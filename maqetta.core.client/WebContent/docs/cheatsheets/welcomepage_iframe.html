@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../maqettadocs.css" />
+	<link rel="stylesheet" href="../../dijit/themes/claro/claro.css">
+    <script src="../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+	<script>require([
+		"dojo/parser",
+		"dijit/TooltipDialog",
+		"dijit/form/DropDownButton"
+	 ]);</script>
+	 <style type='text/css'>
+	 	:focus {
+	 		outline:none;
+	 	}
+	 </style>
+</head>
+<body class="claro maqettadocs cheatsheet_iframe_body">
+	<div id='cheatsheetcontent'>
+		<!--  With zoom/pan enabled, had set width:100% -->
+		<img src='img/WelcomePage.png' style='width:1010px;'></img>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:432px; top:80px;'>
+		    <span>Create menu</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<table class='cheatsheet_table'>
+		    		<colgroup>
+		    			<col style='width:1px;'/>
+		    			<col style='width:325px;'/>
+		    		</colgroup>
+		    		<tr>
+		    			<td><img src='img/Create_menu.png'></img></td>
+		    			<td class='cheatsheet_table_desc_td cheatsheet_table_desc_td_right'>
+		    				Create menu commands:
+		    				<ul class='cheatsheet_desc_list'>
+		    					<li><strong>Mobile Application</strong> - Enables visual authoring of an HTML5 web application targeting mobile phones or tablets</li>
+		    					<li><strong>Desktop Application</strong> - Enables visual authoring of an HTML5 web application targeting desktop browsers</li>
+		    					<li><strong>Sketching (high-fidelity)</strong> - Use Maqetta like a simple drawing tool. Widgets will be rendered with final-form styling.</li>
+		    					<li><strong>Sketching (low-fidelity)</strong> - Use Maqetta like a simple drawing tool. Widgets will be rendered with pseudo hand-drawn styling.</li>
+		    					<li><strong>Folder</strong> - Add a new folder to your cloud workspace</li>
+		    					<li><strong>CSS File</strong> - Add a CSS file to your workspace, opens up Maqetta source editor for the new file</li>
+		    					<li><strong>JavaScript File</strong> - Add a JavaScript file to your workspace, opens up Maqetta source editor for the new file</li>
+		    					<li><strong>Theme</strong> - Clone an existing theme (mobile or desktop), opens ups Maqetta theme editor for the new theme</li>
+		    					<li><strong>Review</strong> - Create a new review session, choosing files to share, and entering addresses for all reviewers</li>
+		    					<li><strong>Project</strong> - Create an additional project area with a fresh file system. Eclipse-compatible projects can be imported into Eclipse easily.</li>
+		    				</ul>
+		    			</td>
+		    		</tr>
+		    	</table>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:560px; top:80px;'>
+		    <span>Open menu</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<table class='cheatsheet_table'>
+		    		<colgroup>
+		    			<col style='width:1px;'/>
+		    			<col style='width:250px;'/>
+		    		</colgroup>
+		    		<tr>
+		    			<td><img src='img/Open_menu.png'></img></td>
+		    			<td class='cheatsheet_table_desc_td cheatsheet_table_desc_td_right'>
+		    				Open menu commands:
+		    				<ul class='cheatsheet_desc_list'>
+		    					<li><strong>File</strong> - Brings up file open dialog, typically to open HTML files in visual page editor, or CSS or JavaScript files in source editor</li>
+		    					<li><strong>Theme Editor</strong> - Opens ups one of your custom themes in the Maqetta theme editor</li>
+		    					<li><strong>Review</strong> - Opens up one of the files that were including in a review/commenting session, the file opens in review editing mode</li>
+		    					<li><strong>Project</strong> - Brings up a dialog that allows you to switch to a different project (if you have more than one project)</li>
+		    					<li><strong>Orion Navigator</strong> - Opens up a new browser tab or window, where you can use the Eclipse Orion source development tools on the files in your Maqetta workspace</li>
+		    				</ul>
+		    			</td>
+		    		</tr>
+		    	</table>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:895px; top:80px;'>
+		    <span>Top-right menus</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<table class='cheatsheet_table'>
+		    		<colgroup>
+		    			<col style='width:1px;'/>
+		    			<col style='width:300px;'/>
+		    		</colgroup>
+		    		<tr>
+		    			<td>&nbsp;</td>
+		    			<td class='cheatsheet_table_desc_td'>
+		    				Top-right menus:<br/><br/>
+		    				User menu:
+		    				<ul class='cheatsheet_desc_list'>
+		    					<li><strong>User login</strong> - Shows the login being used for this session</li>
+		    					<li><strong>Log out</strong> - Terminates this session, returns to login page</li>
+		    				</ul>
+		    				<br/>Application settings menu:
+		    				<ul class='cheatsheet_desc_list'>
+		    					<li><strong>Preferences</strong> - Shows dialog that provide options for customizing Maqetta</li>
+		    					<li><strong>Theme sets</strong> - Maqetta include advanced features for managing which CSS themes should be used for different target devices</li>
+		    				</ul>
+		    				<br/>Help menu:
+		    				<ul class='cheatsheet_desc_list'>
+		    					<li><strong>Documentation</strong> - Opens new browser tab/page showing Maqetta's doc set</li>
+		    					<li><strong>Tutorials</strong> - New browser tab/page showing tutorials within doc set</li>
+		    					<li><strong>Videos</strong> - New browser tab/page showing Maqetta YouTube channel</li>
+		    					<li><strong>Cheat sheets</strong> - New browser tab/page showing cheat sheets within doc set</li>
+		    					<li><strong>How-to</strong> - New browser tab/page showing how-to articles</li>
+		    					<li><strong>About</strong> - Popup window showing current product version</li>
+		    				</ul>
+		    			</td>
+		    		</tr>
+		    	</table>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:290px; top:180px;'>
+		    <span>Common operations</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		Commonly used create actions. Equivalent to same actions found on the Create menu at the top.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:290px; top:365px;'>
+		    <span>Learn about Maqetta</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		Maqetta learning resources. Equivalent to same actions found on the Help menu at the top.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:60px; top:105px;'>
+		    <span>Top/left palettes</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		<strong>Palette</strong> and <strong>Outline</strong> are only available in the Maqetta page editor.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:60px; top:600px;'>
+		    <span>Bottom/left palettes</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<table class='cheatsheet_table'>
+		    		<colgroup>
+		    			<col style='width:250px;'/>
+		    			<col style='width:1px;'/>
+		    		</colgroup>
+		    		<tr>
+		    			<td class='cheatsheet_table_desc_td cheatsheet_table_desc_td_left'>
+		    				<strong>Files</strong> shows your file system in the cloud (see image at right).<br/><br/>
+		    				<strong>Reviews</strong> shows the list of review sessions which either you initiated
+		    				or to which you have been invited.
+		    			</td>
+		    			<td><img src='img/FilesPalette.png'></img></td>
+		    		</tr>
+		    	</table>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:929px; top:105px;'>
+		    <span>Top/right palettes</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		The various "Properties" palettes are only available in the Maqetta page editor and theme editor.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:929px; top:600px;'>
+		    <span>Bottom/right palettes</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		The <strong>Scenes</strong> palette is only available in the Maqetta page editor and theme editor.
+		    	</div>
+		    </div>
+		</div>
+		
+	</div>
+</body>
+</html>

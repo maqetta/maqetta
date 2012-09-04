@@ -1,0 +1,511 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../maqettadocs.css" />
+	<link rel="stylesheet" href="../../dijit/themes/claro/claro.css">
+    <script src="../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+	<script>require([
+		"dojo/parser",
+		"dijit/TooltipDialog",
+		"dijit/form/DropDownButton"
+	 ]);</script>
+	 <style type='text/css'>
+	 	:focus {
+	 		outline:none;
+	 	}
+	 </style>
+</head>
+<body class="claro maqettadocs cheatsheet_iframe_body">
+	<div id='cheatsheetcontent'>
+		<!--  With zoom/pan enabled, had set width:100% -->
+		<img src='img/PageEditor.png' style='width:1010px;'></img>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:432px; top:80px;'>
+		    <span>Create menu</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<table class='cheatsheet_table'>
+		    		<colgroup>
+		    			<col style='width:1px;'/>
+		    			<col style='width:325px;'/>
+		    		</colgroup>
+		    		<tr>
+		    			<td><img src='img/Create_menu.png'></img></td>
+		    			<td class='cheatsheet_table_desc_td cheatsheet_table_desc_td_right'>
+		    				Create menu commands:
+		    				<ul class='cheatsheet_desc_list'>
+		    					<li><strong>Mobile Application</strong> - Enables visual authoring of an HTML5 web application targeting mobile phones or tablets</li>
+		    					<li><strong>Desktop Application</strong> - Enables visual authoring of an HTML5 web application targeting desktop browsers</li>
+		    					<li><strong>Sketching (high-fidelity)</strong> - Use Maqetta like a simple drawing tool. Widgets will be rendered with final-form styling.</li>
+		    					<li><strong>Sketching (low-fidelity)</strong> - Use Maqetta like a simple drawing tool. Widgets will be rendered with pseudo hand-drawn styling.</li>
+		    					<li><strong>Folder</strong> - Add a new folder to your cloud workspace</li>
+		    					<li><strong>CSS File</strong> - Add a CSS file to your workspace, opens up Maqetta source editor for the new file</li>
+		    					<li><strong>JavaScript File</strong> - Add a JavaScript file to your workspace, opens up Maqetta source editor for the new file</li>
+		    					<li><strong>Theme</strong> - Clone an existing theme (mobile or desktop), opens ups Maqetta theme editor for the new theme</li>
+		    					<li><strong>Review</strong> - Create a new review session, choosing files to share, and entering addresses for all reviewers</li>
+		    					<li><strong>Project</strong> - Create an additional project area with a fresh file system. Eclipse-compatible projects can be imported into Eclipse easily.</li>
+		    				</ul>
+		    			</td>
+		    		</tr>
+		    	</table>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:560px; top:80px;'>
+		    <span>Open menu</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<table class='cheatsheet_table'>
+		    		<colgroup>
+		    			<col style='width:1px;'/>
+		    			<col style='width:250px;'/>
+		    		</colgroup>
+		    		<tr>
+		    			<td><img src='img/Open_menu.png'></img></td>
+		    			<td class='cheatsheet_table_desc_td cheatsheet_table_desc_td_right'>
+		    				Open menu commands:
+		    				<ul class='cheatsheet_desc_list'>
+		    					<li><strong>File</strong> - Brings up file open dialog, typically to open HTML files in visual page editor, or CSS or JavaScript files in source editor</li>
+		    					<li><strong>Theme Editor</strong> - Opens ups one of your custom themes in the Maqetta theme editor</li>
+		    					<li><strong>Review</strong> - Opens up one of the files that were including in a review/commenting session, the file opens in review editing mode</li>
+		    					<li><strong>Project</strong> - Brings up a dialog that allows you to switch to a different project (if you have more than one project)</li>
+		    					<li><strong>Orion Navigator</strong> - Opens up a new browser tab or window, where you can use the Eclipse Orion source development tools on the files in your Maqetta workspace</li>
+		    				</ul>
+		    			</td>
+		    		</tr>
+		    	</table>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:895px; top:80px;'>
+		    <span>Top-right menus</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<table class='cheatsheet_table'>
+		    		<colgroup>
+		    			<col style='width:1px;'/>
+		    			<col style='width:300px;'/>
+		    		</colgroup>
+		    		<tr>
+		    			<td>&nbsp;</td>
+		    			<td class='cheatsheet_table_desc_td'>
+		    				Top-right menus:<br/><br/>
+		    				User menu:
+		    				<ul class='cheatsheet_desc_list'>
+		    					<li><strong>User login</strong> - Shows the login being used for this session</li>
+		    					<li><strong>Log out</strong> - Terminates this session, returns to login page</li>
+		    				</ul>
+		    				<br/>Application settings menu:
+		    				<ul class='cheatsheet_desc_list'>
+		    					<li><strong>Preferences</strong> - Shows dialog that provide options for customizing Maqetta</li>
+		    					<li><strong>Theme sets</strong> - Maqetta include advanced features for managing which CSS themes should be used for different target devices</li>
+		    				</ul>
+		    				<br/>Help menu:
+		    				<ul class='cheatsheet_desc_list'>
+		    					<li><strong>Documentation</strong> - Opens new browser tab/page showing Maqetta's doc set</li>
+		    					<li><strong>Tutorials</strong> - New browser tab/page showing tutorials within doc set</li>
+		    					<li><strong>Videos</strong> - New browser tab/page showing Maqetta YouTube channel</li>
+		    					<li><strong>Cheat sheets</strong> - New browser tab/page showing cheat sheets within doc set</li>
+		    					<li><strong>How-to</strong> - New browser tab/page showing how-to articles</li>
+		    					<li><strong>About</strong> - Popup window showing current product version</li>
+		    				</ul>
+		    			</td>
+		    		</tr>
+		    	</table>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:75px; top:85px;'>
+		    <span>File tabs</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		Listing of all currently open files.<br/><br/>
+		    		Asterisk indicates that the file is "dirty" (i.e., changed since most recent save operation).<br/></br>
+		    		File tabs have a short context menu that includes a "Close all tabs" command.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:35px; top:122px;'>
+		    <span>Save commands</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		You can click on <strong>Save</strong> to save the currently open file.<br/><br/>
+		    		The drop-down menu contains these commands:
+    				<ul class='cheatsheet_desc_list'>
+    					<li><strong>Save</strong> - Same as clicking on the <strong>Save</strong> button</li>
+    					<li><strong>Save As</strong> - Save current file under a different name</li>
+    					<li><strong>Save As Widget</strong> - Saves the currently selected widget as a re-usable component.
+    						This new widget will appear in the <strong>Palette</strong> in the "User widgets" section of the palette.</li>
+    				</ul>
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:95px; top:122px;'>
+		    <span>Undo/redo commands</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div>
+		    		Undo and redo commands
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:170px; top:122px;'>
+		    <span>Clipboard commands</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div>
+		    		Clipboard commands: cut, copy, paste
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:236px; top:122px;'>
+		    <span>Delete command</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		Delete command: delete currently selected widget, without affecting clipboard
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:273px; top:122px;'>
+		    <span>Add sticky note</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		Add a sticky note that will overlay the page.<br/><br/>
+		    		The command will create a default note and immediately bring up a rich
+		    		text editing control, which will allow for various text styling options, 
+		    		such as bullets and italics.<br/><br/>
+		    		Sticky notes are a good way for an author to include supplemental
+		    		comments that help explain the application or sketch to reviewers.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:308px; top:122px;'>
+		    <span>Table commands</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:500px'>
+		    		Pressing this icon causes a drop-down menu to appear with a series of table operations.
+		    		Most of these operations are only active when selecting components of an HTML table,
+		    		such as table cells. Commands include:
+    				<ul class='cheatsheet_desc_list'>
+    					<li><strong>Select table</strong> - For currently selected table cell, selects the parent table widget</li>
+    					<li><strong>Select row</strong> - For currently selected table cell, selects the current table row</li>
+    					<li><strong>Select column</strong> - For currently selected table cell, selects the current table column.
+    						Note that users can control HTML table column width and background by selecting
+    						a table column and changing the 'width' or background properties in the various Properties palette
+    						found on the right side of the application.</li>
+    					<li><strong>Insert column before</strong> - For currently selected table cell, insert a table column before current column</li>
+    					<li><strong>Insert column after</strong> - For currently selected table cell, insert a table column after current column</li>
+    					<li><strong>Remove column</strong> - Remove the column containing the currently selected table cell</li>
+    					<li><strong>Insert row before</strong> - For currently selected table cell, insert a table row before current column</li>
+    					<li><strong>Insert row after</strong> - For currently selected table cell, insert a table row after current column</li>
+    					<li><strong>Remove row</strong> - Remove the row containing the currently selected table cell</li>
+    				</ul>
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:800px; top:122px;'>
+		    <span>View controls</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:400px'>
+		    		These controls allow you to switch between the four viewing modes:
+    				<ul class='cheatsheet_desc_list'>
+    					<li><strong>Design</strong> - (The default) Only show the visual editor</li>
+    					<li><strong>Source</strong> - Only show the source editor</li>
+    					<li><strong>Split vertical</strong> - Show design and source view simultaneously,
+    						with design on the left and source on the right.</li>
+    					<li><strong>Split horizontal</strong> - Show design and source view simultaneously,
+    						with design on the top and source on the bottom.</li>
+    				</ul>
+    				<br/>
+			    	The button for the currently active mode will show a "pressed" look.
+			    	<br/><br/>
+			    	You can switch to <strong>Design</strong> or <strong>Source</strong> by clicking on the
+			    	corresponding button. To switch to one of the split modes, use the drop-down menu.
+			    	Note that if you switch to a split mode, the second button's text will change 
+			    	to reflect the most recent source viewing mode (i.e., Source vs Split-H vs Split-V).
+			    	<br/><br/>
+			    	In split view, changes in the design page are immediately reflected in the source pane, and vice versa.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:903px; top:122px;'>
+		    <span>Flow vs absolute</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		This dropdown button controls whether new widgets will be added using flow layout or absolute layout.
+		    		The dropdown button's text indicates the current setting (i.e., flow vs absolute).
+		    		<br/><br/>
+		    		Widgets that use <em>flow layout</em> are arranged in a left-to-right, top-to-bottom text flow
+		    		within the parent widget, similar to how word processors operate on textual content.
+		    		Widgets that use <em>absolute layout</em> are positioned at particular (x,y) locations relative
+		    		to their parent widget.
+		    		<br/><br/>
+		    		Note that this control only applies to new widgets that will be adding in the future.
+		    		This control does not apply to the currently selected widget. To change the layout method
+		    		for the currently selected widget, go to the Layout palette and adjust the 'position' property.
+		    		(position:absolute for absolute layout, position:static for flow layout)
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:948px; top:122px;'>
+		    <span>Document settings</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:600px'>
+		    		Pressing this icon causes a drop-down menu to appear with various settings and operations
+		    		for the currently opened document. Commands include:
+    				<ul class='cheatsheet_desc_list'>
+    					<li><strong>Switch theme</strong> - Switch to a different CSS theme (or theme set) for the current document</li>
+    					<li><strong>Choose device</strong> - Switch to a different mobile device (e.g., from iPhone to an Android device)</li>
+    					<li><strong>Rotate device</strong> - Toggles between portrait and landscape mode (only applies when a mobile silhouette is showing).</li>
+    					<li><strong>Select parent</strong> - Selects the parent widget</li>
+    					<li><strong>Select ancestor...</strong> - Shows a dialog that shows a list of ancestor widgets and allow you to select one of the ancestors</li>
+    					<li><strong>Unselect all</strong> - Unselect all currently selected widgets</li>
+    					<li><strong>Move to front</strong> - (Absolutely positioned widgets only) Make this widget the last child of its parent, which will usually cause this widget to be rendered after its other siblings</li>
+    					<li><strong>Move forward</strong> - (Absolutely positioned widgets only) Move this widget to the position after its next sibling</li>
+    					<li><strong>Move backward</strong> - (Absolutely positioned widgets only) Move this widget to the position before its previous sibling</li>
+    					<li><strong>Move to back</strong> - (Absolutely positioned widgets only) Make this widget the first child of its parent, which will usually cause this widget to be rendered before its other siblings</li>
+    					<li><strong>Surround with &lt;div&gt;</strong> - Surround currently selected widgets with an HTML &lt;div&gt; element. At end of operation, the widget will be a child of the &lt;div&gt;.</li>
+    					<li><strong>Surround with &lt;span&gt;</strong> - Surround currently selected widgets with an HTML &lt;span&gt; element. At end of operation, the widget will be a child of the &lt;span&gt;.</li>
+    					<li><strong>Surround with &lt;a&gt;</strong> - Surround currently selected widgets with an HTML &lt;a&gt; element. At end of operation, the widget will be a child of the &lt;a&gt;.</li>
+    				</ul>
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:976px; top:122px;'>
+		    <span>Preview in browser</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		Opens up a new browser tab/window and run the currently open document
+		    		within that browser tab. In preview mode, the application will be fully interactive.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:244px; top:163px;'>
+		    <span>Collapse icon</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		Clicking on this small icon will cause the palettes to collapse such that only palette tabs are showing.
+		    		<br/><br/>
+		    		To show a particular palette, click on its palette tab (at the very left- and right-
+		    		edges of the Maqetta browser window). Clicking on the same palette tab a second time
+		    		toggles its current state (collapsed vs expanded).
+		    		<br/><br/>
+		    		You can control the size of the expanded palettes by dragging on the splitter that separates
+		    		the palettes and the canvas. There is also a splitter between the top palettes and the bottom palettes.
+		    	</div>
+		    </div>
+		</div>
+
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:30px; top:175px;'>
+		    <span>Widgets Palette</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:700px'>
+		    		The <strong>Palette</strong> contains the list of widgets that you can add to your document.
+		    		<br/><br/>
+		    		To add widgets, open up the appropriate section of the Palette, and then drag/drop
+		    		widgets onto the canvas. You can also add widgets using a two-click approach, where you first
+		    		click on a widget in the Palette, and then either click on the canvas or drag out a rectangle
+		    		on the canvas. If you drag out a rectangle, then widgets that are resizable will have an initial
+		    		size that matches the size of the rectangle you dragged out. 
+		    		<br/><br/>
+		    		The sections of the Palette are as follows:
+    				<ul class='cheatsheet_desc_list'>
+    					<li><strong>Dojo Containers</strong> - Dojo desktop widgets (from the Dijit library) that can contain other widgets.
+   							These include BorderContainer, TabContainer, Accordion, Toolbar and Menubar.
+   							BorderContainer is the commonly used for controlling layouts, particularly fullscreen layouts.</li>
+    					<li><strong>Dojo Controls</strong> - Dojo desktop widgets (from the Dijit library) that are primitive controls.
+    							This section contains a long list of widgets that commonly used controls such as textboxes, buttons, lists, sliders, date pickers.</li>
+    					<li><strong>HTML</strong> - HTML elements that are commonly used in web applications.
+   							Some notes:
+   							<ul>
+   								<li><code>&lt;div&gt;</code> and <code>&lt;span&gt;</code> elements are commonly used as containers for other widgets</li>
+   								<li><code>&lt;label&gt;</code> is commonly used for simple text strings</li>
+   								<li><code>&lt;table&gt;</code> is commonly used for achieving row/column layouts</li>
+   							</ul>
+    					</li>	
+    					<li><strong>Dojox Mobile</strong> - Dojo Mobile widgets. These widgets have been designed
+    						to look and act like native controls on mobile devices.
+    						This section contains a long list of widgets that contain both container widgets and primitive widgets.</li>
+    					<li><strong>Clip Art</strong> - A collection of resizable, commonly-used user interface clip art.
+    						Includes small-size icons such as "close", "help", "home" along with a few larger
+    						placeholder graphics such as "map" and "image". Also includes device silhouettes
+    						for some common mobile devices.</li>
+    					<li><strong>Drawing Tools</strong> - Simple drawing tool widgets such as Rectangle and Arrow. 
+    						These widgets are added to the page in absolute mode even if the current setting
+    						is "flow".</li>
+    				</ul>
+		    	</div>
+		    </div>
+		</div>
+
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:30px; top:225px;'>
+		    <span>Outline palette</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<table class='cheatsheet_table'>
+		    		<colgroup>
+		    			<col style='width:300px;'/>
+		    			<col style='width:1px;'/>
+		    		</colgroup>
+		    		<tr>
+		    			<td class='cheatsheet_table_desc_td_left'>
+		    				The <strong>Outline</strong> palette shows a hierarchy view of the widgets in your document.
+		    				<br/><br/>
+		    				You can reorder your widgets via drag/drop within the Outline palette.
+		    				<br/><br/>
+		    				The Outline palette also includes a context menu which allows many of the same
+		    				widget operations (e.g., delete) that are available on the page editor canvas.
+		    			</td>
+		    			<td><img src='img/OutlinePalette.png'></img></td>
+		    		</tr>
+		    	</table>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:60px; top:600px;'>
+		    <span>Bottom/left palettes</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<table class='cheatsheet_table'>
+		    		<colgroup>
+		    			<col style='width:250px;'/>
+		    			<col style='width:1px;'/>
+		    		</colgroup>
+		    		<tr>
+		    			<td class='cheatsheet_table_desc_td cheatsheet_table_desc_td_left'>
+		    				<strong>Files</strong> shows your file system in the cloud (see image at right).<br/><br/>
+		    				<strong>Reviews</strong> shows the list of review sessions which either you initiated
+		    				or to which you have been invited.
+		    			</td>
+		    			<td><img src='img/FilesPalette.png'></img></td>
+		    		</tr>
+		    	</table>
+		    </div>
+		</div>
+
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:930px; top:175px;'>
+		    <span>Properties palettes</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:700px'>
+		    		The various Properties palettes (Widget, Events, Layout, etc) are where you can change
+		    		widget-specific property values. The various sections are:
+		    		<br/><br/>
+    				<ul class='cheatsheet_desc_list'>
+    					<li><strong>Widget</strong> - This section lists widget-specific properties -
+    						e.g., a Checkbox widget has a "checked" property, whereas most other widgets
+    						will not have such a property. For most widgets, a 'title' property
+    						appears at the top. This corresponds to the HTML 'title' attribute and is often
+    						used for specifying tooltip text for a given widget.</li>
+    					<li><strong>Events</strong> - Defines the actions to take when certain
+    						events occur on a particular widget. Includes mouse events (e.g., onclick)
+    						and focus events for text entry widgets (i.e., onfocus and onblur).
+    					</li>	
+    					<li><strong>Layout</strong> - Various CSS properties in the general area of layout.
+    						Includes CSS properties regarding size (e.g., 'width' and 'height') and 
+    						location (e.g., 'left' and 'top'). Also includes CSS properties
+    						such as 'position', 'display', 'float', 'overflow' and 'opacity'.</li>
+    					<li><strong>Padding</strong> - CSS padding properties, including the 'padding' shortcut
+    						and the specific properties 'padding-top', 'padding-right', 'padding-bottom' and 'padding-left'.</li>
+    					<li><strong>Margin</strong> - CSS margin properties, including the 'margin' shortcut
+    						and the specific properties 'margin-top', 'margin-right', 'margin-bottom' and 'margin-left'.</li>
+    					<li><strong>Background</strong> - CSS background properties. The "..." buttons can be used
+    						to bring up the Background dialog, which allows picking background image and defining
+    						gradients.</li>
+    					<li><strong>Border</strong> - CSS border properties.</li>
+    					<li><strong>Fonts/Text</strong> - CSS properties having to do with text styling.</li>
+    					<li><strong>SVG</strong> - CSS properties that only apply to SVG content.
+    						These properties typically are used only for widgets from the Drawing Tools section
+    						of the <strong>Palette</strong>.</li>
+    				</ul>
+		    		<br/><br/>
+		    		At the top of each of the various Properties palette are controls for setting the
+		    		<strong>class</strong> and/or <strong>id</strong> values for the currently selected widget.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:930px; top:600px;'>
+		    <span>Scenes palette</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		The <strong>Scenes</strong> palette enables two things.
+		    		<br/><br/>
+    				<ul class='cheatsheet_desc_list'>
+    					<li><strong>Application states</strong> - Maqetta includes an "application states" feature
+	    					which allows users to define interactivity without programming.
+	    					With the application states feature, you can organize your application into different states, 
+	    					and then define which widgets are visible (or styled differently) in each different states.
+	    					State changes can be triggered using the Events palette.</li>
+    					<li><strong>Switching between Dojo Mobile Views</strong> - If you create a mobile application
+    						and include Dojo Mobile view widgets (View, ScrollableView or SwapView) in your application,
+    						the Scenes palette will show both the list of views, plus the hierarchy of views.
+    						You can easily switch between views by clicking on one of the view in the Scenes palette.
+    					</li>	
+    				</ul>
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:300px; top:200px;'>
+		    <span>Visual design canvas</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<table class='cheatsheet_table'>
+		    		<colgroup>
+		    			<col style='width:300px;'/>
+		    			<col style='width:1px;'/>
+		    		</colgroup>
+		    		<tr>
+		    			<td class='cheatsheet_table_desc_td_left'>
+		    		This area is where you create your HTML application.
+		    		<br/><br/>
+		    		To add widgets to the page, simply drag/drop widgets from the <strong>Palette</strong> to the canvas.
+		    		<br/><br/>
+		    		When adding a new widget, sometimes Maqetta presents a data entry popup or dialog.
+		    		On the right, you can see the data entry popup for a Button widget.
+		    		You can click on the "?" icon to see what text entry options and rules apply
+		    		to the format of the data for this particular widget.
+		    		<br/><br/>
+		    		To adjust widget options and CSS properties, click to select a particular widget
+		    		and then change properties using the right-side properties palette (e.g., Widget, Events, Layout, etc.).
+		    			</td>
+		    			<td><img src='img/SmartInputButton.png'></img></td>
+		    		</tr>
+		    	</table>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:350px; top:200px;'>
+		    <span>Keyboard shortcuts</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:600px'>
+		    		The Maqetta page editor supports the following keyboard shortcuts:
+		    		<br/><br/>
+		    		<table border='0' cellpadding='3'>
+						<tr><td>Ctrl-z:</td><td>undo</td><td>(Cmd-z on Mac)</td></tr>
+						<tr><td>Ctrl-Shift-z:</td><td>redo</td><td>(Cmd-Shift-z on Mac)</td></tr>
+						<tr><td>Ctrl-x:</td><td>cut</td><td>(Cmd-x on Mac)</td></tr>
+						<tr><td>Ctrl-c:</td><td>copy</td><td>(Cmd-c on Mac)</td></tr>
+						<tr><td>Ctrl-v:</td><td>paste</td><td>(Cmd-v on Mac)</td></tr>
+						<tr><td>DEL or BS:</td><td>delete</td><td>&nbsp;</td></tr>
+						<tr><td>Ctrl-s:</td><td>save</td><td>(Cmd-s on Mac)</td></tr>
+						<tr><td>Ctrl-Shift-s:</td><td>saveAs</td><td>(Cmd-Shift-s on Mac)</td></tr>
+						<tr><td>Ctrl-o:</td><td>open file</td><td>(Cmd-o on Mac)</td></tr>
+						<tr><td>Ctrl-0:</td><td>preview in browser</td><td>(Cmd-0 on Mac)</td></tr>
+						<tr><td>Ctrl-1:</td><td>design view</td><td>(Cmd-1 on Mac)</td></tr>
+						<tr><td>Ctrl-2:</td><td>source view</td><td>(Cmd-3 on Mac)</td></tr>
+						<tr><td>Ctrl-3:</td><td>split vertically view</td><td>(Cmd-3 on Mac)</td></tr>
+						<tr><td>Ctrl-4:</td><td>split horizontally view</td><td>(Cmd-4 on Mac)</td></tr>
+						<tr><td>F1:</td><td>open new window showing Maqetta documentation</td><td>&nbsp;</td></tr>
+		    		</table>
+		    	</div>
+		    </div>
+		</div>
+
+	</div>
+</body>
+</html>

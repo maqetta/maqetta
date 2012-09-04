@@ -44,7 +44,7 @@
                     	var getUrlsRecursive=function(item){
                     		if(dojo.isString(item.url) && item.url.length>0){
                     			// docs_page_array is a global variable
-                        		docs_page_array[item.url]=true;
+                        		docs_page_array[item.url]=item.id;
                     		}
                     		if(dojo.isArray(item.children)){
                         		for(var itemchild=0;itemchild<item.children.length;itemchild++){
@@ -59,9 +59,14 @@
                     	// Force resize action on outer BorderContainer so that
                     	// left-side Tree widget will resize and properly indent the TreeItems.
                     	// (Tree resize needs to be called after Tree is added to DOM)
-                    	setTimeout(function(){
+                    	//setTimeout(function(){
                         	bc2.resize();
-                    	}, 2000);
+                        	var tree = dijit.byId('TOCTree');
+                        	if(tree){
+                        		tree.set('paths',[['topicsRoot','4','4.1'],['topicsRoot','9','9.1']]);
+                        		tree.set('selectedItems',[]);
+                        	}
+                    	//}, 1);
                     },
                     error: function(error) {
                         console.log("unable to load maqettadocs.json");
@@ -159,10 +164,44 @@
 	            	}
 	                location.href = current_loc_nohash + '#' + target_anchor;
 					print_content.setHref(href);
+					var TOCTree = dijit.byId('TOCTree');
+					if(TOCTree && topicsStore){
+						// set path to that item
+						var id = docs_page_array[filename];
+						topicsStore.fetch({query: {id:id}, queryOptions:{deep:true}, onComplete: dojo.hitch(this, function(items, request){
+							if(items && items.length >0){
+								var item = items[0];
+								var buildme = [];
+								var result = recursiveHunt(item.id, TOCTree.model, buildme, TOCTree.model.root);
+								if(result && result.length > 0){
+									TOCTree.set('path', result);
+								}
+							}
+						})});
+					}
                 }else{
                     console.log("Bad hyperlink. currently_viewed_page="+currently_viewed_page+", target="+filename);
                 }
             	return false;
+            }
+
+            function recursiveHunt(lookfor, model, buildme, item){
+                var id = model.getIdentity(item);
+                buildme.push(id);
+                if(id == lookfor){
+                    // Return the buildme array, indicating a match was found
+                    return buildme;
+                }
+                for(var idx in item.children){
+                    // start a new branch of buildme, starting with what we have so far
+                    var buildmebranch = buildme.slice(0);
+                    var r = recursiveHunt(lookfor, model, buildmebranch, item.children[idx]);
+                    // If a match was found in that recurse, return it.
+                    //  This unwinds the recursion on completion.
+                    if(r){ return r; }
+                }
+                // Return undefined, indicating no match was found
+                return undefined;
             }
 
 			/*
@@ -202,19 +241,17 @@
             	<!-- Title Pane -->
             </div>
             <div dojoType="dijit.layout.BorderContainer" liveSplitters="false" design="sidebar" region="center" id="mainSplit">
-                <div dojoType="dojox.layout.ContentPane"  region="leading" splitter="true" style="width:250px;padding:0;" renderStyles="true">
+                <div dojoType="dojox.layout.ContentPane" id="TOCContentPane" region="leading" splitter="true" renderStyles="true" style="width:260px;">
                     <!-- Left Navigation Pane -->
-                    <div dojoType="dojo.data.ItemFileReadStore" jsId="continentStore" url="maqettadocs.json">
+                    <div dojoType="dojo.data.ItemFileReadStore" id="topicsStore" jsId="topicsStore" url="maqettadocs.json">
 			        </div>
-			        <div dojoType="dijit.tree.ForestStoreModel" jsId="continentModel" store="continentStore" rootId="continentRoot" rootLabel="Maqetta Documentation"
+			        <div dojoType="dijit.tree.ForestStoreModel" jsId="topicsForestStoreModel" store="topicsStore" rootId="topicsRoot" rootLabel="Maqetta Documentation"
 			        childrenAttrs="children">
 			        </div>
-			        <div dojoType="dijit.Tree" id="mytree" model="continentModel" showRoot="false">
+			        <div dojoType="dijit.Tree" id="TOCTree" model="topicsForestStoreModel" showRoot="false" persist="false">
 			            <script type="dojo/method" event="onClick" args="item">
 							if (item.url) {
-goToPage(item.url);
-//								content.setHref(item.url);
-//								print_content.setHref(item.url);
+								goToPage(item.url);
 							}
 			            </script>
 			        </div>

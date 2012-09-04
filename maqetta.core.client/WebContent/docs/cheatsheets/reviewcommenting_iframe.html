@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../maqettadocs.css" />
+	<link rel="stylesheet" href="../../dijit/themes/claro/claro.css">
+    <script src="../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+	<script>require([
+		"dojo/parser",
+		"dijit/TooltipDialog",
+		"dijit/form/DropDownButton"
+	 ]);</script>
+	 <style type='text/css'>
+	 	:focus {
+	 		outline:none;
+	 	}
+	 </style>
+</head>
+<body class="claro maqettadocs cheatsheet_iframe_body">
+	<div id='cheatsheetcontent'>
+		<!--  With zoom/pan enabled, had set width:100% -->
+		<img src='img/ReviewCommenting.png' style='width:1010px;'></img>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:432px; top:80px;'>
+		    <span>Create menu</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:450px'>
+		    		To create a new review session,
+		    		press on the "Create" menu and choose "Review...".
+		    		This will bring up a wizard with three sections:<br/>
+		    		<ul class='cheatsheet_desc_list'>
+    					<li><strong>General information</strong> - In this section,
+    						you can provide a title for the review session, description,
+    						and due date.</li>
+    					<li><strong>Select review files</strong> - In this section,
+    						you pick which files from your workspace should be shared
+    						with your colleagues for their review and feedback.</li>
+    					<li><strong>Add reviewers</strong> - In this section,
+    						you provide the email addresses for all reviewers.</li>
+     				</ul>
+		    		<br/>
+		    		After clicking on the Publish button, the Maqetta server will
+		    		send email to all reviewers. The email will contain a hyperlink
+		    		that will take the reviewer to the Maqetta server so they can
+		    		open the review files and supply feedback.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:555px; top:80px;'>
+		    <span>Open menu</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:275px'>
+		    		To open an existing review, you can either 
+		    		press on the "Open" menu and choose "Review..." or double-click
+		    		on an entry in the Reviews palette.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:75px; top:85px;'>
+		    <span>File tabs</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		Listing of all currently open files.<br/><br/>
+		    		Review files have file extension ".rev".
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:75px; top:145px;'>
+		    <span>Message</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		The text within the yellow background explains that the pages opened within a Maqetta
+		    		review editor are live pages that actually run (i.e., you can click on controls and they will respond).
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:60px; top:175px;'>
+		    <span>Top/left palettes</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<table class='cheatsheet_table'>
+		    		<colgroup>
+		    			<col style='width:250px;'/>
+		    			<col style='width:1px;'/>
+		    		</colgroup>
+		    		<tr>
+		    			<td class='cheatsheet_table_desc_td cheatsheet_table_desc_td_left'>
+		    				<strong>Files</strong> shows your file system in the cloud.<br/><br/>
+		    				<strong>Reviews</strong> shows the list of review sessions which either you initiated
+		    				or to which you have been invited. (see image at right)
+		    			</td>
+		    			<td><img src='img/ReviewsPalette.png'></img></td>
+		    		</tr>
+		    	</table>
+		    </div>
+		</div>
+
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:705px; top:175px;'>
+		    <span>Comments palette</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:700px'>
+		    		This <strong>Comments</strong> palette is where a user provides feedback
+		    		on a review. Reviewers can add a comment by clicking on the icon with the "+" symbol.
+		    		Reviewers can also reply to other peoples comments.
+		    		<br/><br/>
+		    		Reviewers can also add graphical annotations onto the canvas, using
+		    		either rectangles, ovals, arrows or text.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:705px; top:600px;'>
+		    <span>Scenes palette</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		The <strong>Scenes</strong> palette allows the reviewer to switch to different
+		    		named scenes within the application. Maqetta supports two forms of "scenes":
+		    		<br/><br/>
+    				<ul class='cheatsheet_desc_list'>
+    					<li><strong>Application states</strong> - Maqetta includes an "application states" feature
+	    					which allows users to define interactivity without programming.
+	    					With the application states feature, you can organize your application into different states, 
+	    					and then define which widgets are visible (or styled differently) in each different states.
+	    					State changes can be triggered using the Events palette.</li>
+    					<li><strong>Switching between Dojo Mobile Views</strong> - If you create a mobile application
+    						and include Dojo Mobile view widgets (View, ScrollableView or SwapView) in your application,
+    						the Scenes palette will show both the list of views, plus the hierarchy of views.
+    						You can easily switch between views by clicking on one of the view in the Scenes palette.
+    					</li>	
+    				</ul>
+		    	</div>
+		    </div>
+		</div>
+
+	</div>
+</body>
+</html>

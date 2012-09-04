@@ -14,7 +14,7 @@
 	<a href="home.html">Home</a> &gt; <a href="tutorials/tutorials.html">Tutorials</a>
     </td>
     <td class="prevnext">
-	<a href="tutorials/Desktop_Theme_Editor.html">Previous</a> / <a href="tutorials/Mobile_Sketching.html">Next</a>
+	<a href="tutorials/Introducing_the_Page_Editor.html">Previous</a> / <a href="tutorials/App_States_Part_1.html">Next</a>
     </td></tr>
 </table>
 
@@ -33,34 +33,27 @@
 
 <p>Set up your authoring canvas to author inside of an iPhone silhouette as follows:</p>
 <ul>
-<li><p>Go to the New menu at the top of the application, and issue a "New HTML File" command.
-	In the New HTML File dialog, set the Composition type to "iphone" using the drop-down menu. 
+<li><p>Go to the Create menu at the top of the application, and issue a "Create Mobile Application" command.
+	In the Create dialog, set the device to "iphone" using the drop-down menu. 
 	You can either accept the default filename
 	(e.g., <code>file1.html</code>) or enter a custom filename. Click on the Create button.</li>
 <li>The page canvas should now show a life-size silhouette of an iPhone.
 	<p><a href="img/iphone_silhouette.png" target="_blank"><img alt="image" src="img/iphone_silhouette.png" style="margin: 1em 1em 0pt 0pt;" height="400" /></a></p>	
 	</li>
-<li>Notice the Choose Device icon
-	<img src="img/device.png" title="Choose Device icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
-	on the page editor's toolbar. This icon allows you to change devices within
-	the page editor (e.g., switch from iPhone to Android). The dialog looks as follows:
+<li>Look at the toolbar. The second icon from the right is the Document Settings icon. 
+	Press that icon and select the "Choose device" command, which will bring up the "Choose a device silhouette" dialog.
+	The dialog looks as follows:
 	<p><a href="img/choose_device_dialog.png" target="_blank"><img alt="image" src="img/choose_device_dialog.png" style="margin: 1em 1em 0pt 0pt;" width="150" /></a></p>
 </li>
 <li>The current release provides authoring support for a handful of popular mobile devices, including
 	both phones and tablets, and supports authoring in both portrait and landscape.
-	Use the Choose Device icon
-	<img src="img/device.png" title="Choose Device icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
+	Use the Choose Device command
 	to change to other silhouettes (e.g., Android phones, iPad, Blackberry).
 	</li>
-<li>Switch between portrait and landscape modes by clicking on the
-	<img src="img/rotate.png" title="Choose Orientation icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
-	icon.
+<li>Switch between portrait and landscape modes by issuing a "Rotate device" command, also found on the Document Settings icon at the right side of the toolbar.
 	</li>
-<li>Using the same two icons,
-	<img src="img/device.png" title="Choose Device icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
-	and
-	<img src="img/rotate.png" title="Choose Orientation icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
-	, go back to showing the iPhone silhouette in portrait mode.
+<li>Using the same commands,
+	go back to showing the iPhone silhouette in portrait mode.
 	</li>
 </ul>
 
@@ -89,7 +82,6 @@
 	<li>RoundedRect, EdgeToEdge and List widgets - These are widgets that either visually appear as
 		rounded rectangles or are used to display a list of information or choices:
 		<ul>
-			<li><strong>RoundRect</strong> - A simple RoundRect into which other widgets and HTML elements can be dropped.</li>
 			<li><strong>RoundRectCategory</strong> - A heading widget typically used above a RoundRectList or RoundRectDataList.</li>
 			<li><strong>RoundRectList</strong> - A list of items displayed as a vertical stacked group of rounded rectangles. </li>
 			<li><strong>RoundRectDataList</strong> - Same as RoundRectList, except data comes from a data store. </li>
@@ -104,12 +96,20 @@
 			<li><strong>Button</strong></li>
 			<li><strong>ToggleButton</strong></li>
 			<li><strong>Switch</strong></li>
+			<li><strong>Slider</strong></li>
 			<li><strong>Checkbox</strong></li>
 			<li><strong>RadioButton</strong></li>
 			<li><strong>TextBox</strong></li>
 			<li><strong>ComboBox</strong></li>
 			<li><strong>TextArea</strong></li>
 			<li><strong>ExpandingTextArea</strong></li>
+			<li><strong>SearchBox</strong></li>
+		</ul>
+	</li>
+	<li>Icon widgets:
+		<ul>
+			<li><strong>IconContainer</strong></li>
+			<li><strong>IconItem</strong></li>
 		</ul>
 	</li>
 	<li>TabBar widgets - These are widgets typically used at the top or bottom of a screen
@@ -122,14 +122,19 @@
 	</li>
 	<li>Other widgets:
 		<ul>
-			<li><strong>Slider</strong></li>
+			<li><strong>RoundRect</strong> - A simple RoundRect into which other widgets and HTML elements can be dropped.</li>
 			<li><strong>ContentPane</strong></li>
-			<li>Icons
-				<ul>
-					<li><strong>IconContainer</strong></li>
-					<li><strong>IconItem</strong></li>
-				</ul>
-			</li>
+			<li><strong>Container</strong></li>
+			<li><strong>Pane</strong></li>
+			<li><strong>ScrollablePane</strong></li>
+			<li><strong>FixedSplitter</strong></li>
+			<li><strong>Accordion</strong></li>
+			<li><strong>GridLayout</strong></li>
+			<li><strong>IconMenu</strong></li>
+			<li><strong>IconMenuItem</strong></li>
+			<li><strong>ProgressIndicator</strong></li>
+			<li><strong>Carousel</strong></li>
+			<li><strong>DataCarousel</strong></li>
 			<li>SpinWheel
 				<ul>
 					<li><strong>SpinWheel</strong></li>
@@ -138,15 +143,16 @@
 					<li><strong>SpinWheelTimePicker</strong></li>
 				</ul>
 			</li>
-<!-- moved to untested temporarily for Preview 3
-			<li><strong>Carousel</strong></li>
--->
-			<li>FixedSplitter
+			<li>ValuePicker
 				<ul>
-					<li><strong>FixedSplitter</strong></li>
-					<li><strong>FixedSplitterPane</strong></li>
+					<li><strong>ValuePicker</strong></li>
+					<li><strong>ValuePickerSlot</strong></li>
+					<li><strong>ValuePickerDatePicker</strong></li>
+					<li><strong>ValuePickerTimePicker</strong></li>
 				</ul>
 			</li>
+			<li><strong>DataPicker</strong></li>
+			<li><strong>TimePicker</strong></li>
 <!-- moved to untested temporarily for Preview 3
 			<li><strong>Overlay</strong></li>
 -->
@@ -175,7 +181,8 @@
 	</li>
 <li>In order to allow easy authoring of multiple screens, 
 	the Dojox Mobile widget uses the '<code>id</code>' attribute to put a referenceable name
-	on widgets. To put a name on this View widget, go to the top of the Properties palette.
+	on widgets. To put a name on this View widget, open up the "Widget" palette (found on the top-right side of the application).
+	and look at the top part of that palette.
 	Type "root_view" as the value for the 
 	'<code>id</code>' attribute and then hit Return to complete the operation.
 	The top of the Properties palette should now show <code>for: View #root_view</code>:
@@ -183,7 +190,7 @@
 	<div class="note">Make sure that you entered the exact string "root_view".
 		The tutorial won't work if the ID is not entered correctly.</div>
 	</li>
-<li>Look at the Scenes palette. Right now the "root_view" View is selected:
+<li>Look at the Scenes palette. Right now the "root_view" View is selected (as you can tell by the visibility symbol):
 	<p><a href="img/Mobile_root_view_visible.png" target="_blank"><img alt="image" src="img/Mobile_root_view_visible.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>		
 	</li>
 <li>Drag/drop a Heading widget into the middle of the View.
@@ -320,12 +327,8 @@ News</pre>
 	</li>
 <li>Use the Scenes palette to make the first View visible. Click on the View with 'id' of <code>root_view</code> so that you will now
 	see the "My Mobile App" heading on the top of the page canvas.
-	<p><a href="img/Mobile_first_view_visible.png" target="_blank"><img alt="image" src="img/Mobile_first_view_visible.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>
 	</li>
 <li>Click the Save icon to save this page.
-	<p class="note">Note that it's important that you have the appropriate View elements selected
-	when you issue a Save command. When you run your HTML page in the browser or on a mobile device,
-	the Dojo Mobile toolkit will show the View elements that were last visible in Maqetta.</p>
 </li>
 </ul>
 
@@ -336,23 +339,17 @@ News</pre>
 </p>
 
 <ul>
-<li>Use the Choose Device icon
-	<img src="img/device.png" title="Choose Device icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
+<li>Use the Choose Device command on the Document Setting menu (found on the right side of the toolbar)
 	to change to other silhouettes (e.g., Android phones, iPad, Blackberry).
 	Notice that the page gets restyled to match the native look-and-feel for different devices.
 	Here is a snapshot of how the root View looks with an Android theme.
 	<p><a href="img/Mobile_root_view_android.png" target="_blank"><img alt="image" src="img/Mobile_root_view_android.png" style="margin: 1em 1em 0pt 0pt;" height="400" /></a></p>		
 	</li>
-<li>Switch between portrait and landscape modes by clicking on the
-	<img src="img/rotate.png" title="Choose Orientation icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
-	icon.
+<li>Switch between portrait and landscape modes by issuing Rotate Device commands
+	(also found on the Document Settings menu on the right side of the toolbar).
 	Note that the user interface stretches to fit both landscape or portrait orientations.
 	</li>
-<li>Using the same two icons,
-	<img src="img/device.png" title="Choose Device icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
-	and
-	<img src="img/rotate.png" title="Choose Orientation icon" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
-	, go back to showing the iPhone silhouette in portrait mode.
+<li>Using the same two commands, go back to showing the iPhone silhouette in portrait mode.
 	</li>
 </ul>
 
@@ -363,7 +360,7 @@ News</pre>
 </p>
 
 <ul>
-<li>In the toolbar, click the <b>Preview in Browser</b> icon <img class="inline" src="img/preview-browser.gif" />. 
+<li>In the toolbar, click the <b>Preview in Browser</b> icon <img class="inline" src="img/preview-browser.png" />. 
 	This will launch a new browser window that contains the mobile application you just created
 	running inside of the same mobile device silhouette as you see in the page editor,
 	with controls at the top for switching devices, controlling zoom level and changing orientation
@@ -382,7 +379,7 @@ News</pre>
 	</li>
 </ul>
 
-<p class="prevnext"><a href="tutorials/Desktop_Theme_Editor.html">Previous</a> / <a href="tutorials/Mobile_Sketching.html">Next</a></p>
+<p class="prevnext"><a href="tutorials/Introducing_the_Page_Editor.html">Previous</a> / <a href="tutorials/App_States_Part_1.html">Next</a></p>
 
 </div> <!-- pagebody -->
 

@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../maqettadocs.css" />
+	<link rel="stylesheet" href="../../dijit/themes/claro/claro.css">
+    <script src="../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+	<script>require([
+		"dojo/parser",
+		"dijit/TooltipDialog",
+		"dijit/form/DropDownButton"
+	 ]);</script>
+	 <style type='text/css'>
+	 	:focus {
+	 		outline:none;
+	 	}
+	 </style>
+</head>
+<body class="claro maqettadocs cheatsheet_iframe_body">
+	<div id='cheatsheetcontent'>
+		<!--  With zoom/pan enabled, had set width:100% -->
+		<img src='img/ApplicationStates.png' style='width:1010px;'></img>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:432px; top:80px;'>
+		    <span>Create menu</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		        <img src='img/Create_menu.png'></img>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:555px; top:80px;'>
+		    <span>Open menu</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		        <img src='img/Open_menu.png'></img>
+		    </div>
+		</div>
+	</div>
+</body>
+</html>

@@ -205,16 +205,23 @@
 	height: 16px;
 }
 
-.selectLayoutIcon {
+.flowLayoutIcon {
 	background-image: url(img/sprite.png); /* FIXME: add logic for undo-disabled.gif? */
-	background-position: 0 -1250px;
+	background-position: -51px -1777px;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
+.absoluteLayoutIcon {
+	background-image: url(img/sprite.png); /* FIXME: add logic for undo-disabled.gif? */
+	background-position: -75px -1777px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
 }
 .stickynoteIcon {
 	background-image: url(img/sprite.png); /* FIXME: add logic for undo-disabled.gif? */
-	background-position: -46px -612px;
+	background-position: -46px -610px;
 	width: 27px;
 	height: 27px;
 }

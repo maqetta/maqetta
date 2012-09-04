@@ -34,8 +34,6 @@
 
 <p>The Maqetta 7 release includes the following updates:</p>
 
-<h2 style='color:red; font-style:italic;'>UNDER CONSTRUCTION</h2>
-
 <ul style="margin-top: 0pt;" type="disc">
 	<li><p><span class='majortopic'>User Interface Makeover</span> - 
 		The Maqetta user interface has had a major makeover with Release 7, with countless UI tweaks. Some highlights:</p>
@@ -43,7 +41,7 @@
 			<li><span class='minortopic'>Graphics redesign</span> - 
 				With Release, 7, nearly all of the major user interface components have new visual styling.
 				There is new visual styling on the topmost banner (and its icons and menus), the file tabs,
-				to toolbar, and the various palettes on the left- and right-side of the application.
+				the toolbar, and the various palettes on the left and right side of the application.
 			</li>
 			<li><span class='minortopic'>Redesigned, collapsable palettes on left and right side of user interface</span> - 
 				Release 7 provides redesigned palettes on the left and right side of the application.
@@ -54,25 +52,21 @@
 				a composition type (e.g., desktop hi-fi page vs desktop lo-fi sketch).
 				With Release 7, the Create menu now includes an easier-to-understand list of
 				common user operations (Mobile Application, Desktop Application, Sketch, etc.), 
-				and users will get to start editing new documents faster.
+				and users can start editing new documents faster.
 			</li>
 			<li><span class='minortopic'>Redesigned and streamlined toolbar</span> - 
 				The toolbar has been redesigned so that common operations can be discovered
 				and used more quickly. Whereas in previous releases, some commands were only
 				available on the page editor's context menu, with Release 7 all page editor
-				commands are available from the toolbar.
+				commands also are available from the toolbar.
 			</li>
 			<li><span class='minortopic'>New welcome page</span> - 
 				Release 7 includes a newly designed welcome page, with buttons at the top
 				for common "New" actions (e.g., New Mobile Application), and buttons at the bottom
 				for getting started information (e.g., tutorials and videos).
 			</li>
-			<li><span class='minortopic'>New login and registration screens</span> - 
-				Release 7 has tossed out Maqetta's old back-end (server) code for workspace management
-				and user management, and replaced it with code from the Eclipse Orion project.
-				(Look below for more information about integrating Orion into Maqetta.)
-				The login and registration screens (and back-end logic) now come from Orion, although
-				Maqetta restyles the these screens (e.g., Maqetta shows a Maqetta banner).
+			<li><span class='minortopic'>New login and registration screens</span>  - Login and registration screens have 
+				similar visual styling to the main Maqetta application.
 			</li>
 		</ul>
 	</li>
@@ -88,182 +82,226 @@
 				when viewing that page directly in the web browser.
 			</li>
 			<li><span class='minortopic'>Page editor speedups</span> - 
-				Release 7 includes several performance improvements, particularly around increased snappiness
+				Release 7 includes several performance improvements, 
+				particularly around opening up new HTML files and increased snappiness
 				when users add new widgets to the page. Under the hood, among the key changes
-				was changing synchronous web requests to asynchronous and using built/optimized versions
+				were changing synchronous web requests to asynchronous and using built/optimized versions
 				of widget JavaScript files.
 			</li>
+			<li><span class='minortopic'>Outline palette speedups</span> - 
+				The underlying code for the Outline palette has been rewritten, 
+				resulting in considerably fewer full redraws of that palette as the document changes.
+			</li>
 		</ul>
 	</li>
-
-	<h3 style='color:red; font-style:italic;'>EVERYTHING UNDER HERE IS JUST A COPY OF PREVIEW6 RELEASE NOTES</h3>
-
-	<li><p><span class='majortopic'>Visual editor enhancements and improvements</span> - 
-		Preview 6 contains many improvements to the visual page editor:</p>
+	<li><p><span class='majortopic'>Eclipse Orion integration</span> - 
+		Mostly under the hood, Release 7 includes major changes to more completely integrate
+		Maqetta with the <a href='http://www.eclipse.org/orion/' target="_blank">Eclipse Orion open source project</a>.
+		Most users won't notice these changes, but nevertheless they represent some of the
+		most significant Release 7 code changes. Some notes on these changes:</p>
 		<ul>
-			<li><span class='minortopic'>Selection chrome has new look (and revised behavior)</span> - 
-				In preview releases, the selection chrome around a widget was a gray hash pattern.
-				With Preview 6, the selection chrome is a two-tone blue rectangle, with circular resize
-				nobs at the corners. With Preview 6, you can resize horizontally by pulling on the left or right edges
-				of the selection chrome, resize vertically by pulling on top or bottom edges, and change both
-				width and height by pulling on the corner resize nobs.
+			<li><span class='minortopic'>"Open Orion Navigator"</span> - 
+				Release 7 adds a new command to the Open menu, "Open Orion Navigator", which
+				opens a new browser window that launches the Eclipse Orion cloud-based source development tools,
+				where you can perform source editing in the cloud on the various files within your Maqetta workspace.
 			</li>
-			<li><span class='minortopic'>Ability to drag a widget by mouse-down on interior</span> - 
-				In preview releases, to move a widget, you had to first select the widget and then mouse-down
-				on the selection chrome that surrounds the widget. (Dragging on interior of a selected widget would do nothing).
-				Now with Preview 6, you can move selected widgets by dragging anywhere within the bounds of the widget
-				(i.e., widget interior or border).
+			<li><span class='minortopic'>Back-end changes to use Orion for user and workspace management</span> - 
+				With Release 7, we have replaced most of the old logic for user management and workspace management
+				with Orion code that provided similar services. These back-end changes improve the robustness
+				and completeness of the Maqetta server, provides additional functionality, and
+				improves long-term maintenance and code sharing between the Maqetta and Eclipse Orion projects. 
 			</li>
-			<li><span class='minortopic'>Elastic band select</span> - 
-				With Preview 6, you can now drag out a selection rectangle to select all widgets
-				that are enclosed by that rectangle. Elastic band select starts with a mouse down
-				within the document area of visual page canvas. (NOTE: If the mouse down operation occurs
-				over a currently selected widget, then the drag operation will move the selected widget
-				rather than initiate elastic band selection. Also, if the mouse down operation occurs
-				over a primitive widget such as a Button, the drag operation will immediately select
-				the primitive widget and initiative a move operation on that widget.)
+			<li><span class='minortopic'>Long-term strategic benefits</span> - 
+				The Eclipse Orion team has implemented (or is pursuring for future releases)
+				several features that will benefit Maqetta users. By using Eclipse Orion code for Maqetta's
+				user management and workspace management, Maqetta users will get many features
+				"for free" as future versions of Maqetta upgrade to future releases of Orion.
 			</li>
-			<li><span class='minortopic'>Alt-key or Option-key to copy a widget with drag operation</span> - 
-				When you drag on the currently selected widget, you move that widget.
-				With Preview 6, if you hold down the Alt key (Windows) or Option key (Mac),
-				then the drag operation will copy the selected widgets, and place the copied widgets at
-				the drop location.
-			</li>
-			<li><span class='minortopic'>Select parent, Select ancestor, Unselect all</span> - 
-				Preview 6 adds three commands to the context menu on the visual page editor that provide some convenient
-				operations related to widget selection:
+		</ul>
+	</li>
+	<li><p><span class='majortopic'>HTML table enhancements</span> - 
+		With Release 7, we have added multiple user interface improvements
+		around using HTML tables. HTML tables can be highly useful not only
+		to display information in a tabular format, but also is one option for
+		achieving tabular layout of user interface components, such as name/address forms
+		which have labels on the left and text fields on the right.
+		HTML table enhancements include:</p>
+		<ul>
+			<li><span class='minortopic'>Table dialog at table creation time (and subsequent editing)</span> - 
+				With Release 7, when a user adds an HTML table to the page, 
+				he is presented with a dialog that allows the user to chooose the following options:
 				<ul>
-					<li>Select parent - switches selection from the current widget to that widget's parent</li>
-					<li>Select ancestor - brings up a small dialog that list the current widget's parent and all other ancestors, and
-						allows the user to change the selection to any of the ancestors.</li>
-					<li>Unselect all - makes it so that no widgets are selected</li>
-				</ul>
-				These commands are only enabled when the current selection consists exclusively of absolutely positioned widgets,
-				and amount to changing the position of the currently selected child widget within its parent's list of children.
-				For example, "Move to front" makes the currently selected widget the last child, which in most cases causes
-				that widget to be drawn on top of its sibling widgets.
-			</li>
-			<li><span class='minortopic'>Move to front, move to back, etc (absolutely positioned widgets)</span> - 
-				Preview 6 adds four commands to the context menu on the visual page editor that allow convenient
-				reordering of widgets, particularly to allow obscured widgets to come to the front visually:
-				<ul>
-					<li>Move to front</li>
-					<li>Move to back</li>
-					<li>Move forward</li>
-					<li>Move backward</li>
-				</ul>
-				These commands are only enabled when the current selection consists exclusively of absolutely positioned widgets,
-				and amount to changing the position of the currently selected child widget within its parent's list of children.
-				For example, "Move to front" makes the currently selected widget the last child, which in most cases causes
-				that widget to be drawn on top of its sibling widgets.
-			</li>
-		</ul>
-	</li>
-	<li><p><span class='majortopic'>GridX support, with creation wizard that allows for column control</span> - 
-		Preview 6 now supports the powerful GridX widget for advanced display of tabular data.
-		Upon dropping a GridX widget or double-clicking on an existing one, a 3-pane wizard appears:
-		<ul>
-			<li>Pane 1 - choose data source -
-				either user-entered dummy data, 
-				data file from user workspace (either JSON or CSV), or 
-				remote data from arbitrary URL (JSONP))</li>
-			<li>Pane 2 - choose columns - user decides which columns to include or exclude
-			<li>Pane 3 - column widths
-		</ul>
-	</li>
-	<li><p><span class='majortopic'>Drawing tool improvements: drag/click-select creation of lines and polylines</span> - 
-		Preview 6 replaces the old line widgets (Line, Arrow, Horizontal Line, Vertical Line) with
-		a different collection: Line, Arrow, Polyline, Polyline Arrow. 
-		<p>To create Lines or Arrows, either:</p>
-		<ul>
-			<li>Drag a Line or Arrow widget from Widget palette onto canvas. The result will be a
-				default widget (horizontal) which you can modify by pulling on nobs.</li>
-			<li>Click on widget in Widgets palette, then click on canvas. Just like previous bullet,
-				the result will be a default widget (horizontal).</li>
-			<li>Click on widget in Widgets palette, then drag out the desired position and size on canvas.</li>
-		</ul>
-		<p>To create Polylines or Polyline Arrows:</p>
-		<ul>
-			<li>Drag a PolyLine or Polyline Arrow widget from Widget palette onto canvas. The result will be a
-				default widget (two segements) which you can modify by pulling on nobs.</li>
-			<li>Click on widget in Widgets palette, then click on canvas. Just like previous bullet,
-				the result will be a default widget (two segments).</li>
-			<li>Click on widget in Widgets palette, then repeatedly click on canvas to define end points.
-				To stop adding points, either click a second time on the last point or press the Esc key.</li>
-		</ul>
-	</li>
-	<li><p><span class='majortopic'>Mobile UI sketching, including clip art widgets for some mobile devices</span> - 
-		In previous releases, it wasn't feasible to use do quick UI sketching using mobile widgets, 
-		but with Preview 6, there have been numerous improvements around mobile UI sketching:
-		<ul>
-			<li><span class='minortopic'>Mobile device silhouetts as clip art widgets</span>
-				Preview 6 includes the follow six new clipart widgets that are pixel-accurate silhouettes
-				for a handful of popular mobile devices. In some scenarios, users want to do quick UI sketching
-				of mobile UIs where the picture of the device is in the background, and other widgets 
-				are placed on top of the device silhouette (using absolute positioning).
-				For all six of these clipart widgets, the default orientation is portrait, but orientation
-				can be changed to landscape by selecting the given widget and changing the 'orientation' property
-				in the Widget-Specific section of the Properties palette.
-				<ul>
-					<li>iPhone</li>
-					<li>iPad</li>
-					<li>Android devices: Android_340x480, Android_480x800, AndroidTablet</li>
-					<li>Blackberry phone</li>
+					<li>Number of rows</li>
+					<li>Number of columns</li>
+					<li>Border thickness (0 means no border)</li>
+					<li>'border-collapse' property value (default is 'collapse')</li>
+					<li>'table-layout' property value (default is 'fixed')</li>
+					<li>Checkbox for whether first row should be a header row (i.e., use TH elements instead of TD elements)</li>
 				</ul>
 			</li>
-			<li><span class='minortopic'>Mobile widget improvements in sketch mode</span>
-				Preview 6 includes countless fixes so that Dojo Mobile widgets can be used
-				in sketch mode. In sketch mode, users can drag/drop widgets, clip art,
-				and shapes (using the Drawing Tools widgets), where Maqetta acts like
-				a simple drawing tool. Sketch mode is good for quick&amp;dirty mockups
-				in very early phases of a UI design.
-			</li>
-			<li><span class='minortopic'>New mobile sketching tutorial</span>
-				The documentation for Preview 6 includes a new tutorial on quick sketching
-				of mobile user interfaces.
+			<li><span class='minortopic'>Column operations</span> - 
+				Users can select a table column either by selecting a table cell and then issuing
+				the "Select column" command (found on the "Table commands" icon on the toolbar and
+				on the context menu). When a column is selected, the user can:
+				<ul>
+					<li>Set the 'width' property or background properties in the Properties palette.
+						Under the hood, in the HTML source code that corresponds to the table,
+						these CSS properties will be attached to the <code>&lt;col&gt;</code> element
+						corresponding to the given column.</li>
+					<li>Users can change column widths by interactively pulling on the blue circular nobs that appear on the left and right
+						side of the selection chrome when a table column is selected.</li>
+				</ul>
 			</li>
 		</ul>
 	</li>
-
-	<li><p><span class='majortopic'>Mobile UI improvements</span> 
+	<li><p><span class='majortopic'>Tree widget enhancements</span> - 
+		With Release 7, we have greatly enhanced the dialog that appears when
+		creating or editing a Tree widget. This dialog allows users to:</p>
 		<ul>
-			<li>Mobile silhouette orientation now persists.</li>
-			<li>moveTo property now lists existing mobile view ids. Also supports hash values.</li>
-			<li>You can now drag and drop widgets into ListItems.</li>
-			<li>IconContainer now has a easier to use editing tool.</li>
-			<li>Leverage  of data-dojo-config attribute for more robust mobile theme switching, as a result cloned a mobile theme will require modification of the dojo-theme-editor.html file of the cloned theme. The html source editor can be used to  
-change the line: <i> &lt;script type="text/javascript" src="/maqetta/app/static/lib/dojo/1.7/dojo/dojo.js" data-dojo-config="parseOnLoad: true, async: true"&gt;&lt;/script&gt; </i>
-to: <i>
-&lt;script type="text/javascript" src="/maqetta/app/static/lib/dojo/1.7/dojo/dojo.js" data-dojo-config="parseOnLoad: true, async: true, 'themeMap':[['.*',null,[]]],'mblThemeFiles':[]"&gt;&lt;/script&gt; </i>
+			<li>Specify custom icons on individual tree nodes. 
+				For container tree nodes, users can specify both a closed and open icon.</li>
+			<li>Actions to take for each of these events:
+				<ul>
+					<li>click</li>
+					<li>double-click</li>
+					<li>open</li>
+					<li>close</li>
+				</ul>
 			</li>
-			
+			<li>Ability to reorder tree nodes via simple drag/drop.</li>
+			<li>Use toolbar buttons to insert new tree nodes, remove tree nodes, move tree nodes up and down in the list, 
+				and control indentation levels on particular tree nodes.</li>
 		</ul>
 	</li>
-	<li><p><span class='majortopic'>Limited PHP file support</span> - 
-		<p>Preview 6 includes limited support for *.php files.
-		If you double-click on a *.php file in the Files palette, the HTML visual page editor opens. 
-		The visual editor ignores any <code>&lt;?php ... ?&gt;</code> constructs in the *.php file (treating them the same as HTML comments).
-		If you click on preview-in-browser for a *.php file, then the file is downloaded to the browser with mime-type <code>text/html</code>,
-		which results in the browser doing whatever it does if cases when a *.html file happens to contain <code>&lt;? ... ?&gt;</code> constructs
-		(usually ignored).</p>
-		<p>This feature can be useful for web application developers where they need to include small amounts of PHP in their
-		files, but note that Maqetta has no ability to actually run a PHP engine against the PHP constructs; all that Maqetta does is
-		do its best to ignore everything within a <code>&lt;?php ... ?&gt;</code> block. </p>
-		<p>Developers who attempt to use this feature need to be careful that 
-		their *.php file (assuming <code>&lt;?php ... ?&gt;</code> constructs are ignored)
-		can be interpreted by the Maqetta page parser
-		as a well-formed HTML file.</p>
+	<li><p><span class='majortopic'>Upgrade to Dojo 1.8, more mobile widgets</span> - 
+		Release 7 supports the latest release of Dojo (version 1.8) and includes
+		support for a number of new Dojo Mobile widgets. New mobile widgets include:</p>
+		<ul>
+			<li>Slider</li>
+			<li>SearchBox</li>
+			<li>ContentPane</li>
+			<li>Container</li>
+			<li>Pane</li>
+			<li>ScrollablePane</li>
+			<li>Accordion</li>
+			<li>GridLayout</li>
+			<li>IconMenu</li>
+			<li>IconMenuItem</li>
+			<li>ProgressIndicator</li>
+			<li>DataCarousel</li>
+			<li>DataCarousel</li>
+			<li>ValuePicker</li>
+			<li>ValuePickerSlot</li>
+			<li>ValuePickerDatePicker</li>
+			<li>ValuePickerTimePicker</li>
+			<li>DatePicker</li>
+			<li>TimePicker</li>
+		</ul>
 	</li>
-	<li><p><span class='majortopic'>CSV data file support</span> - Preview 6 now supports using CSV files for widgets that consume
-	data (such as GridX, DataGrid or EdgeToEdgeDataList) and a sample csv file (sample.csv) is included.  Previously only JSON files could be consumed.
+	<li><p><span class='majortopic'>Save As Widget</span> - 
+		With Release 7, we have added a "Save As Widget" command on the dropdown menu next to the Save button
+		on the toolbar. This command will create a re-usable widget out of the currently selected widget,
+		and add a new widget into a "User Widgets" section of the widgets palette. This feature allows
+		a Maqetta user to create custom re-usable components that he needs to use in multiple places
+		within his user interfaces.</p>
 	</li>
-	<li><p><span class='majortopic'>Many bug fixes</span> - 
-		Preview 6 includes many miscellaneous bug fixes. Some of those fixes
-		can be seen by going to 
-		<a href="https://github.com/maqetta/maqetta/issues?labels=&milestone=15&page=1&state=closed" target="_blank">
-		this URL which lists bugs closed against the Preview 6 release</a>.
+	<li><p><span class='majortopic'>Enhancements and improvements to applications states feature</span> - 
+		Release 7 includes many fixes and improvements to the applications states feature:</p>
+		<ul>
+			<li><span class='minortopic'>Application states can be used with mobile UIs</span> - 
+				In previous releases, application states were designed to only work
+				with desktop user interfaces. In fact, the Maqetta user interface tried to hide the
+				application states feature when device silhouettes were visible. 
+				Now with Release 7,
+				it is possible to use applications states with mobile UIs.
+			</li>
+			<li><span class='minortopic'>Ability to change the name of an application state</span> - 
+				The Scenes palette includes a 3rd "modify state" icon that allows 
+				you to change the name of an application state.
+			</li>
+			<li><span class='minortopic'>Ability to choose an initial state</span> - 
+				In previous releases, when running
+				your application (e.g., preview in browser), the page always began in the "Normal" state.
+				With Release 7, the "modify state" icon (see previous bullet) brings up a dialog
+				that includes a checkbox that allows the Maqetta user to say that a particular
+				state should be the initial state at runtime for his application.
+			</li>
+		</ul>
+	</li>
+	<li><p><span class='majortopic'>Shortcut keys for common operations</span> - 
+		We have implemented some short-cut keys for common operations. Here is a partial list 
+				(refer to the documentation for an updated and complete list):</p>
+		<ul>
+			<li>Ctrl-z: undo (Cmd-z on Mac)</li>
+			<li>Ctrl-Shift-z: redo (Cmd-Shift-z on Mac)</li>
+			<li>Ctrl-x: cut (Cmd-x on Mac)</li>
+			<li>Ctrl-c: copy (Cmd-c on Mac)</li>
+			<li>Ctrl-v: paste (Cmd-v on Mac)</li>
+			<li>DEL or BS: delete</li>
+			<li>Ctrl-s: save (Cmd-s on Mac)</li>
+			<li>Ctrl-Shift-s: saveAs (Cmd-Shift-s on Mac)</li>
+			<li>Ctrl-o: open file (Cmd-o on Mac)</li>
+			<li>Ctrl-0: preview in browser (Cmd-0 on Mac)</li>
+			<li>Ctrl-1: design view (Cmd-1 on Mac)</li>
+			<li>Ctrl-2: source view (Cmd-3 on Mac)</li>
+			<li>Ctrl-3: split vertically view (Cmd-3 on Mac)</li>
+			<li>Ctrl-4: split horizontally view (Cmd-4 on Mac)</li>
+			<li>F1: open new window showing Maqetta documentation</li>
+		</ul>
+	</li>
+	<li><p><span class='majortopic'>Revamped online documentation</span> - 
+		The documentation set has been reorganized and streamlined. 
+		In particular, Release 7 includes a set of "cheat sheets"
+		(interactive quick reference guides) focused on various aspects of the Maqetta user interface.</p>
+	</li>
+	<li><p><span class='majortopic'>Other</span> - </p>
+		<ul>
+			<li><span class='minortopic'>Ability to control which mobile views appear at page startup</span> - 
+				For Dojo mobile view widgets, the 'selected' property under the "Widget" section can be 
+				checked or unchecked to control which view widget is visible initially when the 
+				your mobile application first comes up.
+			</li>
+			<li><span class='minortopic'>No longer using port 55556</span> - 
+				We integrated NGINX into the Maqetta server, which allowed us to run the Maqetta application
+				on port 80 at http://app.maqetta.org/maqetta (vs http://maqetta.org:55556/maqetta). 
+			</li>
+			<li><span class='minortopic'>https support</span> - 
+				Release 7 runs over https instead of http, which represents a very important security improvement.
+			</li>
+			<li><span class='minortopic'>Removal of experimental (untested) widgets</span> - 
+				Previous releases included experimental, partial support for various widgets
+				under the widget categories "Untested Dojo & HTML", jQuery and YUI. With Release 7,
+				the product only includes supported widgets and no longer shows any of the experimental
+				or proof-of-concept widgets. We have plans to include full support for many of the 
+				experimental widgets in future releases. 
+			</li>
+			<li><span class='minortopic'>Allows dojox.mvc in HTML source code</span> - 
+				dojox.mvc is a package of technology in Dojo 1.8 that allows bi-directional
+				data binding between a client-side JSON store and widgets on the page.
+				While Release 7 does not offer visual authoring support for dojox.mvc
+				(Dojo 1.8 data binding), our testing indicates that users can enter dojox.mvc
+				markup into their Maqetta pages while using the Maqetta page editor
+				to build their user interface.
+			</li>
+			<li><span class='minortopic'>Various widget selection bugs fixed</span> - 
+				In previous releases, when the currently selected widget was at the edge of the page,
+				the widget selection box around the widget would be pulled into the user page, 
+				with the result that the widget selection box was not accurate. With Release 7,
+				selection logic has been rewritten and this problem no longer exists.
+				Also, there were several fixes around selection boxes being in the wrong place
+				when the page or container widgets were scrolled.
+			</li>
+			<li><span class='minortopic'>Many bug fixes</span> - 
+				Release 7 includes 750+ bug fixes. Some of those fixes
+				can be seen by going to 
+				<a href="https://github.com/maqetta/maqetta/issues?milestone=16&page=1&state=closed" target="_blank">
+				this URL which lists bugs closed against Release 7</a>.
+			</li>
+		</ul>
 	</li>
 </ul>
+
+<h3 style='color:red; font-style:italic;'>EVERYTHING UNDER HERE IS JUST A COPY OF PREVIEW6 RELEASE NOTES</h3>
 
 <h2>Migration of User Workspaces</h2>
 

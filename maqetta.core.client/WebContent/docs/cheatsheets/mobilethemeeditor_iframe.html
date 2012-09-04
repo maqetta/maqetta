@@ -1,0 +1,176 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../maqettadocs.css" />
+	<link rel="stylesheet" href="../../dijit/themes/claro/claro.css">
+    <script src="../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+	<script>require([
+		"dojo/parser",
+		"dijit/TooltipDialog",
+		"dijit/form/DropDownButton"
+	 ]);</script>
+	 <style type='text/css'>
+	 	:focus {
+	 		outline:none;
+	 	}
+	 </style>
+</head>
+<body class="claro maqettadocs cheatsheet_iframe_body">
+	<div id='cheatsheetcontent'>
+		<!--  With zoom/pan enabled, had set width:100% -->
+		<img src='img/MobileThemeEditor.png' style='width:1010px;'></img>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:432px; top:80px;'>
+		    <span>Create menu</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:450px'>
+		    		To create a new mobile theme,
+		    		press on the "Create" menu and choose "Theme...".
+		    		This will bring up a dialog where you pick an existing theme to clone,
+		    		and provide a name for the cloned theme.<br/><br/>
+		    		Maqetta's base themes (the themes that are available for cloning) are the same
+		    		mobile themes that ship standard with Dojo 1.8:<br/>
+		    		<ul class='cheatsheet_desc_list'>
+    					<li><strong>android</strong> - A CSS theme that styles Dojo Mobile widgets
+    						to look like and behave like Android native controls.</li>
+    					<li><strong>blackberry</strong> - A CSS theme that styles Dojo Mobile widgets
+    						to look like and behave like Blackberry native controls.</li>
+    					<li><strong>iphone</strong> - A CSS theme that styles Dojo Mobile widgets
+    						to look like and behave like iPhone native controls.</li>
+    					<li><strong>ipad</strong> - A CSS theme that styles Dojo Mobile widgets
+    						to look like and behave like iPad native controls.<br/><br/></li>
+    					<li><strong>custom</strong> - A generic CSS theme designed to allow straightforward
+    						transformation into a company-specific, cross-platform mobile CSS theme.</li>	
+     				</ul>
+		    		<br/>
+		    		After clicking on the Create button on the Create Theme dialog,
+		    		Maqetta will clone the theme you specified, and open up the Maqetta mobile
+		    		theme editor on your new CSS theme. (The image below shows how the mobile theme
+		    		editor will look after cloning the <strong>custom</strong> theme.)
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:555px; top:80px;'>
+		    <span>Open menu</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:275px'>
+		    		To edit an existing mobile theme,
+		    		press on the "Open" menu and choose "Theme Editor...".
+		    		This will bring up a dialog where you pick an existing theme to edit.<br/><br/>
+		    		After clicking on the Open button on the Open Theme dialog,
+		    		Maqetta will open up the Maqetta 
+		    		theme editor on your CSS theme.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:31px; top:122px;'>
+		    <span>Save command</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		You can click on <strong>Save</strong> to save the currently open theme.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:78px; top:122px;'>
+		    <span>Undo/redo commands</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:200px'>
+		    		Undo and redo commands
+		    	</div>
+		    </div>
+		</div>
+
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:705px; top:175px;'>
+		    <span>Properties palettes</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:450px'>
+		    		The various Properties palettes (Layout, Padding, Margins, Background, etc) are where you can change
+		    		styling for particular widget types. The various sections are:
+		    		<br/><br/>
+    				<ul class='cheatsheet_desc_list'>
+    					<li><strong>Layout</strong> - Various CSS properties in the general area of layout.
+    						Includes CSS properties regarding size (e.g., 'width' and 'height') and 
+    						location (e.g., 'left' and 'top'). Also includes CSS properties
+    						such as 'position', 'display', 'float', 'overflow' and 'opacity'.</li>
+    					<li><strong>Padding</strong> - CSS padding properties, including the 'padding' shortcut
+    						and the specific properties 'padding-top', 'padding-right', 'padding-bottom' and 'padding-left'.</li>
+    					<li><strong>Margin</strong> - CSS margin properties, including the 'margin' shortcut
+    						and the specific properties 'margin-top', 'margin-right', 'margin-bottom' and 'margin-left'.</li>
+    					<li><strong>Background</strong> - CSS background properties. The "..." buttons can be used
+    						to bring up the Background dialog, which allows picking background image and defining
+    						gradients.</li>
+    					<li><strong>Border</strong> - CSS border properties.</li>
+    					<li><strong>Fonts/Text</strong> - CSS properties having to do with text styling.</li>
+    					<li><strong>SVG</strong> - CSS properties that only apply to SVG content.
+    						These properties typically are used only for widgets from the Drawing Tools section
+    						of the <strong>Palette</strong>.</li>
+    				</ul>
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:705px; top:600px;'>
+		    <span>States palette</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		With the theme editor, you can apply different CSS style rules for different
+		    		interactive states (Normal vs Disabled vs Selected etc).
+		    		The <strong>States</strong> palette allows you to change the current interactive states.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:180px; top:176px;'>
+		    <span>Global styling</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		The top sections of the mobile theme editor allow you to adjust styling
+		    		on a global basis (i.e., styling changes that apply to multiple widgets).
+		    		There are three global styling sections:
+		    		<br/><br/>
+    				<ul class='cheatsheet_desc_list'>
+    					<li>Page background and fonts</li>
+    					<li>Heading background</li>
+    					<li>Button background</li>
+    				</ul>
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:180px; top:436px;'>
+		    <span>Widget-specific styling</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+    				The bottom part of the mobile theme editor allows widget-specific changes
+    				to CSS themes. The mobile theme editor organizes widgets using a TabContainer
+    				with the following three panes:
+		    		<br/><br/>
+    				<ul class='cheatsheet_desc_list'>
+    					<li>Headings and TabBars</li>
+    					<li>Rects &amp; Lists</li>
+    					<li>Controls</li>
+    				</ul>
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:210px; top:436px;'>
+		    <span>Sub-widget styling</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:600px'>
+    				Some widgets offer CSS styling control on different parts ("sub-widgets") of
+    				the given widget. The image below shows the sub-widget selection
+    				control for the ListItem widget. (The sub-widget selection control is on the right side of the image.)
+    				<br/><br/>
+    				<img src='img/ListItemSubwidgets.png'>
+		    	</div>
+		    </div>
+		</div>
+
+	</div>
+</body>
+</html>

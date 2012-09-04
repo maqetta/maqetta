@@ -497,10 +497,9 @@ return {
                 {
                     id: "stickynote",
                     iconClass: 'stickynoteIcon',
-                    className: 'davinciFloatRight',
                     action: "davinci/actions/StickyNoteAction",
                     label: "Add note",
-                    toolbarPath: "undoredo"
+                    toolbarPath: "stickynote"
                 },
                 {
                     id: "layout",
@@ -512,12 +511,12 @@ return {
                     menu:[
                         {
                             label: "Flow",
-                            iconClass: "selectLayoutIcon",
+                            iconClass: "flowLayoutIcon",
                             method: "selectLayoutFlow"
                         },
                         {
                             label: "Absolute",
-                            iconClass: "selectLayoutIcon",
+                            iconClass: "absoluteLayoutIcon",
                             method: "selectLayoutAbsolute"
                         }
                    ]

@@ -1,0 +1,193 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../maqettadocs.css" />
+	<link rel="stylesheet" href="../../dijit/themes/claro/claro.css">
+    <script src="../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+	<script>require([
+		"dojo/parser",
+		"dijit/TooltipDialog",
+		"dijit/form/DropDownButton"
+	 ]);</script>
+	 <style type='text/css'>
+	 	:focus {
+	 		outline:none;
+	 	}
+	 </style>
+</head>
+<body class="claro maqettadocs cheatsheet_iframe_body">
+	<div id='cheatsheetcontent'>
+		<!--  With zoom/pan enabled, had set width:100% -->
+		<img src='img/SourceEditing.png' style='width:1010px;'></img>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:560px; top:80px;'>
+		    <span>Open menu</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<table class='cheatsheet_table'>
+		    		<colgroup>
+		    			<col style='width:1px;'/>
+		    			<col style='width:250px;'/>
+		    		</colgroup>
+		    		<tr>
+		    			<td><img src='img/Open_menu.png'></img></td>
+		    			<td class='cheatsheet_table_desc_td cheatsheet_table_desc_td_right'>
+		    				Open menu commands:
+		    				<ul class='cheatsheet_desc_list'>
+		    					<li><strong>File</strong> - Brings up file open dialog, typically to open HTML files in visual page editor, or CSS or JavaScript files in source editor</li>
+		    					<li><strong>Theme Editor</strong> - Opens ups one of your custom themes in the Maqetta theme editor</li>
+		    					<li><strong>Review</strong> - Opens up one of the files that were including in a review/commenting session, the file opens in review editing mode</li>
+		    					<li><strong>Project</strong> - Brings up a dialog that allows you to switch to a different project (if you have more than one project)</li>
+		    					<li><strong>Orion Navigator</strong> - Opens up Eclipse Orion in a new browser tab or window</li>
+		    				</ul>
+		    				<br/><br/>
+		    				The <strong>Orion Navigator</strong> command brings up the Eclipse Orion
+		    				technology in a new browser tab, where you can use the Eclipse Orion source development tools on the files in your Maqetta workspace.
+		    				Orion is a powerful cloud-based IDE.
+		    			</td>
+		    		</tr>
+		    	</table>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:75px; top:85px;'>
+		    <span>File tabs</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		Listing of all currently open files.<br/><br/>
+		    		Asterisk indicates that the file is "dirty" (i.e., changed since most recent save operation).<br/></br>
+		    		When you open CSS or JavaScript files, Maqetta opens a source editor that takes up the full center region of the application.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:800px; top:122px;'>
+		    <span>View controls</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:400px'>
+		    		These controls allow you to switch between the four viewing modes:
+    				<ul class='cheatsheet_desc_list'>
+    					<li><strong>Design</strong> - (The default) Only show the visual editor</li>
+    					<li><strong>Source</strong> - Only show the source editor</li>
+    					<li><strong>Split vertical</strong> - Show design and source view simultaneously,
+    						with design on the left and source on the right.</li>
+    					<li><strong>Split horizontal</strong> - Show design and source view simultaneously,
+    						with design on the top and source on the bottom.</li>
+    				</ul>
+    				<br/>
+			    	The button for the currently active mode will show a "pressed" look.
+			    	<br/><br/>
+			    	You can switch to <strong>Design</strong> or <strong>Source</strong> by clicking on the
+			    	corresponding button. To switch to one of the split modes, use the drop-down menu.
+			    	Note that if you switch to a split mode, the second button's text will change 
+			    	to reflect the most recent source viewing mode (i.e., Source vs Split-H vs Split-V).
+			    	<br/><br/>
+			    	In split view, changes in the design page are immediately reflected in the source pane, and vice versa.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:60px; top:600px;'>
+		    <span>Files palette</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<table class='cheatsheet_table'>
+		    		<colgroup>
+		    			<col style='width:250px;'/>
+		    			<col style='width:1px;'/>
+		    		</colgroup>
+		    		<tr>
+		    			<td class='cheatsheet_table_desc_td cheatsheet_table_desc_td_left'>
+		    				The <strong>Files</strong> palette shows your file system in the cloud (see image at right).<br/><br/>
+		    				Take special notices of two files that are automatically included in user workspaces,
+		    				<strong>app.css</strong> and <strong>app.js</strong>. Notes on these two files:<br/>
+			   				<ul class='cheatsheet_desc_list'>
+		    					<li><strong>app.css</strong> - This file provides a convenient place
+			    					for you to store your shared CSS style rules that are used by 
+			    					multiple widgets and/or multiple HTML pages.
+			    					Maqetta's CSS properties palettes (Layout, Padding, etc.)
+			    					includes special authoring features
+			    					to allow easy creation of custom style rules in <strong>app.css</strong> 
+			    					that are available when attaching
+			    					a custom CSS class to a given widget.
+			    					(See popup next to properties palettes.)</li>
+		    					<li><strong>app.js</strong> - This file provides a convenient place
+		    						for custom JavaScript logic.</li>
+		    				</ul>
+		    			</td>
+		    			<td><img src='img/FilesPalette.png'></img></td>
+		    		</tr>
+		    	</table>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:300px; top:170px;'>
+		    <span>Visual design canvas</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		In split view, changes made to the design pane are immediately
+		    		reflect in the source pane, and vice versa.
+		    		<br/><br/>
+		    		Selecting a widget in the design pane will usually highlight the corresponding
+		    		source code in the source pane, and vice versa.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:300px; top:470px;'>
+		    <span>Source editing pane</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    	 	In the source pane, you can view and hand-edit your HTML source code.<br/><br/>
+		    	 	<strong>Warning:</strong> Be careful with your source editing changes.
+		    	 	Maqetta can only successfully parse HTML files that are structured in the same
+		    	 	manner as the HTML files that Maqetta creates.
+		    	</div>
+		    </div>
+		</div>
+
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:935px; top:200px;'>
+		    <span>Properties palettes</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<table class='cheatsheet_table'>
+		    		<colgroup>
+		    			<col style='width:1px;'/>
+		    			<col style='width:400px;'/>
+		    		</colgroup>
+		    		<tr>
+		    			<td><img src='img/Layout_Width.png'></img><br/><br/><br/><br/>
+		    				<img src='img/Layout_Width_Cascade.png'></img></td>
+		    			<td class='cheatsheet_table_desc_td cheatsheet_table_desc_td_left'>
+				    		The various Properties palettes are where you can change
+				    		widget-specific property values.<br/><br/>
+				    		By default, changes to CSS properties are attached to element.style
+				    		(i.e., on the 'style' attribute) on a widget's root element.<br/><br/>
+				    		To split off CSS property definitions into external CSS stylesheets,
+				    		here are two options:<br/><br/>
+			   				<ul class='cheatsheet_desc_list'>
+		    					<li><strong>Use the advanced CSS features on the properties palettes</strong> - 
+		    						If you place a custom CSS class on a widget (by selecting a widget and then
+		    						entering a value in the 'class' field at the top of any of the properties palettes),
+		    						and then click on the <code>&gt;</code> icon to the right of any property,
+		    						Maqetta shows an advanced CSS styling feature which allows you to
+		    						either create a new CSS style rule in app.css, modify an existing fule in app.css,
+		    						or modify the style rule in one of your custom theme CSS files.<br/><br/>
+		    						You can see the <code>&gt;</code> icons on the first image on the left.<br/><br/>
+		    						The second image shows the advanced CSS styling features.<br/><br/></li>
+		    					<li><strong>Hand-edit app.css</strong> - You can manually create CSS style rules
+		    						in app.css by opening up that file in the Maqetta source editor.
+		    						For this feature, however, you'll need to have at least some 
+		    						basic knowledge of CSS.
+		    					</li>	
+		    					<li><strong>Custom CSS files</strong> - You can use Maqetta to create
+		    						a custom CSS file, and then hand-edit your HTML file to include
+		    						that CSS file within your HTML file.</li>
+		    				</ul>
+		    			</td>
+		    		</tr>
+		    	</table>
+		    </div>
+		</div>
+
+	</div>
+</body>
+</html>

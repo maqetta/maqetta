@@ -74,7 +74,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 					var context = visualEditor.getContext();
 					context.clearCachedWidgetBounds();
 					context.updateFocusAll(); 
-					visualEditor._registerScrollHandler();
+					visualEditor._registerScrollHandlers();
 				}, 100); 
 			}
 		}.bind(this));
@@ -243,9 +243,13 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		this._focusPopup = null;
 		this.context.destroy();
 	    this._handles.forEach(dojo.disconnect);
-	    if(this._scrollHandler){
-	    	dojo.disconnect(this._scrollHandler);
-	    	this._scrollHandler = null;
+	    if(this._iframeScrollHandler){
+	    	dojo.disconnect(this._iframeScrollHandler);
+	    	this._iframeScrollHandler = null;
+	    }
+	    if(this._designCPScrollHandler){
+	    	dojo.disconnect(this._designCPScrollHandler);
+	    	this._designCPScrollHandler = null;
 	    }
 	    for(var i=0; i<this._subscriptions.length; i++){
 	    	dojo.unsubscribe(this._subscriptions[i]);
@@ -509,7 +513,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 	
 	_contextLoaded: function(context){
 		if(context == this.getContext()){
-			this._registerScrollHandler();
+			this._registerScrollHandlers();
 		}
 	},
 	
@@ -522,7 +526,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 			}
 		}
 		if(event.editor == this._pageEditor){
-			this._registerScrollHandler();
+			this._registerScrollHandlers();
 			if(focusContainer && this._focusPopup){
 				this._focusPopup.bindDomNode(focusContainer);
 			}
@@ -565,24 +569,38 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 			bodyElem.style.height = "100%";
 		}
 	},
+	
+	_scrollHandler: function(e){
+	var iframe = dojo.query('.designCP iframe', this._pageEditor.domNode)[0];
+	if(iframe && iframe.contentDocument && iframe.contentDocument.body){
+		var bodyElem = iframe.contentDocument.body;
+			this._resizeBody(bodyElem, {
+				w: dojo.style(this.contentPane.domNode, 'width'),
+				h: dojo.style(this.contentPane.domNode, 'height')
+			});
+			// (See setTimeout comment up in the constructor)
+			setTimeout(function() {
+				var context = this.getContext();
+				context.clearCachedWidgetBounds();
+				context.updateFocusAll(); 
+			}.bind(this), 100); 
+		}
+	},
 
-	_registerScrollHandler: function(){
-		if(!this._scrollHandler){
+	_registerScrollHandlers: function(){
+		// Note that scrolling happens on different nodes depending
+		// on whether there is a mobile silhouette or not
+		if(!this._iframeScrollHandler){
 			var iframe = dojo.query('.designCP iframe', this._pageEditor.domNode)[0];
 			if(iframe && iframe.contentDocument && iframe.contentDocument.body){
 				var bodyElem = iframe.contentDocument.body;
-				this._scrollHandler = dojo.connect(bodyElem.ownerDocument, 'onscroll', this, function(e){
-					this._resizeBody(bodyElem, {
-						w: dojo.style(this.contentPane.domNode, 'width'),
-						h: dojo.style(this.contentPane.domNode, 'height')
-					});
-					// (See setTimeout comment up in the constructor)
-					setTimeout(function() {
-						var context = this.getContext();
-						context.clearCachedWidgetBounds();
-						context.updateFocusAll(); 
-					}.bind(this), 100); 
-				});
+				this._iframeScrollHandler = dojo.connect(bodyElem.ownerDocument, 'onscroll', this, this._scrollHandler);
+			}
+		}
+		if(!this._designCPScrollHandler){
+			var designCP = dojo.query('.designCP', this._pageEditor.domNode)[0];
+			if(designCP){
+				this._designCPScrollHandler = dojo.connect(designCP, 'onscroll', this, this._scrollHandler);
 			}
 		}
 	}

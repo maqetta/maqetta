@@ -1,0 +1,169 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../maqettadocs.css" />
+	<link rel="stylesheet" href="../../dijit/themes/claro/claro.css">
+    <script src="../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+	<script>require([
+		"dojo/parser",
+		"dijit/TooltipDialog",
+		"dijit/form/DropDownButton"
+	 ]);</script>
+	 <style type='text/css'>
+	 	:focus {
+	 		outline:none;
+	 	}
+	 </style>
+</head>
+<body class="claro maqettadocs cheatsheet_iframe_body">
+	<div id='cheatsheetcontent'>
+		<!--  With zoom/pan enabled, had set width:100% -->
+		<img src='img/DesktopThemeEditor.png' style='width:1010px;'></img>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:432px; top:80px;'>
+		    <span>Create menu</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:450px'>
+		    		To create a new desktop theme,
+		    		press on the "Create" menu and choose "Theme...".
+		    		This will bring up a dialog where you pick an existing theme to clone,
+		    		and provide a name for the cloned theme.<br/><br/>
+		    		Maqetta offers two desktop base themes (the themes that are available for cloning):<br/>
+		    		<ul class='cheatsheet_desc_list'>
+    					<li><strong>claro</strong> - A visual rich CSS theme for Dojo's Dijit widget set.</li>
+    					<li><strong>sketch</strong> - A CSS theme that provides pseudo hand-drawn styling for various Dijit widgets.</li>
+     				</ul>
+		    		<br/>
+		    		After clicking on the Create button on the Create Theme dialog,
+		    		Maqetta will clone the theme you specified, and open up the Maqetta desktop
+		    		theme editor on your new CSS theme. (The image below shows how the desktop theme
+		    		editor will look after cloning the <strong>claro</strong> theme.)
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:555px; top:80px;'>
+		    <span>Open menu</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:275px'>
+		    		To edit an existing desktop theme,
+		    		press on the "Open" menu and choose "Theme Editor...".
+		    		This will bring up a dialog where you pick an existing theme to edit.<br/><br/>
+		    		After clicking on the Open button on the Open Theme dialog,
+		    		Maqetta will open up the Maqetta 
+		    		theme editor on your CSS theme.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:31px; top:122px;'>
+		    <span>Save command</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		You can click on <strong>Save</strong> to save the currently open theme.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:78px; top:122px;'>
+		    <span>Undo/redo commands</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:200px'>
+		    		Undo and redo commands
+		    	</div>
+		    </div>
+		</div>
+
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:705px; top:175px;'>
+		    <span>Properties palettes</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:450px'>
+		    		The various Properties palettes (Layout, Padding, Margins, Background, etc) are where you can change
+		    		styling for particular widget types. The various sections are:
+		    		<br/><br/>
+    				<ul class='cheatsheet_desc_list'>
+    					<li><strong>Layout</strong> - Various CSS properties in the general area of layout.
+    						Includes CSS properties regarding size (e.g., 'width' and 'height') and 
+    						location (e.g., 'left' and 'top'). Also includes CSS properties
+    						such as 'position', 'display', 'float', 'overflow' and 'opacity'.</li>
+    					<li><strong>Padding</strong> - CSS padding properties, including the 'padding' shortcut
+    						and the specific properties 'padding-top', 'padding-right', 'padding-bottom' and 'padding-left'.</li>
+    					<li><strong>Margin</strong> - CSS margin properties, including the 'margin' shortcut
+    						and the specific properties 'margin-top', 'margin-right', 'margin-bottom' and 'margin-left'.</li>
+    					<li><strong>Background</strong> - CSS background properties. The "..." buttons can be used
+    						to bring up the Background dialog, which allows picking background image and defining
+    						gradients.</li>
+    					<li><strong>Border</strong> - CSS border properties.</li>
+    					<li><strong>Fonts/Text</strong> - CSS properties having to do with text styling.</li>
+    					<li><strong>SVG</strong> - CSS properties that only apply to SVG content.
+    						These properties typically are used only for widgets from the Drawing Tools section
+    						of the <strong>Palette</strong>.</li>
+    				</ul>
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:705px; top:600px;'>
+		    <span>States palette</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		With the theme editor, you can apply different CSS style rules for different
+		    		interactive states (Normal vs Disabled vs Selected etc).
+		    		The <strong>States</strong> palette allows you to change the current interactive states.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:180px; top:176px;'>
+		    <span>Global styling</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		The top sections of the desktop theme editor allow you to adjust styling
+		    		on a global basis (i.e., styling changes that apply to multiple widgets).
+		    		There are two global styling sections:
+		    		<br/><br/>
+    				<ul class='cheatsheet_desc_list'>
+    					<li>Generic text</li>
+    					<li>Global background and border</li>
+     				</ul>
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:180px; top:262px;'>
+		    <span>Primitive widget styling</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+    				This part of the desktop theme editor allows widget-specific changes
+    				to CSS themes for various primitive widgets.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:180px; top:446px;'>
+		    <span>Container widget styling</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+   					This part of the desktop theme editor allows widget-specific changes
+    				to CSS themes for various container widgets.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:410px; top:446px;'>
+		    <span>Sub-widget styling</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:500px'>
+    				Some widgets offer CSS styling control on different parts ("sub-widgets") of
+    				the given widget. The image below shows the sub-widget selection
+    				control for the Dialog widget. (The sub-widget selection control is on the right side of the image.)
+    				<br/><br/>
+    				<img src='img/DialogSubwidgets.png'>
+		    	</div>
+		    </div>
+		</div>
+
+	</div>
+</body>
+</html>

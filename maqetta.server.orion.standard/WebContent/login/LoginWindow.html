@@ -45,7 +45,7 @@ require(["LoginWindow.js"]);
 <title>Login Page</title>
 <link rel="shortcut icon" href="../maqetta/app/davinci/img/maqetta.png" />
 </head>
-<body style="margin: 0; padding: 0; min-height:400px;">
+<body style="margin: 0; padding: 0; min-height:400px;" id="orionBody">
 	<div id="davinci_top_bar">
 		<div id="davinci_top_bar_main">
 			<span class="maq_banner_name_box">
@@ -62,21 +62,24 @@ require(["LoginWindow.js"]);
 					<div id="errorMessage">&nbsp;</div>
 			</div>
 			<div class="orion-login" id="orionLogin">
-				<div class="orion-login-header">Login</div>
-				<form>
-					<div class="orion-input-holder">
-						<input type="text" class="orion-text-input" name="login" id="login" placeholder="user@domain" title="Email" autocomplete="on" autofocus="true" spellcheck="false">
-					</div>
-					<div class="orion-input-holder">
-						<input name="password" type="password" id="password" class="orion-text-input" placeholder="password" title="Password">
-					</div>
-					<div class="orion-login-button-holder">
-						<input type="button" name="password" id="loginButton" class="orion-login-button" value="Sign in" tabindex="0">
-					</div>
-					<div class="orion-login-forgot-holder">
-						<a id="resetUserLink" class="orion-forgot-password">Forgot password?</a>
-					</div>
-				</form>
+				<div id='loginLogo'></div>
+				<div id='loginContainer'>
+					<div class="orion-login-header">Login</div>
+					<form>
+						<div class="orion-input-holder">
+							<input type="text" class="orion-text-input" name="login" id="login" placeholder="email" title="Email" autocomplete="on" autofocus="true" spellcheck="false">
+						</div>
+						<div class="orion-input-holder">
+							<input name="password" type="password" id="password" class="orion-text-input" placeholder="password" title="Password">
+						</div>
+						<div class="orion-login-button-holder">
+							<input type="button" name="password" id="loginButton" class="orion-login-button" value="Log In" tabindex="0">
+						</div>
+						<div class="orion-login-forgot-holder">
+							<a id="resetUserLink" class="orion-forgot-password">Forgot your password?</a>
+						</div>
+					</form>
+				</div>
 			</div>
 
 			<div class="orion-register" id="orionRegister">
@@ -89,50 +92,53 @@ require(["LoginWindow.js"]);
 			</div>
 
 			<div class="orion-signup" id="newUserHeaderShown" style="visibility: hidden;">
-				<div class="orion-login-header">Create an account</div>
-				<form>
-					<div class="orion-register-input-holder">
-						<input type="text" class="orion-text-input" placeholder="user@domain" title="Email" autocomplete="on" autofocus="autofocus" id="create_login" spellcheck="false">
-					</div>
-					<div class="orion-register-input-holder">
-						<input type="password" class="orion-text-input" placeholder="password" title="password" autocomplete="on" id="create_password" aria-required="true">
-					</div>
-					<div class="orion-register-input-holder">
-						<input type="password" class="orion-text-input" placeholder="retype password" title="retype password" autocomplete="on" name="passwordRetype" id="create_passwordRetype" aria-required="true">
-					</div>
-					<div class="orion-login-button-holder">
-						<input id="createButton" type="button" class="orion-login-button" value="Sign up" tabindex="0">
-					</div>
-					<div style="padding-right: 5px;"></div>
-					<div class="orion-login-button-holder">
-						<input id="hideRegisterButton" type="button" class="orion-cancel-button" value="Cancel" tabindex="0">
-					</div>
-
-				</form>
+				<div id='signupLogo'></div>
+				<div id='signupContainer'>
+					<div class="orion-login-header">Create an account</div>
+					<form>
+						<div class="orion-register-input-holder">
+							<input type="text" class="orion-text-input" placeholder="email" title="Email" autocomplete="on" autofocus="autofocus" id="create_login" spellcheck="false">
+						</div>
+						<div class="orion-register-input-holder">
+							<input type="password" class="orion-text-input" placeholder="password" title="password" autocomplete="on" id="create_password" aria-required="true">
+						</div>
+						<div class="orion-register-input-holder">
+							<input type="password" class="orion-text-input" placeholder="retype password" title="retype password" autocomplete="on" name="passwordRetype" id="create_passwordRetype" aria-required="true">
+						</div>
+						<div class="orion-register-button-holder">
+							<input id="createButton" type="button" class="orion-login-button" value="Sign up" tabindex="0">
+						</div>
+						<div style="padding-right: 5px;"></div>
+						<div class="orion-register-button-holder">
+							<input id="hideRegisterButton" type="button" class="orion-cancel-button" value="Cancel" tabindex="0">
+						</div>
+					</form>
+				</div>
 			</div>
 
 			<div class="orion-reset" id="orionReset" style="visibility: hidden;">
-				<div class="orion-reset-header">Reset Orion account</div>
-				<div class="orion-reset-note">Provide your username or email to reset your password.</div>
-				<form>
-					<div class="orion-reset-input-holder">
-						<input type="text" class="orion-text-input" id="reset" placeholder="username">
-					</div>
-					<div class="orion-reset-input-holder">
-						<input type="text" class="orion-text-input" id="resetEmail" placeholder="email">
-					</div>
-					<div class="orion-login-button-holder">
-						<input type="button" id="sendResetButton" class="orion-send-button" tabindex="0" value="Send">
-					</div>
-					<div class="orion-login-button-holder">
-						<input type="button" id="cancleResetButton" class="orion-cancel-button" tabindex="0" value="Cancel">
-					</div>
-				</form>
-			</div>
-
-			
-			
+				<div id='resetLogo'></div>
+				<div id='resetContainer'>
+					<div class="orion-reset-header">Reset password</div>
+					<div class="orion-reset-note">Provide your email to reset your password.</div>
+					<form>
+						<div class="orion-reset-input-holder orion-reset-input-holder-username">
+							<input type="text" class="orion-text-input" id="reset" placeholder="username">
+						</div>
+						<div class="orion-reset-input-holder orion-reset-input-holder-useremail">
+							<input type="text" class="orion-text-input" id="resetEmail" placeholder="email">
+						</div>
+						<div class="orion-reset-button-holder">
+							<input type="button" id="sendResetButton" class="orion-send-button" tabindex="0" value="Send">
+						</div>
+						<div class="orion-reset-button-holder">
+							<input type="button" id="cancleResetButton" class="orion-cancel-button" tabindex="0" value="Cancel">
+						</div>
+					</form>
+				</div>
+			</div>			
 		</div>
+		<div id="loginDivider"></div>
 	</div>
 </body>
 </html>

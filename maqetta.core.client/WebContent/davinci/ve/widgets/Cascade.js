@@ -403,23 +403,26 @@ define(["dojo/_base/declare",
 				for(var i=0;i<allCssClasses.length;i++){
 					var thisClass=allCssClasses[i];
 					if(typeof thisClass=="string" && thisClass.length>0){
-						var proposedNewRule=this._getClassSelector(thisClass);
-						// See if there is an existing rule for thisClass
-						var existingRule=false;
-						for(var j=0; j<values.length; j++){
-							if(this._compareSelectors(values[j].ruleString,proposedNewRule)){
-								values[j].className = thisClass;
-								existingRule=true;
-								break;
+						var proposedNewRules=this._getClassSelector(thisClass);
+						proposedNewRules.forEach(function(proposedNewRule){
+							// See if there is an existing rule for thisClass
+							var existingRule=false;
+							for(var j=0; j<values.length; j++){
+								if(this._compareSelectors(values[j].ruleString,proposedNewRule)){
+									values[j].className = thisClass;
+									existingRule=true;
+									break;
+								}
 							}
-						}
-						if(!existingRule){
-							var matchLevel = this._computeMatchLevelSelector(proposedNewRule);
-							values.splice(nProposals,0,{rule:null, ruleString:proposedNewRule, 
-										targetFile:this.targetFile, className:thisClass,
-										value:null, matchLevel:matchLevel, type:'proposal'});
-							nProposals++;
-						}
+							if(!existingRule){
+								var matchLevel = this._computeMatchLevelSelector(proposedNewRule);
+								values.splice(nProposals,0,{rule:null, ruleString:proposedNewRule, 
+											targetFile:this.targetFile, className:thisClass,
+											value:null, matchLevel:matchLevel, type:'proposal'});
+								nProposals++;
+							}
+						}.bind(this));
+						
 					}
 				}
 			}
@@ -907,7 +910,7 @@ define(["dojo/_base/declare",
 			var lastElementStyle = -1;
 			var deltas = [];
 			var cssFiles = this.context._getCssFiles();
-			var dynamicThemeUrl = cssFiles ? cssFiles[0].url: null;
+			var dynamicThemeUrl = (cssFiles &&  cssFiles.length > 0)? cssFiles[0].url: null;
 			var dynamicThemeReadOnly = false;
 			if (dynamicThemeUrl){
 				var file = systemResource.findResource(dynamicThemeUrl);
@@ -996,7 +999,7 @@ define(["dojo/_base/declare",
 				var cssFile = model.find({elementType:'CSSFile', relativeURL: this._values[event.target].targetFile}, true);
 				var contextCssFile =  this.context._getCssFiles();
 				//#23
-				if (cssFile) {
+				if (cssFile /*&& cssFile.length > 0*/) {
 					loc=cssFile.getResource();
 				} else if (contextCssFile[0].url == this._values[event.target].targetFile){ // FIXME should run the array
 					// maybe it's a dynamic theme (mobile)
@@ -1184,12 +1187,21 @@ define(["dojo/_base/declare",
 			var text = rel.length>0?rel[0]:"";
 			var bodyId = this.context.getBodyId();
 			var theme = this.context.getTheme();
+			var rules = [];
+			if (!theme) {
+				return rules;
+			}
 			var bodyClass = theme.className;
 			
 			/* PITFALL here. if the relative selector doesn't start at the top node, 
 			 * then it needs to be a child selector (ie with a space) and no sibling.
 			 */
-			return "#" + bodyId + "." + bodyClass + " ." + className  + text;
+			var selectors = text.split(",");
+			selectors.forEach(function(selector){
+				rules.push("#" + bodyId + "." + bodyClass + " ." + className  + selector);
+			}.bind(this));
+			
+			return rules;
 			
 		},
 	

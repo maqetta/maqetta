@@ -1,0 +1,225 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../maqettadocs.css" />
+	<link rel="stylesheet" href="../../dijit/themes/claro/claro.css">
+    <script src="../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+	<script>require([
+		"dojo/parser",
+		"dijit/TooltipDialog",
+		"dijit/form/DropDownButton"
+	 ]);</script>
+	 <style type='text/css'>
+	 	:focus {
+	 		outline:none;
+	 	}
+	 </style>
+</head>
+<body class="claro maqettadocs cheatsheet_iframe_body">
+	<div id='cheatsheetcontent'>
+		<!--  With zoom/pan enabled, had set width:100% -->
+		<img src='img/Sketching.png' style='width:1010px;'></img>
+				
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:432px; top:80px;'>
+		    <span>Create menu</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<table class='cheatsheet_table'>
+		    		<colgroup>
+		    			<col style='width:250px;'/>
+		    			<col style='width:1px;'/>
+		    		</colgroup>
+		    		<tr>
+		    			<td class='cheatsheet_table_desc_td cheatsheet_table_desc_td_left'>
+		    				To create a new sketch application,
+		    				press on the Create menu and choose one of 
+		    				"Sketch (high-fidelity)" or "Sketch (high-fidelity)".
+		    				With either command, Maqettta will open a page editor in sketch mode,
+		    				where Maqetta acts as a simple drawing tool. 
+		    				Widgets are absolutely positioned relative to their parent container.
+		    				The difference between the two sketch modes:
+		    				<br/><br/>
+		    				<ul class='cheatsheet_desc_list'>
+		    					<li><strong>Sketching (high-fidelity)</strong> - Widgets will be rendered with final-form styling.</li>
+		    					<li><strong>Sketching (low-fidelity)</strong> - Widgets will be rendered with pseudo hand-drawn styling.</li>
+		    				</ul>
+		    				<br/><br/>
+		    				The "Where" field indicates the parent folder for the new file.
+		    				The drop down control shows the
+		    				current target parent folder and will show a complete list of ancestor folders.
+		    				<br/><br/>
+		    				The right arrow next to "Where" opens up a view of your current workspace
+		    				and provides a "New folder" button in case you need to create a new
+		    				folder.
+		    				<br/><br/>
+		    				The "Theme..." button allows you to choose the initial CSS theme or theme set
+		    				to use with the new HTML file.
+		    			</td>
+		    			<td><img src='img/Create_Sketch_Dialog.png'></img></td>
+		    		</tr>
+		    	</table>
+		    </div>
+		</div>
+
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:30px; top:175px;'>
+		    <span>Widgets Palette</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:350px'>
+		    		The <strong>Palette</strong> contains the list of widgets that you can add to your document.
+		    		<br/><br/>
+		    		The widgets found in the <strong>Drawing Tools</strong> and <strong>Clip Art</strong> sections of the 
+		    		Palette are commonly used for sketching:
+		    		<br/><br/>
+	   				<ul class='cheatsheet_desc_list'>
+    					<li><strong>Drawing Tools</strong> - Simple geometric shapes, such as rectangles, circle/ellipses,
+    						lines, arrows, polylines, polylines with arrows, and simple point text. </li>
+    					<li><strong>Clip Art</strong> - A collection of resizable, commonly-used user interface clip art.
+    						Includes small-size icons such as "close", "help", "home" along with a few larger
+    						placeholder graphics such as "map" and "image". Also includes device silhouettes
+    						for some common mobile devices.</li>
+    				</ul>
+			    	<br/><br/>
+			    	In sketch mode, you can also use any of the other widgets found in the widget palette
+			    	(Dojo Container, Dojo Controls, Dojox Mobile and HTML). When you drop these widgets
+			    	onto the page, they are positioned at absolute locations.
+			    </div>
+		    </div>
+		</div>
+
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:30px; top:225px;'>
+		    <span>Outline palette</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<table class='cheatsheet_table'>
+		    		<colgroup>
+		    			<col style='width:300px;'/>
+		    			<col style='width:1px;'/>
+		    		</colgroup>
+		    		<tr>
+		    			<td class='cheatsheet_table_desc_td_left'>
+		    				The <strong>Outline</strong> palette shows a hierarchy view of the widgets in your document.
+		    				<br/><br/>
+		    				You can reorder your widgets via drag/drop within the Outline palette.
+		    				<br/><br/>
+		    				The Outline palette also includes a context menu which allows many of the same
+		    				widget operations (e.g., delete) that are available on the page editor canvas.
+		    			</td>
+		    			<td><img src='img/OutlinePalette.png'></img></td>
+		    		</tr>
+		    	</table>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:60px; top:600px;'>
+		    <span>Bottom/left palettes</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<table class='cheatsheet_table'>
+		    		<colgroup>
+		    			<col style='width:250px;'/>
+		    			<col style='width:1px;'/>
+		    		</colgroup>
+		    		<tr>
+		    			<td class='cheatsheet_table_desc_td cheatsheet_table_desc_td_left'>
+		    				<strong>Files</strong> shows your file system in the cloud (see image at right).<br/><br/>
+		    				<strong>Reviews</strong> shows the list of review sessions which either you initiated
+		    				or to which you have been invited.
+		    			</td>
+		    			<td><img src='img/FilesPalette.png'></img></td>
+		    		</tr>
+		    	</table>
+		    </div>
+		</div>
+
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:930px; top:175px;'>
+		    <span>Properties palettes</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:700px'>
+		    		The various Properties palettes (Widget, Events, Layout, etc) are where you can change
+		    		widget-specific property values. The various sections are:
+		    		<br/><br/>
+    				<ul class='cheatsheet_desc_list'>
+    					<li><strong>Widget</strong> - This section lists widget-specific properties -
+    						e.g., a Checkbox widget has a "checked" property, whereas most other widgets
+    						will not have such a property. For most widgets, a 'title' property
+    						appears at the top. This corresponds to the HTML 'title' attribute and is often
+    						used for specifying tooltip text for a given widget.</li>
+    					<li><strong>Events</strong> - Defines the actions to take when certain
+    						events occur on a particular widget. Includes mouse events (e.g., onclick)
+    						and focus events for text entry widgets (i.e., onfocus and onblur).
+    					</li>	
+    					<li><strong>Layout</strong> - Various CSS properties in the general area of layout.
+    						Includes CSS properties regarding size (e.g., 'width' and 'height') and 
+    						location (e.g., 'left' and 'top'). Also includes CSS properties
+    						such as 'position', 'display', 'float', 'overflow' and 'opacity'.</li>
+    					<li><strong>Padding</strong> - CSS padding properties, including the 'padding' shortcut
+    						and the specific properties 'padding-top', 'padding-right', 'padding-bottom' and 'padding-left'.</li>
+    					<li><strong>Margin</strong> - CSS margin properties, including the 'margin' shortcut
+    						and the specific properties 'margin-top', 'margin-right', 'margin-bottom' and 'margin-left'.</li>
+    					<li><strong>Background</strong> - CSS background properties. The "..." buttons can be used
+    						to bring up the Background dialog, which allows picking background image and defining
+    						gradients.</li>
+    					<li><strong>Border</strong> - CSS border properties.</li>
+    					<li><strong>Fonts/Text</strong> - CSS properties having to do with text styling.</li>
+    					<li><strong>SVG</strong> - CSS properties that only apply to SVG content.
+    						These properties typically are used only for widgets from the Drawing Tools section
+    						of the <strong>Palette</strong>.</li>
+    				</ul>
+		    		<br/><br/>
+		    		At the top of each of the various Properties palette are controls for setting the
+		    		<strong>class</strong> and/or <strong>id</strong> values for the currently selected widget.
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:930px; top:600px;'>
+		    <span>Scenes palette</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<div style='width:300px'>
+		    		The <strong>Scenes</strong> palette enables two things.
+		    		<br/><br/>
+    				<ul class='cheatsheet_desc_list'>
+    					<li><strong>Application states</strong> - Maqetta includes an "application states" feature
+	    					which allows users to define interactivity without programming.
+	    					With the application states feature, you can organize your application into different states, 
+	    					and then define which widgets are visible (or styled differently) in each different states.
+	    					State changes can be triggered using the Events palette.</li>
+    					<li><strong>Switching between Dojo Mobile Views</strong> - If you create a mobile application
+    						and include Dojo Mobile view widgets (View, ScrollableView or SwapView) in your application,
+    						the Scenes palette will show both the list of views, plus the hierarchy of views.
+    						You can easily switch between views by clicking on one of the view in the Scenes palette.
+    					</li>	
+    				</ul>
+		    	</div>
+		    </div>
+		</div>
+		
+		<div data-dojo-type="dijit/form/DropDownButton" showLabel='false' style='position:absolute; left:300px; top:200px;'>
+		    <span>Visual design canvas</span>
+		    <div data-dojo-type="dijit/TooltipDialog" class='cheatsheetPopup'>
+		    	<table class='cheatsheet_table'>
+		    		<colgroup>
+		    			<col style='width:300px;'/>
+		    			<col style='width:1px;'/>
+		    		</colgroup>
+		    		<tr>
+		    			<td class='cheatsheet_table_desc_td_left'>
+		    		This area is where you create your sketch.
+		    		<br/><br/>
+		    		To add widgets to the page, simply drag/drop widgets from the <strong>Palette</strong> to the canvas.
+		    		<br/><br/>
+		    		When adding a new widget, sometimes Maqetta presents a data entry popup or dialog.
+		    		On the right, you can see the data entry popup for a Button widget.
+		    		You can click on the "?" icon to see what text entry options and rules apply
+		    		to the format of the data for this particular widget.
+		    		<br/><br/>
+		    		To adjust widget options and CSS properties, click to select a particular widget
+		    		and then change properties using the right-side properties palette (e.g., Widget, Events, Layout, etc.).
+		    			</td>
+		    			<td><img src='img/SmartInputButton.png'></img></td>
+		    		</tr>
+		    	</table>
+		    </div>
+		</div>
+
+	</div>
+</body>
+</html>

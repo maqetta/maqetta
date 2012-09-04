@@ -220,7 +220,7 @@
 		-->
 		<echo message="caching dojo build.."/>
 		
-		<copy todir="${dojo.cache.directory}" failonerror="true" overwrite="true" description="move Dojo build">
+		<move todir="${dojo.cache.directory}" failonerror="true" overwrite="true" description="move Dojo build">
 					<fileset dir="${target.folder}/WebContent/release/dojo">
 						<include name="davinci/"/>
 						<include name="system/"/>
@@ -230,7 +230,7 @@
 						<include name="eclipse/"/>
 			            <include name="preview/"/>
 					</fileset>
-		</copy>
+		</move>
 	</target>
 	
 	<target name="copy.dojo" if="${run.dojo.build}">

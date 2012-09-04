@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="../../dijit/themes/claro/claro.css">
+    <script src="../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+	<script>
+	var cheatSheetScale = 1;
+	var cheatSheetPanX = 0;
+	var cheatSheetPanY = 0;
+	var cheatSheetConnects = [];
+	var cheatSheetConnects, cheatSheetDragDiv, cheatSheetMover;
+	var origDragX, origDragY, origDragDivLeft, origDragDivTop, origDragPanX, origDragPanY;
+	var lastDragX, lastDragY;
+	
+	//Part of Mover interface
+	var onFirstMove = function(mover){
+	};
+
+	//Part of Mover interface
+	var onMoveStart = function(mover){
+	};
+
+	/**
+	 * Callback routine from dojo.dnd.Mover with every mouse move.
+	 * What that means here is dragging currently selected widgets around.
+	 * @param {object} mover - return object from dojo.dnd.Mover constructor
+	 * @param {object} box - {l:,t:} top/left corner of where drag DIV should go
+	 * @param {object} event - the mousemove event
+	 */
+	var onMove = function(mover, box, event){
+		var cheatsheetcontent_iframe = document.getElementById('cheatsheetcontent_iframe');
+		if(cheatsheetcontent_iframe){
+			var contentDocument = cheatsheetcontent_iframe.contentDocument;
+			var cheatsheetcontent = contentDocument.getElementById('cheatsheetcontent');
+			if(cheatsheetcontent){
+				var deltaX = event.pageX - origDragX;
+				var deltaY = event.pageY - origDragY;
+				var dragDivNewLeft = origDragDivLeft + deltaX;
+				var dragDivNewTop = origDragDivTop + deltaY;
+				cheatSheetDragDiv.style.left = dragDivNewLeft + 'px';
+				cheatSheetDragDiv.style.top = dragDivNewTop + 'px';
+				var newDragPanX = origDragPanX + deltaX;
+				var newDragPanY = origDragPanY + deltaY;
+		    	var style = cheatsheetcontent.style;
+		        style.MozTransform = 'scale('+cheatSheetScale+') translate('+newDragPanX+'px,'+newDragPanY+'px)';
+		        style.webkitTransform = 'scale('+cheatSheetScale+') translate('+newDragPanX+'px,'+newDragPanY+'px)';
+		        style.transform = 'scale('+cheatSheetScale+') translate('+newDragPanX+'px,'+newDragPanY+'px)';
+				// global vars
+				lastDragX = event.pageX;
+				lastDragY = event.pageY;
+			}
+		}
+	};
+
+	//Part of Mover interface
+	var onMoveStop = function(mover){
+		cheatSheetDragDiv.parentNode.removeChild(cheatSheetDragDiv);
+		cheatSheetDragDiv = null;
+		var deltaX = lastDragX - origDragX;
+		var deltaY = lastDragY - origDragY;
+		// global vars
+		cheatSheetPanX = origDragPanX + deltaX;
+		cheatSheetPanY = origDragPanY + deltaY;
+		var cheatsheetcontent_iframe = document.getElementById('cheatsheetcontent_iframe');
+		if(cheatsheetcontent_iframe){
+			var contentDocument = cheatsheetcontent_iframe.contentDocument;
+			var cheatsheetcontent = contentDocument.getElementById('cheatsheetcontent');
+			if(cheatsheetcontent){
+				var style = cheatsheetcontent.style;
+		        style.MozTransform = 'scale('+cheatSheetScale+') translate('+cheatSheetPanX+'px,'+cheatSheetPanY+'px)';
+		        style.webkitTransform = 'scale('+cheatSheetScale+') translate('+cheatSheetPanX+'px,'+cheatSheetPanY+'px)';
+		        style.transform = 'scale('+cheatSheetScale+') translate('+cheatSheetPanX+'px,'+cheatSheetPanY+'px)';
+			}
+		}
+	};
+
+	require([
+	    "dojo/ready",
+		"dojo/_base/connect",
+	    "dijit/form/VerticalSlider",
+	    "dojo/dom", 
+		"dojo/dnd/Mover",
+	    "dojo/parser" 
+	], function(ready, connect, VerticalSlider, dom, Mover){
+
+	    ready(function(){
+			var outer_window = window;
+/* Disabling zoom/pan features, might restore later
+	        var slider = new VerticalSlider({
+	            name: "cheatsheet_slider",
+	            "class": "cheatsheet_slider",
+	            value: 1,
+	            minimum: 0,
+	            maximum: 1.5,
+	            intermediateChanges: true,
+	            style: "height:300px;",
+	            onChange: function(value){
+					var cheatsheetcontent_iframe = document.getElementById('cheatsheetcontent_iframe');
+					if(cheatsheetcontent_iframe && cheatsheetcontent_iframe.contentDocument){
+						var contentDocument = cheatsheetcontent_iframe.contentDocument;
+						var cheatsheetcontent = contentDocument.getElementById('cheatsheetcontent');
+						if(cheatsheetcontent){
+							var style = cheatsheetcontent.style;
+							style.webkitTransformOrigin = '0px 0px';
+							style.transformOrigin = '0px 0px';
+							cheatSheetScale = 2-value;	// global var
+							style.MozTransform = 'scale('+cheatSheetScale+') translate('+cheatSheetPanX+'px,'+cheatSheetPanY+'px)';
+							style.webkitTransform = 'scale('+cheatSheetScale+') translate('+cheatSheetPanX+'px,'+cheatSheetPanY+'px)';
+							style.transform = 'scale('+cheatSheetScale+') translate('+cheatSheetPanX+'px,'+cheatSheetPanY+'px)';
+	    	        	}	
+	    	        }
+	            }
+	        }, "cheatsheet_slider");
+*/
+	        var content = '';
+	        var cheatsheetcontent_iframe = document.getElementById('cheatsheetcontent_iframe');
+	        var arr1 = document.location.search.split('?');
+	        if(cheatsheetcontent_iframe && arr1.length > 1){
+				connect.connect(cheatsheetcontent_iframe, 'onload', function(e){
+					var contentDocument = cheatsheetcontent_iframe.contentDocument;
+					var cheatsheetcontent = contentDocument.getElementById('cheatsheetcontent');
+					if(cheatsheetcontent){
+/* Disabling zoom/pan features, might restore later
+				        cheatSheetConnects.push(connect.connect(cheatsheetcontent, 'onmousedown', function(event){
+				        	if(outer_window.popupOpen){
+				        		return;
+				        	}
+				        	var delta = 400;
+				        	var l = event.pageX - delta;
+				        	var t = event.pageY - delta;
+				        	var w = delta + delta;
+				        	var h = w;
+				        	// The following are global variables
+				        	origDragX = event.pageX;
+				        	origDragY = event.pageY;
+				        	origDragDivLeft = l;
+				        	origDragDivTop = t;
+				        	origDragPanX = cheatSheetPanX;
+				        	origDragPanY = cheatSheetPanY;
+							cheatSheetDragDiv = dojo.create('div', 
+									{style:'position:z-index:1000;absolute;cursor:pointer;left:'+l+'px;top:'+t+'px;width:'+w+'px;height:'+h+'px'},
+									contentDocument.body);
+							cheatSheetMover = new Mover(cheatSheetDragDiv, event, window);
+				        }));
+*/
+				        cheatSheetConnects.push(connect.connect(window, 'onunload', function(){
+				        	for(var i=0; i<cheatSheetConnects.length; i++){
+				        		connect.disconnect(cheatSheetConnects[i]);
+				        		cheatSheetConnects = [];
+				        	}
+				        }));
+						var innerDojo = contentDocument.defaultView && contentDocument.defaultView.dojo;
+						if(innerDojo){
+							innerDojo.ready(function(){
+								var popups = contentDocument.querySelectorAll('.cheatsheetPopup');
+								for(var i=0; i<popups.length; i++){
+									var widget = innerDojo.dijit.byNode(popups[i]);
+									if(widget){
+										widget.connect(widget, 'onOpen', function(){
+											outer_window.popupOpen = true;
+										});
+										widget.connect(widget, 'onClose', function(){
+											setTimeout(function(){
+												outer_window.popupOpen = false;
+											},10);
+										});
+									}
+								}
+								
+							});
+						}
+    	        	}
+		        });
+	        	var checkstring = 'content=';
+	        	var urlparams = arr1[1];
+	        	var params = urlparams.split('&');
+	        	for(var i=0; i<params.length; i++){
+	        		if(params[i].indexOf(checkstring)==0){
+	        			content = params[i].substr(checkstring.length);
+	        			cheatsheetcontent_iframe.src = content;
+	        			break;
+	        		}
+	        	}
+	        }
+	    });
+	});</script>
+	<link rel="stylesheet" href="../maqettadocs.css">
+</head>
+<body class="claro cheatsheet_body">
+	<div id='cheatsheet_loading'>Loading...</div>
+<!-- disabling zoom/pan features - might restore later
+	<div id="cheatsheet_slider"></div>
+-->
+	<div id='cheatsheet_content_container'>
+		<iframe id='cheatsheetcontent_iframe' src=''></iframe>
+	</div>
+</body>
+</html>

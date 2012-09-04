@@ -415,7 +415,8 @@ return declare("davinci.ve.input.SmartInput", null, {
 	_connectHelpDiv: function(){
 		var help = dojo.byId('davinci.ve.input.SmartInput_img_help');
 		this._connection.push(dojo.connect(help, "onclick", this, "toggleHelp"));
-		this._connection.push(dojo.connect(dijit.byId('davinci.ve.input.SmartInput_ok'), "onClick", this, "onOk")); // same effect ad click away..
+		// since the button is a submit button, we need to listen to _onSubmit as it is expecting a form widget
+		this._connection.push(dojo.connect(dijit.byId('davinci.ve.input.SmartInput_ok'), "_onSubmit", this, "onOk")); // same effect ad click away..
 		this._connection.push(dojo.connect(dijit.byId('davinci.ve.input.SmartInput_cancel'), "onClick", this, "onCancel")); // same effect ad click away..
 	},
 	

@@ -58,9 +58,7 @@ require(["LoginWindow.js"]);
 	</div>
 	<div class="orion-login-container" id="login-window" style="display:none;min-height:400px;">
 		<div id="landingArea" class="orion-landing-area">
-			<div id="errorWin"  class="orion-error" style="visibility: hidden;" aria-atomic="true" aria-live="assertive">
-					<div id="errorMessage">&nbsp;</div>
-			</div>
+			
 			<div class="orion-login" id="orionLogin">
 				<div id='loginLogo'></div>
 				<div id='loginContainer'>
@@ -74,7 +72,12 @@ require(["LoginWindow.js"]);
 						</div>
 						<div class="orion-login-button-holder">
 							<input type="button" name="password" id="loginButton" class="orion-login-button" value="Log In" tabindex="0">
+							<div id="errorWin"  class="orion-error" style="visibility: hidden;" aria-atomic="true" aria-live="assertive">
+								<div id="errorMessage">&nbsp;</div>
+							</div>
 						</div>
+						
+						
 						<div class="orion-login-forgot-holder">
 							<a id="resetUserLink" class="orion-forgot-password">Forgot your password?</a>
 						</div>

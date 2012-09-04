@@ -215,7 +215,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		];
 		this.widgetAddedOrDeleted();
 		if(this.visualEditor && this.visualEditor._pageEditor && this.visualEditor._pageEditor._visualChanged){
-			this.visualEditor._pageEditor._visualChanged();
+			this.visualEditor._pageEditor._visualChanged(true);
 		}
 		this.setActiveTool();
 	},
@@ -559,12 +559,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
      *              'device' is the same as the current device
      */
 	setMobileTheme: function(device) {
+
         var oldDevice = this.getMobileDevice() || 'none';
         if (oldDevice != device) {
         	this.setMobileDevice(device);
         }
         this.close(); //// return any singletons for CSSFiles
-        
+		
         // Need this to be run even if the device is not changed,
         // when the page is loaded the device matches what is in the doc
         // but we need to get dojo in sync.
@@ -572,8 +573,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
         	var ua = Silhouette.getMobileTheme(device + '.svg');
       		ua = ua || "other";
     		// dojox/mobile specific CSS file handling
-    		var deviceTheme = this.getGlobal()['require']('dojox/mobile/deviceTheme');
-        	deviceTheme.loadDeviceTheme(ua);
+      		this._configDojoxMobile();
+    		//var deviceTheme = this.getGlobal()['require']('dojox/mobile/deviceTheme');
+        	//deviceTheme.loadDeviceTheme(ua);
         } catch(e) {
         	// dojox/mobile/deviceTheme not loaded
         }
@@ -1312,7 +1314,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// disconnected latter
 		this._connects = (this._connects || []).concat(UserActivityMonitor.addInActivityMonitor(this.getDocument()));
 
-		this._configDojoxMobile();
+		//this._configDojoxMobile();
+		// Set mobile device CSS files
+		var mobileDevice = this.getMobileDevice();
+		if (mobileDevice) {
+			this.setMobileDevice(mobileDevice);
+			this.visualEditor.setDevice(mobileDevice);
+		}
 	    dojo.publish('/davinci/ui/context/loaded', [this]);
 	    this.editor.setDirty(this.hasDirtyResources());
 	},
@@ -3298,7 +3306,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			// dojox/mobile wasn't loaded
 		}
 
-		// Set mobile device CSS files
+/*		// Set mobile device CSS files
 		var mobileDevice = this.getMobileDevice();
 		if (mobileDevice) {
 			this.setMobileDevice(mobileDevice);
@@ -3309,7 +3317,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var orientation = this.getMobileOrientation();
 		if (orientation) {
 			this.visualEditor.setOrientation(orientation);
-		}
+		}*/
 	},
 // XXX end "move this section to Dojo library"
 ////////////////////////////////////////////////////////////////////////////////

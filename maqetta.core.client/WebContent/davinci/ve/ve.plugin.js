@@ -511,12 +511,12 @@ return {
                     menu:[
                         {
                             label: "Flow",
-                            iconClass: "selectLayoutIcon",
+                            iconClass: "flowLayoutIcon",
                             method: "selectLayoutFlow"
                         },
                         {
                             label: "Absolute",
-                            iconClass: "selectLayoutIcon",
+                            iconClass: "absoluteLayoutIcon",
                             method: "selectLayoutAbsolute"
                         }
                    ]

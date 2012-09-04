@@ -275,6 +275,14 @@ div.right-col {
 	top: 10px;
 }
 */
+#cheatsheet_loading {
+	position:fixed;
+	width:100%;
+	left:120px;
+	top:120px;
+	font-size:24px;
+	overflow:hidden;
+}
 #cheatsheet_content_container {
 	position:fixed;
 	overflow:hidden;
@@ -290,9 +298,9 @@ div.right-col {
 	right:10px;
 }
 #cheatsheetcontent {
-	cursor:pointer;
 	position:absolute;
 /* Disabling zoom/pan features, might restore later
+	cursor:pointer;
 	width: 100%;
 	height:100%;
 */

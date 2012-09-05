@@ -5,10 +5,9 @@ define([
     	"../widget",
     	"./SelectTool",
     	"../Context",
-    	"../utils/GeomUtils",
     	"../../library",
     	"../metadata"
-], function(declare, Deferred, CommandStack, Widget, SelectTool, Context, GeomUtils, Library, Metadata){
+], function(declare, Deferred, CommandStack, Widget, SelectTool, Context, Library, Metadata){
 
 
 return declare([Context], {

@@ -38,7 +38,7 @@ public class Register  extends Command {
     	
     	String requestUrl = req.getRequestURL().toString();
     	String host = requestUrl.substring(0, requestUrl.indexOf('/', "http://".length()));
-    	String authLink = host + "/mixloginstatic/LoginWindow.html?login=" + emailAdd + "&loginTolken=" + randomToken + "&redirect=../maqetta/static/migrate.html";
+    	String authLink = host + "/mixloginstatic/LoginWindow.html?login=" + emailAdd + "&loginTolken=" + randomToken + "&redirect=../maqetta/cmd/migrate";
     	
     	
     	IEclipsePreferences signupTokens = new OrionScope().getNode("signup"); //$NON-NLS-1$

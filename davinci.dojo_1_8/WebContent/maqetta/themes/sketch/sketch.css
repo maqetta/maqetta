@@ -197,6 +197,7 @@
 }
 .claro {
     font-family : 'Comic Sans MS',cursive;
+    font-size : 12px;
 }
 .claro .dijitCalendarPreviousMonth .dijitCalendarDateLabel, .claro .dijitCalendarNextMonth .dijitCalendarDateLabel {
     border-color : #bcbec0;

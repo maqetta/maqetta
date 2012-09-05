@@ -609,6 +609,8 @@
 							"font-size",
 							"font-weight",
 							"position", 
+							"opacity",
+							"float"
                  		]
                     },
 					"selectors": {

@@ -299,14 +299,20 @@
 	</li>
 </ul>
 
-<h3 style='color:red; font-style:italic;'>EVERYTHING UNDER HERE IS JUST A COPY OF PREVIEW6 RELEASE NOTES</h3>
-
 <h2>Migration of User Workspaces</h2>
-
-<p>Preview 6 changes how files are constructed and stored in users' workspaces.  If you are using Preview 5 and wish to deploy Preview 6, you can migrate the users' files by using the <a href="https://raw.github.com/maqetta/maqetta/master/migration/m5-m6-migrate.sh" target="_blank">m5-m6-migrate.sh</a> script.  Download and script and run from within your "users" directory.</p>
-
-<p><em>Note:</em> The script only works on Unix-based systems.</p>
-
+<ul>
+	<li><p><span class='majortopic'>Widgets</span> - </p>
+		<ul>
+			<li><span class='minortopic'>HTML tables and empty cells</span> - 
+				If you were working with HTML tables in earlier releases of Maqetta, you will likely notice that when you open those pages using Maqetta 7 
+				that empty cells will have a height of 0 in the page editor. It is recommended that you use the source editor to add <code>&amp;nbsp;</code> to all 
+				of your empty table cells (e.g, the <code>&lt;td&gt;</code> elements) to workaround this issue. Any new HTML tables created by Maqetta will 
+				automatically have their empty cells filled with the <code>&amp;nbsp;</code> character, so this will be a one time change.
+			</li>
+		</ul>
+	</li>
+</ul>
+	
 <p> </p>
 
 <p class="prevnext">

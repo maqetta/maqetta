@@ -10,10 +10,7 @@
 <div id="pagebody">
 
 <table class="breadcrumbs noprint"><tr>
-	<td>
-	<a href="home.html">Home</a> &gt; <a href="userguide.html">Using Maqetta</a>
-		 &gt; <a href="pageEditor.html">Page Editor</a>
-    </td>
+	<td> &nbsp; </td>
     <td class="prevnext">
     <a href="peKeyboardShortcuts.html">Previous</a> / <a href="Export_to_Developer_Tools.html">Next</a>
     </td></tr>
@@ -64,43 +61,50 @@ and facilitate an efficient hand-off of your UI mockup to the development team. 
 
 <p>Here are the steps:</p>
 <ol>
-<li><strong>Select the widget or HTML element you need to customize</strong></li>
+<li><strong>Select the widget or HTML element you need to customize</strong>
+For this tutorial, drag a <strong>Button</strong> widget from the Dojo Controls
+section onto the canvas. To complete subsequent steps, make sure that the Button
+widget is selected.</li>
 <li>
 <p><strong>Assign one or more custom CSS classes to the currently selected widget or element</strong>.
-The list of custom CSS classes are defined in the 'class' attribute for  the widget or element.
+Custom CSS classes are specified by the 'class' attribute for  the widget or element.
 (The 'class' attribute is a standard attribute in HTML that is available for all elements
-in the HTML language.) As the picture below shows, the 'class' attribute editing box is located
-at the top of the Properties palette. In this example, the 'class' attribute is set to the value
-"login_button", which means one custom class ("login_button") has been assigned to the currently
-selected widget. (If you need multiple classes, use spaces to separate the class names.)</p>
+in the HTML language.) The 'class' attribute editing box is located
+at the top of all of the various properties palettes (e.g., Widget, Events, Layout, Padding, etc.)
+found on the right-side of the Maqetta application. In the example below, 
+the Layout palette is open, and the 'class' attribute has been set to the value
+"login_button". (If you need multiple classes on a particular widget, use spaces to separate the class names.)</p>
 <p><img src="img/app_css_class_attribute.png"></img></p>
 </li>
 <li>
 <p><strong>Create style rules (or modify rules) for your custom class in your app.css file</strong>.
 The pictures below demonstrate the steps for creating a style rule for class "login_button"
-for the CSS 'width' property. First, you need to click on the appropriate section button
-of the Properties palette. The 'width' property is in the Layout section, so click on the Layout button:
-</p>
-<p><img src="img/app_css_layout_button.png"></img></p>
-<p>This will cause the Layout properties to show. 'width' is the first property in this section.
-Next, click on the right arrow icon (">") found to the right of the 'width' property's input entry control
+for the CSS 'width' property.</p>
+<p>First, you need to click on the appropriate section button
+of the Properties palette. The 'width' property is in the Layout palette, so if the Layout palette 
+is not open now, click on the Layout tab to open up the layout palette. 'width' is the first property in this section.</p>
+<p>Next, click on the right arrow icon ("&gt;") found to the right of the 'width' property's input entry control
 to cause the CSS Details view to show for the 'width' property:</p>
 <p><img src="img/app_css_layout_section.png"></img></p>
-<p>This will cause the CSS Details pane to show for the CSS 'width' property:</p>
-<p><img src="img/app_css_width_details.png"></img></p>
-<p>
+<p>This will cause the CSS Details pane to show for the CSS 'width' property.
 This pane shows all existing CSS style rules that are relevant to the 'width' property
 on this type of widget or HTML element, including any existing style rules found in the app.css file
 and any existing style rules in the theme CSS files. The pane also shows "proposed new style rules",
-which are candidate rules that Maqetta can add automatically to app.css. In the picture below,
+which are candidate rules that Maqetta can add automatically to app.css. </p>
+<p><img src="img/app_css_width_details.png"></img></p>
+<p>
+In the picture below,
 the user has clicked on the radio button corresponding to the first style rule listed,
-which is one of the proposed new style rules. That will cause the new property value ("8em")
-to be inserted into a new "class selector" style rule in app.css that applies to all
-Button widgets that have custom class "login_button".</p>
+which is one of the proposed new style rules. With that radio button selected,
+the user has entered the value "8em" for the value of the 'width' property. </p>
 <p><em>NOTE: The sequence of operations is important. To cause the new property value to go into 
 a particular style rule, you must first click on the radio button for that style rule,
 and subsequently change and commit the value in the text entry field for the current property (in this case, 'width').</em>
-(You can "commit" a property change by either hitting Enter or clicking away from the field.)
+(You can "commit" a property change by either hitting Enter or clicking away from the field.)</p>
+<p><img src="img/app_css_width_details_new_rule_value.png"></img></p>
+<p>This will cause the new property value ("8em")
+to be inserted into a new "class selector" style rule in app.css that applies to all
+Button widgets that have custom class "login_button".</p>
 <p>After clicking on the radio button to choose the proposed new style rule, and then
 changing (and committing) the property value to "8em", a new rule will appear in the app.css file as follows:</p>
 <p><img src="img/app_css_new_width_rule.png"></img></p>

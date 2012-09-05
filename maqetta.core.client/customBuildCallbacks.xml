@@ -221,7 +221,7 @@
 		<echo message="caching dojo build.."/>
 		
 		<move todir="${dojo.cache.directory}" failonerror="true" overwrite="true" description="move Dojo build">
-					<fileset dir="${target.folder}/WebContent/release/dojo">
+					<fileset dir="${target.folder}/WebContent/release/dojo"><!-- TODO: why not delete the entire structure? -->
 						<include name="davinci/"/>
 						<include name="system/"/>
 						<include name="dojo/"/>
@@ -229,6 +229,7 @@
 						<include name="dojox/"/>
 						<include name="eclipse/"/>
 			            <include name="preview/"/>
+			            <include name="orion/"/>
 					</fileset>
 		</move>
 	</target>

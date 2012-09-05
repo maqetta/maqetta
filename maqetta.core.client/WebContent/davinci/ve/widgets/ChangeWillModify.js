@@ -15,7 +15,7 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 	uiNLS: uiNLS,
 
 	buildRendering: function() {
-		var helpLink = "<a href='app/docs/index.html#peAppCss' target='_blank'>"+ veNLS.creatingStyleRules +"</a>";
+		var helpLink = "<a href='app/docs/index.html#CreatingStyleRulesWithAppCss' target='_blank'>"+ veNLS.creatingStyleRules +"</a>";
 		this.insteadOfChanging = dojo.string.substitute(veNLS.insteadOfChanging,[helpLink]);
 		this.inherited(arguments);
 	},

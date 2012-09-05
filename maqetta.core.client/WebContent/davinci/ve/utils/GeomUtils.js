@@ -60,7 +60,9 @@ return /** @scope davinci.ve.utils.GeomUtils */ {
 		win.withDoc(node.ownerDocument, function(){
 			if(tableElems.indexOf(node.tagName)){
 				var bcr = node.getBoundingClientRect();
-				o = {l: bcr.left, t: bcr.top, w: bcr.width, h: bcr.height};
+				var scrollLeft = this.getScrollLeft(node);
+				var scrollTop = this.getScrollTop(node);
+				o = {l: bcr.left + scrollLeft, t: bcr.top + scrollTop, w: bcr.width, h: bcr.height};
 			}else{
 				var l = node.offsetLeft;
 				var t = node.offsetTop;

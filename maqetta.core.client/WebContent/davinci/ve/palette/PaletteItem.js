@@ -3,12 +3,14 @@ define([
 	"dijit/_WidgetBase",
 	"davinci/ve/tools/CreateTool",
 	"davinci/ui/dnd/DragManager",
+	"davinci/ve/utils/GeomUtils",
 	"davinci/ve/metadata"
 ], function(
 	declare,
 	_WidgetBase,
 	CreateTool,
 	DragManager,
+	GeomUtils,
 	Metadata
 ){
 
@@ -106,8 +108,8 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		if(frameNode){
 			var coords = dojo.coords(frameNode);
 			var containerNode = this.palette._context.getContainerNode();
-			DragManager.documentX = coords.x - containerNode.scrollLeft;
-			DragManager.documentY = coords.y - containerNode.scrollTop
+			DragManager.documentX = coords.x - GeomUtils.getScrollLeft(containerNode);
+			DragManager.documentY = coords.y - GeomUtils.getScrollTop(containerNode);
 		}
 
 		// pre-fetch helper to warm the cache

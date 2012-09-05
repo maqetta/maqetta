@@ -32,7 +32,26 @@ return declare(CreateTool, {
 		}
 
 		var index = args.index;
-		var position = args.position;
+		
+		var position;
+		var widgetAbsoluteLayout = false;
+		if (this._data.properties && this._data.properties.style &&
+				(this._data.properties.style.indexOf('absolute') > 0)) {
+			widgetAbsoluteLayout = true;
+		}
+		if (! widgetAbsoluteLayout && this.createWithFlowLayout()) {
+			// do not position child under layout container... except for ContentPane
+			if (child) {
+				index = parent.indexOf(child);
+			}
+		}else if(args.position){
+			// specified position must be relative to parent
+			position = args.position;
+		}else if(this._position){
+			// convert container relative position to parent relative position
+			position = this._position;
+		}
+
 		this._data.context=this._context;
 
 		this._create({parent: parent, index: index, position: position, size: args.size}); 

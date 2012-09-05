@@ -610,7 +610,8 @@
 							"font-weight",
 							"position", 
 							"opacity",
-							"float"
+							"float",
+							"z-index"
                  		]
                     },
 					"selectors": {
@@ -1527,7 +1528,8 @@
   							"transition-property",
   							"-webkit-transition-duration",
   							"-moz-transition-duration",
-  							"transition-duration"			
+  							"transition-duration",
+  							"z-index"			
 						],
 						".claro .dijitSelect, .claro .dijitTextBox": [
 						  	"background-color" 

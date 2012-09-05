@@ -74,7 +74,7 @@ in multiple ways (described in subsequent sections). Below is a snapshot of the 
 	with Maqetta you can also clone and customize any of the native-looking mobile themes (i.e., "android", "blackberry", "iphone" and "ipad").</p>
 	
 <p>To clone and customize the "custom" theme, 
-	select the <b>New &gt; Theme...</b> command from the Maqetta menu bar.
+	select the <b>Create&gt; Theme...</b> command from the Maqetta menu bar.
 	A dialog will appear. In the first field, choose "custom" as the theme to clone.
 	In the second field, enter "mymobiletheme" as the name for the cloned theme.
 	<em>(Note: theme names must not contain spaces or other special characters.)</em>
@@ -85,7 +85,7 @@ in multiple ways (described in subsequent sections). Below is a snapshot of the 
 	</div>
 </p> 
 	
-<p>After issuing the <b>New &gt; Theme...</b> command, the Maqetta application should look something like this:</p>
+<p>After issuing the <b>Create &gt; Theme...</b> command, the Maqetta application should look something like this:</p>
 
 <p><a href="img/MobileThemeEditor.png" target="_blank"><img alt="image" src="img/MobileThemeEditor.png" style="margin: 1em 1em 0pt 0pt;" width="650" /></a></p>
 
@@ -118,11 +118,11 @@ in multiple ways (described in subsequent sections). Below is a snapshot of the 
 <p>At the top of the Global Styling section, click inside of the rectangular object that contains the words "Page backgrounds and fonts".
 	This is the "widget" that you can select to customize background and font properties that apply at a full page level.
 	After clicking, you should see a blue selection border surrounding the widget:</p>
-<p><a href="img/MobileTEPageStylingSelected.png" target="_blank"><img alt="image" src="img/MobileTEPageStylingSelected.png" style="margin: 1em 1em 0pt 0pt;" width="250" /></a></p>
+<p><a href="img/MobileTEPageStylingSelected.png" target="_blank"><img alt="image" src="img/MobileTEPageStylingSelected.png" style="margin: 1em 1em 0pt 0pt;" height="200" /></a></p>
 </li>
 <li>Open the <b>Background</b> section of the Properties palette.</li>
 <li>Change the background color to green by choosing "green" from the dropdown menu for the background-color property.
-<p><a href="img/MobileTEBackgroundColorDropdown.png" target="_blank"><img alt="image" src="img/MobileTEBackgroundColorDropdown.png" style="margin: 1em 1em 0pt 0pt;" width="160" /></a></p>
+<p><a href="img/MobileTEBackgroundColorDropdown.png" target="_blank"><img alt="image" src="img/MobileTEBackgroundColorDropdown.png" style="margin: 1em 1em 0pt 0pt;" height="220" /></a></p>
 <p class="note">The page background should now be green inside the various sections of the mobile theme editor.</p>
 </li>
 <li>Change the background color again by clicking on the rectangular color swatch that is just to the right of the dropdown menu. <img alt="image" src="img/MobileTEColorSwatch.png" style="margin: 1em 1em 0pt 0pt;" width="24" />
@@ -145,7 +145,7 @@ Select a light purple color from the color picker and then click OK.
 <li>For the 'font-size' property, see if the value appears as '14px'. If not, enter '14px' as the value of 'font-size. Now, click on the "+" icon twice to change font size from 14px to 16px.
 <p class="note">Various text strings in the mobile theme editor should be larger.</p>
 </li>
-<li>Click on the <b>Save</b> icon <img class="inline" src="img/save_icon.png" /> to save your theme changes.</li>
+<li>Click on the <b>Save</b> button on the toolbar to save your theme changes.</li>
 </ol>
 
 
@@ -160,14 +160,8 @@ Select a light purple color from the color picker and then click OK.
 <li>We will now create a background gradient for these widgets. 
 	Click on any of the "..." buttons <img alt="image" src="img/MobileTEBackgroundDialogButton.png" style="margin: 1em 1em 0pt 0pt;" width="32" />
 	on the right side of the Backgrounds sections to bring up the Backgrounds dialog.
-	<p><a href="img/MobileTEBackgroundDialog2.png" target="_blank"><img alt="image" src="img/MobileTEBackgroundDialog2.png" style="margin: 1em 1em 0pt 0pt;" width="300" /></a></p>
-	<p class="note">Note that the original background for Heading widgets within the "custom" theme is a complex linear gradient consisting of 9 gradient stops.
-		Also notice that the gradient uses rgba() values for some of the color stops. The "a" part of "rgba" is "alpha",
-		which defines the opacity (transparency) of the particular color stop. A value of "1" is fully opaque, a value of 
-		"0" is fully transparent.</p>
 </li>
-<li>Let's now simplify the gradient by removing stops. Click on the "-" icon for all gradient stops except for the first one (position=0%) and the last one (position=100%).
-	Set the color value for the first gradient stop to "#FAF" (light purple) and the second gradient stop to "#828" (darker purple).
+<li>Set the color value for the first gradient stop to "#FAF" (light purple) and the second gradient stop to "#828" (darker purple).
 	<p class="note">The color swatch at the top right of the dialog should show a gradient that starts with light purple at the top
 	and transitions into dark purple at the bottom.</p>
 	Click OK at the bottom of the dialog.
@@ -177,8 +171,7 @@ Select a light purple color from the color picker and then click OK.
 <p>Repeat the above steps for the "Button backgrounds" widget. Click inside of the rectangular object that contains the words "Button backgrounds" to select the Button Backgrounds and Fonts widget.
 	This is the "widget" that you can select to customize background and font properties that apply various Button widgets, CheckBox and Radio Button.
 	Once again, click any of the "..." buttons <img alt="image" src="img/MobileTEBackgroundDialogButton.png" style="margin: 1em 1em 0pt 0pt;" width="32" />
-	on the right side of the Backgrounds sections to bring up the Backgrounds dialog, and once again
-	remove all gradient stops except for the first one (position=0%) and the last one (position=100%).
+	on the right side of the Backgrounds sections to bring up the Backgrounds dialog.
 	Set the color value for the first gradient stop to "#FAF" (light purple) and the second gradient stop to "#828" (darker purple).
 	Click OK at the bottom of the dialog. The mobile theme editor should now look like this:
 	<p><a href="img/MobileTEAfterBackgrounds.png" target="_blank"><img alt="image" src="img/MobileTEAfterBackgrounds.png" style="margin: 1em 1em 0pt 0pt;" width="450" /></a></p>
@@ -217,8 +210,8 @@ Select a light purple color from the color picker and then click OK.
 <h2>Using your custom theme in a new HTML page</h2>
 
 <ol>
-<li>Go to the New menu at the top of the application, and issue a "New HTML File" command.
-	In the New HTML File dialog, set the Composition type to "iphone" using the drop-down menu. 
+<li>Go to the New menu at the top of the application, and issue a "Create Mobile Application" command.
+	In the Create dialog, set device type to "iphone" using the drop-down menu. 
 	You can either accept the default filename
 	(e.g., <code>file1.html</code>) or enter a custom filename.</li>
 <li>Click on the Theme... button to bring up the Switch/Select Theme dialog. In the dialog,

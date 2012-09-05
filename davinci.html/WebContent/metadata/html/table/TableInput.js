@@ -49,7 +49,7 @@ return declare(ContainerInput, {
 		//Configure listeners for Cancel button
 		var cancelButton = dijit.byId('tableInputCancelButton');
 		this._connection.push(dojo.connect(cancelButton, 'onClick', dojo.hitch(this,function(){
-			this.onCancel();
+			this._inline.onCancel();
 		})));
 		if (this._widget.inLineEdit_displayOnCreate){
 			// hide cancel on widget creation #120

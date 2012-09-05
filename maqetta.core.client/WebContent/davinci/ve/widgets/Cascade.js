@@ -200,7 +200,7 @@ define(["dojo/_base/declare",
 				var langObj = veNLS;
 				if(this._values[this._targetValueIndex].readOnly && this._editor.editorID != 'davinci.themeEdit.ThemeEditor'){ // #23 theme editor only writes out deltas
 					//FIXME: the commented out message in next line provides a more informative error message
-		            var helpLink = "<a href='app/docs/index.html#peAppCss' target='_blank'>"+ langObj.creatingStyleRules +"</a>";
+		            var helpLink = "<a href='app/docs/index.html#CreatingStyleRulesWithAppCss' target='_blank'>"+ langObj.creatingStyleRules +"</a>";
 					var content = langObj.propChangeCannotComplete + "<br><br>" + dojo.string.substitute(langObj.toChangeProperty,[helpLink]) + "<br/><br/>";
 
 					davinci.Workbench.showMessage(langObj.errorModifyingValue, content, {width: 350}, dojo.hitch(this, function(){

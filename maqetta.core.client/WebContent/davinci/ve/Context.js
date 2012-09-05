@@ -1935,6 +1935,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				hasLayout: (widget.isLayout && widget.isLayout()),
 				isChild: parent && parent.isLayout && parent.isLayout()
 			}, index, inline);
+			
+			// Currently only used by theme editor
+			this._focuses[0].showContext(this, widget);
+			
 		}.bind(this));	
 	},
 	
@@ -2269,7 +2273,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * Returns true if the given node is part of the focus (ie selection) chrome
 	 */
 	isFocusNode: function(node){
-		if(this._selection){
+		if(this._selection && this._selection.length > 0 && this._focuses && this._focuses.length >= this._selection.length){
 			for(var i=0; i<this._selection.length; i++){
 				if(this._focuses[i].isFocusNode(node)){
 					return true;

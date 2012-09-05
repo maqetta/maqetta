@@ -1870,7 +1870,7 @@
             "resizable": "none",
             "hidden": "true",
             "invisible": false,
-            "helper": "./dojox/data/CsvStoreHelper",
+            "helper": "./dojo/data/ItemFileReadStoreHelper",
             "inlineEdit": "./dojox/data/CsvStoreInput"
         },
         {

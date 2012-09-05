@@ -16,7 +16,7 @@
 	ignore=dirty
 [submodule "maqetta.core.client/WebContent/dojox"]
 	path = maqetta.core.client/WebContent/dojox
-	url = git://github.com/dojo/dojox.git
+	url = git://github.com/maqetta/dojox.git
 	ignore=dirty
 [submodule "maqetta.core.client/WebContent/util"]
 	path = maqetta.core.client/WebContent/util

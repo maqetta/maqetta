@@ -59,6 +59,9 @@ require(["LoginWindow.js"]);
 	<div class="orion-login-container" id="login-window" style="display:none;min-height:400px;">
 		<div id="landingArea" class="orion-landing-area">
 			
+			<div id="errorWin"  class="orion-error" style="visibility: hidden;" aria-atomic="true" aria-live="assertive">
+					<div id="errorMessage">&nbsp;</div>
+			</div>
 			<div class="orion-login" id="orionLogin">
 				<div id='loginLogo'></div>
 				<div id='loginContainer'>
@@ -72,9 +75,6 @@ require(["LoginWindow.js"]);
 						</div>
 						<div class="orion-login-button-holder">
 							<input type="button" name="password" id="loginButton" class="orion-login-button" value="Log In" tabindex="0">
-							<div id="errorWin"  class="orion-error" style="visibility: hidden;" aria-atomic="true" aria-live="assertive">
-								<div id="errorMessage">&nbsp;</div>
-							</div>
 						</div>
 						
 						
@@ -121,7 +121,7 @@ require(["LoginWindow.js"]);
 				</div>
 			</div>
 			<div class="orion-signup" id="newUserSignup" style="visibility: hidden; left:0px;">
-				<div class="orion-login-header">Request an account</div>
+				<div class="orion-login-header">Create an account</div>
 				<form>
 					<div class="orion-register-input-holder">
 						<input type="text" class="orion-text-input" placeholder="email" title="Email" autocomplete="on" autofocus="autofocus" id="signupEmail" spellcheck="false">
@@ -141,10 +141,10 @@ require(["LoginWindow.js"]);
 			<div class="orion-reset" id="orionReset" style="visibility: hidden;">
 				<div id='resetLogo'></div>
 				<div id='resetContainer'>
-					<div class="orion-reset-header">Reset Orion account</div>
-					<div class="orion-reset-note">Provide your username or email to reset your password.</div>
+					<div class="orion-reset-header">Reset Maqetta password</div>
+					<div class="orion-reset-note">Provide your email to reset your password.</div>
 					<form>
-						<div class="orion-reset-input-holder">
+						<div class="orion-reset-input-holder" style='display:none'>
 							<input type="text" class="orion-text-input" id="reset" placeholder="username">
 						</div>
 						<div class="orion-reset-input-holder">

@@ -101,6 +101,13 @@
 	margin: 0;
 	margin-right: 2px;
 	width: 285px;
+	color:#222;
+}
+#orionBody .orion-text-input::-webkit-input-placeholder {
+	color:#ccc;
+}
+#orionBody #landingArea input.orion-text-input:-moz-placeholder {
+	color:#ccc;
 }
 #orionBody .orion-login-button-holder {
 	margin-top:10px;
@@ -118,7 +125,9 @@
 #orionBody #sendResetButton, 
 #orionBody #cancleResetButton, 
 #orionBody #createButton, 
-#orionBody #hideRegisterButton {
+#orionBody #hideRegisterButton, 
+#orionBody #signupUserButton, 
+#orionBody #hideRegisterButtonSignup {
 	background: #EEE;
 	background-image: -webkit-linear-gradient(#F4F4F4, #DBDBDB);
 	background-image: -moz-linear-gradient(#F4F4F4, #DBDBDB);
@@ -137,7 +146,9 @@
 #orionBody #sendResetButton:hover, 
 #orionBody #cancleResetButton:hover, 
 #orionBody #createButton:hover, 
-#orionBody #hideRegisterButton:hover {
+#orionBody #hideRegisterButton:hover, 
+#orionBody #signupUserButton:hover, 
+#orionBody #hideRegisterButtonSignup:hover {
 	background: #DDD;
 	background-image: -webkit-linear-gradient(#E4E4E4, #D0D0D0);
 	background-image: -moz-linear-gradient(#E4E4E4, #D0D0D0);
@@ -226,4 +237,15 @@
 	border-top:1px #c4c4c4 dotted;
 	position:absolute;
 	top:504px;
+}
+#resetUserLink {
+	color:#222;
+}
+#orionBody #errorWin {
+	color:#222;
+	background:#ccc;
+	width: 557px;
+	border: 1px solid #222;
+	margin-left: 10px;
+	z-index:1;
 }

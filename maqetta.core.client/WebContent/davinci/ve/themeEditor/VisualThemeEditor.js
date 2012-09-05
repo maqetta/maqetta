@@ -9,9 +9,9 @@ define([
     	"davinci/html/HTMLFile",
     	"davinci/Theme",
     	"dojo/i18n!davinci/ve/nls/ve",
-    	"davinci/ve/utils/URLRewrite"
-
-], function(declare, Runtime, Workbench, Context, Preferences, Path, Factory, HTMLFile, Theme, veNls,URLRewrite) {
+    	"davinci/ve/utils/URLRewrite",
+    	"dojo/_base/sniff"
+], function(declare, Runtime, Workbench, Context, Preferences, Path, Factory, HTMLFile, Theme, veNls,URLRewrite, has) {
 
 return declare([], {
 
@@ -88,6 +88,9 @@ return declare([], {
 			this.themeVersionError(); 
 		} else if (this.theme.specVersion < this.THEME_EDITOR_SPEC){
 			this.themeVersionWarn(); //just warn for now
+		}
+		if(!has("webkit") && this.theme.type == "dojox.mobile"){
+			Workbench.showMessage(veNls.vteWarningUnsuportedBrowserTitle, veNls.vteWarningUnsuportedBrowserMessage, {width: 250});
 		}
 		if(fileName.toLowerCase().indexOf(".css")>0){
 			// add the style sheet to the theme editor

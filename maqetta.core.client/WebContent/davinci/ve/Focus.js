@@ -217,14 +217,11 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var parentbounds = context.getParentIframeBounds();
 		rect.l += parentbounds.l;
 		rect.t += parentbounds.t;
-		// Theme editor puts scrollbar on iframe's html element
-		//FIXME: Need to package this up as a callback somehow
-		if(this._context.editor.declaredClass == 'davinci.ve.themeEditor.ThemeEditor'){
-			var parentIframe = context.getParentIframe();
-			var bodyElement = parentIframe.contentDocument.body;
-			rect.l -= GeomUtils.getScrollLeft(bodyElement);
-			rect.t -= GeomUtils.getScrollTop(bodyElement);
-		}
+		var parentIframe = context.getParentIframe();
+		var htmlElement = parentIframe.contentDocument.documentElement;
+		var bodyElement = parentIframe.contentDocument.body;
+		rect.l -= GeomUtils.getScrollLeft(bodyElement);
+		rect.t -= GeomUtils.getScrollTop(bodyElement);
 		// FIXME: Disable the offscreen adjust in all cases - should just delete that code
 		offScreenAdjust = false;
 
@@ -687,18 +684,22 @@ return declare("davinci.ve.Focus", _WidgetBase, {
      * Theme editor selection routines
      **************************************/
     showContext: function(context, widget){
-        if(!this._contexDiv){
-            this._context = context;
-            //this._selectedWidget = null;
-            this._createContextPopUp();
-        }
-        this._contexDiv.style.display = "block";
+    	if(this._context.editor.declaredClass == 'davinci.ve.themeEditor.ThemeEditor'){
+    		if(!this._contexDiv){
+	            this._context = context;
+	            //this._selectedWidget = null;
+	            this._createContextPopUp();
+	        }
+	        this._contexDiv.style.display = "block";
+    	}
     },
     
     hideContext: function(){
-        if(this._contexDiv){
-            this._contexDiv.style.display = "none";
-        }
+    	if(this._context.editor.declaredClass == 'davinci.ve.themeEditor.ThemeEditor'){
+	        if(this._contexDiv){
+	            this._contexDiv.style.display = "none";
+	        }
+    	}
     },
     
     _createContextPopUp: function(){

@@ -5,9 +5,10 @@ define([
     	"../widget",
     	"./SelectTool",
     	"../Context",
+    	"../utils/GeomUtils",
     	"../../library",
     	"../metadata"
-], function(declare, Deferred, CommandStack, Widget, SelectTool, Context, Library, Metadata){
+], function(declare, Deferred, CommandStack, Widget, SelectTool, Context, GeomUtils, Library, Metadata){
 
 
 return declare([Context], {
@@ -177,20 +178,7 @@ return declare([Context], {
 			this._selection = selection;
 			selectionChanged = true;
 		}
-		
-		var box = undefined;
-		var op = undefined;
-		if (!Metadata.queryDescriptor(widget.type, "isInvisible")) {
-			var node = widget.getStyleNode();
-			box = this.getDojo().position(node, true);
-			box.l = box.x;
-			box.t = box.y;
-			op = {move: false};
-			op.resizeWidth = false;
-			op.resizeHeight = false;
-		}
-		this.focus({box: box, op: op}, index);
-		this._focuses[0].showContext(this, widget);
+		this.updateFocus(widget, index);
 
 		if(selectionChanged){
 			this.onSelectionChange(this.getSelection());

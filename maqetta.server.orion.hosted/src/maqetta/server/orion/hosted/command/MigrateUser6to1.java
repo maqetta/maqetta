@@ -30,20 +30,11 @@ public class MigrateUser6to1 extends Command {
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
     	String migrate = req.getParameter("migrate");
         File oldWorkspace = getOldWorkspace(user);
-    	if(oldWorkspace==null){
-    		this.responseString = "NO_WORKSPACE";
-    		return;
+    	if(oldWorkspace!=null && oldWorkspace.exists()){
+			migrateUser(user);
+			user.rebuildWorkspace();
     	}
-    	
-    	if(migrate!=null){
-    		/* Copy user files */
-    			migrateUser(user);
-    			user.rebuildWorkspace();
-    			this.responseString="OK";
-    			return;
-    			
-    	}
-    	this.responseString="WORKSPACE_EXISTS";
+    	resp.sendRedirect("/maqetta/");
     	
     }
 

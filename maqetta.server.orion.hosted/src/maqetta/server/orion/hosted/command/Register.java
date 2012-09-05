@@ -44,7 +44,7 @@ public class Register  extends Command {
     	int offset = (requestUrl.indexOf("https://") > -1 ? "https://".length():"http://".length() );
     	
     	String host = requestUrl.substring(0, requestUrl.indexOf('/', offset));
-    	String authLink = host + "/mixloginstatic/LoginWindow.html?login=" + emailAdd + "&loginTolken=" + randomToken + "&redirect=../maqetta/static/migrate.html";
+    	String authLink = host + "/mixloginstatic/LoginWindow.html?login=" + emailAdd + "&loginTolken=" + randomToken + "&redirect=../maqetta/cmd/migrate";
     	
     	String domain = host.substring( offset);
     	String emailAddy = Utils.getCommonNotificationId();

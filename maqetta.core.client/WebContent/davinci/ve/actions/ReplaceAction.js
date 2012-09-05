@@ -13,7 +13,7 @@ define([
 return declare("davinci.ve.actions.ReplaceAction", [ContextAction], {
 	/* replace the current selection with a given widget type */
 	run: function(context, newWidget){
-		return;
+	
 		context = this.fixupContext(context);
 		if(context){
 			if (context.declaredClass!=="davinci.ve.Context"){
@@ -24,6 +24,7 @@ return declare("davinci.ve.actions.ReplaceAction", [ContextAction], {
 				return;
 			}
 			var newselection = [];
+			var newData = {'type':newWidget, 'context':context};
 			if(selection.length > 0){
 				var compoundCommand = new CompoundCommand();
 				dojo.forEach(selection, function(w){
@@ -33,7 +34,7 @@ return declare("davinci.ve.actions.ReplaceAction", [ContextAction], {
 					if(d){
 						d.context = context;
 						dojo.withDoc(context.getDocument(), function(){
-							newwidget = widgetUtils.createWidget(d);
+							newwidget = widgetUtils.createWidget(newData);
 						}, this);
 						if(newwidget){
 							compoundCommand.add(new AddCommand(newwidget, w.getParent(), undefined));

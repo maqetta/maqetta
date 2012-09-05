@@ -279,8 +279,7 @@ define(['domReady'], function(domReady) {
 		mypostrequest.setRequestHeader("Orion-Version", "1");
 		mypostrequest.send(parameters);
 		
-		document.getElementById("signupUserButton").style.visibility='hidden';
-		document.getElementById("hideRegisterButtonSignup").style.visibility='hidden';
+		hideRegistration();
 		document.getElementById("errorWin").style.visibility = '';
 		document.getElementById("errorMessage").innerHTML = "Email sent to " + login;
 	}

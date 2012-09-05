@@ -107,6 +107,7 @@ public class SmtpPop3Mailer {
 
 		System.setProperty("mail.mime.charset", "UTF-8");
 		Properties props = System.getProperties();
+		props.put("mail.debug", "true");
 		props.put("mail.transport.protocol", "smtp");
 		props.put("mail.store.protocol", "pop3");
 		if (smtpHost != null) {

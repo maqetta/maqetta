@@ -18,13 +18,13 @@
 
 <h1>Exporting to Developer Tools</h1>
 
-<a name="about_this_tutorial"><h2>About this tutorial</h2></a>
+<a name="about_this_article"><h2>About this article</h2></a>
 
 <p>Using Maqetta, the user create web application prototypes which are subsequently handed off to
 	developers, who transform the prototype incrementally into a production application.</p>
-<p>	This tutorial introduces the features in Maqetta that help with the 
-	designer-to-developer hand-off. The tutorial starts by introducing some important
-	concepts. The tutorial then highlights the product's export-as-ZIP and workspace management features,
+<p>	This article introduces the features in Maqetta that help with the 
+	designer-to-developer hand-off. The article starts by introducing some important
+	concepts. The article then highlights the product's export-as-ZIP and workspace management features,
 	including the ability to create Eclipse-compatible projects.</p>
 
 <a name="exploring_workspace_html_files"><h2>Exploring the Maqetta workspace</h2></a>
@@ -64,7 +64,7 @@ shows the default workspace:
 <p>Some things to note:</p> 
 <ul>
 <li>In Maqetta's default workspace, JavaScript libraries are placed into the <code>libs/</code> folder.
-	The picture above shows two libraries, <code>dojo/</code> and <code>html/</code>.
+	The picture above shows multiple libraries, <code>clipart/</code>, <code>custom/</code>, <code>dojo/</code>, <code>maqetta/</code> and <code>shapes/</code>.
 	<ul>
 		<li>The <code>dojo/</code> folder contains a <em>read-only</em> version of the 
 			<a href="http://dojotoolkit.org">Dojo toolkit</a>.
@@ -73,24 +73,35 @@ shows the default workspace:
 			<code>dojo</code> (Dojo's core functions) and
 			<code>dojox</code> (an extensive library of Dojo extensions).
 			<div class="note">
-				<div>Maqetta includes a <em>release</em> distribution of Dojo in your workspace.</div>
-				<div>A <em>release</em> distribution contains
-				compressed versions of JavaScript and CSS files. Both release and full source
-				distributions for the Dojo toolkit can be found at 
-				<a href="http://download.dojotoolkit.org/">http://download.dojotoolkit.org/</a>.
-				Source distributions contain uncompressed versions of JavaScript and CSS
-				files and include various other files useful to developers, such as build utilities,
-				demos, test files and documentation.
+				Notes:
+				<ul>
+					<li>By default, Maqetta includes a <em>release</em> distribution of Dojo in your workspace.
+						A <em>release</em> distribution contains
+						compressed versions of JavaScript and CSS files.</li>
+					<li>Dojo also provides a <em>source</em> distributions that contains uncompressed versions of JavaScript and CSS
+						files and include various other files useful to developers, such as build utilities,
+						demos, test files and documentation.
+						 Both release and full source
+						distributions for the Dojo toolkit can be found at 
+						<a href="http://download.dojotoolkit.org/">http://download.dojotoolkit.org/</a></li>
+					<li>Maqetta includes a "download as ZIP" feature (described below) where you can
+						package up your HTML and CSS files, along with necessary libraries such as Dojo,
+						into a ZIP file that can be expanded onto a web server, where your applications
+						can run outside of Maqetta. 
+						However, Maqetta also offers a "download as ZIP" feature (described below) where you can
+						package up your HTML and CSS files, along with necessary libraries such as Dojo,
+						into a ZIP file that can be expanded onto a web server, where you applications
+						can run outside of Maqetta. By default, Maqetta copies the <em>release</em> distribution of Dojo
+						into the ZIP file, but the download dialog offers an option to include
+						a full source version of Dojo into the ZIP file.</li>
+				</ul>
 			</div>
 		</li>
-		<li>The <code>themes/</code> folder (Dojo themes) contains the CSS style themes used by your
-			applications. If you application uses any Dojo widgets, your application
-			probably requires the <code>themes/</code> folder in order to work properly
-			outside of Maqetta.
-		</li>
-		<li>The <code>html/</code> folder is likely to be removed from future releases and can be ignored
-			for now.
-		</li>
+		<li>The <code>clipart/</code> folder contains the widgets found in the Clip Art section of the <strong>Palette</strong>.</li>
+		<li>The <code>custom/</code> folder is custom widgets are stored (when using the SaveAs Widget feature).</li>
+		<li>The <code>maqetta/</code> folder includes a couple of Maqetta-supplied runtime JavaScript files, including
+			AppStates.js that provides runtime support for Maqetta's application states feature.</li>
+		<li>The <code>shapes/</code> folder contains the widgets found in the Drawing Tools section of the <strong>Palette</strong>.</li>
 	</ul>
 </li>
 <li>All CSS themes used by Maqetta are in the <code>themes/</code> folder. Maqetta includes
@@ -113,13 +124,14 @@ shows the default workspace:
 		<li>The <code>custom/</code> theme is a generic, cross-platform theme that is designed for custom theme development
 			for development teams that prefer highly customized visual styling instead of attempting to exactly match native device styling.</li>
 	</ul>
-	<li>Any custom themes created with the "New theme..." command (found on the New menu at the top of the application)
+	There is also a <code>dijit/</code>folder for supplemental CSS files needed by the various Dojo themes:
+	<li>Any custom themes created with the "Create theme..." command (found on the Create menu at the top of the application)
 			will be added to the <code>themes/</code> folder. For example, if you create a new theme called "mytheme1":
 			then the Files palette would show a <code>mytheme1</code> subfolder under <code>themes/</code>:
 	</li>
 </li>
 <li><p>Maqetta automatically includes a reference to an application CSS file (i.e., <code>app.css</code>) with each new HTML
-	file created by a New HTML File command.</p>
+	file created by a Create command.</p>
 	<p>You can insert application-specific CSS style rules in the <code>app.css</code> file
 	either by using some of the advanced features in the Properties palette
 	or by double-clicking on <code>app.css</code> in the Files palette
@@ -166,23 +178,38 @@ html,body {
 }
 	</pre></blockquote>
 	</li>
+<li><p>Maqetta also automatically includes a reference to an application JavaScript file (i.e., <code>app.js</code>) with each new HTML
+	file created by a Create command. This file is a convenient place for you to insert
+	custom runtime JavaScript logic.</p>
+	<blockquote><strong>app.js default contents</strong>
+	<pre class="code_block_tight_spacing">
+/*
+ * This file is provided for custom JavaScript logic that your HTML files might need.
+ * Maqetta includes this JavaScript file by default within HTML pages authored in Maqetta.
+ */
+require(["dojo/ready"], function(ready){
+     ready(function(){
+         // logic that requires that Dojo is fully initialized should go here
+
+     });
+});
+	</pre></blockquote>
+	</li>
 </ul>
 
 <a name="exploring_workspace_html_files"><h2>Exploring the HTML files created by Maqetta</h2></a>
 
-<p>This part of the tutorial provides an overview of some technical details about
+<p>This part of the article provides an overview of some technical details about
 the HTML files that Maqetta creates:
 </p>
 
 <ul>
-<li><p>Go to the New menu at the top of the application, and issue a "New HTML File" command.
-	In the New HTML File dialog, set the Composition type to "Desktop hi-fi page" using the drop-down menu.  
+<li><p>Go to the Create menu at the top of the application, and issue a "Create Desktop Application" command.
 	You can either accept the default filename
 	(e.g., <code>file1.html</code>) or enter a custom filename. Click on the Create button.</li>
-<li>Go into top/bottom split view by clicking on Split Horizontally icon
-	<img src="img/Maqetta-toolbar-splith.png" title="Split Horizontally" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
-	the last icon on the toolbar. Pull on the horiztonal divider until 
-	all of the source code for application is visible. Your screen should
+<li>On the toolbar, look for the "Split horizontally" command on the dropdown menu
+	to the right of the "Design" and "Source" buttons.
+	Your screen should
 	look like this now:</p>
 	<p><a href="img/HTML_Page_Initial_Split_View.png" target="_blank"><img alt="image" src="img/HTML_Page_Initial_Split_View.png" style="margin: 1em 1em 0pt 0pt;" width="600" /></a></p>
 </li>
@@ -195,7 +222,7 @@ the HTML files that Maqetta creates:
 [03] &lt;head>
 [04] &lt;meta charset="utf-8"/>
 [05] &lt;title>Untitled&lt;/title>
-[06] &lt;script type="text/javascript" src="lib/dojo/dojo/dojo.js" data-dojo-config="'async':true,'parseOnLoad':true,'packages':[{'name':'shapes','location':'../../shapes'},{'name':'clipart','location':'../../clipart'},{'name':'gridx','location':'../gridx'},{'name':'maqetta','location':'../../maqetta'}]">&lt;/script>
+[06] &lt;script type="text/javascript" src="lib/dojo/dojo/dojo.js" data-dojo-config="'parseOnLoad':true,'async':true,'packages':[{'name':'gridx','location':'../gridx'},{'name':'clipart','location':'../../clipart'},{'name':'maqettaSamples','location':'../../../samples'},{'name':'maqetta','location':'../../maqetta'},{'name':'shapes','location':'../../shapes'},{'name':'widgets','location':'../../custom'}]">&lt;/script>
 [07] &lt;script type="text/javascript">
 [08] require([
 [09]   "dijit/dijit",
@@ -205,13 +232,14 @@ the HTML files that Maqetta creates:
 [13]   "dijit/form/Button"
 [14] ]);
 [15] &lt;/script>
-[16] &lt;style>@import "themes/claro/claro.css";@import "app.css";
+[16] &lt;style>@import "themes/claro/document.css";@import "themes/claro/claro.css";@import "app.css";
 [17] &lt;/style>
-[18] &lt;/head>
-[19] &lt;body class="claro" data-maqetta-device="none" data-davinci-ws="collapse" dvFlowLayout="true">
-[20]  &lt;input type="button" data-dojo-type="dijit.form.Button" intermediateChanges="false" label="Button" iconClass="dijitNoIcon">&lt;/input>
-[21] &lt;/body>
-[22] &lt;/html>
+[18] &lt;script type="text/javascript" src="app.js">&lt;/script>
+[19] &lt;/head>
+[20] &lt;body class="claro" data-maq-flow-layout="true" data-maq-ws="collapse" id="myapp" data-maq-appstates="{}">
+[21]  &lt;input type="button" data-dojo-type="dijit.form.Button" intermediateChanges="false" label="Button" iconClass="dijitNoIcon">&lt;/input>
+[22] &lt;/body>
+[23] &lt;/html>
 </pre></blockquote>
 <li>Some notes about the above HTML file listing:
 	<ul>
@@ -234,7 +262,7 @@ the HTML files that Maqetta creates:
 		<li>Lines <code>[16]-[17]</code> - These lines load the CSS files used by this HTML file:
 			<ul>
 				<li><code>themes/claro/claro.css</code> - Reference to the CSS theme used by this page. (Default for Dojo/Dijit is the "claro" theme.)</li>
-				<li><code>app.css</code> - Application-specific CSS style rules. (See discussion earlier in this tutorial about <code>app.css</code>.)</li>
+				<li><code>app.css</code> - Application-specific CSS style rules. (See discussion earlier in this article about <code>app.css</code>.)</li>
 			</ul>
 			<div class="note">
 				Note that Maqetta application will update the URL references to the above files automatically
@@ -243,7 +271,9 @@ the HTML files that Maqetta creates:
 				will properly load the CSS files.
 			</div>
 		</li>
-		<li>Line <code>[19]</code> - The <code>&lt;body&gt;</code> element often includes some Maqetta-specific
+		<li>Line <code>[18]</code> - Application-specific JavaScript logic. (See discussion earlier in this article  about <code>app.js</code>.))
+		</li>
+		<li>Line <code>[20]</code> - The <code>&lt;body&gt;</code> element often includes some Maqetta-specific
 			attributes that provide essential authoring information to the Maqetta page editor
 			and/or are required so that the application states feature can run outside of the
 			Maqetta authoring environment:
@@ -252,7 +282,7 @@ the HTML files that Maqetta creates:
 					appears in two places
 					in the HTML source code: (1) within an @import command in the <code>&lt;head&gt;</code>
 					and as a class name on the <code>&lt;body&gt;</code> element.</li>
-				<li><code>dvFlowLayout="true"</code> - This attribute persists whether this HTML file
+				<li><code>data-maq-flow-layout="true"</code> - This attribute persists whether this HTML file
 					is currently being editing using flow layout or absolute layout.</li>
 				<li><code>data-davinci-ws="collapse"</code> - This attribute allows Maqetta
 					to work around HTML/CSS white space complexities. Without this attribute,
@@ -268,15 +298,15 @@ the HTML files that Maqetta creates:
 					<div class="note">Maqetta's override CSS rules always include <code>#myapp</code> at the
 					beginning of the selector.</div>
 					</li>
-				<li><code>dvStates</code> attribute - (Not shown above) If an HTML page
+				<li><code>data-maq-appstates</code> attribute - If an HTML page
 					defines custom application states via the States palette, then the
 					<code>&lt;body&gt;</code> element and various other elements within the page
-					will include a <code>dvStates</code> attribute. The <code>dvStates</code> attribute 
+					will include a <code>data-maq-appstates</code> attribute. The <code>data-maq-appstates</code> attribute 
 					is necessary to make the application states feature work
 					when your HTML page runs outside of the Maqetta authoring environment.</li>
 			</ul>
 		</li>
-		<li>Line <code>[20]</code> - This line provides the declarative markup for the Button widget.
+		<li>Line <code>[21]</code> - This line provides the declarative markup for the Button widget.
 			Typically, each widget on the page will be represented in the HTML file as a single line of HTML.
 			Some widgets, however, expand into multiple lines of HTML.
 		</li>
@@ -326,7 +356,7 @@ created by Maqetta into a production application.
 </p>
 <ul>
 	<li>In the Files palette, select all files that you would like to include in the download
-		other than the <code>libs/</code> and <code>themes/</code> files. (The download
+		other than the <code>libs/</code> files. (The download
 		dialog will allow you to include or exclude those files.)</li>
 	<li>Click on the second icon in the Files palette, the Download Selected Files icon
 		<img src="img/download-selected-files.gif" title="Download Selected Files" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
@@ -342,16 +372,16 @@ created by Maqetta into a production application.
 <ul>
 	<li>
 		<p><strong>Include/exclude particular libraries</strong> - The checkboxes to the left of the
-		list of libraries and themes controls whether the given resources should be included 
-		in the download ZIP file. By default, all JavaScript libraries (e.g., dojo) and the <code>themes</code>
-		folder will be included in the download ZIP file.</p>
+		list of libraries controls whether the given resources should be included 
+		in the download ZIP file. By default, all JavaScript libraries (e.g., dojo)
+		will be included in the download ZIP file.</p>
 		<p>The decision whether to include particular JavaScript libraries in your download ZIP
 		depends on the needs and constraints of the team that will receive the ZIP.
 		Usually, you will want to collaborate with your development team to find out
 		whether they want or do not want the libaries and/or themes within the ZIP.
 		Three common scenarios:</p>
 		<ul>
-			<li><em>You probably would include all JavaScript libraries and themes if</em>
+			<li><em>You probably would include all JavaScript libraries if</em>
 			you want the contents of the download ZIP to be a totally self-contained, runnable
 			application that you can install on an arbitrary web server or localhost server.</li>
 			<li><em>You probably would include a particular JavaScript libraries if</em>
@@ -418,7 +448,7 @@ and want to export a fully self-contained Eclipse project that can be imported s
 then importing the project into Eclipse:</p>
 
 <ul>
-<li>Before you create your HTML and CSS content, invoke the "New Project" command (found on the <b>New</b>
+<li>Before you create your HTML and CSS content, invoke the "Create Project" command (found on the <b>Create</b>
 menu at the top of the application). In the dialog that appears, click on the "Eclipse support" checkbox. 
 <div class="note">
 This will create a new project in your Maqetta workspace. Because of the "Eclipse support" checkbox, the new project

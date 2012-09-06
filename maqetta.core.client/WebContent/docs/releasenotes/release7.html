@@ -71,14 +71,6 @@
 	<li><p><span class='majortopic'>Performance improvements</span> - 
 		Release 7 includes performance improvements in several areas. In particular:</p>
 		<ul>
-			<li><span class='minortopic'>Preview-in-browser speedups due to ZAZL</span> - 
-				Release 7 integrates 
-				<a href='http://dojofoundation.org/projects/zazl' alt='ZAZL project page'>ZAZL</a> 
-				open source technology into Maqetta's preview-in-browser feature. With Release 7, when a Maqetta user clicks
-				on the preview-in-browser button, Maqetta runs ZAZL on the server to optimize
-				(build and minify) the user's HTML page to minimize network requests and download sizes 
-				when viewing that page directly in the web browser.
-			</li>
 			<li><span class='minortopic'>Page editor speedups</span> - 
 				Release 7 includes several performance improvements, 
 				particularly around opening up new HTML files and increased snappiness
@@ -89,6 +81,25 @@
 			<li><span class='minortopic'>Outline palette speedups</span> - 
 				The underlying code for the Outline palette has been rewritten, 
 				resulting in considerably fewer full redraws of that palette as the document changes.
+			</li>
+			<li><span class='minortopic'>ZAZL option for speedup with preview-in-browser</span> - 
+				Release 7 integrates 
+				<a href='http://dojofoundation.org/projects/zazl' alt='ZAZL project page'>ZAZL</a> 
+				open source technology into Maqetta's preview-in-browser feature. When turned on
+				(in the Preferences dialog on the Settings menu at the top-right of the top toolbar),
+				whenever a user clicks on the preview-in-browser, button, 
+				Maqetta will run ZAZL on the server to optimize
+				(build and minify) the user's HTML page to minimize network requests and download sizes 
+				when viewing that page directly in the web browser, typically speeding up
+				first-time previews considerably. ZAZL does take some elapsed time to perform
+				the build, but once the build is complete, the resulting page should preview
+				many times faster than without the ZAZL build process.
+				With Release 7, ZAZL is off by default because a handful of features
+				don't work with ZAZL, such as custom CSS themes and data requests to external servers. 
+				If your previews are too slow without ZAZL, try turning it on to see if
+				your previews work correctly, and see if viewing performance improves.
+				The Maqetta team hopes to get all features working with ZAZL for upcoming
+				releases and to turn ZAZL on by default.
 			</li>
 		</ul>
 	</li>
@@ -262,9 +273,6 @@
 			<li><span class='minortopic'>No longer using port 55556</span> - 
 				We integrated NGINX into the Maqetta server, which allowed us to run the Maqetta application
 				on port 80 at http://app.maqetta.org/maqetta (vs http://maqetta.org:55556/maqetta). 
-			</li>
-			<li><span class='minortopic'>https support</span> - 
-				Release 7 runs over https instead of http, which represents a very important security improvement.
 			</li>
 			<li><span class='minortopic'>Removal of experimental (untested) widgets</span> - 
 				Previous releases included experimental, partial support for various widgets

@@ -33,6 +33,6 @@
         "dojo": {
             "src": "../../../dojo/dojo.js"
         }
-    }
+    },
     "content": "<div></div>"
 }

@@ -46,7 +46,7 @@ public class MaqettaHTMLFilter implements Filter {
 
 		configScriptTag = new StringBuffer();
 		configScriptTag.append("<script type=\"text/javascript\">\n");
-		configScriptTag.append("var dojoConfig = { parseOnLoad: true };\n");
+		configScriptTag.append("var dojoConfig = __DOJOCONFIG__;\n");
 		configScriptTag.append("var zazlConfig = {\n");
 		configScriptTag.append("	directInject: true,\n");
 		//configScriptTag.append("	debug: true,\n");

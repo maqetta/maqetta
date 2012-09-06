@@ -165,13 +165,13 @@
 		display: none;
 }
 
-.davinci_ve_ThemeEditor .showCss.propertyButton{
+.davinci_themeEdit_ThemeEditor .showCss.propertyButton{
 	
 	display:none;	
 	
 }
 
-.davinci_ve_ThemeEditor .cssCascadeSection{
+.davinci_themeEdit_ThemeEditor .cssCascadeSection{
 	display:none;	
 }
 

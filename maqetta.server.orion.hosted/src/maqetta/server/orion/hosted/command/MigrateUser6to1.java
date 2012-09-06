@@ -14,6 +14,9 @@ import maqetta.server.orion.user.OrionUser;
 import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.orion.server.useradmin.IOrionCredentialsService;
+import org.eclipse.orion.server.useradmin.UserConstants;
+import org.eclipse.orion.server.useradmin.UserServiceHelper;
 import org.maqetta.server.Command;
 import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;
@@ -30,6 +33,7 @@ public class MigrateUser6to1 extends Command {
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
     	String migrate = req.getParameter("migrate");
         File oldWorkspace = getOldWorkspace(user);
+        initOrionUser(user);
     	if(oldWorkspace!=null && oldWorkspace.exists()){
 			migrateUser(user);
 			user.rebuildWorkspace();
@@ -38,6 +42,17 @@ public class MigrateUser6to1 extends Command {
     	
     }
 
+    private void initOrionUser(IUser maqettauser){
+		/* mark the user as 'email confirmed' */
+		IOrionCredentialsService userAdmin = UserServiceHelper.getDefault().getUserStore();
+   	 	org.eclipse.orion.server.useradmin.User user = (org.eclipse.orion.server.useradmin.User) userAdmin.getUser(UserConstants.KEY_UID, maqettauser.getUserID());
+   	 	user.setEmail(user.getLogin());
+     	 user.confirmEmail();
+     	
+   	 	userAdmin.updateUser(user.getUid(), user);
+   	 
+	}
+    
     private void migrateUser(IUser user){
     	File oldWorkspace = getOldWorkspace(user);
     	OrionUser orionUser = (OrionUser)user;

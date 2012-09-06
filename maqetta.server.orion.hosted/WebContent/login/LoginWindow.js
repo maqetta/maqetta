@@ -168,7 +168,7 @@ define(['domReady'], function(domReady) {
 		mypostrequest.open("POST", "../useremailconfirmation", true);
 		mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		mypostrequest.setRequestHeader("Orion-Version", "1");
-		mypostrequest.send("{login='" + document.getElementById("reset").value + "', email='" + document.getElementById("resetEmail").value + "'}");
+		mypostrequest.send("{login='" + document.getElementById("resetEmail").value + "', email='" + document.getElementById("resetEmail").value + "'}");
 
 		setResetMessage(false, "Sending password reset confirmation...");
 	}
@@ -236,6 +236,7 @@ define(['domReady'], function(domReady) {
 	}
 
 	function confirmCreateUser() {
+	
 		if (!validatePassword()) {
 			document.getElementById("create_password").setAttribute("aria-invalid", "true");
 			document.getElementById("create_passwordRetype").setAttribute("aria-invalid", "true");
@@ -311,29 +312,22 @@ define(['domReady'], function(domReady) {
 	}
 
 	function revealResetUser() {
-		document.getElementById('orionLogin').style.visibility = 'hidden';
-		if (!userCreationEnabled) {
-			document.getElementById('orionRegister').style.visibility = 'hidden';
-			document.getElementById('orionReset').style.height = '212px';
-			document.getElementById('orionOpen').style.top = '251px';
-			document.getElementById('orionOpen').style.height = '50px';
-			document.getElementById('orionOpen').style.paddingTop = '17px';
-		}
-		document.getElementById('newUserSignup').style.display = 'none';
+		
+	//	document.getElementById('orionLogin').style.visibility = 'hidden';
+	
+			//document.getElementById('orionRegister').style.visibility = 'hidden';
+		//	document.getElementById('orionReset').style.height = '212px';
+		//	document.getElementById('orionOpen').style.top = '251px';
+		//	document.getElementById('orionOpen').style.height = '50px';
+		//	document.getElementById('orionOpen').style.paddingTop = '17px';
+		//document.getElementById('newUserSignup').style.display = 'none';
 		document.getElementById('orionReset').style.visibility = '';
+		document.getElementById('orionRegister').style.visibility = 'hidden';
 	}
 
 	function hideResetUser() {
-		document.getElementById('orionLogin').style.visibility = '';
-		if (userCreationEnabled) {
-			document.getElementById('orionRegister').style.visibility = '';
-		} else {
-			document.getElementById('orionOpen').style.top = '188px';
-			document.getElementById('orionOpen').style.height = '75px';
-			document.getElementById('orionOpen').style.paddingTop = '55px';
-		}
-		document.getElementById('newUserSignup').style.display = '';
 		document.getElementById('orionReset').style.visibility = 'hidden';
+		document.getElementById('orionRegister').style.visibility = '';
 	}
 
 	domReady(function() {
@@ -355,44 +349,11 @@ define(['domReady'], function(domReady) {
 			document.getElementById("loginTolken").value = loginToken;
 		}
 		
-		var checkusersrequest = new XMLHttpRequest();
-		checkusersrequest.onreadystatechange = function() {
-			if (checkusersrequest.readyState === 4) {
-				if (checkusersrequest.status === 200) {
-					var responseObject = JSON.parse(checkusersrequest.responseText);
-					userCreationEnabled = responseObject.CanAddUsers;
-					if (!userCreationEnabled) {
-						formatForNoUserCreation();
-					}
-					document.getElementById("login-window").style.display = '';
-					document.getElementById("login").focus();
-				}
-			}
-		};
-
-		checkusersrequest.open("POST", "../login/canaddusers", true);
-		checkusersrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		checkusersrequest.setRequestHeader("Orion-Version", "1");
-		checkusersrequest.send();
-
-		var checkemailrequest = new XMLHttpRequest();
-		checkemailrequest.onreadystatechange = function() {
-			if (checkemailrequest.readyState === 4) {
-				if (checkemailrequest.status === 200) {
-					var responseObject = JSON.parse(checkemailrequest.responseText);
-					if (responseObject.emailConfigured === false) {
-						document.getElementById("resetUserLink").style.display = 'none';
-					}
-
-				}
-			}
-		};
-
-		checkemailrequest.open("POST", "../useremailconfirmation/cansendemails", true);
-		checkemailrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		checkemailrequest.setRequestHeader("Orion-Version", "1");
-		checkemailrequest.send();
-
+		
+		document.getElementById("login-window").style.display = '';
+		document.getElementById("login").focus();
+		
+		
 
 		injectPlaceholderShims();
 

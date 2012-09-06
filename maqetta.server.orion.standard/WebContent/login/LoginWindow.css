@@ -79,7 +79,7 @@
 #orionBody .orion-login-header, #orionBody.orion-reset-header {
 	border-bottom:none;
 }
-#orionLogin, #orionReset, #newUserHeaderShown {
+#orionLogin, #orionReset, #newUserSignup, #newUserHeaderShown {
 	left:0px;
 	padding: 50px;
 	width:478px;
@@ -213,20 +213,22 @@
 	width:300px;
 	top:260px;
 }
-#loginLogo, #signupLogo, #resetLogo {
+#loginLogo, #signupLogo, #signupAfterEmailLogo, #resetLogo {
 	width:120px;
 	height:140px;
 	float:right;
 	background-image: url(../maqetta/app/davinci/img/sprite.png);
 	background-position:0px -2650px;
 }
-#loginContainer, #signupContainer, #resetContainer {
+#loginContainer, #signupContainer, #signupAfterEmailContainer, #resetContainer {
 	width:300px;
 }
 #orionLogin .orion-login-header {
 	display:none;
 }
-#orionLogin .orion-login-button-holder {
+#orionLogin .orion-login-button-holder,
+#newUserHeaderShown .orion-register-button-holder,
+#newUserSignup .orion-login-button-holder {
 	text-align:left;
 	float:left;
 }
@@ -248,4 +250,7 @@
 	border: 1px solid #222;
 	margin-left: 10px;
 	z-index:1;
+}
+#orionBody #newUserHeaderShown .orion-register-input-holder {
+	margin-bottom:10px;
 }

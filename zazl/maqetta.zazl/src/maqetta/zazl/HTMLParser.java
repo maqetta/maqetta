@@ -76,6 +76,8 @@ public class HTMLParser extends DefaultFilter {
                 	String src = attrs.getValue("src");
                 	if (src != null && src.equals(scriptURL)) {
             			attrs.setValue(attrs.getIndex("src"), scriptURLPrefix+"lib/zazl/zazl.js");
+            			String dojoDataConfigStr = attrs.getValue(attrs.getIndex("data-dojo-config"));
+	            		configScriptTag = configScriptTag.replace("__DOJOCONFIG__", "{"+dojoDataConfigStr+"}");
             			attrs.removeAttributeAt(attrs.getIndex("data-dojo-config"));
                 	}
         			super.printStartElement(element, attrs);

@@ -2,8 +2,12 @@
 <html>
 <head>
 <meta charset="utf-8">
-<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<link rel="stylesheet" type="text/css" href="../maqettadocs.css" />
 <title>Maqetta 7 Release Notes</title>
+<style type="text/css">
+.majortopic { font-size:105%; font-weight:bold; color:#a0a; }
+.minortopic { font-weight:bold; }
+</style>
 </head>
 
 <body class="maqettadocs">
@@ -14,11 +18,6 @@
 </iframe> 
 -->
 <div id="pagebody">
-
-<style type="text/css">
-.majortopic { font-size:105%; font-weight:bold; color:#a0a; }
-.minortopic { font-weight:bold; }
-</style>
 
 <table class="breadcrumbs noprint"><tr>
 	<td> &nbsp; </td>
@@ -73,33 +72,28 @@
 		<ul>
 			<li><span class='minortopic'>Page editor speedups</span> - 
 				Release 7 includes several performance improvements, 
-				particularly around opening up new HTML files and increased snappiness
+				particularly around opening HTML files and increased snappiness
 				when users add new widgets to the page. Under the hood, among the key changes
-				were changing synchronous web requests to asynchronous and using built/optimized versions
+				were changing synchronous web requests to asynchronous and using optimized versions
 				of widget JavaScript files.
 			</li>
 			<li><span class='minortopic'>Outline palette speedups</span> - 
 				The underlying code for the Outline palette has been rewritten, 
 				resulting in considerably fewer full redraws of that palette as the document changes.
 			</li>
-			<li><span class='minortopic'>ZAZL option for speedup with preview-in-browser</span> - 
-				Release 7 integrates 
-				<a href='http://dojofoundation.org/projects/zazl' alt='ZAZL project page'>ZAZL</a> 
-				open source technology into Maqetta's preview-in-browser feature. When turned on
-				(in the Preferences dialog on the Settings menu at the top-right of the top toolbar),
-				whenever a user clicks on the preview-in-browser button, 
-				Maqetta will run ZAZL on the server to optimize
-				(build and minify) the user's HTML page to minimize network requests and download sizes 
-				when viewing that page directly in the web browser, typically speeding up
-				first-time previews considerably. ZAZL does take some elapsed time to perform
-				the build, but once the build is complete, the resulting page should preview
-				many times faster than without the ZAZL build process.
-				With Release 7, ZAZL is off by default because a handful of features
-				don't work with ZAZL, such as custom CSS themes and data requests to external servers. 
-				If your previews are too slow without ZAZL, try turning it on to see if
-				your previews work correctly, and see if viewing performance improves.
-				The Maqetta team hopes to get all features working with ZAZL for upcoming
-				releases and to turn ZAZL on by default.
+			<li><span class='minortopic'>Zazl option to improve performance with preview-in-browser</span> - 
+				Release 7 integrates the
+				<a href='http://www.zazl.org/' title='Zazl project page'>Zazl</a>
+				open source technology into Maqetta's preview-in-browser feature. When enabled,
+				whenever a user clicks on the preview-in-browser button, Maqetta will run the
+				Zazl Optimizer on the server to optimize (concatenate and minify) Javascript
+				on the user's HTML page on demand. This will minimize network requests and download sizes 
+				when viewing that page directly in the web browser, improving performance, particularly on network
+				connections with high latency. Zazl does take some elapsed time to perform this task,
+				but results are cached and shared, so subsequent page loads should be even faster for a given set of widgets.
+				With Release 7, Zazl is an experimental feature which must be enabled in the Preferences Dialog
+				on the Settings menu at the top-right of the top toolbar.  It does not yet work with all Maqetta features
+				such as JSONP data or custom widgets. The goal is to enable Zazl by default in an upcoming release.
 			</li>
 		</ul>
 	</li>
@@ -276,7 +270,7 @@
 			</li>
 			<li><span class='minortopic'>Removal of experimental (untested) widgets</span> - 
 				Previous releases included experimental, partial support for various widgets
-				under the widget categories "Untested Dojo & HTML", jQuery and YUI. With Release 7,
+				under the widget categories "Untested Dojo &amp; HTML", jQuery and YUI. With Release 7,
 				the product only includes supported widgets and no longer shows any of the experimental
 				or proof-of-concept widgets. We have plans to include full support for many of the 
 				experimental widgets in future releases. 

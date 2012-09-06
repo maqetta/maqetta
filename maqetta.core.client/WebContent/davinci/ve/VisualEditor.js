@@ -479,7 +479,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		}
 		var useZazl = this.context.getPreference("zazl");
 		if (useZazl) {
-			query.push('zazl=1');
+			query.push('zazl=true');
 		}
 		if (query.length) {
 			fileURL += "?" + query.join("&");

@@ -107,7 +107,6 @@ public class SmtpPop3Mailer {
 
 		System.setProperty("mail.mime.charset", "UTF-8");
 		Properties props = System.getProperties();
-		props.put("mail.debug", "true");
 		props.put("mail.transport.protocol", "smtp");
 		props.put("mail.store.protocol", "pop3");
 		if (smtpHost != null) {
@@ -121,6 +120,8 @@ public class SmtpPop3Mailer {
 			props.put("mail.smtp.auth", "true");
 		}
 		mailSession = Session.getInstance(props);
+
+		mailSession.setDebug(true);
 
 		if (smtpHost != null) {
 			if(port==null)

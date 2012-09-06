@@ -4,7 +4,7 @@ define([
 	"dijit/_TemplatedMixin",
 	"dijit/form/CheckBox",
 	"dijit/form/TextBox",
-	"dojo/i18n!davinci/ve/nls/common"
+	"dojo/i18n!../nls/common"
 ], function(declare, ContentPane, TemplatedMixin, CheckBox, TextBox, commonNls) {
 
 return declare([ContentPane, TemplatedMixin], {
@@ -56,9 +56,6 @@ return declare([ContentPane, TemplatedMixin], {
 
 	setPreferences: function(preferences){
 		preferences = preferences || {};
-		if (preferences.zazl === undefined) {
-			preferences.zazl = true;
-		}
 		//this._check(this._flowBox, !!preferences.flowLayout);
 		this._check(this._snap, !!preferences.snap);
 		this._check(this._showPossibleParents, !!preferences.showPossibleParents);

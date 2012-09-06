@@ -1198,6 +1198,7 @@ define(["dojo/_base/declare",
 			 */
 			var selectors = text.split(",");
 			selectors.forEach(function(selector){
+				selector = selector.trim();
 				rules.push("#" + bodyId + "." + bodyClass + " ." + className  + selector);
 			}.bind(this));
 			

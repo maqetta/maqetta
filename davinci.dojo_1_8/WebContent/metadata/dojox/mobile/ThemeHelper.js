@@ -18,36 +18,6 @@ define([
 
 return {
 
-	getHeadStyleString: function() {
-	    return '';
-	},
-	
-/*	preThemeConfig: function(context) {
-		
-		if(!has("webkit")) {
-			
-			 * Only add the compat CSS files if no webkit
-			 
-			var themeRoot = Theme.getThemeLocation();
-			var relFilePath = themeRoot.relativeTo('./'+themeRoot+'/'+context.theme.name+'/'+context.theme.themeEditorHtmls[0], true);
-			var relativePath = '';
-			for (var i = 0; i < relFilePath.segments.length; i++){
-				relativePath = relativePath +relFilePath.segments[i]+'/';
-			}
-			if (context.theme.conditionalFiles) {
-				for(var i = 0; i < context.theme.conditionalFiles.length; i++){
-					var compatCss = relativePath+context.theme.name+'/'+context.theme.conditionalFiles[i]
-					var link = context.getDocument().createElement("link");
-					link.href = compatCss;
-					link.type = "text/css";
-					link.rel = "stylesheet";
-					var head = context.getDocument().getElementsByTagName('head')[0];
-					head.appendChild(link);
-				}
-			}
-		}
-	},*/
-	
 	
 	onContentChange: function(context, theme){
 		if(!context || !context.editor || !context.editor.isActiveEditor()){

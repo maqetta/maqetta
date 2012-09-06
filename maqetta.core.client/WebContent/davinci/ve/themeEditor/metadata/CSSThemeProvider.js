@@ -53,14 +53,14 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 	
 	},
 	
-	getRelativeStyleSelectorsText: function(widgetType, state, subwidget,properties){
+	getRelativeStyleSelectorsText: function(widgetType, state, subwidget,properties, className){
 		var selectors = this.getStyleSelectors(widgetType, state,subwidget);
 		var relativeSelectors = new Array();
 		for (s in selectors){
 			properties.forEach(function(property){
 				var foundProp = false;
 				for(var p=0;!foundProp && p<selectors[s].length;p++){
-					if(selectors[s][p]==property)
+					if(selectors[s][p]==property || selectors[s][p] == '$std_10')
 						foundProp=true;
 					
 				}
@@ -68,9 +68,12 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 					var text = "" + s;
 					var classes = text.split(" ");
 					text = "";
-					for (var x = 1; x < classes.length; x++ ){
-						text += " " + classes[x];
-					}
+					classes.forEach(function(c){
+						// remove the theme body class ex .claro
+						if (c != "."+className) {
+							text += " " + c;
+						}
+					}.bind(this));
 					relativeSelectors.push(text.replace(/^\s*/, "").replace(/\s*$/, "")); // trim leading trailing white space
 					return;
 				}

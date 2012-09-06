@@ -478,10 +478,10 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 			}
 		}
 		var useZazl = this.context.getPreference("zazl");
-		if(useZazl !== false){
-			query.push('zazl=true');
+		if (useZazl) {
+			query.push('zazl=1');
 		}
-		if(query.length) {
+		if (query.length) {
 			fileURL += "?" + query.join("&");
 		}
 		window.open(fileURL, "preview_" + fileURL); // TODO: any restrictions on characters, length? Use hash value?

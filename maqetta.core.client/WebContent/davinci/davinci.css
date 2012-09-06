@@ -2235,19 +2235,19 @@ td.welcome_section_cell {
   background-color: #e9e9e9;
   background-image: none;
 }
-#maqBody .dijitButtonHover .dijitButtonNode,
-#maqBody .dijitDropDownButtonHover .dijitButtonNode,
-#maqBody .dijitComboButton .dijitButtonNodeHover,
-#maqBody .dijitComboButton .dijitDownArrowButtonHover,
-#maqBody .dijitToggleButtonHover .dijitButtonNode {
+#maqBody .dijitToolbar .dijitButtonHover .dijitButtonNode,
+#maqBody .dijitToolbar .dijitDropDownButtonHover .dijitButtonNode,
+#maqBody .dijitToolbar .dijitComboButton .dijitButtonNodeHover,
+#maqBody .dijitToolbar .dijitComboButton .dijitDownArrowButtonHover,
+#maqBody .dijitToolbar .dijitToggleButtonHover .dijitButtonNode {
   background-color: #e9e9e9;
   border-color:#d2d2d2;
 }
-#maqBody .dijitButtonActive .dijitButtonNode,
-#maqBody .dijitDropDownButtonActive .dijitButtonNode,
-#maqBody .dijitComboButton .dijitButtonNodeActive,
-#maqBody .dijitComboButton .dijitDownArrowButtonActive,
-#maqBody .dijitToggleButtonActive .dijitButtonNode {
+#maqBody .dijitToolbar .dijitButtonActive .dijitButtonNode,
+#maqBody .dijitToolbar .dijitDropDownButtonActive .dijitButtonNode,
+#maqBody .dijitToolbar .dijitComboButton .dijitButtonNodeActive,
+#maqBody .dijitToolbar .dijitComboButton .dijitDownArrowButtonActive,
+#maqBody .dijitToolbar .dijitToggleButtonActive .dijitButtonNode {
   background-color: #d9d9d9;
   border-color:#c2c2c2;
 }

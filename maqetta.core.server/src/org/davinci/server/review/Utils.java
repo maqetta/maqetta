@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.maqetta.server.ServerManager;
 
@@ -27,7 +29,7 @@ public class Utils {
 		}
 	}
 
-	public static String getCommonNotificationId() {
+	public static String getCommonNotificationId(HttpServletRequest req) {
 		String notificationId = null;
 
 		notificationId = ServerManager.getServerManger().getDavinciProperty(Constants.EP_ATTR_MAIL_CONFIG_NOTIFICATIONID);
@@ -37,8 +39,8 @@ public class Utils {
 				notificationId = mailConfig.getAttribute(Constants.EP_ATTR_MAIL_CONFIG_NOTIFICATIONID);
 			}
 		}
-		if(notificationId == null){
-			notificationId = "noreply@website.org";
+		if (notificationId == null) {
+			notificationId = "admin@" + req.getServerName();
 		}
 		return notificationId;
 	}

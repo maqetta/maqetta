@@ -66,7 +66,7 @@ public class AddComment extends Command {
 			ReviewCacheManager.$.updateComments(commentList);
 
 			if (version != null && version.isReceiveEmail()) // Send the notification only the designer want receive it.
-				notifyRelatedPersons(user, designer, comment, req.getRequestURL().toString());
+				notifyRelatedPersons(user, designer, comment, req);
 
 			//FIXME: use JSONWriter?
 			SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_PATTERN);
@@ -82,22 +82,12 @@ public class AddComment extends Command {
 		}
 	}
 
-	protected void notifyRelatedPersons(IUser reviewer, IUser designer, Comment comment, String requestUrl) {
+	protected void notifyRelatedPersons(IUser reviewer, IUser designer, Comment comment, HttpServletRequest req) {
 		String to = designer.getPerson().getEmail();
 		if (to != null && !to.trim().equals("")) {
-			String htmlContent = getHtmlContent(reviewer, comment, requestUrl);
-			
-			String emailAdd = Utils.getCommonNotificationId();
-			if(emailAdd==null){
-				int offset = (requestUrl.indexOf("https://") > -1 ? "https://".length():"http://".length() );
-				String domain = requestUrl.substring(offset, requestUrl.indexOf('/', offset));
-		    	if(domain.indexOf(":") > -1)
-		    		domain = domain.substring(0,domain.indexOf(":"));
-		    	emailAdd = "admin@" + domain;	
-			}
-			
-			
-			SimpleMessage email = new SimpleMessage(emailAdd,
+			String htmlContent = getHtmlContent(reviewer, comment, req.getRequestURL().toString());
+			String notifId = Utils.getCommonNotificationId(req);
+			SimpleMessage email = new SimpleMessage(notifId,
 					designer.getPerson().getEmail(), null, null, Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT_NOTIFICATION_SUBJECT),
 					htmlContent);
 //			SmtpPop3Mailer.send(email);

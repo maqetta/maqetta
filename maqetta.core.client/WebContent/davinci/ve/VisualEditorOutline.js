@@ -204,7 +204,11 @@ var DesignOutlineTreeModel = declare(null, {
 				this.onChildrenChange(widget, this._getChildren(widget));
 			} else if (type === this._context.WIDGET_REPARENTED) {
 				// args = [oldParent, newParent]
-				this.onChildrenChange(args[0], this._getChildren(args[0]));
+
+				// remove the old widget first
+				this.remove(widget);
+
+				// now add it with the new parent
 				this.put(widget, {
 						overwrite: true,
 						parent: args[1]

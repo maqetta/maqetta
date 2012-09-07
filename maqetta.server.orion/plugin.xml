@@ -17,6 +17,12 @@
      <extension point="maqetta.core.server.userManager">
     	<userManager class="maqetta.server.orion.user.OrionUserManager"/>
    	 </extension>
+   	 
+   	 <!-- this probably should eventually be moved to a dojo or RAD specific plugin -->
+	<extension point="maqetta.core.server.libraryFinder">
+    	<libraryFinder class="maqetta.core.server.DojoLibraryFinder"/>
+   	 </extension>
+   	 
       <extension
             point="maqetta.core.server.command">
             

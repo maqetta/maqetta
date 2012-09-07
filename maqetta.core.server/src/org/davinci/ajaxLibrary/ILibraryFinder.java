@@ -5,7 +5,7 @@ import java.net.URI;
 public interface ILibraryFinder {
 
 	
-	ILibraryFinder getInstance(URI baseResource);
+	ILibraryFinder getInstance(URI baseResource, String project);
 
 	ILibInfo[] getLibInfo();
 	

@@ -84,7 +84,7 @@ public class User implements IUser {
 		IStorage baseFile = this.userDirectory.newInstance(this.userDirectory, base);
 		Vector<ILibraryFinder> allLibs = new Vector();
 		for(int i=0;i<finders.length;i++){
-			ILibraryFinder finder = finders[i].getInstance(baseFile.toURI());
+			ILibraryFinder finder = finders[i].getInstance(baseFile.toURI(), baseFile.getName());
 			allLibs.add(finder);
 		}
 		return allLibs.toArray(new ILibraryFinder[allLibs.size()]);
@@ -96,7 +96,7 @@ public class User implements IUser {
 		IStorage baseFile = this.userDirectory.newInstance(this.userDirectory, base);
 		Vector<ILibInfo> allLibs = new Vector();
 		for(int i=0;i<finders.length;i++){
-			ILibraryFinder finder = finders[i].getInstance(baseFile.toURI());
+			ILibraryFinder finder = finders[i].getInstance(baseFile.toURI(), baseFile.getName());
 			ILibInfo[] libs = finder.getLibInfo();
 			allLibs.addAll(Arrays.asList(libs));
 		}

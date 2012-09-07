@@ -1,10 +1,10 @@
-#Fri Mar 30 10:57:02 EDT 2012
-dojo-root=/project1/WebContent/dojo
+#Fri Sep 07 14:25:26 CDT 2012
+dojo-root=/project1/WebContent/lib/dojo
 dojo-bootstrap-js=dojo/dojo.js
 dojo-css=dojo/resources/dojo.css
 eclipse.preferences.version=1
 dojo-dijit-css=dijit/themes/dijit.css
 dojo-deploy-location-option=ProjectSetupProperties.deploy.as.part.of.this.project
-dojo-source-metadata-root=/project1/WebContent/dojo
+dojo-source-metadata-root=/project1/WebContent/lib/dojo
 dojo-theme-css=dijit/themes/claro/claro.css
-dojo-version-attribute-name=1.7.1 (27407)
+dojo-version-attribute-name=1.8.0dev (NaN)

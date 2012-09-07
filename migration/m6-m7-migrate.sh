@@ -18,6 +18,8 @@ function migrate_project {
 	else
 		eclipseDir=""
 	fi
+
+	mainFolder="$path/$eclipseDir"
 	
 	#
 	# Change default location of 'maqetta' library; and add line for 'grids' library
@@ -39,11 +41,34 @@ s|\(</libraries>\)|<library id="zazl" name="zazl" required="true" version="0.3.0
 	mv "$libSettings.new" "$libSettings"
 
 	#
+	# Remove Sample files
+	#
+	echo "5. Remove samples"
+	rm -f "${mainFolder}Sample1.html"
+	rm -f "${mainFolder}Sample2.html"
+	rm -f "${mainFolder}Sample3-Mobile.html"
+	rm -f "${mainFolder}SampleBanner.jpg"
+	rm -f "${mainFolder}SampleJs.js"
+	rm -rf "${mainFolder}sample_data"
+
+	#
+	# Remove 'maqetta' library files script tags
+	#
+	echo "6. Edit HTML files"
+	find "$mainFolder" \( -name "*.html" -o -name "*.html.workingcopy" \) \
+			-exec sed -i '
+s|<script type="text/javascript" src="[\./]*/maqetta/maqetta.js"></script>||
+s|<script type="text/javascript" src="[\./]*/maqetta/States.js"></script>||
+' {} \;
+
+	#
 	# Update version in Dojo path.
 	#
-	if [[ -d "$path/themes" ]]; then
-		echo "5. Update dojo-theme-editor.html"
-		find "$path/themes" -name dojo-theme-editor.html -exec sed -i 's|/maqetta/app/static/lib/dojo/1.7|/maqetta/app/static/lib/dojo/1.8|g' {} \;
+	themesFolder="${mainFolder}themes"
+	if [[ -d "$themesFolder" ]]; then
+		echo "7. Update dojo-theme-editor.html"
+		find "$themesFolder" -name dojo-theme-editor.html \
+				-exec sed -i 's|/maqetta/app/static/lib/dojo/1.7|/maqetta/app/static/lib/dojo/1.8|g' {} \;
 	fi
 }
 

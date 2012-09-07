@@ -143,8 +143,16 @@ public class OrionUser extends User {
 		// return storage system
 		return this.userDirectory;
 	}
-	
+	public boolean isProject(String projectName){
+		IStorage baseFile = userDirectory.newInstance(this.userDirectory, projectName);
+		
+		IStorage settings = userDirectory.newInstance(baseFile, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
+		return settings.exists();
+	}
 	public IVResource createProject(String projectName, String basePath, boolean initFiles){
+		
+		if(isProject(projectName))  return getResource(projectName);
+		
 		IVResource project = createOrionProject(projectName);
 		/*
 		 * Load the initial user files extension point and copy the files to the projects root

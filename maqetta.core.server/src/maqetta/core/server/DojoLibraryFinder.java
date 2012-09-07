@@ -46,12 +46,12 @@ public class DojoLibraryFinder implements ILibraryFinder{
 		this.project = project;
 	}
 	
-	public ILibraryFinder getInstance(URI baseResource) {
+	public ILibraryFinder getInstance(URI baseResource, String project) {
 		// TODO Auto-generated method stub
 		IPath p = new Path(baseResource.getPath());
 		String projectPiece = p.segment(p.segmentCount()-1);
 		
-		return new DojoLibraryFinder(baseResource, projectPiece);
+		return new DojoLibraryFinder(baseResource, project);
 	}
 
 	private static URI appendPath(URI u, String piece){
@@ -190,12 +190,24 @@ public class DojoLibraryFinder implements ILibraryFinder{
 				Set<Object> keySet = dojoValidationProps.keySet();
 				Iterator<Object> itr = keySet.iterator(); 
 		
-				String regex = "file121\\S+/dojoxF0204file120\\S+/dojoF0204file120\\S+/utilF0204file124\\S+/ibm_soapF0204file121\\S+/dijitF02";
+				String regex = "file128\\S+/ibm_soap" +
+							   "F0204file125\\S+/dijit" +
+							   "F0204file124\\S+/dojo" +
+							   "F0204file124\\S+/util" +
+							   "F0204file125\\S+/dojox" +
+							   "F02";
+				
 				while(itr.hasNext()) {
 					String key = (String)itr.next();
-					if (key.endsWith("/groups")) {
+					if (key.endsWith("groups")) {
 						String value = dojoValidationProps.getProperty(key);
-						value = value.replaceAll(regex, "file121" + path + "/dojoxF0204file120" + path + "/dojoF0204file120" + path + "/utilF0204file124" + path + "/ibm_soapF0204file121" + path + "/dijitF02");
+						String replaceStr = "file128" + path + "/ibm_soap" + 
+											"F0204file125" + path + "/dijit" +
+											"F0204file124" + path + "/dojo" +
+											"F0204file124" + path + "/util" +
+											"F0204file125" + path + "/dojox" + 
+											"F02";
+						value = value.replaceAll(regex, replaceStr);
 						dojoValidationProps.setProperty(key, value);
 					}
 				}

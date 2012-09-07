@@ -349,8 +349,8 @@ define(['domReady'], function(domReady) {
 		if(loginToken){
 			revealUserValidation();
 			var email = getParam('login');
-			document.getElementById("resetEmail").value = email;
-			document.getElementById("resetLoginTolken").value = loginToken;
+			document.getElementById("create_login").value = email;
+			document.getElementById("loginTolken").value = loginToken;
 		}
 		
 		if(resetTolken){

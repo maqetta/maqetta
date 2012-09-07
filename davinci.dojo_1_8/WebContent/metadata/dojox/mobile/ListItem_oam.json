@@ -108,11 +108,11 @@
         "variableHeight": {
             "datatype": "boolean",
             "defaultValue": false
-        },
+        }/*,
         "busy": {
             "datatype": "boolean",
             "defaultValue": false
-        },
+        }*/,
         "header": {
             "datatype": "boolean",
             "defaultValue": false

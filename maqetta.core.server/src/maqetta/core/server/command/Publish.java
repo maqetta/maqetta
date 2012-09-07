@@ -158,18 +158,9 @@ public class Publish extends Command {
 					String url = ReviewManager.getReviewManager().getReviewUrl(user.getUserID(), version.getTime(), requestUrl);
 					String htmlContent = getHtmlContent(user, message, url);
 					
-					String emailAdd = Utils.getCommonNotificationId();
-					if(emailAdd==null){
-						int offset = (requestUrl.indexOf("https://") > -1 ? "https://".length():"http://".length() );
-						String domain = requestUrl.substring(offset, requestUrl.indexOf('/', offset));
-				    	if(domain.indexOf(":") > -1)
-				    		domain = domain.substring(0,domain.indexOf(":"));
-				    	emailAdd = "admin@" + domain;	
-					}
-					
-					emailResult = notifyRelatedPersons(emailAdd, mail,
+					String notifId = Utils.getCommonNotificationId(req);
+					emailResult = notifyRelatedPersons(notifId, mail,
 							Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION_SUBJECT_PREFIX) + " " + versionTitle, htmlContent);
-					
 				}
 			}
 			if (emailResult != null) {

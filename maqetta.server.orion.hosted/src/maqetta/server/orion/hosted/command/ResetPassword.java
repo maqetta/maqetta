@@ -54,20 +54,13 @@ public class ResetPassword extends Command {
 		    	String host = requestUrl.substring(0, requestUrl.indexOf('/', offset));
 		    	String authLink = host + "/mixloginstatic/LoginWindow.html?login=" + emailAdd + "&resetTolken=" + randomToken + "&redirect=../maqetta/";
 		    	
-		    	String domain = host.substring( offset);
-		    	String emailAddy = Utils.getCommonNotificationId();
-		    	if(domain.indexOf(":") > -1)
-		    		domain = domain.substring(0,domain.indexOf(":"));
-		    	
-		    	if(emailAddy ==null)
-		    		emailAddy = "admin@" + domain;
 		    	IEclipsePreferences signupTokens = new OrionScope().getNode("resetPassword"); //$NON-NLS-1$
 		    	
 		    	/* index by the token for easy retrival */
 				IEclipsePreferences result = (IEclipsePreferences) signupTokens.node(randomToken);
 		    	/* store the email address with the token */
 				result.put(ResetPassword.EMAIL_FIELD, emailAdd);
-				sendEmail(emailAdd, EMAIL_TEMPLATE + authLink, emailAddy);
+				sendEmail(emailAdd, EMAIL_TEMPLATE + authLink, Utils.getCommonNotificationId(req));
 	    	}else if(changePassword){
 	    		/* reset link followed, now actually reset the password */
 	    		IEclipsePreferences signupTokens = new OrionScope().getNode("resetPassword"); //$NON-NLS-1$

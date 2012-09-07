@@ -46,16 +46,6 @@ public class Register  extends Command {
     	String host = requestUrl.substring(0, requestUrl.indexOf('/', offset));
     	String authLink = host + "/mixloginstatic/LoginWindow.html?login=" + emailAdd + "&loginTolken=" + randomToken + "&redirect=../maqetta/cmd/migrate";
     	
-    	String domain = host.substring( offset);
-    	String emailAddy = Utils.getCommonNotificationId();
-    	if(domain.indexOf(":") > -1)
-    		domain = domain.substring(0,domain.indexOf(":"));
-    	
-    	if(emailAddy ==null)
-    		emailAddy = "admin@" + domain;
-    	
-    	
-    	
     	IEclipsePreferences signupTokens = new OrionScope().getNode("signup"); //$NON-NLS-1$
     	
     	/* index by the token for easy retrival */
@@ -63,11 +53,10 @@ public class Register  extends Command {
     	/* store the email address with the token */
 		result.put(Register.EMAIL_FIELD, emailAdd);
 		
-		sendEmail(emailAdd, EMAIL_TEMPLATE + authLink, emailAddy);
-	
+		sendEmail(emailAdd, EMAIL_TEMPLATE + authLink, Utils.getCommonNotificationId(req));
         
     	this.responseString = "OK";
-      }
+    }
     
     private void sendEmail(String emailAdd, String htmlContent, String from){
     	(new Thread(new EmailRunnable(emailAdd, htmlContent, from))).start();

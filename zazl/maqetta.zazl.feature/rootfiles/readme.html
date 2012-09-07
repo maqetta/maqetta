@@ -1,0 +1,216 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Installing and Launching Maqetta on Localhost</title>
+<style type='text/css'>
+	body {
+		margin: 5em;
+	}
+</style>
+</head>
+
+<body>
+
+<div id="pagebody">
+
+<h1>Installing and Launching Maqetta on Localhost</h1>
+
+<h2 id="supported_browsers">Supported browsers: Google Chrome (current release), Mozilla Firefox (current release) and Mac Safari 5.1</h2>
+
+<h2 id="run_off_cloud">Long-term vision: everyone runs a cloud version of Maqetta (i.e., run off server)</h2>
+<p> This README describes how to launch the locally installed version of Maqetta
+off of http://localhost. However, it is important to note that
+the Maqetta open source team's goal is that ultimately everyone will run Maqetta in the cloud 
+(i.e. off of a server), saving files in their cloud workspace. 
+The team features of Maqetta, particularly review and commenting,
+require users to run the server-based version of the product.</p>
+<p>There might be multiple cloud versions of Maqetta. The Maqetta team 
+provides a non-commercial, as-is, non-secure, use at your own risk, etc. cloud-hosted version 
+of Maqetta at Maqetta.org:</p>
+<ul>
+<li>
+<a href="http://maqetta.org">http://maqetta.org</a>
+</li>
+</ul>
+<p>Other cloud versions of Maqetta might also be available. 
+For example, your company might be hosting a version of Maqetta on an intranet server, 
+or other web sites might offer cloud-hosted versions of Maqetta.</p>
+
+<h2 id="local_install">Instructions for installing and running Maqetta locally</h2>
+
+<p>With this option, you download a ZIP file containing Maqetta, double-click on a file to launch
+	the Maqetta server on <i>localhost:50000</i>, and then launch Maqetta by
+	navigating your browser to <a href="http://localhost:50000/maqetta" rel="external">http://localhost:50000/maqetta</a>.
+	As a result, you will be running Maqetta on a &quot;local cloud&quot; where <a href="http://localhost:50000/maqetta" rel="external">http://localhost:50000/maqetta</a>
+	simulates a cloud environment. Detailed installation instructions can be found in a subsequent section.
+	This approach allows your data to be stored on your local file system, but you cannot use the team features such
+	as review and commenting.</p>
+<p>Here are the instructions for installing and running Maqetta locally (i.e. http://localhost:50000).</p>
+
+<h3 id="local_install_java">Step 1: Verify you have Java Version 5 installed on your machine.</h3>
+
+<p>Maqetta requires Java Version 5 (i.e. JRE Version 1.5), installed on your machine in order to run Maqetta locally.<br />
+Follow these steps to check your Java version:</p>
+
+<ol><li> Open a Command Prompt window
+<ul><li>On Windows: Click <b>Start > Run</b>, type in <code style="letter-spacing:1px;">cmd</code> and click OK</li>
+    <li>On Mac: Open <b>Finder > Applications > Utilites > Terminal</b></li></ul>
+<li>Type in <code>java -version</code></li>
+<li>If the version number 1.5.0 or higher, no further action is required.</li>
+<li>If the version number is lower than 1.5.0, or you don't have Java on your machine, then you'll need to install
+	Java 1.5 (or later) onto your machine.
+</li>
+</ol>
+
+<h3 id="local_install_launch_server">Step 2: Launch the Maqetta server</h3>
+
+<ol><li> With the Explorer (Windows) or Finder (Mac), navigate to the directory into which you unzipped the Maqetta files.
+</li><li> Launch the Maqetta server process.
+<ul><li> On Windows, double-click on the file <b>maqetta.server.win.bat</b> (depending on your settings, the Windows explorer might not show the &quot;.bat&quot; extension).
+</li><li> On Mac, double-click on the file <b>maqetta.server.mac.command</b> (depending on your settings, the Mac finder might not show the &quot;.command&quot; extension).
+
+</li></ul>
+</li></ol>
+
+<p> </p>
+
+<p>You can tell that the server has launched if you see the following message in the shell window:
+</p>
+<p> </p>
+<hr />
+<pre>!!!!!!!!!!!!!!<br />NOTE: CLOSING THIS WINDOW WILL <br />      STOP THE MAQETTA SERVER PROCESS<br />!!!!!!!!!!!!!<br /><br />Using directory : &lt;maqetta-unzip-dir&gt;\users<br />start your browser at http://localhost:50000/maqetta<br /><br />...(various messages might appear here)...<br /><br />osgi&gt;</pre>
+<hr />
+<p> </p>
+<p>Be sure to wait until you see the <code>osgi&gt;</code> prompt appear. That indicates that the server has initialized.</p>
+<p>The Maqetta server will continue to run until you close the shell window that comes up after you double-click on the server launch file. Therefore, if you close the shell window, the Maqetta server process will stop running, at which point you can't run <a href="http://localhost:50000/maqetta" rel="external" title="http://localhost:50000/maqetta">http://localhost:50000/maqetta</a> anymore. <br /></p>
+<p><i><font color="#ff0000"><b><u>One possible problem</u></b> <font color="#000000">is that you might already be running a different localhost server on your system at <b><u>http://localhost:50000</u></b> (the default for Maqetta). Refer to the detailed notes immediately below about how to change the Maqetta launch script to use a different port number.</font></font></i><br /></p><p /><p><b><i>Detailed notes about the Maqetta server <br /></i></b></p>
+
+<ul><li>On the Mac, you can launch the Maqetta server from the Dock by dragging the <code>maqetta.server.mac.command</code> onto the right part of the doc.</li>
+<li>The launch scripts (<b>maqetta.server.win.bat</b> and <b>maqetta.server.mac.command</b>) have some default parameters:
+<ul>
+<li><b>HTTP port number</b> - The scripts default to port 50000. If you prefer to use 8080 or some other port number, hand-edit the launch script 
+and change 50000 to something else (any number in the 50000's is OK).
+</li><li><b>User workspace folder</b> - Any files that you create in Maqetta will be saved into a folder managed by the Maqetta server process. You can change the location for where your workspace is saved by hand-editing the launch scripts. <i><b>Note that a future version of Maqetta will allow you to open any file on your local system. The current release can only open files within the workspace area.</b></i><br /><br />The default <b>user workspace folder</b> locations are:<br /><br />
+
+<ul><li>Windows: &lt;maqetta-unzip-dir&gt;\users</li>
+<li>Macintosh: &lt;maqetta-unzip-dir&gt;/users</li></ul>
+
+</li></ul>
+</li></ul>
+
+<h3 id="local_install_launch_browser">Step 3: Launch Maqetta application in Google Chrome, Firefox 4 or Mac Safari 5.1</h3>
+
+<p>Once the Maqetta server has been launched (see previous steps), open Chrome, Firefox or Safari and go to the following URL: 
+</p>
+<ul><li> <a href="http://localhost:50000/maqetta" rel="external" title="http://localhost:50000/maqetta">http://localhost:50000/maqetta</a>
+</li></ul>
+
+<p>You will now see a Maqetta login screen. The first time run bring up your locally installed version in the browser, 
+	you will need create a new user account by clicking on the Register button, which will take you to the account creation screen.
+	For a local installation of Maqetta, the login name can be an email address or any string (e.g., your name). 
+	(Note: Local installations do not require that new accounts get verified via activation emails.)
+	After clicking Register,
+	the Maqetta application should appear.
+</p>
+
+<p>In subsequent sessions, you will need to enter the same login and password.
+</p>
+
+<h2 id="clearing_caches">Detailed instructions for clearing caches and cookies in various browsers</h2>
+
+<p>When using a new release of Maqetta for the first time, it is generally a good idea to restart your browser and clear caches and any cookies associated with the Maqetta server. Details instructions:</p>
+
+<ul>
+	<li><strong>Quit and restart your browser before launching a new version of Maqetta for the first time.</strong>
+		We have found occasional issues when switching from an old version
+		of Maqetta to a newer version. </li>
+	<li><strong>Clear both the browser's cache, cookes and "appcache" (offline storage):</strong>
+		<ul>
+			<li>Chrome (version 19)
+				<ul>
+				 	<li>(Windows only): Click on the tools icon (looks like a wrench) and choose "Settings".
+				 		This will open a new browser tab titled "Settings".</li>
+				 	<li>(Mac only) Under the "Chrome" menu, choose "Preferences".
+				 		This will open a new browser tab titled "Settings".</li>
+				 	<li>Make sure that advanced settings such as "Content settings" and "Clear browser cache" are visible on the page.
+				 		In some cases, you might have to toggle the "Show advanced settings / Hide advanced settings" control
+				 		(found at the bottom of the page content for the Settings page).</li>
+					<li>To clear the browser cache, click on the "Clear browsing data" button.
+						In the dialog that follows, make sure "Empty the cache" is checked.
+						You might want to uncheck the other items so that other things are not also cleared.
+						Once the check boxes are set correctly, click on the "Clear browsing data" button.</li>
+					<li>To clear the appcache (offline storage) and Maqetta's cookies: 
+						<ul>
+							<li>Click on "Content settings...." to bring up the Content Settings dialog.</li>
+							<li>In the "Cookies" section towards the top, click on the "All Cookies and Site Data..." button to bring up the Cookies and Other Data panel.</li>
+							<li>In the top right search box, type in part of the URL for the web server where you are running Maqetta.
+								For example:
+								<ul>
+									<li>If you run Maqetta at Maqetta.org, then you can start typing "maqetta.org" into the search box
+										and immediately you will see the subset of sites that match the pattern (e.g., maqetta.org).</li>
+									<li>If run run locally on http://localhost, then you can start typing "localhost" into the search box.</li>
+								</ul>
+							<li>When the listing of sites shows the site from which you run Maqetta, click on the row for that site to select that row.</li>
+							<li>Then click on the "x" in the top-right of that row to delete all cookies and offline storage for that site.</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li>Firefox
+				<ul>
+					<li>(Windows only): On main menubar, invoke Tools->Options. 
+						This brings up the Options dialog. 
+						Click on the "Advanced" button
+						and then click on the "Network" tab.</li>
+				 	<li>(Mac only) Under the "Firefox" menu, choose "Preferences".
+						Click on the "Advanced" button
+						and then click on the "Network" tab.</li>
+					<li>Clear cache: Under "Cached Web Content", click on "Clear Now".</li>
+					<li>Clear appcache: Under "Offline Storage", at the bottom is a
+						box labelled as follows: "The following websites have stored data for offline use:".
+						See if the server which hosts Maqetta is listed. 
+						If you installed locally, the server is "localhost". 
+						If running off of http://maqetta.org,
+						the server is "maqetta.org". 
+						If the Maqetta server is listed, click on it and then click "Remove" (and then "Remove offline data").
+					</li>
+					<li>Clear cookies: Click on the "Privacy" tab, then click on the hyperlink that says "remove individual cookies".
+						This brings up a "Cookies" dialog. In the search text entry box at the top, 
+						type in the URL for the web server where you are running Maqetta.
+						For example:
+						<ul>
+							<li>If you run Maqetta at Maqetta.org, then type "maqetta.org" into the search box.</li>
+							<li>If run run locally on http://localhost, then type "localhost" into the search box.</li>
+						</ul>
+						Select all cookies listed and then click the "Remove cookie" button.
+					</li>
+				</ul>
+			</li>
+			<li>Safari
+				<ul>
+				 	<li>(Mac only) Clear both the browser cache and the application cache: Under the "Safari" menu, invoke the "Empty cache..." command,
+				 		and then click "Empty" on the dialog that appears.</li>
+					<li>(Mac only) Clear cookies: Under the "Safari" menu, invoke the "Preferences..." command to bring up the Preferences dialog.
+						Click on the "Security" tab, then click on "Show Cookies" button.
+						This brings up a "Cookies" dialog. In the search text entry box at the top, 
+						type in the URL for the web server where you are running Maqetta.
+						For example:
+						<ul>
+							<li>If you run Maqetta at Maqetta.org, then type "maqetta.org" into the search box.</li>
+							<li>If run run locally on http://localhost, then type "localhost" into the search box.</li>
+						</ul>
+						Select all cookies listed and then click the "Remove" button.
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+</ul>
+
+<p> </p>
+
+</div>  <!-- pagebody -->
+
+</body>
+</html>

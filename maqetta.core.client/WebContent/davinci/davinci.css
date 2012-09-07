@@ -1160,11 +1160,11 @@ background-position: -75px -745px;
 	background-image: url(img/sprite.png);
 	background-position: -51px -1573px;
 }
-.tableSelectColumnIconSmall {
+.tableSelectRowIconSmall {
 	background-image: url(img/sprite.png);
 	background-position: -72px -1574px;
 }
-.tableSelectRowIconSmall {
+.tableSelectColumnIconSmall {
 	background-image: url(img/sprite.png);
 	background-position: -94px -1574px;
 }

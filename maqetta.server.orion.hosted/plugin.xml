@@ -23,6 +23,9 @@
             
          <command path="register" noLogin="true" 
               class="maqetta.server.orion.hosted.command.Register" />
+         <command path="resetPassword" noLogin="true" 
+              class="maqetta.server.orion.hosted.command.ResetPassword" />
+              
         <command path="migrate"
               class="maqetta.server.orion.hosted.command.MigrateUser6to1" />      
     </extension>

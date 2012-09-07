@@ -134,42 +134,14 @@ define(['domReady'], function(domReady) {
 	}
 
 	function confirmResetUser() {
-		var responseObject;
-		if (document.getElementById("reset").value === "" && document.getElementById("resetEmail").value === "") {
-			setResetMessage(true, "Provide username or email to reset.");
-			return;
-		}
 		var mypostrequest = new XMLHttpRequest();
-		mypostrequest.onreadystatechange = function() {
-			document.getElementById("errorWin").style.visibility = 'hidden';
-			if (mypostrequest.readyState === 4) {
-				if (mypostrequest.status === 200) {
-					responseObject = JSON.parse(mypostrequest.responseText);
-					if (responseObject.Message) {
-						setResetMessage(false, responseObject.Message);
-					} else {
-						document.getElementById("errorWin").style.visibility = '';
-					}
-				} else {
-					try {
-						responseObject = JSON.parse(mypostrequest.responseText);
-						if (responseObject.Message) {
-							setResetMessage(true, responseObject.Message);
-							return;
-						}
-					} catch (e) {
-						// not json
-					}
-					setResetMessage(true, mypostrequest.statusText);
-				}
-			}
-		};
-
-		mypostrequest.open("POST", "../useremailconfirmation", true);
+		mypostrequest.open("POST", "/maqetta/cmd/resetPassword", true);
 		mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		mypostrequest.setRequestHeader("Orion-Version", "1");
-		mypostrequest.send("{login='" + document.getElementById("resetEmail").value + "', email='" + document.getElementById("resetEmail").value + "'}");
-
+		
+		var parameters = "login=" + encodeURIComponent(document.getElementById("resetEmail").value) + "&action=reset";
+	
+		mypostrequest.send(parameters);
 		setResetMessage(false, "Sending password reset confirmation...");
 	}
 
@@ -234,7 +206,32 @@ define(['domReady'], function(domReady) {
 		document.getElementById("errorMessage").innerHTML = "&nbsp;";
 		return true;
 	}
-
+	function submitReset(){
+		var mypostrequest = new XMLHttpRequest();
+		var login = document.getElementById("reset_login").value;
+		var password = document.getElementById("reset_password").value;
+		var resetTolken = document.getElementById("resetTolken").value;
+		
+		mypostrequest.onreadystatechange = function() {
+			if (mypostrequest.readyState === 4) {
+				if (mypostrequest.status !== 200 && window.location.href.indexOf("http") !== -1) {
+					if (!mypostrequest.responseText) {
+						return;
+					}
+					var responseObject = JSON.parse(mypostrequest.responseText);
+					document.getElementById("errorMessage").innerHTML = responseObject.Message;
+					document.getElementById("errorWin").style.visibility = '';
+				} else {
+					confirmLogin(login, password);
+				}
+			}
+		};
+		var parameters = "action=change&login=" + encodeURIComponent(login) + "&password=" + encodeURIComponent(password) + "&resetTolken=" + resetTolken;
+		mypostrequest.open("POST", "/maqetta/cmd/resetPassword", true);
+		mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		mypostrequest.setRequestHeader("Orion-Version", "1");
+		mypostrequest.send(parameters);
+	}
 	function confirmCreateUser() {
 	
 		if (!validatePassword()) {
@@ -298,6 +295,12 @@ define(['domReady'], function(domReady) {
 		document.getElementById('newUserHeaderShown').style.visibility = '';
 	}
 	
+	function revealResetForm() {
+		document.getElementById('orionLogin').style.visibility = 'hidden';
+		document.getElementById('orionRegister').style.visibility = 'hidden';
+		document.getElementById('resetPassword').style.visibility = '';
+	}
+	
 	function hideRegistration() {
 		document.getElementById('orionLogin').style.visibility = '';
 		document.getElementById('orionRegister').style.visibility = '';
@@ -339,16 +342,25 @@ define(['domReady'], function(domReady) {
 			document.getElementById("errorWin").style.visibility = '';
 			document.getElementById("errorMessage").innerHTML = errorMessage;
 		}
-
+		
 		var loginToken = getParam('loginTolken');
+		var resetTolken = getParam('resetTolken');
 		
 		if(loginToken){
 			revealUserValidation();
 			var email = getParam('login');
-			document.getElementById("create_login").value = email;
-			document.getElementById("loginTolken").value = loginToken;
+			document.getElementById("resetEmail").value = email;
+			document.getElementById("resetLoginTolken").value = loginToken;
 		}
 		
+		if(resetTolken){
+			revealResetForm();
+			var email = getParam('login');
+			document.getElementById("reset_login").value = email;
+			document.getElementById("resetTolken").value = resetTolken;	
+		}
+		
+		document.getElementById("resetConfirmButton").onclick=submitReset;
 		
 		document.getElementById("login-window").style.display = '';
 		document.getElementById("login").focus();
@@ -380,19 +392,7 @@ define(['domReady'], function(domReady) {
 
 		document.getElementById("resetUserLink").onclick = revealResetUser;
 
-		document.getElementById("reset").onkeypress = function(event) {
-			if (event.keyCode === 13) {
-				confirmResetUser();
-			}
-			return true;
-		};
-		
-		document.getElementById("resetEmail").onkeypress = function(event) {
-			if (event.keyCode === 13) {
-				confirmResetUser();
-			}
-			return true;
-		};
+	
 
 		document.getElementById("registerButton").onclick = revealRegistration;
 

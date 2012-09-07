@@ -79,11 +79,11 @@
                     "value": "bottom"
                 }
             ]
-        },
+        }/*,
         "busy": {
             "datatype": "boolean",
             "defaultValue": false
-        }
+        }*/
     },
     "content": "<h1 label='Heading'></h1>"
 }

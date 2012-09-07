@@ -127,7 +127,8 @@
 #orionBody #createButton, 
 #orionBody #hideRegisterButton, 
 #orionBody #signupUserButton, 
-#orionBody #hideRegisterButtonSignup {
+#orionBody #hideRegisterButtonSignup,
+#orionBody #resetConfirmButton {
 	background: #EEE;
 	background-image: -webkit-linear-gradient(#F4F4F4, #DBDBDB);
 	background-image: -moz-linear-gradient(#F4F4F4, #DBDBDB);
@@ -148,7 +149,8 @@
 #orionBody #createButton:hover, 
 #orionBody #hideRegisterButton:hover, 
 #orionBody #signupUserButton:hover, 
-#orionBody #hideRegisterButtonSignup:hover {
+#orionBody #hideRegisterButtonSignup:hover,
+#orionBody #resetConfirmButton:hover {
 	background: #DDD;
 	background-image: -webkit-linear-gradient(#E4E4E4, #D0D0D0);
 	background-image: -moz-linear-gradient(#E4E4E4, #D0D0D0);
@@ -156,10 +158,17 @@
 	background-image: -o-linear-gradient(#E4E4E4, #D0D0D0);
 	background-image: linear-gradient(#E4E4E4, #D0D0D0);
 }
-#orionBody #cancleResetButton, #orionBody #registerButton, #orionBody #hideRegisterButton {
+#orionBody #cancleResetButton, 
+#orionBody #registerButton, 
+#orionBody #hideRegisterButton, 
+#orionBody #hideRegisterButtonSignup {
 	font-weight:normal;
 }
-#orionLogin #loginButton {
+#orionLogin #loginButton, 
+#orionBody #sendResetButton, 
+#orionBody #createButton, 
+#orionBody #signupUserButton,
+#orionBody #resetConfirmButton {
 	font-weight:bold;
 }
 #orionLogin .orion-login-forgot-holder {

@@ -1276,12 +1276,17 @@ var singleton = davinci.states = new States();
 						// The second part of the check, className.indexOf(), is there because 
 						// an earlier pass of the parser might have replaced the node, 
 						// and therefore the _maqAlreadyPreserved flag would be lost.
-						if(!node._maqAlreadyPreserved && node.className.indexOf(prefix)<0){
+						var className = node.getAttribute('class') 
+						if(!className){
+							className = '';
+						}
+						if(!node._maqAlreadyPreserved && className.indexOf(prefix)<0){
 							node._maqAlreadyPreserved = true;
 							var statesAttributes = singleton.retrieve(node);
 							if (node.tagName != "BODY" && statesAttributes && (statesAttributes.maqAppStates || statesAttributes.maqDeltas)) {
 								var tempClass = prefix+count;
-								node.className = node.className + ' ' + tempClass;
+								className = className + ' ' + tempClass;
+								node.setAttribute('class', className);
 								count++;
 								cache[tempClass] = {};
 								if(statesAttributes.maqAppStates){

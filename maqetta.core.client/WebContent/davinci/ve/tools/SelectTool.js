@@ -300,8 +300,9 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			// Don't process mouse events on focus nodes. Focus.js already takes care of those events.
 			return;
 		}
-		// #2127 First check for the selectToolDragDiv, if found then use the selected widget that is hiding under it..
-		var widget = (event.target.className === 'selectToolDragDiv' ) ? this._context.getSelection()[0] : (this._getTarget() || widgetUtils.getEnclosingWidget(event.target));
+		// #2127 First check for the selectToolDragDiv, if found then use the selected widget that is hiding under it.
+		var className = event.target.getAttribute('class');
+		var widget = (className === 'selectToolDragDiv' ) ? this._context.getSelection()[0] : (this._getTarget() || widgetUtils.getEnclosingWidget(event.target));
 		//FIXME: I'm not sure this while() block make sense anymore. 
 		//Not sure what a "managed widget" is.
 		while(widget){

@@ -143,9 +143,9 @@ define(function() {
 						if(node.style.display == "none" || node.getAttribute("selected") != "true"){
 							viewsToUpdate.splice(0, 0, node);
 						}else{
-							for(var i=0;i<pnode.children.length;i++){
-								n=pnode.children[i];
-								if(dj.hasClass(n,"mblView")){
+							for(var i=0;i<pnode.childNodes.length;i++){
+								n=pnode.childNodes[i];
+								if(n.nodeType==1 && dj.hasClass(n,"mblView")){	//nodeType==1 is Element
 									if(n!=node && (n.style.display != "none" || n.getAttribute("selected") == "true")){
 										viewsToUpdate.splice(0, 0, node);
 										break;
@@ -294,9 +294,9 @@ define(function() {
 			if(!dj){
 				return false;
 			}
-			for(var i=0; i<node.children.length; i++){
-				var child = node.children[i];
-				if(dj.hasClass(child, 'mblView')){
+			for(var i=0; i<node.childNodes.length; i++){
+				var child = node.childNodes[i];
+				if(child.nodeType==1 && dj.hasClass(child, 'mblView')){	// nodeType==1 => Element
 					return true;
 				}
 			}
@@ -311,9 +311,9 @@ define(function() {
 				return [];
 			}
 			var scenes = [];
-			for(var i=0; i<node.children.length; i++){
-				var child = node.children[i];
-				if(dj.hasClass(child, 'mblView')){
+			for(var i=0; i<node.childNodes.length; i++){
+				var child = node.childNodes[i];
+				if(child.nodeType==1 && dj.hasClass(child, 'mblView')){	// nodeType==1 => Element
 					scenes.push(child);
 				}
 			}

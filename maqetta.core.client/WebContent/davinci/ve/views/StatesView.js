@@ -861,9 +861,11 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 						newState = States.getState(stateContainerNode);
 					}
 					States.setState(newState, stateContainerNode, { focus:true, updateWhenCurrent:true });
-					context.deselectInvisible();
-					context.clearCachedWidgetBounds();
-					context.updateFocusAll();
+					if(this._editor.declaredClass === "davinci.ve.PageEditor"){
+						context.deselectInvisible();
+						context.clearCachedWidgetBounds();
+						context.updateFocusAll();
+					}
 				}
 				if(item.sceneId){
 					// Loop through plugin scene managers, eg Dojo Mobile Views

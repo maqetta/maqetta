@@ -121,7 +121,7 @@ public class SmtpPop3Mailer {
 		}
 		mailSession = Session.getInstance(props);
 
-		mailSession.setDebug(true);
+//		mailSession.setDebug(true);
 
 		if (smtpHost != null) {
 			if(port==null)

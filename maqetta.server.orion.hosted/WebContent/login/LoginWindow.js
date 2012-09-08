@@ -142,7 +142,7 @@ define(['domReady'], function(domReady) {
 		var parameters = "login=" + encodeURIComponent(document.getElementById("resetEmail").value) + "&action=reset";
 	
 		mypostrequest.send(parameters);
-		setResetMessage(false, "Sending password reset confirmation...");
+		setResetMessage(false, "Password reset email sent");
 	}
 
 	function getRedirect() {
@@ -279,7 +279,9 @@ define(['domReady'], function(domReady) {
 		
 		hideRegistration();
 		document.getElementById("errorWin").style.visibility = '';
-		document.getElementById("errorMessage").innerHTML = "Email sent to " + login;
+		document.getElementById('loginContainer').style.visibility = 'hidden';
+		document.getElementById('orionRegister').style.visibility = 'hidden';
+		document.getElementById("errorMessage").innerHTML = "Activation email sent to " + login;
 	}
 	
 	function revealRegistration() {

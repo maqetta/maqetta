@@ -48,7 +48,7 @@ define([
 
 	var onTextChanged = function(textChangeEvent) {
 		// 'this' === Editor._textModel
-		if (this._dontNotifyChange) {
+		if (this._dontNotifyChange) { 
 			// clear out the notify skipping
 			this._dontNotifyChange = false;
 			return;
@@ -108,7 +108,8 @@ return declare(null, {
 		
 		// delay binding to the onChange event until after initializing the content 
 		if (this._textModel) {
-			dojo.connect(this._textModel, "onChanged", this, onTextChanged); // editor.onInputChange?
+			dojo.disconnect(this._textModelConnection);
+			this._textModelConnection = dojo.connect(this._textModel, "onChanged", this, onTextChanged); // editor.onInputChange?
 		}
 	},
 

@@ -84,10 +84,13 @@ return declare([], {
 
 	setContent: function(fileName, content, themeCssFiles){
 		
-		if (this.theme.specVersion < 0.8){
-			this.themeVersionError(); 
-		} else if (this.theme.specVersion < this.THEME_EDITOR_SPEC){
-			this.themeVersionWarn(); //just warn for now
+		if (this.theme.specVersion < this.THEME_EDITOR_SPEC){
+			var cookieName = 'maqetta_'+this.theme.name+'_'+this.theme.specVersion;
+			var warnCookie = dojo.cookie(cookieName);
+			if (!warnCookie){
+				dojo.cookie(cookieName, "true");
+				this.themeVersionWarn(); //just warn for now
+			}
 		}
 		if(!has("webkit") && this.theme.type == "dojox.mobile"){
 			Workbench.showMessage(veNls.vteWarningUnsuportedBrowserTitle, veNls.vteWarningUnsuportedBrowserMessage, {width: 250});

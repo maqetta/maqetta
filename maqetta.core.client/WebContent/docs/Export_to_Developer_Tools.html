@@ -488,49 +488,6 @@ your zip file, click "Finish" at the bottom of the import wizard.
 <li>At this point, you should be able to use Eclipse features to edit the project you just imported.</li>
 </ul>
 
-
-<a name="exporting_without_Dojo"><h2>Exporting projects to IBM Rational Application Developer (TM) 8.5 without including the Dojo toolkit</h2></a>
-
-<p>This section is relevant to web development teams that use IBM Rational Application Developer (RAD) 8.5
-in conjunction with the Dojo Toolkit when the development team does not want the ZIP file exported from Maqetta to include
-the Dojo toolkit inside.</p>
-
-<p>To demonstrate Maqetta integration with RAD:</p>
-<ul>
-<li>Launch RAD</li>
-<li>Issue a <code>New-&gt;Web Project...</code> command and the following dialog will appear:
-<p><a href="img/RAD_New_Static_Web_Project.png" target="_blank"><img alt="image" src="img/RAD_New_Static_Web_Project.png" style="margin: 1em 1em 0pt 0pt; height:400px;"/></a></p>
-</li>
-<li>Enter a name for your project and choose the "Dojo Toolkit" project template. 
-</li>
-<li>Click Finish to create your static web project. If you look in the Project Explorer,
-you will see a <code>dojo/</code> folder within the <code>WebContent/</code> folder for your new project.
-</li>
-<li>Go into the Maqetta application and click on the Download Entire Workspace icon
-<img src="img/download.gif" title="Download Entire Workspace" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
-within the Files palette. In the Download dialog, uncheck the box next to "Dojo" 
-(this causes the downloaded ZIP to <em>not</em> include the Dojo JavaScript files)
-and replace the string <code>lib/dojo</code> with the string <code>dojo</code>
-(this causes all cloned HTML files that are included within the ZIP to look
-for the Dojo JavaScript files at relative URL <code>./dojo</code> instead of relative URL <code>./lib/dojo</code>).
-</li>
-<li>Click OK to start the download process </li>
-<li>Wait until the browser has completed the download.
-(Since Dojo was not included in the ZIP, the download should be completed quickly.)</li>
-<li>Using an external utility (e.g., use a product like WinZip or operating system utilities), 
-unzip the contents of the ZIP file into the <code>WebContent</code>
-folder for your project. (You'll need to know where your Eclipse workspace is stored on your system.)
-When completed, files such as <code>app.css</code>, <code>app.js</code>, and any you've created should end up
-in your <code>WebContent</code> folder.
-</li>
-<li>Back in RAD, issue a Refresh command on your new project. The files from the Maqetta ZIP should
-appear in the Project Explorer.
-</li>
-<li>Find one of your HTML files. Using the context menu, choose "Open With" and then "Rich Page Editor".
-You should see your HTML file rendered in RAD's page editor.
-</li>
-</ul>
-
 <p class="prevnext"><a href="CreatingStyleRulesWithAppCss.html">Previous</a> / <a href="advancedtopics.html">Next</a></p>
 
 </div> <!-- pagebody -->

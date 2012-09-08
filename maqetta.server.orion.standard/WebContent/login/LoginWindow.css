@@ -79,7 +79,7 @@
 #orionBody .orion-login-header, #orionBody.orion-reset-header {
 	border-bottom:none;
 }
-#orionLogin, #orionReset, #newUserSignup, #newUserHeaderShown {
+#orionLogin, #orionReset, #newUserSignup, #newUserHeaderShown, #resetPassword {
 	left:0px;
 	padding: 50px;
 	width:478px;

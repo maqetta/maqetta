@@ -55,7 +55,10 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
         } else {
             this.addThemeSet(newThemeInfo);
         }
-        var context = this._context;
+        var context = this._context,
+            editor = context.editor,
+            text = context.getModel().getText();
+        editor.setContent(editor.fileName, text);
         context.widgetAddedOrDeleted(true);
         context._configDojoxMobile();
         var device = context.getMobileDevice() || 'none';
@@ -122,7 +125,6 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
                                 importElements[i].close(); // removes the instance from the Factory
                                 query('link[href="' + url + '"]', doc).orphan();
                                 this._context.theme = null;
-                                this._context._themeUrl = null;
                                 break;
                             }
                         }
@@ -130,10 +132,6 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
                 }
             }
         }
-        if (this._context._selection) {
-			// forces style palette to update cascade rules
-        	this._context.onSelectionChange(this._context._selection);
-		}
     },
     
     addTheme: function(newThemeInfo){
@@ -178,13 +176,8 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
 			css.cssFile = cssFile; 
             style.addChild(css,0);
             this._context.theme = newThemeInfo;
-            this._context._themeUrl = this._context.loadThemeMeta(this._context._srcDocument).themeUrl;
-           
         }
-        if (this._context._selection) {
-			// forces style palette to update cascade rules
-        	this._context.onSelectionChange(this._context._selection);
-		}
+        
     },
     
     removeThemeSet: function(themeSet){

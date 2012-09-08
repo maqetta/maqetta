@@ -190,28 +190,50 @@ public class DojoLibraryFinder implements ILibraryFinder{
 				Set<Object> keySet = dojoValidationProps.keySet();
 				Iterator<Object> itr = keySet.iterator(); 
 		
-				String regex = "file128\\S+/ibm_soap" +
-							   "F0204file125\\S+/dijit" +
-							   "F0204file124\\S+/dojo" +
-							   "F0204file124\\S+/util" +
-							   "F0204file125\\S+/dojox" +
-							   "F02";
+				String[] regexes = 
+					{
+						//pattern 1
+						 "file128\\S+/ibm_soap" +
+						 "F0204file125\\S+/dijit" +
+						 "F0204file124\\S+/dojo" +
+						 "F0204file124\\S+/util" +
+						 "F0204file125\\S+/dojox" +
+						 "F02",
+						 //pattern 2
+						 "file128\\S+/ibm_soap" + 	
+						 "F02113projectNature134org.eclipse.jst.j2ee.ejb.EJBNature04file125\\S+/dijit" +
+						 "F0207pattern124.*/META-INF/ibmconfig/.*F04file124\\S+/dojo" + 
+						 "F0204file08.projectT01113projectNature130org.eclipse.jst.j2ee.EARNature04file124\\S+/util" +
+						 "F0204file125\\S+/dojoxF0204"
+					};
+
+				String[] replacements = 
+					{	//replacement 1
+						"file128" + path + "/ibm_soap" + 
+						"F0204file125" + path + "/dijit" +
+						"F0204file124" + path + "/dojo" +
+						"F0204file124" + path + "/util" +
+						"F0204file125" + path + "/dojox" + 
+						"F02",
+						//replacement 2
+						"file128" + path + "/ibm_soap" + 	
+						"F02113projectNature134org.eclipse.jst.j2ee.ejb.EJBNature04file125" + path + "/dijit" +
+						"F0207pattern124.*/META-INF/ibmconfig/.*F04file124" + path + "/dojo" + 
+						"F0204file08.projectT01113projectNature130org.eclipse.jst.j2ee.EARNature04file124" + path + "/util" +
+						"F0204file125" + path + "/dojoxF0204"
+					};
 				
 				while(itr.hasNext()) {
 					String key = (String)itr.next();
 					if (key.endsWith("groups")) {
 						String value = dojoValidationProps.getProperty(key);
-						String replaceStr = "file128" + path + "/ibm_soap" + 
-											"F0204file125" + path + "/dijit" +
-											"F0204file124" + path + "/dojo" +
-											"F0204file124" + path + "/util" +
-											"F0204file125" + path + "/dojox" + 
-											"F02";
-						value = value.replaceAll(regex, replaceStr);
+						for(int j=0;j<regexes.length;j++){
+							value = value.replaceAll(regexes[j], replacements[j]);
+						}
 						dojoValidationProps.setProperty(key, value);
 					}
 				}
-
+				
 				try {
 					dojoValidationProps.store(new FileOutputStream(settingsFile), null);
 				} catch (MalformedURLException e) {

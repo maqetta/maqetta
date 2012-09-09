@@ -35,7 +35,7 @@ return {
             },
             {
                 viewID: "davinci.ui.navigator",
-                position: "left",
+                position: "left-bottom",
                 selected: true
             },
             {

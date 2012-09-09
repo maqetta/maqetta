@@ -86,7 +86,7 @@ return {
         views: [
             {
                 viewID: "davinci.ui.navigator",
-                position: "left"
+                position: "left-bottom"
             },
             {
                 viewID: "davinci.ui.outline",

@@ -464,9 +464,18 @@
                     ]
                 }
             ],
-            "initialSize": "auto",
+            "initialSize": {
+				"flow": {
+					"width": "100%",
+					"height": "auto"
+				},
+				"absolute": {
+					"width": "300px",
+					"height": "auto"
+				}
+			},
             "allowedChild": "html.tbody, html.thead, html.tfoot, html.tr, html.caption, html.colgroup",
-            "inlineEdit": "./html/table/TableInput"
+            "inlineEdit": "./html/table/TableInput",
         },
         {
             "name": "<tbody>",

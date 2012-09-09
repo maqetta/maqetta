@@ -71,7 +71,7 @@ return {
                 },
                 {
                     viewID: "davinci.review.reviewNavigator",
-                    position: "left"
+                    position: "left-bottom"
                 }
             ]
         }

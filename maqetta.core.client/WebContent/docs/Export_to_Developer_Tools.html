@@ -63,7 +63,7 @@ shows the default workspace:
 
 <p>Some things to note:</p> 
 <ul>
-<li>In Maqetta's default workspace, JavaScript libraries are placed into the <code>libs/</code> folder.
+<li>In Maqetta's default workspace, JavaScript libraries are placed into the <code>lib/</code> folder.
 	The picture above shows multiple libraries, <code>clipart/</code>, <code>custom/</code>, <code>dojo/</code>, <code>maqetta/</code> and <code>shapes/</code>.
 	<ul>
 		<li>The <code>dojo/</code> folder contains a <em>read-only</em> version of the 
@@ -330,8 +330,8 @@ created by Maqetta into a production application.
 		<p><a href="img/HTML_Page_Initial_Split_View.png" target="_blank"><img alt="image" src="img/Download_Dialog.png" style="margin: 1em 1em 0pt 0pt;" /></a></p>
 	</li>
 	<li>Accept all of the defaults, and click on the OK button to download your entire workspace 
-		as a ZIP file named <code>workspace1.zip</code>. This will initiate a browser downlaod
-		action, with the download process happening the background.</li>
+		as a ZIP file named <code>workspace1.zip</code>. This will initiate a browser download
+		action, with the download process happening in the background.</li>
 	<li>Invoke the browser's Download feature to look at all of the browser's recent downloads.
 		In most browsers, the most recent download appears at the top. If the download is not
 		yet completed, the browser usually will show download progress. Wait until the download is complete.</li>
@@ -356,7 +356,7 @@ created by Maqetta into a production application.
 </p>
 <ul>
 	<li>In the Files palette, select all files that you would like to include in the download
-		other than the <code>libs/</code> files. (The download
+		other than the <code>lib/</code> files. (The download
 		dialog will allow you to include or exclude those files.)</li>
 	<li>Click on the second icon in the Files palette, the Download Selected Files icon
 		<img src="img/download-selected-files.gif" title="Download Selected Files" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
@@ -384,12 +384,12 @@ created by Maqetta into a production application.
 			<li><em>You probably would include all JavaScript libraries if</em>
 			you want the contents of the download ZIP to be a totally self-contained, runnable
 			application that you can install on an arbitrary web server or localhost server.</li>
-			<li><em>You probably would include a particular JavaScript libraries if</em>
+			<li><em>You probably would include particular JavaScript libraries if</em>
 			you have created an Eclipse-compatible project (see discussion of Eclipse-compatible projects below)
 			and are handing the ZIP off to a development team that is using the Eclipse IDE.
 			By including the JavaScript libraries, you will be providing a ZIP file that
 			contains the equivalent of a self-contained Eclipse web project.</li>
-			<li><em>You probably would <strong>not</strong> include a particular JavaScript libraries if</em>
+			<li><em>You probably would <strong>not</strong> include particular JavaScript libraries if</em>
 			you are handing the ZIP off to a development team that is not using Eclipse and is familiar
 			with the JavaScript libraries you are using in the UI mockups. The development
 			team might not want the JavaScript libraries included in the ZIP because they
@@ -397,11 +397,11 @@ created by Maqetta into a production application.
 			and it is wasteful to include these (usually quite large) components if not needed.</li>
 		</ul>
 	</li>
-	<br/><br/>
+	<br/>
 	<li><strong>Relocate particular libraries</strong> - 
 		Sometimes the development team sets up their folder hierarchy differently than
 		how Maqetta sets up user workspaces. For example, by default Maqetta places
-		the Dojo libraries at <code>./libs/dojo</code>, whereas the development team
+		the Dojo libraries at <code>./lib/dojo</code>, whereas the development team
 		might place Dojo at a different location, such as <code>./js/dojo</code>, 
 		<code>./dojo</code> or perhaps <code>../../libraries/dojo</code>.
 		The editable textboxes within the dialog allow you to "relocate" the JavaScript
@@ -418,6 +418,16 @@ created by Maqetta into a production application.
 			as they were.
 		</div>
 	</li>
+	<br/>
+	<li><strong>Download uncompressed source for selected libraries (if available)</strong> - By default, the
+		downloaded zip will contain built, minified source for the selected libraries. Check this option if you
+		want the original uncompressed source instead (currently only available for the Dojo and GridX libraries). Some 
+		tooling that you may wish to import your zip file into (such as IBM Rational Application Developer (TM) 
+		described below) work better with uncompressed source.
+	</li>
+	<br/>
+	<li><strong>Use Dojo Web Builder (experimental)</strong>
+	</li>
 </ul>
 
 <a name="exploring_workspace_html_files"><h2>Customizing your workspace to relocate JavaScript libraries</h2></a>
@@ -429,7 +439,7 @@ structure of your Maqetta workspace.</p>
 
 
 <p>For example, by default, Maqetta places all JavaScript libraries
-within the <code>./libs</code> folder, with the Dojo toolkit located at <code>./libs/dojo</code>.
+within the <code>./lib</code> folder, with the Dojo toolkit located at <code>./lib/dojo</code>.
 These defaults usually work well for most Maqetta users. However, if your development team 
 uses a different folder hierarchy, and you often create download ZIPs that you hand off to your developers,
 then sometimes it will be more efficient and less error-prone if you customize your Maqetta workspace
@@ -438,9 +448,9 @@ you won't need to relocate JavaScript libraries for each new ZIP file.
 Maqetta will automatically fix up all HTML files in your workspace
 to take into account the new location(s) for your JavaScript libraries.</p>
 
-<a name="exporting_self_contained"><h2>Exporting self-contained projects to the Eclipse IDE and IBM Rational Application Developer (TM) 8.0</h2></a>
+<a name="exporting_self_contained"><h2>Exporting self-contained projects to the Eclipse IDE and IBM Rational Application Developer (TM) 8.5</h2></a>
 
-<p>This section is relevant to web development teams that use the Eclipse IDE or IBM Rational Application Developer (RAD) 8.0
+<p>This section is relevant to web development teams that use the Eclipse IDE or IBM Rational Application Developer (RAD) 8.5
 and want to export a fully self-contained Eclipse project that can be imported simply into the Eclipse IDE.</p>
 
 
@@ -465,98 +475,17 @@ becauses that is what Eclipse expects.</li>
 
 <li>Click on the Download Entire Workspace icon
 <img src="img/download.gif" title="Download Entire Workspace" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
-within the Files palette and then click OK in the dialog that appears to accept the default options and start the download process.</li>
+within the Files palette. If using RAD, then you may want to check the <em>Download uncompressed source for selected 
+libraries</em> option. Otherwise, click OK in the dialog that appears to start the download process.</li>
 
 <li>Wait until the browser has completed the download.
 (Because Dojo is included in the ZIP, the download might take some time to complete.)</li>
 
-<li>On the same system where the Eclipse IDE is running, create a new folder (e.g., <code>maqetta_project1/</code>) 
-somewhere on the disk.
-Unzip the contents of the ZIP file into that folder.
-When completed, you should see the <code>WebContent/</code> folder as a direct child of the new folder
-(i.e., you should see <code>maqetta_project1/WebContent</code>).
-<div class="note">
-Warning about moving files around: Maqetta exports various "dot files" (i.e., hidden files that begin
-with the letter "."). If you use the system explorer or finder to rearrange files and folders,
-make sure that the dot files are moved along with any files or folders you move.
-</div>
-</li>
-
 <li>In Eclipse, from the File menu, issue an Import command and choose "General>Existing Project Into Workspace". 
-In the wizard that follows, choose the parent folder of the folder you created 
-(e.g., the parent folder for <code>maqetta_project1/</code>). You should see the folder you created
-(e.g., <code>maqetta_project1/</code>) in the list
-of projects to import. Make sure the checkbox next to that folder is checked and then click "Finish".
+In the wizard that follows, choose the "Select archive file" option and then browse to your zip file. After selecting 
+your zip file, click "Finish" at the bottom of the import wizard.
 </li>
 <li>At this point, you should be able to use Eclipse features to edit the project you just imported.</li>
-</ul>
-
-
-<a name="exporting_without_Dojo"><h2>Exporting projects to IBM Rational Application Developer (TM) 8.0 without including the Dojo toolkit</h2></a>
-
-<p>This section is relevant to web development teams that use IBM Rational Application Developer (RAD) 8.0
-in conjunction with the Dojo Toolkit when the development team does not want the ZIP file exported from Maqetta to include
-the Dojo toolkit inside.</p>
-
-<p>To demonstrate Maqetta integration with RAD:</p>
-<ul>
-<li>Launch RAD</li>
-<li>Issue a <code>New-&gt;Other...</code> command and then choose Web-&gt;Static Web Project. The following dialog will appear:
-<p><a href="img/RAD_New_Static_Web_Project.png" target="_blank"><img alt="image" src="img/RAD_New_Static_Web_Project.png" style="margin: 1em 1em 0pt 0pt; height:400px;"/></a></p>
-</li>
-<li>Fill out the usual fields (e.g., project name) as you would normally,
-but also click on the "Modify..." button so that you can tell RAD that you want to include the
-Dojo facet as part of your static web project. This brings up the Project Facets dialog.
-Open up the "Web 2.0" group and click on the checkbox next to "Dojo Toolkit":
-<p><a href="img/RAD_Dojo_Project_Facet.png" target="_blank"><img alt="image" src="img/RAD_Dojo_Project_Facet.png" style="margin: 1em 1em 0pt 0pt; height:400px;"/></a></p>
-And then click OK.
-</li>
-<li>Click Next until you get to the Dojo Project Setup dialog:
-<p><a href="img/RAD_Dojo_Project_Setup_1.png" target="_blank"><img alt="image" src="img/RAD_Dojo_Project_Setup_1.png" style="margin: 1em 1em 0pt 0pt; height:400px;"/></a></p>
-Click on the "Change these setup options" button. You will see the following wizard pane:
-<p><a href="img/RAD_Dojo_Project_Setup_2.png" target="_blank"><img alt="image" src="img/RAD_Dojo_Project_Setup_2.png" style="margin: 1em 1em 0pt 0pt; height:400px;"/></a></p>
-Notice that RAD provides three options for how to configure Dojo within your project:
-<ol>
-	<li>clone a copy of Dojo into the current project</li>
-	<li>reference a copy of Dojo that is within a project in the current workspace</li>
-	<li>reference Dojo off of a remote server (CDN)</li>
-</ol>
-</li>
-<li>Choose option 1 (clone a copy of Dojo into the current project) and click Next. You will see the following:
-<p><a href="img/RAD_Dojo_Project_Setup_3.png" target="_blank"><img alt="image" src="img/RAD_Dojo_Project_Setup_3.png" style="margin: 1em 1em 0pt 0pt; height:400px;"/></a></p>
-As you can see, RAD allows you to choose where you would like the Dojo toolkit to be located
-within your current project (i.e., relative to the <code>WebContent\</code> folder). 
-The dialog above shows the RAD's default location for Dojo: <code>dojo</code>.
-<div class="note">
-Maqetta uses a different default location for Dojo: : <code>lib/dojo</code>.
-</div>
-</li>
-<li>Click Finish to create your static web project. If you look in the Project Explorer,
-you will see a <code>dojo/</code> folder within the <code>WebContent/</code> folder for your new project.
-</li>
-<li>Go into the Maqetta application and click on the Download Entire Workspace icon
-<img src="img/download.gif" title="Download Entire Workspace" style="width:16px;height:16px;display:inline-block;margin:0;padding:0;"/>
-within the Files palette. In the Download dialog, uncheck the box next to "Dojo 1.7" 
-(this causes the download ZIP to <em>not</em> include the Dojo JavaScript files)
-and replace the string <code>lib/dojo</code> with the string <code>dojo</code>
-(this causes all cloned HTML files that are included within the ZIP to look
-for the Dojo JavaScript files at relative URL <code>./dojo</code> instead of relative URL <code>./lib/dojo</code>).
-</li>
-<li>Click OK to start the download process. </li>
-<li>Wait until the browser has completed the download.
-(Since Dojo was not included in the ZIP, the download should be completed quickly.)</li>
-<li>Using an external utility (e.g., use a product like WinZip or operating system utilities), 
-unzip the contents of the ZIP file into the <code>WebContent</code>
-folder for your project. (You'll need to know where your Eclipse workspace is stored on your system.)
-When completed, files such as <code>Sample1.html</code> and <code>app.css</code> should end up
-in your <code>WebContent</code> folder.
-</li>
-<li>Back in RAD, issue a Refresh command on your new project. The files from the Maqetta ZIP should
-appear in the Project Explorer.
-</li>
-<li>Find Sample1.html. Using the context menu, choose "Open With" and then "Web Browser".
-You should see Sample.html running within the embedded Web browser that is part of RAD.
-</li>
 </ul>
 
 <p class="prevnext"><a href="CreatingStyleRulesWithAppCss.html">Previous</a> / <a href="advancedtopics.html">Next</a></p>

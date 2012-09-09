@@ -73,13 +73,13 @@
 			{ id: '10.3', name:'Exporting to Developer Tools', url: 'Export_to_Developer_Tools.html' }
 		] },
 		{ id: '2', name:'Release Notes', url: 'releasenotes/releasenotes.html', children:[
-			{ id: '2.1', name:'Preview 1', url: 'releasenotes/preview1.html' },
-			{ id: '2.2', name:'Preview 2', url: 'releasenotes/preview2.html' },
-			{ id: '2.3', name:'Preview 3', url: 'releasenotes/preview3.html' },
-			{ id: '2.4', name:'Preview 4', url: 'releasenotes/preview4.html' },
-			{ id: '2.5', name:'Preview 5', url: 'releasenotes/preview5.html' },
+			{ id: '2.7', name:'Release 7', url: 'releasenotes/release7.html' },
 			{ id: '2.6', name:'Preview 6', url: 'releasenotes/preview6.html' },
-			{ id: '2.7', name:'Release 7', url: 'releasenotes/release7.html' }
+			{ id: '2.5', name:'Preview 5', url: 'releasenotes/preview5.html' },
+			{ id: '2.4', name:'Preview 4', url: 'releasenotes/preview4.html' },
+			{ id: '2.3', name:'Preview 3', url: 'releasenotes/preview3.html' },
+			{ id: '2.2', name:'Preview 2', url: 'releasenotes/preview2.html' },
+			{ id: '2.1', name:'Preview 1', url: 'releasenotes/preview1.html' }
 		] },
 	    { id: '7', name:'Programming Maqetta', url: 'techdocs/techguide.html', children:[
 			{ id: '7.1', name:'States API', url: 'techdocs/states.html' },		

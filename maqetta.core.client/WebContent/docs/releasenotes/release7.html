@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<link rel="stylesheet" type="text/css" href="../maqettadocs.css" />
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
 <title>Maqetta 7 Release Notes</title>
 <style type="text/css">
 .majortopic { font-size:105%; font-weight:bold; color:#a0a; }
@@ -307,6 +307,20 @@
 
 <h2>Migration of User Workspaces</h2>
 <ul>
+	<li><p><span class='majortopic'>Migration Process</span> -
+		This release changes how files are constructed and stored in users' workspaces.  Migration is a two step process:
+
+		<ol>
+			<li>
+				Run the <a href="https://raw.github.com/maqetta/maqetta/master/migration/m6-m7-migrate.sh" target="_blank">m6-m7-migrate.sh</a> script within a copy of the 'users' directory.  This will update users' files to better work with this release.
+			</li>
+			<li>
+				Set the <code>migrateWorkspaceLoc</code> property to point to the migrated 'users' directory.  Set this in the <em>maqetta.conf</em> configuration file, in the top level of the release folder.
+			</li>
+		</ol>
+
+		<p><em>Note:</em> The migration script only works on Unix-based systems.</p>
+	</li>
 	<li><p><span class='majortopic'>Widgets</span> - </p>
 		<ul>
 			<li><span class='minortopic'>HTML tables and empty cells</span> - 

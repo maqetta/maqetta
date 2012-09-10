@@ -213,7 +213,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			dojo.connect(containerNode, "onmouseover", this, "onMouseOver"),
 			dojo.connect(containerNode, "onmouseout", this, "onMouseOut")
 		];
-		this.widgetAddedOrDeleted();
+		//this.widgetAddedOrDeleted();
 		if(this.visualEditor && this.visualEditor._pageEditor && this.visualEditor._pageEditor._visualChanged){
 			this.visualEditor._pageEditor._visualChanged(true);
 		}
@@ -1038,7 +1038,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					lang.mixin(callbackData, e);
 				}
 				this._continueLoading(data, callback, callbackData, scope);
-				this.widgetAddedOrDeleted();
+				//this.widgetAddedOrDeleted();
 			}.bind(this);
 
 			doc.open();
@@ -1316,11 +1316,19 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 		//this._configDojoxMobile();
 		// Set mobile device CSS files
+		
 		var mobileDevice = this.getMobileDevice();
 		if (mobileDevice) {
 			this.setMobileDevice(mobileDevice);
 			this.visualEditor.setDevice(mobileDevice);
 		}
+		/*
+		 * give the browser a change to settle the head link changes from setting mobile themes before
+		 * widgetAddedorDeleted starts messing with the head for document.css
+		 * I don't like the setTimeout but until we come up with a way to single thread the head changes this 
+		 * the best we could do for now
+		 */
+		window.setTimeout(function(){this.widgetAddedOrDeleted();}.bind(this), 2000);
 	    dojo.publish('/davinci/ui/context/loaded', [this]);
 	    this.editor.setDirty(this.hasDirtyResources());
 	},

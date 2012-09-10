@@ -23,6 +23,23 @@ public class VOrionProjectStorage extends VOrionStorage {
 			}
 		}
 	}
+	
+	 public boolean delete() {
+	        // TODO Auto-generated method stub
+		 try {
+			 
+			this.store.delete(EFS.NONE, null);
+			((VOrionWorkspaceStorage)this.parent).removeProject(this.proj);
+			proj.remove();
+			proj.save();
+		} catch (CoreException e) {
+			return false;
+		}
+		 return true;
+	 }
+
+	 
+	
 	public boolean isDirectory() {
 		return true;
 	}

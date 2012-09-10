@@ -34,6 +34,12 @@ public class VOrionWorkspaceStorage extends VOrionProjectStorage{
 	}
 
 	public IStorage create(String name){
+		
+		IStorage existing = this.get(name);
+		
+		if(existing!=null)
+			return existing;
+		
 			IPath path = new Path(name);
 			VOrionStorage parent = (VOrionStorage)this.createProj(path.segment(0));
 			if(path.segmentCount() > 1)
@@ -96,6 +102,15 @@ public class VOrionWorkspaceStorage extends VOrionProjectStorage{
 				return projects[i];
 		}
 		return null;
+	}
+	public void removeProject(WebProject webProject){
+		webWorkspace.removeProject(webProject);
+		try {
+			webWorkspace.save();
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public IStorage[] listFiles(){

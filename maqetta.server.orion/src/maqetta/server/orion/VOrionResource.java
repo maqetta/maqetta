@@ -46,11 +46,15 @@ public class VOrionResource extends VFile {
 	
     protected IStorage getWorkingCopy(IStorage original) {
     	
-    	if(this.file.isDirectory()){
+    	if(this.file.isDirectory() ){
     		// no working copy for directories (java.io.file handled this before 
     		return this.file;
     	}
     	
+    	if(original.isDirectory() ){
+    		// no working copy for directories (java.io.file handled this before 
+    		return original;
+    	}
     	IStorage parent = original.getParentFile();
     	IStorage workingCopy;
     	if(parent!=null)

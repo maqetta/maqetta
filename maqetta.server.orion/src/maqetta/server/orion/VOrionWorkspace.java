@@ -33,46 +33,12 @@ import org.osgi.service.prefs.BackingStoreException;
 
 public class VOrionWorkspace extends VWorkspaceRoot{
 
-	VOrionWorkspaceStorage store;
+	private VOrionWorkspaceStorage store;
 	
     public VOrionWorkspace(VOrionWorkspaceStorage storage) {
     	this.store=storage;
 	}
 
-    /*
-	public IVResource[] listFiles() {
-		IVResource[] addedFiles = super.listFiles();
-		
-		IStorage[] files = this.store.listFiles();
-		IVResource[] returns = new IVResource[files.length + addedFiles.length];
-		for(int i=0;i<files.length;i++){
-			returns[i] = new VOrionResource(files[i], this, files[i].getName());
-		}
-		
-		for(int i=0;i<addedFiles.length;i++){
-			int index = files.length + i;
-			returns[index] = addedFiles[i];
-		}
-		
-		return returns;
-	}
-
-
-	public IVResource get(String childName) {
-		IStorage[] files = this.store.listFiles();
-		for(int i=0;i<files.length;i++){
-			
-			if(files[i].getName().compareTo(childName)==0)
-			return new VOrionResource(files[i], this, files[i].getName());
-		}
-		
-		return super.get(childName);
-	}
-	
-	public IVResource[] findChildren(String childName) {
-		return null;
-	}
-	*/
 	public IVResource create(String path) {
 		IPath ps = new Path(path);
 		IVResource parent = this;
@@ -88,6 +54,8 @@ public class VOrionWorkspace extends VWorkspaceRoot{
 			}else if(f.isVirtual()){
 				
 				IStorage file = this.store.create(path);
+				if(f.isDirectory())
+					file.mkdirs();
 				f = new VOrionResource(file, parent, segment);
 				parent.add(f);
 				

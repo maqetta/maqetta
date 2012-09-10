@@ -30,6 +30,10 @@ public class VStorageDirectory extends VDirectory {
     public boolean isVirtual() {
 		return false;
 	}
+    public boolean delete() {
+  		return this.resource.delete();
+  	}
+    
 	protected LibrarySettings getLibSettings() {
 		
 		return new LibrarySettings(this.resource.newInstance(this.resource, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME));

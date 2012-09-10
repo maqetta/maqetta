@@ -112,6 +112,11 @@
     	</condition>
     	<antcall target="backup.davinciPlugin.dojoDir"/>
 
+		<!-- remove tests in the src directory, if present, to reduce the size of the image -->
+		<delete quiet="true" includeemptydirs="true">
+			<fileset dir="${target.folder}/WebContent/${davinciPlugin.id}-src" includes="**/tests/**" />
+		</delete>
+
 		<!-- copy in dojo and dojo build utils to working directory in prep for build -->
 		<copy todir="${target.folder}" failonerror="true" overwrite="true" description="copying dojo and maqetta dependencies and dojo util tools">
 				<fileset dir="${basedir}/../maqetta.core.client">
@@ -198,11 +203,6 @@
     		<available file="${target.folder}/WebContent/dojo_BACKUP" type="dir"/>
     	</condition>
 		<antcall target="restore.davinciPlugin.dojoDir"/>
-
-		<!-- remove tests in the src directory, if present, to reduce the size of the image -->
-		<delete quiet="true" includeemptydirs="true">
-			<fileset dir="${target.folder}/WebContent/${davinciPlugin.id}-src" includes="**/tests/**" />
-		</delete>
 	</target>
 	
 	<!-- copy in helpers from dojo_1_8 plugin... if we didn't have a "dojo" directory when we started (representing 

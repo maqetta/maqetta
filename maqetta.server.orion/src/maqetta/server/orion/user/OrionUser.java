@@ -28,6 +28,7 @@ import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.ajaxLibrary.Library;
 import org.davinci.server.user.IPerson;
 import org.davinci.server.user.LibrarySettings;
+import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -149,6 +150,26 @@ public class OrionUser extends User {
 		IStorage settings = userDirectory.newInstance(baseFile, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
 		return settings.exists();
 	}
+	
+	public String computeMaqettaPath(String orionPath){
+
+		String split[] = orionPath.split("/");
+		String projectId = split[2];
+		WebProject proj = WebProject.fromId(projectId);
+		String path = proj.getName();
+		IFileStore child = null;
+		for(int i=3;i<split.length;i++){
+			try {
+				child = proj.getProjectStore().getChild(split[i]);
+				path+= "/" + child.getName();
+			} catch (CoreException e) {
+				
+				System.err.println("Error reconstituting orion path: " + orionPath);
+			}
+		}
+		return path;
+	}
+	
 	public IVResource createProject(String projectName, String basePath, boolean initFiles){
 		
 		if(isProject(projectName))  return getResource(projectName);

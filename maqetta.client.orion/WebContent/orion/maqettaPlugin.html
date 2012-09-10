@@ -26,6 +26,7 @@ http://localhost:8081/plugin/install.html#http://localhost:8081/maqetta/app/orio
 		}
 		
 		function fullPath(item){
+			
 			var path = "";
 			var parent = item[0];
 			var first = true;
@@ -39,14 +40,13 @@ http://localhost:8081/plugin/install.html#http://localhost:8081/maqetta/app/orio
 		}
 		/* this needs to change to registerService with newer versions of orion */
 		provider.registerServiceProvider('orion.navigate.command', {
-			run : function(item) {
-			   	window.open("/maqetta/cmd/configProject?project=" + fullPath(item), '_blank');
-            	window.focus();
-            }
+			
 			}, {
+			uriTemplate: "/maqetta/cmd/configProject?orionProject={Location}",
 			id: 'orion.maqetta.launch',
 			name: 'Open in Maqetta',
 			tooltip: 'Open this folder in Maqetta',
+			 
 			validationProperties: [{source: "Directory", match: true}],
 			forceSingleItem: true
 		

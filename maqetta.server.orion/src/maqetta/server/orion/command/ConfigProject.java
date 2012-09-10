@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import maqetta.server.orion.MaqettaOrionServerConstants;
+import maqetta.server.orion.user.OrionUser;
 
 import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -18,7 +19,14 @@ public class ConfigProject extends Command {
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
     	
         String projectName = req.getParameter("project");
-        boolean configOnly = "true".equals(req.getParameter("configOnly"));
+        String orionProject = req.getParameter("orionProject");
+        if(orionProject!=null){
+        	OrionUser u = (OrionUser)user;
+        	projectName = u.computeMaqettaPath(orionProject);
+        }
+        	boolean configOnly = "true".equals(req.getParameter("configOnly"));
+        
+        
     	user.createProject(projectName);
 
     	this.responseString = "OK";

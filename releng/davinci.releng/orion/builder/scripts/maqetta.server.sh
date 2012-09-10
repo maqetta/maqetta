@@ -51,7 +51,7 @@ APP_ARGS="-console -noExit -clean"
 read_conf()
 {
 	# check for configuration file
-	MAQ_CONFIG=maqetta.conf
+	MAQ_CONFIG=$MAQ_BASE/maqetta.conf
 	test -r $MAQ_CONFIG || { echo "$MAQ_CONFIG not found"; exit 1; }
 
 	# Some props (such as 'admin' password) **must** be in a config file; passing

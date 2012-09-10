@@ -426,7 +426,12 @@ created by Maqetta into a production application.
 		described below) work better with uncompressed source.
 	</li>
 	<br/>
-	<li><strong>Use Dojo Web Builder (experimental)</strong>
+	<li><strong>Use <a href="https://github.com/dojo/dwb">Dojo Web Builder</a> (experimental)</strong> This feature,
+	still under development, will pass the downloaded workspace files through a web service which collects AMD-style
+	Javascript module references across all HTML files and concatenates them into a single Javascript "layer" file
+	to avoid network latency, and also minify symbols and remove comments and whitespace to reduce the size of the download.
+	Initially, the processing is limited to Dojo modules and will attempt to replace the default dojo.js bootstrap file
+	with a single file containing all the concatenated and minified code.
 	</li>
 </ul>
 

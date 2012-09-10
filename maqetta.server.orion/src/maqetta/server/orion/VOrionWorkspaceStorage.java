@@ -108,7 +108,6 @@ public class VOrionWorkspaceStorage extends VOrionProjectStorage{
 		try {
 			webWorkspace.save();
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

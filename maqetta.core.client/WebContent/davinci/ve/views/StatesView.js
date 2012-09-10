@@ -914,7 +914,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		if(this._tree.getParent){
 			var parent = this._tree.getParent();
 			if(parent.resize){
-				parent.resize();
+				window.setTimeout(function(){parent.resize()}, 0);
 			}
 		}
 	},
@@ -961,8 +961,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		var context = (this._editor.getContext && this._editor.getContext());
 		var showAppStates = (this._editor.declaredClass === "davinci.ve.PageEditor");
 		dojo.style(this.toolbarDiv, "display", showAppStates ? "block" : "none");
-		var d = dijit.byId(this.toolbarDiv.parentNode.id);
-		d.resize();
 		var AddStateActive, RemoveStateActive, ModifyStateActive;
 		AddStateActive = RemoveStateActive = ModifyStateActive = false;
 		if(context && context.rootNode){

@@ -363,7 +363,7 @@ return declare("davinci.ve.input.SmartInput", null, {
 
 		this._inline.eb = dijit.byId("davinciIleb");
 		this._connection.push(dojo.connect(this._inline.eb, "onMouseDown", this, "stopEvent"));
-		this._connection.push(dojo.connect(this._inline.eb, "onKeyDown", this, "stopEvent"));
+		this._connection.push(dojo.connect(this._inline.eb, "onKeyDown", this, "stopEvent_Intercept_Enter"));
 		this._connection.push(dojo.connect(this._inline.eb, "onKeyUp", this, "handleEvent"));
 		if (this.multiLine == "true"){                                  
 /*FIXME: TO DIRECT TO PROPS PALETTE, NEED TO DISABLE */
@@ -607,6 +607,15 @@ return declare("davinci.ve.input.SmartInput", null, {
 		//FIXME stopPropation() doesn't work on old IEs
 		e.stopPropagation();
 		this.updateSimStyle();
+	},
+	
+	stopEvent_Intercept_Enter: function(e){
+		this.stopEvent(e);
+		// For single-line SmartInput, don't let Enter key
+		// wipe out the currently selected text input
+		if(e.keyCode == 13 && !this.multiLine){
+			e.preventDefault();
+		}
 	},
 	
 	

@@ -20,6 +20,7 @@ public class VResourceUtils {
 		IVResource[] list = source.listFiles();
 
 		for (int i = 0; i < list.length; i++) {
+			if(list[i].isVirtual()) continue;
 			destination.mkdir();
 			IVResource r = destination.create(list[i].getName());
 			if (list[i].isDirectory()) {

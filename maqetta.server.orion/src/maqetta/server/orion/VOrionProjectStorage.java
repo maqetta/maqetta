@@ -18,11 +18,27 @@ public class VOrionProjectStorage extends VOrionStorage {
 			try {
 				this.store.mkdir(EFS.NONE, null);
 			} catch (CoreException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
+	
+	 public boolean delete() {
+	        // TODO Auto-generated method stub
+		 try {
+			 
+			this.store.delete(EFS.NONE, null);
+			((VOrionWorkspaceStorage)this.parent).removeProject(this.proj);
+			proj.remove();
+			proj.save();
+		} catch (CoreException e) {
+			return false;
+		}
+		 return true;
+	 }
+
+	 
+	
 	public boolean isDirectory() {
 		return true;
 	}

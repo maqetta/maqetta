@@ -145,10 +145,10 @@ public class OrionUser extends User {
 		return this.userDirectory;
 	}
 	public boolean isProject(String projectName){
-		IStorage baseFile = userDirectory.newInstance(this.userDirectory, projectName);
+		Collection baseFile = userDirectory.findFiles(userDirectory, projectName + "/" + IDavinciServerConstants.SETTINGS_DIRECTORY_NAME+ "/" + IDavinciServerConstants.LIBS_FILE, false);
 		
-		IStorage settings = userDirectory.newInstance(baseFile, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
-		return settings.exists();
+		return (baseFile.size() > 0 );
+
 	}
 	
 	public String computeMaqettaPath(String orionPath){

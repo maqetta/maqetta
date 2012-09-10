@@ -135,14 +135,24 @@ define(['domReady'], function(domReady) {
 
 	function confirmResetUser() {
 		var mypostrequest = new XMLHttpRequest();
+		mypostrequest.onreadystatechange = function() {
+			
+			if (mypostrequest.readyState === 4) {
+				if (mypostrequest.responseText == "NO_USER") {
+					setResetMessage(false, "No user found.");
+				} else {
+					setResetMessage(false, "Password reset email sent");
+
+				}
+			}
+		};
+
+		var parameters = "login=" + encodeURIComponent(document.getElementById("resetEmail").value) + "&action=reset";
 		mypostrequest.open("POST", "/maqetta/cmd/resetPassword", true);
 		mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		mypostrequest.setRequestHeader("Orion-Version", "1");
-		
-		var parameters = "login=" + encodeURIComponent(document.getElementById("resetEmail").value) + "&action=reset";
-	
 		mypostrequest.send(parameters);
-		setResetMessage(false, "Password reset email sent");
+		
 	}
 
 	function getRedirect() {
@@ -278,7 +288,6 @@ define(['domReady'], function(domReady) {
 	}
 
 	function submitRegister() {
-
 		var mypostrequest = new XMLHttpRequest();
 		var login = document.getElementById("signupEmail").value;
 		var parameters = "login=" + encodeURIComponent(login) ;

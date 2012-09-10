@@ -53,6 +53,13 @@ return declare([LayoutContainerHelper, DataGridHelper], {
 	 * with "auto" width. We give it that help by re-setting the columns.
 	 */
 	resize: function(widget) {
+		// Due to timing issues, once in awhile when a document is closed, 
+		// this resize function still gets called even though document has gone
+		// away, in which case defaultView is null, and dojo dies when checking getComputedStyle.
+		// See #3344.
+		if(!widget || !widget.dijitWidget || !widget.dijitWidget.domNode || !widget.dijitWidget.domNode.defaultView){
+			return;
+		}
 		var dijitWidget = widget.dijitWidget;
 		dijitWidget.resize();
 		dijitWidget.setColumns(dijitWidget.structure);

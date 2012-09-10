@@ -17,10 +17,14 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.orion.server.configurator.ConfiguratorActivator;
 import org.eclipse.orion.server.core.authentication.IAuthenticationService;
 import org.eclipse.orion.server.core.users.OrionScope;
+import org.eclipse.orion.server.useradmin.IOrionCredentialsService;
+import org.eclipse.orion.server.useradmin.UserConstants;
+import org.eclipse.orion.server.useradmin.UserServiceHelper;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
+import org.osgi.service.prefs.BackingStoreException;
 
 public class OrionUserManager extends UserManagerImpl {
 
@@ -51,9 +55,12 @@ public class OrionUserManager extends UserManagerImpl {
 
     protected boolean checkUserExists(String userName) {
     
-    	IEclipsePreferences users = new OrionScope().getNode("Users"); //$NON-NLS-1$
-		IEclipsePreferences result = (IEclipsePreferences) users.node(userName);
-		return result!=null;
+    	
+   	 IOrionCredentialsService userAdmin = UserServiceHelper.getDefault().getUserStore();
+   	 org.eclipse.orion.server.useradmin.User user = (org.eclipse.orion.server.useradmin.User) userAdmin.getUser(UserConstants.KEY_LOGIN, userName);
+   	 return(user!=null);
+    	
+    	
     
     }
     

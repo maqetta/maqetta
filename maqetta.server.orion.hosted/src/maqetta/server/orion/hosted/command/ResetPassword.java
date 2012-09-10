@@ -44,6 +44,10 @@ public class ResetPassword extends Command {
 	    	String randomToken = req.getParameter("resetTolken");
 	    	String newPassword = req.getParameter("password");
 	    	
+	    	if(!ServerManager.getServerManger().getUserManager().isValidUser(emailAdd)){
+	    		this.responseString = "NO_USER";
+	    		return;
+	    	}
 	    	
 	    	/* user requested password reset */
 	    	if(requestReset){

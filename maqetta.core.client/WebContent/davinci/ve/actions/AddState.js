@@ -33,11 +33,7 @@ var AddStateWidget = declare("davinci.ve.actions.AddStateWidget", [_WidgetBase, 
 	},
 
 	_onKeyPress: function(e) {
-		if (e.keyCode==dojo.keys.ENTER) {
-			if(this._isValid()){
-				this.onOk();
-			}
-		} else {
+		if (e.keyCode!=dojo.keys.ENTER) {
 			if (this._isValid()) {
 				this.okButton.set("disabled", false);
 			} else {
@@ -74,7 +70,7 @@ return declare("davinci.ve.actions.AddState", [Action], {
 
 		var w = new davinci.ve.actions.AddStateWidget({node: statesFocus.stateContainerNode });
 
-		Workbench.showModal(w, veNls.createNewState);
+		Workbench.showModal(w, veNls.createNewState, null, null, true);
 	}
 });
 });

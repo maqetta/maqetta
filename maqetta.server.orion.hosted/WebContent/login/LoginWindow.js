@@ -135,14 +135,24 @@ define(['domReady'], function(domReady) {
 
 	function confirmResetUser() {
 		var mypostrequest = new XMLHttpRequest();
+		mypostrequest.onreadystatechange = function() {
+			
+			if (mypostrequest.readyState === 4) {
+				if (mypostrequest.responseText == "NO_USER") {
+					setResetMessage(false, "No user found.");
+				} else {
+					setResetMessage(false, "Password reset email sent");
+
+				}
+			}
+		};
+
+		var parameters = "login=" + encodeURIComponent(document.getElementById("resetEmail").value) + "&action=reset";
 		mypostrequest.open("POST", "/maqetta/cmd/resetPassword", true);
 		mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		mypostrequest.setRequestHeader("Orion-Version", "1");
-		
-		var parameters = "login=" + encodeURIComponent(document.getElementById("resetEmail").value) + "&action=reset";
-	
 		mypostrequest.send(parameters);
-		setResetMessage(false, "Password reset email sent");
+		
 	}
 
 	function getRedirect() {
@@ -162,11 +172,14 @@ define(['domReady'], function(domReady) {
 		}
 	}
 
-	function confirmLogin(login, password) {
+	function confirmLogin(login, password, event) {
 		if (!login) {
 			login = document.getElementById('login').value;
 			password = document.getElementById('password').value;
 		}
+		// shiftkey-click on Login causes Maqetta to open with no editors showing
+		// Needed sometimes if Maqetta is hanging with a particular open file
+		var resetWorkBench = (event && event.shiftKey) ? 'resetWorkbenchState=1' : '';
 		var mypostrequest = new XMLHttpRequest();
 		mypostrequest.onreadystatechange = function() {
 			if (mypostrequest.readyState === 4) {
@@ -180,6 +193,13 @@ define(['domReady'], function(domReady) {
 				} else {
 					var redirect = getRedirect();
 					if (redirect !== null) {
+						if(resetWorkBench){
+							if(redirect.indexOf('?')>=0){
+								redirect += '&'+resetWorkBench;
+							}else{
+								redirect += '?'+resetWorkBench;
+							}
+						}
 						window.location = decodeURIComponent(redirect);
 					} else {
 						window.close();
@@ -268,7 +288,6 @@ define(['domReady'], function(domReady) {
 	}
 
 	function submitRegister() {
-
 		var mypostrequest = new XMLHttpRequest();
 		var login = document.getElementById("signupEmail").value;
 		var parameters = "login=" + encodeURIComponent(login) ;
@@ -388,8 +407,8 @@ define(['domReady'], function(domReady) {
 			}
 		};
 
-		document.getElementById("loginButton").onclick = function() {
-			confirmLogin();
+		document.getElementById("loginButton").onclick = function(e) {
+			confirmLogin(null, null, e);
 		};
 
 		document.getElementById("resetUserLink").onclick = revealResetUser;

@@ -185,7 +185,13 @@ return declare([Context], {
 	},
 	
 	onSelectionChange: function(selection){
-		this.visualEditor._themeEditor._selectedSubWidget = null;
+		if (!this._forceSelectionChange) {
+			/*
+			 * This can be called from onContentChange in ve/context
+			 * So in that case we don't want to deslect the subwidget
+			 */
+			this.visualEditor._themeEditor._selectedSubWidget = null;
+		}
 		this.inherited(arguments);
 	},
 	

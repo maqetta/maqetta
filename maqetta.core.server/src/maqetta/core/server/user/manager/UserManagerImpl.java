@@ -83,7 +83,10 @@ public class UserManagerImpl implements IUserManager {
     }
     
     public IUser getUser(String userName) {
+    	return getUser(userName, false);
+    }
 
+    public IUser getUser(String userName, Boolean isLogin) {
        // IUser user = (IUser) users.get(userName);
         if (ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equals(userName)) {
             return this.getSingleUser();
@@ -94,7 +97,6 @@ public class UserManagerImpl implements IUserManager {
             
         }
         return null;
-
     }
 
     /*
@@ -172,17 +174,21 @@ public class UserManagerImpl implements IUserManager {
         return userDir.exists();
     }
 
+    public boolean isValidUser(String userName) {
+    	return isValidUser(userName, false);
+    }
+    
     /*
      * (non-Javadoc)
      * 
      * @see
-     * org.davinci.server.user.impl.UserManager#isValidUser(java.lang.String)
+     * org.davinci.server.user.impl.UserManager#isValidUser(java.lang.String, Boolean)
      */
-    public boolean isValidUser(String userName) {
+    public boolean isValidUser(String userName, Boolean isLogin) {
         if (ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equals(userName)) {
             return true;
         }
-        IUser user = getUser(userName);
+        IUser user = getUser(userName, isLogin);
         return user != null;
     }
 

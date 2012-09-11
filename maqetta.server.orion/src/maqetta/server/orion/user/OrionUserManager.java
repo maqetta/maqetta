@@ -53,25 +53,22 @@ public class OrionUserManager extends UserManagerImpl {
 	   // noop for orion
    }
 
-    protected boolean checkUserExists(String userName) {
+	protected boolean checkUserExists(String userName, Boolean isLogin) {
+		String key = isLogin ? UserConstants.KEY_LOGIN : UserConstants.KEY_UID;
+		IOrionCredentialsService userAdmin = UserServiceHelper.getDefault().getUserStore();
+		org.eclipse.orion.server.useradmin.User user = (org.eclipse.orion.server.useradmin.User)
+				userAdmin.getUser(key, userName);
+		return user != null;
+	}
     
-    	
-   	 IOrionCredentialsService userAdmin = UserServiceHelper.getDefault().getUserStore();
-   	 org.eclipse.orion.server.useradmin.User user = (org.eclipse.orion.server.useradmin.User) userAdmin.getUser(UserConstants.KEY_LOGIN, userName);
-   	 return(user!=null);
-    	
-    	
-    
-    }
-    
-    public IUser getUser(String userName) {
+    public IUser getUser(String userName, Boolean isLogin) {
 
         // IUser user = (IUser) users.get(userName);
          if (ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equals(userName)) {
              return this.getSingleUser();
          }
       
-         if (this.checkUserExists(userName)) {
+         if (this.checkUserExists(userName, isLogin)) {
              IPerson person = this.personManager.getPerson(userName);
              return newUser(person, null);
              

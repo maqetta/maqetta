@@ -12,6 +12,8 @@ public interface IUserManager {
 
     public abstract IUser getUser(String userName);
 
+    public abstract IUser getUser(String userName, Boolean isLogin);
+
     public abstract IUser addUser(String userName, String password, String email) throws UserException;
 
     public abstract void removeUser(String userName) throws UserException;
@@ -19,6 +21,8 @@ public interface IUserManager {
     public abstract IUser login(String userName, String password);
 
     public abstract boolean isValidUser(String userName);
+
+    public abstract boolean isValidUser(String userName, Boolean isLogin);
 
     public IUser getSingleUser();
 

@@ -8,8 +8,8 @@
 <body>
 <table id="suiteTable" cellpadding="1" cellspacing="1" border="1" class="selenium"><tbody>
 <tr><td><b>Test Suite</b></td></tr>
-<tr><td><a href="Main menu test 1.html">Main menu test 1</a></td></tr>
-<tr><td><a href="Main menu test 2.html">Main menu test 2</a></td></tr>
+<tr><td><a href="newDesktopHtmlNoSave.html">newDesktopHtmlNoSave</a></td></tr>
+<tr><td><a href="newDesktopHtml.html">newDesktopHtml</a></td></tr>
 <tr><td><a href="Main menu test 3.html">Main menu test 3</a></td></tr>
 <tr><td><a href="Main menu test 4.html">Main menu test 4</a></td></tr>
 <tr><td><a href="Main menu test 5.html">Main menu test 5</a></td></tr>

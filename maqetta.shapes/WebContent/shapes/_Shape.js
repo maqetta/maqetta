@@ -20,6 +20,10 @@ define([
 			this._header = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" shape-rendering="geometric-precision">';
 			this._header += '<g class="shapeg" pointer-events="all">';
 			this._footer = '</g></svg>';
+			
+			this.subscribe('/maqetta/appstates/state/changed',function(){
+				this.resize();
+			}.bind(this));
 		},
 
 		/*

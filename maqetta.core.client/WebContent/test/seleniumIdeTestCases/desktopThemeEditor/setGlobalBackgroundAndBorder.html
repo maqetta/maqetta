@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8081/" />
+<title>setGlobalBackgroundAndBorder</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">setGlobalBackgroundAndBorder</td></tr>
+</thead><tbody>
+<tr>
+	<td>setSpeed</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<!--select the global widget-->
+<tr>
+	<td>clickAt</td>
+	<td>id=all</td>
+	<td></td>
+</tr>
+<!--set the background color-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='tabLabel' and .='Background']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//td[@class='propertyInputField']/div/div[@class='colorPicker']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//div[@class='dojoxColorPickerHex']/input</td>
+	<td>#c5f7ed</td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//div[@role='dialog']/div/div/div/span/span</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

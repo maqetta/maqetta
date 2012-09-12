@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8081/" />
+<title>verifyGlobalBackgroundBorderColor</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">verifyGlobalBackgroundBorderColor</td></tr>
+</thead><tbody>
+<tr>
+	<td>setSpeed</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<!--varify button style background-color normal state #c5f7ed-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitTreeLabel' and .='Normal']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertEval</td>
+	<td>window.document.defaultView.getComputedStyle(window.document.getElementsByTagName('iframe')[0].contentDocument.getElementById('1465').parentElement).getPropertyValue('background-color') </td>
+	<td>rgb(197, 247, 237)</td>
+</tr>
+<!--Switch to Acti ve state and verify style-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitTreeLabel' and .='Active']</td>
+	<td></td>
+</tr>
+<!--button Active state-->
+<tr>
+	<td>assertEval</td>
+	<td>window.document.defaultView.getComputedStyle(window.document.getElementsByTagName('iframe')[0].contentDocument.getElementById('1465').parentElement).getPropertyValue('background-color') </td>
+	<td>rgb(134, 230, 212)</td>
+</tr>
+<!--Switch to Close state and verify style-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitTreeLabel' and .='Close']</td>
+	<td></td>
+</tr>
+<!--button Close state-->
+<tr>
+	<td>assertEval</td>
+	<td>window.document.defaultView.getComputedStyle(window.document.getElementsByTagName('iframe')[0].contentDocument.getElementById('1465').parentElement).getPropertyValue('background-color') </td>
+	<td>rgb(197, 247, 237)</td>
+</tr>
+<!--Switch to Disabled state and verify style-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitTreeLabel' and .='Disabled']</td>
+	<td></td>
+</tr>
+<!--button Disabled state-->
+<tr>
+	<td>assertEval</td>
+	<td>window.document.defaultView.getComputedStyle(window.document.getElementsByTagName('iframe')[0].contentDocument.getElementById('1465').parentElement).getPropertyValue('background-color') </td>
+	<td>rgb(197, 247, 237)</td>
+</tr>
+<!--Switch to Hover state and verify style-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitTreeLabel' and .='Hover']</td>
+	<td></td>
+</tr>
+<!--button hover state-->
+<tr>
+	<td>assertEval</td>
+	<td>window.document.defaultView.getComputedStyle(window.document.getElementsByTagName('iframe')[0].contentDocument.getElementById('1465').parentElement).getPropertyValue('background-color') </td>
+	<td>rgb(171, 243, 230)</td>
+</tr>
+<!--Switch to Open state and verify style-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitTreeLabel' and .='Open']</td>
+	<td></td>
+</tr>
+<!--button open state-->
+<tr>
+	<td>assertEval</td>
+	<td>window.document.defaultView.getComputedStyle(window.document.getElementsByTagName('iframe')[0].contentDocument.getElementById('1465').parentElement).getPropertyValue('background-color') </td>
+	<td>rgb(197, 247, 237)</td>
+</tr>
+<!--Switch to Selected state and verify style-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitTreeLabel' and .='Selected']</td>
+	<td></td>
+</tr>
+<!--button selected state-->
+<tr>
+	<td>assertEval</td>
+	<td>window.document.defaultView.getComputedStyle(window.document.getElementsByTagName('iframe')[0].contentDocument.getElementById('1465').parentElement).getPropertyValue('background-color') </td>
+	<td>rgb(197, 247, 237)</td>
+</tr>
+<!--Switch to SelectedDisabled state and verify style-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitTreeLabel' and .='SelectedDisabled']</td>
+	<td></td>
+</tr>
+<!--button selectedDisabled state-->
+<tr>
+	<td>assertEval</td>
+	<td>window.document.defaultView.getComputedStyle(window.document.getElementsByTagName('iframe')[0].contentDocument.getElementById('1465').parentElement).getPropertyValue('background-color') </td>
+	<td>rgb(197, 247, 237)</td>
+</tr>
+<!--Switch to SelectedHover state and verify style-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitTreeLabel' and .='SelectedHover']</td>
+	<td></td>
+</tr>
+<!--button selectedHover state-->
+<tr>
+	<td>assertEval</td>
+	<td>window.document.defaultView.getComputedStyle(window.document.getElementsByTagName('iframe')[0].contentDocument.getElementById('1465').parentElement).getPropertyValue('background-color') </td>
+	<td>rgb(197, 247, 237)</td>
+</tr>
+<!--Back to Normal state-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitTreeLabel' and .='Normal']</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

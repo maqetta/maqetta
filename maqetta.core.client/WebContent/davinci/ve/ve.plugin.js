@@ -192,28 +192,6 @@ return {
                     menubarPath: "davinci.edit/cut"
                 }*/
             ]
-        },
-        {
-            id: "datastoreActions",
-            visible: true,
-            actions: [
-                {
-                    id: "davinci.ui.generateform",
-                    label: "Generate Form",
-                    run: function(){
-                    	require("davinci/ve/views/DataStoresView").generateForm();
-                    },
-                    menubarPath: "newfile"
-                },
-                {
-                    id: "davinci.ui.generateform",
-                    label: "Generate Table",
-                    run: function(){
-                    	require("davinci/ve/views/DataStoresView").generateTable();
-                    },
-                    menubarPath: "newfile"
-                }
-            ]
         }
     ],
     "davinci.viewActions": [

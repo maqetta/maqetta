@@ -5,6 +5,10 @@ require({
 });
 
 dependencies = {
+
+	// override defaults
+	insertAbsMids: 0,
+
 	layers: [
 		{
 			name: "../gridx/Grid.js",
@@ -18,7 +22,7 @@ dependencies = {
 				"gridx/modules/extendedSelect/Column",
     			"gridx/modules/move/Column",
     			"gridx/modules/dnd/Column",
-    			"gridx/modules/ColumnResizer",
+    			"gridx/modules/ColumnResizer"
 			]
 		}
 	],
@@ -34,4 +38,4 @@ dependencies = {
 	   		[ "dijit", "../dijit" ],
 	   		[ "dojox", "../dojox" ]
 	]
-}
+};

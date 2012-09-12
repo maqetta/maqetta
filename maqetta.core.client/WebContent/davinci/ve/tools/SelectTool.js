@@ -11,7 +11,6 @@ define(["dojo/_base/declare",
 		"../Snap",
 		"../../commands/CompoundCommand",
 		"../commands/AddCommand",
-		"../commands/RemoveCommand",
 		"../commands/ReparentCommand",
 		"../commands/MoveCommand",
 		"../commands/ResizeCommand",
@@ -32,7 +31,6 @@ define(["dojo/_base/declare",
 		Snap,
 		CompoundCommand,
 		AddCommand,
-		RemoveCommand,
 		ReparentCommand,
 		MoveCommand,
 		ResizeCommand,
@@ -376,6 +374,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		var copy = params.copy;
 		var oldBoxes = params.oldBoxes;
 		var applyToWhichStates = params.applyToWhichStates;
+		var idx;
 				
 		var context = this._context;
 		var cp = context._chooseParent;
@@ -430,14 +429,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			
 		}else{
 
-			var IDs = [];
-			var NewWidgets = [];
-			var OldParents = [];
-			var OldIndex = [];
-			dojo.forEach(selection, function(w, idx){
-				OldParents[idx] = selection[idx].getParent();
-				OldIndex[idx] = OldParents[idx].indexOf(w);
-			});
 			var _node = widget.getStyleNode();
 			var absolute = (dojo.style(_node, 'position') == 'absolute');
 			if(!absolute) {
@@ -451,24 +442,12 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 					//get the data	
 					var reorderedSelection = context.reorderPreserveSiblingOrder(selection);
 					dojo.forEach(reorderedSelection, function(w){
-						IDs.push(w.getId());
-						var newwidget,
-							d = w.getData( {identify:false});
-						d.context=context;
-						dojo.withDoc(context.getDocument(), function(){
-							newwidget = widgetUtils.createWidget(d);
-						}, this);		
-						if (!newwidget) {
-							console.debug("Widget is null!!");
-							return;
-						}
-						NewWidgets.push(newwidget);
 						if(ppw.refChild){
 							if(lastIdx !== null){
 								idx = lastIdx + 1;
 							}else{
 								var ppwChildren = ppw.parent.getChildren();
-								var idx = ppwChildren.indexOf(ppw.refChild);
+								idx = ppwChildren.indexOf(ppw.refChild);
 								if(idx >= 0){
 									if(ppw.refAfter){
 										idx++;
@@ -479,28 +458,36 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 							}
 							lastIdx = idx;
 						}
-						compoundCommand.add(new AddCommand(newwidget, ppw.parent, idx));
-						newselection.push(newwidget);
-					}, this);
-
-					// remove old widget and restore ID on the new version of the given widget(s)
-					if(!copy){
-						dojo.forEach(selection, function(w){
-							var newwidget = NewWidgets.shift();
-							compoundCommand.add(new RemoveCommand(w));
-							var id = IDs.shift();
-							if(id){
-								compoundCommand.add(new ModifyCommand(newwidget, {id:id}));
+						if(copy){
+							var newwidget,
+								d = w.getData( {identify:false});
+							d.context=context;
+							dojo.withDoc(context.getDocument(), function(){
+								newwidget = widgetUtils.createWidget(d);
+							}, this);		
+							if (!newwidget) {
+								console.debug("Widget is null!!");
+								return;
 							}
-						}, this);
-					}
-
+							compoundCommand.add(new AddCommand(newwidget, ppw.parent, idx));
+							newselection.push(newwidget);
+						}else{
+							compoundCommand.add(new ReparentCommand(w, ppw.parent, idx));
+							newselection.push(w);
+						}
+					}, this);
 					context.select(null);
 				}else{
 					console.error('SelectTool: ppw is null');
 				}
 				
 			}else{
+				var OldParents = [];
+				var OldIndex = [];
+				dojo.forEach(selection, function(w, idx){
+					OldParents[idx] = selection[idx].getParent();
+					OldIndex[idx] = OldParents[idx].indexOf(w);
+				});
 				var left = newBox.l,
 					top = newBox.t;
 				if(!compoundCommand){
@@ -520,7 +507,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 					//get the data
 					var reorderedSelection = context.reorderPreserveSiblingOrder(selection);
 					dojo.forEach(reorderedSelection, function(w){
-						IDs.push(w.getId());
 						var parentWidget = w.getParent();
 						if (!parentWidget) {
 							console.debug("onExtentChange: parentWidget is null!!");
@@ -542,7 +528,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 							console.debug("Widget is null!!");
 							return;
 						}
-						NewWidgets.push(newwidget);
 						if(proposedParent){
 							compoundCommand.add(new AddCommand(newwidget, proposedParent, -1 /*append*/));
 						}else{

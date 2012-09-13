@@ -2907,7 +2907,7 @@
             "category": "mobile",
             "allowedParent": "dojox.mobile.ValuePicker",
             "icon": "resources/images/Overlay.gif",
-            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAADlck4idvtjf6vP2+zxhlz9mnPH1+pi515q72aXG48nd7t7p8u30+f///////wAAACH5BAEAAA4ALAAAAAAQABAAAARb0MlJq0Q4L7BydsggDg1gNuOAOMegKIwpM+9wOEmqp4lT/MCg0EEwGI9I44DgAAwS0Kg0B2g+p9NB1bnbbWXgsAnX3fUCLliYphgEHOiUTPcO2O8CgOB+t/gnEQA7"
+            "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMLAPP2+zlck6XG44idvpq72T9mnMnd7vH1+u30+Zi51zxhl////wAAAAAAAAAAAAAAACH5BAEAAAsALAAAAAAQABAAAARTcMlJqyQ4670I+GAAgsSSAEaKBCySGkCyCGM9Ckuh73y/KIegcBgEKBYigXLJpAWQgKYU8BTZbFWWdsudXW24AUqldaUAg4W4Zh2lB/C4fG6pTyIAOw=="
         },
         {
             "name": "ValuePickerDatePicker",

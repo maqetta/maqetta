@@ -153,7 +153,6 @@ return declare([DataStoreBasedWidgetHelper], {
 			dojo.withDoc(widget.getContext().getDocument(), function(){
 				var storeWidget = storeId.declaredClass ? Widget.byId(storeId.id) : Widget.byId(storeId);
 				if (storeWidget && widget.dijitWidget && widget.dijitWidget.store){
-					this._reparentTheStore(widget, storeWidget);
 					this.updateStore(widget, storeWidget);
 				}
 			}.bind(this));

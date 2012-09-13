@@ -30,24 +30,6 @@ TreeHelper.prototype = {
 		command.add(new RemoveCommand(storeWidget));
 		return command;
 		
-	}, 
-	
-	/*
-	 * Called  when widget is created.
-	 * @param {davinci.ve._Widget} widget  Widget that is being created
-	 * @param {} source element  Widget that is being created
-	 * @param {} 
-	 * 
-	 * This widget has a data store and a model widget that are associated with it and must be created before the Tree.
-	 */
-	create: function(widget, srcElement){ 
-
-		try{
-			this.reparent(widget);
-		} 
-		catch (e) {
-			console.error('TreeHelper.Create error processing tree.');
-		}
 	},
 	
 	/*
@@ -57,7 +39,6 @@ TreeHelper.prototype = {
 	 * This widget has a data store and a model widget that are associated with it and must be reparented also.
 	 */
 	reparent: function(widget){ 
-
 		try{
 			var modelId = "";
 			if (widget.dijitWidget && widget.dijitWidget.model) {
@@ -74,9 +55,15 @@ TreeHelper.prototype = {
 						if(storeId){
 							// we may have the store as an object
 							var storeWidget = storeId.declaredClass ? Widget.byId(storeId.id) : Widget.byId(storeId);
-								if (storeWidget ){
-									this._reparentWidget(modelWidget, storeWidget);
+							if (!storeWidget) {
+								// the jsId doesn't necessarily have to be the id of the store widget
+								if (widget.dijitWidget.model.store && widget.dijitWidget.model.store.id) {
+									storeWidget = Widget.byId(widget.dijitWidget.model.store.id);
 								}
+							}
+							if (storeWidget ){
+								this._reparentWidget(modelWidget, storeWidget);
+							}
 						}
 					}
 				}.bind(this));

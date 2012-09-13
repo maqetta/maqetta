@@ -314,6 +314,8 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 		var compoundCommand = new OrderedCompoundCommand();
 
 		// remove the old store
+		var storeWidgetParent = storeWidget.getParent();
+		var oldStoreWidgetIndex = (storeWidgetParent.indexOf(widget) < 1) ? 0 : storeWidgetParent.indexOf(widget)-1;
 		var removeCmd = new RemoveCommand(storeWidget);
 		compoundCommand.add(removeCmd);
 		
@@ -334,8 +336,8 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 			context: context,
 		};
 
-		// add the new store
-		var addCmd = new AddCommand(data, widget.getParent(), 0);
+		// add the new store (in the same place it was before we deleted the old one)
+		var addCmd = new AddCommand(data, widget.getParent(), oldStoreWidgetIndex);
 		compoundCommand.add(addCmd);
 
 		// create the item store (which must be created in context of page)
@@ -541,6 +543,8 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 		var compoundCommand = new OrderedCompoundCommand();
 
 		//Remove the old data store
+		var storeWidgetParent = storeWidget.getParent();
+		var oldStoreWidgetIndex = (storeWidgetParent.indexOf(widget) < 1) ? 0 : storeWidgetParent.indexOf(widget)-1;
 		var removeCmd = new RemoveCommand(storeWidget);
 		compoundCommand.add(removeCmd);
 
@@ -580,7 +584,7 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 			};
 		}
 		this._urlDataStore.id = newStoreId;
-		var addCmd = new AddCommand(newDataStoreData, widget.getParent(), 0);
+		var addCmd = new AddCommand(newDataStoreData, widget.getParent(), oldStoreWidgetIndex);
 		compoundCommand.add(addCmd);
 
 		// allow subclasses to inject their own data

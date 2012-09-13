@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8081/" />
+<title>verifyDijitToolbar</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">verifyDijitToolbar</td></tr>
+</thead><tbody>
+<tr>
+	<td>setSpeed</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitTreeLabel' and .='Normal']</td>
+	<td></td>
+</tr>
+<!--check toolbar background-->
+<tr>
+	<td>assertEval</td>
+	<td>window.document.defaultView.getComputedStyle(window.document.getElementsByTagName('iframe')[0].contentDocument.getElementById('maqetta_claro_theme_toolbar')).getPropertyValue('background-color') </td>
+	<td>rgb(191, 247, 202)</td>
+</tr>
+<!--check toolbar border-->
+<tr>
+	<td>assertEval</td>
+	<td>window.document.defaultView.getComputedStyle(window.document.getElementsByTagName('iframe')[0].contentDocument.getElementById('maqetta_claro_theme_toolbar')).getPropertyValue('border-left-color') </td>
+	<td>rgb(241, 113, 113)</td>
+</tr>
+<tr>
+	<td>assertEval</td>
+	<td>window.document.defaultView.getComputedStyle(window.document.getElementsByTagName('iframe')[0].contentDocument.getElementById('maqetta_claro_theme_toolbar')).getPropertyValue('border-top-color') </td>
+	<td>rgb(241, 113, 113)</td>
+</tr>
+<tr>
+	<td>assertEval</td>
+	<td>window.document.defaultView.getComputedStyle(window.document.getElementsByTagName('iframe')[0].contentDocument.getElementById('maqetta_claro_theme_toolbar')).getPropertyValue('border-right-color') </td>
+	<td>rgb(241, 113, 113)</td>
+</tr>
+<tr>
+	<td>assertEval</td>
+	<td>window.document.defaultView.getComputedStyle(window.document.getElementsByTagName('iframe')[0].contentDocument.getElementById('maqetta_claro_theme_toolbar')).getPropertyValue('border-bottom-color') </td>
+	<td>rgb(241, 113, 113)</td>
+</tr>
+<!--check toolbar button subwidget hover background-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitTreeLabel' and .='Hover']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertEval</td>
+	<td>window.document.defaultView.getComputedStyle(window.document.getElementsByTagName('iframe')[0].contentDocument.getElementById('maqetta_claro_theme_toolbar').children[0].children[0]).getPropertyValue('background-color') </td>
+	<td>rgb(245, 119, 46)</td>
+</tr>
+<!--check toolbar button subwidget hover border-->
+<tr>
+	<td>assertEval</td>
+	<td>window.document.defaultView.getComputedStyle(window.document.getElementsByTagName('iframe')[0].contentDocument.getElementById('maqetta_claro_theme_toolbar').children[0].children[0]).getPropertyValue('border-left-color') </td>
+	<td>rgb(66, 87, 243)</td>
+</tr>
+<tr>
+	<td>assertEval</td>
+	<td>window.document.defaultView.getComputedStyle(window.document.getElementsByTagName('iframe')[0].contentDocument.getElementById('maqetta_claro_theme_toolbar').children[0].children[0]).getPropertyValue('border-top-color') </td>
+	<td>rgb(66, 87, 243)</td>
+</tr>
+<tr>
+	<td>assertEval</td>
+	<td>window.document.defaultView.getComputedStyle(window.document.getElementsByTagName('iframe')[0].contentDocument.getElementById('maqetta_claro_theme_toolbar').children[0].children[0]).getPropertyValue('border-right-color') </td>
+	<td>rgb(66, 87, 243)</td>
+</tr>
+<tr>
+	<td>assertEval</td>
+	<td>window.document.defaultView.getComputedStyle(window.document.getElementsByTagName('iframe')[0].contentDocument.getElementById('maqetta_claro_theme_toolbar').children[0].children[0]).getPropertyValue('border-bottom-color') </td>
+	<td>rgb(66, 87, 243)</td>
+</tr>
+<!--check font color hover subwidget button-->
+<tr>
+	<td>assertEval</td>
+	<td>window.document.defaultView.getComputedStyle(window.document.getElementsByTagName('iframe')[0].contentDocument.getElementById('maqetta_claro_theme_toolbar').children[0].children[0]).getPropertyValue('color') </td>
+	<td>rgb(255, 0, 0)</td>
+</tr>
+</tbody></table>
+</body>
+</html>

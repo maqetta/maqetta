@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8081/" />
+<title>dijitToolBar</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">dijitToolBar</td></tr>
+</thead><tbody>
+<tr>
+	<td>setSpeed</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<!--toolbar button style background-color normal state -->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitTreeLabel' and .='Normal']</td>
+	<td></td>
+</tr>
+<!--select the global widget-->
+<tr>
+	<td>clickAt</td>
+	<td>id=maqetta_claro_theme_toolbar</td>
+	<td></td>
+</tr>
+<!--set the background color-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='tabLabel' and .='Background']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//td[@class='propertyInputField']/div/div[@class='colorPicker']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//div[@class='dojoxColorPickerHex']/input</td>
+	<td>#bff7ca</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@role='dialog']/div/div/div/span/span</td>
+	<td></td>
+</tr>
+<!--set the border color-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='tabLabel' and .='Border']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>//tr[@propname='show']/td[@class='propertyInputField']/select</td>
+	<td>index=1</td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//tr[@propname='border-color']/td[@class='propertyInputField']/div/div[@class='colorPicker']/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//div[@class='dojoxColorPickerHex']/input</td>
+	<td>#f17171</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@role='dialog']/div/div/div/span/span</td>
+	<td></td>
+</tr>
+<!--close state disabled-->
+<tr>
+	<td>clickAt</td>
+	<td>//tr[@id='claro1_Button']/td[1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitTreeLabel' and .='Close']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@id='disableWidgetFocusFrame_maqetta_claro_theme_toolbar']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//tr[@id='claro1_Button' and @aria-disabled=&quot;true&quot; and @aria-checked=&quot;false&quot;]</td>
+	<td></td>
+</tr>
+<!--set button subwidget for hover-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitTreeLabel' and .='Hover']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementNotPresent</td>
+	<td>//div[@id='disableWidgetFocusFrame_maqetta_claro_theme_toolbar']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//tr[@id='claro1_Button']/td[1]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//tr[@id='claro1_Button' and @aria-disabled=&quot;false&quot; and @aria-checked=&quot;true&quot;]</td>
+	<td></td>
+</tr>
+<!--set the background color-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='tabLabel' and .='Background']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//td[@class='propertyInputField']/div/div[@class='colorPicker']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//div[@class='dojoxColorPickerHex']/input</td>
+	<td>#f5772e</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@role='dialog']/div/div/div/span/span</td>
+	<td></td>
+</tr>
+<!--set the border color-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='tabLabel' and .='Border']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>//tr[@propname='show']/td[@class='propertyInputField']/select</td>
+	<td>index=1</td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//tr[@propname='border-color']/td[@class='propertyInputField']/div/div[@class='colorPicker']/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//div[@class='dojoxColorPickerHex']/input</td>
+	<td>#4257f3</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@role='dialog']/div/div/div/span/span</td>
+	<td></td>
+</tr>
+<!--set the font color-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='tabLabel' and .='Fonts/Text']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//tr[@propname='color']/td[@class='propertyInputField']/div/div[@class='colorPicker']/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//div[@class='dojoxColorPickerHex']/input</td>
+	<td>#ff0000</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@role='dialog']/div/div/div/span/span</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

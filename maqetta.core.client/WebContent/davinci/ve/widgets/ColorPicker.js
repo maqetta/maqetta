@@ -76,7 +76,7 @@ define(["dojo/_base/declare",
 			this._dropDown.set("value", this._value, true);
 
 			var content = this._colorPickerFlat;
-			var	dialog = new TooltipDialog({title: veNLS.selectColor, content: content});
+			var	dialog = new TooltipDialog({id: 'maqetta_prop_tooltip_color_picker', title: veNLS.selectColor, content: content});
 			dijit.popup.moveOffScreen(dialog.domNode);
 			var opened = false;
 			var closePopup = function(target){ return function(){
@@ -119,6 +119,7 @@ define(["dojo/_base/declare",
 							}
 							
 							closePopup();
+							dialog.destroy();
 							/*
 							if(!colorpicker.canceled && oldValue!=colorpicker.get("value")) 
 								target.onChange();

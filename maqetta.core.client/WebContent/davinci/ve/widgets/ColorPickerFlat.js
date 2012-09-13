@@ -79,7 +79,7 @@ define(["dojo/_base/declare",
 	 */
 	return dojo.mixin(colorPickerProto, {show:  function(content, initialValue, parentWidget, isLeftToRight){				
 		var langObj = veNLS;
-		var	dialog = new TooltipDialog({title: langObj.selectColor, content: content});
+		var dialog = new TooltipDialog({id: 'maqetta_prop_tooltip_color_picker', title: langObj.selectColor, content: content});
 		dijit.popup.moveOffScreen(dialog.domNode);
 		var opened = false;
 		
@@ -131,6 +131,7 @@ define(["dojo/_base/declare",
 						}
 						
 						closePopup();
+						dialog.destroy();
 						/*
 						if(!colorpicker.canceled && oldValue!=colorpicker.get("value")) 
 							target.onChange();

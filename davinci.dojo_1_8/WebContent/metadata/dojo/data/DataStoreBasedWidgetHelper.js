@@ -3,12 +3,14 @@ define([
 	"davinci/ve/widget",
 	"davinci/commands/CompoundCommand",
 	"davinci/ve/commands/RemoveCommand",
+	"davinci/ve/commands/ReparentCommand",
 	"./DataStoreBasedWidgetInput"
 ], function (
 	declare,
 	Widget,
 	CompoundCommand,
 	RemoveCommand,
+	ReparentCommand,
 	DataStoreBasedWidgetInput
 ) {
 
@@ -63,6 +65,51 @@ return declare(null, {
 		return command;
 	},
 	
+	/*
+	 * Called by Reparent command when widget is reparented.
+	 * @param {davinci.ve._Widget} widget  Widget that is being reparentted
+	 * 
+	 * This widget has a data store and a model widget that are associated with it and must be reparented also.
+	 */
+	reparent: function(widget){ 
+		try{
+			var storeId = DataStoreBasedWidgetInput.getStoreId(widget);
+			var storeWidget = Widget.byId(storeId);
+              
+			if (storeWidget) {
+				dojo.withDoc(widget.getContext().getDocument(), function(){
+						this._reparentWidget(widget, storeWidget);
+				}.bind(this));
+			}
+			
+		} catch (e) {
+			console.error('DataStoreBasedWidgetHelper.Reparent error processing:', e);
+		}
+	},
+
+	/*
+	 * Called  to reparent the widget
+	 * @param {davinci.ve._Widget} widget  Widget that is being created
+	 * @param {davinci.ve._Widget} widget associated with parm 1 eg. ForestModel or store
+	 * @param {} 
+	 * 
+	 * This widget has a data store and a model widget that are associated with it and must be created before the Tree.
+	 */
+	_reparentWidget: function(widget, assocatedWidget) {
+		var parent = widget.getParent();
+		var assocatedParent = assocatedWidget.getParent();
+		var newIndex = (parent.indexOf(widget) < 1) ? 0 : parent.indexOf(widget)-1;
+		var i = parent.indexOf(widget);
+		var x = assocatedParent.indexOf(assocatedWidget);
+		if ((parent === assocatedParent) && (i < x )){ // same parent
+			newIndex = parent.indexOf(widget);
+		} else if (parent != assocatedParent) {
+			newIndex = i;
+		}
+		var command = new ReparentCommand(assocatedWidget, parent, newIndex);
+		command.execute();
+	}, 
+
 	/*
 	 * In same cases we are handling certain attributes within data-dojo-props 
 	 * or via child HTML elements, and we do not want to allow those attributes 

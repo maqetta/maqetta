@@ -166,14 +166,9 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 			return;
 		}
 		var context = this.getContext();
-		var compoundCommand = event.compoundCommand;
 		var command = event.command;
 		var commandStack = context.getCommandStack();
-		if(compoundCommand){
-			commandStack.execute(compoundCommand);
-		}else{
-			commandStack.execute(command);
-		}
+		commandStack.execute(event.compoundCommand || command);
 		if(command._newId){
 			var widget = widgetUtils.byId(command._newId, context.getDocument());
 			context.select(widget);
@@ -221,6 +216,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 			dojo.publish("/davinci/ui/widgetValuesChanged",[value]);
 		}
 	},
+
 	_srcChanged: function(){
 		this.isDirty = true;
 	},
@@ -251,9 +247,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 	    	dojo.disconnect(this._designCPScrollHandler);
 	    	this._designCPScrollHandler = null;
 	    }
-	    for(var i=0; i<this._subscriptions.length; i++){
-	    	dojo.unsubscribe(this._subscriptions[i]);
-	    }
+	    this._subscriptions.forEach(dojo.unsubscribe);
 	    this._subscriptions = [];
 	},
 	
@@ -263,7 +257,6 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 	},
 	
 	saveAs: function (newFileName, oldFileName, content){
-		
 		this._setContent(newFileName, content);
 	},
 	

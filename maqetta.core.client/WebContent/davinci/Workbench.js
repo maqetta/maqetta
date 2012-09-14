@@ -365,10 +365,8 @@ var Workbench = {
 			initializeWorkbenchState();			
 		});
 	
-		var loading = dojo.query('.loading');
-		if (loading[0]){ // remove the loading div
-			loading[0].parentNode.removeChild(loading[0]);
-		}
+		dojo.query('.loading').orphan();
+
 		Workbench._lastAutoSave = Date.now();
 		setInterval(dojo.hitch(this,"_autoSave"),30000);
 		return d;
@@ -1427,10 +1425,7 @@ var Workbench = {
 				"." + keywordArgs.fileName.extension : "";
 		nodeName = nodeName + (extension == ".rev" ? extension : "");
 
-		var loading = dojo.query('.loading');
-		if (loading[0]) {
-			loading[0].parentNode.removeChild(loading[0]);
-		}
+		dojo.query('.loading').orphan();
 
 		var editorsStackContainer = dijit.byId('editorsStackContainer'),
 			editors_container = dijit.byId('editors_container');

@@ -21,7 +21,6 @@ import org.cyberneko.html.HTMLConfiguration;
 import org.cyberneko.html.filters.DefaultFilter;
 import org.cyberneko.html.filters.Identity;
 import org.cyberneko.html.filters.Writer;
-import org.davinci.ajaxLibrary.Library;
 import org.dojotoolkit.json.JSONParser;
 
 public class HTMLParser extends DefaultFilter {

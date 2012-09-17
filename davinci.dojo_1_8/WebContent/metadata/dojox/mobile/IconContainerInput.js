@@ -96,7 +96,6 @@ return declare(SmartInput, {
 
 	_onOk: function(e) {
 		this.updateWidget();
-		this.onOk();
 	},
 
 	_onCancel: function(e) {
@@ -143,10 +142,6 @@ return declare(SmartInput, {
 			while (connection = this._connection.pop()){
 				dojo.disconnect(connection);
 			}
-			
-			//Destroy dialog and widgets
-			this._inline.destroyRecursive();
-			delete this._inline;
 		}
 
 		this.inherited(arguments);

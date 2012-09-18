@@ -113,7 +113,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 		this.focused = false;
 
 		// Populate the comment body
-		var color = this.color = Review.getColor(this.ownerId);
+		var color = this.color = Review.getColor(this.email);
 		this.subjectNode.innerHTML = this.subject;
 		dojo.style(this.subjectNode, "color", color);
 		var ownerDisplayName = Runtime.getUserDisplayName({

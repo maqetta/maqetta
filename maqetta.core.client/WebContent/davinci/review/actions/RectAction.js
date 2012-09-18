@@ -19,7 +19,7 @@ var RectAction = declare("davinci.review.actions.RectAction", [_DrawingCommon], 
 		if(createTool){
 			createTool.deactivate();
 			createTool.setShape("Rectangle", {
-				colorAlias: surface.currentReviewer,
+				colorAlias: surface.currentReviewerEmail,
 				a2c: dojo.hitch(Review, Review.getColor),
 				commentId: surface.commentId,
 				state: "",

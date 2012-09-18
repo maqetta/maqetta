@@ -19,7 +19,7 @@ var TextAction = declare("davinci.review.actions.TextAction", [_DrawingCommon], 
 		if(createTool){
 			createTool.deactivate();
 			createTool.setShape("Text", {
-				colorAlias: surface.currentReviewer,
+				colorAlias: surface.currentReviewerEmail,
 				a2c: dojo.hitch(Review, Review.getColor),
 				commentId: surface.commentId,
 				state: "",

@@ -74,11 +74,12 @@ return declare(ContainerInput, {
 			this._addChild(widget, view);
 		}));
 
-		// now reparent
-		this._reparentWidget(widget);
-
 
 		this._addOrExecCommand();
+
+		// hack to make things resize correctly
+		widget.dijitWidget.resizeItems();
+
 		return widget;
 	},
 	

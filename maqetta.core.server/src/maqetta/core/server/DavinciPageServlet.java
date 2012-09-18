@@ -70,11 +70,24 @@ public class DavinciPageServlet extends HttpServlet {
 			return;
 		}
 		String path = getPathInfo(req);
+		if (path == null) {
+			System.err.println("DavinciPageServlet:doPut getPathInfo returned NUll for user: " + user.getUserID());
+			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+			resp.getOutputStream().close();
+			return;
+		}
 		boolean isWorkingCopy = (path.indexOf(IDavinciServerConstants.WORKING_COPY_EXTENSION) > -1);
 		if ( isWorkingCopy ) {
 			path = path.substring(0, path.indexOf(IDavinciServerConstants.WORKING_COPY_EXTENSION));
+			
 		}
 		IVResource file = user.getResource(path);
+		if (file == null) {
+			System.err.println("DavinciPageServlet:doPut user.getResource("+path+") returned NUll for user: " + user.getUserID());
+			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+			resp.getOutputStream().close();
+			return;
+		}
 		/* user is trying to save over a library path */
 		if ( file.isVirtual() ) {
 			file = user.createResource(path, file.isDirectory());

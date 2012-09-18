@@ -177,6 +177,9 @@ define(['domReady'], function(domReady) {
 			login = document.getElementById('login').value;
 			password = document.getElementById('password').value;
 		}
+		if (!validateEmail(login)){
+			return;
+		}
 		// shiftkey-click on Login causes Maqetta to open with no editors showing
 		// Needed sometimes if Maqetta is hanging with a particular open file
 		var resetWorkBench = (event && event.shiftKey) ? 'resetWorkbenchState=1' : '';
@@ -217,6 +220,18 @@ define(['domReady'], function(domReady) {
 		mypostrequest.send(parameters);
 	}
 
+	function validateEmail(value) {
+		var regex = /[a-z0-9!#$%&'*+/=?^_`{|}~.-]+@[a-z0-9-]+(\.[a-z0-9-]+)*/;
+		if(!regex.test(value)){
+			document.getElementById("errorWin").style.visibility = '';
+			document.getElementById("errorMessage").innerHTML = "Not valid email address";
+			return false;
+		}
+		document.getElementById("errorWin").style.visibility = 'hidden';
+		document.getElementById("errorMessage").innerHTML = "&nbsp;";
+		return true;
+	}
+
 	function validatePassword() {
 		if (document.getElementById("create_password").value !== document.getElementById("create_passwordRetype").value) {
 			document.getElementById("errorWin").style.visibility = '';
@@ -254,7 +269,10 @@ define(['domReady'], function(domReady) {
 		mypostrequest.send(parameters);
 	}
 	function confirmCreateUser() {
-	
+		var login = document.getElementById("create_login").value;
+		if (!validateEmail(login)){
+			return;
+		}
 		if (!validatePassword()) {
 			document.getElementById("create_password").setAttribute("aria-invalid", "true");
 			document.getElementById("create_passwordRetype").setAttribute("aria-invalid", "true");
@@ -263,7 +281,6 @@ define(['domReady'], function(domReady) {
 		document.getElementById("create_password").setAttribute("aria-invalid", "false");
 		document.getElementById("create_passwordRetype").setAttribute("aria-invalid", "false");
 		var mypostrequest = new XMLHttpRequest();
-		var login = document.getElementById("create_login").value;
 		var password = document.getElementById("create_password").value;
 		var loginTolken = document.getElementById("loginTolken").value;
 		
@@ -419,12 +436,11 @@ define(['domReady'], function(domReady) {
 			document.getElementById("login").value = loginCookie;
 		}
 
-		// TODO: Temporary --- old page logic
-		document.getElementById("login").onkeypress = function(event) {
+		document.getElementById("login").onkeyup = function(event) {
 			if (event.keyCode === 13) {
 				confirmLogin();
 			} else {
-				return true;
+				validateEmail(document.getElementById("login").value);
 			}
 		};
 
@@ -446,6 +462,14 @@ define(['domReady'], function(domReady) {
 	
 
 		document.getElementById("registerButton").onclick = revealRegistration;
+		
+		document.getElementById("create_login").onkeyup = function(event) {
+			if (event.keyCode === 13) {
+				confirmCreateUser();
+			} else {
+				validateEmail(document.getElementById("create_login").value);
+			}
+		};
 
 		document.getElementById("create_password").onkeyup = function(event) {
 			if (event.keyCode === 13) {
@@ -464,6 +488,14 @@ define(['domReady'], function(domReady) {
 		};
 
 		document.getElementById("createButton").onclick = confirmCreateUser;
+		
+		document.getElementById("signupEmail").onkeyup = function(event) {
+			if (event.keyCode === 13) {
+				submitRegister();
+			} else {
+				validateEmail(document.getElementById("signupEmail").value);
+			}
+		};
 
 		document.getElementById("signupUserButton").onclick = submitRegister;
 		
@@ -480,5 +512,13 @@ define(['domReady'], function(domReady) {
 		document.getElementById("cancleResetButton").onclick = hideResetUser;
 
 		document.getElementById("sendResetButton").onclick = confirmResetUser;
+		
+		document.getElementById("resetEmail").onkeyup = function(event) {
+			if (event.keyCode === 13) {
+				confirmResetUser();
+			} else {
+				validateEmail(document.getElementById("resetEmail").value);
+			}
+		};
 	});
 });

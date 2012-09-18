@@ -216,6 +216,7 @@ define(['domReady'], function(domReady) {
 								redirect += '?'+resetWorkBench;
 							}
 						}
+						setCookie("login", login);
 						window.location = decodeURIComponent(redirect);
 					} else {
 						window.close();
@@ -324,6 +325,29 @@ define(['domReady'], function(domReady) {
 		document.getElementById('newUserHeaderShown').style.display = '';
 		document.getElementById('orionReset').style.visibility = 'hidden';
 	}
+	
+	function setCookie(cookieName, cookieValue, numberDays){
+		if(!numberDays){
+			numberDays = 365;
+		}
+		var today = new Date();
+		var expireDate = new Date();
+		expireDate.setTime(today.getTime() + 3600000 * 24 * numberDays);
+		document.cookie = cookieName + "=" + escape(cookieValue) + ";expires=" + expireDate.toGMTString();
+	}
+	
+	function getCookie(cookieName){
+		var cookies=document.cookie.split(";");
+		for(var i=0; i<cookies.length; i++){
+			var c = cookies[i];
+			var eq = c.indexOf('=');
+			var name = c.substr(0, eq);
+			if(name == cookieName){
+				return unescape(c.substr(eq+1));
+			}
+		}
+		return null;
+	}
 
 	domReady(function() {
 
@@ -377,6 +401,11 @@ define(['domReady'], function(domReady) {
 
 		injectPlaceholderShims();
 
+		var loginCookie = getCookie('login');
+		if(loginCookie){
+			document.getElementById("login").value = loginCookie;
+		}
+		
 		// TODO: Temporary --- old page logic
 		document.getElementById("login").onkeypress = function(event) {
 			if (event.keyCode === 13) {
@@ -394,8 +423,9 @@ define(['domReady'], function(domReady) {
 			}
 		};
 
-		document.getElementById("loginButton").onclick = function(e) {
+		document.getElementById("loginForm").onsubmit = function(e) {
 			confirmLogin(null, null, e);
+			return false;
 		};
 
 		document.getElementById("resetUserLink").onclick = revealResetUser;

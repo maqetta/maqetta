@@ -162,7 +162,7 @@ return declare("davinci.review.editor.Context", [Context], {
 			 connect.subscribe(this.fileName+"/davinci/review/drawing/addShape", function(shapeDef, clear, editor) {
 				 this.surface.exchangeTool.importShapes(shapeDef, clear, dojo.hitch(Review, Review.getColor)); // FIXME: Unique surface is required
 			 }.bind(this)),
-			 connect.subscribe(this.fileName+"/davinci/review/drawing/enableEditing", this, function(reviewer, commentId, args) {
+			 connect.subscribe(this.fileName+"/davinci/review/drawing/enableEditing", this, function(reviewerEmail, commentId, args) {
 				 var pageState = args.pageState;
 				 var pageStateList = args.pageStateList;
 				 var viewScene = args.viewScene;
@@ -170,7 +170,7 @@ return declare("davinci.review.editor.Context", [Context], {
 				 var surface = this.surface;
 				 surface.activate();
 				 surface.cached = surface.exchangeTool.exportShapesByAttribute();
-				 surface.currentReviewer = reviewer;
+				 surface.currentReviewerEmail = reviewerEmail;
 				 surface.commentId = commentId;
 				 surface.filterState = pageState;
 				 surface.filterStateList = pageStateList;
@@ -294,13 +294,13 @@ return declare("davinci.review.editor.Context", [Context], {
 					var reviewers = Runtime.reviewers;
 					var found = false;
 					for (var i=0; i<reviewers.length; i++) {
-						if (colorAlias == reviewers[i].name || colorAlias == reviewers[i].email) {
+						if (colorAlias == reviewers[i].email) {
 							found = true;
 							break;
 						}
 					}
 					if (found) {
-						if (shape.colorAlias == reviewers[i].name || shape.colorAlias == reviewers[i].email) {
+						if (shape.colorAlias == reviewers[i].email) {
 							return true;
 						}
 					}

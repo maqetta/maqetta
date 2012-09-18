@@ -599,6 +599,11 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 
 			// Populate the shapes
 			if (!_comment._hasPopulate) {
+				//We used to put user name instead of email into the colorAlias field, so let's ensure
+				//colorAlias is set correctly for legacy reviews
+				comment.drawingJson = comment.drawingJson.replace(/\"colorAlias\":\"[\S+]\"/, "\"colorAlias\":\"" + comment.email + "\"");
+
+				//Publish addShape
 				dojo.publish(this._currentPage+"/davinci/review/drawing/addShape", [comment.drawingJson]);
 				_comment._hasPopulate = true;
 			}
@@ -640,7 +645,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		// Notify the drawing tool to be in edit mode
 		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", 
 				[
-				 Runtime.userName,
+				 Runtime.userEmail,
 				 form.commentId,
 				 { pageState: comment.pageState,
 					 pageStateList: comment.pageStateList,
@@ -668,7 +673,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		// Notify the drawing tool to be in edit mode
 		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", 
 				[
-				 Runtime.userName,
+				 Runtime.userEmail,
 				 form.commentId,
 				 { pageState: this._cached[this._currentPage].pageState,
 					 pageStateList: this._cached[this._currentPage].pageStateList,
@@ -800,15 +805,14 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 
 			Runtime.reviewers = reviewers;
 			dojo.forEach(reviewers, dojo.hitch(this, function(reviewer, index) { 
-				//If no name, probably not a Maqetta user and no way they could have comments yet (so color irrelevant)
-				if (reviewer.name) { 
+				if (reviewer.email) { 
 					var reviewerDisplayName = Runtime.getUserDisplayName({
 						email: reviewer.email,
 						userId: reviewer.name
 					});
 					var check = new CheckedMenuItem({
 						label: "<div class='davinciReviewToolbarReviewersColor' style='background-color:" + 
-						Review.getColor(reviewer.name) +";'></div><span>"+reviewerDisplayName+"</span>",
+						Review.getColor(reviewer.email) +";'></div><span>"+reviewerDisplayName+"</span>",
 							onChange: dojo.hitch(this, function() {
 								this._reviewFilterChanged();
 								
@@ -821,8 +825,8 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					});
 					this.reviewerList.addChild(check);
 					if (this._cached[this._currentPage] && this._cached[this._currentPage].shownColors) {
-						var checked = dojo.some(this._cached[this._currentPage].shownColors,function(name) {
-							if (name == reviewer.name) return true;
+						var checked = dojo.some(this._cached[this._currentPage].shownColors,function(email) {
+							if (email == reviewer.email) return true;
 							return false;
 						});
 						check.set("checked",checked);
@@ -898,7 +902,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 		var children = this.reviewerList.getChildren();
 		for (var i = 2; i<children.length; i++){
 			if (children[i].checked) {
-				reviewers.push(children[i].reviewer.name);
+				reviewers.push(children[i].reviewer.email);
 			}
 		}
 		//set the select all button.
@@ -953,7 +957,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 
 		// Notify the drawing tool to be in edit mode
 		dojo.publish(this._currentPage+"/davinci/review/drawing/enableEditing", [
-			 Runtime.userName,
+			 Runtime.userEmail,
 			 form.commentId,
 			 { pageState: this._cached[this._currentPage].pageState,
 				 pageStateList: this._cached[this._currentPage].pageStateList,

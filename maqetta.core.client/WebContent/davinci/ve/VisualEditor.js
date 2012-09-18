@@ -99,11 +99,13 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		return this.deviceName;
 	},
 	
-	setDevice: function(deviceName) {
+	setDevice: function(deviceName, deviceOnly) {
 	    this.deviceName = deviceName;
 	    var context = this.getContext();
 	    context.setMobileMeta(deviceName);
-	    context.setMobileTheme(deviceName);
+	    if (!deviceOnly){
+	    	context.setMobileTheme(deviceName);
+	    }
 	    
 		//FIXME: Path shouldn't be hard-coded
 	    var svgfilename = deviceName == 'none' ? null : "app/preview/images/" + deviceName + ".svg";

@@ -1323,9 +1323,14 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			*/
 			this.visualEditor.setDevice(mobileDevice, true); // set deviceOnly
 		}
-		this.widgetAddedOrDeleted();
-        dojo.publish('/davinci/ui/context/loaded', [this]);
-        this.editor.setDirty(this.hasDirtyResources());
+		/*
+		 * Need to let the widgets get parsed, and things finsh loading async
+		 */
+		window.setTimeout(function(){
+			this.widgetAddedOrDeleted();
+			dojo.publish('/davinci/ui/context/loaded', [this]);
+			this.editor.setDirty(this.hasDirtyResources());
+		}.bind(this), 500);
 
 
 	   

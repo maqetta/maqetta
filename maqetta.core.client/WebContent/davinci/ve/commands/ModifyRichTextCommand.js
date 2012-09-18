@@ -149,7 +149,7 @@ return declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 		this._oldData.properties.id = this._oldId; // make sure the id is restored
 		var newWidget = widgetUtils.createWidget(this._oldData);
 
-		widget.getParent().addChild(newWidget, index);
+		this._parentWidget.addChild(newWidget, index);
 		if(context){
 			this._refresh(newWidget);
 		}

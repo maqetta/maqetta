@@ -3580,6 +3580,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * @param {number} type  0 - modified, 1 - added, 2 - removed
 	*/
 	widgetChanged: function(type, widget) {
+		this._updateWidgetHash();
 	},
 	
 	// move to SelectTool.js?
@@ -3742,6 +3743,19 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			j = k;
 		}
 		return newArray;
+	},
+	
+	_updateWidgetHash: function(){
+		this.widgetHash = {};
+		var allWidgets = this.getAllWidgets();
+		for(var i=0; i<allWidgets.length; i++){
+			var widget = allWidgets[i];
+			var id = widget.id;
+			if(id){
+				this.widgetHash[id] = widget;
+			}
+		}
+
 	}
 
 });

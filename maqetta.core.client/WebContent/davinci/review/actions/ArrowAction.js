@@ -19,7 +19,7 @@ var ArrowAction = declare("davinci.review.actions.ArrowAction", [_DrawingCommon]
 		if(createTool){
 			createTool.deactivate();
 			createTool.setShape("Arrow", {
-				colorAlias: surface.currentReviewer,
+				colorAlias: surface.currentReviewerEmail,
 				a2c: dojo.hitch(Review, Review.getColor),
 				commentId: surface.commentId,
 				state: "",

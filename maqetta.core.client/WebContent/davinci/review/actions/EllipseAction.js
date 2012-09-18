@@ -19,7 +19,7 @@ var EllipseAction = declare("davinci.review.actions.EllipseAction", [_DrawingCom
 		if(createTool){
 			createTool.deactivate();
 			createTool.setShape("Ellipse", {
-				colorAlias: surface.currentReviewer,
+				colorAlias: surface.currentReviewerEmail,
 				a2c: dojo.hitch(Review, Review.getColor),
 				commentId: surface.commentId,
 				state: "",

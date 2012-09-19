@@ -40,7 +40,8 @@ cd ..
 if [ -z $NEWNAME ]; then
 	NEWNAME=maqetta-orion-${timestamp}
 fi
-tar cpjf ../$NEWNAME.tar.bz2 maqetta
+#tar cpjf ../$NEWNAME.tar.bz2 maqetta
+zip -qr  ../$NEWNAME.zip maqetta
 
 # cleanup
 cd ..

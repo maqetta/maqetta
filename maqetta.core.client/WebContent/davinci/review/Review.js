@@ -4,10 +4,10 @@ define([
 ], function(Runtime, Color) {
 
 return {
-	getColor: function(/*string*/ name) {
+	getColor: function(/*string*/ email) {
 		var index;
 		dojo.some(Runtime.reviewers, function(item, n) {
-			if (item.name == name) {
+			if (item.email == email) {
 				index = n;
 				return true;
 			}

@@ -1311,31 +1311,28 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// add the user activity monitoring to the document and add the connects to be 
 		// disconnected latter
 		this._connects = (this._connects || []).concat(UserActivityMonitor.addInActivityMonitor(this.getDocument()));
-
+		// Set mobile device CSS files
+		var mobileDevice = this.getMobileDevice();
+	
+		if (mobileDevice) {
+			this.setMobileDevice(mobileDevice);
+			/* 
+			 * on start up the theme should already be set by deviceTheme
+			 * setting it again here can cause timing problems, so just 
+			 * the device silhouette 
+			*/
+			this.visualEditor.setDevice(mobileDevice, true); // set deviceOnly
+		}
 		/*
-		 * give the browser a change to settle the head link changes before setting mobile themes 
-		 * before which change head links
+		 * Need to let the widgets get parsed, and things finsh loading async
 		 */
 		window.setTimeout(function(){
-			// Set mobile device CSS files
-			var mobileDevice = this.getMobileDevice();
-		
-			if (mobileDevice) {
-				this.setMobileDevice(mobileDevice);
-				this.visualEditor.setDevice(mobileDevice);
-			}
-			/*
-			 * Let the change from mobile settle before
-			 * widgetAddedorDeleted starts messing with the head for document.css
-			 * I don't like the setTimeout but until we come up with a way to single thread the head changes this 
-			 * the best we could do for now
-			 */
-			window.setTimeout(function(){
-				this.widgetAddedOrDeleted();
-				 dojo.publish('/davinci/ui/context/loaded', [this]);
-				    this.editor.setDirty(this.hasDirtyResources());
-			    }.bind(this), 500);
+			this.widgetAddedOrDeleted();
+			dojo.publish('/davinci/ui/context/loaded', [this]);
+			this.editor.setDirty(this.hasDirtyResources());
 		}.bind(this), 500);
+
+
 	   
 	},
 
@@ -2451,6 +2448,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	onContentChange: function(){
+		this._updateWidgetHash();
+		
 		// update focus
 		dojo.forEach(this.getSelection(), function(w, i){
 			if(i === 0){
@@ -3583,6 +3582,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * @param {number} type  0 - modified, 1 - added, 2 - removed
 	*/
 	widgetChanged: function(type, widget) {
+		if(type == 1){
+			this.widgetHash[widget.id] = widget;
+		}else if(type == 2){
+			delete this.widgetHash[widget.id];
+		}
 	},
 	
 	// move to SelectTool.js?
@@ -3745,6 +3749,19 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			j = k;
 		}
 		return newArray;
+	},
+	
+	_updateWidgetHash: function(){
+		this.widgetHash = {};
+		var allWidgets = this.getAllWidgets();
+		for(var i=0; i<allWidgets.length; i++){
+			var widget = allWidgets[i];
+			var id = widget.id;
+			if(id){
+				this.widgetHash[id] = widget;
+			}
+		}
+
 	}
 
 });

@@ -2448,6 +2448,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	onContentChange: function(){
+		this._updateWidgetHash();
+		
 		// update focus
 		dojo.forEach(this.getSelection(), function(w, i){
 			if(i === 0){
@@ -3580,7 +3582,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * @param {number} type  0 - modified, 1 - added, 2 - removed
 	*/
 	widgetChanged: function(type, widget) {
-		this._updateWidgetHash();
+		if(type == 1){
+			this.widgetHash[widget.id] = widget;
+		}else if(type == 2){
+			delete this.widgetHash[widget.id];
+		}
 	},
 	
 	// move to SelectTool.js?

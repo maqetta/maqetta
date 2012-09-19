@@ -287,7 +287,13 @@ define(function() {
 		 * 
 		 * @return {*}
 		 */
-		getPropertyValue: function(widget, name) {},
+		getPropertyValue: function(widget, name) {
+			/*
+			 * Note: Should always use the base implementations for names that 
+			 * are not overridden
+			 */
+			return widget._getPropertyValue(name);
+		},
 
 
 		/**

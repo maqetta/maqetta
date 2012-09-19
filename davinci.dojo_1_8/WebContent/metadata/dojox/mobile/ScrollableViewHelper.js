@@ -61,6 +61,10 @@ return declare(ViewHelper, {
 			children.push(getWidget(footer));
 		}
 		return children;
+	},
+
+	getContainerNode: function(widget) {
+		return widget.dijitWidget.containerNode;
 	}
 
 });

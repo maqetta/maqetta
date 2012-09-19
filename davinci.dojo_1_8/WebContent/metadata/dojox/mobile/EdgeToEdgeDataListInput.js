@@ -48,7 +48,7 @@ return declare(DataStoreBasedWidgetInput, {
 				value = textArea.attr('value'),
 				nodes = value,
 				rows = value.split('\n'),
-			data = { identifier: 'label', items:[]},
+			data = {items:[]}, //Do not include identifier: 'label' with EdgeToEdgeDataList
 			items = data.items;
 		for (var r = 0; r < rows.length; r++){ 
 			var cols = rows[r].split(',');

@@ -39,11 +39,6 @@
             "datatype": "boolean",
             "title": "Read Only"
         },
-        "label": {
-            "datatype": "string",
-            "defaultValue": "test label:",
-            "title": "Label"
-        },
         "state": {
             "datatype": "string",
             "option": [

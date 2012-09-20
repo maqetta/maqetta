@@ -103,15 +103,13 @@ var handleIoError = function (deferred, reason) {
      *	It passes the error and the dojo.Deferred
      *	for the request with the topic.
 	 */
-console.warn("Workbench::handleIoError reason="+reason);
-	if (reason.status == 401 || reason.status == 403) {
-console.warn("Workbench::handleIoError sessionTimedOut");
+
+	if (reason.response.status == 401 || reason.response.status == 403) {
 		sessionTimedOut();
 	// Only handle error if it is as of result of a failed XHR connection, not
 	// (for example) if a callback throws an error. (For dojo.xhr, def.cancel()
 	// is only called if connection fails or if it times out.)
 	} else if (deferred.canceled === true) {
-console.warn("Workbench::handleIoError deferred.canceled");
 		// Filter on XHRs for maqetta server commands.  Possible values which we
 		// test for:
 		//     cmd/findResource
@@ -127,14 +125,13 @@ console.warn("Workbench::handleIoError deferred.canceled");
 				return;
 			}
 		} else {
-console.warn("Workbench::handleIoError skip");
 			// Must not be a Maqetta URL (like for JSONP on GridX), so skip
 			return;
 		}
 
 		Runtime.handleError(reason.message);
 		console.warn('Failed to load url=' + url + ' message=' + reason.message +
-				' status=' + reason.status);
+				' status=' + reason.response.status);
 	}
 };
 

@@ -225,7 +225,7 @@ public class Download extends Command {
         	.addField("themes", "claro")
         	.addField("cssOptimise", "comments");
         jsonWriter.addFieldName("packages").startArray();
-        jsonWriter.startObject().addField("name", "dojo").addField("version","1.7.2").endObject();
+        jsonWriter.startObject().addField("name", "dojo").addField("version","1.8.0").endObject();
         jsonWriter.startObject().addField("name", "dwb").addField("version","1.0.0").endObject();
 //TODO: add supplemental packages like maqetta.*
 //        jsonWriter.startObject().addField("name", supplemental).addField("version","1.0.0").endObject();

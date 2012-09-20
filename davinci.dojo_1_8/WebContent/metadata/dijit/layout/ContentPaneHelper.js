@@ -62,6 +62,18 @@ ContentPaneHelper.prototype = {
 			}
 
 			return text;
+		},
+
+		preProcessData: function(data) {
+			// we need parseOnLoad set to false so that the content pane doesn't try to parse its contents
+			data.properties.parseOnLoad = false;
+			return data;
+		},
+
+		cleanSrcElement: function(srcElement) {
+			// but we don't want parseOnLoad to be in the source as that will break
+			// contentpane from working outside of maqetta
+			srcElement.removeAttribute("parseOnLoad");
 		}
 	};
 

@@ -192,12 +192,11 @@ var initializeWorkbenchState = function(){
 		if (state.editors) {
 			state.version = davinci.version;
 			
-			var project = null;
-			var singleProject = Workbench.singleProjectMode();
+			var project,
+				singleProject = Workbench.singleProjectMode();
 		
 			if (singleProject) {
-				var p = Workbench.getProject();
-				project = new Path(p);
+				project = new Path(Workbench.getProject());
 			}
 		
 			state.editors.forEach(function(editor){
@@ -234,7 +233,7 @@ var initializeWorkbenchState = function(){
 							Workbench.openEditor({
 								fileName: resource,
 								content: resource.getContentSync(),
-								noSelect: noSelect,
+								noSelect: true, // style: should flip logic to use "select" property
 								isDirty: resource.isDirty(),
 								startup: false
 							});
@@ -245,15 +244,27 @@ var initializeWorkbenchState = function(){
 				if(isReviewRes){
 					var version = getReviewVersion(editor);
 					var resPath = getReviewResource(editor).toString();
-					 reviewResource.findFile(version, resPath).then(function(resource) {
+					reviewResource.findFile(version, resPath).then(function(resource) {
 						 handleResource(resource);
-					 });
+					});
 				}else{
 					handleResource(sysResource.findResource(editor));
 				}
-				
-				
 			});
+
+			// select the activeEditor, forcing it to load its contents
+			var selectEditor = state.activeEditor,
+				selectResource = sysResource.findResource(selectEditor),
+				selectFilename = selectResource.getPath();
+
+			// is this necessary, and can it be put inside _switchEditor()?
+			if (Workbench._state.editors.indexOf(selectFilename) === -1) {
+				Workbench._state.editors.push(selectFilename);
+			}
+			var editorContainer = dijit.byId(filename2id(selectFilename));
+//			Workbench._switchEditor(editorContainer.editor, false);
+			dijit.byId("editors_container").selectChild(editorContainer);
+//			Runtime.currentEditor = selectEditor;
 		} else {
 			state.editors = [];
 		}

@@ -63,6 +63,16 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 			states: this._oldData.states,
 			context: context
 		};
+		for(var prop in this._newData.properties){
+			var value = this._newData.properties[prop];
+			//FIXME: We don't have a good way now to distinguish between setting a property
+			// to empty string versus deleting this property. I invented this special flag
+			// to address the requirements of #3425 just before 7.0.1 release.
+			// Better to add an additional "propertiesToDelete" argument to ModifyCommand.
+			if(value === '$MAQ_MODIFYCOMMAND_DELETE_PROPERTY$'){
+				delete this._newData.properties[prop];
+			}
+		}
 		
 		// Some properties (such as Dojox Mobile's 'fixed' property) require that
 		// we reload the Visual Editor iframe when they are changed, so that the

@@ -305,6 +305,7 @@ return declare(SmartInput, {
 
 	updateWidget: function() {
 		var context = this._widget.getContext();
+		var id = this._widget.id;
 
 		var data = this._containerInput.getValue();
 
@@ -313,7 +314,10 @@ return declare(SmartInput, {
 		this._widget._edit_context.getCommandStack().execute(command);
 
 		// redraw the box around the widget
-		context.select(this._widget, null, false); 
+		var widget = Widget.byId(id);
+		if(widget){
+			context.select(widget, null, false); 
+		}
 	}
 
 });

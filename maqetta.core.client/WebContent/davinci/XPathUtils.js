@@ -100,6 +100,9 @@ return /* XPathUtils */ {
 				var idx = elem.index();
 				if (idx) {
 					tag += '[' + idx + ']';
+				} else {
+					//For consistency, always add the brackets
+					tag += '[' + 1 + ']';
 				}
 				path = tag + (path ? '/' + path : '');
 				return _get(path, parent);

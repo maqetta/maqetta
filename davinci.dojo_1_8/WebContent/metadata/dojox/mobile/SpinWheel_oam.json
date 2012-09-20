@@ -27,11 +27,6 @@
             "format": "amd",
             "src": "dojox/mobile/SpinWheel",
             "$library": "dojo"
-        },
-        {
-            "type": "css",
-            "src": "dojox/mobile/themes/common/SpinWheel.css",
-            "$library": "dojo"
         }
     ],
     "library": {

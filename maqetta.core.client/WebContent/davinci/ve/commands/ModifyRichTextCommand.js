@@ -77,9 +77,9 @@ return declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 				context:this._context
 			};
 		}
-		
-		if(this._context){
-			this._context.detach(widget);
+		var context = this._context;
+		if(context){
+			context.detach(widget);
 		}	
 
 		if(this._properties.id){
@@ -112,6 +112,16 @@ return declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 			this._refresh(newWidget);
 		
 		}
+		
+		//davinci.ve.widget.addChild(parent, widget, index);
+		if (context) {
+			context.widgetAddedOrDeleted();
+			if (this._oldId != this._newId) {
+				context.widgetChanged(context.WIDGET_ID_CHANGED, newWidget, this._oldId);
+			}
+			context.widgetChanged(context.WIDGET_MODIFIED, newWidget);
+		}
+
 		this.newWidget=newWidget;
 		dojo.publish("/davinci/ui/widget/replaced", [newWidget, widget]);
 		
@@ -149,10 +159,12 @@ return declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 		this._oldData.properties.id = this._oldId; // make sure the id is restored
 		var newWidget = widgetUtils.createWidget(this._oldData);
 
-		widget.getParent().addChild(newWidget, index);
+		this._parentWidget.addChild(newWidget, index);
 		if(context){
 			this._refresh(newWidget);
 		}
+		context.widgetAddedOrDeleted();
+		context.widgetChanged(context.WIDGET_MODIFIED, newWidget);
 		dojo.publish("/davinci/ui/widget/replaced", [newWidget, widget]);
 		
 		// Recompute styling properties in case we aren't in Normal state

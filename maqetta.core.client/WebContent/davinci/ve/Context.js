@@ -2448,6 +2448,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	onContentChange: function(){
+		this._updateWidgetHash();
+		
 		// update focus
 		dojo.forEach(this.getSelection(), function(w, i){
 			if(i === 0){
@@ -3580,6 +3582,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * @param {number} type  0 - modified, 1 - added, 2 - removed
 	*/
 	widgetChanged: function(type, widget) {
+		if(type == 1){
+			this.widgetHash[widget.id] = widget;
+		}else if(type == 2){
+			delete this.widgetHash[widget.id];
+		}
 	},
 	
 	// move to SelectTool.js?
@@ -3742,6 +3749,19 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			j = k;
 		}
 		return newArray;
+	},
+	
+	_updateWidgetHash: function(){
+		this.widgetHash = {};
+		var allWidgets = this.getAllWidgets();
+		for(var i=0; i<allWidgets.length; i++){
+			var widget = allWidgets[i];
+			var id = widget.id;
+			if(id){
+				this.widgetHash[id] = widget;
+			}
+		}
+
 	}
 
 });

@@ -26,6 +26,9 @@ return declare("davinci.ve.actions._ReorderAction", [ContextAction], {
 			return false;
 		}
 		var firstParent = selection[0].getParent();
+		if(!firstParent){
+			return false;
+		}
 		for(var i=0; i<selection.length; i++){
 			var widget = selection[i];
 			if(widget.getParent() != firstParent){
@@ -49,6 +52,9 @@ return declare("davinci.ve.actions._ReorderAction", [ContextAction], {
 			return false;
 		}
 		var parent = selection[0].getParent();
+		if(!parent){
+			return false;
+		}
 		var children = parent.getChildren();
 		var minIndex = Number.MAX_VALUE;
 		var maxIndex = Number.MIN_VALUE;

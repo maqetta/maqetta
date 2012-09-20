@@ -64,11 +64,11 @@ return declare(SmartInput, {
 		}
 
 		var command = new ModifyCommand(this._widget, props, children, this._widget._edit_context);
-
 		this._widget._edit_context.getCommandStack().execute(command);
 
 		// redraw the box around the widget
-		context.select(this._widget, null, false); 
+		var widget = command.newWidget;
+		context.select(widget, null, false); 
 	},
 
 	_getTemplate: function() {

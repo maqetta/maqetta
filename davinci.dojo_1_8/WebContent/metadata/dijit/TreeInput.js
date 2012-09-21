@@ -266,7 +266,7 @@ return declare(ContainerInput, {
 		//Create model for preview
 		var previewModel = this._previewModel = new CustomObjectStoreModel({
 			labelAttr: modelWidgetData.properties.labelAttr ? modelWidgetData.properties.labelAttr : "label",
-			query: modelWidgetData.properties.query,
+			query: modelWidgetData.properties.query ? modelWidgetData.properties.query : {id: "treeRoot"},
 			store: observablePreviewStore
 		});
 		this._treeHelper._addModelFunctions(previewModel);

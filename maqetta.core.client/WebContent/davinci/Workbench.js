@@ -233,7 +233,7 @@ var initializeWorkbenchState = function(){
 							Workbench.openEditor({
 								fileName: resource,
 								content: resource.getContentSync(),
-								noSelect: true, // style: should flip logic to use "select" property
+								noSelect: noSelect, // style: should flip logic to use "select" property
 								isDirty: resource.isDirty(),
 								startup: false
 							});
@@ -251,29 +251,6 @@ var initializeWorkbenchState = function(){
 					handleResource(sysResource.findResource(editor));
 				}
 			});
-			if(state.activeEditor){
-				var path = new Path(state.activeEditor);
-				if (!path.startsWith(project)) {
-					state.activeEditor = null;
-				}
-			}
-			if(state.activeEditor){
-				// select the activeEditor, forcing it to load its contents
-				var selectEditor = state.activeEditor,
-					selectResource = sysResource.findResource(selectEditor),
-					selectFilename = selectResource.getPath();
-
-				// is this necessary, and can it be put inside _switchEditor()?
-				if (Workbench._state.editors.indexOf(selectFilename) === -1) {
-					Workbench._state.editors.push(selectFilename);
-				}
-				var editorContainer = dijit.byId(filename2id(selectFilename));
-//				Workbench._switchEditor(editorContainer.editor, false);
-				dijit.byId("editors_container").selectChild(editorContainer);
-//				Runtime.currentEditor = selectEditor;
-			}else{
-				state.editors = [];
-			}
 		} else {
 			state.editors = [];
 		}

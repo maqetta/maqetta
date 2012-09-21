@@ -42,9 +42,16 @@ return declare("davinci.ve.actions.SurroundAction", [ContextAction], {
 		if (context && context.getSelection().length){
 			var parent = context.getSelection()[0].getParent(),
 				indices = [];
+			if(!parent){
+				return false;
+			}
 			var siblings = dojo.every(context.getSelection(), function(selection){
+				var selectionParent = selection.getParent();
+				if(!selectionParent){
+					return false;
+				}
 				indices.push(parent.indexOf(selection));
-				return parent.id == selection.getParent().id;
+				return parent.id == selectionParent.id;
 			});
 			if (siblings){
 				// return true only if they are sequential

@@ -66,17 +66,19 @@ ViewHelper.prototype = {
 				//called after the 'display:block' operation occurred, and we don't
 				//have a mechanism for triggering additional logic after command stack has completed
 				node._dvWidget.dijitWidget.disableTouchScroll = true;
-				var display, selected;
+				var display, visibility, selected;
+				var props = [];
 				if(node==domNode){
-					display = "";
+					props.push({display:""});
+					props.push({visibility:"visible"});	// Dojo sometimes puts visibility:hidden on node to prevent flicker
 					node._dvWidget.dijitWidget.set('selected',true);
 					command.add(new ModifyAttributeCommand(node._dvWidget, {selected: "true"}));
 				}else{
-					display = "none";
+					props.push({display:"none"});
 					node._dvWidget.dijitWidget.set('selected',false);
 					command.add(new ModifyAttributeCommand(node._dvWidget, {selected: "false"}));
 				}
-				command.add(new StyleCommand(node._dvWidget, [{display: display}]));
+				command.add(new StyleCommand(node._dvWidget, props));
 			}
 		}
 	},

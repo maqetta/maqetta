@@ -105,14 +105,25 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 
 		if (davinci.ve.metadata.getAllowedChild(this.type)[0] !== 'NONE') {
 			this.dijitWidget.getChildren().forEach(function(child) {
-				if (attach) {
-					children.push(require("davinci/ve/widget").getWidget(child.domNode));
-				} else {
-                    var widget = child.domNode && child.domNode._dvWidget;
-                    if (widget) {
-                        children.push(widget);
-                    }
-                }
+				// The "_maqNotDVWidget" property on a Dijit indicates that even though
+				// Dojo treats the given DOM node as a child, Maqetta should ignore it
+				// This was necessary to deal with #3425 because Heading creates a real
+				// widget (with data-dojo-type and everything) under the hood 
+				// when the 'back' property gets a value. 
+				// To use this feature, Helper functions on an ancestor
+				// widget need to put this property on any child widgets that the Maqetta
+				// page editor needs to ignore.
+				// FIXME: There has to be a cleaner way of doing this.
+				if(!child._maqNotDVWidget){
+					if (attach) {
+						children.push(require("davinci/ve/widget").getWidget(child.domNode));
+					} else {
+	                    var widget = child.domNode && child.domNode._dvWidget;
+	                    if (widget) {
+	                        children.push(widget);
+	                    }
+	                }
+				}
 			});
 		}
 		return children;
@@ -159,6 +170,12 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 		if (helper && helper.addChild) {
 			helper.addChild(this, dijitWidget, index);
 		} else {
+			// Some widgets such as dijit.form.DataList don't have a startup
+			// method, but addChild expects there will always be one.
+			// Address #3449
+			if(!dijitWidget.startup){
+				dijitWidget.startup = function(){};
+			}
 			this.dijitWidget.addChild(dijitWidget, index);
 		}
 	},
@@ -180,6 +197,12 @@ return declare("davinci.ve.DijitWidget", _Widget, {
         if (helper && helper.addChild) {
         	helper.addChild(this, widget, index);
         } else {
+			// Some widgets such as dijit.form.DataList don't have a startup
+			// method, but addChild expects there will always be one.
+			// Address #3449
+			if(!widget.startup){
+				widget.startup = function(){};
+			}
         	parentWidget.addChild(widget, index);
         }
 

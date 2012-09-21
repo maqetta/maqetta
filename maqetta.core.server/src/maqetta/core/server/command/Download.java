@@ -116,36 +116,34 @@ public class Download extends Command {
 		URL buildURL = null;
 		try {
         	Map dependencies = analyzeWorkspace(user, requestURLString);
-        	if (dependencies != null) {
-        		String statusCookie = requestBuild(dependencies);
-        		String result = null;
-        		while (result == null) {
-                    // now poll for a response with a "result" property
-            		URL status = new URL(statusCookie);
-        			InputStream is = status.openStream();
-        			try {
-                        int size;
-                        byte[] buffer = new byte[2048];
-         
-                        ByteArrayOutputStream baos =
-                                new ByteArrayOutputStream(buffer.length);
-         
-                        while ((size = is.read(buffer, 0, buffer.length)) != -1) {
-                            baos.write(buffer, 0, size);
-                        }        				
-            			String content = baos.toString();
-            			System.out.println("build status: " + content);
-            			Map json = (Map)JSONReader.read(content);
-            			result = (String)json.get("result");
-        			} finally {
-        				is.close();
-        			}
-        			Thread.sleep(1000);
-        		}
+    		String statusCookie = requestBuild(dependencies);
+    		String result = null;
+    		while (result == null) {
+                // now poll for a response with a "result" property
+        		URL status = new URL(statusCookie);
+    			InputStream is = status.openStream();
+    			try {
+                    int size;
+                    byte[] buffer = new byte[2048];
+     
+                    ByteArrayOutputStream baos =
+                            new ByteArrayOutputStream(buffer.length);
+     
+                    while ((size = is.read(buffer, 0, buffer.length)) != -1) {
+                        baos.write(buffer, 0, size);
+                    }        				
+        			String content = baos.toString();
+        			System.out.println("build status: " + content);
+        			Map json = (Map)JSONReader.read(content);
+        			result = (String)json.get("result");
+    			} finally {
+    				is.close();
+    			}
+    			Thread.sleep(1000);
+    		}
 
-        		System.out.println("build result: " + result);
-        		buildURL = new URL(result);
-        	}
+    		System.out.println("build result: " + result);
+    		buildURL = new URL(result);
         } catch (InterruptedException ie) {
         	throw new IOException("Thread interrupted.  Did not obtain build result.");
         }
@@ -177,15 +175,13 @@ public class Download extends Command {
 	            int statusCode = client.executeMethod(method);
 	            String body = method.getResponseBodyAsString();
 	            if (statusCode != HttpStatus.SC_OK) {
-	                System.err.println("build.dojotoolkit.org: Analyse failed: " + method.getStatusLine() + " " + body);
-	                return null;
+	                throw new IOException(buildBase + "/api/dependencies: Analyse failed: " + method.getStatusLine() + " " + body);
 	            }
 
 	            int start = body.indexOf("<textarea>");
 	            int end = body.indexOf("</textarea>");
 	            if (start == -1 || end == -1) {
-	            	System.err.println("Builder unable to parse output: " + body);
-	            	return null;
+	            	throw new IOException(buildBase + "/api/dependencies: unable to parse output: " + body);
 	            }
 
 	            String content = body.substring(start + 10, end);
@@ -251,14 +247,14 @@ public class Download extends Command {
         	method.setRequestEntity(new StringRequestEntity(content, "application/json", "utf-8"));
             int statusCode = client.executeMethod(method);
         	if (statusCode != HttpStatus.SC_OK) {
-        		throw new IOException("/api/build failed with status: " + statusCode);
+        		throw new IOException(buildBase + "/api/build failed with status: " + statusCode);
         	}
             String json = method.getResponseBodyAsString();
             System.out.println("/api/build response: " + json);
             Map status = (Map)JSONReader.read(json);
             String statusLink = (String)status.get("buildStatusLink");
             if (statusLink == null) {
-            	throw new IOException("/api/build failed with error: " + (String)status.get("error"));
+            	throw new IOException(buildBase + "/api/build failed with error: " + (String)status.get("error"));
             }
             return statusLink;
         } finally {

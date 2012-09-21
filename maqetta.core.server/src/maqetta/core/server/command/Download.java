@@ -112,7 +112,7 @@ public class Download extends Command {
         }
     }
 
-	private URL getBuildURL(IUser user, String requestURLString) {
+	private URL getBuildURL(IUser user, String requestURLString) throws IOException {
 		URL buildURL = null;
 		try {
         	Map dependencies = analyzeWorkspace(user, requestURLString);
@@ -146,12 +146,8 @@ public class Download extends Command {
         		System.out.println("build result: " + result);
         		buildURL = new URL(result);
         	}
-        } catch (IOException ioe) {
-        	ioe.printStackTrace();
-        	// continue download without a build
         } catch (InterruptedException ie) {
-        	System.out.println("build interrupted.");
-        	// continue download without a build
+        	throw new IOException("Thread interrupted.  Did not obtain build result.");
         }
         return buildURL;
 	}
@@ -225,7 +221,7 @@ public class Download extends Command {
         	.addField("themes", "claro")
         	.addField("cssOptimise", "comments");
         jsonWriter.addFieldName("packages").startArray();
-        jsonWriter.startObject().addField("name", "dojo").addField("version","1.7.2").endObject();
+        jsonWriter.startObject().addField("name", "dojo").addField("version","1.8.0").endObject();
         jsonWriter.startObject().addField("name", "dwb").addField("version","1.0.0").endObject();
 //TODO: add supplemental packages like maqetta.*
 //        jsonWriter.startObject().addField("name", supplemental).addField("version","1.0.0").endObject();
@@ -254,11 +250,17 @@ public class Download extends Command {
         try {
         	method.setRequestEntity(new StringRequestEntity(content, "application/json", "utf-8"));
             int statusCode = client.executeMethod(method);
-        	//TODO: check statusCode
+        	if (statusCode != HttpStatus.SC_OK) {
+        		throw new IOException("/api/build failed with status: " + statusCode);
+        	}
             String json = method.getResponseBodyAsString();
             System.out.println("/api/build response: " + json);
             Map status = (Map)JSONReader.read(json);
-            return (String)status.get("buildStatusLink");
+            String statusLink = (String)status.get("buildStatusLink");
+            if (statusLink == null) {
+            	throw new IOException("/api/build failed with error: " + (String)status.get("error"));
+            }
+            return statusLink;
         } finally {
 			method.releaseConnection();
 		}

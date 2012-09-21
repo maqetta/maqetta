@@ -24,10 +24,16 @@ return declare("davinci.html.HTMLAttribute", HTMLItem, {
 				autoplay: 1, controls: 1, formnovalidate: 1, loop: 1, muted: 1, required: 1
 		};
 		if (bool[this.name.toLowerCase()]) {
-			if (this.value && this.value != "false") {
-				s += '="' + this.name + '"';
-			} else {
-				s = "";
+			/*
+			 * dojox.form.TriStateCheckbox checked attribute any value other than 'mixed' is treaded as checked(true)
+			 * checked='mixed' is treated as mixed and of course if checked is absent then the checkbox is false
+			 * So do to this widget and maybe others overriding the HTML standard behavior of boolean attributes 
+			 * We should just pass any value other than false through..
+			 */
+			if (!this.value || this.value === "false") { 
+				s = ""; 
+			}else {
+				s += '="' + this.value + '"';
 			}
 		} else if (!this.noValue) {
 			s = s + '="' + davinci.html.escapeXml(String(this.value)) + '"';

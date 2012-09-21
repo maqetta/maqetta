@@ -103,15 +103,13 @@ var handleIoError = function (deferred, reason) {
      *	It passes the error and the dojo.Deferred
      *	for the request with the topic.
 	 */
-console.warn("Workbench::handleIoError reason="+reason);
-	if (reason.status == 401 || reason.status == 403) {
-console.warn("Workbench::handleIoError sessionTimedOut");
+
+	if (reason.response.status == 401 || reason.response.status == 403) {
 		sessionTimedOut();
 	// Only handle error if it is as of result of a failed XHR connection, not
 	// (for example) if a callback throws an error. (For dojo.xhr, def.cancel()
 	// is only called if connection fails or if it times out.)
 	} else if (deferred.canceled === true) {
-console.warn("Workbench::handleIoError deferred.canceled");
 		// Filter on XHRs for maqetta server commands.  Possible values which we
 		// test for:
 		//     cmd/findResource
@@ -127,14 +125,13 @@ console.warn("Workbench::handleIoError deferred.canceled");
 				return;
 			}
 		} else {
-console.warn("Workbench::handleIoError skip");
 			// Must not be a Maqetta URL (like for JSONP on GridX), so skip
 			return;
 		}
 
 		Runtime.handleError(reason.message);
 		console.warn('Failed to load url=' + url + ' message=' + reason.message +
-				' status=' + reason.status);
+				' status=' + reason.response.status);
 	}
 };
 
@@ -195,12 +192,11 @@ var initializeWorkbenchState = function(){
 		if (state.editors) {
 			state.version = davinci.version;
 			
-			var project = null;
-			var singleProject = Workbench.singleProjectMode();
+			var project,
+				singleProject = Workbench.singleProjectMode();
 		
 			if (singleProject) {
-				var p = Workbench.getProject();
-				project = new Path(p);
+				project = new Path(Workbench.getProject());
 			}
 		
 			state.editors.forEach(function(editor){
@@ -237,7 +233,7 @@ var initializeWorkbenchState = function(){
 							Workbench.openEditor({
 								fileName: resource,
 								content: resource.getContentSync(),
-								noSelect: noSelect,
+								noSelect: true, // style: should flip logic to use "select" property
 								isDirty: resource.isDirty(),
 								startup: false
 							});
@@ -248,15 +244,36 @@ var initializeWorkbenchState = function(){
 				if(isReviewRes){
 					var version = getReviewVersion(editor);
 					var resPath = getReviewResource(editor).toString();
-					 reviewResource.findFile(version, resPath).then(function(resource) {
+					reviewResource.findFile(version, resPath).then(function(resource) {
 						 handleResource(resource);
-					 });
+					});
 				}else{
 					handleResource(sysResource.findResource(editor));
 				}
-				
-				
 			});
+			if(state.activeEditor){
+				var path = new Path(state.activeEditor);
+				if (!path.startsWith(project)) {
+					state.activeEditor = null;
+				}
+			}
+			if(state.activeEditor){
+				// select the activeEditor, forcing it to load its contents
+				var selectEditor = state.activeEditor,
+					selectResource = sysResource.findResource(selectEditor),
+					selectFilename = selectResource.getPath();
+
+				// is this necessary, and can it be put inside _switchEditor()?
+				if (Workbench._state.editors.indexOf(selectFilename) === -1) {
+					Workbench._state.editors.push(selectFilename);
+				}
+				var editorContainer = dijit.byId(filename2id(selectFilename));
+//				Workbench._switchEditor(editorContainer.editor, false);
+				dijit.byId("editors_container").selectChild(editorContainer);
+//				Runtime.currentEditor = selectEditor;
+			}else{
+				state.editors = [];
+			}
 		} else {
 			state.editors = [];
 		}

@@ -314,6 +314,10 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 
 	_connectCallback: function(failureInfo) {
 		try {
+			if (failureInfo instanceof Error) {
+				throw failureInfo;
+			}
+
 			var context = this.context,
 				popup;
 

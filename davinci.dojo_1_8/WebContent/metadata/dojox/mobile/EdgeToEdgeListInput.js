@@ -47,6 +47,7 @@ return declare(ContainerInput, {
 	update: function(widget, value) {
 		var values = value;
 		
+		var id=widget.id;
 		this.command = new CompoundCommand();
 
 		var children = widget.getChildren();
@@ -71,6 +72,7 @@ return declare(ContainerInput, {
 		}
 
 		this._addOrExecCommand();
+		widget = Widget.byId(id);
 		return widget;
 	},
 	

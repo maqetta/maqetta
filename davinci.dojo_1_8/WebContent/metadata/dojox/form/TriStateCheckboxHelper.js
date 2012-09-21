@@ -23,7 +23,7 @@ define(function() {
 		 *             The equivalent of the 'pos' parameter to 'dojo.place()', can be a number or
 		 *             a position name.  Defaults to "last".
 		 */
-		addChild: function(widget, dijitWidget, index) {},
+		//addChild: function(widget, dijitWidget, index) {},
 
 		/**
 		 * Check that there are no discrepencies with 'value'.
@@ -35,7 +35,7 @@ define(function() {
 		 * @return {*}
 		 * @deprecated DO NOT USE, this API will be removed.
 		 */
-		checkValue: function(value) {},
+		//checkValue: function(value) {},
 
 		/**
 		 * Override the default action, which adds a new widget as a child of the most deeply nested
@@ -47,7 +47,7 @@ define(function() {
 		 * 
 		 * @return {davinci.ve._Widget}  an element from 'allowedParentList' array
 		 */
-		chooseParent: function(allowedParentList) {},
+		//chooseParent: function(allowedParentList) {},
 
 		/**
 		 * Allows you to "clean" (update) an HTML model element.
@@ -64,7 +64,7 @@ define(function() {
 		 * 
 		 * @param  {davinci/html/HTMLElement} srcElement
 		 */
-		cleanSrcElement: function(srcElement) {},
+		//cleanSrcElement: function(srcElement) {},
 
 		/**
 		 * Invoked when adding a new widget to the page; when changing properties on a widget (and
@@ -88,54 +88,14 @@ define(function() {
 		 */
 		create: function(widget, srcElement) {
 
-//		Example:
-//			try{
-//				/*
-//				 * Find the widget that is associated with widget be created.
-//				 */
-//				var storeId = "";
-//				if (widget.dijitWidget && widget.dijitWidget.store) {
-//					var store = widget.dijitWidget.store;
-//					storeId = store.id ? store.id : store._edit_object_id;
-//				}
-//				if(storeId){
-//					/*
-//					 * we may have the store as an object, stores must be 
-//					 * created before the widgets that use them
-//					 * So lets make sure this store is defined in the document 
-//					 * before the widget we are create.
-//					 */
-//					
-//					dojo.withDoc(widget.getContext().getDocument(), function(){
-//						var assocatedWidget = storeId.declaredClass ? Widget.byId(storeId.id) : Widget.byId(storeId);
-//						if (assocatedWidget && widget.dijitWidget && widget.dijitWidget.store){
-//							/*
-//							 * Now that we have the associated widget lets find where to move it to
-//							 */
-//							var parent = widget.getParent();
-//							var assocatedParent = assocatedWidget.getParent();
-//							var newIndex = (parent.indexOf(widget) < 1) ? 0 : parent.indexOf(widget)-1;
-//							var i = parent.indexOf(widget);
-//							var x = assocatedParent.indexOf(assocatedWidget);
-//							if ((parent === assocatedParent) && (i < x )){ // same parent
-//								newIndex = parent.indexOf(widget);
-//							} else if (parent != assocatedParent) {
-//								newIndex = i;
-//							}
-//							/*
-//							 * We do not need to add this to the command stack, but we can use the ReparentCommand 
-//							 * for code reuse. 
-//							 */
-//							var command = new ReparentCommand(assocatedWidget, parent, newIndex);
-//							command.execute();
-//						}
-//					}.bind(this));
-//				}
-//				
-//			} 
-//			catch (e) {
-//				console.error('Helper.Create error processing tree.');
-//			}
+			if (widget.properties && widget.properties.checked && widget.properties.checked === "false") {
+				delete widget.properties.checked;
+				delete widget.dijitWidget.checked;
+				delete widget.dijitWidget.params.checked;
+				widget.dijitWidget._setCheckedAttr(false);
+			}
+
+
 		},
 
 		/**
@@ -144,7 +104,7 @@ define(function() {
 		 * 
 		 * @param  {davinci/ve/_Widget} widget
 		 */
-		destroy: function(widget) {},
+	//	destroy: function(widget) {},
 
 		/**
 		 * Allows you to disable dragging of a widget within the Visual Editor.
@@ -156,7 +116,7 @@ define(function() {
 		 * 
 		 * @return {boolean}  'true' is dragging of 'widget' should be disabled
 		 */
-		disableDragging: function(widget) {},
+		//disableDragging: function(widget) {},
 
 		/**
 		 * Override the default action, which is to return all "widgets" that are children of the
@@ -177,7 +137,7 @@ define(function() {
 		 * 
 		 * @return {davinci/ve/_Widget[]}  array of child widgets
 		 */
-		getChildren: function(widget, attach) {
+		//getChildren: function(widget, attach) {
 			
 //		Example:
 //			var children = [];
@@ -202,7 +162,7 @@ define(function() {
 //			}
 //
 //			return children;
-		},
+//		},
 		
 		/**
 		 * Override the default implementation of 'widget.getChildrenData()', which calls
@@ -216,7 +176,7 @@ define(function() {
 		 * @return {Object[]}  An array data for the widget's children.  See 'getData()' docs for
 		 *                     more information on the structure.
 		 */
-		getChildrenData: function(widget, options) {},
+	//	getChildrenData: function(widget, options) {},
 
 		/**
 		 * Override default implementation, which returns the widget's DOM node which contains the
@@ -227,7 +187,7 @@ define(function() {
 		 * @return {DOMElement|null}  If 'widget' can have child widgets, then return the DOM node
 		 *             which contains those children; otherwise, return null.
 		 */
-		getContainerNode: function(widget) {},
+	//	getContainerNode: function(widget) {},
 
 		/**
 		 * Override the default implementation of 'widget._getData()', which returns an object
@@ -248,7 +208,7 @@ define(function() {
 		 *                 children:    // {[Object]} data for child widgets (from 'widget.getChildrenData()')
 		 *             }
 		 */
-		getData: function(/*Widget*/ widget, /*Object*/ options) {
+	//	getData: function(/*Widget*/ widget, /*Object*/ options) {
 			
 //		Example:
 //			if(!widget){
@@ -266,7 +226,7 @@ define(function() {
 //				data.properties.query = widget.dijitWidget.query;
 //			}
 //			return data;
-		},
+//		},
 
 		/**
 		 * Override default action, which is to call 'GeomUtils.getMarginBoxPageCoords(widget.domNode)'.
@@ -276,7 +236,7 @@ define(function() {
 		 * @return {Object}  coordinates object of form {l:, t:, w:, h: }
 		 * @see davinci/ve/utils/GeomUtils#getMarginBoxPageCoords
 		 */
-		getMarginBoxPageCoords: function(widget) {},
+	//	getMarginBoxPageCoords: function(widget) {},
 
 		/**
 		 * Override the default implementation, which simply gets the value of the named attribute
@@ -288,11 +248,12 @@ define(function() {
 		 * @return {*}
 		 */
 		getPropertyValue: function(widget, name) {
-			/*
-			 * Note: Should always use the base implementations for names that 
-			 * are not overridden
-			 */
-			return widget._getPropertyValue(name);
+			
+			if (name == 'states' && widget.dijitWidget.params && widget.dijitWidget.params.states){
+				return widget.dijitWidget.params.states;
+			} else {
+				return widget._getPropertyValue(name);
+			}
 		},
 
 
@@ -309,7 +270,7 @@ define(function() {
 		 *             A command to delete 'widget' and perform any other necessary actions. Will be
 		 *             added to the command stack.
 		 */
-		getRemoveCommand: function(widget) {
+	//	getRemoveCommand: function(widget) {
 			
 //		Example:
 //			/*
@@ -335,7 +296,7 @@ define(function() {
 //			 */
 //			return command;
 			
-		}, 
+//		}, 
 
 		/**
 		 * Invoked by Snap.js from core application to get a snapping rect for this widget
@@ -356,7 +317,7 @@ define(function() {
 		 *         snapPoints: [{x:, y:}] // all numbers in page coordinate system
 		 *      }
 		 */
-		getSnapInfo: function(widget, widgetSnapInfo){},
+	//	getSnapInfo: function(widget, widgetSnapInfo){},
 
 		/**
 		 * Normally, a widget is treated as a single entity in the Visual Editor.  But some widgets
@@ -373,7 +334,7 @@ define(function() {
 		 *             dimension properties: { x:, y:, width:, height: }.  Coordinates are in
 		 *             the page coordinate system.
 		 */
-		getTargetOverlays: function(widget) {},
+	//	getTargetOverlays: function(widget) {},
 
 		/**
 		 * Provide additional widget descriptor.
@@ -384,7 +345,7 @@ define(function() {
 		 * 
 		 * @return {String}  additional label text
 		 */
-		getWidgetDescriptor: function(widget) {},
+	//	getWidgetDescriptor: function(widget) {},
 
 		/**
 		 * Helper that allows a custom string that will show as the widget's name
@@ -400,7 +361,7 @@ define(function() {
 		 * 
 		 * @return {string}
 		 */
-		getWidgetText: function(widget) {},
+	//	getWidgetText: function(widget) {},
 
 		/**
 		 * Adds additional text to a widget's label.
@@ -411,7 +372,7 @@ define(function() {
 		 * 
 		 * @return {String}  additional label text
 		 */
-		getWidgetTextExtra: function(widget) {},
+	//	getWidgetTextExtra: function(widget) {},
 
 		/**
 		 * Return the initial size for a widget, overriding the default code in CreateTool.js.
@@ -428,7 +389,7 @@ define(function() {
 		 *
 		 * @return {Object}  Dimensions for widget's initial size, in form { w:, h: }
 		 */
-		initialSize: function(args) {},
+	//	initialSize: function(args) {},
 
 		/**
 		 * Override the default action of ChooseParent.js#isAllowed() for deciding whether 
@@ -454,7 +415,7 @@ define(function() {
 		 * 
 		 * @returns {boolean}  'true' if the given child is allowed to be child of given parent
 		 */
-		isAllowed: function(args) {},
+	//	isAllowed: function(args) {},
 
 		/**
 		 * Returns error message to display if CreateTool cannot find valid parent targets.
@@ -473,7 +434,7 @@ define(function() {
 		 * 
 		 * @returns {String}	Error message to show
 		 */
-		isAllowedError: function(args) {},
+	//	isAllowedError: function(args) {},
 
 		/**
 		 * Invoked when a widget is created and sized.  Implement this function if you need to
@@ -485,7 +446,7 @@ define(function() {
 		 * @param  {Number} width   initial width for 'widget'
 		 * @param  {Number} height  initial height for 'widget'
 		 */
-		onCreateResize: function(command, widget, width, height) {},
+	//	onCreateResize: function(command, widget, width, height) {},
 
 		/**
 		 * Invoked when 'widget' is deselected in the Visual Editor.
@@ -494,7 +455,7 @@ define(function() {
 		 * 
 		 * @param  {davinci/ve/_Widget} widget
 		 */
-		onDeselect: function(widget) {},
+	//	onDeselect: function(widget) {},
 
 		/**
 		 * Called by Focus.js right after Maqetta hides selection chrome on a widget.
@@ -506,14 +467,14 @@ define(function() {
 		 * @return {boolean}  Return false if no problems.
 		 * FIXME: Better if helper had a class inheritance setup
 		 */
-		onHideSelection: function(obj){},
+	//	onHideSelection: function(obj){},
 
 		/**
 		 * Called at end of document loading, after all widgets initialized.
 		 * @param {davinci.ve._Widget} widget 
 		 * @param {boolean} already  False if this first call for this document. True for subsequent widgets.
 		 */
-		onLoad: function(widget,already) {},
+	//	onLoad: function(widget,already) {},
 
 		/**
 		 * Called by RemoveCommand before removal actions take place.
@@ -521,13 +482,13 @@ define(function() {
 		 * @param {davinci.ve._Widget} widget  
 		 * @return {function}  Optional function to call after removal actions take place
 		 */
-		onRemove: function(widget) {},
+	//	onRemove: function(widget) {},
 
 		/**
 		 * Called by Context.js when a widget becomes selected.
 		 * @param  {davinci/ve/_Widget} widget
 		 */
-		onSelect: function(widget) {},
+	//	onSelect: function(widget) {},
 
 		/*
 		 * Called by Focus.js right after Maqetta shows selection chrome around a widget.
@@ -538,7 +499,7 @@ define(function() {
 		 *    obj.customDiv: DIV into which widget can inject its own selection chrome
 		 * @return {boolean}  Return false if no problems.
 		 */
-		onShowSelection: function(obj){},
+	//	onShowSelection: function(obj){},
 
 		/**
 		 * Invoked whenever user attempts to toggle visibility of a widget
@@ -548,7 +509,7 @@ define(function() {
 		 * @param  {boolean} on  Whether given widget is currently visible
 		 * @return {boolean}  whether standard toggle processing should proceed
 		 */
-		onToggleVisibility: function(widget, on) {},
+	//	onToggleVisibility: function(widget, on) {},
 
 		/**
 		 * Helper function called whenever a widget-specific property is changed
@@ -557,20 +518,20 @@ define(function() {
 		 *      compoundCommand  the CompoundCommand object that contains the ModifyCommand
 		 *      modifyCommand  the ModifyCommand object that will soon be executed to change properties
 		 */
-		onWidgetPropertyChange: function(args){},
+	//	onWidgetPropertyChange: function(args){},
 
 		/**
 		 * [popup description]
 		 * @param  {davinci/ve/_Widget} widget [description]
 		 */
-		popup: function(widget) {},
+	//	popup: function(widget) {},
 
 		/**
 		 * [preProcessData description]
 		 * @param  {Object} data [description]
 		 * @return {Object}      [description]
 		 */
-		preProcessData: function(data) {},
+	//	preProcessData: function(data) {},
 
 		/**
 		 * Called by ReparentCommand when widget is reparent, used for widget that have associated
@@ -578,7 +539,7 @@ define(function() {
 		 * For Example widgets with stores and models like dijitTree.
 		 * @param  {davinci/ve/_Widget} widget - Widget that is being reparentted
 		 */
-		reparent: function(widget) { 
+	//	reparent: function(widget) { 
 
 //		Example:
 //			try{
@@ -622,19 +583,19 @@ define(function() {
 //				catch (e) {
 //					console.error('Helper.Reparent error processing tree.');
 //				}
-		},
+//		},
 
 		/**
 		 * NOTE: Only applies to widgets of class "dijit".
 		 * @param  {davinci/ve/DijitWidget} widget [description]
 		 */
-		resize: function(widget) {},
+//		resize: function(widget) {},
 
 		/**
 		 * [tearDown description]
 		 * @param  {davinci/ve/_Widget} widget [description]
 		 */
-		tearDown: function(widget) {}
+	//	tearDown: function(widget) {}
 	};
 
 	return Helper;

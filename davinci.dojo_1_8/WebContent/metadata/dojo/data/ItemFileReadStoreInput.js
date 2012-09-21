@@ -56,6 +56,7 @@ return declare(SmartInput, {
 		}
 		var command = new ModifyCommand(widget, props, null, this._getContext());
 		this._getContext().getCommandStack().execute(command);
+		var widget = command.newWidget;
 		// this works just as well for ItemFileWriteStore
 		var ds = new dojo.data.ItemFileReadStore({url: props.url});
 		var dsId = props.jsId;

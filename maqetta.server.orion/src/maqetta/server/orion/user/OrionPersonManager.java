@@ -38,8 +38,12 @@ public class OrionPersonManager extends PersonManagerImpl {
 	   // 	 UserServiceHelper.getDefault().getUserProfileService().getUserProfileNode(this.name, false);
 	    	 IOrionCredentialsService userAdmin = UserServiceHelper.getDefault().getUserStore();
 	    	 User user = (User) userAdmin.getUser(UserConstants.KEY_UID, this.getUserID());
-	    	 this.email = user.getLogin();
-	    	 return email;
+	    	 if (user != null) {
+	    		 this.email = user.getLogin();
+	    	 } else {
+	    		 System.err.println("ERROR: OrionPersonImpl.getEmail: user '" + this.getUserID() + "' could not be found in IOrionCredentialsService.");
+	    	 }
+	    	 return this.email;
 	     }
 	
 	     public String getUserID() {
@@ -64,8 +68,12 @@ public class OrionPersonManager extends PersonManagerImpl {
 	        if (person != null) {
 	           return person;
 	        }
+	        
 	        person = new OrionPersonImpl(userName, password, email);
 	        persons.put(userName, person);
+	        
+	        //Trace out the addition
+	        System.out.println("INFO: OrionPersonManager.addPerson: user added with following info: userName = " + userName + ", email = " + email);
 	        
 	        return person;
 	    }
@@ -111,7 +119,6 @@ public class OrionPersonManager extends PersonManagerImpl {
 	    protected void savePersons() {}
 
 	    public IPerson getPerson(String userName) {
-
 	        IPerson person = (IPerson) persons.get(userName);
 	        if(person!=null)
 	        	return person;
@@ -123,7 +130,6 @@ public class OrionPersonManager extends PersonManagerImpl {
 				e.printStackTrace();
 			}
 	        return null;
-
 	    }
 	    
 	    public IPerson getPersonByEmail(String email) {
@@ -131,7 +137,8 @@ public class OrionPersonManager extends PersonManagerImpl {
 	        Iterator peopleIterator = persons.values().iterator();
 	        while (peopleIterator.hasNext() && match == null) {
 	        	IPerson person = (IPerson)peopleIterator.next();
-	        	if (person.getEmail().equals(email)) {
+	        	String personEmail = person.getEmail();
+	        	if (personEmail != null && personEmail.equals(email)) {
 	        		match = person;
 	        	}
 	        }

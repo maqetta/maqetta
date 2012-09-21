@@ -25,6 +25,9 @@ return declare("davinci.ve.actions._SelectAncestorAction", [ContextAction], {
 			return false;
 		}
 		var firstParent = selection[0].getParent();
+		if(!firstParent || !firstParent.domNode){
+			return false;
+		}
 		if(firstParent.domNode.tagName == 'BODY'){
 			return false;
 		}

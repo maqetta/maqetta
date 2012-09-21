@@ -37,7 +37,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
         this.currentEditor = this.visualEditor;
         this.currentEditor._commandStack = this._commandStack;
 
-        this._srcCP = new dijit.layout.ContentPane({region: 'bottom', splitter: true, style: "height:50%"});
+        this._srcCP = new ContentPane({region: 'bottom', splitter: true, style: "height:50%"});
 
         // hack to get the source content page to resize itself
         var oldResize = this._srcCP.resize;
@@ -49,17 +49,14 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 			}
         };
 
-        var htmlEditor = this.htmlEditor = new HTMLEditor(this._srcCP.domNode, fileName, true);
+        this.htmlEditor = new HTMLEditor(this._srcCP.domNode, fileName, true);
         this.htmlEditor.setVisible(false);
         this.model = this.htmlEditor.model;
 
         this._displayMode = "design";
 
-        this.model = this.htmlEditor.model;
-
         this._bc.startup();
         this._bc.resize(); // kludge: forces primary tab to display	
-
 
         this._connect(this.visualEditor,"onContentChange", "_visualChanged");
         this._connect(this.htmlEditor,"handleChange", "_srcChanged");
@@ -350,11 +347,9 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		this._connect(this.htmlEditor.model,"onChange", "_themeChange");
 		// update the source with changes which may have been made during initialization without setting dirty bit
 		this.htmlEditor.setValue(this.model.getText(), true);
-
 	},
 	
 	_themeChange: function(e) {
-
 		if (e && e.elementType === 'CSSRule') {
 			this.setDirty(true); // a rule change so the CSS files are dirty. we need to save on exit
 			this.visualEditor.context.hotModifyCssRule(e);
@@ -409,7 +404,6 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	},
 
 	destroy: function () {
-		
 		this.inherited(arguments);
 		this.visualEditor.destroy();
 		this.htmlEditor.destroy();

@@ -1737,6 +1737,7 @@ var Workbench = {
 	_switchEditor: function(newEditor, startup) {
 		var oldEditor = Runtime.currentEditor;
 		Runtime.currentEditor = newEditor;
+		Workbench._state.activeEditor=newEditor ? newEditor.fileName : null;
 		this._showEditorTopPanes();
 		try {
 			dojo.publish("/davinci/ui/editorSelected", [{
@@ -1747,8 +1748,6 @@ var Workbench = {
 			console.error(ex);
 		}
 		Workbench._updateTitle(newEditor);
-	
-		Workbench._state.activeEditor=newEditor ? newEditor.fileName : null;
 		
 		setTimeout(function(){
 			// kludge: if there is a visualeditor and it is already populated, resize to make Dijit visualEditor contents resize

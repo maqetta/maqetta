@@ -50,9 +50,9 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 				}
 	        };
 	
-	        this.htmlEditor = new HTMLEditor(this._srcCP.domNode, fileName, true);
-	        this.htmlEditor.setVisible(false);
-	        this.model = this.htmlEditor.model;
+	        var htmlEditor = this.htmlEditor = new HTMLEditor(this._srcCP.domNode, fileName, true);
+	        htmlEditor.setVisible(false);
+	        this.model = htmlEditor.model;
 	
 	        this._displayMode = "design";
 	

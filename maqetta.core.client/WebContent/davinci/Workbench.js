@@ -251,20 +251,29 @@ var initializeWorkbenchState = function(){
 					handleResource(sysResource.findResource(editor));
 				}
 			});
-
-			// select the activeEditor, forcing it to load its contents
-			var selectEditor = state.activeEditor,
-				selectResource = sysResource.findResource(selectEditor),
-				selectFilename = selectResource.getPath();
-
-			// is this necessary, and can it be put inside _switchEditor()?
-			if (Workbench._state.editors.indexOf(selectFilename) === -1) {
-				Workbench._state.editors.push(selectFilename);
+			if(state.activeEditor){
+				var path = new Path(state.activeEditor);
+				if (!path.startsWith(project)) {
+					state.activeEditor = null;
+				}
 			}
-			var editorContainer = dijit.byId(filename2id(selectFilename));
-//			Workbench._switchEditor(editorContainer.editor, false);
-			dijit.byId("editors_container").selectChild(editorContainer);
-//			Runtime.currentEditor = selectEditor;
+			if(state.activeEditor){
+				// select the activeEditor, forcing it to load its contents
+				var selectEditor = state.activeEditor,
+					selectResource = sysResource.findResource(selectEditor),
+					selectFilename = selectResource.getPath();
+
+				// is this necessary, and can it be put inside _switchEditor()?
+				if (Workbench._state.editors.indexOf(selectFilename) === -1) {
+					Workbench._state.editors.push(selectFilename);
+				}
+				var editorContainer = dijit.byId(filename2id(selectFilename));
+//				Workbench._switchEditor(editorContainer.editor, false);
+				dijit.byId("editors_container").selectChild(editorContainer);
+//				Runtime.currentEditor = selectEditor;
+			}else{
+				state.editors = [];
+			}
 		} else {
 			state.editors = [];
 		}

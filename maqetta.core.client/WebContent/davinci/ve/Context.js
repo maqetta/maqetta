@@ -1282,7 +1282,17 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		containerNode.setAttribute('data-maq-ws','collapse');
 		var model_bodyElement = this._srcDocument.getDocumentElement().getChildElement("body");
 		model_bodyElement.addAttribute('data-maq-ws','collapse');
-
+		// Set the mobile agaent if there is a device on the body
+		// We need to ensure it is set before the require of deviceTheme is executed
+		var djConfig = this.getDojo().config;  // TODO: use require
+		var bodyElement = this.getDocumentElement().getChildElement("body");
+		var device = bodyElement.getAttribute(MOBILE_DEV_ATTR);
+		if (device && djConfig) {
+			var ua = Silhouette.getMobileTheme(device + '.svg');
+			ua = ua || "other";
+			djConfig.mblUserAgent = ua;
+		} 
+				
 		// Collapses all text nodes that only contain white space characters into empty string.
 		// Skips certain nodes where whitespace does not impact layout and would cause unnecessary processing.
 		// Similar to features that hopefully will appear in CSS3 via white-space-collapse.

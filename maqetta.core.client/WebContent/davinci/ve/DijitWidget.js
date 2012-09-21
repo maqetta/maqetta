@@ -170,6 +170,12 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 		if (helper && helper.addChild) {
 			helper.addChild(this, dijitWidget, index);
 		} else {
+			// Some widgets such as dijit.form.DataList don't have a startup
+			// method, but addChild expects there will always be one.
+			// Address #3449
+			if(!dijitWidget.startup){
+				dijitWidget.startup = function(){};
+			}
 			this.dijitWidget.addChild(dijitWidget, index);
 		}
 	},
@@ -191,6 +197,12 @@ return declare("davinci.ve.DijitWidget", _Widget, {
         if (helper && helper.addChild) {
         	helper.addChild(this, widget, index);
         } else {
+			// Some widgets such as dijit.form.DataList don't have a startup
+			// method, but addChild expects there will always be one.
+			// Address #3449
+			if(!widget.startup){
+				widget.startup = function(){};
+			}
         	parentWidget.addChild(widget, index);
         }
 

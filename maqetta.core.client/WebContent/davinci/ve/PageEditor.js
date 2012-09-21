@@ -37,39 +37,40 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
         this.currentEditor = this.visualEditor;
         this.currentEditor._commandStack = this._commandStack;
 
-        this._srcCP = new dijit.layout.ContentPane({region: 'bottom', splitter: true, style: "height:50%"});
-
-        // hack to get the source content page to resize itself
-        var oldResize = this._srcCP.resize;
-        this._srcCP.resize = function(changeSize, resultSize) {
-            dojo.marginBox(this.domNode, resultSize);
-            oldResize.apply(this, arguments);
-			if(htmlEditor.editor && htmlEditor.editor.getTextView()) {
-				htmlEditor.editor.getTextView().resize();
-			}
-        };
-
-        var htmlEditor = this.htmlEditor = new HTMLEditor(this._srcCP.domNode, fileName, true);
-        this.htmlEditor.setVisible(false);
-        this.model = this.htmlEditor.model;
-
-        this._displayMode = "design";
-
-        this.model = this.htmlEditor.model;
-
-        this._bc.startup();
-        this._bc.resize(); // kludge: forces primary tab to display	
-
-
-        this._connect(this.visualEditor,"onContentChange", "_visualChanged");
-        this._connect(this.htmlEditor,"handleChange", "_srcChanged");
-        this.subscribe("/davinci/ui/styleValuesChange",   this._stylePropertiesChange);
-        this.subscribe("/davinci/ui/widgetSelected",   this._widgetSelectionChange);
-        this.subscribe("/davinci/ui/selectionChanged",  this._modelSelectionChange);
-//      this._connect(this.visualEditor.context, "onSelectionChange","_widgetSelectionChange");
-		this.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this));
-		this.subscribe("/davinci/ui/context/loaded", this._contextLoaded.bind(this));
-		this.subscribe("/davinci/ui/deviceChanged", this._deviceChanged.bind(this));
+        try {
+	        this._srcCP = new ContentPane({region: 'bottom', splitter: true, style: "height:50%"});
+	
+	        // hack to get the source content page to resize itself
+	        var oldResize = this._srcCP.resize;
+	        this._srcCP.resize = function(changeSize, resultSize) {
+	            dojo.marginBox(this.domNode, resultSize);
+	            oldResize.apply(this, arguments);
+				if(htmlEditor.editor && htmlEditor.editor.getTextView()) {
+					htmlEditor.editor.getTextView().resize();
+				}
+	        };
+	
+	        this.htmlEditor = new HTMLEditor(this._srcCP.domNode, fileName, true);
+	        this.htmlEditor.setVisible(false);
+	        this.model = this.htmlEditor.model;
+	
+	        this._displayMode = "design";
+	
+	        this._bc.startup();
+	        this._bc.resize(); // kludge: forces primary tab to display	
+	
+	        this._connect(this.visualEditor,"onContentChange", "_visualChanged");
+	        this._connect(this.htmlEditor,"handleChange", "_srcChanged");
+	        this.subscribe("/davinci/ui/styleValuesChange",   this._stylePropertiesChange);
+	        this.subscribe("/davinci/ui/widgetSelected",   this._widgetSelectionChange);
+	        this.subscribe("/davinci/ui/selectionChanged",  this._modelSelectionChange);
+	//      this._connect(this.visualEditor.context, "onSelectionChange","_widgetSelectionChange");
+			this.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this));
+			this.subscribe("/davinci/ui/context/loaded", this._contextLoaded.bind(this));
+			this.subscribe("/davinci/ui/deviceChanged", this._deviceChanged.bind(this));
+        } catch(e) {
+        	this.visualEditor._connectCallback(e);
+        }
     },
 	
 	setRootElement: function(rootElement){
@@ -350,11 +351,9 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		this._connect(this.htmlEditor.model,"onChange", "_themeChange");
 		// update the source with changes which may have been made during initialization without setting dirty bit
 		this.htmlEditor.setValue(this.model.getText(), true);
-
 	},
 	
 	_themeChange: function(e) {
-
 		if (e && e.elementType === 'CSSRule') {
 			this.setDirty(true); // a rule change so the CSS files are dirty. we need to save on exit
 			this.visualEditor.context.hotModifyCssRule(e);
@@ -409,7 +408,6 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	},
 
 	destroy: function () {
-		
 		this.inherited(arguments);
 		this.visualEditor.destroy();
 		this.htmlEditor.destroy();

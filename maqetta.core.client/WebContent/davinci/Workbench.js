@@ -236,7 +236,8 @@ var initializeWorkbenchState = function(){
 								content: resource.getContentSync(),
 								noSelect: noSelect,
 								isDirty: resource.isDirty(),
-								startup: false
+								startup: false,
+								initializationTime: true
 							});
 //						});
 					}
@@ -1507,6 +1508,13 @@ var Workbench = {
 		
 		if (!keywordArgs.noSelect) {
 			editorsContainer.selectChild(editorContainer);
+		}
+		//FIXME: this is very kludgy. At initialization time, we want EditorContainer.js 
+		//to filter past all editors except the current filename to prevent the cs=null issue #3279.
+		//But when not at initialization time, we need to make sure the
+		//current activeEditor is set to the "fileName".
+		if(!keywordArgs.initializationTime){
+			Workbench._state.activeEditor = fileName;
 		}
 		editorContainer.setEditor(editorExtension, fileName, content, keywordArgs.fileName, editorContainer.domNode, newHtmlParams).then(function(editor) {
 			if (keywordArgs.startLine) {

@@ -81,7 +81,7 @@ return declare(ToolbaredContainer, {
 					// but also avoid problems with display:none on hidden tabs making it impossible
 					// to do geometry measurements in editor initialization
 					var editorsContainer = "editors_container";
-					if(dijit.byId(editorsContainer).selectedChildWidget.domNode == this.domNode){
+					if(davinci.Workbench._state.activeEditor == fileName){
 						// Tab is visible.  Go ahead
 						editor.setContent(fileName, content, newHtmlParams);
 

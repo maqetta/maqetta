@@ -220,18 +220,18 @@ var initializeWorkbenchState = function(){
 						}
 					}
 					
-					var select = editor == state.activeEditor;
+					var noSelect = editor != state.activeEditor;
 		
-					if (!select && !isActiveEditorInProject) {
+					if (noSelect && !isActiveEditorInProject) {
 						// if the active editor is not in our project, force selection
-						select = true;
+						noSelect = false;
 						state.activeEditor = editor; // this is now the active editor
 					}
 		
 					if (resource) {
 						Workbench.openEditor({
 							fileName: resource,
-							select: select,
+							noSelect: noSelect, // style: should flip logic to use "select" property
 							isDirty: resource.isDirty(),
 							startup: false,
 							initializationTime: true
@@ -1395,8 +1395,8 @@ var Workbench = {
 					editorCreateCallback.call(window, editor);
 				}
 	
-				if(keywordArgs.select) {
-					Runtime.currentEditor = editor;
+				if(!keywordArgs.noSelect) {
+					 Runtime.currentEditor = editor;
 				}			
 			}, function(error) {
 				console.error("Error opening editor for filename: " + fileName, error);
@@ -1493,7 +1493,7 @@ var Workbench = {
 			dojo.removeClass(loadIcon[0],'dijitNoIcon');
 		}
 		
-		if (keywordArgs.select) {
+		if (!keywordArgs.noSelect) {
 			editorsContainer.selectChild(editorContainer);
 		}
 		//FIXME: this is very kludgy. At initialization time, we want EditorContainer.js 
@@ -1508,7 +1508,7 @@ var Workbench = {
 				editorContainer.editor.select(keywordArgs);
 			}
 			
-			if (keywordArgs.select) {
+			if (!keywordArgs.noSelect) {
 	            if (Workbench._state.editors.indexOf(fileName) === -1) {
 	            	Workbench._state.editors.push(fileName);
 	            }

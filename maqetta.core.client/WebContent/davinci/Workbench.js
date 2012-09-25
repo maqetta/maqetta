@@ -229,16 +229,13 @@ var initializeWorkbenchState = function(){
 					}
 		
 					if (resource) {
-//						resource.getContent().then(function(content){						
-							Workbench.openEditor({
-								fileName: resource,
-								content: resource.getContentSync(),
-								noSelect: noSelect, // style: should flip logic to use "select" property
-								isDirty: resource.isDirty(),
-								startup: false,
-								initializationTime: true
-							});
-//						});
+						Workbench.openEditor({
+							fileName: resource,
+							noSelect: noSelect, // style: should flip logic to use "select" property
+							isDirty: resource.isDirty(),
+							startup: false,
+							initializationTime: true
+						});
 					}
 				};
 				
@@ -1352,7 +1349,6 @@ var Workbench = {
 	openEditor: function (keywordArgs, newHtmlParams) {
 		try{
 			var fileName=keywordArgs.fileName,
-				content=keywordArgs.content,
 				fileExtension,
 				file;
 			if (typeof fileName=='string') {
@@ -1418,7 +1414,7 @@ var Workbench = {
 		var nodeName = fileName.split('/').pop();
 		var extension = keywordArgs && keywordArgs.fileName && keywordArgs.fileName.extension ? 
 				"." + keywordArgs.fileName.extension : "";
-		nodeName = nodeName + (extension == ".rev" ? extension : "");
+		nodeName += (extension == ".rev" ? extension : "");
 
 		dojo.query('.loading').orphan();
 
@@ -1429,8 +1425,7 @@ var Workbench = {
 			Workbench.mainStackContainer.selectChild(Workbench.mainBorderContainer);
 		}
 
-		var content = keywordArgs.content,
-			editorContainer = dijit.byId(filename2id(fileName)),
+		var editorContainer = dijit.byId(filename2id(fileName)),
 			editorsContainer = dijit.byId("editors_container"),
 			shadowTabContainer = dijit.byId("davinci_file_tabs"),
 			editorCreated = false,
@@ -1508,7 +1503,7 @@ var Workbench = {
 		if(!keywordArgs.initializationTime){
 			Workbench._state.activeEditor = fileName;
 		}
-		editorContainer.setEditor(editorExtension, fileName, content, keywordArgs.fileName, editorContainer.domNode, newHtmlParams).then(function(editor) {
+		editorContainer.setEditor(editorExtension, fileName, true, keywordArgs.fileName, editorContainer.domNode, newHtmlParams).then(function(editor) {
 			if (keywordArgs.startLine) {
 				editorContainer.editor.select(keywordArgs);
 			}

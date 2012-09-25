@@ -10,7 +10,9 @@
 	<target name="noDefault">
 	</target>
 
-    <!-- +++++++++++ Verify that "git" or "git.exe" is on the PATH +++++++++++ -->
+	<property environment="env"/>
+
+	<!-- +++++++++++ Verify that "git" or "git.exe" is on the PATH +++++++++++ -->
     <target name="verify.command.line.git">
         <!--
         <echo message="filepath=${env.PATH}"/>

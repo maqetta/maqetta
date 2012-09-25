@@ -231,7 +231,7 @@ var initializeWorkbenchState = function(){
 					if (resource) {
 						Workbench.openEditor({
 							fileName: resource,
-							noSelect: noSelect, // style: should flip logic to use "select" property
+							noSelect: noSelect,
 							isDirty: resource.isDirty(),
 							startup: false,
 							initializationTime: true

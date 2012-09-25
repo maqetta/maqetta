@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta charset="utf-8" />
+    <title>daVinci Page Designer</title>
+ 	<style type="text/css">
+		@import url("davinci/workbench.css");
+		@import url("davinci/propview.css");
+		html, body {
+			width: 100%;
+			height: 100%;
+		}
+    </style>
+   
+     <script type="text/javascript" src="dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+    <script type="text/javascript" src="dijit/dijit.js"></script>
+    <script>
+    	
+    	
+    	dojo.require("dijit.form.Button")
+		dojo.require("davinci.Workbench");
+    	dojo.require("davinci.ui.Dialogs");
+    	
+    	function showError(){
+    		var errorTitle = "Can't modify read only attribute!";
+    		var errorText = "Would you like to copy the theme to your workspace?";
+    		
+    		davinci.Workbench.showModal(davinci.ui.Error({'errorText':errorText, 'okButtonText':'Copy Theme'}), errorTitle);
+
+		}
+    </script>
+  </head>
+  <body class="claro">
+  <br><br><br><br>
+ 
+  <div id="mainAttach"></div>
+  <div dojoType="dijit.form.Button" onClick="showError()">Show Error</div>
+  
+  </body>
+
+</html>

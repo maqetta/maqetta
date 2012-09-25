@@ -10,9 +10,8 @@ import java.io.Writer;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Calendar;
+import java.util.Enumeration;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -54,6 +53,18 @@ public class DavinciPageServlet extends HttpServlet {
 		libraryManager = serverManager.getLibraryManager();
 	}
 
+	private void log(HttpServletRequest req) {
+		System.err.println("RequestURL: " + req.getRequestURL().toString());
+		Enumeration<String> names = req.getHeaderNames();
+		while (names.hasMoreElements()) {
+			String name = names.nextElement();
+			String header = req.getHeader(name);
+			if (header != null) {
+				System.err.println(name + ": " + header);
+			}
+		}
+	}
+
 	/*
 	 * Save file request from user. Saves files to workspace. (non-Javadoc)
 	 * 
@@ -63,52 +74,53 @@ public class DavinciPageServlet extends HttpServlet {
 	 */
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		IUser user = ServerManager.getServerManger().getUserManager().getUser(req);
-		if(user==null){
-			resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-			resp.getOutputStream().close();
-			return;
-		}
-		String path = getPathInfo(req);
-		if (path == null) {
-			System.err.println("DavinciPageServlet:doPut getPathInfo returned NUll for user: " + user.getUserID());
-			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-			resp.getOutputStream().close();
-			return;
-		}
-		boolean isWorkingCopy = (path.indexOf(IDavinciServerConstants.WORKING_COPY_EXTENSION) > -1);
-		if ( isWorkingCopy ) {
-			path = path.substring(0, path.indexOf(IDavinciServerConstants.WORKING_COPY_EXTENSION));
-			
-		}
-		IVResource file = user.getResource(path);
-		if (file == null) {
-			System.err.println("DavinciPageServlet:doPut user.getResource("+path+") returned NUll for user: " + user.getUserID());
-			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-			resp.getOutputStream().close();
-			return;
-		}
-		/* user is trying to save over a library path */
-		if ( file.isVirtual() ) {
-			file = user.createResource(path, file.isDirectory());
-			if(file.isDirectory())
-				file.mkdir();
-			else
-			   file.createNewInstance();
-
-		}
-		if ( file.exists() ) {
-			OutputStream os = file.getOutputStreem();
-			transferStreams(req.getInputStream(), os, false);
-			if ( !isWorkingCopy ) {
-				// flush the working copy
-				file.flushWorkingCopy();
+		try {
+			IUser user = ServerManager.getServerManger().getUserManager().getUser(req);
+			if(user==null){
+				resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+				return;
 			}
-
-		} else {
-			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+			String path = getPathInfo(req);
+			if (path == null) {
+				System.err.println("DavinciPageServlet:doPut getPathInfo returned Null for user: " + user.getUserID());
+				resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				return;
+			}
+			boolean isWorkingCopy = (path.indexOf(IDavinciServerConstants.WORKING_COPY_EXTENSION) > -1);
+			if ( isWorkingCopy ) {
+				path = path.substring(0, path.indexOf(IDavinciServerConstants.WORKING_COPY_EXTENSION));
+			}
+			IVResource file = user.getResource(path);
+			if (file == null) {
+				System.err.println("DavinciPageServlet:doPut user.getResource("+path+") returned Null for user: " + user.getUserID());
+				resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+				return;
+			}
+			/* user is trying to save over a library path */
+			if ( file.isVirtual() ) {
+				file = user.createResource(path, file.isDirectory());
+				if(file.isDirectory())
+					file.mkdir();
+				else
+				   file.createNewInstance();
+			}
+			if ( file.exists() ) {
+				OutputStream os = file.getOutputStreem();
+				transferStreams(req.getInputStream(), os, false);
+				if ( !isWorkingCopy ) {
+					// flush the working copy
+					file.flushWorkingCopy();
+				}
+	
+			} else {
+				resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+			}
+		} catch (RuntimeException re) {
+			log(req);
+			throw re;
+		} finally {
+			resp.getOutputStream().close();
 		}
-		resp.getOutputStream().close();
 	}
 
 	public String getPathInfo(HttpServletRequest req){
@@ -117,42 +129,48 @@ public class DavinciPageServlet extends HttpServlet {
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		if ( serverManager == null ) {
-			initialize();
-		}
-		String previewParam = req.getParameter(IDavinciServerConstants.PREVIEW_PARAM);
-
-		IUser user = ServerManager.getServerManger().getUserManager().getUser(req);
-		String pathInfo = getPathInfo(req);
-		if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
-			System.out.println("Page Servlet request: " + pathInfo + ", logged in=" + (user != null));
-		}
-		
-		if ( pathInfo == null ) {
-			handleReview(req, resp);
-			resp.sendRedirect("./maqetta/");
-		} else if ( pathInfo != null && (pathInfo.equals("") || pathInfo.equals("/")) && previewParam == null ) {
-			if ( !ServerManager.LOCAL_INSTALL ) {
-				if ( user == null ) {
-					resp.sendRedirect("./welcome");
+		try {
+			if ( serverManager == null ) {
+				initialize();
+			}
+			String previewParam = req.getParameter(IDavinciServerConstants.PREVIEW_PARAM);
+	
+			IUser user = ServerManager.getServerManger().getUserManager().getUser(req);
+			String pathInfo = getPathInfo(req);
+			if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
+				System.out.println("Page Servlet request: " + pathInfo + ", logged in=" + (user != null));
+			}
+			
+			if ( pathInfo == null ) {
+				handleReview(req, resp);
+				resp.sendRedirect("maqetta/");
+			} else if ( pathInfo != null && (pathInfo.equals("") || pathInfo.equals("/")) && previewParam == null ) {
+				if ( !ServerManager.LOCAL_INSTALL ) {
+					if ( user == null ) {
+						resp.sendRedirect("welcome");
+					} else {
+						writeMainPage(req, resp);
+					}
 				} else {
 					writeMainPage(req, resp);
 				}
+			} else if ( pathInfo.equals("/welcome") ) {
+				/* write the welcome page (may come from extension point) */
+				writeWelcomePage(req, resp);
+			} else if ( previewParam != null ) {
+				handlePreview(req, resp);
+			} else if ( pathInfo.startsWith(IDavinciServerConstants.USER_URL) ) {
+				handleWSRequest(req, resp, user);
 			} else {
-				writeMainPage(req, resp);
+				/* resource not found */
+				resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 			}
-		} else if ( pathInfo.equals("/welcome") ) {
-			/* write the welcome page (may come from extension point) */
-			writeWelcomePage(req, resp);
-		} else if ( previewParam != null ) {
-			handlePreview(req, resp);
-		} else if ( pathInfo.startsWith(IDavinciServerConstants.USER_URL) ) {
-			handleWSRequest(req, resp, user);
-		} else {
-			/* resource not found */
-			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+		} catch (RuntimeException re) {
+			log(req);
+			throw re;
+		} finally {
+			resp.getOutputStream().close();
 		}
-		resp.getOutputStream().close();
 	}
 	
 	/*

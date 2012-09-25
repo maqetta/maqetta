@@ -14,6 +14,7 @@
 
 define(['domReady'], function(domReady) {
 	var userCreationEnabled;
+	var admin_userid = 'admin';
 
 	function injectPlaceholderShims() {
 		function textFocus(e) {
@@ -177,7 +178,7 @@ define(['domReady'], function(domReady) {
 			login = document.getElementById('login').value;
 			password = document.getElementById('password').value;
 		}
-		if (!validateEmail(login)){
+		if (login != admin_userid && !validateEmail(login)){
 			return;
 		}
 		// shiftkey-click on Login causes Maqetta to open with no editors showing

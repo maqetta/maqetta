@@ -15,6 +15,7 @@ import org.davinci.server.user.IUser;
 import org.davinci.server.user.UserException;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.orion.server.configurator.ConfiguratorActivator;
+import org.eclipse.orion.server.core.LogHelper;
 import org.eclipse.orion.server.core.authentication.IAuthenticationService;
 import org.eclipse.orion.server.core.users.OrionScope;
 import org.eclipse.orion.server.useradmin.IOrionCredentialsService;
@@ -119,6 +120,12 @@ public class OrionUserManager extends UserManagerImpl {
      
     	if(!wasInit){
     		result.putBoolean("maqettaInit", true);
+    		try {
+    			//flush directly at root level to workaround equinox bug 389754.
+    			result.parent().flush();
+    		} catch (BackingStoreException e) {
+    			LogHelper.log(e);
+    		}
     	}
     	return !wasInit;
     }

@@ -1,12 +1,8 @@
 package maqetta.server.orion.command;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,10 +11,10 @@ import maqetta.server.orion.MaqettaOrionServerConstants;
 
 import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.orion.server.core.LogHelper;
 import org.eclipse.orion.server.core.users.OrionScope;
 import org.maqetta.server.Command;
-import org.maqetta.server.IDavinciServerConstants;
-import org.maqetta.server.IStorage;
+import org.osgi.service.prefs.BackingStoreException;
 
 public class SetWorkbenchState extends Command {
 
@@ -34,9 +30,15 @@ public class SetWorkbenchState extends Command {
     	while ((line = br.readLine()) != null) {
     		value+=line;
     	}
-     
     	br.close();
+
     	result.put(MaqettaOrionServerConstants.WORKBENCH_PREF, value);
+		try {
+			//flush directly at root level to workaround equinox bug 389754.
+			result.parent().flush();
+		} catch (BackingStoreException e) {
+			LogHelper.log(e);
+		}
    }
 
 }

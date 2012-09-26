@@ -9,11 +9,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.davinci.server.review.Utils;
 import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.orion.server.core.LogHelper;
 import org.eclipse.orion.server.core.users.OrionScope;
 import org.eclipse.orion.server.useradmin.IOrionCredentialsService;
 import org.eclipse.orion.server.useradmin.UserServiceHelper;
 import org.maqetta.server.Command;
 import org.maqetta.server.ServerManager;
+import org.osgi.service.prefs.BackingStoreException;
 
 public class ResetPassword extends Command {
 
@@ -64,6 +66,13 @@ public class ResetPassword extends Command {
 				IEclipsePreferences result = (IEclipsePreferences) signupTokens.node(randomToken);
 		    	/* store the email address with the token */
 				result.put(ResetPassword.EMAIL_FIELD, emailAdd);
+				try {
+					//flush directly at root level to workaround equinox bug 389754.
+					result.parent().flush();
+				} catch (BackingStoreException e) {
+					LogHelper.log(e);
+				}
+
 				sendEmail(emailAdd, EMAIL_TEMPLATE + authLink, Utils.getCommonNotificationId(req));
 	    	}else if(changePassword){
 	    		/* reset link followed, now actually reset the password */

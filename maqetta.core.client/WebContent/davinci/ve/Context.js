@@ -1332,6 +1332,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			 * the device silhouette 
 			*/
 			this.visualEditor.setDevice(mobileDevice, true); // set deviceOnly
+			this.visualEditor.setOrientation(this.getMobileOrientation());
 		}
 		/*
 		 * Need to let the widgets get parsed, and things finsh loading async

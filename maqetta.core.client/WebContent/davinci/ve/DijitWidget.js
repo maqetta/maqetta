@@ -151,24 +151,39 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 					this._srcElement.addChild(child._srcElement);
 				}
                 if (! this.acceptsHTMLChildren) {
-            		this._addChildHelper(child.dijitWidget, index);
+            		this._addChildHelper(child, index);
                 } else {
                     // See comment for _addChildHooked() for more info.
-                    this._addChildHooked(child.dijitWidget, index);
+                    this._addChildHooked(child, index);
                 }
 	        } else {
                 this._srcElement.addChild(child._srcElement);
-                this._addChildHelper(child.dijitWidget);
+                this._addChildHelper(child);
             }
         } else {
-			this.inherited(arguments);
+    		var helper = this.getHelper();
+    		if (helper && helper.addChild) {
+    			helper.addChild(this, child, index);
+    			if(index === undefined || index === null || index === -1) {
+    				this._srcElement.addChild(child._srcElement);
+    			}else{
+    				var children = this.getChildren();
+    				if(index < children.length) {
+     					this._srcElement.insertBefore(child._srcElement,children[index]._srcElement);
+    				}else{
+    					this._srcElement.addChild(child._srcElement);
+    				}
+    			}
+    		}else{
+    			this.inherited(arguments);
+    		}
 		}
 	},
 	
-	_addChildHelper: function(dijitWidget, index) {
+	_addChildHelper: function(childWidget, index) {
 		var helper = this.getHelper();
 		if (helper && helper.addChild) {
-			helper.addChild(this, dijitWidget, index);
+			helper.addChild(this, childWidget, index);
 		} else {
 			// Some widgets such as dijit.form.DataList don't have a startup
 			// method, but addChild expects there will always be one.
@@ -176,7 +191,7 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 			if(!dijitWidget.startup){
 				dijitWidget.startup = function(){};
 			}
-			this.dijitWidget.addChild(dijitWidget, index);
+			this.dijitWidget.addChild(childWidget.dijitWidget, index);
 		}
 	},
 

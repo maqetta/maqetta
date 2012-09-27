@@ -4,14 +4,31 @@ var SpinWheelSlotHelper = function() {};
 SpinWheelSlotHelper.prototype = {
 
 	preProcessData: function(data) {
-		// dojo hangs if empty strings are passed for labelTo and labelFrom
-		if (data.properties && dojo.isString(data.properties.labelTo) && data.properties.labelTo.length == 0) {
-			delete data.properties.labelTo;
+		function fixLabelProp(value){
+			if(dojo.isString(value)){
+				value = parseFloat(value);
+			}
+			if(isNaN(value)){
+				value = null;
+			}
+			return value;
 		}
-		if (data.properties && dojo.isString(data.properties.labelFrom) && data.properties.labelFrom.length == 0) {
-			delete data.properties.labelFrom;
+		// dojo hangs if string values are passed for labelTo and labelFrom
+		// and when labelFrom > labelTo
+		if (data.properties){
+			data.properties.labelFrom = fixLabelProp(data.properties.labelFrom);
+			if(data.properties.labelFrom === null){
+				delete data.properties.labelFrom;
+			}
+			data.properties.labelTo = fixLabelProp(data.properties.labelTo);
+			if(data.properties.labelTo === null){
+				delete data.properties.labelTo;
+			}
+			if(typeof data.properties.labelFrom == 'number' && typeof data.properties.labelTo == 'number' && 
+					data.properties.labelFrom > data.properties.labelTo){
+				data.properties.labelTo = data.properties.labelFrom;
+			}
 		}
-
 		return data;
 	}
 

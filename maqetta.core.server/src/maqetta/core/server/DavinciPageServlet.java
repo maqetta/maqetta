@@ -55,6 +55,10 @@ public class DavinciPageServlet extends HttpServlet {
 
 	private void log(HttpServletRequest req) {
 		System.err.println("RequestURL: " + req.getRequestURL().toString());
+		String query = req.getQueryString();
+		if (query != null) {
+			System.err.println("Query: " + query);
+		}
 		Enumeration<String> names = req.getHeaderNames();
 		while (names.hasMoreElements()) {
 			String name = names.nextElement();

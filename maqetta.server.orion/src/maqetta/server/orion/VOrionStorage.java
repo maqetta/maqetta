@@ -76,8 +76,7 @@ public class VOrionStorage implements IStorage {
 		// TODO Auto-generated method stub
 		try {
 			IStorage parent = this.getParentFile();
-			if (parent != null && !parent.exists()
-					&& !(parent instanceof VOrionWorkspaceStorage)) {
+			if (parent != null && !parent.exists() && !(parent instanceof VOrionWorkspaceStorage)) {
 				parent.mkdirs();
 			}
 			// if(this.store.fetchInfo().isDirectory())
@@ -90,7 +89,7 @@ public class VOrionStorage implements IStorage {
 	}
 
 	public IStorage[] listFiles() {
-		Vector results = new Vector();
+		Vector<VOrionStorage> results = new Vector<VOrionStorage>();
 		try {
 			String[] children = this.store.childNames(EFS.NONE, null);
 			for (int i = 0; i < children.length; i++) {
@@ -172,7 +171,6 @@ public class VOrionStorage implements IStorage {
 			parent = this;
 
 		IPath path = new Path(name);
-		IStorage base = null;
 		for (int i = 0; i < path.segmentCount(); i++) {
 			parent = (VOrionStorage) parent.create(path.segment(i));
 		}
@@ -205,16 +203,25 @@ public class VOrionStorage implements IStorage {
 		return null;
 	}
 
-	public Collection findFiles(IStorage parentFolder, String pathStr,
-			boolean ignoreCase) {
+	public Collection<IStorage> findFiles(IStorage parentFolder, String pathStr, boolean ignoreCase) {
+		return findFiles(parentFolder, pathStr, ignoreCase, false);
+	}
+
+	public Collection<IStorage> findFiles(IStorage parentFolder, String pathStr, boolean ignoreCase, boolean immediate) {
+		String[] parts = pathStr.split("/", 2);
 		IStorage[] children = parentFolder.listFiles();
-		Collection found = new Vector();
-		for (int i = 0; i < children.length; i++) {
-			if (VResourceUtils.matches(children[i].getName(), pathStr)) {
-				found.add(children[i]);
+		Collection<IStorage> found = new Vector<IStorage>();
+
+		for (IStorage child: children) {
+			if (VResourceUtils.matches(child.getName(), parts[0])) {
+				if (parts.length > 1) {
+					found.addAll(findFiles(child, parts[1], ignoreCase, true));
+				} else {
+					found.add(child);
+				}
 			}
-			if (children[i].isDirectory()) {
-				found.addAll(this.findFiles(children[i], pathStr, ignoreCase));
+			if (child.isDirectory() && !immediate) {
+				found.addAll(findFiles(child, pathStr, ignoreCase));
 			}
 		}
 		return found;

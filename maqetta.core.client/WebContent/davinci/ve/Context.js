@@ -1334,6 +1334,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this.visualEditor.setDevice(mobileDevice, true); // set deviceOnly
 			this.visualEditor.setOrientation(this.getMobileOrientation());
 		}
+		this._configDojoxMobile(true); // loading
 		/*
 		 * Need to let the widgets get parsed, and things finsh loading async
 		 */
@@ -3273,7 +3274,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 	},
 
-	_configDojoxMobile: function() {
+	_configDojoxMobile: function(loading) {
 		// dojox.mobile.configDeviceTheme should run only the first time dojox.mobile.deviceTheme runs, to establish
 		// monitoring of which stylesheets get loaded for a given theme
 
@@ -3328,8 +3329,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				// forces style palette to update cascade rules
 				this.onSelectionChange(this._selection);
 			}
-
-			deviceTheme.loadDeviceTheme(ua);
+			if (!loading){
+				// if we are loading the reqire of deviceTheme will have already done this				
+				deviceTheme.loadDeviceTheme(ua);
+			}
 		} catch(e) {
 			// dojox/mobile wasn't loaded
 		}

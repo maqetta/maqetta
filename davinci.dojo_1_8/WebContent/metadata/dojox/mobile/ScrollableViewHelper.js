@@ -22,9 +22,35 @@ return declare(ViewHelper, {
 
 	},
 
-	addChild: function(widget, dijitWidget, index) {
-		// make sure we place widgets in the containerNode
-		dojo.place(dijitWidget.domNode, widget.dijitWidget.containerNode, index)
+	addChild701: function(parentWidget, childWidget, index) {
+		var parentDijitWidget = parentWidget.dijitWidget,
+			childDomNode = childWidget.domNode,
+			children = parentWidget.getChildren(),
+			header = parentDijitWidget.fixedHeader,
+			footer = parentDijitWidget.fixedFooter,
+			containerNode = parentDijitWidget.containerNode;
+		if(childDomNode == header){
+			dojo.place(childDomNode, parentWidget.domNode, 0);
+		}else if(childDomNode == footer){
+			dojo.place(childDomNode, parentWidget.domNode, undefined);
+		}else{
+			var refSibling = (typeof index == 'number' && index >= 0 && index < children.length) ? children[index] : undefined;
+			var adjustedIndex;
+			if(refSibling){
+				// Have to use childNodes because dojo.place deals with DOM nodes, not element children 
+				for(var i=0; i<containerNode.childNodes.length; i++){
+					var node = containerNode.childNodes[i];
+					if(node.nodeType == 1){
+						if(node == refSibling.domNode){
+							adjustedIndex = i;
+							break;
+						}
+					}
+				}
+			}
+			// make sure we place widgets in the containerNode
+			dojo.place(childDomNode, containerNode, adjustedIndex);
+		}
 	},
 
 	/**

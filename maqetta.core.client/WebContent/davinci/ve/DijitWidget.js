@@ -141,73 +141,92 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 	},
 	
 	addChild: function(child, index) {
-	    if (this.dijitWidget.addChild && child.dijitWidget) {
-	        if (typeof index === 'number' && index >= 0) {
+		if (this.dijitWidget.addChild && child.dijitWidget) {
+			if (typeof index === 'number' && index >= 0) {
 				var children = this.getChildren();
 				if(index < children.length) {
-                    this._srcElement.insertBefore(child._srcElement,
-                            children[index]._srcElement);
+					this._srcElement.insertBefore(child._srcElement,
+						children[index]._srcElement);
 				}else{
 					this._srcElement.addChild(child._srcElement);
 				}
-                if (! this.acceptsHTMLChildren) {
-            		this._addChildHelper(child.dijitWidget, index);
-                } else {
-                    // See comment for _addChildHooked() for more info.
-                    this._addChildHooked(child.dijitWidget, index);
-                }
-	        } else {
-                this._srcElement.addChild(child._srcElement);
-                this._addChildHelper(child.dijitWidget);
-            }
-        } else {
-			this.inherited(arguments);
+				if (! this.acceptsHTMLChildren) {
+					this._addChildHelper(child, index);
+				} else {
+					// See comment for _addChildHooked() for more info.
+					this._addChildHooked(child, index);
+				}
+			} else {
+				this._srcElement.addChild(child._srcElement);
+				this._addChildHelper(child);
+			}
+		} else {
+			var helper = this.getHelper();
+			if (helper && helper.addChild701) {
+				var children = this.getChildren();
+				helper.addChild701(this, child, index);
+				if(index === undefined || index === null || index === -1) {
+					this._srcElement.addChild(child._srcElement);
+				}else{
+					if(index < children.length) {
+						this._srcElement.insertBefore(child._srcElement,children[index]._srcElement);
+					}else{
+						this._srcElement.addChild(child._srcElement);
+					}
+				}
+			}else{
+				this.inherited(arguments);
+			}
 		}
 	},
 	
-	_addChildHelper: function(dijitWidget, index) {
+	_addChildHelper: function(childWidget, index) {
 		var helper = this.getHelper();
 		if (helper && helper.addChild) {
-			helper.addChild(this, dijitWidget, index);
+			helper.addChild(this, childWidget.dijitWidget, index);
+		}else if (helper && helper.addChild701) {
+				helper.addChild701(this, childWidget, index);
 		} else {
 			// Some widgets such as dijit.form.DataList don't have a startup
 			// method, but addChild expects there will always be one.
 			// Address #3449
-			if(!dijitWidget.startup){
-				dijitWidget.startup = function(){};
+			if(!childWidget.dijitWidget.startup){
+				childWidget.dijitWidget.startup = function(){};
 			}
-			this.dijitWidget.addChild(dijitWidget, index);
+			this.dijitWidget.addChild(childWidget.dijitWidget, index);
 		}
 	},
 
-    // #514, #741, #856 - Some Dojox Mobile containers mixin dijit._Container
-    // (thereby adding addChild()), yet still allow HTML (non-Dojo)
-    // children. We still need to call addChild() when the child is another
-    // Dijit/Dojox widget, but there is a problem -- internally, the Dojo
-    // code only returns children which are Dijit/Dojox widgets, ignoring
-    // any of our HTML widgets. To work around this, we temporarily replace
-    // the Dijit/Dojox widget's getChildren() with our own, which returns all
-    // Maqetta managed children.
-    _addChildHooked: function(widget, index) {
-        var parentWidget = this.dijitWidget,
-            _getChildren = parentWidget.getChildren;
-        parentWidget.getChildren = dojo.hitch(this, this.getChildren);
-
-        var helper = this.getHelper();
-        if (helper && helper.addChild) {
-        	helper.addChild(this, widget, index);
-        } else {
+	// #514, #741, #856 - Some Dojox Mobile containers mixin dijit._Container
+	// (thereby adding addChild()), yet still allow HTML (non-Dojo)
+	// children. We still need to call addChild() when the child is another
+	// Dijit/Dojox widget, but there is a problem -- internally, the Dojo
+	// code only returns children which are Dijit/Dojox widgets, ignoring
+	// any of our HTML widgets. To work around this, we temporarily replace
+	// the Dijit/Dojox widget's getChildren() with our own, which returns all
+	// Maqetta managed children.
+	_addChildHooked: function(widget, index) {
+		var parentDijitWidget = this.dijitWidget,
+			_getChildren = parentDijitWidget.getChildren;
+		parentDijitWidget.getChildren = dojo.hitch(this, this.getChildren);
+	
+		var helper = this.getHelper();
+		if (helper && helper.addChild) {
+			helper.addChild(this, widget.dijitWidget, index);
+		}else if (helper && helper.addChild701) {
+				helper.addChild701(this, widget, index);
+		} else {
 			// Some widgets such as dijit.form.DataList don't have a startup
 			// method, but addChild expects there will always be one.
 			// Address #3449
-			if(!widget.startup){
-				widget.startup = function(){};
+			if(!widget.dijitWidget.startup){
+				widget.dijitWidget.startup = function(){};
 			}
-        	parentWidget.addChild(widget, index);
-        }
+			parentDijitWidget.addChild(widget.dijitWidget, index);
+		}
 
-        parentWidget.getChildren = _getChildren;
-    },
+		parentDijitWidget.getChildren = _getChildren;
+	},
 
     removeChild: function(/*Widget*/child) {
         if (!child) {

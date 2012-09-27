@@ -22,7 +22,7 @@ return declare(ViewHelper, {
 
 	},
 
-	addChild: function(parentWidget, childWidget, index) {
+	addChild701: function(parentWidget, childWidget, index) {
 		// make sure we place widgets in the containerNode
 		dojo.place(childWidget.domNode, parentWidget.dijitWidget.containerNode, index)
 	},

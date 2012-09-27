@@ -162,9 +162,9 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 			}
 		} else {
 			var helper = this.getHelper();
-			if (helper && helper.addChild) {
+			if (helper && helper.addChild701) {
 				var children = this.getChildren();
-				helper.addChild(this, child, index);
+				helper.addChild701(this, child, index);
 				if(index === undefined || index === null || index === -1) {
 					this._srcElement.addChild(child._srcElement);
 				}else{
@@ -183,7 +183,9 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 	_addChildHelper: function(childWidget, index) {
 		var helper = this.getHelper();
 		if (helper && helper.addChild) {
-			helper.addChild(this, childWidget, index);
+			helper.addChild(this, childWidget.dijitWidget, index);
+		}else if (helper && helper.addChild701) {
+				helper.addChild701(this, childWidget, index);
 		} else {
 			// Some widgets such as dijit.form.DataList don't have a startup
 			// method, but addChild expects there will always be one.
@@ -210,7 +212,9 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 	
 		var helper = this.getHelper();
 		if (helper && helper.addChild) {
-			helper.addChild(this, widget, index);
+			helper.addChild(this, widget.dijitWidget, index);
+		}else if (helper && helper.addChild701) {
+				helper.addChild701(this, widget, index);
 		} else {
 			// Some widgets such as dijit.form.DataList don't have a startup
 			// method, but addChild expects there will always be one.

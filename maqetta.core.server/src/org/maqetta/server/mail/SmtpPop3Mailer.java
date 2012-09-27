@@ -182,6 +182,28 @@ public class SmtpPop3Mailer {
 		trans.connect();
 		try {
 			trans.sendMessage(msg, msg.getAllRecipients());
+		// start LOGGING (#3427)
+		} catch(NullPointerException e) {
+			Address[] from = msg.getFrom();
+			int fromSize = (from != null ? from.length : 0);
+			Address[] rec = msg.getAllRecipients();
+			int recSize = (rec != null ? rec.length : 0);
+			Object content;
+			try {
+				content = msg.getContent();
+			} catch (IOException ioe) {
+				content = "<exception>";
+			}
+			System.err.println("Exception when calling SMTPTransport.sendMessage()" +
+							   "\n\t(Message) msg => ");
+			System.err.println("\n\t\t from = " + (fromSize > 0 ? from[0] : "null") + " (size: " + fromSize + ")");
+			System.err.println("\n\t\t to = " + (recSize > 0 ? rec[0] : "null") + " (size: " + recSize + ")");
+			System.err.println("\n\t\t sentDate = " + msg.getSentDate());
+			System.err.println("\n\t\t subject = " + msg.getSubject());
+			System.err.println("\n\t\t content = " + content);
+			System.err.println("\n\t(Address[]) recipients = " + (recSize > 0 ? rec[0] : "null") + " (size: " + recSize + ")");
+			throw e;
+		// end LOGGING
 		} finally {
 			trans.close();
 		}

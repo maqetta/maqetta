@@ -23,8 +23,33 @@ return declare(ViewHelper, {
 	},
 
 	addChild701: function(parentWidget, childWidget, index) {
-		// make sure we place widgets in the containerNode
-		dojo.place(childWidget.domNode, parentWidget.dijitWidget.containerNode, index)
+		var parentDijitWidget = parentWidget.dijitWidget,
+			childDomNode = childWidget.domNode,
+			children = parentDijitWidget.getChildren(),
+			header = parentDijitWidget.fixedHeader,
+			footer = parentDijitWidget.fixedFooter,
+			containerNode = parentDijitWidget.containerNode;
+		if(childDomNode == header){
+			dojo.place(childDomNode, parentWidget.domNode, 0);
+		}else if(childDomNode == footer){
+			dojo.place(childDomNode, parentWidget.domNode, undefined);
+		}else{
+			var refSibling = (typeof index == 'number' && index >=0 && index < children.length) ? children[index] : undefined;
+			var adjustedIndex;
+			if(refSibling){
+				for(var i=0; i<containerNode.childNodes.length; i++){
+					var node = containerNode.childNodes[i];
+					if(node.nodeType == 1){
+						if(node == refSibling.domNode){
+							adjustedIndex = i;
+							break;
+						}
+					}
+				}
+			}
+			// make sure we place widgets in the containerNode
+			dojo.place(childDomNode, containerNode, adjustedIndex);
+		}
 	},
 
 	addChildModel701: function(parentWidget, childWidget, index) {
@@ -38,8 +63,7 @@ return declare(ViewHelper, {
 				parentWidget._srcElement.addChild(childWidget._srcElement);
 			}
 		}
-		// make sure we place widgets in the containerNode
-		dojo.place(childWidget.domNode, parentWidget.dijitWidget.containerNode, index)
+		this.addChild701(parentWidget, childWidget, index);
 	},
 
 	/**

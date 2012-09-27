@@ -27,6 +27,21 @@ return declare(ViewHelper, {
 		dojo.place(childWidget.domNode, parentWidget.dijitWidget.containerNode, index)
 	},
 
+	addChildModel701: function(parentWidget, childWidget, index) {
+		var children = parentWidget.getChildren();
+		if(index === undefined || index === null || index === -1) {
+			parentWidget._srcElement.addChild(childWidget._srcElement);
+		}else{
+			if(index < children.length) {
+				parentWidget._srcElement.insertBefore(childWidget._srcElement,children[index]._srcElement);
+			}else{
+				parentWidget._srcElement.addChild(childWidget._srcElement);
+			}
+		}
+		// make sure we place widgets in the containerNode
+		dojo.place(childWidget.domNode, parentWidget.dijitWidget.containerNode, index)
+	},
+
 	/**
 	 * ScrollableView, due to its support for fixed headers and footers, keeps
 	 * its children in two locations (its 'domNode' is not the same as its

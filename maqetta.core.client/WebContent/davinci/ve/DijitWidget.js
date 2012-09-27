@@ -162,18 +162,8 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 			}
 		} else {
 			var helper = this.getHelper();
-			if (helper && helper.addChild701) {
-				var children = this.getChildren();
-				helper.addChild701(this, child, index);
-				if(index === undefined || index === null || index === -1) {
-					this._srcElement.addChild(child._srcElement);
-				}else{
-					if(index < children.length) {
-						this._srcElement.insertBefore(child._srcElement,children[index]._srcElement);
-					}else{
-						this._srcElement.addChild(child._srcElement);
-					}
-				}
+			if (helper && helper.addChildModel701) {
+				helper.addChildModel701(this, child, index);
 			}else{
 				this.inherited(arguments);
 			}

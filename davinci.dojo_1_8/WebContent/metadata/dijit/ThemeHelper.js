@@ -122,7 +122,7 @@ return {
 			}
 			if(anyDojoxMobileWidgets && !context.anyDojoxMobileWidgets){
 				// this is the first time we found a mobile widget so ensure the mobile
-				// css files are loaded
+				// css files are loaded 
 				context._configDojoxMobile(true); // no need to refresh the deviceTheme.loadDevice the require will have done it.
 			}
 			context.anyDojoxMobileWidgets = anyDojoxMobileWidgets;

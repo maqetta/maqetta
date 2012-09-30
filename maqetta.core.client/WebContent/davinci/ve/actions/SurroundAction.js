@@ -64,7 +64,7 @@ return declare("davinci.ve.actions.SurroundAction", [ContextAction], {
 				if(i == 0 || marginBoxPageCoords[i].l < minX){
 					minX = marginBoxPageCoords[i].l;
 				}
-				if(i == 0 || marginBoxPageCoords[i].l < minY){
+				if(i == 0 || marginBoxPageCoords[i].t < minY){
 					minY = marginBoxPageCoords[i].t;
 				}
 				if(i == 0 || r > maxX){

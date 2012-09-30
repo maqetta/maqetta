@@ -155,42 +155,72 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		}
 		this._op = op;
 		
-		this._resizeWidth = op.resizeWidth;
-		this._resizeHeight = op.resizeHeight;
-		var horizontal = (op.resizeWidth && !op.resizeHeight) ? "block" : "none";
-		var vertical = (op.resizeHeight && !op.resizeWidth) ? "block" : "none";
-		var corner = (op.resizeWidth && op.resizeHeight) ? "block" : "none";
-		this._nobs[LEFT].style.display = horizontal;
-		this._nobs[RIGHT].style.display = horizontal;
-		this._nobs[TOP].style.display = vertical;
-		this._nobs[BOTTOM].style.display = vertical;
-		this._nobs[LEFT_TOP].style.display = corner;
-		this._nobs[LEFT_BOTTOM].style.display = corner;
-		this._nobs[RIGHT_TOP].style.display = corner;
-		this._nobs[RIGHT_BOTTOM].style.display = corner;
-		if(op.resizeWidth){
+		var display = {};
+		var helper = this._selectedWidget.getHelper();
+		if(helper && helper.resizeAllowWhich){
+			helper.resizeAllowWhich(this._selectedWidget, display);
+			this._resizeLeft = display.resizeLeft;
+			this._resizeRight = display.resizeRight;
+			this._resizeTop = display.resizeTop;
+			this._resizeBottom = display.resizeBottom;
+		}else{
+			this._resizeLeft = this._resizeRight = op.resizeWidth;
+			this._resizeTop = this._resizeBottom = op.resizeHeight;
+		}
+		display.left = (this._resizeLeft && !this._resizeTop && !this._resizeBottom) ? "block" : "none";
+		display.right = (this._resizeRight && !this._resizeTop && !this._resizeBottom) ? "block" : "none";
+		display.top = (this._resizeTop && !this._resizeLeft && !this._resizeRight) ? "block" : "none";
+		display.bottom = (this._resizeBottom && !this._resizeLeft && !this._resizeRight) ? "block" : "none";
+		display.left_top = (this._resizeLeft && this._resizeTop) ? "block" : "none";
+		display.left_bottom = (this._resizeLeft && this._resizeBottom) ? "block" : "none";
+		display.right_top = (this._resizeRight && this._resizeTop) ? "block" : "none";
+		display.right_bottom = (this._resizeRight && this._resizeBottom) ? "block" : "none";
+		this._nobs[LEFT].style.display = display.left;
+		this._nobs[RIGHT].style.display = display.right;
+		this._nobs[TOP].style.display = display.top;
+		this._nobs[BOTTOM].style.display = display.bottom;
+		this._nobs[LEFT_TOP].style.display = display.left_top;
+		this._nobs[LEFT_BOTTOM].style.display = display.left_bottom;
+		this._nobs[RIGHT_TOP].style.display = display.right_top;
+		this._nobs[RIGHT_BOTTOM].style.display = display.right_bottom;
+		if(this._resizeLeft){
 			this._nobs[LEFT].style.cursor = this._frames[LEFT].style.cursor = "w-resize";
+		}else{
+			this._nobs[LEFT].style.cursor = this._frames[LEFT].style.cursor = "auto";
+		}
+		if(this._resizeRight){
 			this._nobs[RIGHT].style.cursor = this._frames[RIGHT].style.cursor = "e-resize";
 		}else{
-			this._nobs[LEFT].style.cursor = this._nobs[RIGHT].style.cursor =
-				this._frames[LEFT].style.cursor = this._frames[RIGHT].style.cursor = "auto";
+			this._nobs[RIGHT].style.cursor = this._frames[RIGHT].style.cursor = "auto";
 		}
-		if(op.resizeHeight){
+		if(this._resizeTop){
 			this._nobs[TOP].style.cursor = this._frames[TOP].style.cursor = "n-resize";
+		}else{
+			this._nobs[TOP].style.cursor = this._frames[TOP].style.cursor = "auto";
+		}
+		if(this._resizeBottom){
 			this._nobs[BOTTOM].style.cursor = this._frames[BOTTOM].style.cursor = "s-resize";
 		}else{
-			this._nobs[TOP].style.cursor = this._nobs[BOTTOM].style.cursor =
-				this._frames[TOP].style.cursor = this._frames[BOTTOM].style.cursor = "auto";
+			this._nobs[BOTTOM].style.cursor = this._frames[BOTTOM].style.cursor = "auto";
 		}
-		if(op.resizeWidth && op.resizeHeight){
+		if(display.left_top != "none"){
 			this._nobs[LEFT_TOP].style.cursor = "nw-resize";
+		}else{
+			this._nobs[LEFT_TOP].style.cursor = "auto";
+		}
+		if(display.left_bottom != "none"){
 			this._nobs[LEFT_BOTTOM].style.cursor = "sw-resize";
+		}else{
+			this._nobs[LEFT_BOTTOM].style.cursor = "auto";
+		}
+		if(display.right_top != "none"){
 			this._nobs[RIGHT_TOP].style.cursor = "ne-resize";
+		}else{
+			this._nobs[RIGHT_TOP].style.cursor = "auto";
+		}
+		if(display.right_bottom != "none"){
 			this._nobs[RIGHT_BOTTOM].style.cursor = "se-resize";
 		}else{
-			this._nobs[LEFT_TOP].style.cursor = 
-			this._nobs[LEFT_BOTTOM].style.cursor = 
-			this._nobs[RIGHT_TOP].style.cursor =
 			this._nobs[RIGHT_BOTTOM].style.cursor = "auto";
 		}
 	},
@@ -425,8 +455,8 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		
 		// Don't do move operation if dragging on an edge where that dimension of the widget
 		// is not resizable
-		if(((this._frameIndex === LEFT || this._frameIndex === RIGHT) && !this._resizeWidth) ||
-				((this._frameIndex === TOP || this._frameIndex === BOTTOM) && !this._resizeHeight)){
+		if((this._frameIndex === LEFT && !this._resizeLeft) || (this._frameIndex === RIGHT && !this._resizeRight) ||
+				(this._frameIndex === TOP && !this._resizeTop) || (this._frameIndex === BOTTOM && !this._resizeBottom)){
 			return;
 		}
 		

@@ -18,6 +18,8 @@ return declare("davinci.ve.actions.SurroundAction", [ContextAction], {
 
 	run: function(context){
 		context = this.fixupContext(context);
+		var minX, minY, maxX, maxY;
+		var marginBoxPageCoords = [];
 		var newWidget, tag = this.item.surroundWithTagName;
 		if(!tag){
 			console.error('missing surroundWithTagName');
@@ -42,13 +44,21 @@ return declare("davinci.ve.actions.SurroundAction", [ContextAction], {
 				return (position_prop == 'absolute');
 			}
 		});
+		if(allAbsolute){
+			Array.forEach(selection, function(w, i){
+				// Store away margin boxes for later use
+				marginBoxPageCoords.push(GeomUtils.getMarginBoxPageCoordsCached(w.domNode));
+				
+				// Add a seemingly superfluous MoveCommand at front of command stack
+				// so that when an Undo occurs, the surrounded widgets will properly
+				// go back to original correct location
+				command.add(new MoveCommand(w, marginBoxPageCoords[i].l, marginBoxPageCoords[i].t, null, marginBoxPageCoords[i]));
+			});
+		}
 		command.add(new AddCommand(newWidget, parent, parent.indexOf(first)));
-		var minX, minY, maxX, maxY;
-		var marginBoxPageCoords = [];
 		if(allAbsolute){
 			command.add(new StyleCommand(newWidget, [{'position':'absolute'}]));
 			Array.forEach(selection, function(w, i){
-				marginBoxPageCoords.push(GeomUtils.getMarginBoxPageCoordsCached(w.domNode));
 				var r = marginBoxPageCoords[i].l + marginBoxPageCoords[i].w;
 				var b = marginBoxPageCoords[i].t + marginBoxPageCoords[i].h;
 				if(i == 0 || marginBoxPageCoords[i].l < minX){

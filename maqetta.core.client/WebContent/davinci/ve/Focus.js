@@ -5,10 +5,11 @@ define([
 	"dojo/dnd/Mover",
 	"dojo/dnd/Moveable",
 	"./metadata",
+	"davinci/ve/tools/CreateTool",
 	"davinci/ve/States",
 	"davinci/ve/utils/GeomUtils"
 ],
-function(require, declare, _WidgetBase, Mover, Moveable, Metadata, States, GeomUtils) {
+function(require, declare, _WidgetBase, Mover, Moveable, Metadata, CreateTool, States, GeomUtils) {
 	
 // Nobs and frame constants
 var LEFT = 0,	// nob and frame
@@ -38,6 +39,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			var frame = dojo.create("div", {"class": "editFocusFrame"}, this._stdChrome);
 			this._frames.push(frame);
 			this.connect(frame, "onmousedown", "onMouseDown");
+			this.connect(frame, "onmouseup", "onMouseUpChrome");
 		}
 		dojo.addClass(this._frames[LEFT], "editFocusFrameLEFT");
 		dojo.addClass(this._frames[RIGHT], "editFocusFrameRIGHT");
@@ -50,6 +52,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			var nob = dojo.create("div", {"class": "editFocusNob"}, this._stdChrome);
 			this._nobs.push(nob);
 			this.connect(nob, "onmousedown", "onMouseDown");
+			this.connect(nob, "onmouseup", "onMouseUpChrome");
 		}
 		this._nobIndex = -1;
 		this._frameIndex = -1;
@@ -921,6 +924,19 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     			return dojo.style.apply(dojo, arguments);
     		}
     	}
+    },
+    
+    /**
+     * This routine allows users to drag from widget palette onto selection chrome,
+     * which will then cause the given widget to be added as a child of the currently selected widget
+     */
+    onMouseUpChrome: function(e){
+    	var activeTool = this._context.getActiveTool();
+    	var isCreateTool = activeTool.isInstanceOf(CreateTool);
+		if(!isCreateTool || this._mover || !this._selectedWidget || !this._selectedWidget.domNode ||
+				event.button === 2 || event.ctrlKey || event.shiftKey){
+			return;
+		}
     }
 	
 });

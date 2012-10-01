@@ -254,18 +254,11 @@ var initializeWorkbenchState = function(){
 		}
 	};
 
-	if (!Workbench._state || !Workbench._state.hasOwnProperty("editors")) { //TODO: is this conditional necessary?  could state have been set prior to initialization?
-		xhr.get({
-			url: "cmd/getWorkbenchState",
-			handleAs: "json"
-		}).then(function(response){
-			init((Workbench._state = response));
-			Workbench.setupGlobalKeyboardHandler();
-		});
-	} else {                              
-		init(Workbench._state);
-		Workbench.setupGlobalKeyboardHandler();
+	if (!Workbench._state){
+		Workbench._state = davinci.Runtime.getWorkbenchState();
 	}
+	init(Workbench._state);
+	Workbench.setupGlobalKeyboardHandler();
 };
 
 var Workbench = {
@@ -2018,8 +2011,8 @@ var Workbench = {
 		 * to the workbench setting
 		 */
 		
-		if (!Workbench._state) {
-			Workbench._state=Runtime.serverJSONRequest({url:"cmd/getWorkbenchState", handleAs:"json", sync:true});
+		if (!Workbench._state){
+			Workbench._state = davinci.Runtime.getWorkbenchState();
 		}
 		var urlProject = dojo.queryToObject(dojo.doc.location.search.substr((dojo.doc.location.search[0] === "?" ? 1 : 0))).project;
 		

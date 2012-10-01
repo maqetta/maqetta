@@ -43,8 +43,8 @@
          <command path="setPreferences"  isPut="true"
                class="maqetta.core.server.command.SetPreferences" />
          <!-- orion specific -->
-         <command path="getWorkbenchState" 
-               class="maqetta.server.orion.command.GetWorkbenchState" />
+         <command path="getInitializationInfo" 
+               class="maqetta.server.orion.command.GetInitializationInfo" />
          <command path="setWorkbenchState"  isPut="true"
                class="maqetta.server.orion.command.SetWorkbenchState" />
          
@@ -88,8 +88,6 @@
                
            <command path="keepalive" 
                class="maqetta.core.server.command.KeepAlive" />
-           <command path="getUserInfo" 
-               class="maqetta.core.server.command.GetUserInfo" /> 
                    
           <!-- Review and Commenting Commands -->        
           <command path="listVersions"

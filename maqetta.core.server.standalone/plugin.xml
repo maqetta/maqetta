@@ -59,8 +59,13 @@
                class="maqetta.core.server.command.GetPreferences" />
          <command path="setPreferences"  isPut="true"
                class="maqetta.core.server.command.SetPreferences" />
-         <command path="getWorkbenchState" 
-               class="maqetta.core.server.command.GetWorkbenchState" />
+		<!--
+			NOTE: IN PRACTICE, GetInitializationInfo is never called because
+			all supported versions support Orion server and orion.core.server
+			overrides GetInitializationInfo.
+		-->
+         <command path="getInitializationInfo" 
+               class="maqetta.core.server.command.GetInitializationInfo" />
          <command path="setWorkbenchState"  isPut="true"
                class="maqetta.core.server.command.SetWorkbenchState" />
          <command path="removeWorkingCopy" 
@@ -98,8 +103,6 @@
            <command path="keepalive" 
                class="maqetta.core.server.command.KeepAlive" />
            
-           <command path="getUserInfo" 
-               class="maqetta.core.server.command.GetUserInfo" /> 
            
                 
           <!-- Review and Commenting Commands -->        

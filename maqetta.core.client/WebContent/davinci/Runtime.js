@@ -57,20 +57,35 @@ var Runtime = {
 		});
 	},
 
-	getUser: function() {
+	getInitializationInfo: function() {
 		
-		if(this._userInfo) {
-			return this._userInfo;
+		if(this._initializationInfo) {
+			return this._initializationInfo;
 		}
-		
-		this._userInfo = Runtime.serverJSONRequest({
-			url: "cmd/getUserInfo",
+		this._initializationInfo = Runtime.serverJSONRequest({
+			url: "cmd/getInitializationInfo",
 			handleAs: "json",
 			content:{},
 			sync:true
 		});
 
-		return this._userInfo;
+		return this._initializationInfo;
+	},
+
+	getUser: function() {
+
+		this.getInitializationInfo();
+		if(this._initializationInfo){
+			return this._initializationInfo.userInfo;
+		}
+	},
+
+	getWorkbenchState: function() {
+
+		this.getInitializationInfo();
+		if(this._initializationInfo){
+			return this._initializationInfo.workbenchState;
+		}
 	},
 	
 	/*

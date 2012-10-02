@@ -3,14 +3,14 @@
      * @constructor 
      * @extends davinci.model.resource.Resource
    */
- define([
+define([
 	"dojo/_base/declare",
 	"dojo/_base/xhr",
 	"davinci/Runtime",
 	"davinci/model/resource/Resource",
 	"davinci/model/resource/Marker",
 	"davinci/ve/utils/URLRewrite"
-], function(declare, xhr, Runtime, Resource, Marker,URLRewrite) {
+], function(declare, xhr, Runtime, Resource, Marker, URLRewrite) {
 
 return declare("davinci.model.resource.File", Resource, {
 
@@ -22,6 +22,7 @@ return declare("davinci.model.resource.File", Resource, {
 		this.extension = name.substr(name.lastIndexOf('.') + 1);
 	},
 
+	// deprecated.  use extension property instead
 	getExtension: function() {
 		return this.extension;
 	},
@@ -59,7 +60,6 @@ return declare("davinci.model.resource.File", Resource, {
 
 	setContents: function(content, isWorkingCopy){
 		var workingCopy = isWorkingCopy ? "true" : "false";
-		var dirty = isWorkingCopy  ? true : false;
 		if (this.isNew && !isWorkingCopy) {
 			this.isNew = false;
 		}
@@ -71,19 +71,15 @@ return declare("davinci.model.resource.File", Resource, {
 			handleAs: "text",
 			contentType: "text/html"
 		}).then(function(res){
-			this.dirtyResource = dirty;
+			this.dirtyResource = isWorkingCopy;
 			dojo.publish("/davinci/resource/resourceChanged", ["modified", this]);
 		}.bind(this), function(err){ 
-			// This shouldn't occur, but it's defined just in case
 			// more meaningful error message should be reported to user higher up the food chain...
 			console.error("An error occurred: davinci.model.resource.File.prototype.setContents " + err + " : " + path);
 		});
 	},
 
-	getText: function() {
-		return this.getContentSync();
-	},
-
+	// deprecated.  Use getContent instead.
 	getContentSync: function(){
 		return Runtime.serverJSONRequest({
 			url: URLRewrite.encodeURI(this.getURL()),

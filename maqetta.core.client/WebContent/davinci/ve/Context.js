@@ -48,7 +48,7 @@ define([
 	all,
 	connect,
 	windowUtils,
-	Resource,
+	systemResource,
 	UserActivityMonitor,
 	Theme,
 	ThemeModifier,
@@ -367,7 +367,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	getBaseResource: function(options){
-		return system.resource.findResource(this.getDocumentLocation());
+		return systemResource.findResource(this.getDocumentLocation());
 	},
 
 	getLibraryBase: function(id, version){
@@ -2511,7 +2511,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	hotModifyCssRule: function(r){
 		
 		function updateSheet(sheet, rule){
-			var fileName = URLRewrite.encodeURI(rule.parent.getResource().getURL());
+			var uri = systemResource.findResource(rule.parent.uri).getURL(); // FIXME: can we skip findResource?
+			var fileName = URLRewrite.encodeURI(uri);
 			var selectorText = rule.getSelectorText();
 //			console.log("------------  Hot Modify looking  " + fileName + " ----------------:=\n" + selectorText + "\n");
 			selectorText = selectorText.replace(/^\s+|\s+$/g,""); // trim white space

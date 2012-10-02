@@ -152,13 +152,6 @@ var sessionTimedOut = function(){
 	dialog.show();
 };
 
-var getSelectedResource = function() {
-	var selection=Runtime.getSelection();
-	if (selection[0]&&selection[0].resource) {
-		return selection[0].resource;
-	}
-};
-
 var initializeWorkbenchState = function(){	
 	// The _expandCollapsePaletteContainers() call  below collapses the 
 	// left-side and right-side palettes before
@@ -1088,7 +1081,8 @@ var Workbench = {
 					} else {
 						var enabled = true;
 						if (item.isEnabled) {
-							var resource = getSelectedResource();
+							var selection = Runtime.getSelection(),
+								resource = selection[0] && selection[0].resource;
 							enabled = resource ? item.isEnabled(resource) : false;
 						}
 

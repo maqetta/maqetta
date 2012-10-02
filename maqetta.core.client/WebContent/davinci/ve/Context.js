@@ -2079,17 +2079,22 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			for(var i=this._selection.length-1; i>=0; i--){
 				var widget = this._selection[i];
 				var domNode = widget.domNode;
-				while(domNode && domNode.tagName != 'BODY'){
-					// Sometimes browsers haven't set up defaultView yet,
-					// and dojo.style will raise exception if defaultView isn't there yet
-					if(domNode && domNode.ownerDocument && domNode.ownerDocument.defaultView){
-						var computed_style_display = dojo.style(domNode, 'display');
-						if(computed_style_display == 'none'){
-							this.deselect(widget);
-							break;
+				// Assume that if all offset values are zero, then widget has display:none somewhere in ancestor DOM hierarchy
+				if(domNode.offsetLeft==0 && domNode.offsetTop==0 && domNode.offsetWidth==0 && domNode.offsetHeight==0){
+					this.deselect(widget);
+				}else{
+					while(domNode && domNode.tagName != 'BODY'){
+						// Sometimes browsers haven't set up defaultView yet,
+						// and dojo.style will raise exception if defaultView isn't there yet
+						if(domNode && domNode.ownerDocument && domNode.ownerDocument.defaultView){
+							var computed_style_display = dojo.style(domNode, 'display');
+							if(computed_style_display == 'none'){
+								this.deselect(widget);
+								break;
+							}
 						}
+						domNode = domNode.parentNode;
 					}
-					domNode = domNode.parentNode;
 				}
 			}
 		}
@@ -2461,6 +2466,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 	onContentChange: function(){
 		this._updateWidgetHash();
+		
+		this.deselectInvisible();
 		
 		// update focus
 		dojo.forEach(this.getSelection(), function(w, i){

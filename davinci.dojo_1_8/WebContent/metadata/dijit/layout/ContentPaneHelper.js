@@ -74,6 +74,34 @@ ContentPaneHelper.prototype = {
 			// but we don't want parseOnLoad to be in the source as that will break
 			// contentpane from working outside of maqetta
 			srcElement.removeAttribute("parseOnLoad");
+		},
+		
+		resizeAllowWhich: function(widget, allowWhich){
+			allowWhich.resizeLeft = allowWhich.resizeRight = allowWhich.resizeTop = allowWhich.resizeBottom = false;
+			if(!widget){
+				return;
+			}
+			var parent = widget.getParent();
+			if(!parent){
+				return;
+			}
+			// If ContentPane isn't a child of a dijit layout container, then allow resize on all sides and corners
+			if(!parent.dijitWidget || !parent.dijitWidget.layout){
+				allowWhich.resizeLeft = allowWhich.resizeRight = allowWhich.resizeTop = allowWhich.resizeBottom = true;
+			}else{
+				var dijitWidget = widget.dijitWidget;
+				if(dijitWidget){
+					if(dijitWidget.region == 'left'){
+						allowWhich.resizeRight = true;
+					}else if(dijitWidget.region == 'right'){
+						allowWhich.resizeLeft = true;
+					}else if(dijitWidget.region == 'top'){
+						allowWhich.resizeBottom = true;
+					}else if(dijitWidget.region == 'bottom'){
+						allowWhich.resizeTop = true;
+					}
+				}
+			}
 		}
 	};
 

@@ -175,7 +175,7 @@ public class Download extends Command {
 	            int statusCode = client.executeMethod(method);
 	            String body = method.getResponseBodyAsString();
 	            if (statusCode != HttpStatus.SC_OK) {
-	                throw new IOException(buildBase + "/api/dependencies: Analyse failed: " + method.getStatusLine() + " " + body);
+	                throw new IOException(buildBase + "/api/dependencies: Analyse failed: " + method.getStatusLine() + "\n" + body);
 	            }
 
 	            int start = body.indexOf("<textarea>");
@@ -246,10 +246,10 @@ public class Download extends Command {
         try {
         	method.setRequestEntity(new StringRequestEntity(content, "application/json", "utf-8"));
             int statusCode = client.executeMethod(method);
-        	if (statusCode != HttpStatus.SC_OK) {
-        		throw new IOException(buildBase + "/api/build failed with status: " + statusCode);
-        	}
             String json = method.getResponseBodyAsString();
+        	if (statusCode != HttpStatus.SC_OK) {
+        		throw new IOException(buildBase + "/api/build failed with status: " + statusCode + "\n" + json);
+        	}
             System.out.println("/api/build response: " + json);
             Map status = (Map)JSONReader.read(json);
             String statusLink = (String)status.get("buildStatusLink");

@@ -1725,6 +1725,7 @@ var Workbench = {
 		var oldEditor = Runtime.currentEditor;
 		Runtime.currentEditor = newEditor;
 		Workbench._state.activeEditor=newEditor ? newEditor.fileName : null;
+		this._removeFocusContainerChildren();	//FIXME: Visual editor logic bleeding into Workbench
 		this._showEditorTopPanes();
 		try {
 			dojo.publish("/davinci/ui/editorSelected", [{
@@ -2276,6 +2277,10 @@ var Workbench = {
 	},
 	_showEditorTopPanes: function(){
 		this._hideShowEditorTopPanes('block');
+	},
+	
+	_removeFocusContainerChildren: function(){
+		davinci.Workbench.focusContainer.innerHTML = '';
 	},
 
 	_XX_last_member: true	// dummy with no trailing ','

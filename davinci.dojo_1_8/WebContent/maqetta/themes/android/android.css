@@ -1472,7 +1472,7 @@
 		-o-transform: scale3d(0.835,0.835,0.835) rotateY(0deg) translateZ(160px);
 	}
 }
-}.dj_iphone.dj_landscape .mblCube.mblOut.mblReverse {
+.dj_iphone.dj_landscape .mblCube.mblOut.mblReverse {
 	-webkit-animation-name: mblCubeOutReverse_iphone_l;
 	-moz-animation-name: mblCubeOutReverse_iphone_l;
 	-o-animation-name: mblCubeOutReverse_iphone_l;

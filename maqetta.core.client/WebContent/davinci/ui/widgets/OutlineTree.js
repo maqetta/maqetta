@@ -148,6 +148,20 @@ return declare(Tree, {
 		}, this);
 
 		this.set("selectedItems", newSelected);
+
+		/* Dojo bug here.  If we remove a tree node, the cached version of the node
+		   (_itemNodesMap) is removed.  However, if the tree node has children, those
+		   nodes get destroyed but not removed from the cache (_itemNodesMap).  So
+		   manually do that here.
+		   
+		   TODO: remove in Dojo 2.0 which will fix this
+		 */
+		array.forEach(nodes, function(node) {
+			array.forEach(node.getDescendants(), function(treenode) {
+					var id = treenode.getIdentity(treenode.item);
+					delete this._itemNodesMap[id];
+			}, this);
+		}, this);
 				
 		this.inherited(arguments);
 	},

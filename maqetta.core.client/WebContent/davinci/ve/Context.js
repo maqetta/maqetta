@@ -48,7 +48,7 @@ define([
 	all,
 	connect,
 	windowUtils,
-	Resource,
+	systemResource,
 	UserActivityMonitor,
 	Theme,
 	ThemeModifier,
@@ -367,7 +367,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	getBaseResource: function(options){
-		return system.resource.findResource(this.getDocumentLocation());
+		return systemResource.findResource(this.getDocumentLocation());
 	},
 
 	getLibraryBase: function(id, version){
@@ -1368,8 +1368,23 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		all(prereqs).then(function() {
 			this.getGlobal()["require"]("dojo/ready")(function(){
 				try {
-					this.getGlobal()["require"]("dojo/parser").parse(containerNode);
-					promise.resolve();
+					this.getGlobal()["require"]("dojo/parser").parse(containerNode).then(function(){
+						promise.resolve();						
+
+						if(attachWidgets){
+							this._attachAll();
+						}
+			
+				        if (scripts) {
+				            try {
+				                dojox.html.evalInGlobal(scripts, containerNode);
+				            } catch(e) {
+				                console.error('Error eval script in Context._setSourceData, ' + e);
+				            }
+				        }
+					}, function(e){
+						promise.reject(e);
+					});
 				} catch(e) {
 					// When loading large files on FF 3.6 if the editor is not the active editor (this can happen at start up
 					// the dojo parser will throw an exception trying to compute style on hidden containers
@@ -1377,31 +1392,22 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					// then we will reprocess the content when we have focus -- wdr
 	
 					console.error(e);
-					// remove all registered widgets, some may be partly constructed.
-					this.getDijit().registry.forEach(function(w){
-						  w.destroy();			 
-					});
-		
-					this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",
-							this, '_editorSelectionChange');
-	
 					promise.reject(e);
-					throw e;
 				}
-
-				if(attachWidgets){
-					this._attachAll();
-				}
-	
-		        if (scripts) {
-		            try {
-		                dojox.html.evalInGlobal(scripts, containerNode);
-		            } catch(e) {
-		                console.error('Error eval script in Context._setSourceData, ' + e);
-		            }
-		        }
 			}.bind(this));
 		}.bind(this));
+
+		/*
+		promise.otherwise(function(e){
+			// remove all registered widgets, some may be partly constructed.
+			this.getDijit().registry.forEach(function(w){
+				  w.destroy();			 
+			});
+
+			this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",
+					this, '_editorSelectionChange');			
+		});
+		*/
 
 		return promise;
 	},
@@ -2511,7 +2517,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	hotModifyCssRule: function(r){
 		
 		function updateSheet(sheet, rule){
-			var fileName = URLRewrite.encodeURI(rule.parent.getResource().getURL());
+			var uri = systemResource.findResource(rule.parent.uri).getURL(); // FIXME: can we skip findResource?
+			var fileName = URLRewrite.encodeURI(uri);
 			var selectorText = rule.getSelectorText();
 //			console.log("------------  Hot Modify looking  " + fileName + " ----------------:=\n" + selectorText + "\n");
 			selectorText = selectorText.replace(/^\s+|\s+$/g,""); // trim white space

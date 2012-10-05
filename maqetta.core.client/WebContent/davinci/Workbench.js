@@ -152,13 +152,6 @@ var sessionTimedOut = function(){
 	dialog.show();
 };
 
-var getSelectedResource = function() {
-	var selection=Runtime.getSelection();
-	if (selection[0]&&selection[0].resource) {
-		return selection[0].resource;
-	}
-};
-
 var initializeWorkbenchState = function(){	
 	// The _expandCollapsePaletteContainers() call  below collapses the 
 	// left-side and right-side palettes before
@@ -229,15 +222,13 @@ var initializeWorkbenchState = function(){
 					}
 		
 					if (resource) {
-//						resource.getContent().then(function(content){						
-							Workbench.openEditor({
-								fileName: resource,
-								content: resource.getContentSync(),
-								noSelect: noSelect, // style: should flip logic to use "select" property
-								isDirty: resource.isDirty(),
-								startup: false
-							});
-//						});
+						Workbench.openEditor({
+							fileName: resource,
+							noSelect: noSelect,
+							isDirty: resource.isDirty(),
+							startup: false,
+							initializationTime: true
+						});
 					}
 				};
 				
@@ -1090,7 +1081,8 @@ var Workbench = {
 					} else {
 						var enabled = true;
 						if (item.isEnabled) {
-							var resource = getSelectedResource();
+							var selection = Runtime.getSelection(),
+								resource = selection[0] && selection[0].resource;
 							enabled = resource ? item.isEnabled(resource) : false;
 						}
 
@@ -1351,7 +1343,6 @@ var Workbench = {
 	openEditor: function (keywordArgs, newHtmlParams) {
 		try{
 			var fileName=keywordArgs.fileName,
-				content=keywordArgs.content,
 				fileExtension,
 				file;
 			if (typeof fileName=='string') {
@@ -1417,7 +1408,7 @@ var Workbench = {
 		var nodeName = fileName.split('/').pop();
 		var extension = keywordArgs && keywordArgs.fileName && keywordArgs.fileName.extension ? 
 				"." + keywordArgs.fileName.extension : "";
-		nodeName = nodeName + (extension == ".rev" ? extension : "");
+		nodeName += (extension == ".rev" ? extension : "");
 
 		dojo.query('.loading').orphan();
 
@@ -1428,8 +1419,7 @@ var Workbench = {
 			Workbench.mainStackContainer.selectChild(Workbench.mainBorderContainer);
 		}
 
-		var content = keywordArgs.content,
-			editorContainer = dijit.byId(filename2id(fileName)),
+		var editorContainer = dijit.byId(filename2id(fileName)),
 			editorsContainer = dijit.byId("editors_container"),
 			shadowTabContainer = dijit.byId("davinci_file_tabs"),
 			editorCreated = false,
@@ -1500,7 +1490,14 @@ var Workbench = {
 		if (!keywordArgs.noSelect) {
 			editorsContainer.selectChild(editorContainer);
 		}
-		editorContainer.setEditor(editorExtension, fileName, content, keywordArgs.fileName, editorContainer.domNode, newHtmlParams).then(function(editor) {
+		//FIXME: this is very kludgy. At initialization time, we want EditorContainer.js 
+		//to filter past all editors except the current filename to prevent the cs=null issue #3279.
+		//But when not at initialization time, we need to make sure the
+		//current activeEditor is set to the "fileName".
+		if(!keywordArgs.initializationTime){
+			Workbench._state.activeEditor = fileName;
+		}
+		editorContainer.setEditor(editorExtension, fileName, true, keywordArgs.fileName, editorContainer.domNode, newHtmlParams).then(function(editor) {
 			if (keywordArgs.startLine) {
 				editorContainer.editor.select(keywordArgs);
 			}
@@ -1721,6 +1718,8 @@ var Workbench = {
 	_switchEditor: function(newEditor, startup) {
 		var oldEditor = Runtime.currentEditor;
 		Runtime.currentEditor = newEditor;
+		Workbench._state.activeEditor=newEditor ? newEditor.fileName : null;
+		this._removeFocusContainerChildren();	//FIXME: Visual editor logic bleeding into Workbench
 		this._showEditorTopPanes();
 		try {
 			dojo.publish("/davinci/ui/editorSelected", [{
@@ -1731,8 +1730,6 @@ var Workbench = {
 			console.error(ex);
 		}
 		Workbench._updateTitle(newEditor);
-	
-		Workbench._state.activeEditor=newEditor ? newEditor.fileName : null;
 		
 		setTimeout(function(){
 			// kludge: if there is a visualeditor and it is already populated, resize to make Dijit visualEditor contents resize
@@ -2274,6 +2271,10 @@ var Workbench = {
 	},
 	_showEditorTopPanes: function(){
 		this._hideShowEditorTopPanes('block');
+	},
+	
+	_removeFocusContainerChildren: function(){
+		davinci.Workbench.focusContainer.innerHTML = '';
 	},
 
 	_XX_last_member: true	// dummy with no trailing ','

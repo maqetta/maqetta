@@ -631,6 +631,19 @@ define(function() {
 		resize: function(widget) {},
 
 		/**
+		 * Sets parameters on the allowWhich object to indicate
+		 * which sides should be resizable in the Maqetta page editor
+		 * @param  {Object} allowWhich
+		 *    Properties include:
+		 *        four booleans that indicate which resize operations are allowed: 
+		 *            resizeLeft, resizeRight, resizeTop, resizeBottom
+		 * For example:
+		 *   allowWhich.resizeLeft = allowWhich.resizeRight = true;
+		 *   allowWhich.resizeTop = allowWhich.resizeBottom = false;
+		 */
+		resizeAllowWhich: function(widget, allowWhich) {},
+		
+		/**
 		 * [tearDown description]
 		 * @param  {davinci/ve/_Widget} widget [description]
 		 */

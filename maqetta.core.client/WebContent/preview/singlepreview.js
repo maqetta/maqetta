@@ -78,7 +78,7 @@ return declare([_WidgetBase], {
 				'class':'singlepreview_styles',
 				innerHTML: 
 					'.controlbar { line-height:1.25em; }\n'+
-					'.controlbar_label { display:inline-block; vertical-align:middle; margin-top:14px; }\n'+
+					'.controlbar_label { display:inline-block; vertical-align:middle; margin-top:14px; margin-left:.75em; }\n'+
 					'.controlbar_container { display:inline-block; vertical-align:top; }\n'+
 					'.controlbar_container_device { margin:9px 7px 0 1px; }\n'+
 					'.controlbar_container_zoom { margin-right:6px; }\n'+

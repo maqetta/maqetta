@@ -61,6 +61,16 @@ define(["dojo/_base/declare",
 			});
 
 			this.fileDialogWhereDropDownCell.appendChild(this._whereDropDownButton.domNode);
+			
+			// If current folder or any ancestor folders are read-only, then force the folder to the root folder
+			var resource = this.value;
+			while(resource){
+				if(resource.readOnly()){
+					this.value = null;
+					break;
+				}
+				resource = resource.parent;
+			}
 			if(!this.value){
 				this._setValueAttr(this._getForcedRootAttr());
 			}

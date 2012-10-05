@@ -238,16 +238,16 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		if(this._focusPopup){
 			this._focusPopup.destroyRecursive();			
 		}
-		this._focusPopup = null;
+		delete this._focusPopup;
 		this.context.destroy();
 	    this._handles.forEach(dojo.disconnect);
 	    if(this._iframeScrollHandler){
 	    	dojo.disconnect(this._iframeScrollHandler);
-	    	this._iframeScrollHandler = null;
+	    	delete this._iframeScrollHandler;
 	    }
 	    if(this._designCPScrollHandler){
 	    	dojo.disconnect(this._designCPScrollHandler);
-	    	this._designCPScrollHandler = null;
+	    	delete this._designCPScrollHandler;
 	    }
 	    this._subscriptions.forEach(dojo.unsubscribe);
 	    this._subscriptions = [];

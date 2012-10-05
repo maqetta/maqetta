@@ -2873,7 +2873,8 @@
             "properties": {
                 "labels": ['A','B','C','D','E']
             },
-            "inlineEdit": "./dojox/mobile/SpinWheelSlotInput"
+            "inlineEdit": "./dojox/mobile/SpinWheelSlotInput",
+            "helper": "./dojox/mobile/SpinWheelSlotHelper"
         },
         {
             "name": "SpinWheelDatePicker",

@@ -36,6 +36,21 @@
 				font-style:italic;
 				color:#8B0000;
 			}
+			#preview_which_file {
+				margin-bottom: -10px;
+				padding: 5px 0 0 5px;
+				color: black;
+				opacity: .85;
+				text-align: center;
+			}
+			#preview_which_file_filename {
+				text-decoration:none;
+				color:black;
+			}
+			#preview_which_file_filename:hover {
+				text-decoration:underline;
+				color:blue;
+			}
 		</style>
 
 		<script src="app/dojo/dojo.js" data-dojo-config="async:true,packages:[{name:'preview', location:'../preview'}]"></script>
@@ -73,6 +88,10 @@
 					
 					if(urlparams.file){
 						iframefilename = urlparams.file;
+						document.getElementById('preview_which_file_label').innerHTML = localizations.devicePreviewPreviewing;
+						var preview_which_file_filename = document.getElementById('preview_which_file_filename');
+						preview_which_file_filename.innerHTML = iframefilename;
+						preview_which_file_filename.setAttribute('href', iframefilename);
 					}else{
 						var error_div = document.getElementById('preview_app_error');
 						error_div.innerHTML = localizations.devicePreviewError;
@@ -127,8 +146,11 @@
 	</head>
     
 	<body class="claro" id="preview_app_body">
-		<div id="preview_app_error">
+		<div id="preview_which_file">
+			<span id='preview_which_file_label'></span>
+			<a id='preview_which_file_filename'></a>
 		</div>
+		<div id="preview_app_error"></div>
 		<table class="silhouette_table_container">
 			<tr>
 				<td class="silhouette_td_container">

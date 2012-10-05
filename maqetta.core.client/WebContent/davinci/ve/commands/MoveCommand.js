@@ -81,6 +81,7 @@ return declare("davinci.ve.commands.MoveCommand", null, {
 				}
 			}
 		}
+		// These two values might be used by subsequent MoveCommands via this._commandForXYDeltas
 		this._deltaX = this._newBox.l - this._oldBox.l;
 		this._deltaY = this._newBox.t - this._oldBox.t;
 

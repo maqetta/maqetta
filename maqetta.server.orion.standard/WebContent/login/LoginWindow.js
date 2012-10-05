@@ -15,6 +15,7 @@
 define(['domReady'], function(domReady) {
 	var userCreationEnabled;
 	var registrationURI;
+	var admin_userid = 'admin';
 
 	function injectPlaceholderShims() {
 		function textFocus(e) {
@@ -196,12 +197,12 @@ define(['domReady'], function(domReady) {
 			login = document.getElementById('login').value;
 			password = document.getElementById('password').value;
 		}
-		if (!validateEmail(login)){
+		if (login != admin_userid && !validateEmail(login)){
 			return;
 		}
 		// shiftkey-click on Login causes Maqetta to open with no editors showing
 		// Needed sometimes if Maqetta is hanging with a particular open file
-		var resetWorkBench = (event && event.shiftKey) ? 'resetWorkbenchState=1' : '';
+		var resetWorkBench = LoginWindowShiftKey ? 'resetWorkbenchState=1' : '';
 		var mypostrequest = new XMLHttpRequest();
 		mypostrequest.onreadystatechange = function() {
 			if (mypostrequest.readyState === 4) {
@@ -368,6 +369,13 @@ define(['domReady'], function(domReady) {
 	}
 
 	domReady(function() {
+		
+		// global variable
+		LoginWindowShiftKey = false;
+		function DocumentKeyHandler(event){
+			LoginWindowShiftKey = event.shiftKey;
+		}
+		document.onkeydown = document.onkeyup = DocumentKeyHandler;
 
 		var error = getParam("error");
 		if (error) {

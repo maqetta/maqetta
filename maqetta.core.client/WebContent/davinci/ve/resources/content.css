@@ -189,7 +189,10 @@ IMG.HtmlWidget {
 /* dojox.mobile widgets */
 
 div.mblView,
-div.mblContentPane {
+div.mblContentPane,
+div.mblPane,
+div.mblContainer,
+div.mblScrollablePane {
     min-width:1em;
     min-height:1em; 
     outline: 1px dotted #AAA;

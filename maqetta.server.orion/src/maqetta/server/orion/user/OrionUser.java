@@ -1,20 +1,12 @@
 package maqetta.server.orion.user;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import maqetta.core.server.user.User;
 import maqetta.core.server.util.VResourceUtils;
@@ -23,13 +15,8 @@ import maqetta.server.orion.VOrionWorkspace;
 import maqetta.server.orion.VOrionWorkspaceStorage;
 import maqetta.server.orion.internal.Activator;
 
-
-import org.davinci.ajaxLibrary.ILibInfo;
-import org.davinci.ajaxLibrary.Library;
 import org.davinci.server.user.IPerson;
-import org.davinci.server.user.LibrarySettings;
 import org.eclipse.core.filesystem.IFileStore;
-import org.eclipse.core.filesystem.URIUtil;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
@@ -39,7 +26,6 @@ import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.orion.internal.server.servlets.workspace.WebProject;
 import org.eclipse.orion.internal.server.servlets.workspace.WebUser;
 import org.eclipse.orion.internal.server.servlets.workspace.WebWorkspace;
-import org.eclipse.orion.internal.server.servlets.workspace.WorkspaceResourceHandler;
 import org.eclipse.orion.internal.server.servlets.workspace.authorization.AuthorizationService;
 import org.eclipse.orion.server.core.users.OrionScope;
 import org.json.JSONArray;
@@ -49,11 +35,6 @@ import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
-import org.maqetta.server.StorageFileSystem;
-import org.maqetta.server.VDirectory;
-import org.maqetta.server.VFile;
-import org.maqetta.server.VLibraryResource;
-import org.maqetta.server.VWorkspaceRoot;
 import org.osgi.framework.Bundle;
 
 

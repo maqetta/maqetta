@@ -93,19 +93,20 @@ define(["dojo/_base/declare",
 		},
 		
 		
-		_canModifyRule : function(modifiedRule){
+		_canModifyRule: function(modifiedRule){
 			
 			// not all "rules" passed in are rules, and sometimes they are null (in case of element.style).
-			if(!modifiedRule || !modifiedRule.getCSSFile) // empty object, in cases like element.style there is no rule
+			if(!modifiedRule || !modifiedRule.getCSSFile) {// empty object, in cases like element.style there is no rule
 				return true; 
-			
+			}
+
 			var cssFile = modifiedRule.getCSSFile();
-			if(cssFile==null) return true;
-			
-			
-			var resource = cssFile.getResource();
+			if (!cssFile) {
+				return true;
+			}
+
+			var resource = systemResource.findResource(cssFile.url);
 			return !resource.readOnly();
-			
 		},
 		
 		/**
@@ -746,32 +747,36 @@ define(["dojo/_base/declare",
 			}
 		},
 		
-		_isTarget : function(t){
+		_isTarget: function(t){
 			if (t === '$std_10') {
 				// this means all values are vaild for this selctor
 				// FIXME: at some point in the future we will define $std_10 but for now it means all
 				return true;
 			}
-			for(var i = 0;i<this.target.length;i++)
-				if(this.target[i]== t) return true;
+
+			for(var i = 0;i<this.target.length;i++) {
+				if(this.target[i]== t) {
+					return true;
+				}
+			}
 			
 			return false;
 			
 		},
-		_updateFieldValue : function(){
+
+		_updateFieldValue: function(){
 			
 			function isReadOnly(value){	
 				if(value && value.rule && value.rule.getCSSFile){
-					var file = value.rule.getCSSFile();
-					var resource = file.getResource();
-					return resource.readOnly();
+					return systemResource.findResource(value.rule.getCSSFile().url).readOnly();
 				}else{
 					return false;
 				}
 			}
 			
-			if(this._widget==null)
+			if(this._widget==null) {
 				this._setFieldValue("",this._getBaseLocation());
+			}
 		
 			/*Disabled hasOverride logic - had bugs, causes problems with logic and not sure it helps user
 			if(this._hasOverride){
@@ -1000,14 +1005,14 @@ define(["dojo/_base/declare",
 				var contextCssFile =  this.context._getCssFiles();
 				//#23
 				if (cssFile /*&& cssFile.length > 0*/) {
-					loc=cssFile.getResource();
+					loc = systemResource.findResource(cssFile.url); //FIXME: can we skip findReource?
 				} else if (contextCssFile[0].url == this._values[event.target].targetFile){ // FIXME should run the array
 					// maybe it's a dynamic theme (mobile)
 					loc = contextCssFile.cssFiles[0];
 				}
 				//#23
 			}else{
-				loc = this._values[event.target].rule.getCSSFile().getResource();
+				loc = systemResource.findResource(this._values[event.target].rule.getCSSFile().url);  //FIXME: can we skip findReource?
 			}
 			this._setFieldValue(this._values[event.target].value || "",loc);
 			this._targetValueIndex = event.target;

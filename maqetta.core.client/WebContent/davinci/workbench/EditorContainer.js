@@ -1,6 +1,7 @@
 define([
     "require",
 	"dojo/_base/declare",
+	"dojo/_base/connect",
 	"./_ToolbaredContainer",
 	"../Runtime",
 //	"../Workbench",
@@ -8,7 +9,7 @@ define([
 	"../ve/utils/GeomUtils",
 	"dojo/Deferred",
 	"dojo/i18n!./nls/workbench"  
-], function(require, declare, ToolbaredContainer, Runtime, /*Workbench, */Metadata, GeomUtils, Deferred, workbenchStrings) {
+], function(require, declare, connect, ToolbaredContainer, Runtime, /*Workbench, */Metadata, GeomUtils, Deferred, workbenchStrings) {
 
 var _editorToolbarCreationStarted = {}, _editorToolbarCreated = {};
 
@@ -58,17 +59,12 @@ return declare(ToolbaredContainer, {
 					if(typeof editorExtension.editorClassName == 'string'){
 						dojo.addClass(this.domNode, editorExtension.editorClassName);
 					}
-					editor.editorID=editorExtension.id;
-					editor.isDirty= !editor.isReadOnly && this.isDirty;
+					editor.editorID = editorExtension.id;
+					editor.isDirty = !editor.isReadOnly && this.isDirty;
 					this._createToolbar(editorExtension.editorClass);
 					if (!content) {
 						content=editor.getDefaultContent();
-						if (editor.isReadOnly || !file.isNew) {
-							// if readonly or not a new file, not dirty if we have no content
-							editor.isDirty = false;
-						} else {
-							editor.isDirty = true;
-						}
+						editor.isDirty = !editor.isReadOnly && file.isNew;
 						editor.lastModifiedTime=Date.now();
 					}
 					if (!content) {
@@ -81,13 +77,12 @@ return declare(ToolbaredContainer, {
 					// but also avoid problems with display:none on hidden tabs making it impossible
 					// to do geometry measurements in editor initialization
 					var editorsContainer = "editors_container";
-					if(dijit.byId(editorsContainer).selectedChildWidget.domNode == this.domNode){
+					if(davinci.Workbench._state.activeEditor == fileName){
 						// Tab is visible.  Go ahead
 						editor.setContent(fileName, content, newHtmlParams);
 
 						// keyboard bindings
-						this._setupKeyboardHandler();
-						dojo.connect(editor, "handleKeyEvent", this, "_handleKeyDown");
+						this._setupKeyboardHandler(editor);
 					}else{
 						// When tab is selected, set up the editor
 						var handle = dojo.subscribe(editorsContainer + "-selectChild", this, function(args){
@@ -96,29 +91,28 @@ return declare(ToolbaredContainer, {
 								editor.setContent(fileName, content);
 
 								// keyboard bindings
-								this._setupKeyboardHandler();
-								dojo.connect(editor, "handleKeyEvent", this, "_handleKeyDown");
+								this._setupKeyboardHandler(editor);
 							}
 						});
 					}
 					editor.editorContainer=this;
 					this.setDirty(editor.isDirty);
 				}.bind(this);
-				if(editor.deferreds){
-					editor.deferreds.then(function(){
-						try {
-							setupEditor();
-							d.resolve(editor);
-						} catch (e2) {
-							d.reject(e2);
-						}
-					}, function(e){
-						d.reject(e);
-					});
-				}else{
-					//setupEditor.bind(this);
+
+				(editor.deferreds || new Deferred().resolve()).then(function(){
+					// content === true indicates that the content should be asynchronously fetched as needed
+					if (content === true) {
+						return file.getContent().then(function(fileContent) {
+							content = fileContent;
+						});
+					}
+					return new Deferred().resolve();
+				}).then(function(){
 					setupEditor();
-					d.resolve(editor);			}
+					d.resolve(editor);
+				}, function(e){
+					d.reject(e);
+				});
 			} catch (e) {
 				d.reject(e);
 			}
@@ -253,7 +247,7 @@ return declare(ToolbaredContainer, {
 		return this.editor;
 	},
 
-	_setupKeyboardHandler: function() {
+	_setupKeyboardHandler: function(editor) {
 		var pushBinding = function(o){
 			if (!this.keyBindings) {
 				this.keyBindings = [];
@@ -275,6 +269,8 @@ return declare(ToolbaredContainer, {
 				}
 			}, this);
 		}, this);
+
+		connect.connect(editor, "handleKeyEvent", this, "_handleKeyDown");
 	},
 
 	_handleKeyDown: function(e, isGlobal) {

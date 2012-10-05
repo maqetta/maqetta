@@ -117,11 +117,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		
 		lang.mixin(this, args);
 
-		if(dojo.isString(this.containerNode)){
+		if(typeof this.containerNode == "string"){
 			this.containerNode = dijit.byId(this.containerNode);
 		}
-
-		this.hostNode = this.containerNode;
 
 		this._commandStack = new CommandStack(this);
 		this._defaultTool = new SelectTool();
@@ -137,17 +135,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var libraries = metadata.getLibrary();	// No argument => return all libraries
 		for(var libId in libraries){
 			var library = metadata.getLibrary(libId);
-			args = [this];
-			metadata.invokeCallback(library, 'onDocInit', args);
+			metadata.invokeCallback(library, 'onDocInit', [this]);
 		}
 	},
 	
 	destroy: function () {
-		
+		this.deactivate();
 		this.inherited(arguments);
 		if (this._loadedCSSConnects) {
-			dojo.forEach(this._loadedCSSConnects, dojo.disconnect);
-			delete 	this._loadedCSSConnects;
+			this._loadedCSSConnects.forEach(connect.disconnect);
+			delete this._loadedCSSConnects;
 		}
 	},
 
@@ -193,25 +190,25 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// which sometimes happens after context loaded event. So, not good enough for StatesView
 		// to listen to context/loaded event - has to also listen for context/statesLoaded.
 		this._statesLoaded = true;
-		dojo.publish('/davinci/ui/context/statesLoaded', [this]);
+		connect.publish('/davinci/ui/context/statesLoaded', [this]);
 		this._onLoadHelpers();
 
 		var containerNode = this.getContainerNode();
 		dojo.addClass(containerNode, "editContextContainer");
 		
 		this._connects = [
-			dojo.connect(this._commandStack, "onExecute", this, "onCommandStackExecute"),
+			connect.connect(this._commandStack, "onExecute", this, "onCommandStackExecute"),
 			// each time the command stack executes, onContentChange sets the focus, which has side-effects
 			// defer this until the stack unwinds in case a caller we don't control iterates on multiple commands
-			dojo.connect(this._commandStack, "onExecute", function(){setTimeout(this.onContentChange.bind(this), 0);}.bind(this)),
-			dojo.connect(this.getDocument(), "onkeydown", this, "onKeyDown"),
-			dojo.connect(this.getDocument(), "onkeyup", this, "onKeyUp"),
-			dojo.connect(containerNode, "ondblclick", this, "onDblClick"),
-			dojo.connect(containerNode, "onmousedown", this, "onMouseDown"),
-			dojo.connect(containerNode, "onmousemove", this, "onMouseMove"),
-			dojo.connect(containerNode, "onmouseup", this, "onMouseUp"),
-			dojo.connect(containerNode, "onmouseover", this, "onMouseOver"),
-			dojo.connect(containerNode, "onmouseout", this, "onMouseOut")
+			connect.connect(this._commandStack, "onExecute", function(){setTimeout(this.onContentChange.bind(this), 0);}.bind(this)),
+			connect.connect(this.getDocument(), "onkeydown", this, "onKeyDown"),
+			connect.connect(this.getDocument(), "onkeyup", this, "onKeyUp"),
+			connect.connect(containerNode, "ondblclick", this, "onDblClick"),
+			connect.connect(containerNode, "onmousedown", this, "onMouseDown"),
+			connect.connect(containerNode, "onmousemove", this, "onMouseMove"),
+			connect.connect(containerNode, "onmouseup", this, "onMouseUp"),
+			connect.connect(containerNode, "onmouseover", this, "onMouseOver"),
+			connect.connect(containerNode, "onmouseout", this, "onMouseOut")
 		];
 		if(this.visualEditor && this.visualEditor._pageEditor && this.visualEditor._pageEditor._visualChanged){
 			this.visualEditor._pageEditor._visualChanged(true);
@@ -224,9 +221,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			return;
 		}
 
-		dojo.forEach(this._connects, dojo.disconnect);
-		this._connects = undefined;
-		dojo.forEach(this._focuses, function(f){
+		this._connects.forEach(connect.disconnect);
+		delete this._connects;
+		(this._focuses || []).forEach(function(f){
 			f._connected = false;
 		});
 		this._commandStack.clear();
@@ -234,8 +231,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this._activeTool.deactivate();
 			delete this._activeTool;
 		}
+
 		var containerNode = this.getContainerNode();
-		this._menu.unBindDomNode(containerNode);
+		// FIXME: what's _menu?
+		//this._menu.unBindDomNode(containerNode);
 
 		this.select(null);
 		dojo.removeClass(containerNode, "editContextContainer");
@@ -1050,14 +1049,14 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			doc.close();
 
 			// intercept BS key - prompt user before navigating backwards
-			dojo.connect(doc.documentElement, "onkeypress", function(e){
+			connect.connect(doc.documentElement, "onkeypress", function(e){
 				if(e.charOrCode==8){
 					window.davinciBackspaceKeyTime = win.davinciBackspaceKeyTime = Date.now();
 				}
 			});	
 
 			// add key press listener
-			dojo.connect(doc.documentElement, "onkeydown", dojo.hitch(this, function(e) {
+			connect.connect(doc.documentElement, "onkeydown", dojo.hitch(this, function(e) {
 				// we let the editor handle stuff for us
 				this.editor.handleKeyEvent(e);
 			}));	
@@ -1340,7 +1339,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		 */
 		window.setTimeout(function(){
 			this.widgetAddedOrDeleted();
-			dojo.publish('/davinci/ui/context/loaded', [this]);
+			connect.publish('/davinci/ui/context/loaded', [this]);
 			this.editor.setDirty(this.hasDirtyResources());
 		}.bind(this), 500);
 
@@ -1404,7 +1403,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				  w.destroy();			 
 			});
 
-			this._editorSelectConnection = dojo.subscribe("/davinci/ui/editorSelected",
+			this._editorSelectConnection = connect.subscribe("/davinci/ui/editorSelected",
 					this, '_editorSelectionChange');			
 		});
 		*/
@@ -1427,7 +1426,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// we should only be here do to a dojo.parse exception the first time we tried to process the page
 		// Now the editor tab container should have focus becouse the user selected it. So the dojo.processing should work this time
 		if (event.editor.fileName === this.editor.fileName){
-			dojo.unsubscribe(this._editorSelectConnection);
+			connect.unsubscribe(this._editorSelectConnection);
 			delete this._editorSelectConnection;
 			this._setSource(this._srcDocument);
 		}
@@ -1645,7 +1644,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this.model.addStyleSheet(url, undefined, undefined, beforeChild);
 			
 			for (var css in this.model._loadedCSS) {
-				this._loadedCSSConnects.push(dojo.connect(this.model._loadedCSS[css], 'onChange', this,
+				this._loadedCSSConnects.push(connect.connect(this.model._loadedCSS[css], 'onChange', this,
 						'_themeChange'));
 			}
 		}
@@ -2169,7 +2168,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if(state){
 			if(state.box && state.op){
 				if(!focus._connected){
-					this._connects.push(dojo.connect(focus, "onExtentChange", this, "onExtentChange"));
+					this._connects.push(connect.connect(focus, "onExtentChange", this, "onExtentChange"));
 					focus._connected = true;
 				}
 				var w = this.getSelection();
@@ -2511,7 +2510,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 	onSelectionChange: function(selection){
 		this._cssCache = {};
-		dojo.publish("/davinci/ui/widgetSelected",[selection]);
+		connect.publish("/davinci/ui/widgetSelected",[selection]);
 	},
 
 	hotModifyCssRule: function(r){
@@ -2805,7 +2804,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				/* remove stale elements from the cache if they change */
 				var handle = dojo.hitch(rule, "onChange", this, function(){
 					delete this._cssCache[domHash];
-					dojo.unsubscribe(handle);
+					connect.unsubscribe(handle);
 				});
 			}, this);
 			
@@ -3280,7 +3279,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				// Connect to the css files, so we can update the canvas when
 				// the model changes.
 				this._getCssFiles().forEach(function(file) {
-					this._loadedCSSConnects.push(dojo.connect(file, 'onChange', this, '_themeChange'));
+					this._loadedCSSConnects.push(connect.connect(file, 'onChange', this, '_themeChange'));
 				}, this);
 
 				break;
@@ -3489,7 +3488,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var id = sceneManager.id;
 		if(!this.sceneManagers[id]){
 			this.sceneManagers[id] = sceneManager;
-			dojo.publish('/davinci/ui/context/registerSceneManager', [sceneManager]);
+			connect.publish('/davinci/ui/context/registerSceneManager', [sceneManager]);
 		}
 	},
 

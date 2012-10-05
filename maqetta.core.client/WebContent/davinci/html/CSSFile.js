@@ -43,7 +43,7 @@ return declare("davinci.html.CSSFile", CSSElement, {
 	save: function(isWorkingCopy) {
 		return systemResource.findResourceAsync(this.url).then(function (file) {
 			return file.setContents(this.getText(), isWorkingCopy);
-		});
+		}.bind(this));
 	},
 
 	close: function() {

@@ -2517,8 +2517,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	hotModifyCssRule: function(r){
 		
 		function updateSheet(sheet, rule){
-			var uri = systemResource.findResource(rule.parent.uri).getURL(); // FIXME: can we skip findResource?
-			var fileName = URLRewrite.encodeURI(uri);
+			var url = systemResource.findResource(rule.parent.url).getURL(); // FIXME: can we skip findResource?
+			var fileName = URLRewrite.encodeURI(url);
 			var selectorText = rule.getSelectorText();
 //			console.log("------------  Hot Modify looking  " + fileName + " ----------------:=\n" + selectorText + "\n");
 			selectorText = selectorText.replace(/^\s+|\s+$/g,""); // trim white space

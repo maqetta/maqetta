@@ -105,7 +105,7 @@ define(["dojo/_base/declare",
 				return true;
 			}
 
-			var resource = systemResource.findResource(cssFile.uri);
+			var resource = systemResource.findResource(cssFile.url);
 			return !resource.readOnly();
 		},
 		

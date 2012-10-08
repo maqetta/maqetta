@@ -17,6 +17,7 @@ define({ root:
 		
 		//preview.html
 		"devicePreviewError":"Maqetta device previewer error. Must supply URL parameter 'file='",
+		"devicePreviewPreviewing":"Previewing:",
 		
 		//davinci.review/WebContent/review.html
 		"help":"Help",

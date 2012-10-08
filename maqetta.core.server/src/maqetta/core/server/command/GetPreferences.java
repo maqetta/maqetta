@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +25,18 @@ public class GetPreferences extends Command {
         
         IStorage userSettings = user.getWorkbenchSettings(base);
         IStorage settingsFile = userSettings.newInstance(userSettings, path + IDavinciServerConstants.SETTINGS_EXTENSION);
+		/*
+		 * FIXME Hack for getting default theme from server when #3505 replace this code
+		 */
+        if (path.equalsIgnoreCase("maqetta.default.themeset")){
+        	String desktop = System.getenv("MAQ_DEFAULT_DESKTOP_THEME");  
+        	if (desktop == null){
+        		desktop = "claro";
+        	}
+        	PrintWriter out = resp.getWriter();
+        	out.println("{'desktopTheme':'"+desktop+"'}");
+        	return;
+        }
         if(!user.isValid(settingsFile.getAbsolutePath()) ) return;
         
         

@@ -53,6 +53,20 @@ define(["dojo/_base/declare",
 			}
 			var lastDialogValues = Workbench.workbenchStateCustomPropGet('nhfo');
 			this._selectedThemeSet = lastDialogValues ? lastDialogValues.themeSet : undefined;
+			/*
+			 * FIXME Hack for getting default theme from server when #3505 replace this code
+			 */
+			if (!this._selectedThemeSet){
+				this._selectedThemeSet = dojo.clone(Theme.none_themeset);
+				// get defaults from server
+				var defaultThemeSet = Preferences.getPreferences("maqetta.default.themeset", Workbench.getProject());
+				this._selectedThemeSet.desktopTheme = defaultThemeSet.desktopTheme;
+				//this._selectedThemeSet.name = 'oneui';
+				//this._selectedThemeSet.mobileTheme.forEach
+			}
+			/*
+			 * End Hack
+			 */
 			if (this._selectedThemeSet && this._selectedThemeSet.name != Theme.none_themeset_name) {
 			   // refresh the stored themeset in case it was changed
 			    var themeSetName = this._selectedThemeSet.name;

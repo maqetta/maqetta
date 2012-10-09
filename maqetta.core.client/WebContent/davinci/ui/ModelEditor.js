@@ -1,9 +1,12 @@
-define(["dojo/_base/declare", "./TextEditor"], function(declare, TextEditor) {
+define([
+	"dojo/_base/declare", 
+	"./TextEditor",
+	"davinci/commands/SourceChangeCommand"
+], function(declare, TextEditor, SourceChangeCommand) {
 
 return declare(TextEditor, {
 
     constructor: function (element, fileName) {
-
 		this.subscribe("/davinci/ui/selectionChanged", this.selectModel);
 	},
 	
@@ -25,15 +28,21 @@ return declare(TextEditor, {
 	},
 	
 	handleChange: function(text) {
-        this.inherited(arguments);
-        
-        this.model.setText(text);
-        
-        var changeEvent = {
-                newModel: this.model
-        };
-        dojo.publish("/davinci/ui/modelChanged", [changeEvent]);
-	},
+		this.inherited(arguments);
+		var editor = davinci.Runtime.currentEditor;
+		if(editor && editor.getCommandStack){
+			var commandStack = editor.getCommandStack();
+			var command = new SourceChangeCommand({model:this.model, newText:text});
+			commandStack.execute(command);
+		}else{
+			this._model.setText(this._args.newText);
+			var changeEvent = {
+				newModel: this._model
+			};
+			dojo.publish("/davinci/ui/modelChanged", [changeEvent]);
+		}
+		
+		},
 	
 	selectModel: function (selection, editor) {
 		if (this.publishingSelect || (editor && this != editor)) {

@@ -470,6 +470,11 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 			}
 			return box;
 		}
+	},
+	
+	getCommandStack: function(){
+		var context = this.getContext();
+		return context.getCommandStack();
 	}
 });
 }); 

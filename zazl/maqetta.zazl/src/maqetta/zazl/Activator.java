@@ -69,20 +69,13 @@ public class Activator implements BundleActivator {
 				"org.dojotoolkit.optimizer.amd",
 				"org.dojotoolkit.optimizer.servlet"
 			};
-			List<Library> libraryList = new ArrayList<Library>();
 			List<Library> srcLibraryList = new ArrayList<Library>();
 			Library[] libraries = ServerManager.getServerManger().getLibraryManager().getAllLibraries();
 			for (Library library : libraries) {
 				if (library.getSourcePath() != null) {
 					srcLibraryList.add(library);
 				}
-				String libraryId = library.getID();
-				if (libraryId.equals("zazl") || libraryId.equals("dojo")) {
-					continue;
-				}
-				libraryList.add(library);
 			}
-			Library dojoLib = ServerManager.getServerManger().getLibraryManager().getLibrary("dojo", "1.8");
 			ResourceLoader resourceLoader = new MaqettaOSGiResourceLoader(bundleContext, bundleIds, ServerManager.getServerManger().getUserManager(), srcLibraryList);
 			RhinoClassLoader rhinoClassLoader = new RhinoClassLoader(resourceLoader);
 			JSCompressorFactory jsCompressorFactory = null;
@@ -93,7 +86,7 @@ public class Activator implements BundleActivator {
 			JSOptimizerFactory jsOptimizerFactory = new AMDJSOptimizerFactory();
 	
 			JSServlet jsServlet = new JSServlet(resourceLoader, jsOptimizerFactory, rhinoClassLoader, "zazl", null, null, jsCompressorFactory);
-			maqettaHTMLFilter = new MaqettaHTMLFilter(dojoLib, libraryList);
+			maqettaHTMLFilter = new MaqettaHTMLFilter();
 			try {
 				System.out.println("Registering Zazl JavaScript servlet");
 				httpService.registerServlet("/_javascript", jsServlet, null, null);

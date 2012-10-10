@@ -1381,7 +1381,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				                console.error('Error eval script in Context._setSourceData, ' + e);
 				            }
 				        }
-					}, function(e){
+					}.bind(this), function(e){
 						promise.reject(e);
 					});
 				} catch(e) {

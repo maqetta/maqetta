@@ -92,9 +92,9 @@ return declare([], {
 				this.themeVersionWarn(); //just warn for now
 			}
 		}
-		if(!has("webkit") && this.theme.type == "dojox.mobile"){
+		/*if(!has("webkit") && this.theme.type == "dojox.mobile"){
 			Workbench.showMessage(veNls.vteWarningUnsuportedBrowserTitle, veNls.vteWarningUnsuportedBrowserMessage, {width: 250});
-		}
+		}*/
 		if(fileName.toLowerCase().indexOf(".css")>0){
 			// add the style sheet to the theme editor
 		}else if(fileName == "DEFAULT_PAGE"){

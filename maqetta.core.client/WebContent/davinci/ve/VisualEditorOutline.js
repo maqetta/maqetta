@@ -87,10 +87,10 @@ var DesignOutlineTreeModel = declare(null, {
 		} else {
 			widgets = this._getWidget(item).getChildren();
 		}
-
+		
 		return widgets.filter(function(widget) {
 			// managed widget only
-			return widget && widget.getContext && widget.getContext() && !widget.internal;
+			return widget && widget.getContext && widget.getContext() && !widget.internal && widget._srcElement;
 		}).map(this._buildItem);
 	},
 	

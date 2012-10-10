@@ -35,7 +35,8 @@ define([
 	"dojo/i18n!./ve/nls/common",
 	"dojo/dnd/Mover",
 	"./ve/utils/GeomUtils",
-	"dojo/i18n!./workbench/nls/workbench"
+	"dojo/i18n!./workbench/nls/workbench",
+	"./header"
 ], function(
 		lang,
 		require,
@@ -73,7 +74,8 @@ define([
 		veNLS,
 		Mover,
 		GeomUtils,
-		workbenchStrings
+		workbenchStrings,
+		Header
 ) {
 
 var paletteTabWidth = 71;	// Width of tabs for left- and right-side palettes
@@ -273,6 +275,9 @@ var Workbench = {
 		Runtime.run();
 		Workbench._initKeys();
 		Workbench._baseTitle = dojo.doc.title;
+		
+		// Set up top banner region. (Top banner is an extensibility point)
+		Header.setup();
 
 		Runtime.subscribe("/davinci/resource/resourceChanged",
 			function (type, changedResource) {
@@ -759,20 +764,24 @@ var Workbench = {
 				var menu = menuTreeItem.menus[j];
 				var menuWidget = Workbench._createMenu(menu);
 				menu.id = menu.id.replace(".", "-"); // kludge to work around the fact that '.' is being used for ids, and that's not compatible with CSS
-				var widget = dijit.byId(menu.id + "-dropdown");
-				if(!widget) {
-					var params = { label: menu.label, dropDown: menuWidget, id: menu.id + "-dropdown" };
-					if(menu.hasOwnProperty('showLabel')){
-						params.showLabel = menu.showLabel;
+				if(Header.attachMenu){
+					Header.attachMenu(menu, menuWidget, menuDiv);
+				}else{
+					var widget = dijit.byId(menu.id + "-dropdown");
+					if(!widget) {
+						var params = { label: menu.label, dropDown: menuWidget, id: menu.id + "-dropdown" };
+						if(menu.hasOwnProperty('showLabel')){
+							params.showLabel = menu.showLabel;
+						}
+						if(menu.hasOwnProperty('iconClass')){
+							params.iconClass = menu.iconClass;
+						}
+						if(menu.hasOwnProperty('className')){
+							params['class'] = menu.className;
+						}
+						widget = new DropDownButton(params);
+						menuDiv.appendChild(widget.domNode);
 					}
-					if(menu.hasOwnProperty('iconClass')){
-						params.iconClass = menu.iconClass;
-					}
-					if(menu.hasOwnProperty('className')){
-						params['class'] = menu.className;
-					}
-					widget = new DropDownButton(params);
-					menuDiv.appendChild(widget.domNode);
 				}
 			}
 		}

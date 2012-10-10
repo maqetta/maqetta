@@ -213,7 +213,8 @@ var Runtime = {
 			
 			//Loop through all of the editor containers and give them a chance to tell us
 			//the user should be warned before leaving the page.
-			var editorContainers = davinci.Workbench.editorTabs.getChildren();
+			var editorContainers = (davinci.Workbench && davinci.Workbench.editorTabs) ? 
+					davinci.Workbench.editorTabs.getChildren() : [];
 			var editorsWithWarningsCount = 0;
 			for (var i = 0; i < editorContainers.length; i++) {
 				var editorContainer = editorContainers[i];

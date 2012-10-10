@@ -1,49 +1,49 @@
 #
 # maqetta plugins
 #
-plugin@davinci.dojo_1_8=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/davinci.dojo_1_8
-plugin@maqetta.clipart=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.clipart
-plugin@davinci.core=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/davinci.core
-plugin@davinci.gridx=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/davinci.gridx
-plugin@maqetta.core.client=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.core.client
-plugin@maqetta.server.orion=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.server.orion
-plugin@davinci.html=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/davinci.html
-plugin@maqetta.core.server=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.core.server
-plugin@maqetta.shapes=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.shapes
-#  plugin@davinci.joomla=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/davinci.joomla
-plugin@maqetta.client.orion=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.client.orion
-#  plugin@maqetta.core.server.standalone=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.core.server.standalone
-plugin@org.apache.commons.fileupload=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/org.apache.commons.fileupload
-#  plugin@davinci.product=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/releng/davinci.product
-plugin@maqetta.server.orion.hosted=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.server.orion.hosted
-plugin@maqetta.server.orion.standard=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.server.orion.standard
+plugin@davinci.dojo_1_8=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/davinci.dojo_1_8
+plugin@maqetta.clipart=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.clipart
+plugin@davinci.core=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/davinci.core
+plugin@davinci.gridx=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/davinci.gridx
+plugin@maqetta.core.client=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.core.client
+plugin@maqetta.server.orion=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.server.orion
+plugin@davinci.html=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/davinci.html
+plugin@maqetta.core.server=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.core.server
+plugin@maqetta.shapes=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.shapes
+#  plugin@davinci.joomla=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/davinci.joomla
+plugin@maqetta.client.orion=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.client.orion
+#  plugin@maqetta.core.server.standalone=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.core.server.standalone
+plugin@org.apache.commons.fileupload=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/org.apache.commons.fileupload
+#  plugin@davinci.product=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/releng/davinci.product
+plugin@maqetta.server.orion.hosted=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.server.orion.hosted
+plugin@maqetta.server.orion.standard=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.server.orion.standard
 
 #
 # maqetta features
 #
-feature@maqetta.orion.feature=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.orion.feature
-feature@maqetta.orion.hosted.feature=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.orion.hosted.feature
+feature@maqetta.orion.feature=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.orion.feature
+feature@maqetta.orion.hosted.feature=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.orion.hosted.feature
 
 #
 # zazl plugins
 #
-plugin@maqetta.zazl=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/zazl/maqetta.zazl
-plugin@org.cyberneko.html=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/zazl/dependencies/org.cyberneko.html
-plugin@org.dojotoolkit.compressor=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.compressor
-plugin@org.dojotoolkit.compressor.shrinksafe=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.compressor.shrinksafe
-plugin@org.dojotoolkit.json=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.json
-plugin@org.dojotoolkit.optimizer=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.optimizer
-plugin@org.dojotoolkit.optimizer.amd=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.optimizer.amd
-plugin@org.dojotoolkit.optimizer.amd.rhinoast=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.optimizer.amd.rhinoast
-plugin@org.dojotoolkit.optimizer.servlet=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.optimizer.servlet
-plugin@org.dojotoolkit.server.util=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.server.util
-plugin@org.dojotoolkit.server.util.js=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.server.util.js
-plugin@org.dojotoolkit.shrinksafe=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/zazl/dependencies/org.dojotoolkit.shrinksafe
-plugin@org.json.js=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/zazl/dependencies/org.json.js
-plugin@org.mozilla.javascript=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/zazl/dependencies/org.mozilla.javascript
-fragment@org.dojotoolkit.optimizer.amd.fragment=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/zazl/org.dojotoolkit.optimizer.amd.fragment
+plugin@maqetta.zazl=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/zazl/maqetta.zazl
+plugin@org.cyberneko.html=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/zazl/dependencies/org.cyberneko.html
+plugin@org.dojotoolkit.compressor=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.compressor
+plugin@org.dojotoolkit.compressor.shrinksafe=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.compressor.shrinksafe
+plugin@org.dojotoolkit.json=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.json
+plugin@org.dojotoolkit.optimizer=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.optimizer
+plugin@org.dojotoolkit.optimizer.amd=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.optimizer.amd
+plugin@org.dojotoolkit.optimizer.amd.rhinoast=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.optimizer.amd.rhinoast
+plugin@org.dojotoolkit.optimizer.servlet=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.optimizer.servlet
+plugin@org.dojotoolkit.server.util=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.server.util
+plugin@org.dojotoolkit.server.util.js=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/zazl/optimizer/org.dojotoolkit.server.util.js
+plugin@org.dojotoolkit.shrinksafe=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/zazl/dependencies/org.dojotoolkit.shrinksafe
+plugin@org.json.js=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/zazl/dependencies/org.json.js
+plugin@org.mozilla.javascript=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/zazl/dependencies/org.mozilla.javascript
+fragment@org.dojotoolkit.optimizer.amd.fragment=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/zazl/org.dojotoolkit.optimizer.amd.fragment
 
 #
 # zazl feature
 #
-feature@maqetta.zazl.feature=GIT,tag=M7_0_1,repo=git://github.com/maqetta/maqetta.git,path=/zazl/maqetta.zazl.feature
+feature@maqetta.zazl.feature=GIT,tag=jarred,repo=git://github.com/maqetta/maqetta.git,path=/zazl/maqetta.zazl.feature

@@ -7,12 +7,17 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.davinci.ajaxLibrary.ILibInfo;
+import org.davinci.ajaxLibrary.LibInfo;
 import org.davinci.ajaxLibrary.Library;
 import org.davinci.server.user.IUser;
 import org.davinci.server.user.IUserManager;
+import org.davinci.server.user.LibrarySettings;
 import org.dojotoolkit.server.util.osgi.OSGiResourceLoader;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.maqetta.server.IDavinciServerConstants;
+import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;
 import org.osgi.framework.BundleContext;
 
@@ -47,7 +52,8 @@ public class MaqettaOSGiResourceLoader extends OSGiResourceLoader {
 				user = userManager.getSingleUser();
 			}
 			int removecount = user.getResource(ipath.segment(0)+"/.project") == null ? 1 : 2;
-			url = scanSrcLibs(ipath, removecount);
+			ILibInfo[] projectLibs = user.getLibs(ipath.segment(0));
+			url = scanSrcLibs(ipath, removecount, projectLibs);
 			if (url != null) {
 				return url;
 			}
@@ -68,12 +74,16 @@ public class MaqettaOSGiResourceLoader extends OSGiResourceLoader {
 		return null;
 	}
 
-	private URL scanSrcLibs(IPath ipath, int removecount) {
+	private URL scanSrcLibs(IPath ipath, int removecount, ILibInfo[] projectLibs) {
 		for (Library srcLib: srcLibs) {
 			IPath srcPath = ipath.removeFirstSegments(removecount);
-			IPath srcLibPath = new Path(srcLib.getDefaultRoot());
+			String root = getRoot(srcLib, projectLibs);
+			if (root.charAt(0) == '/') {
+				root = root.substring(1);
+			}
+			IPath srcLibPath = new Path(root);
 			IPath srcRelPath = srcPath.removeFirstSegments(srcLibPath.segmentCount());
-			if (srcPath.toString().startsWith(srcLib.getDefaultRoot().substring(1))) {
+			if (srcPath.toString().startsWith(root)) {
 				URL url = srcLib.getURL(srcRelPath.toString(), true);
 				if (url != null) {
 					if (logger.isLoggable(Level.FINEST)) {
@@ -84,5 +94,14 @@ public class MaqettaOSGiResourceLoader extends OSGiResourceLoader {
 			}
 		}
 		return null;
+	}
+
+	private String getRoot(Library srcLib, ILibInfo[] projectLibs) {
+		for (ILibInfo projectLib: projectLibs) {
+			if (projectLib.getId().equals(srcLib.getID())) {
+				return projectLib.getVirtualRoot();
+			}
+		}
+		return srcLib.getDefaultRoot();
 	}
 }

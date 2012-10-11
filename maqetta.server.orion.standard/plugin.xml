@@ -7,6 +7,7 @@
         <resource alias="/mixloginstatic/LoginWindow.html" base-name="/WebContent/login/LoginWindow.html" />  
         <resource alias="/mixloginstatic/LoginWindow.css" base-name="/WebContent/login/LoginWindow.css" />  
         <resource alias="/mixloginstatic/LoginWindow.js" base-name="/WebContent/login/LoginWindow.js" />
+        <resource alias="/maqetta/app/davinci/header.js" base-name="/WebContent/davinci/header.js" />
      </extension>
 	
 </plugin>

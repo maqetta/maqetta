@@ -18,7 +18,7 @@ define(["dojo/_base/declare",
 					items.push({label: v.name, value: v.name});
 				}));
 				
-				this.combo = new Select({ style: "width:100%", options:items});
+				this.combo = new Select({ id:"maqetta_project_select", style: "width:100%", options:items});
 				this.domNode.appendChild(this.combo.domNode);
 				this.combo.set('value', this.value);
 				dojo.connect(this.combo, "onChange", this, "_onChange");

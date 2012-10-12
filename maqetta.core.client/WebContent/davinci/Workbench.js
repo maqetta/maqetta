@@ -76,6 +76,9 @@ define([
 		workbenchStrings
 ) {
 
+var Header;	// Search for "Header" to find comments about these two variables
+var HeaderLoadingDeferred;
+
 var paletteTabWidth = 71;	// Width of tabs for left- and right-side palettes
 var paletteTabDelta = 20;	// #pixels - if this many or fewer pixels of tab are showing, treat as collapsed
 var paletteCache = {};
@@ -274,11 +277,19 @@ var Workbench = {
 		Workbench._initKeys();
 		Workbench._baseTitle = dojo.doc.title;
 		
-		// Set up top banner region. (Top banner is an extensibility point)
-		require(["davinci/header"], function(Header){
+		// Note: because of quirks with Maqetta build setup
+		// (where header.js is in different build-specific projects)
+		// and Dojo build system (which fails if there are 2 requires for
+		// the same module within a given file), have to resort to
+		// some monkey business just a simple require(["davinci/header"]).
+		HeaderLoadingDeferred = new Deferred();
+		require(["davinci/header"], function(_Header){
+			Header = _Header;
 			if(Header.setup){
+				// Set up top banner region. (Top banner is an extensibility point)
 				Header.setup();
 			}
+			HeaderLoadingDeferred.resolve();
 		});
 
 		Runtime.subscribe("/davinci/resource/resourceChanged",
@@ -766,7 +777,7 @@ var Workbench = {
 				var menu = menuTreeItem.menus[j];
 				var menuWidget = Workbench._createMenu(menu);
 				menu.id = menu.id.replace(".", "-"); // kludge to work around the fact that '.' is being used for ids, and that's not compatible with CSS
-				require(["davinci/header"], function(Header){
+				HeaderLoadingDeferred.then(function(menu, menuWidget, menuDiv){
 					if(Header.attachMenu){
 						Header.attachMenu(menu, menuWidget, menuDiv);
 					}else{
@@ -786,7 +797,7 @@ var Workbench = {
 							menuDiv.appendChild(widget.domNode);
 						}
 					}
-				});
+				}.bind(this, menu, menuWidget, menuDiv));
 			}
 		}
 	},

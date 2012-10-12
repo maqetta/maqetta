@@ -76,9 +76,6 @@ define([
 		workbenchStrings
 ) {
 
-var Header;	// Search for "Header" to find comments about these two variables
-var HeaderLoadingDeferred;
-
 var paletteTabWidth = 71;	// Width of tabs for left- and right-side palettes
 var paletteTabDelta = 20;	// #pixels - if this many or fewer pixels of tab are showing, treat as collapsed
 var paletteCache = {};
@@ -276,21 +273,11 @@ var Workbench = {
 		Runtime.run();
 		Workbench._initKeys();
 		Workbench._baseTitle = dojo.doc.title;
-		
-		// Note: because of quirks with Maqetta build setup
-		// (where header.js is in different build-specific projects)
-		// and Dojo build system (which fails if there are 2 requires for
-		// the same module within a given file), have to resort to
-		// some monkey business just a simple require(["davinci/header"]).
-		HeaderLoadingDeferred = new Deferred();
-		require(["davinci/header"], function(_Header){
-			Header = _Header;
-			if(Header.setup){
-				// Set up top banner region. (Top banner is an extensibility point)
-				Header.setup();
-			}
-			HeaderLoadingDeferred.resolve();
-		});
+
+		// Set up top banner region. (Top banner is an extensibility point)
+		if(window.maqetta && maqetta.TopBanner && maqetta.TopBanner.setup){
+			maqetta.TopBanner.setup();
+		}
 
 		Runtime.subscribe("/davinci/resource/resourceChanged",
 			function (type, changedResource) {
@@ -777,27 +764,26 @@ var Workbench = {
 				var menu = menuTreeItem.menus[j];
 				var menuWidget = Workbench._createMenu(menu);
 				menu.id = menu.id.replace(".", "-"); // kludge to work around the fact that '.' is being used for ids, and that's not compatible with CSS
-				HeaderLoadingDeferred.then(function(menu, menuWidget, menuDiv){
-					if(Header.attachMenu){
-						Header.attachMenu(menu, menuWidget, menuDiv);
-					}else{
-						var widget = dijit.byId(menu.id + "-dropdown");
-						if(!widget) {
-							var params = { label: menu.label, dropDown: menuWidget, id: menu.id + "-dropdown" };
-							if(menu.hasOwnProperty('showLabel')){
-								params.showLabel = menu.showLabel;
-							}
-							if(menu.hasOwnProperty('iconClass')){
-								params.iconClass = menu.iconClass;
-							}
-							if(menu.hasOwnProperty('className')){
-								params['class'] = menu.className;
-							}
-							widget = new DropDownButton(params);
-							menuDiv.appendChild(widget.domNode);
+				// Set up top banner region. (Top banner is an extensibility point)
+				if(window.maqetta && maqetta.TopBanner && maqetta.TopBanner.attachMenu){
+					maqetta.TopBanner.attachMenu(menu, menuWidget, menuDiv);
+				}else{
+					var widget = dijit.byId(menu.id + "-dropdown");
+					if(!widget) {
+						var params = { label: menu.label, dropDown: menuWidget, id: menu.id + "-dropdown" };
+						if(menu.hasOwnProperty('showLabel')){
+							params.showLabel = menu.showLabel;
 						}
+						if(menu.hasOwnProperty('iconClass')){
+							params.iconClass = menu.iconClass;
+						}
+						if(menu.hasOwnProperty('className')){
+							params['class'] = menu.className;
+						}
+						widget = new DropDownButton(params);
+						menuDiv.appendChild(widget.domNode);
 					}
-				}.bind(this, menu, menuWidget, menuDiv));
+				}
 			}
 		}
 	},

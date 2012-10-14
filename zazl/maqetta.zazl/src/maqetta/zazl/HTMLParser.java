@@ -123,7 +123,6 @@ public class HTMLParser extends DefaultFilter {
             			if (m.find()) {
 	            			String packagesString = m.group(0);
 	            			if (packagesString != null) {
-	            				System.out.println("packagesString:"+packagesString);
 	            				StringBuffer sb = new StringBuffer();
 	            				try {
 									Map<String, Object> packages = (Map<String, Object>) JSONParser.parse(new StringReader('{'+packagesString+'}'));

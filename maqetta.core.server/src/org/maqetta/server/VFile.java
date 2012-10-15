@@ -112,7 +112,7 @@ public class VFile implements IVResource {
      * public String getPath() { if(this.virtualPath== null) return null;
      * if(this.parent==null) return ".";
      * 
-     * String cleanPath = this.parent.getPath() + IVResource.SEPERATOR +
+     * String cleanPath = this.parent.getPath() + IVResource.SEPARATOR +
      * this.virtualPath;
      * 
      * if(cleanPath.length() > 0 && cleanPath.charAt(0)=='.'){ cleanPath =

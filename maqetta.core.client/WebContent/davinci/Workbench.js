@@ -2051,6 +2051,7 @@ var Workbench = {
 			Workbench._state = {};
 		}
 		Workbench._state.project = project;
+		delete Workbench._state.nhfo; // FIXME reset when switching projects as themes might not exsist in new project, should this be stored in the project settings? 
 		return Workbench._updateWorkbenchState();
 	},
 	

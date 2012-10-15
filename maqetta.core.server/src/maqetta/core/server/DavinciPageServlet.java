@@ -367,8 +367,11 @@ public class DavinciPageServlet extends HttpServlet {
 			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
-		String path = resourceURL.getPath();
-		boolean noCache = resourceURL.getPath().toLowerCase().endsWith(".html") || resourceURL.getPath().toLowerCase().endsWith(".css") || resourceURL.getPath().toLowerCase().endsWith(".js");
+		// Very conservative code: Turn on no-cache to avoid stale files to be on the safe side.
+		// Downside is this prevents caching on the client. Avoid caching lib files, for now. Should reduce use of no-cache more.
+		boolean isLib = resourceURL.getPath().indexOf("/lib/") != -1; // FIXME: could use more precise test
+		String name = resourceURL.getName().toLowerCase();
+		boolean noCache = !isLib && (name.endsWith(".html") || !isLib && name.endsWith(".css") || name.endsWith(".js"));
 		cacheExpires = noCache;
 		
 		URLConnection connection = resourceURL.openConnection();
@@ -402,6 +405,7 @@ public class DavinciPageServlet extends HttpServlet {
 			resp.setContentLength(contentLength);
 		}
 
+		String path = resourceURL.getPath();
 		String contentType = req.getSession().getServletContext().getMimeType(path);
 		if ( contentType != null ) {
 			resp.setContentType(contentType);

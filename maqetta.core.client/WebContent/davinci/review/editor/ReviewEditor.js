@@ -5,9 +5,10 @@ define([
     "dijit/layout/ContentPane",
     "davinci/review/editor/Context",
 	"davinci/Runtime",
+	"davinci/model/Path",
 	"preview/silhouetteiframe",
 	"dojo/i18n!./nls/review",
-], function(declare, ModelEditor, BorderContainer, ContentPane, Context, Runtime, SilhouetteIframe, reviewNls) {
+], function(declare, ModelEditor, BorderContainer, ContentPane, Context, Runtime, Path, SilhouetteIframe, reviewNls) {
 	
 return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 
@@ -45,7 +46,7 @@ return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 		});
 	},
 	save: function(){
-		// nooop.  editor not saved, comments are submited
+		// no-op.  editor not saved, comments are submitted
 	},
 	supports: function(something) {
 		return something=="states";
@@ -56,27 +57,24 @@ return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 	},
 
 	setContent: function(filename, content) {
-		
 		this.fileName = filename;
-		this.basePath = new davinci.model.Path(filename);
+		this.basePath = new Path(filename);
 		// URL will always be http://localhost:8080/davinci/review without / at the end at present
-		var locationPath = new davinci.model.Path(davinci.Workbench.location());
-		//locationPath = locationPath.removeLastSegments().append("review"); // delete /maqetta
-		var baseUrl;
+		var locationPath = new Path(Runtime.location());
 
 		var designerName = this.resourceFile.parent.designerId;
 		// Compose a URL like http://localhost:8080/davinci/review/user/heguyi/ws/workspace/.review/snapshot/20100101/folder1/sample1.html
-		baseUrl = locationPath.append("user").append(designerName)
-		.append("ws").append("workspace").append(filename).toString();
+		var baseUrl = locationPath.append("user").append(designerName)
+			.append("ws").append("workspace").append(filename.replace(/:/g, "%3A")).toString();
 
 		var containerNode = dojo.query('.silhouette_div_container',this._designCP.domNode)[0];
 		this.context = new Context({
 			containerNode: containerNode,
-			baseURL : baseUrl,
-			fileName : this.fileName,
+			baseURL: baseUrl,
+			fileName: this.fileName,
 			resourceFile: this.resourceFile,
-			containerEditor:this,
-			iframeattrs:{'class':'silhouetteiframe_iframe'}
+			containerEditor: this,
+			iframeattrs: {'class': 'silhouetteiframe_iframe'}
 		});
 
 		this.title = dojo.doc.title;

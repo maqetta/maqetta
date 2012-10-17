@@ -12,6 +12,7 @@ plugin@maqetta.core.server=GIT,tag=M7,repo=git://github.com/maqetta/maqetta.git,
 plugin@maqetta.shapes=GIT,tag=M7,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.shapes
 #  plugin@davinci.joomla=GIT,tag=M7,repo=git://github.com/maqetta/maqetta.git,path=/davinci.joomla
 plugin@maqetta.client.orion=GIT,tag=M7,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.client.orion
+plugin@maqetta.client.plugins.defaults=GIT,tag=M7,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.client.plugins.defaults
 #  plugin@maqetta.core.server.standalone=GIT,tag=M7,repo=git://github.com/maqetta/maqetta.git,path=/maqetta.core.server.standalone
 plugin@org.apache.commons.fileupload=GIT,tag=M7,repo=git://github.com/maqetta/maqetta.git,path=/org.apache.commons.fileupload
 #  plugin@davinci.product=GIT,tag=M7,repo=git://github.com/maqetta/maqetta.git,path=/releng/davinci.product

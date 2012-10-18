@@ -966,6 +966,7 @@ davinci_top_bar .dijitButtonNode {
     color: black;
     white-space: nowrap;
     display: block;
+    overflow: hidden;
 }
 .dojoyPaletteCommon img {
 	vertical-align: top;
@@ -1055,7 +1056,8 @@ davinci_top_bar .dijitButtonNode {
 }
 .paletteLayoutIcons .maqWidgetsCategorySeparateLine {
 	display: block;
-}
+	overflow: hidden;
+	text-overflow: ellipsis;}
 
 /* FIXME: Temporary hack to make "Select Files..." command on Add Files dialog 
 	look like a button. Really need to do a UI makeover for Add Files dialog. */

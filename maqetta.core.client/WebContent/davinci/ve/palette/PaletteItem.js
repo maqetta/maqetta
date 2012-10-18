@@ -1,13 +1,21 @@
 define([
 	"dojo/_base/declare",
+	"dojo/on",
+	"dojo/_base/event",
 	"dijit/_WidgetBase",
+	"dijit/popup",
+	"dijit/TooltipDialog",
 	"davinci/ve/tools/CreateTool",
 	"davinci/ui/dnd/DragManager",
 	"davinci/ve/utils/GeomUtils",
 	"davinci/ve/metadata"
 ], function(
 	declare,
+	On,
+	Event,
 	_WidgetBase,
+	Popup,
+	TooltipDialog,
 	CreateTool,
 	DragManager,
 	GeomUtils,
@@ -56,6 +64,41 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		maqWidgetsCategorySeparateLine.textContent = this.category;
 		this.domNode.componentClassName = this.name; // ex. "davinci.ve.widget.Hello"
 		dojo.setSelectable(this.domNode, false);
+		this._hovering = false;
+		this._tooltipShowing = false;
+		var hoverHandler = function(currentTarget){
+			console.dir(currentTarget);
+			if(this._hovering && !this._tooltipShowing){
+				this._tooltipShowing = true;
+				console.log('show tooltip');
+				this._tooltipDialog = new TooltipDialog({
+					style: "width: 300px;",
+					content: "<p>I have a mouse leave event handler that will close the dialog."
+				});
+				Popup.open({
+					popup: this._tooltipDialog,
+					around: this.domNode
+				});
+			}else if(!this._hovering && this._tooltipShowing){
+				this._tooltipShowing = false;
+				console.log('hide tooltip');
+				Popup.close(this._tooltipDialog);
+			}
+		}.bind(this);
+		On(a, 'mouseover', function(e){
+			console.log('mouseover');
+			this._hovering = true;
+			setTimeout(function(){
+				hoverHandler(e.currentTarget);
+			}, 750);
+		}.bind(this));
+		On(a, 'mouseout', function(e){
+			console.log('mouseout');
+			this._hovering = false;
+			setTimeout(function(){
+				hoverHandler(e.currentTarget);
+			}, 10);
+		}.bind(this));
 	},
 
 	postCreate: function(){

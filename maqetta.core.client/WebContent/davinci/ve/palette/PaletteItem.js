@@ -25,19 +25,35 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 	tool: "",
 	palette: null,
 	category: "",
+	template: '<a href="javascript:void(0)">'+
+					'<span class="paletteItemImageContainer">'+
+						'<img border="0"/>'+
+					'</span>'+
+					'<span class="paletteItemLabelContainer">'+
+						'<span class="paletteItemLabel"></span>'+
+						'<span class="maqWidgetsCategory maqWidgetsCategorySameLine"></span>'+
+					'</span>'+
+					'<span class="maqWidgetsCategory maqWidgetsCategorySeparateLine"></span>'+
+				'</a>',
 
 	buildRendering: function(){
 		this.palette = dijit.byId(this.paletteId);
-		var div = this.domNode = this.palette.itemTemplate.cloneNode(true);
+		var div = this.domNode = dojo.create('div', { className: 'dojoyPaletteCommon dojoyPaletteItem' });
+		div.innerHTML = this.template;
 		var a = div.firstChild;
 		dojo.attr(a, "tabIndex", "0");
 		a.onclick = this.palette.nop; // to avoid firing the onbeforeunload event (dojo.event.connect doesn't work for this purpose)
-		var img = a.firstChild;
+		var img = a.querySelector('img');
 
 		img.src = this.icon;
-		a.appendChild(dojo.doc.createTextNode(this.displayName));
-		dojo.create('span', { className: 'maqWidgetsCategory' }, a).textContent = this.category;
-
+		var labelContainer = a.querySelector('.paletteItemLabelContainer');
+		var label = a.querySelector('.paletteItemLabel');
+		label.appendChild(dojo.doc.createTextNode(this.displayName));
+		a.title = this.displayName + ' (category: ' + this.category + ')';
+		var maqWidgetsCategorySameLine = a.querySelector('.maqWidgetsCategorySameLine');
+		maqWidgetsCategorySameLine.textContent = this.category;
+		var maqWidgetsCategorySeparateLine = a.querySelector('.maqWidgetsCategorySeparateLine');
+		maqWidgetsCategorySeparateLine.textContent = this.category;
 		this.domNode.componentClassName = this.name; // ex. "davinci.ve.widget.Hello"
 		dojo.setSelectable(this.domNode, false);
 	},

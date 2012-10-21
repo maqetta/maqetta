@@ -28,7 +28,7 @@ public class GetWorkbenchState extends Command {
             inputStream = new ByteArrayInputStream("{}".getBytes());
         }
         Command.transferStreams(inputStream, resp.getOutputStream(), true);
-
+        resp.setContentType("application/json;charset=UTF-8");
     }
 
 }

@@ -169,6 +169,7 @@ public class Publish extends Command {
 		}
 		writer.endObject();
 		this.responseString = writer.getJSON();
+        resp.setContentType("application/json;charset=UTF-8");
 	}
 
 	private String notifyRelatedPersons(String from, String to, String subject,
@@ -179,7 +180,6 @@ public class Publish extends Command {
 		}else{
 			return htmlContent;
 		}
-	
 	}
 
 	private String getHtmlContent(IUser user, String message, String url) {

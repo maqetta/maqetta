@@ -33,7 +33,6 @@ public class ListReviewFiles extends Command {
 		}
 
 		this.responseString = writer.getJSON();
-
+        resp.setContentType("application/json;charset=UTF-8");
 	}
-
 }

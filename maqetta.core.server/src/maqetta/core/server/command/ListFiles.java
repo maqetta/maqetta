@@ -19,5 +19,6 @@ public class ListFiles extends Command {
     	String path = req.getParameter("path");
         IVResource[] listDir = user.listFiles(path);
         this.responseString = Resource.vRsourcesToJson(listDir, false);
+        resp.setContentType("application/json;charset=UTF-8");
     }
 }

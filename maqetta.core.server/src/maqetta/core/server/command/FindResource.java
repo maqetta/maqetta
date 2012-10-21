@@ -35,7 +35,6 @@ public class FindResource extends Command {
             foundFiles = user.findFiles(pathStr, ignoreCase, workspaceOnly);
         }
         this.responseString = Resource.foundVRsourcesToJson(foundFiles, user);
-
+        resp.setContentType("application/json;charset=UTF-8");
     }
-
 }

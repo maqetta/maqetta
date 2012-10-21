@@ -20,9 +20,9 @@ public class KeepAlive extends Command {
            
             HttpSession session = req.getSession(true);
             session.setMaxInactiveInterval(IDavinciServerConstants.SESSION_TIMEOUT); // FIXME temp fix until orion provides way to configure seesion timeout
-            this.responseString =  "{MaxInactiveInterval:" + session.getMaxInactiveInterval() +"}";
+            this.responseString =  "{\"MaxInactiveInterval\":" + session.getMaxInactiveInterval() +"}";
            //Date d = new Date();
            //System.err.println("Poll: " + d);
-      
+            resp.setContentType("application/json;charset=UTF-8");
     }
 }

@@ -32,6 +32,7 @@ public class ListLibs extends Command {
         }
         jsonWriter.endArray().endObject();
         this.responseString = jsonWriter.getJSON();
+        resp.setContentType("application/json;charset=UTF-8");
     }
 
 }

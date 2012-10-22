@@ -1,5 +1,5 @@
-define(["dojo/_base/connect", "dojo/dom-style", "dojo/dom", "dojo/_base/html", "dojo/_base/window", "dojo/_base/array", "dojo/parser", "require", "dojo/json"], 
-function(connect, domStyle, dom, dhtml, dwindow, darray, dparser, require, JSON){ // needed for IE9 compat view mode
+define(["dojo/_base/connect", "dojo/dom-style", "dojo/dom", "dojo/_base/html", "dojo/_base/window", "dojo/_base/array", "dojo/parser", "require", "dojo/json", "dojo/_base/lang"], 
+function(connect, domStyle, dom, dhtml, dwindow, darray, dparser, require, JSON, lang){ // needed for IE9 compat view mode
 
 var States = function(){};
 States.prototype = {
@@ -694,7 +694,7 @@ States.prototype = {
 						var matches = value ? value.match(this.reImportant) : null;
 						if(matches){	// if value includes !important
 							var t = matches[1]+matches[3];
-							t = t.trim(); // IE9 does not like spaces at the end of the value
+							t = lang.trim(t); // IE9 does not like spaces at the end of the value
 							if(style.setProperty){
 								style.setProperty(nProp, t, 'important');
 							}else{
@@ -743,7 +743,7 @@ States.prototype = {
 					var matches = value ? value.match(this.reImportant) : null;
 					if(matches){	// if value includes !important
 						var t = matches[1]+matches[3];
-						t = t.trim(); // IE9 does not like spaces at the end of the value
+						t = lang.trim(t); // IE9 does not like spaces at the end of the value
 						if(style.setProperty){
 							style.setProperty(name, t, 'important');
 						}else{
@@ -1094,8 +1094,12 @@ States.prototype = {
 	 */
 	clear: function(node) {
 		if (!node) return;
-		delete node._maqAppStates;
-		delete node._maqDeltas;
+		if (node._maqAppStates) { // IE8
+			delete node._maqAppStates;
+		}
+		if (node._maqDeltas) { // IE8
+			delete node._maqDeltas;
+		}
 	},
 	
 	/**

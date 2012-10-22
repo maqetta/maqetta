@@ -40,6 +40,12 @@ public class OrionUserManager extends UserManagerImpl {
         }
     }
 
+    private void assertValidUserId(String uid) {
+    	if (uid.indexOf("@") != -1) {
+    		throw new Error("Invalid user ID");
+    	}
+    }
+
     private IAuthenticationService getAuthenticationService(){
     	if(authenticationService==null){
     		authenticationService = ConfiguratorActivator.getDefault().getAuthService();
@@ -59,6 +65,8 @@ public class OrionUserManager extends UserManagerImpl {
 	}
 
 	protected boolean checkUserExists(String userName) {
+		assertValidUserId(userName);
+
 		return checkUserExists(UserConstants.KEY_UID, userName);
 	}
 
@@ -66,18 +74,19 @@ public class OrionUserManager extends UserManagerImpl {
 		return checkUserExists(UserConstants.KEY_LOGIN, email);
 	}
 
-    public IUser getUser(String userName) {
-        // IUser user = (IUser) users.get(userName);
-         if (ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equals(userName)) {
-             return this.getSingleUser();
-         }
-      
-         if (this.checkUserExists(userName)) {
-             IPerson person = this.personManager.getPerson(userName);
-             return newUser(person, null);
-         }
-         return null;
-    }
+	public IUser getUser(String userName) {
+		assertValidUserId(userName);
+
+		if (ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equals(userName)) {
+			return this.getSingleUser();
+		}
+
+		if (this.checkUserExists(userName)) {
+			IPerson person = this.personManager.getPerson(userName);
+			return newUser(person, null);
+		}
+		return null;
+	}
 
     public IUser getUserByEmail(String email) {
          if (checkUserExistsByEmail(email)) {
@@ -88,7 +97,6 @@ public class OrionUserManager extends UserManagerImpl {
     }
 
     public IUser newUser(IPerson person, IStorage baseDirectory) {
-
      	IUser user =  new OrionUser(person);
      	if(init(person.getUserID())){
      		user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
@@ -97,7 +105,9 @@ public class OrionUserManager extends UserManagerImpl {
     }
 
     public IUser addUser(String userName, String password, String email) throws UserException {
-        if (checkUserExists(userName)) {
+		assertValidUserId(userName);
+
+		if (checkUserExists(userName)) {
             throw new UserException(UserException.ALREADY_EXISTS);
         }
 
@@ -106,7 +116,6 @@ public class OrionUserManager extends UserManagerImpl {
         }
         IPerson person = this.personManager.addPerson(userName, password, email);
         if (person != null) {
-
             IUser user = newUser(person,null);
           
             //File userDir = user.getUserDirectory();
@@ -123,7 +132,9 @@ public class OrionUserManager extends UserManagerImpl {
 
     /* sets the init flag on the user. returns 'true' if this happened (so that we can setup any user project files */
     private boolean init(String userName){
-    	IEclipsePreferences users = new OrionScope().getNode("Users"); //$NON-NLS-1$
+		assertValidUserId(userName);
+
+		IEclipsePreferences users = new OrionScope().getNode("Users"); //$NON-NLS-1$
 		IEclipsePreferences result = (IEclipsePreferences) users.node(userName);
         	// read it with BufferedReader
     	boolean wasInit = result.getBoolean("maqettaInit", false);

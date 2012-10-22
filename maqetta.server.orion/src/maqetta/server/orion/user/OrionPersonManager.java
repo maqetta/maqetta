@@ -61,9 +61,16 @@ public class OrionPersonManager extends PersonManagerImpl {
 		}
 
 	 }
-	
-	 
+
+    private void assertValidUserId(String uid) {
+    	if (uid.indexOf("@") != -1) {
+    		throw new Error("Invalid user ID");
+    	}
+    }
+
 	 public IPerson addPerson(String userName, String password, String email) throws UserException {
+		 assertValidUserId(userName);
+
 	        IPerson person = (IPerson) persons.get(userName);
 	        if (person != null) {
 	           return person;
@@ -86,7 +93,9 @@ public class OrionPersonManager extends PersonManagerImpl {
 	     * java.lang.String)
 	     */
 	    public IPerson login(String userName, String password) {
-	        IPerson person = (IPerson) persons.get(userName);
+			assertValidUserId(userName);
+
+			IPerson person = (IPerson) persons.get(userName);
 	        if(person!=null){
 	        	return person;
 	        }
@@ -119,7 +128,9 @@ public class OrionPersonManager extends PersonManagerImpl {
 	    protected void savePersons() {}
 
 	    public IPerson getPerson(String userName) {
-	        IPerson person = (IPerson) persons.get(userName);
+			assertValidUserId(userName);
+
+			IPerson person = (IPerson) persons.get(userName);
 	        if(person!=null)
 	        	return person;
 	        
@@ -146,18 +157,18 @@ public class OrionPersonManager extends PersonManagerImpl {
 	    }
 	    
 	    /* no need to load the users */
-	    protected void loadUsers(){
-	    	
+	    protected void loadUsers() {
 	    }
-	    public IPerson[] getPersons(String userName, int resultNumber, int start) {
-	        HashMap<String, IPerson> users = new HashMap<String, IPerson>();
+
+	    public IPerson[] getPersons(String email, int resultNumber, int start) {
+			HashMap<String, IPerson> users = new HashMap<String, IPerson>();
 	        Set<String> names = persons.keySet();
 	        int i = 0;
 	        for (String name : names) {
-	            String email = ((IPerson) persons.get(name)).getEmail();
-	            if (name.indexOf(userName) >= 0 || email.indexOf(userName) >= 0) {
+	            String personEmail = ((IPerson) persons.get(name)).getEmail();
+	            if (name.indexOf(email) >= 0 || personEmail.indexOf(email) >= 0) {
 	                if (i >= start && i < start + resultNumber) {
-	                    users.put(email, new OrionPersonImpl(name, "", email));
+	                    users.put(personEmail, new OrionPersonImpl(name, "", personEmail));
 	                }
 	                i++;
 	            }
@@ -168,6 +179,4 @@ public class OrionPersonManager extends PersonManagerImpl {
 	    public String getPhotoRepositoryPath() {
 	        return "not-implemented";
 	    }
-    
-    
 }

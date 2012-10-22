@@ -1,5 +1,5 @@
-define(["dojo/_base/connect", "dojo/dom-style", "dojo/dom", "dojo/_base/html", "dojo/_base/window", "dojo/_base/array", "dojo/parser", "require"], 
-function(connect, domStyle, dom, dhtml, dwindow, darray, dparser, require){
+define(["dojo/_base/connect", "dojo/dom-style", "dojo/dom", "dojo/_base/html", "dojo/_base/window", "dojo/_base/array", "dojo/parser", "require", "dojo/json"], 
+function(connect, domStyle, dom, dhtml, dwindow, darray, dparser, require, JSON){ // needed for IE9 compat view mode
 
 var States = function(){};
 States.prototype = {
@@ -693,10 +693,12 @@ States.prototype = {
 						var value = this._getFormattedValue(nProp, nItem[nProp])+'';
 						var matches = value ? value.match(this.reImportant) : null;
 						if(matches){	// if value includes !important
+							var t = matches[1]+matches[3];
+							t = t.trim(); // IE9 does not like spaces at the end of the value
 							if(style.setProperty){
-								style.setProperty(nProp, matches[1]+matches[3], 'important');
+								style.setProperty(nProp, t, 'important');
 							}else{
-								node.style[convertedName] = matches[1]+matches[3];
+								node.style[convertedName] = t; 
 							}
 						}else{
 							node.style[convertedName] = value;
@@ -740,10 +742,12 @@ States.prototype = {
 					var value = style[name]+'';
 					var matches = value ? value.match(this.reImportant) : null;
 					if(matches){	// if value includes !important
+						var t = matches[1]+matches[3];
+						t = t.trim(); // IE9 does not like spaces at the end of the value
 						if(style.setProperty){
-							style.setProperty(name, matches[1]+matches[3], 'important');
+							style.setProperty(name, t, 'important');
 						}else{
-							node.style[convertedName] = matches[1]+matches[3];
+							node.style[convertedName] = t; 
 						}
 					}else{
 						node.style[convertedName] = value;

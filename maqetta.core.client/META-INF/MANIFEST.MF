@@ -7,3 +7,4 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.equinox.http.registry;bundle-version="1.0.200",
  org.eclipse.equinox.registry;bundle-version="3.4.100"
+Eclipse-BundleShape: jar

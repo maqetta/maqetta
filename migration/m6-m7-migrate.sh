@@ -56,7 +56,7 @@ s|\(</libraries>\)|<library id="zazl" name="zazl" required="true" version="0.3.0
 	#
 	echo "6. Edit HTML files"
 	find "$mainFolder" \( -name "*.html" -o -name "*.html.workingcopy" \) \
-			-exec sed -i '
+			-exec sed -i "" '
 s|<script type="text/javascript" src="[\./]*/maqetta/maqetta.js"></script>||
 s|<script type="text/javascript" src="[\./]*/maqetta/States.js"></script>||
 ' {} \;

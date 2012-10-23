@@ -229,6 +229,9 @@
 		<delete dir="${target.folder}/WebContent/dojo/"/>
 		<delete dir="${target.folder}/WebContent/dojox/"/>
 		<mkdir dir="${target.folder}/WebContent/dojo/"/>
+		<delete quiet="true" includeemptydirs="true">
+			<fileset dir="${target.folder}/WebContent/release/dojo" includes="**/*.uncompressed.js" />
+		</delete>
     	<move file="${target.folder}/WebContent/release/dojo/dojo" todir="${target.folder}/WebContent/dojo/"/>
     	<move file="${target.folder}/WebContent/release/dojo/dijit" todir="${target.folder}/WebContent/dojo/"/>
        	<move file="${target.folder}/WebContent/release/dojo/dojox" todir="${target.folder}/WebContent/dojo/"/>

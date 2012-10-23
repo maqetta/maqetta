@@ -175,11 +175,13 @@ return declare("davinci.ve.RebuildPage", Context, {
 			var relativePath = filename.relativeTo(resourcePath, true);
 			this.addModeledStyleSheet(relativePath.toString(), new Path(file), true);
 		}, this);
-		theme.conditionalFiles.forEach(function(file) {
-			var filename = parentPath.append(file);
-			var relativePath = filename.relativeTo(resourcePath, true);
-			this.addModeledStyleSheet(relativePath.toString(), new Path(file), true);
-		}, this);
+		if (theme.conditionalFiles) {
+			theme.conditionalFiles.forEach(function(file) {
+				var filename = parentPath.append(file);
+				var relativePath = filename.relativeTo(resourcePath, true);
+				this.addModeledStyleSheet(relativePath.toString(), new Path(file), true);
+			}, this);
+		}
 	},
 	
 	getCurrentBasePath: function(){

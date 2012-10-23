@@ -218,9 +218,9 @@
 		<delete dir="${target.folder}/WebContent/dojo/"/>
 		<delete dir="${target.folder}/WebContent/dojox/"/>
 		<mkdir dir="${target.folder}/WebContent/dojo/"/>
-    	<move file="${target.folder}/WebContent/release/dojo" todir="${target.folder}/WebContent/dojo/"/>
-    	<move file="${target.folder}/WebContent/release/dijit" todir="${target.folder}/WebContent/dojo/"/>
-       	<move file="${target.folder}/WebContent/release/dojox" todir="${target.folder}/WebContent/dojo/"/>
+    	<move file="${target.folder}/WebContent/release/dojo/dojo" todir="${target.folder}/WebContent/dojo/"/>
+    	<move file="${target.folder}/WebContent/release/dojo/dijit" todir="${target.folder}/WebContent/dojo/"/>
+       	<move file="${target.folder}/WebContent/release/dojo/dojox" todir="${target.folder}/WebContent/dojo/"/>
 	</target>
 
 	<target name="copy.maqettaLibs">

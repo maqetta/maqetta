@@ -184,22 +184,24 @@
 		<antcall target="delete.maqettaLibs"/>
 	</target>
 
+	<patternset id="dojo.sources">
+		<include name="dijit/"/>
+		<include name="dojo/"/>
+		<include name="dojox/"/>
+		<exclude name="**/tests/**"/>
+		<exclude name="dojox/drawing"/>
+		<exclude name="dojox/dtl"/>
+		<exclude name="dojox/sketch"/>
+		<exclude name="dojox/sql"/>
+		<exclude name="dojox/storage"/>
+	</patternset>
+
 	<target name="copy.dojoLibs" unless="davinciPlugin.dojoDir.exists">
 		<!-- copy in dojo to working directory in prep for build -->
 		<!-- Note that we are using the Maqetta client's version of Dojo, which may not be the correct version for the plugin -->
 		<copy todir="${target.folder}/WebContent" failonerror="true" overwrite="true" description="copying dojo dependencies">
-			<fileset dir="${basedir}/../maqetta.core.client">
-				<patternset id="dojo.sources">
-					<include name="dijit/"/>
-					<include name="dojo/"/>
-					<include name="dojox/"/>
-					<exclude name="**/tests/**"/>
-					<exclude name="dojox/drawing"/>
-					<exclude name="dojox/dtl"/>
-					<exclude name="dojox/sketch"/>
-					<exclude name="dojox/sql"/>
-					<exclude name="dojox/storage"/>
-				</patternset>
+			<fileset dir="${basedir}/../maqetta.core.client/WebContent">
+				<patternset refid="dojo.sources"/>
 			</fileset>
 		</copy>
 	</target>

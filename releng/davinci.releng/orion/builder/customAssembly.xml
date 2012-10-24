@@ -74,7 +74,9 @@
 	  			<include name="LICENSE"/>
 			  </fileset>
 			</copy>
-
+		  	<copy todir="${copyTo}/siteConfigScript">
+		    	<fileset dir="${productDir}/siteConfigScript"/>
+		  	</copy>
 			<chmod perm="0755">
 			  <fileset dir="${copyTo}">
 	  			<include name="*.command"/>

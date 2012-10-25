@@ -9,7 +9,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -45,6 +44,10 @@ public class DavinciPageServlet extends HttpServlet {
 	private static final String PRAGMA = "Pragma"; //$NON-NLS-1$
 	private static final String EXPIRES = "Expires"; //$NON-NLS-1$
 	private static final long maxAge = 30*24*60*60; // 30 days
+
+	private enum CacheHeaders {
+		CACHE, NO_CACHE
+	}
 
 	protected IUserManager userManager;
 	protected IServerManager serverManager;
@@ -262,14 +265,14 @@ public class DavinciPageServlet extends HttpServlet {
 		URL welcomePage = getPageExtensionPath(IDavinciServerConstants.EXTENSION_POINT_WELCOME_PAGE,
 				IDavinciServerConstants.EP_TAG_WELCOME_PAGE);
 		VURL resourceURL = new VURL(welcomePage);
-		this.writePage(req, resp, resourceURL, false);
+		this.writePage(req, resp, resourceURL, CacheHeaders.NO_CACHE);
 	}
 
 	protected void writeMainPage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		URL welcomePage = getPageExtensionPath(IDavinciServerConstants.EXTENSION_POINT_MAIN_PAGE,
 				IDavinciServerConstants.EP_TAG_MAIN_PAGE);
 		VURL resourceURL = new VURL(welcomePage);
-		this.writePage(req, resp, resourceURL, false);
+		this.writePage(req, resp, resourceURL, CacheHeaders.NO_CACHE);
 	}
 
 	/*
@@ -279,7 +282,7 @@ public class DavinciPageServlet extends HttpServlet {
 		URL previewPage = getPageExtensionPath(IDavinciServerConstants.EXTENSION_POINT_PREVIEW_PAGE,
 				IDavinciServerConstants.EP_TAG_PREVIEW_PAGE);
 		VURL resourceURL = new VURL(previewPage);
-		this.writePage(req, resp, resourceURL, false);
+		this.writePage(req, resp, resourceURL, CacheHeaders.CACHE);
 	}
 
 	protected void handleWSRequest(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException,
@@ -353,15 +356,15 @@ public class DavinciPageServlet extends HttpServlet {
 			throws ServletException, IOException {
 		IVResource libraryURL = user.getResource(path.toString());
 		if (libraryURL != null) {
-			boolean nocache = !libraryURL.readOnly();
-			writePage(req, resp, libraryURL, nocache);
+			CacheHeaders caching = libraryURL.readOnly() ? CacheHeaders.CACHE : CacheHeaders.NO_CACHE;
+			writePage(req, resp, libraryURL, caching);
 			return true;
 		}
 		return false;
 	}
 
 	protected void writePage(HttpServletRequest req, HttpServletResponse resp, IVResource resourceURL,
-			boolean noCache) throws ServletException, IOException {
+			CacheHeaders doCache) throws ServletException, IOException {
 
 		if ( resourceURL == null ) {
 			if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
@@ -419,7 +422,7 @@ public class DavinciPageServlet extends HttpServlet {
 		}
 
 		// Cache Headers
-		if (!noCache) {
+		if (doCache != CacheHeaders.NO_CACHE) {
 			resp.setDateHeader(EXPIRES, System.currentTimeMillis() + maxAge * 1000);
 			resp.setHeader(CACHE_CONTROL, "public, max-age=" + maxAge + ", must-revalidate"); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
@@ -470,11 +473,11 @@ public class DavinciPageServlet extends HttpServlet {
 		
 	}
 
-	protected void writeInternalPage(HttpServletRequest req, HttpServletResponse resp, Bundle bundle, String path)
-			throws ServletException, IOException {
-		VURL resourceURL = new VURL(bundle.getResource(path));
-		writePage(req, resp, resourceURL, false);
-	}
+//	protected void writeInternalPage(HttpServletRequest req, HttpServletResponse resp, Bundle bundle, String path)
+//			throws ServletException, IOException {
+//		VURL resourceURL = new VURL(bundle.getResource(path));
+//		writePage(req, resp, resourceURL, CacheHeaders.CACHE);
+//	}
 
 	protected static int writeResource(InputStream is, OutputStream os) throws IOException {
 		byte[] buffer = new byte[8192];

@@ -9,7 +9,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -262,14 +261,14 @@ public class DavinciPageServlet extends HttpServlet {
 		URL welcomePage = getPageExtensionPath(IDavinciServerConstants.EXTENSION_POINT_WELCOME_PAGE,
 				IDavinciServerConstants.EP_TAG_WELCOME_PAGE);
 		VURL resourceURL = new VURL(welcomePage);
-		this.writePage(req, resp, resourceURL, false);
+		this.writePage(req, resp, resourceURL, true);
 	}
 
 	protected void writeMainPage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		URL welcomePage = getPageExtensionPath(IDavinciServerConstants.EXTENSION_POINT_MAIN_PAGE,
 				IDavinciServerConstants.EP_TAG_MAIN_PAGE);
 		VURL resourceURL = new VURL(welcomePage);
-		this.writePage(req, resp, resourceURL, false);
+		this.writePage(req, resp, resourceURL, true);
 	}
 
 	/*

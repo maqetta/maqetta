@@ -384,9 +384,7 @@ public class DavinciPageServlet extends HttpServlet {
 		// We should prefer ETag validation as the guarantees are stronger and
 		// all HTTP 1.1 clients should be using it
 		String ifNoneMatch = req.getHeader(DavinciPageServlet.IF_NONE_MATCH);
-// XXX Why the check for `noCache`? If ETAG matches, then we can just send back NOT_MODIFIED, even if
-//    resource would normally not be cached.
-		if ( ifNoneMatch != null && etag != null && ifNoneMatch.compareTo(etag) == 0 && !noCache ) {
+		if (ifNoneMatch != null && etag != null && ifNoneMatch.compareTo(etag) == 0) {
 			resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
 			return;
 		}
@@ -394,8 +392,7 @@ public class DavinciPageServlet extends HttpServlet {
 		long ifModifiedSince = req.getDateHeader(DavinciPageServlet.IF_MODIFIED_SINCE);
 		// for purposes of comparison we add 999 to ifModifiedSince since the fidelity
 		// of the IMS header generally doesn't include milli-seconds
-// XXX Same here (see comment above about `noCache` check).
-		if ( ifModifiedSince > -1 && lastModified > 0 && lastModified <= (ifModifiedSince + 999) && !noCache ) {
+		if ( ifModifiedSince > -1 && lastModified > 0 && lastModified <= (ifModifiedSince + 999)) {
 			resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
 			return;
 		}

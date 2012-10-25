@@ -57,8 +57,9 @@
 	
 	<target name="pre.archive">
 <!-- ===================================================================== -->
-<!-- MAQETTA ADDITION		-->
-<!-- copy maqetta bat and command files into zip                          -->
+<!-- MAQETTA ADDITION		                                               -->
+<!-- copy maqetta bat and command files into zip                           -->
+<!-- copy maqetta siteConfig folder into zip                               -->
 <!-- ===================================================================== -->
 		
 		<property name="productDir" value="${builder}/scripts" />
@@ -74,15 +75,17 @@
 	  			<include name="LICENSE"/>
 			  </fileset>
 			</copy>
-		  	<copy todir="${copyTo}/siteConfigScript">
-		    	<fileset dir="${productDir}/siteConfigScript"/>
-		  	</copy>
+		  	
 			<chmod perm="0755">
 			  <fileset dir="${copyTo}">
 	  			<include name="*.command"/>
 	  			<include name="*.sh"/>
 			  </fileset>
 			</chmod>
+		
+			<copy todir="${copyTo}/siteConfig">
+		    	<fileset dir="${builder}/siteConfig"/>
+		  	</copy>
 	
 	</target>
 	

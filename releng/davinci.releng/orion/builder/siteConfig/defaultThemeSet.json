@@ -1,5 +1,5 @@
-    {
-        "name":"custom_default",
+    {	
+        "name":"site_dojo_default",
         "desktopTheme":"claro", 
         "mobileTheme":[
             {

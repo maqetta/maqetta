@@ -88,6 +88,14 @@ var Runtime = {
 		}
 	},
 	
+	getDefaultThemeSet: function() {
+
+		this.getInitializationInfo();
+		if(this._initializationInfo && this._initializationInfo.defaultThemeSet){
+			return this._initializationInfo.defaultThemeSet;
+		} 
+	},
+	
 	/*
 	 * Based on the information available, provides an appropriate string to
 	 * display that identifies the user. 

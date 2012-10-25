@@ -54,34 +54,39 @@ public class GetInitializationInfo extends Command {
     	String ret = "";
     	String siteConfigDir =  System.getProperty(IDavinciServerConstants.SITECONFIG_DIRECTORY_PROPERTY);
     	 File folder = new File(siteConfigDir);
-    	  File[] listOfFiles = folder.listFiles(); 
-    	 
-    	  for (int i = 0; i < listOfFiles.length; i++) 
-    	  {
-    	 
-    	   if (listOfFiles[i].isFile()) 
-    	   {
-    		   String file = listOfFiles[i].getName();
-    	       if (file.endsWith(".json") || file.endsWith(".JSON"))
-    	       {
-    	    	   try {
-    	    		   File f = new File(siteConfigDir+"/"+file);
-    	    		   String fileNameWithOutExt = file.replaceFirst("[.][^.]+$", "");
-    	    		   String output = new Scanner(f).useDelimiter("\\Z").next();
-    	    	        System.out.println("" + output);
-    	    		   JSONObject j = new JSONObject(output);
-    	    		   ret = ret + ",\n\t'"+fileNameWithOutExt+"': "+output;
-    	    		}
-    	    		catch(JSONException ex) {
-    	    			System.err.println("not valid json");
-    	    		} 
-    	    	    catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-    	        }
-    	     }
-    	  }
+    	 if (folder.exists()) {
+    		 File[] listOfFiles = folder.listFiles(); 
+	    	 
+	    	  for (int i = 0; i < listOfFiles.length; i++) 
+	    	  {
+	    	 
+	    	   if (listOfFiles[i].isFile()) 
+	    	   {
+	    		   String file = listOfFiles[i].getName();
+	    	       if (file.endsWith(".json") || file.endsWith(".JSON"))
+	    	       {
+	    	    	   try {
+	    	    		   File f = new File(siteConfigDir+"/"+file);
+	    	    		   String fileNameWithOutExt = file.replaceFirst("[.][^.]+$", "");
+	    	    		   String output = new Scanner(f).useDelimiter("\\Z").next();
+	    	    	        System.out.println("" + output);
+	    	    		   JSONObject j = new JSONObject(output);
+	    	    		   ret = ret + ",\n\t'"+fileNameWithOutExt+"': "+output;
+	    	    		}
+	    	    		catch(JSONException ex) {
+	    	    			System.err.println("not valid json");
+	    	    		} 
+	    	    	    catch (FileNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+	    	        }
+	    	     }
+	    	  }
+
+    	 } else {
+    		 System.err.println(IDavinciServerConstants.SITECONFIG_DIRECTORY_PROPERTY + " : " + siteConfigDir + " Does not exist");
+    	 }
     	  this.siteConigJson = ret;
     	  return this.siteConigJson;
     }

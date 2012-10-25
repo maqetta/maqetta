@@ -52,12 +52,14 @@ define(["dojo/_base/declare",
 				this.nhfo_outer2.style.display = 'none';
 			}
 			var lastDialogValues = Workbench.workbenchStateCustomPropGet('nhfo');
-			this._selectedThemeSet = lastDialogValues ? lastDialogValues.themeSet : undefined;
+			//var defaultThemeSet = this.getDefaultThemeSet();
+			var defaultThemeSet = Runtime.getDefaultThemeSet();
+			this._selectedThemeSet = lastDialogValues ? lastDialogValues.themeSet : defaultThemeSet /*undefined*/;
 			if (this._selectedThemeSet && this._selectedThemeSet.name != Theme.none_themeset_name) {
 			   // refresh the stored themeset in case it was changed
 			    var themeSetName = this._selectedThemeSet.name;
 			    this._selectedThemeSet = dojo.clone(Theme.none_themeset); // this will act as the default if the last used themeset has been deleted
-			    var dojoThemeSets = Preferences.getPreferences("maqetta.dojo.themesets", Workbench.getProject());
+			    var dojoThemeSets = Theme.getThemeSets( Workbench.getProject());
 			    if (dojoThemeSets) {
 			        for (var s = 0; s < dojoThemeSets.themeSets.length; s++){
 			            if (dojoThemeSets.themeSets[s].name === themeSetName) {
@@ -217,7 +219,7 @@ define(["dojo/_base/declare",
 				o = this.standardDevices[0];
 			}
 			return o;
-		}
-	
+		},
+		
 	});
 });

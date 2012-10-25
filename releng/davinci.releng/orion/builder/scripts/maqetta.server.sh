@@ -53,10 +53,15 @@ read_conf()
 	# check for configuration file
 	MAQ_CONFIG=$MAQ_BASE/maqetta.conf
 	test -r $MAQ_CONFIG || { echo "$MAQ_CONFIG not found"; exit 1; }
+	# check for site configuration Directory
+	MAQ_CONFIG_DIR=$MAQ_BASE/siteConfig
+	test -r $MAQ_CONFIG_DIR || { echo "$MAQ_CONFIG_DIR not found"; exit 1; }
 
 	# Some props (such as 'admin' password) **must** be in a config file; passing
 	# them on the command line won't work.
 	JAVA_ARGS="${JAVA_ARGS} -Dorion.core.configFile=${MAQ_CONFIG}"
+	# Site configuration json files
+	JAVA_ARGS="${JAVA_ARGS} -Dmaqetta.siteConfigDirectory=${MAQ_CONFIG_DIR}" 
 
 	# read config
 	while read line

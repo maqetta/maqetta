@@ -3,6 +3,7 @@ define([
 		"dojo/_base/declare",
 		"dojo/_base/xhr",
     "../Runtime",
+//   "../Theme",
     "dijit/_WidgetBase",
     "dijit/_TemplatedMixin",
     "dijit/_WidgetsInTemplateMixin",
@@ -14,7 +15,7 @@ define([
     "dojo/i18n!dijit/nls/common",
     "dojo/text!./templates/Preferences.html",
     "dijit/form/Button"
-], function(/*Workbench,*/ declare, xhr, Runtime, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, Dialog, Tree, ForestStoreModel, ItemFileReadStore, workbenchStrings, commonStrings, templateString) {
+], function(/*Workbench,*/ declare, xhr, Runtime, /*Theme,*/ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, Dialog, Tree, ForestStoreModel, ItemFileReadStore, workbenchStrings, commonStrings, templateString) {
 
 
 var PreferencesWidget = declare([WidgetBase, TemplatedMixin, WidgetsInTemplateMixin], {
@@ -216,6 +217,7 @@ var Preferences = {
 		}
 		return Preferences._allPrefs[base][id];
 	},
+	
 	
 	getDefaultPreferences: function(id){
 		Preferences._loadExtensions();

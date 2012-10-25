@@ -2,13 +2,14 @@ define([
     	"dojo/_base/declare",
     	"dojo/promise/all",
     	"./Workbench",
+    	"./Runtime",
     	"./library",
     	"./workbench/Preferences",
     	"./model/Path",
     	"./html/HTMLFile",
     	"./model/Factory",
     	"system/resource"
-], function(declare, all, Workbench, Library, Preferences, Path, HTMLFile, Factory, systemResource) {
+], function(declare, all, Workbench, Runtime, Library, Preferences, Path, HTMLFile, Factory, systemResource) {
 
 	var Theme = {
 		TEMP_CLONE_PRE: "clone_",
@@ -165,7 +166,8 @@ define([
 	},
 
 	getThemeSet: function(context) {
-	    var dojoThemeSets = Preferences.getPreferences("maqetta.dojo.themesets", Workbench.getProject()),
+
+		var dojoThemeSets = Theme.getThemeSets( Workbench.getProject()),
 	    	mobileTheme = dojo.clone(this.dojoMobileDefault),
 	    	themeSet;
 	    if (!dojoThemeSets){ 
@@ -348,7 +350,49 @@ define([
 	    }
 	    return true;
 	   
-	}
+	},
+	
+	getThemeSets: function(base){
+
+		var defaultThemeSet = Runtime.getDefaultThemeSet();
+		var prefThemeSets = null;
+		if(defaultThemeSet){
+			var save = false;
+			prefThemeSets = Preferences.getPreferences("maqetta.dojo.themesets", base);
+	        if (!prefThemeSets){ // The user has no theme Sets yet, so create the site default
+	        	prefThemeSets =  Theme.dojoThemeSets;
+	        	prefThemeSets.themeSets[0] = defaultThemeSet; // replace the default with siteDefault
+	        	save = true;
+	        } else { // is present check up to date 
+	        	var found = false;
+		        for (var s = 0; s < prefThemeSets.themeSets.length; s++){
+		            if (prefThemeSets.themeSets[s].name === defaultThemeSet.name) {
+		            	found = true;
+		            	if (!Theme.themeSetEquals(prefThemeSets.themeSets[s], defaultThemeSet)) {
+		            		// replace to make sure it is fresh
+		            		prefThemeSets.themeSets[s] = defaultThemeSet;
+		            		save = true;
+		            	}
+		            	break;	
+		            }
+		        }
+		        if (!found) {
+		        	prefThemeSets.themeSets.push(defaultThemeSet);
+		        	save = true;
+		        }
+		    }
+	        if (save) {
+	        	Theme.saveThemeSets( base, prefThemeSets);
+	        }
+		
+		} 
+		return prefThemeSets;
+	},
+	
+	saveThemeSets: function(base, prefThemeSets){
+		Preferences.savePreferences("maqetta.dojo.themesets", base, prefThemeSets);
+	},
+	
 };
 
 	

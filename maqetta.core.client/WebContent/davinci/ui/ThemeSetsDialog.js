@@ -41,15 +41,15 @@ define(["dojo/_base/declare",
 	            contentStyle: {width: 580}
 	        });
 	        dojo.connect(this._dialog, "onCancel", this, "onClose");
-	        this._dojoThemeSets = Preferences.getPreferences("maqetta.dojo.themesets", Workbench.getProject());
+	        this._dojoThemeSets = Theme.getThemeSets( Workbench.getProject());
 	        if (!this._dojoThemeSets){ 
 	            this._dojoThemeSets =  Theme.dojoThemeSets;
-	            Preferences.savePreferences("maqetta.dojo.themesets", Workbench.getProject(),this._dojoThemeSets);
+	            Theme.saveThemeSets( Workbench.getProject(), this._dojoThemeSets);
 	            
 	        }
 	        if (!this._dojoThemeSets.themeSets[0]) {
 	            this._dojoThemeSets.themeSets.push(dojo.clone(Theme.custom_themeset));
-	            Preferences.savePreferences("maqetta.dojo.themesets", Workbench.getProject(),this._dojoThemeSets);
+	            Theme.saveThemeSets( Workbench.getProject(), this._dojoThemeSets);
 	        }
 	        this._dojoThemeSets = dojo.clone(this._dojoThemeSets); // make a copy so we won't effect the real object
 	        
@@ -388,7 +388,7 @@ define(["dojo/_base/declare",
 	       
 	     onOk: function(e){
 
-	         Preferences.savePreferences("maqetta.dojo.themesets", Workbench.getProject(),this._dojoThemeSets);
+	         Theme.saveThemeSets( Workbench.getProject(), this._dojoThemeSets);
 	         this.onClose(e);
 
 	     },

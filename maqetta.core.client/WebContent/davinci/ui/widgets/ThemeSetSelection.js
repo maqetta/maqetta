@@ -80,7 +80,7 @@ define(["dojo/_base/declare",
 	
 	    addThemeSets: function(){
 	
-	        this._dojoThemeSets = Preferences.getPreferences("maqetta.dojo.themesets", Workbench.getProject());
+	        this._dojoThemeSets = Theme.getThemeSets( Workbench.getProject());
 	        if (!this._dojoThemeSets){ 
 	            this._dojoThemeSets =  Theme.dojoThemeSets;
 	            

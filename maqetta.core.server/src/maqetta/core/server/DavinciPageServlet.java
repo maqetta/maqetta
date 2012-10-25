@@ -41,7 +41,10 @@ public class DavinciPageServlet extends HttpServlet {
 	private static final String IF_MODIFIED_SINCE = "If-Modified-Since"; //$NON-NLS-1$
 	private static final String IF_NONE_MATCH = "If-None-Match"; //$NON-NLS-1$
 	private static final String ETAG = "ETag"; //$NON-NLS-1$
-	private static final String CACHE_CONTROL = "Cache-Control";
+	private static final String CACHE_CONTROL = "Cache-Control"; //$NON-NLS-1$
+	private static final String PRAGMA = "Pragma"; //$NON-NLS-1$
+	private static final String EXPIRES = "Expires"; //$NON-NLS-1$
+	private static final long maxAge = 30*24*60*60; // 30 days
 
 	protected IUserManager userManager;
 	protected IServerManager serverManager;
@@ -263,7 +266,6 @@ public class DavinciPageServlet extends HttpServlet {
 	}
 
 	protected void writeMainPage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
 		URL welcomePage = getPageExtensionPath(IDavinciServerConstants.EXTENSION_POINT_MAIN_PAGE,
 				IDavinciServerConstants.EP_TAG_MAIN_PAGE);
 		VURL resourceURL = new VURL(welcomePage);
@@ -350,15 +352,16 @@ public class DavinciPageServlet extends HttpServlet {
 	protected boolean handleLibraryRequest(HttpServletRequest req, HttpServletResponse resp, IPath path, IUser user)
 			throws ServletException, IOException {
 		IVResource libraryURL = user.getResource(path.toString());
-		if ( libraryURL != null ) {
-			writePage(req, resp, libraryURL, false);
+		if (libraryURL != null) {
+			boolean nocache = !libraryURL.readOnly();
+			writePage(req, resp, libraryURL, nocache);
 			return true;
 		}
 		return false;
 	}
 
 	protected void writePage(HttpServletRequest req, HttpServletResponse resp, IVResource resourceURL,
-			boolean cacheExpires) throws ServletException, IOException {
+			boolean noCache) throws ServletException, IOException {
 
 		if ( resourceURL == null ) {
 			if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
@@ -367,9 +370,6 @@ public class DavinciPageServlet extends HttpServlet {
 			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
-		String path = resourceURL.getPath();
-		boolean noCache = resourceURL.getPath().toLowerCase().endsWith(".html") || resourceURL.getPath().toLowerCase().endsWith(".css") || resourceURL.getPath().toLowerCase().endsWith(".js");
-		cacheExpires = noCache;
 		
 		URLConnection connection = resourceURL.openConnection();
 		long lastModified = connection.getLastModified();
@@ -384,6 +384,8 @@ public class DavinciPageServlet extends HttpServlet {
 		// We should prefer ETag validation as the guarantees are stronger and
 		// all HTTP 1.1 clients should be using it
 		String ifNoneMatch = req.getHeader(DavinciPageServlet.IF_NONE_MATCH);
+// XXX Why the check for `noCache`? If ETAG matches, then we can just send back NOT_MODIFIED, even if
+//    resource would normally not be cached.
 		if ( ifNoneMatch != null && etag != null && ifNoneMatch.compareTo(etag) == 0 && !noCache ) {
 			resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
 			return;
@@ -392,6 +394,7 @@ public class DavinciPageServlet extends HttpServlet {
 		long ifModifiedSince = req.getDateHeader(DavinciPageServlet.IF_MODIFIED_SINCE);
 		// for purposes of comparison we add 999 to ifModifiedSince since the fidelity
 		// of the IMS header generally doesn't include milli-seconds
+// XXX Same here (see comment above about `noCache` check).
 		if ( ifModifiedSince > -1 && lastModified > 0 && lastModified <= (ifModifiedSince + 999) && !noCache ) {
 			resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
 			return;
@@ -402,6 +405,7 @@ public class DavinciPageServlet extends HttpServlet {
 			resp.setContentLength(contentLength);
 		}
 
+		String path = resourceURL.getPath();
 		String contentType = req.getSession().getServletContext().getMimeType(path);
 		if ( contentType != null ) {
 			resp.setContentType(contentType);
@@ -417,15 +421,15 @@ public class DavinciPageServlet extends HttpServlet {
 			resp.setHeader(DavinciPageServlet.ETAG, etag);
 		}
 
-		if ( !cacheExpires && !noCache ) {
-			String dateStamp = "Mon, 25 Aug " + (Calendar.getInstance().get(Calendar.YEAR) + 5) + " 01:00:00 GMT";
-			resp.setHeader(DavinciPageServlet.CACHE_CONTROL, "Expires:" + dateStamp);
-		} else if ( noCache ) {
-			resp.setDateHeader("Expires", 0);
-			resp.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
-			resp.setHeader("Pragma", "no-cache"); // HTTP 1.0
+		// Cache Headers
+		if (!noCache) {
+			resp.setDateHeader(EXPIRES, System.currentTimeMillis() + maxAge * 1000);
+			resp.setHeader(CACHE_CONTROL, "public, max-age=" + maxAge + ", must-revalidate"); //$NON-NLS-1$ //$NON-NLS-2$
+		} else {
+			resp.setDateHeader(EXPIRES, 0);
+			resp.setHeader(CACHE_CONTROL, "no-cache"); // HTTP 1.1
+			resp.setHeader(PRAGMA, "no-cache"); // HTTP 1.0
 		}
-
 	
 		// open the input stream
 		InputStream is = null;

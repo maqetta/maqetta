@@ -32,7 +32,7 @@
 	ignore=dirty
 [submodule "davinci.dojo_1_8/WebContent/dojo-src/dojox"]
 	path = davinci.dojo_1_8/WebContent/dojo-src/dojox
-	url = git://github.com/maqetta/dojox.git
+	url = git://github.com/dojo/dojox.git
 	ignore=dirty
 [submodule "davinci.dojo_1_8/WebContent/dojo-src/util"]
 	path = davinci.dojo_1_8/WebContent/dojo-src/util
@@ -46,3 +46,12 @@
 	path = zazl/dependencies
 	url = git://github.com/zazl/optimizer-dependencies.git
     ignore=dirty
+[submodule "davinci.dojo_1_8/WebContent/dojo/dojox"]
+	path = davinci.dojo_1_8/WebContent/dojo/dojox
+	url = git://github.com/dojo/dojox.git
+[submodule "davinci.dojo_1_8/WebContent/dojo/dojo"]
+	path = davinci.dojo_1_8/WebContent/dojo/dojo
+	url = git://github.com/dojo/dojo.git
+[submodule "davinci.dojo_1_8/WebContent/dojo/dijit"]
+	path = davinci.dojo_1_8/WebContent/dojo/dijit
+	url = git://github.com/dojo/dijit.git

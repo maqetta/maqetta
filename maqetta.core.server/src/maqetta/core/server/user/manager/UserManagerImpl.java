@@ -83,10 +83,7 @@ public class UserManagerImpl implements IUserManager {
     }
     
     public IUser getUser(String userName) {
-    	return getUser(userName, false);
-    }
 
-    public IUser getUser(String userName, Boolean isLogin) {
        // IUser user = (IUser) users.get(userName);
         if (ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equals(userName)) {
             return this.getSingleUser();
@@ -174,23 +171,24 @@ public class UserManagerImpl implements IUserManager {
         return userDir.exists();
     }
 
-    public boolean isValidUser(String userName) {
-    	return isValidUser(userName, false);
-    }
-    
     /*
      * (non-Javadoc)
      * 
      * @see
-     * org.davinci.server.user.impl.UserManager#isValidUser(java.lang.String, Boolean)
+     * org.davinci.server.user.impl.UserManager#isValidUser(java.lang.String)
      */
-    public boolean isValidUser(String userName, Boolean isLogin) {
+    public boolean isValidUser(String userName) {
         if (ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equals(userName)) {
             return true;
         }
-        IUser user = getUser(userName, isLogin);
+        IUser user = getUser(userName);
         return user != null;
     }
+
+	public boolean isValidUserByEmail(String email) {
+		throw new Error("NOT IMPLEMENTED");
+//		return isValidUser(email);
+	}
 
     public IUser getSingleUser() {
     	if (localUser == null) {
@@ -228,6 +226,5 @@ public class UserManagerImpl implements IUserManager {
 		}
 		return (IUser) req.getSession().getAttribute(IDavinciServerConstants.SESSION_USER);
 	}
-
 
 }

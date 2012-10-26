@@ -593,6 +593,11 @@
             ],
             "states": {
                 "Normal": {
+	                "elements":{ 
+                     	"$root": [ 
+							"$std_10"
+                 		]
+                    },
                     "selectors": {
                         ".mblButton": [
                             "$std_10"
@@ -627,6 +632,11 @@
             ],
             "states": {
                 "Normal": {
+                    "elements":{ 
+                     	"$root": [ 
+							"$std_10"
+                 		]
+                    },
                     "selectors": {
                         ".mblCheckBox": [
                             "$std_10"
@@ -652,6 +662,11 @@
             ],
             "states": {
                 "Normal": {
+                    "elements":{ 
+                     	"$root": [ 
+							"$std_10"
+                 		]
+                    },
                     "selectors": {
                         ".mblEdgeToEdgeCategory": [
                             "$std_10"
@@ -668,6 +683,11 @@
             ],
             "states": {
                 "Normal": {
+            	    "elements":{ 
+                     	"$root": [ 
+							"$std_10"
+                 		]
+                    },
                     "selectors": {
                         ".mblHeading": [
                             "$std_10"
@@ -711,6 +731,43 @@
             ],
             "states": {
                 "Normal": {
+                    "elements":{ 
+                     	"$root": [ 
+							"float",
+                            "position",
+                            "overflow",
+                            "overflow-x",
+                            "overflow-y",
+                            "cursor",
+                            "-webkit-tap-highlight-color",
+                            "margin",
+                            "margin-top",
+                            "margin-right",
+                            "margin-bottom",
+                            "margin-left",
+                            "height",
+                            "border",
+                            "border-top-width",
+                            "border-right-width",
+                            "border-bottom-width",
+                            "border-left-width",
+                            "border-top-style",
+                            "border-right-style",
+                            "border-bottom-style",
+                            "border-left-style",
+                            "border-top-color",
+                            "border-right-color",
+                            "border-bottom-color",
+                            "border-left-color",
+                            "font-family",
+                            "font-size",
+                            "font-weight",
+                            "color",
+                            "line-height",
+                            "text-align",
+                            "border-image"
+                 		]
+                    },
                     "selectors": {
                         ".mblToolBarButtonText .mblToolBarButtonLabel": [
                             "padding",
@@ -846,6 +903,11 @@
             ],
             "states": {
                 "Normal": {
+            	    "elements":{ 
+                     	"$root": [ 
+							"$std_10"
+                 		]
+                    },
                     "selectors": {
                         ".mblRadioButton": [
                             "$std_10"
@@ -871,6 +933,11 @@
             ],
             "states": {
                 "Normal": {
+            	    "elements":{ 
+                     	"$root": [ 
+							"$std_10"
+                 		]
+                    },
                     "selectors": {
                         ".mblRoundRect": [
                             "$std_10"
@@ -887,6 +954,11 @@
             ],
             "states": {
                 "Normal": {
+                    "elements":{ 
+                     	"$root": [ 
+							"$std_10"
+                 		]
+                    },
                     "selectors": {
                         ".mblRoundRectCategory": [
                             "$std_10"
@@ -1225,7 +1297,12 @@
             "states": {
                 "Normal": {
                     "selectors": {
-                        ".mblTabBarSegmentedControl": [
+                	"elements":{ 
+                     	"$root": [ 
+							"$std_10"
+                 		]
+                    },
+                    ".mblTabBarSegmentedControl": [
                             "$std_10"
                         ],
                         "query": ""
@@ -1316,6 +1393,11 @@
             ],
             "states": {
                 "Normal": {
+                	"elements":{ 
+                     	"$root": [ 
+							"$std_10"
+                 		]
+                    },
                     "selectors": {
                         ".mblTextArea": [
                             "$std_10"
@@ -1332,6 +1414,11 @@
             ],
             "states": {
                 "Normal": {
+                	"elements":{ 
+                     	"$root": [ 
+							"$std_10"
+                 		]
+                    },
                     "selectors": {
                         ".mblTextBox": [
                             "$std_10"
@@ -1348,6 +1435,11 @@
             ],
             "states": {
                 "Normal": {
+                	"elements":{ 
+                     	"$root": [ 
+							"$std_10"
+                 		]
+                    },
                     "selectors": {
                         ".mblToggleButton": [
                             "$std_10"

@@ -7,8 +7,9 @@ define([
 	"dojo/_base/declare",
 	"davinci/html/CSSElement",
 	"davinci/html/CSSRule",
-	"davinci/html/CSSSelector"
-], function(declare, CSSElement, CSSRule, CSSSelector) {
+	"davinci/html/CSSSelector",
+	"system/resource"
+], function(declare, CSSElement, CSSRule, CSSSelector, systemResource) {
 
 return declare("davinci.html.CSSFile", CSSElement, {
 
@@ -17,9 +18,9 @@ return declare("davinci.html.CSSFile", CSSElement, {
 		dojo.mixin(this, args);
 		if (!this.options) { 
 			this.options = {
-					xmode : 'style',
-					css : true,
-					expandShorthand : false
+				xmode: 'style',
+				css: true,
+				expandShorthand: false
 			};
 		}
 		var txt = null;
@@ -27,11 +28,12 @@ return declare("davinci.html.CSSFile", CSSElement, {
 		if (this.url && this.loader) {
 			txt = this.loader(this.url);
 		} else if (this.url) {
-			var file = this.getResource();
-			if (file){
-				txt = file.getText();
+			systemResource.findResourceAsync(this.url).then(function(file) {
+				file.getContent().then(function(txt) {
+					this.setText(txt);					
+				}.bind(this));
 				this.setDirty(file.isDirty());
-			}
+			}.bind(this));
 		}
 		if (txt) {
 			this.setText(txt);
@@ -39,18 +41,14 @@ return declare("davinci.html.CSSFile", CSSElement, {
 	}, 
 
 	save: function(isWorkingCopy) {
-		var deferred;
-		var file = this.getResource();
-		if (file) {
-			var text = this.getText();
-			deferred = file.setContents(text, isWorkingCopy);
-		}
-		return deferred;
+		return systemResource.findResourceAsync(this.url).then(function (file) {
+			return file.setContents(this.getText(), isWorkingCopy);
+		}.bind(this));
 	},
 
 	close: function() {
 		this.visit({
-			visit : function(node) {
+			visit: function(node) {
 				if (node.elementType == "CSSImport") {
 					node.close();
 				}
@@ -61,10 +59,6 @@ return declare("davinci.html.CSSFile", CSSElement, {
 		require(["dojo/_base/connect"], function(connect) {
 			connect.publish("davinci/model/closeModel", [this]);
 		});
-	},
-
-	getResource: function (isWorkingCopy) {
-		return system.resource.findResource(this.url);
 	},
 
 	addRule: function (ruleText) {
@@ -88,11 +82,11 @@ return declare("davinci.html.CSSFile", CSSElement, {
 			this.children = oldChildren;
 		}
 		if (this.includeImports) {
-			for ( var i = 0; i < this.children.length; i++ ) {
-				if (this.children[i].elementType == 'CSSImport') {
-					this.children[i].load();
-				}
-			}
+			this.children.forEach(function(child) {
+				if (child.elementType == 'CSSImport') {
+					child.load();
+				}				
+			});
 		}
 		this.onChange();
 	}, 
@@ -100,11 +94,10 @@ return declare("davinci.html.CSSFile", CSSElement, {
 	getText: function(context) {
 		context = context || {};
 		context.indent = 0;
-		var s = "";
-		for ( var i = 0; i < this.children.length; i++ ) {
-			s = s + this.children[i].getText(context);
-		}
-		return s;
+
+		return this.children.map(function(child) {
+			return child.getText(context);
+		}).join();
 	},
 
 	getCSSFile: function() {
@@ -204,14 +197,13 @@ return declare("davinci.html.CSSFile", CSSElement, {
 			return property;
 		}
 
-		if (dojo.isString(propertyNames))
-			return getMatchingProperty(propertyNames);
-		var result = [];
-		for ( var i = 0; i < propertyNames.length; i++ ) {
-			result.push(getMatchingProperty(propertyNames[i]));
+		if (typeof propertyNames == "string") {
+			propertyNames = [propertyNames];
 		}
-		return result;
 
+		return propertyNames.map(function(name) {
+			return getMatchingProperty(name);
+		});
 	}
 
 });

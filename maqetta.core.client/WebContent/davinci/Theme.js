@@ -238,7 +238,7 @@ define([
 	getThemeByCssFile:  function(cssFile){
 
 		var themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly);
-    	var targetFile = cssFile.getResource().getPath(); // target
+    	var targetFile = systemResource.findResource(cssFile.url).getPath(); // target //FIXME: can we skip findResource step?
 	    for (var i = 0; i < themeData.length; i++){
 	    	var themeFile = themeData[i].file;
 	    	var path = themeFile.getParentFolder().getPath();// theme path

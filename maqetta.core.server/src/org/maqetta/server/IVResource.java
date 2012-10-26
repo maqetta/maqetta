@@ -11,9 +11,9 @@ import java.net.URLConnection;
 
 public interface IVResource {
 
-    public static final char SEPERATOR = '/';
+//    public static final char SEPARATOR = '/';
 
-    URLConnection openConnection() throws MalformedURLException, IOException;
+    public URLConnection openConnection() throws MalformedURLException, IOException;
 
     public boolean exists();
     
@@ -68,10 +68,10 @@ public interface IVResource {
 	
     public IVResource getSource();
     
-    IVResource get(String childName);
+    public IVResource get(String childName);
 
     /* search for children, supports wild card */
-    IVResource[] findChildren(String childName);
+    public IVResource[] findChildren(String childName);
 
-    void add(IVResource v);
+    public void add(IVResource v);
 }

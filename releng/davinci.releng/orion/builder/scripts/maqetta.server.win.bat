@@ -8,6 +8,7 @@ echo NOTE: CLOSING THIS WINDOW WILL
 echo       STOP THE MAQETTA SERVER PROCESS
 echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 echo.
+set MAQ_DEFAULT_DESKTOP_THEME=claro
 set port=50000
 set scriptdir=%~dp0
 

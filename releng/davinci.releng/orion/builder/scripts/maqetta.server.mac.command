@@ -39,7 +39,7 @@ check_java() {
 		fi
 	fi
 }
-
+MAQ_DEFAULT_DESKTOP_THEME="claro"
 MAQ_BASE=`dirname "$0"`
 JAVA_ARGS=""
 # XXX Issue 2941 - Need to specify "-clean" flag due to possible Eclipse bug.

@@ -152,13 +152,6 @@ var sessionTimedOut = function(){
 	dialog.show();
 };
 
-var getSelectedResource = function() {
-	var selection=Runtime.getSelection();
-	if (selection[0]&&selection[0].resource) {
-		return selection[0].resource;
-	}
-};
-
 var initializeWorkbenchState = function(){	
 	// The _expandCollapsePaletteContainers() call  below collapses the 
 	// left-side and right-side palettes before
@@ -273,6 +266,11 @@ var Workbench = {
 		Runtime.run();
 		Workbench._initKeys();
 		Workbench._baseTitle = dojo.doc.title;
+
+		// Set up top banner region. (Top banner is an extensibility point)
+		if(window.maqetta && maqetta.TopBanner && maqetta.TopBanner.setup){
+			maqetta.TopBanner.setup();
+		}
 
 		Runtime.subscribe("/davinci/resource/resourceChanged",
 			function (type, changedResource) {
@@ -759,20 +757,25 @@ var Workbench = {
 				var menu = menuTreeItem.menus[j];
 				var menuWidget = Workbench._createMenu(menu);
 				menu.id = menu.id.replace(".", "-"); // kludge to work around the fact that '.' is being used for ids, and that's not compatible with CSS
-				var widget = dijit.byId(menu.id + "-dropdown");
-				if(!widget) {
-					var params = { label: menu.label, dropDown: menuWidget, id: menu.id + "-dropdown" };
-					if(menu.hasOwnProperty('showLabel')){
-						params.showLabel = menu.showLabel;
+				// Set up top banner region. (Top banner is an extensibility point)
+				if(window.maqetta && maqetta.TopBanner && maqetta.TopBanner.attachMenu){
+					maqetta.TopBanner.attachMenu(menu, menuWidget, menuDiv);
+				}else{
+					var widget = dijit.byId(menu.id + "-dropdown");
+					if(!widget) {
+						var params = { label: menu.label, dropDown: menuWidget, id: menu.id + "-dropdown" };
+						if(menu.hasOwnProperty('showLabel')){
+							params.showLabel = menu.showLabel;
+						}
+						if(menu.hasOwnProperty('iconClass')){
+							params.iconClass = menu.iconClass;
+						}
+						if(menu.hasOwnProperty('className')){
+							params['class'] = menu.className;
+						}
+						widget = new DropDownButton(params);
+						menuDiv.appendChild(widget.domNode);
 					}
-					if(menu.hasOwnProperty('iconClass')){
-						params.iconClass = menu.iconClass;
-					}
-					if(menu.hasOwnProperty('className')){
-						params['class'] = menu.className;
-					}
-					widget = new DropDownButton(params);
-					menuDiv.appendChild(widget.domNode);
 				}
 			}
 		}
@@ -1081,7 +1084,8 @@ var Workbench = {
 					} else {
 						var enabled = true;
 						if (item.isEnabled) {
-							var resource = getSelectedResource();
+							var selection = Runtime.getSelection(),
+								resource = selection[0] && selection[0].resource;
 							enabled = resource ? item.isEnabled(resource) : false;
 						}
 
@@ -2032,6 +2036,7 @@ var Workbench = {
 			Workbench._state = {};
 		}
 		Workbench._state.project = project;
+		delete Workbench._state.nhfo; // FIXME reset when switching projects as themes might not exsist in new project, should this be stored in the project settings? 
 		return Workbench._updateWorkbenchState();
 	},
 	

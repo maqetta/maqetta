@@ -110,26 +110,16 @@
     	<condition property="davinciPlugin.dojoDir.exists">
     		<available file="${target.folder}/WebContent/dojo" type="dir"/>
     	</condition>
-    	<antcall target="backup.davinciPlugin.dojoDir"/>
 
 		<!-- remove tests in the src directory, if present, to reduce the size of the image -->
 		<delete quiet="true" includeemptydirs="true">
 			<fileset dir="${target.folder}/WebContent/${davinciPlugin.id}-src" includes="**/tests/**" />
 		</delete>
 
-		<!-- copy in dojo and dojo build utils to working directory in prep for build -->
-		<copy todir="${target.folder}" failonerror="true" overwrite="true" description="copying dojo and maqetta dependencies and dojo util tools">
-				<fileset dir="${basedir}/../maqetta.core.client">
-					<include name="WebContent/davinci/"/>
-					<include name="WebContent/dijit/"/>
-					<include name="WebContent/dojo/"/>
-					<include name="WebContent/dojox/"/>
-					<include name="WebContent/orion/"/>
-					<include name="WebContent/preview/"/>
-					<include name="WebContent/system/"/>
-					<include name="WebContent/util/"/>
-				</fileset>
-		</copy>
+    	<antcall target="copy.dojoLibs"/>
+    	<antcall target="move.dojoLibs"/>
+
+		<antcall target="copy.maqettaLibs"/>
 		
 		<!-- copy in helpers from dojo_1_8 plugin -->
 		<antcall target="copy.dojo18.metadata"/>
@@ -181,30 +171,95 @@
 		<mkdir dir="${davinciPlugin.dojo.cache.directory}"/>
 		<antcall target="cache.davinciPlugin.library"/>
 		<antcall target="cache.davinciPlugin.metadata"/>
-		
+		<antcall target="restore.dojoLibs"/>
+
 		<!-- Delete directory used by dojo build tooling -->
 		<delete dir="${target.folder}/WebContent/release" />
 		
 		<!-- Do additional clean-up -->
-		<delete dir="${target.folder}/WebContent/davinci/"/>
+		<delete dir="${target.folder}/WebContent/${davinciPlugin.metadata.moduleId}"/>
+		<!-- delete helpers we had copied from dojo_1_8 plugin -->
+		<antcall target="delete.dojo18.metadata"/>
+		<antcall target="delete.dojoLibs"/>
+		<antcall target="delete.maqettaLibs"/>
+	</target>
+
+	<patternset id="dojo.sources">
+		<include name="dijit/"/>
+		<include name="dojo/"/>
+		<include name="dojox/"/>
+		<exclude name="**/tests/**"/>
+		<exclude name="dojox/drawing"/>
+		<exclude name="dojox/dtl"/>
+		<exclude name="dojox/sketch"/>
+		<exclude name="dojox/sql"/>
+		<exclude name="dojox/storage"/>
+	</patternset>
+
+	<target name="copy.dojoLibs" unless="davinciPlugin.dojoDir.exists">
+		<!-- copy in dojo to working directory in prep for build -->
+		<!-- Note that we are using the Maqetta client's version of Dojo, which may not be the correct version for the plugin -->
+		<copy todir="${target.folder}/WebContent" failonerror="true" overwrite="true" description="copying dojo dependencies">
+			<fileset dir="${basedir}/../maqetta.core.client/WebContent">
+				<patternset refid="dojo.sources"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- all this is made more complicated by the fact that the dojo plugin chose to put its Javascript
+		web content under WebContent/dojo/* instead of WebContent/*  It needs to be moved to the root to
+		match other plugins. -->
+	<target name="move.dojoLibs" if="davinciPlugin.dojoDir.exists">
+		<!-- rename to avoid collision -->
+    	<move file="${target.folder}/WebContent/dojo" tofile="${target.folder}/WebContent/dojo-temp"/>
+    	<move todir="${target.folder}/WebContent/">
+			<fileset dir="${target.folder}/WebContent/dojo-temp">
+				<patternset refid="dojo.sources"/>
+			</fileset>
+		</move>
+       	<delete dir="${target.folder}/WebContent/dojo-temp"/>
+	</target>
+
+	<target name="delete.dojoLibs" unless="davinciPlugin.dojoDir.exists">
 		<delete dir="${target.folder}/WebContent/dijit/"/>
 		<delete dir="${target.folder}/WebContent/dojo/"/>
 		<delete dir="${target.folder}/WebContent/dojox/"/>
+	</target>
+	
+	<target name="restore.dojoLibs" if="davinciPlugin.dojoDir.exists">
+		<delete dir="${target.folder}/WebContent/dijit/"/>
+		<delete dir="${target.folder}/WebContent/dojo/"/>
+		<delete dir="${target.folder}/WebContent/dojox/"/>
+		<mkdir dir="${target.folder}/WebContent/dojo/"/>
+		<delete quiet="true" includeemptydirs="true">
+			<fileset dir="${target.folder}/WebContent/release/dojo" includes="**/*.uncompressed.js" />
+		</delete>
+    	<move file="${target.folder}/WebContent/release/dojo/dojo" todir="${target.folder}/WebContent/dojo/"/>
+    	<move file="${target.folder}/WebContent/release/dojo/dijit" todir="${target.folder}/WebContent/dojo/"/>
+       	<move file="${target.folder}/WebContent/release/dojo/dojox" todir="${target.folder}/WebContent/dojo/"/>
+	</target>
+
+	<target name="copy.maqettaLibs">
+		<!-- copy in Maqetta code and dojo utils to working directory in prep for build, to satisfy helper dependencies -->
+		<copy todir="${target.folder}" failonerror="true" overwrite="true" description="copying maqetta dependencies and dojo utils">
+			<fileset dir="${basedir}/../maqetta.core.client">
+				<include name="WebContent/util/"/>
+				<include name="WebContent/davinci/"/>
+				<include name="WebContent/orion/"/>
+				<include name="WebContent/preview/"/>
+				<include name="WebContent/system/"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="delete.maqettaLibs">
+		<delete dir="${target.folder}/WebContent/davinci/"/>
 		<delete dir="${target.folder}/WebContent/orion/"/>
 		<delete dir="${target.folder}/WebContent/preview/"/>
 		<delete dir="${target.folder}/WebContent/system/"/>
 		<delete dir="${target.folder}/WebContent/util/"/>
-		<delete dir="${target.folder}/WebContent/${davinciPlugin.metadata.moduleId}"/>
-		<!-- delete helpers we had copied from dojo_1_8 plugin -->
-		<antcall target="delete.dojo18.metadata"/>
-		
-		<!-- Restore dojo dir if we backed it up earlier -->
-		<condition property="davinciPlugin.dojoBackupDir.exists">
-    		<available file="${target.folder}/WebContent/dojo_BACKUP" type="dir"/>
-    	</condition>
-		<antcall target="restore.davinciPlugin.dojoDir"/>
 	</target>
-	
+
 	<!-- copy in helpers from dojo_1_8 plugin... if we didn't have a "dojo" directory when we started (representing 
 		 the plugin's library), we can assume we're not currently building the the dojo_1_8 plugin, and we'll need 
 		 its helpers. -->
@@ -265,17 +320,6 @@
 			</fileset>
 		</copy>
 	</target>
-	
-	<!-- if plugin's library is "dojo" let's back it up so we don't overwrite it -->
-	<target name="backup.davinciPlugin.dojoDir" if="davinciPlugin.dojoDir.exists">
-    	<move file="${target.folder}/WebContent/dojo" todir="${target.folder}/WebContent/dojo_BACKUP"/>
-  	</target>
-  	
-  	<!-- if plugin's library is "dojo" we backed up earlier, so need to put it back -->
-  	<target name="restore.davinciPlugin.dojoDir" if="davinciPlugin.dojoBackupDir.exists">
-    	<move file="${target.folder}/WebContent/dojo_BACKUP/dojo" todir="${target.folder}/WebContent"/>
-    	<delete dir="${target.folder}/WebContent/dojo_BACKUP"/>
-  	</target>
 	
 	<!-- ===================================================================== -->
 	<!-- Steps to do after the target gather.bin.parts                         -->

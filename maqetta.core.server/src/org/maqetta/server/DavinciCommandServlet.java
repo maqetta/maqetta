@@ -1,6 +1,7 @@
 package org.maqetta.server;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 
@@ -45,6 +46,7 @@ public class DavinciCommandServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     	try {
+    		resp.setCharacterEncoding("utf-8");
 	        if (!initialized) {
 	            initialize();
 	        }
@@ -69,8 +71,8 @@ public class DavinciCommandServlet extends HttpServlet {
 	        if (command.getErrorString() != null) {
 	            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, command.getErrorString());
 	        } else if (command.getResponse() != null) {
-	            ServletOutputStream stream = resp.getOutputStream();
-	            stream.print(command.getResponse());
+	            OutputStream stream = resp.getOutputStream();
+	            stream.write(command.getResponse().getBytes("utf-8"));
 	        }
     	} catch (RuntimeException re) {
     		log(req);
@@ -157,8 +159,8 @@ public class DavinciCommandServlet extends HttpServlet {
 	        if (command.getErrorString() != null) {
 	            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, command.getErrorString());
 	        } else if (command.getResponse() != null) {
-	            ServletOutputStream stream = resp.getOutputStream();
-	            stream.print(command.getResponse());
+	            OutputStream stream = resp.getOutputStream();
+	            stream.write(command.getResponse().getBytes("utf-8"));
 	        }
     	} catch(RuntimeException re) {
     		log(req);

@@ -28,22 +28,13 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-import org.davinci.ajaxLibrary.Library;
 import org.maqetta.server.IDavinciServerConstants;
 
 public class MaqettaHTMLFilter implements Filter {
 	private static Logger logger = Logger.getLogger("maqetta.zazl");
-	private static final String zazlScriptTagPrefix = "<script type=\"text/javascript\" src=\"lib/zazl/zazl.js\"";
-	private String scriptTagPrefix = null;
 	private StringBuffer configScriptTag = null;
-	private boolean useHTMLParser = true;
-	private Library dojoLib = null;
 
-	public MaqettaHTMLFilter(Library dojoLib, List<Library> libraryList) {
-		this.dojoLib = dojoLib;
-		String dojoDefaultRoot = dojoLib.getDefaultRoot().substring(1);
-		scriptTagPrefix = "<script type=\"text/javascript\" src=\""+dojoDefaultRoot+"/dojo/dojo.js\"";
-
+	public MaqettaHTMLFilter() {
 		configScriptTag = new StringBuffer();
 		configScriptTag.append("<script type=\"text/javascript\">\n");
 		configScriptTag.append("var dojoConfig = __DOJOCONFIG__;\n");
@@ -52,34 +43,10 @@ public class MaqettaHTMLFilter implements Filter {
 		//configScriptTag.append("	debug: true,\n");
 		configScriptTag.append("	injectUrl: '/_javascript',\n");
 		configScriptTag.append("	packages:[\n");
-		configScriptTag.append("		{'name':'dojo','location':'__URLPREFIX__"+dojoDefaultRoot+"/dojo'},\n");
-		configScriptTag.append("		{'name':'dijit','location':'__URLPREFIX__"+dojoDefaultRoot+"/dijit'},\n");
-		configScriptTag.append("		{'name':'dojox','location':'__URLPREFIX__"+dojoDefaultRoot+"/dojox'}\n");
-		configScriptTag.append("	]");
-		if (libraryList.size() > 0) {
-			configScriptTag.append(",\n	paths: {\n");
-			for (Library library : libraryList) {
-				String defaultRoot = library.getDefaultRoot();
-				if (defaultRoot != null) {
-					if (defaultRoot.charAt(0) == '/') {
-						defaultRoot = defaultRoot.substring(1);
-					}
-					if (!defaultRoot.equals("")) {
-						configScriptTag.append("		'");
-						configScriptTag.append(library.getID());
-						configScriptTag.append("' : ");
-						configScriptTag.append("'");
-						configScriptTag.append("__URLPREFIX__");
-						configScriptTag.append(defaultRoot);
-						configScriptTag.append("'");
-						configScriptTag.append(",\n");
-					}
-				}
-			}
-			configScriptTag.deleteCharAt(configScriptTag.length()-1);
-			configScriptTag.deleteCharAt(configScriptTag.length()-1);
-			configScriptTag.append("\n	}\n");
-		}
+		configScriptTag.append("		{'name':'dojo','location':'__URLPREFIX__/dojo'},\n");
+		configScriptTag.append("		{'name':'dijit','location':'__URLPREFIX__/dijit'},\n");
+		configScriptTag.append("		{'name':'dojox','location':'__URLPREFIX__/dojox'}\n");
+		configScriptTag.append("	],\n	paths: {\n__PATHS__\n	}\n");
 		configScriptTag.append("};\n");
 		configScriptTag.append("</script>\n");
 	}
@@ -102,25 +69,14 @@ public class MaqettaHTMLFilter implements Filter {
 			String responseText = responseWrapper.toString();
 			if (responseText != null && responseText.length() > 0) {
 				String result = responseText;
-				if (useHTMLParser) {
-					CharArrayWriter caw = new CharArrayWriter();
-					// Maqetta's servlet overrides the encoding with UTF-8, as does the HTML META tag in
-					// typical Maqetta content.  Not clear if either of those get picked up.  Hard-code UTF-8, for now.
-					HTMLParser parser = new HTMLParser(caw, /*response.getCharacterEncoding()*/ "UTF-8", dojoLib, configScriptTag.toString());
-					parser.parse(responseText);
-					result = caw.toString();
-					if (logger.isLoggable(Level.FINEST)) {
-						logger.logp(Level.FINEST, getClass().getName(), "doFilter", "filter response : "+result);
-					}
-				} else {
-					int index = responseText.indexOf(scriptTagPrefix);
-					logger.logp(Level.INFO, getClass().getName(), "doFilter", "parsing html for "+requestURI+". dojo tag found = "+(index > -1 ? true : false));
-					if (index != -1) {
-						StringBuffer sb = new StringBuffer(responseText);
-						sb.replace(index, index+scriptTagPrefix.length(), zazlScriptTagPrefix);
-						sb.insert(index, configScriptTag);
-						result = sb.toString();
-					}
+				CharArrayWriter caw = new CharArrayWriter();
+				// Maqetta's servlet overrides the encoding with UTF-8, as does the HTML META tag in
+				// typical Maqetta content.  Not clear if either of those get picked up.  Hard-code UTF-8, for now.
+				HTMLParser parser = new HTMLParser(caw, /*response.getCharacterEncoding()*/ "UTF-8", configScriptTag.toString(), pathInfo);
+				parser.parse(responseText);
+				result = caw.toString();
+				if (logger.isLoggable(Level.FINEST)) {
+					logger.logp(Level.FINEST, getClass().getName(), "doFilter", "filter response : "+result);
 				}
 				response.setContentLength(result.length());
 				out.write(result);

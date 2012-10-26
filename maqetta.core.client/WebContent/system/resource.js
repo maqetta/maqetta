@@ -236,7 +236,11 @@ var Resource = {
 		// Deferred API placeholder until we have a real async implementation
 		var promise = new Deferred();
 		var resource = this.findResource(name, ignoreCase, inFolder, workspaceOnly);
-		promise.resolve(resource);
+		if (resource) {
+			promise.resolve(resource);
+		} else {
+			promise.reject();
+		}
 		return promise;
 	},
 

@@ -76,7 +76,7 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 
 		var allowedChild = davinci.ve.metadata.getAllowedChild(this.type);
 		this.acceptsHTMLChildren = allowedChild[0] === 'ANY' ||
-								   allowedChild.indexOf('HTML') !== -1;
+								   allowedChild.toString().toUpperCase().indexOf('HTML') !== -1;
 		this.dijitWidget=dijitWidget;
 		this.containerNode=dijitWidget.containerNode;
 		this.styleNode=dijitWidget.styleNode;

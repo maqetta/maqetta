@@ -309,6 +309,9 @@ define(['domReady'], function(domReady) {
 	function submitRegister() {
 		var mypostrequest = new XMLHttpRequest();
 		var login = document.getElementById("signupEmail").value;
+		if (!validateEmail(login)){
+			return;
+		}
 		var parameters = "login=" + encodeURIComponent(login) ;
 		mypostrequest.open("POST", "../maqetta/cmd/register", true);
 		mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Migrate a "users" directory created by Maqetta Preview 6 for use by Preview 7.
 #

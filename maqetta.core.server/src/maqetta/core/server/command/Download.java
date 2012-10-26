@@ -175,7 +175,7 @@ public class Download extends Command {
 	            int statusCode = client.executeMethod(method);
 	            String body = method.getResponseBodyAsString();
 	            if (statusCode != HttpStatus.SC_OK) {
-	                throw new IOException(buildBase + "/api/dependencies: Analyse failed: " + method.getStatusLine() + " " + body);
+	                throw new IOException(buildBase + "/api/dependencies: Analyse failed: " + method.getStatusLine() + "\n" + body);
 	            }
 
 	            int start = body.indexOf("<textarea>");
@@ -218,7 +218,6 @@ public class Download extends Command {
         	.addField("cssOptimise", "comments");
         jsonWriter.addFieldName("packages").startArray();
         jsonWriter.startObject().addField("name", "dojo").addField("version","1.8.0").endObject();
-        jsonWriter.startObject().addField("name", "dwb").addField("version","1.0.0").endObject();
 //TODO: add supplemental packages like maqetta.*
 //        jsonWriter.startObject().addField("name", supplemental).addField("version","1.0.0").endObject();
         jsonWriter.endArray();
@@ -246,11 +245,11 @@ public class Download extends Command {
         try {
         	method.setRequestEntity(new StringRequestEntity(content, "application/json", "utf-8"));
             int statusCode = client.executeMethod(method);
-        	if (statusCode != HttpStatus.SC_OK) {
-        		throw new IOException(buildBase + "/api/build failed with status: " + statusCode);
-        	}
             String json = method.getResponseBodyAsString();
             System.out.println("/api/build response: " + json);
+        	if (statusCode != HttpStatus.SC_ACCEPTED && statusCode != HttpStatus.SC_OK) {
+        		throw new IOException(buildBase + "/api/build failed with status: " + statusCode + "\n" + json);
+        	}
             Map status = (Map)JSONReader.read(json);
             String statusLink = (String)status.get("buildStatusLink");
             if (statusLink == null) {

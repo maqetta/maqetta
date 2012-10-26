@@ -20,3 +20,4 @@ Require-Bundle: maqetta.core.server;bundle-version="1.0.0",
 Export-Package: maqetta.server.orion.hosted,
  maqetta.server.orion.hosted.command
 Bundle-ActivationPolicy: lazy
+Eclipse-BundleShape: jar

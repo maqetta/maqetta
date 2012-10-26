@@ -14,6 +14,8 @@ print_help() {
 port=50000
 consolePort="-console"
 smtpServer="localhost"
+MAQ_DEFAULT_DESKTOP_THEME="claro"
+
 
 # parse options
 while [ "${1+isset}" ]; do

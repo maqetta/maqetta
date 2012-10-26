@@ -9,7 +9,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -41,7 +40,14 @@ public class DavinciPageServlet extends HttpServlet {
 	private static final String IF_MODIFIED_SINCE = "If-Modified-Since"; //$NON-NLS-1$
 	private static final String IF_NONE_MATCH = "If-None-Match"; //$NON-NLS-1$
 	private static final String ETAG = "ETag"; //$NON-NLS-1$
-	private static final String CACHE_CONTROL = "Cache-Control";
+	private static final String CACHE_CONTROL = "Cache-Control"; //$NON-NLS-1$
+	private static final String PRAGMA = "Pragma"; //$NON-NLS-1$
+	private static final String EXPIRES = "Expires"; //$NON-NLS-1$
+	private static final long maxAge = 30*24*60*60; // 30 days
+
+	private enum CacheHeaders {
+		CACHE, NO_CACHE
+	}
 
 	protected IUserManager userManager;
 	protected IServerManager serverManager;
@@ -259,15 +265,14 @@ public class DavinciPageServlet extends HttpServlet {
 		URL welcomePage = getPageExtensionPath(IDavinciServerConstants.EXTENSION_POINT_WELCOME_PAGE,
 				IDavinciServerConstants.EP_TAG_WELCOME_PAGE);
 		VURL resourceURL = new VURL(welcomePage);
-		this.writePage(req, resp, resourceURL, false);
+		this.writePage(req, resp, resourceURL, CacheHeaders.NO_CACHE);
 	}
 
 	protected void writeMainPage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
 		URL welcomePage = getPageExtensionPath(IDavinciServerConstants.EXTENSION_POINT_MAIN_PAGE,
 				IDavinciServerConstants.EP_TAG_MAIN_PAGE);
 		VURL resourceURL = new VURL(welcomePage);
-		this.writePage(req, resp, resourceURL, false);
+		this.writePage(req, resp, resourceURL, CacheHeaders.NO_CACHE);
 	}
 
 	/*
@@ -277,7 +282,7 @@ public class DavinciPageServlet extends HttpServlet {
 		URL previewPage = getPageExtensionPath(IDavinciServerConstants.EXTENSION_POINT_PREVIEW_PAGE,
 				IDavinciServerConstants.EP_TAG_PREVIEW_PAGE);
 		VURL resourceURL = new VURL(previewPage);
-		this.writePage(req, resp, resourceURL, false);
+		this.writePage(req, resp, resourceURL, CacheHeaders.CACHE);
 	}
 
 	protected void handleWSRequest(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException,
@@ -350,15 +355,16 @@ public class DavinciPageServlet extends HttpServlet {
 	protected boolean handleLibraryRequest(HttpServletRequest req, HttpServletResponse resp, IPath path, IUser user)
 			throws ServletException, IOException {
 		IVResource libraryURL = user.getResource(path.toString());
-		if ( libraryURL != null ) {
-			writePage(req, resp, libraryURL, false);
+		if (libraryURL != null) {
+			CacheHeaders caching = libraryURL.readOnly() ? CacheHeaders.CACHE : CacheHeaders.NO_CACHE;
+			writePage(req, resp, libraryURL, caching);
 			return true;
 		}
 		return false;
 	}
 
 	protected void writePage(HttpServletRequest req, HttpServletResponse resp, IVResource resourceURL,
-			boolean cacheExpires) throws ServletException, IOException {
+			CacheHeaders doCache) throws ServletException, IOException {
 
 		if ( resourceURL == null ) {
 			if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
@@ -367,9 +373,6 @@ public class DavinciPageServlet extends HttpServlet {
 			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
-		String path = resourceURL.getPath();
-		boolean noCache = resourceURL.getPath().toLowerCase().endsWith(".html") || resourceURL.getPath().toLowerCase().endsWith(".css") || resourceURL.getPath().toLowerCase().endsWith(".js");
-		cacheExpires = noCache;
 		
 		URLConnection connection = resourceURL.openConnection();
 		long lastModified = connection.getLastModified();
@@ -384,7 +387,7 @@ public class DavinciPageServlet extends HttpServlet {
 		// We should prefer ETag validation as the guarantees are stronger and
 		// all HTTP 1.1 clients should be using it
 		String ifNoneMatch = req.getHeader(DavinciPageServlet.IF_NONE_MATCH);
-		if ( ifNoneMatch != null && etag != null && ifNoneMatch.compareTo(etag) == 0 && !noCache ) {
+		if (ifNoneMatch != null && etag != null && ifNoneMatch.compareTo(etag) == 0) {
 			resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
 			return;
 		}
@@ -392,7 +395,7 @@ public class DavinciPageServlet extends HttpServlet {
 		long ifModifiedSince = req.getDateHeader(DavinciPageServlet.IF_MODIFIED_SINCE);
 		// for purposes of comparison we add 999 to ifModifiedSince since the fidelity
 		// of the IMS header generally doesn't include milli-seconds
-		if ( ifModifiedSince > -1 && lastModified > 0 && lastModified <= (ifModifiedSince + 999) && !noCache ) {
+		if ( ifModifiedSince > -1 && lastModified > 0 && lastModified <= (ifModifiedSince + 999)) {
 			resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
 			return;
 		}
@@ -402,6 +405,7 @@ public class DavinciPageServlet extends HttpServlet {
 			resp.setContentLength(contentLength);
 		}
 
+		String path = resourceURL.getPath();
 		String contentType = req.getSession().getServletContext().getMimeType(path);
 		if ( contentType != null ) {
 			resp.setContentType(contentType);
@@ -417,15 +421,15 @@ public class DavinciPageServlet extends HttpServlet {
 			resp.setHeader(DavinciPageServlet.ETAG, etag);
 		}
 
-		if ( !cacheExpires && !noCache ) {
-			String dateStamp = "Mon, 25 Aug " + (Calendar.getInstance().get(Calendar.YEAR) + 5) + " 01:00:00 GMT";
-			resp.setHeader(DavinciPageServlet.CACHE_CONTROL, "Expires:" + dateStamp);
-		} else if ( noCache ) {
-			resp.setDateHeader("Expires", 0);
-			resp.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
-			resp.setHeader("Pragma", "no-cache"); // HTTP 1.0
+		// Cache Headers
+		if (doCache != CacheHeaders.NO_CACHE) {
+			resp.setDateHeader(EXPIRES, System.currentTimeMillis() + maxAge * 1000);
+			resp.setHeader(CACHE_CONTROL, "public, max-age=" + maxAge + ", must-revalidate"); //$NON-NLS-1$ //$NON-NLS-2$
+		} else {
+			resp.setDateHeader(EXPIRES, 0);
+			resp.setHeader(CACHE_CONTROL, "no-cache"); // HTTP 1.1
+			resp.setHeader(PRAGMA, "no-cache"); // HTTP 1.0
 		}
-
 	
 		// open the input stream
 		InputStream is = null;
@@ -469,11 +473,11 @@ public class DavinciPageServlet extends HttpServlet {
 		
 	}
 
-	protected void writeInternalPage(HttpServletRequest req, HttpServletResponse resp, Bundle bundle, String path)
-			throws ServletException, IOException {
-		VURL resourceURL = new VURL(bundle.getResource(path));
-		writePage(req, resp, resourceURL, false);
-	}
+//	protected void writeInternalPage(HttpServletRequest req, HttpServletResponse resp, Bundle bundle, String path)
+//			throws ServletException, IOException {
+//		VURL resourceURL = new VURL(bundle.getResource(path));
+//		writePage(req, resp, resourceURL, CacheHeaders.CACHE);
+//	}
 
 	protected static int writeResource(InputStream is, OutputStream os) throws IOException {
 		byte[] buffer = new byte[8192];

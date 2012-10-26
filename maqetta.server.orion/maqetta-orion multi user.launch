@@ -15,7 +15,7 @@
 <stringAttribute key="featurePluginResolution" value="workspace"/>
 <booleanAttribute key="includeOptional" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/CDC-1.0%Foundation-1.0"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console&#13;&#10;-data ${workspace_loc}/../maqetta-workspace -clean -product org.eclipse.orion.product -mail.from admin@maqetta.org"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog -console&#13;&#10;-data ${workspace_loc}/../__maqetta_server_workspace -clean -product org.eclipse.orion.product"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dorg.eclipse.equinox.http.jetty.http.port=8081&#13;&#10;-Dorg.eclipse.equinox.http.jetty.autostart=false&#13;-DloginUrl=&quot;/maqetta/welcome&quot;  &#10;-Dmaqetta.serverDebug=true &#10;-Dmaqetta.cacheLevel=100&#10;-Dsmtp.mailServer=localhost&#10;-Dmail.smtp.host=localhost&#10;-Dmaqetta.baseDirectory=${env_var:MAQETTA_WORKSPACE} &#10;-Dorion.core.configFile=${project_loc:maqetta.server.orion}/web-ide.conf -Dmaqetta.siteConfigDirectory=${project_loc:davinci.releng}/orion/builder/siteConfig"/>
 <stringAttribute key="pde.version" value="3.3"/>

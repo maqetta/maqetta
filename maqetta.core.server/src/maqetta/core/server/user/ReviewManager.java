@@ -315,7 +315,8 @@ public class ReviewManager implements IReviewManager {
 	}
 	
 	public String getReviewUrl(String designerId, String version, String requestUrl) {
-		String host = requestUrl.substring(0, requestUrl.indexOf('/', "http://".length()));
+		String protocol = requestUrl.substring(0, requestUrl.indexOf("://")+3);
+		String host = requestUrl.substring(0, requestUrl.indexOf('/', protocol.length()));
 		return host + "/maqetta?"
 				+ IDavinciServerConstants.REVIEW_DESIGNER_ATTR + "="
 				+ designerId+ "&"

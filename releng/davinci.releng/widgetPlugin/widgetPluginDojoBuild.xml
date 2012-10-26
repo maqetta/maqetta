@@ -169,9 +169,9 @@
 
 		<!-- Cache our build results -->
 		<mkdir dir="${davinciPlugin.dojo.cache.directory}"/>
+		<antcall target="restore.dojoLibs"/>
 		<antcall target="cache.davinciPlugin.library"/>
 		<antcall target="cache.davinciPlugin.metadata"/>
-		<antcall target="restore.dojoLibs"/>
 
 		<!-- Delete directory used by dojo build tooling -->
 		<delete dir="${target.folder}/WebContent/release" />

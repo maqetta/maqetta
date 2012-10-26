@@ -53,21 +53,8 @@ define(["dojo/_base/declare",
 			}
 			var lastDialogValues = Workbench.workbenchStateCustomPropGet('nhfo');
 			//var defaultThemeSet = this.getDefaultThemeSet();
-                        var defaultThemeSet = Runtime.getDefaultThemeSet();
+			var defaultThemeSet = Runtime.getDefaultThemeSet();
 			this._selectedThemeSet = lastDialogValues ? lastDialogValues.themeSet : defaultThemeSet /*undefined*/;
-
-			 */
-			if (!this._selectedThemeSet){
-				this._selectedThemeSet = dojo.clone(Theme.none_themeset);
-				// get defaults from server
-				var defaultThemeSet = Preferences.getPreferences("maqetta.default.themeset", Workbench.getProject());
-				this._selectedThemeSet.desktopTheme = defaultThemeSet.desktopTheme;
-				//this._selectedThemeSet.name = 'oneui';
-				//this._selectedThemeSet.mobileTheme.forEach
-			}
-			/*
-			 * End Hack
-			 */
 			if (this._selectedThemeSet && this._selectedThemeSet.name != Theme.none_themeset_name) {
 			   // refresh the stored themeset in case it was changed
 			    var themeSetName = this._selectedThemeSet.name;

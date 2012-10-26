@@ -69,7 +69,6 @@ public class GetInitializationInfo extends Command {
 	    	    		   File f = new File(siteConfigDir+"/"+file);
 	    	    		   String fileNameWithOutExt = file.replaceFirst("[.][^.]+$", "");
 	    	    		   String output = new Scanner(f).useDelimiter("\\Z").next();
-	    	    	        System.out.println("" + output);
 	    	    		   JSONObject j = new JSONObject(output);
 	    	    		   ret = ret + ",\n\t'"+fileNameWithOutExt+"': "+output;
 	    	    		}

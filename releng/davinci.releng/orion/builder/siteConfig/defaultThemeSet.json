@@ -3,23 +3,23 @@
         "desktopTheme":"claro", 
         "mobileTheme":[
             {
-                "theme":"custom", 
+                "theme":"android", 
                 "device":"Android"
             },
             {
-                "theme":"custom",
+                "theme":"blackberry",
                 "device":"BlackBerry"
             },
             {
-                "theme":"custom",
+                "theme":"ipad",
                 "device":"iPad"
             },
             {
-                "theme":"custom",
+                "theme":"iphone",
                 "device":"iPhone"
             },
             {
-                "theme":"custom",
+                "theme":"iphone",
                 "device":"other"
             }
         ]

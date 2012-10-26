@@ -5,7 +5,6 @@ rem defaults
 set port=50000
 set consolePort=-console
 set smtpServer=localhost
-set MAQ_DEFAULT_DESKTOP_THEME=claro
 
 
 :loop

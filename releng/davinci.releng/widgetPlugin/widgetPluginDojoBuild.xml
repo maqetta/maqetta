@@ -169,9 +169,9 @@
 
 		<!-- Cache our build results -->
 		<mkdir dir="${davinciPlugin.dojo.cache.directory}"/>
+		<antcall target="restore.dojoLibs"/>
 		<antcall target="cache.davinciPlugin.library"/>
 		<antcall target="cache.davinciPlugin.metadata"/>
-		<antcall target="restore.dojoLibs"/>
 
 		<!-- Delete directory used by dojo build tooling -->
 		<delete dir="${target.folder}/WebContent/release" />
@@ -189,11 +189,14 @@
 		<include name="dojo/"/>
 		<include name="dojox/"/>
 		<exclude name="**/tests/**"/>
-		<exclude name="dojox/drawing"/>
-		<exclude name="dojox/dtl"/>
-		<exclude name="dojox/sketch"/>
-		<exclude name="dojox/sql"/>
-		<exclude name="dojox/storage"/>
+		<exclude name="dojox/cometd/"/>
+		<exclude name="dojox/cometd.js"/>
+		<exclude name="dojox/data/demos/"/>
+		<exclude name="dojox/drawing/"/>
+		<exclude name="dojox/drawing.js"/>
+		<exclude name="dojox/sketch/"/>
+		<exclude name="dojox/sketch.js"/>
+		<exclude name="dojox/xmpp/"/>
 	</patternset>
 
 	<target name="copy.dojoLibs" unless="davinciPlugin.dojoDir.exists">
@@ -277,9 +280,7 @@
 		<delete dir="${target.folder}/WebContent/maq-metadata-dojo/"/>
 	</target>
 	
-	<!-- if we had a "dojo" directory when we started (representing the plugin's library), we 
-	     don't want to use the one from the build, so skip caching it -->
-	<target name="cache.davinciPlugin.library" unless="davinciPlugin.dojoDir.exists">
+	<target name="cache.davinciPlugin.library">
 		<copy todir="${davinciPlugin.dojo.cache.directory}" failonerror="true" overwrite="true" description="move ${davinciPlugin.id} build">
 			<fileset dir="${target.folder}/WebContent/release/dojo">
 				<include name="${davinciPlugin.id}/"/>
@@ -302,9 +303,7 @@
 		<antcall target="copy.davinciPlugin.metadata"/>
 	</target>
 	
-	<!-- only copy library from cache back into working dir if the library wasn't "dojo"
-	     when we started. -->
-	<target name="copy.davinciPlugin.library" unless="davinciPlugin.dojoDir.exists">
+	<target name="copy.davinciPlugin.library">
 		<copy todir="${target.folder}/WebContent" failonerror="true" overwrite="true" description="Copy cached ${davinciPlugin.id} build">
 			<fileset dir="${davinciPlugin.dojo.cache.directory}">
 				<include name="${davinciPlugin.id}/"/>

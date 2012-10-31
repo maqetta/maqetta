@@ -11,7 +11,8 @@ define([
 	"./PaletteFolder",
 	"./PaletteItem",
 	"dojo/i18n!davinci/ve/nls/common",
-	"davinci/ve/tools/CreateTool"
+	"davinci/ve/tools/CreateTool",
+	"davinci/workbench/Preferences"
 ], function(
 	declare,
 	WidgetBase,
@@ -25,7 +26,8 @@ define([
 	PaletteFolder,
 	PaletteItem,
 	commonNls,
-	CreateTool) {
+	CreateTool,
+	Preferences) {
 
 return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 
@@ -34,6 +36,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 //	_context: null,
 	_folders: {}, //FIXME: not instance safe
 	_folderNodes: {}, //FIXME: not instance safe
+	_displayShowValue: 'block', // either block or inline-block, depending on editorPrefs.widgetPaletteLayout
 	
 	postMixInProperties: function() {
 		this._resource = commonNls;
@@ -41,6 +44,15 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	
 	postCreate: function(){
 		dojo.addClass(this.domNode, "dojoyPalette");
+		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', 
+				Workbench.getProject());
+		if(editorPrefs.widgetPaletteLayout == 'icons'){
+			dojo.addClass(this.domNode, "paletteLayoutIcons");
+			this._displayShowValue = 'inline-block';
+		}else{
+			dojo.removeClass(this.domNode, "paletteLayoutIcons");
+			this._displayShowValue = 'block';
+		}
 		this.refresh();
 		this.connectKeyNavHandlers([dojo.keys.UP_ARROW], [dojo.keys.DOWN_ARROW]);
 		dojo.subscribe("/davinci/ui/libraryChanged", this, "refresh");
@@ -140,7 +152,6 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	refresh: function() {
 		delete this._loaded;
 		this._createFolderTemplate();
-		this._createItemTemplate();
 		this._createHeader();
 		
 		if (this._context) {
@@ -373,15 +384,6 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		);
 	},
 
-	_createItemTemplate: function(){
-	    this.itemTemplate = dojo.create('div',
-	            {
-	                className: 'dojoyPaletteCommon dojoyPaletteItem',
-	                innerHTML: '<a href="javascript:void(0)"><img border="0"/></a>'
-	            }
-	    );
-	},
-
 	_createHeader: function(){
 		var div = dojo.doc.createElement("div");
 		div.className = "dojoyPaletteCommon";
@@ -402,6 +404,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
       action;
 
       // reset to default state -- only show category headings
+	    var displayShowValue = this._displayShowValue;
 	    function resetWidgets(child) {
 	    	if (child.declaredClass != 'dijit.form.TextBox') {
 	    		var style = child.declaredClass === 'davinci.ve.palette.PaletteFolder' ?
@@ -417,7 +420,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	    	} else if (child.declaredClass === 'davinci.ve.palette.PaletteFolder') {
 	    		dojo.style(child.domNode, 'display', 'none');
 	    	} else if (child.name && re.test(child.name)) {
-	    		dojo.style(child.domNode, 'display', 'block');
+	    		dojo.style(child.domNode, 'display', displayShowValue);
 	    	} else {
 	    		dojo.style(child.domNode, 'display', 'none');
 	    	}

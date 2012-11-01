@@ -70,19 +70,13 @@ public class VOrionWorkspaceStorage extends VOrionProjectStorage{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		 
-		//If all went well, add project to workspace
-		webWorkspace.addProject(project);
 
-		//save the workspace and project metadata
 		try {
-			project.save();
-			webWorkspace.save();
+			//If all went well, add project to workspace
+			WorkspaceResourceHandler.addProject(userName, webWorkspace, project);
 		} catch (CoreException e) {
 			e.printStackTrace();				
 		}
-		
-		Activator.getDefault().registerProjectLocation(project);
 		
 		try {
 			return new VOrionProjectStorage(name, project.getProjectStore(),project,this);

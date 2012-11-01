@@ -49,7 +49,7 @@ public class OrionUser extends User {
 	
 	public OrionUser(IPerson person) {
 		super(person);
-		this.webuser = WebUser.fromUserName(this.getUserID());
+		this.webuser = WebUser.fromUserId(this.getUserID());
 		try {
 			JSONArray workspaceJson = webuser.getWorkspacesJSON();
 			for(int i=0;i<workspaceJson.length();i++){

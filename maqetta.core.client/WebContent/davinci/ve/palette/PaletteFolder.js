@@ -1,8 +1,9 @@
 define([
 	"dojo/_base/declare",
 	"dijit/_WidgetBase",
+	"dojo/dom-class",
 	"dojo/fx",
-], function(declare, _WidgetBase, fx){
+], function(declare, _WidgetBase, domClass, fx){
 
 return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 
@@ -10,10 +11,14 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 	displayName: "",
 	paletteId: "",
 	palette: null,
+	presetClassName: null,
 
 	buildRendering: function(){
 		this.palette = dijit.byId(this.paletteId);
 		var div = this.domNode = this.palette.folderTemplate.cloneNode(true);
+		if(this.presetClassName){
+			domClass.add(div, this.presetClassName);
+		}
 		var a = div.firstChild;
 		dojo.attr(a, "tabIndex", "0");
 		a.onclick = this.palette.nop; // to avoid firing the onbeforeunload event (dojo.event.connect doesn't work for this purpose)

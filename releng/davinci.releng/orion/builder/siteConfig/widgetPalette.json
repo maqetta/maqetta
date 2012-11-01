@@ -1,7 +1,7 @@
 {
 	"_COMMENT_":"Defines site-specific organization for widget palette",
     "name":"widgetPalette_dojo_default",
-    "sections":[
+    "$defaultSections":[
 		{
 			"id":"Foobar",
 			"name": "Foobar",
@@ -13,17 +13,17 @@
             ]
         }
     ],
-    "presets":[
-    	{
-    		"id":"$all",
-    		"label":"All widgets"
-    	},
-    	{
-    		"id":"Mobile",
-    		"label":"Mobile"
+    "presets":{
+    	"sketchhifi":{
+    		"collections":[
+    			{
+	    			"id":"shapes",
+	    			"showByDefault":true
+	    		}
+    		],
+    		"sections":"$defaultSections"
     	}
-    ],
+    },
     "options":{
-    	"widgetsCanAppearInMultipleSections":false
     }
 }

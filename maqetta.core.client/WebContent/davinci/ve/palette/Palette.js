@@ -248,13 +248,23 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		if(!widgetPalette){
 			console.error('widgetPalette.json not defined (in siteConfig folder)');
 		}else{
-			var sections = widgetPalette.sections;
-			if(!sections){
-				console.error('No sections defined in widgetPalette.json (in siteConfig folder)');
-			}
-			for(var i=0; i < sections.length; i++){
-				var section = sections[i];
-				orderedDescriptors.push(section);
+			var presets = widgetPalette.presets;
+			if(!presets || typeof presets != 'object'){
+				console.warning('No presets defined in widgetPalette.json (in siteConfig folder)');
+			}else{
+				for(var p in presets){
+					var preset = presets[p];
+					var sections = preset.sections == '$defaultSections' ? widgetPalette['$defaultSections'] : preset.sections;
+					if(!sections || !sections.length){
+						console.warning('No sections defined for preset '+preset.name+' in widgetPalette.json (in siteConfig folder)');
+					}else{
+						for(var s=0; s < sections.length; s++){
+							var section = dojo.mixin({},sections[s]);
+							section.preset = p;
+							orderedDescriptors.push(section);
+						}
+					}
+				}
 			}
 		}
 
@@ -262,6 +272,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		dojo.forEach(orderedDescriptors, function(component) {
 			if (component.name && !this._folders[component.name]) {
 				this._createPalette(component);
+				//FIXME: We will have some duplicate folder names with new regime!
 				this._folders[component.name] = true;
 			}
 		}, this);
@@ -334,10 +345,12 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		var iconUri = iconFolder + iconFile;
 		var componentIcon = this._getIconUri(component.icon, iconUri);
 		
+		var presetClassName = component.preset ? 'maqPaletteSection_'+component.preset : null;
 		var opt = {
 			paletteId: this.id,
 			icon: componentIcon,
-			displayName: /* XXX component.provider.getDescriptorString(component.name) ||*/ component.name
+			displayName: /* XXX component.provider.getDescriptorString(component.name) ||*/ component.name,
+			presetClassName: presetClassName
 		};
 		this._createFolder(opt);
 		if(component.items){
@@ -363,7 +376,8 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 					paletteId: this.id,
 					type: item.type,
 					data: item.data || {name:item.name, type: item.type, properties: item.properties, children: item.children},
-					category: component.name
+					category: component.name,
+					presetClassName: presetClassName
 				};
 				this._createItem(opt);
 			}, this);
@@ -385,6 +399,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 
 	_createFolder: function(opt){
 		
+		//FIXME: With new regime, we are likely to have duplicate folderNodes
 		if(this._folderNodes[opt.displayName]!=null) {
 			return this._folderNodes[opt.displayName];
 		}

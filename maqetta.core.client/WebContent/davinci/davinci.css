@@ -966,11 +966,33 @@ davinci_top_bar .dijitButtonNode {
     color: black;
     white-space: nowrap;
     display: block;
+    overflow: hidden;
 }
 .dojoyPaletteCommon img {
 	vertical-align: top;
     padding-right: 4px;
 }
+.dojoyPalette.paletteLayoutIcons .dojoyPaletteItem.dojoyPaletteCommon {
+	display:inline-block;
+	width:75px;
+}
+.dojoyPalette.paletteLayoutIcons .paletteItemImageContainer {
+	text-align:center;
+	display:block;
+}
+.dojoyPalette.paletteLayoutIcons .paletteItemImageContainer img {
+	width:60px;
+}
+.dojoyPalette.paletteLayoutIcons .paletteItemLabelContainer {
+	text-align:left;
+	display:block;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	margin-left:10px;
+}
+.dojoyPalette.paletteLayoutIcons .paletteItemLabel {
+}
+
 .dojoyPaletteCommon {
 	white-space: nowrap;
     border-width: 1px;
@@ -1018,16 +1040,24 @@ davinci_top_bar .dijitButtonNode {
     padding-left: 1px;
 }
 
-.maqWidgetsCategory { /* use dijitHidden instead? */
-	display: none
-}
-
-.maqWidgetsFiltered .maqWidgetsCategory {
-	display: inline;
+.maqWidgetsCategory {
     margin-left: 1em;
     color: grey;
     font: italic smaller sans-serif;
 }
+.maqWidgetsCategorySameLine {
+	display: inline;
+}
+.paletteLayoutIcons .maqWidgetsCategorySameLine {
+	display:none;
+}
+.maqWidgetsCategorySeparateLine {
+	display: none;
+}
+.paletteLayoutIcons .maqWidgetsCategorySeparateLine {
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;}
 
 /* FIXME: Temporary hack to make "Select Files..." command on Add Files dialog 
 	look like a button. Really need to do a UI makeover for Add Files dialog. */

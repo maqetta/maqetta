@@ -1,0 +1,29 @@
+{
+	"_COMMENT_":"Defines site-specific organization for widget palette",
+    "name":"widgetPalette_dojo_default",
+    "sections":[
+		{
+			"id":"Foobar",
+			"name": "Foobar",
+            "widgetTags":[
+            	"circle"
+            ],
+            "widgetTypes":[
+            	"shapes.Rectangle"
+            ]
+        }
+    ],
+    "presets":[
+    	{
+    		"id":"$all",
+    		"label":"All widgets"
+    	},
+    	{
+    		"id":"Mobile",
+    		"label":"Mobile"
+    	}
+    ],
+    "options":{
+    	"widgetsCanAppearInMultipleSections":false
+    }
+}

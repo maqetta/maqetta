@@ -1,6 +1,7 @@
 define([
     "dojo/_base/declare",
 	"dijit/_WidgetBase",
+	"davinci/Runtime",
 	"davinci/Workbench",
 	"dijit/_KeyNavContainer",
 	"dijit/Tooltip",
@@ -16,6 +17,7 @@ define([
 ], function(
 	declare,
 	WidgetBase,
+	Runtime,
 	Workbench,
 	_KeyNavContainer,
 	Tooltip,
@@ -108,34 +110,36 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 				displayName: /* XXX component.provider.getDescriptorString(component.name) ||*/ component.name
 			};
 			var folder = this._createFolder(opt);
-			dojo.forEach(component.items, function(item){
-		        // XXX For now, we want to keep some items hidden. If item.hidden is set, then don't
-		        //  add this item to palette (see bug 5626).
-				
-		        if (item.hidden || this._hasItem(item.type)) {
-		            return;
-		        }
-	
-				var opt = {
-					icon: item.iconBase64 || this._getIconUri(item.icon, "ve/resources/images/file_obj.gif"),
-					displayName:
-						item.$library._maqGetString(item.type) ||
-						item.$library._maqGetString(item.name) ||
-						item.name,
-					description: 
-					    item.$library._maqGetString(item.type+"_description") || 
-					    item.$library._maqGetString(item.name+"_description") || 
-						item.description || 
-						item.type,
-					name: item.name,
-					paletteId: this.id,
-					type: item.type,
-					data: item.data || {name:item.name, type: item.type, properties: item.properties, children: item.children},
-					tool: item.tool,
-					category: name
-				};
-				this._createItem(opt,folder);
-			}, this);
+			if(component.items){
+				dojo.forEach(component.items, function(item){
+			        // XXX For now, we want to keep some items hidden. If item.hidden is set, then don't
+			        //  add this item to palette (see bug 5626).
+					
+			        if (item.hidden || this._hasItem(item.type)) {
+			            return;
+			        }
+		
+					var opt = {
+						icon: item.iconBase64 || this._getIconUri(item.icon, "ve/resources/images/file_obj.gif"),
+						displayName:
+							item.$library._maqGetString(item.type) ||
+							item.$library._maqGetString(item.name) ||
+							item.name,
+						description: 
+						    item.$library._maqGetString(item.type+"_description") || 
+						    item.$library._maqGetString(item.name+"_description") || 
+							item.description || 
+							item.type,
+						name: item.name,
+						paletteId: this.id,
+						type: item.type,
+						data: item.data || {name:item.name, type: item.type, properties: item.properties, children: item.children},
+						tool: item.tool,
+						category: name
+					};
+					this._createItem(opt,folder);
+				}, this);
+			}
 		}
 	},
 	
@@ -240,6 +244,20 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
             delete descriptorObject[category];
         }
 		
+		var widgetPalette = Runtime.getSiteConfigData('widgetPalette');
+		if(!widgetPalette){
+			console.error('widgetPalette.json not defined (in siteConfig folder)');
+		}else{
+			var sections = widgetPalette.sections;
+			if(!sections){
+				console.error('No sections defined in widgetPalette.json (in siteConfig folder)');
+			}
+			for(var i=0; i < sections.length; i++){
+				var section = sections[i];
+				orderedDescriptors.push(section);
+			}
+		}
+
 		this._generateCssRules(orderedDescriptors);
 		dojo.forEach(orderedDescriptors, function(component) {
 			if (component.name && !this._folders[component.name]) {
@@ -275,16 +293,18 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		if(!sheet){ return; }
 
 		dojo.forEach(descriptor, function(component){
-			dojo.forEach(component.items, function(item){
-				var iconSrc = item.iconBase64 || this._getIconUri(item.icon, "ve/resources/images/file_obj.gif");
-				var selector = "img.davinci_"+item.type.replace(/\./g, "_");
-				var rule = "{background-image: url(" + iconSrc + ")}";
-				if(dojo.isIE){
-					sheet.addRule(selector, rule);
-				}else{
-					sheet.insertRule(selector + rule, sheet.cssRules.length);
-				}
-			}, this);
+			if(component.items){
+				dojo.forEach(component.items, function(item){
+					var iconSrc = item.iconBase64 || this._getIconUri(item.icon, "ve/resources/images/file_obj.gif");
+					var selector = "img.davinci_"+item.type.replace(/\./g, "_");
+					var rule = "{background-image: url(" + iconSrc + ")}";
+					if(dojo.isIE){
+						sheet.addRule(selector, rule);
+					}else{
+						sheet.insertRule(selector + rule, sheet.cssRules.length);
+					}
+				}, this);
+			}
 		}, this);
 	},
 	
@@ -320,32 +340,34 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 			displayName: /* XXX component.provider.getDescriptorString(component.name) ||*/ component.name
 		};
 		this._createFolder(opt);
-		dojo.forEach(component.items, function(item){
-	        // XXX For now, we want to keep some items hidden. If item.hidden is set, then don't
-	        //  add this item to palette (see bug 5626).
-	        if (item.hidden) {
-	            return;
-	        }
+		if(component.items){
+			dojo.forEach(component.items, function(item){
+		        // XXX For now, we want to keep some items hidden. If item.hidden is set, then don't
+		        //  add this item to palette (see bug 5626).
+		        if (item.hidden) {
+		            return;
+		        }
 
-			var opt = {
-				icon: item.iconBase64 || this._getIconUri(item.icon, "ve/resources/images/file_obj.gif"),
-				displayName:
-					item.$library._maqGetString(item.type) ||
-					item.$library._maqGetString(item.name) ||
-					item.name,
-				description: 
-				    item.$library._maqGetString(item.type+"_description") || 
-				    item.$library._maqGetString(item.name+"_description") || 
-					item.description || 
-					item.type,
-				name: item.name,
-				paletteId: this.id,
-				type: item.type,
-				data: item.data || {name:item.name, type: item.type, properties: item.properties, children: item.children},
-				category: component.name
-			};
-			this._createItem(opt);
-		}, this);
+				var opt = {
+					icon: item.iconBase64 || this._getIconUri(item.icon, "ve/resources/images/file_obj.gif"),
+					displayName:
+						item.$library._maqGetString(item.type) ||
+						item.$library._maqGetString(item.name) ||
+						item.name,
+					description: 
+					    item.$library._maqGetString(item.type+"_description") || 
+					    item.$library._maqGetString(item.name+"_description") || 
+						item.description || 
+						item.type,
+					name: item.name,
+					paletteId: this.id,
+					type: item.type,
+					data: item.data || {name:item.name, type: item.type, properties: item.properties, children: item.children},
+					category: component.name
+				};
+				this._createItem(opt);
+			}, this);
+		}
 	},
 	
 	_getIconUri: function(uri, fallbackUri) {

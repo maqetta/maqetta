@@ -94,10 +94,11 @@ return declare("davinci.html.CSSFile", CSSElement, {
 	getText: function(context) {
 		context = context || {};
 		context.indent = 0;
-
-		return this.children.map(function(child) {
-			return child.getText(context);
-		}).join();
+		var s = "";
+		for ( var i = 0; i < this.children.length; i++ ) {
+			s = s + this.children[i].getText(context);
+		}
+		return s;
 	},
 
 	getCSSFile: function() {

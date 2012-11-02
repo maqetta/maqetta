@@ -17,7 +17,6 @@
 
 define({
 	"Comment": "Comment",
-	"Flat outline": "Flat outline",
 	"incrementalFind": "Incremental find: ${0}",
 	"incrementalFindNotFound": "Incremental find: ${0} (not found)",
 	"find": "Find...",

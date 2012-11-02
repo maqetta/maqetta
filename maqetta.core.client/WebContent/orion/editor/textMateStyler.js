@@ -14,33 +14,6 @@
 
 define("orion/editor/textMateStyler", ['orion/editor/regex'], function(mRegex) {
 
-/**
- * @param obj {Object} A JSON-ish object.
- * @returns {Object} Deep copy of <code>obj</code>. Does not work on properties that are functions or RegExp instances.
- */
-var clone = function (obj) {
-	var c;
-	if (obj instanceof Array) {
-		c = new Array(obj.length);
-		for (var i=0; i < obj.length; i++) {
-			c[i] = clone(obj[i]);
-		}
-	} else {
-		c = {};
-		for (var prop in obj) {
-			if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-				var value = obj[prop];
-				if (typeof value === "object" && value !== null) {
-					c[prop] = clone(value);
-				} else {
-					c[prop] = value;
-				}
-			}
-		}
-	}
-	return c;
-};
-
 var RegexUtil = {
 	// Rules to detect some unsupported Oniguruma features
 	unsupported: [
@@ -422,7 +395,7 @@ var RegexUtil = {
 	 * </ul>
 	 * 
 	 * @description Creates a new TextMateStyler.
-	 * @extends orion.editor.AbstractStylr
+	 * @extends orion.editor.AbstractStyler
 	 * @param {orion.textview.TextView} textView The <code>TextView</code> to provide styling for.
 	 * @param {Object} grammar The TextMate grammar to use for styling the <code>TextView</code>, as a JavaScript object. You can
 	 * produce this object by running a PList-to-JavaScript conversion tool on a TextMate <code>.tmLanguage</code> file.
@@ -431,8 +404,8 @@ var RegexUtil = {
 	function TextMateStyler(textView, grammar, externalGrammars) {
 		this.initialize(textView);
 		// Copy grammar object(s) since we will mutate them
-		this.grammar = clone(grammar);
-		this.externalGrammars = externalGrammars ? clone(externalGrammars) : [];
+		this.grammar = this.clone(grammar);
+		this.externalGrammars = externalGrammars ? this.clone(externalGrammars) : [];
 		
 		this._styles = {}; /* key: {String} scopeName, value: {String[]} cssClassNames */
 		this._tree = null;
@@ -473,6 +446,33 @@ var RegexUtil = {
 			this._styles = null;
 			this._tree = null;
 			this._listener = null;
+		},
+		/**
+		 * @private
+		 * @param obj {Object} A JSON-ish object.
+		 * @returns {Object} Deep copy of <code>obj</code>. Does not work on properties that are functions or RegExp instances.
+		 */
+		clone: function clone(obj) {
+			var c;
+			if (obj instanceof Array) {
+				c = new Array(obj.length);
+				for (var i=0; i < obj.length; i++) {
+					c[i] = clone(obj[i]);
+				}
+			} else {
+				c = {};
+				for (var prop in obj) {
+					if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+						var value = obj[prop];
+						if (typeof value === "object" && value !== null) {
+							c[prop] = clone(value);
+						} else {
+							c[prop] = value;
+						}
+					}
+				}
+			}
+			return c;
 		},
 		/** @private */
 		preprocess: function(grammar) {

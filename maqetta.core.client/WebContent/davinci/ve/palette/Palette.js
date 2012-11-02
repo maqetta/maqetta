@@ -13,7 +13,8 @@ define([
 	"./PaletteItem",
 	"dojo/i18n!davinci/ve/nls/common",
 	"davinci/ve/tools/CreateTool",
-	"davinci/workbench/Preferences"
+	"davinci/workbench/Preferences",
+	"davinci/ve/metadata"
 ], function(
 	declare,
 	WidgetBase,
@@ -29,7 +30,8 @@ define([
 	PaletteItem,
 	commonNls,
 	CreateTool,
-	Preferences) {
+	Preferences,
+	Metadata) {
 
 return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 
@@ -243,6 +245,9 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
             orderedDescriptors.push(descriptorObject[category]);
             delete descriptorObject[category];
         }
+		
+		// TEMPORARY
+		var items = Metadata.getWidgetsWithTag('circle');
 		
 		var widgetPalette = Runtime.getSiteConfigData('widgetPalette');
 		if(!widgetPalette){

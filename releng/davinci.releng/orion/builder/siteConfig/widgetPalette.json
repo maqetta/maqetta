@@ -5,7 +5,7 @@
 		{
 			"id":"Foobar",
 			"name": "Foobar",
-            "widgetTags":[
+            "tags":[
             	"circle"
             ],
             "widgetTypes":[

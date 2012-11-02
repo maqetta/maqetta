@@ -95,6 +95,7 @@
           "name": "Circle",
           "type": "shapes.Circle",
           "category": "shapes",
+          "tags": "circle",
           "icon": "resources/images/circle.gif",
           "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAANXT1vj4+eLi49ra29nZ2tbW19XV1tTU1dDQ0c3NzpCQkf////7+/u/v7+zs7OPj49HR0c/Pz87Ozs3NzczMzKOjo6GhoZ6enp2dnZycnJubm4+Pj4aGhoWFhYGBgX5+fnR0dGlpaVdXV1VVVVNTU1FRUU5OTkxMTDY2NjMzMzIyMi8vLyoqKiYmJiMjI////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAC8ALAAAAAAQABAAAAaXwJfwFfmcVq7V6RMZDi+mTYJQIEg2povzEqIIGgFGoCGghLRE08SxaLsXjomp6VEI3niBwvMyQRp4bw0IJi8qAwGBbgEDKi8tBQyKbQwFLS8piJMLjCkvJQaAkw0GJS8dGg+bDxodRCMHbIEOByNNLxYgBw9gYg0PByAVThUiGAYDAAMGGSPDTi8QHCQoLCgkHBDQ29wvQQA7",
           "enablePointerEvents": true,

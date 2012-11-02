@@ -337,6 +337,13 @@ define([
         return null;
     }
     
+    function getWidgetDescriptorForType(type){
+    	var lib = getLibraryForType(type);
+    	if(lib){
+    		return lib.$wm.$providedTypes[type];
+    	}
+    }
+    
     function getWidgetsWithTag(tag){
     	var arr = [];
         if (tag) {
@@ -792,6 +799,20 @@ define([
 //    from a packages API (i.e. getPackage().name).
         getLibraryForType: function(type) {
             return getLibraryForType(type);
+        },
+        
+        getLibraryMetadataForType: function(type) {
+            var lib = getLibraryForType(type);
+            return lib ? lib.$wm : null;
+        },
+        
+        /**
+         * Returns the widget descriptor object corresponding to a given widget type.
+         * @param  {String} type 
+         * @return {object}
+         */       
+        getWidgetDescriptorForType: function(type) {
+            return getWidgetDescriptorForType(type);
         },
 
         /**

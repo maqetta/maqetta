@@ -1,15 +1,14 @@
 {
-	"_COMMENT_":"Defines site-specific organization for widget palette",
+	"_COMMENT1_":"Defines site-specific organization for widget palette",
+ 	"_COMMENT2_":"for includes: tags are simple strings. 'type:' prefix indicates a widget type",
     "name":"widgetPalette_dojo_default",
     "$defaultSections":[
 		{
 			"id":"Foobar",
 			"name": "Foobar",
-            "tags":[
-            	"circle"
-            ],
-            "widgetTypes":[
-            	"shapes.Rectangle"
+            "includes":[
+            	"circle",
+            	"type:shapes.Rectangle"
             ]
         }
     ],

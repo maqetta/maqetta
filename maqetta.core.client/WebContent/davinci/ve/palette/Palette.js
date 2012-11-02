@@ -246,26 +246,56 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
             delete descriptorObject[category];
         }
 		
-		// TEMPORARY
-		var items = Metadata.getWidgetsWithTag('circle');
-		
 		var widgetPalette = Runtime.getSiteConfigData('widgetPalette');
 		if(!widgetPalette){
 			console.error('widgetPalette.json not defined (in siteConfig folder)');
 		}else{
+			// There should be a preset for each of built-in composition types (desktop, mobile, sketchhifi, sketchlofi)
+			// In future, we might allow users to create custom presets
 			var presets = widgetPalette.presets;
 			if(!presets || typeof presets != 'object'){
 				console.warning('No presets defined in widgetPalette.json (in siteConfig folder)');
 			}else{
 				for(var p in presets){
 					var preset = presets[p];
+					// For each preset, widgetPalette.json can either use the $defaultSections list of sections
+					// or a special list of sections defined for this preset
 					var sections = preset.sections == '$defaultSections' ? widgetPalette['$defaultSections'] : preset.sections;
 					if(!sections || !sections.length){
 						console.warning('No sections defined for preset '+preset.name+' in widgetPalette.json (in siteConfig folder)');
 					}else{
 						for(var s=0; s < sections.length; s++){
 							var section = dojo.mixin({},sections[s]);
+							// Add preset name to object so downstream logic can add an appropriate CSS class
+							// to the paletteFolder and paletteItem DOM nodes
 							section.preset = p;
+							section.items = [];
+							var includes = section.includes;
+							if(!includes || !includes.length){
+								console.warning('No includes property for preset '+p+' in widgetPalette.json (in siteConfig folder)');
+							}
+							for(var inc=0; inc < includes.length; inc++){
+								var include = includes[inc];
+								if(include.substr(0,5) === 'type:'){
+									// explicit widget type
+									var item = Metadata.getWidgetDescriptorForType(include.substr(5));
+									if(item){
+										var newItem = dojo.clone(item);
+										var $wm = Metadata.getLibraryMetadataForType(newItem.type);
+										newItem.$library = $wm;
+										section.items.push(newItem);
+									}
+								}else{
+									var items = Metadata.getWidgetsWithTag(include);
+									for(var itemindex=0; itemindex < items.length; itemindex++){
+										var item = items[itemindex];
+										var newItem = dojo.clone(item);
+										var $wm = Metadata.getLibraryMetadataForType(newItem.type);
+										newItem.$library = $wm;
+										section.items.push(newItem);
+									}
+								}
+							}
 							orderedDescriptors.push(section);
 						}
 					}

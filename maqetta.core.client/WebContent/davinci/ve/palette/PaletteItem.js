@@ -45,7 +45,13 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 					'</span>'+
 					'<span class="maqWidgetsCategory maqWidgetsCategorySeparateLine"></span>'+
 				'</a>',
+	// css class for the preset to which this item belongs (preset=desktop, mobile, sketchhifi, sketchlofi)
+	// higher-level logic will hide all folders and items that don't belong to current preset
 	presetClassName:null,
+	// All palette items with the same paletteItemGroup will be mutually exclusive in that
+	// only one of these palette items will appear in the widget palette at any time.
+	// (There is UI where the user can switch among the various palette items with a group.)
+	paletteItemGroup:null,
 	
 	buildRendering: function(){
 		this.palette = dijit.byId(this.paletteId);

@@ -1,5 +1,7 @@
 define([
     "dojo/_base/declare",
+    "dojo/_base/lang",
+	"dojo/_base/connect",
 	"dijit/_WidgetBase",
 	"davinci/Runtime",
 	"davinci/Workbench",
@@ -17,6 +19,8 @@ define([
 	"davinci/ve/metadata"
 ], function(
 	declare,
+	Lang,
+	connect,
 	WidgetBase,
 	Runtime,
 	Workbench,
@@ -41,6 +45,8 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	_folders: {}, //FIXME: not instance safe
 	_folderNodes: {}, //FIXME: not instance safe
 	_displayShowValue: 'block', // either block or inline-block, depending on editorPrefs.widgetPaletteLayout
+	_presetClassNamePrefix: 'maqPaletteSection_',
+
 	
 	postMixInProperties: function() {
 		this._resource = commonNls;
@@ -59,8 +65,11 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		}
 		this.refresh();
 		this.connectKeyNavHandlers([dojo.keys.UP_ARROW], [dojo.keys.DOWN_ARROW]);
-		dojo.subscribe("/davinci/ui/libraryChanged", this, "refresh");
-		dojo.subscribe("/davinci/ui/addedCustomWidget", this, "addCustomWidget");
+		connect.subscribe("/davinci/ui/libraryChanged", this, "refresh");
+		connect.subscribe("/davinci/ui/addedCustomWidget", this, "addCustomWidget");
+/*FIXME: Maybe not needed - HtmlWidgets.js is already listening
+		connect.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this));
+*/
 	},
 	
 	addCustomWidget: function(lib){
@@ -148,6 +157,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	setContext: function(context){
 		this._context = context;
 		this._loadPalette();
+		this.updatePaletteVisibility();
 		this.startupKeyNavChildren();
 
 		// setting context will reset
@@ -246,6 +256,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
             delete descriptorObject[category];
         }
 		
+		var paletteItemGroupCount = 0;
 		var widgetPalette = Runtime.getSiteConfigData('widgetPalette');
 		if(!widgetPalette){
 			console.error('widgetPalette.json not defined (in siteConfig folder)');
@@ -275,26 +286,35 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 								console.warning('No includes property for preset '+p+' in widgetPalette.json (in siteConfig folder)');
 							}
 							for(var inc=0; inc < includes.length; inc++){
-								var include = includes[inc];
-								if(include.substr(0,5) === 'type:'){
-									// explicit widget type
-									var item = Metadata.getWidgetDescriptorForType(include.substr(5));
-									if(item){
-										var newItem = dojo.clone(item);
-										var $wm = Metadata.getLibraryMetadataForType(newItem.type);
-										newItem.$library = $wm;
-										section.items.push(newItem);
-									}
-								}else{
-									var items = Metadata.getWidgetsWithTag(include);
-									for(var itemindex=0; itemindex < items.length; itemindex++){
-										var item = items[itemindex];
-										var newItem = dojo.clone(item);
-										var $wm = Metadata.getLibraryMetadataForType(newItem.type);
-										newItem.$library = $wm;
-										section.items.push(newItem);
+								var includeValue = includes[inc];
+								// Each item in "includes" property can be an array of strings or string
+								// which we then convert to an array of strings (with just one string value)
+								var includeArray = Lang.isArray(includeValue) ? includeValue : [includeValue];
+								for(var ii=0; ii < includeArray.length; ii++){
+									var includeItem = includeArray[ii];
+									if(includeItem.substr(0,5) === 'type:'){
+										// explicit widget type
+										var item = Metadata.getWidgetDescriptorForType(includeItem.substr(5));
+										if(item){
+											var newItem = dojo.clone(item);
+											var $wm = Metadata.getLibraryMetadataForType(newItem.type);
+											newItem.$library = $wm;
+											newItem.paletteItemGroup = paletteItemGroupCount;
+											section.items.push(newItem);
+										}
+									}else{
+										var items = Metadata.getWidgetsWithTag(includeItem);
+										for(var itemindex=0; itemindex < items.length; itemindex++){
+											var item = items[itemindex];
+											var newItem = dojo.clone(item);
+											var $wm = Metadata.getLibraryMetadataForType(newItem.type);
+											newItem.$library = $wm;
+											newItem.paletteItemGroup = paletteItemGroupCount;
+											section.items.push(newItem);
+										}
 									}
 								}
+								paletteItemGroupCount++;
 							}
 							orderedDescriptors.push(section);
 						}
@@ -380,7 +400,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		var iconUri = iconFolder + iconFile;
 		var componentIcon = this._getIconUri(component.icon, iconUri);
 		
-		var presetClassName = component.preset ? 'maqPaletteSection_'+component.preset : null;
+		var presetClassName = component.preset ? this._presetClassNamePrefix + component.preset : null;
 		var opt = {
 			paletteId: this.id,
 			icon: componentIcon,
@@ -412,7 +432,8 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 					type: item.type,
 					data: item.data || {name:item.name, type: item.type, properties: item.properties, children: item.children},
 					category: component.name,
-					presetClassName: presetClassName
+					presetClassName: presetClassName,
+					paletteItemGroup: item.paletteItemGroup
 				};
 				this._createItem(opt);
 			}, this);
@@ -538,6 +559,46 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 			connectId:[node.id]
 		});
 		return node;
+	},
+	
+	/**
+	 * When switching to a new editor, update the list of sections
+	 * and widgets shown within each section
+	 * @param event {object}  Two properties: editor and oldEditor
+	 */
+/*FIXME: Maybe not needed because HtmlWidgets.js is already listening
+	_editorSelected: function(event){
+		// Determine which preset applies to the current editor
+		if(!Runtime.currentEditor || Runtime.currentEditor.declaredClass != "davinci.ve.PageEditor" ||
+				!Runtime.currentEditor.getContext){
+			//FIXME: maybe show the palette, but all items would be inactive.
+			return;
+		}
+		var context = Runtime.currentEditor.getContext();
+		var comptype = context.getCompType();
+		var presetClassName = this._presetClassNamePrefix + comptype;
+		//FIXME: Maybe we don't need all of the presetClassName stuff.
+		//Just go through everything in widget palette and set display property
+		//depending on preset and which widget in each group should be active
+	},
+*/
+	
+	/**
+	 * Control visibility of the various paletteFolder and paletteItem controls
+	 * based on the preset that applies to the currently open editor.
+	 */
+	updatePaletteVisibility: function(){
+		// Determine which preset applies to the current editor
+		if(!Runtime.currentEditor || Runtime.currentEditor.declaredClass != "davinci.ve.PageEditor" ||
+				!Runtime.currentEditor.getContext){
+			return;
+		}
+		var context = Runtime.currentEditor.getContext();
+		var comptype = context.getCompType();
+		var presetClassName = this._presetClassNamePrefix + comptype;
+		//FIXME: Maybe we don't need all of the presetClassName stuff.
+		//Just go through everything in widget palette and set display property
+		//depending on preset and which widget in each group should be active
 	},
 	
 	onDragStart: function(e){	

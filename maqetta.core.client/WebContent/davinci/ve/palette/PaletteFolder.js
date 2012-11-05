@@ -3,7 +3,8 @@ define([
 	"dijit/_WidgetBase",
 	"dojo/dom-class",
 	"dojo/fx",
-], function(declare, _WidgetBase, domClass, fx){
+	"davinci/Runtime"
+], function(declare, _WidgetBase, domClass, fx, Runtime){
 
 return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 
@@ -11,6 +12,8 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 	displayName: "",
 	paletteId: "",
 	palette: null,
+	// css class for the preset to which this item belongs (preset=desktop, mobile, sketchhifi, sketchlofi)
+	// higher-level logic will hide all folders and items that don't belong to current preset
 	presetClassName: null,
 
 	buildRendering: function(){
@@ -62,12 +65,33 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 	
 	folderClickHandler: function(evt){
 		
+		// Determine which preset applies to the current editor
+		if(!Runtime.currentEditor || Runtime.currentEditor.declaredClass != "davinci.ve.PageEditor" ||
+				!Runtime.currentEditor.getContext){
+			return;
+		}
+		var context = Runtime.currentEditor.getContext();
+		var comptype = context.getCompType();
+		var presetClassName = comptype ? this.palette._presetClassNamePrefix + comptype : null;
+		
 		var children = this.palette.getChildren();
 		for(var i = 0, len = children.length; i < len; i++){
 			var child = children[i];
 			if(child != this){
 				continue;
 			}
+/*
+			//FIXME: Only the IF clause should stay. ELSE clause should be deleted.
+			if(domClass.has(this, presetClassName)){
+				var a = 1;
+				// If folder is open, then wipeOut
+				// If folder is closed, see if children list exists, if so then wipeIn, else create
+				// Remove existing paletteItems for this folder
+				// Add new paletteItems for this folder
+				
+			}else{
+				//FIXME: Legacy logic - should be deleted
+*/
 			for(var j = i + 1; j < len; j++){
 				child = children[j];
 				if(child.declaredClass != "davinci.ve.palette.PaletteItem"){
@@ -79,6 +103,9 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 					fx.wipeOut({node: child.id, duration: 200}).play();
 				}
 			}
+/*
+			}
+*/
 			break;
 		}
 		return false;

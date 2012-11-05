@@ -12,6 +12,8 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 	displayName: "",
 	paletteId: "",
 	palette: null,
+	// name of preset for which this PaletteFolder object will be included
+	preset: null,
 	// css class for the preset to which this item belongs (preset=desktop, mobile, sketchhifi, sketchlofi)
 	// higher-level logic will hide all folders and items that don't belong to current preset
 	presetClassName: null,

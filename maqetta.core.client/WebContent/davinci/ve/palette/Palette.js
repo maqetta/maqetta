@@ -2,6 +2,7 @@ define([
     "dojo/_base/declare",
     "dojo/_base/lang",
 	"dojo/_base/connect",
+	"dojo/Deferred",
 	"dijit/_WidgetBase",
 	"davinci/Runtime",
 	"davinci/Workbench",
@@ -11,7 +12,7 @@ define([
 	"davinci/ui/dnd/DragSource",
 	"davinci/ve/metadata",
 	"davinci/library",
-	"./PaletteFolder",
+	"./PaletteFolder",	// There must be a circular dependency - not available when this routine is loaded
 	"./PaletteItem",
 	"dojo/i18n!davinci/ve/nls/common",
 	"davinci/ve/tools/CreateTool",
@@ -21,6 +22,7 @@ define([
 	declare,
 	Lang,
 	connect,
+	Deferred,
 	WidgetBase,
 	Runtime,
 	Workbench,
@@ -42,11 +44,13 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	descriptors: "", // "fooDescriptor,barDescriptor"
 //	_resource: null,
 //	_context: null,
+/*FIXME: DELETE THIS
 	_folders: {}, //FIXME: not instance safe
 	_folderNodes: {}, //FIXME: not instance safe
+*/
 	_displayShowValue: 'block', // either block or inline-block, depending on editorPrefs.widgetPaletteLayout
 	_presetClassNamePrefix: 'maqPaletteSection_',
-
+	_presetSections: {},	// Assoc array of all paletteItem objects, indexed by [preset][section]
 	
 	postMixInProperties: function() {
 		this._resource = commonNls;
@@ -120,49 +124,54 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 				icon: componentIcon,
 				displayName: /* XXX component.provider.getDescriptorString(component.name) ||*/ component.name
 			};
-			var folder = this._createFolder(opt);
-			if(component.items){
-				dojo.forEach(component.items, function(item){
-			        // XXX For now, we want to keep some items hidden. If item.hidden is set, then don't
-			        //  add this item to palette (see bug 5626).
-					
-			        if (item.hidden || this._hasItem(item.type)) {
-			            return;
-			        }
-		
-					var opt = {
-						icon: item.iconBase64 || this._getIconUri(item.icon, "ve/resources/images/file_obj.gif"),
-						displayName:
-							item.$library._maqGetString(item.type) ||
-							item.$library._maqGetString(item.name) ||
-							item.name,
-						description: 
-						    item.$library._maqGetString(item.type+"_description") || 
-						    item.$library._maqGetString(item.name+"_description") || 
-							item.description || 
-							item.type,
-						name: item.name,
-						paletteId: this.id,
-						type: item.type,
-						data: item.data || {name:item.name, type: item.type, properties: item.properties, children: item.children},
-						tool: item.tool,
-						category: name
-					};
-					this._createItem(opt,folder);
-				}, this);
-			}
+			//FIXME: delete this: var folder = this._createFolder(opt);
+			
+			// this._createFolder() has a miniscule chance of not happening synchronously
+			var deferred = this._createFolder(opt);
+			deferred.then(function(){
+				if(component.items){
+					dojo.forEach(component.items, function(item){
+				        // XXX For now, we want to keep some items hidden. If item.hidden is set, then don't
+				        //  add this item to palette (see bug 5626).
+						
+				        if (item.hidden || this._hasItem(item.type)) {
+				            return;
+				        }
+			
+						var opt = {
+							icon: item.iconBase64 || this._getIconUri(item.icon, "ve/resources/images/file_obj.gif"),
+							displayName:
+								item.$library._maqGetString(item.type) ||
+								item.$library._maqGetString(item.name) ||
+								item.name,
+							description: 
+							    item.$library._maqGetString(item.type+"_description") || 
+							    item.$library._maqGetString(item.name+"_description") || 
+								item.description || 
+								item.type,
+							name: item.name,
+							paletteId: this.id,
+							type: item.type,
+							data: item.data || {name:item.name, type: item.type, properties: item.properties, children: item.children},
+							tool: item.tool,
+							category: name
+						};
+						this._createItem(opt,folder);
+					}, this);
+				}
+			}.bind(this));
 		}
 	},
 	
 	setContext: function(context){
 		this._context = context;
 		this._loadPalette();
-		this.updatePaletteVisibility();
 		this.startupKeyNavChildren();
 
 		// setting context will reset
 		this.filterField.set("value", "");
 		this._filter();
+		this.updatePaletteVisibility();
 	},
 
 	refresh: function() {
@@ -268,6 +277,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 				console.warning('No presets defined in widgetPalette.json (in siteConfig folder)');
 			}else{
 				for(var p in presets){
+					this._presetSections[p] = [];
 					var preset = presets[p];
 					// For each preset, widgetPalette.json can either use the $defaultSections list of sections
 					// or a special list of sections defined for this preset
@@ -276,7 +286,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 						console.warning('No sections defined for preset '+preset.name+' in widgetPalette.json (in siteConfig folder)');
 					}else{
 						for(var s=0; s < sections.length; s++){
-							var section = dojo.mixin({},sections[s]);
+							var section = dojo.clone(sections[s]);
 							// Add preset name to object so downstream logic can add an appropriate CSS class
 							// to the paletteFolder and paletteItem DOM nodes
 							section.preset = p;
@@ -316,21 +326,25 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 								}
 								paletteItemGroupCount++;
 							}
-							orderedDescriptors.push(section);
+							//orderedDescriptors.push(section);
+							this._presetSections[p].push(section);
 						}
 					}
 				}
 			}
 		}
 
+//FIXME: Pretty sure this has to move into dynamic editor-specific logic
+/*
 		this._generateCssRules(orderedDescriptors);
 		dojo.forEach(orderedDescriptors, function(component) {
 			if (component.name && !this._folders[component.name]) {
 				this._createPalette(component);
-				//FIXME: We will have some duplicate folder names with new regime!
 				this._folders[component.name] = true;
 			}
 		}, this);
+*/
+//END FIXME
 		this._loaded = true; // call this only once
 	},
 	
@@ -405,39 +419,44 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 			paletteId: this.id,
 			icon: componentIcon,
 			displayName: /* XXX component.provider.getDescriptorString(component.name) ||*/ component.name,
+			preset: component.preset,
 			presetClassName: presetClassName
 		};
-		this._createFolder(opt);
-		if(component.items){
-			dojo.forEach(component.items, function(item){
-		        // XXX For now, we want to keep some items hidden. If item.hidden is set, then don't
-		        //  add this item to palette (see bug 5626).
-		        if (item.hidden) {
-		            return;
-		        }
+		// this._createFolder() has a miniscule chance of not happening synchronously
+		var deferred = this._createFolder(opt);
+		deferred.then(function(){
+			if(component.items){
+				dojo.forEach(component.items, function(item){
+			        // XXX For now, we want to keep some items hidden. If item.hidden is set, then don't
+			        //  add this item to palette (see bug 5626).
+			        if (item.hidden) {
+			            return;
+			        }
 
-				var opt = {
-					icon: item.iconBase64 || this._getIconUri(item.icon, "ve/resources/images/file_obj.gif"),
-					displayName:
-						item.$library._maqGetString(item.type) ||
-						item.$library._maqGetString(item.name) ||
-						item.name,
-					description: 
-					    item.$library._maqGetString(item.type+"_description") || 
-					    item.$library._maqGetString(item.name+"_description") || 
-						item.description || 
-						item.type,
-					name: item.name,
-					paletteId: this.id,
-					type: item.type,
-					data: item.data || {name:item.name, type: item.type, properties: item.properties, children: item.children},
-					category: component.name,
-					presetClassName: presetClassName,
-					paletteItemGroup: item.paletteItemGroup
-				};
-				this._createItem(opt);
-			}, this);
-		}
+					var opt = {
+						icon: item.iconBase64 || this._getIconUri(item.icon, "ve/resources/images/file_obj.gif"),
+						displayName:
+							item.$library._maqGetString(item.type) ||
+							item.$library._maqGetString(item.name) ||
+							item.name,
+						description: 
+						    item.$library._maqGetString(item.type+"_description") || 
+						    item.$library._maqGetString(item.name+"_description") || 
+							item.description || 
+							item.type,
+						name: item.name,
+						paletteId: this.id,
+						type: item.type,
+						data: item.data || {name:item.name, type: item.type, properties: item.properties, children: item.children},
+						category: component.name,
+						preset: component.preset,
+						presetClassName: presetClassName,
+						paletteItemGroup: item.paletteItemGroup
+					};
+					this._createItem(opt);
+				}, this);
+			}
+		}.bind(this));
 	},
 	
 	_getIconUri: function(uri, fallbackUri) {
@@ -454,7 +473,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	},
 
 	_createFolder: function(opt){
-		
+/*
 		//FIXME: With new regime, we are likely to have duplicate folderNodes
 		if(this._folderNodes[opt.displayName]!=null) {
 			return this._folderNodes[opt.displayName];
@@ -463,6 +482,17 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		this._folderNodes[opt.displayName] = new PaletteFolder(opt);
 		this.addChild(this._folderNodes[opt.displayName]);
 		return this._folderNodes[opt.displayName];
+*/
+		var deferred = new Deferred();
+		
+		// Must have a circular require() reference going on because
+		// doesn't work to put require for PaletteFolder at top of file
+		require(["davinci/ve/palette/PaletteFolder"],function(PaletteFolder){
+			var PaletteFolder = new PaletteFolder(opt);
+			this.addChild(PaletteFolder);
+			deferred.resolve();
+		}.bind(this));
+		return deferred;
 	},
 	
 	_createFolderTemplate: function(){
@@ -599,6 +629,38 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		//FIXME: Maybe we don't need all of the presetClassName stuff.
 		//Just go through everything in widget palette and set display property
 		//depending on preset and which widget in each group should be active
+		
+		//FIXME: current preset might be different than comptype once various new UI options become available
+		var orderedDescriptions = [];
+		var sections = this._presetSections[comptype];
+		if(!sections){
+			debugger;
+			console.error('Palette.js - no sections for comptype='+comptype);
+		}else{
+			for(var s = 0; s<sections.length; s++){
+				var section = sections[s];
+				if(!section._created){
+					var orderedDescriptors = [section];
+					this._generateCssRules(orderedDescriptors);
+					this._createPalette(section);
+					section._created = true;
+				}
+			}
+		}
+		// Set display property to show only those PaletteFolder's and PaletteItem's
+		// that correspond to the current preset
+		var children = this.getChildren();
+		for(var i = 0, len = children.length; i < len; i++){
+			var child = children[i];
+			if(child && child.domNode && child.preset){
+				if(child.declaredClass == "davinci.ve.palette.PaletteFolder" && child.preset == comptype){
+					child.domNode.style.display = 'block';
+				}else{
+					child.domNode.style.display = 'none';
+				}
+			}
+		
+		}
 	},
 	
 	onDragStart: function(e){	

@@ -23,7 +23,43 @@
 	"_COMMENT3_":"For each preset, collections is list of each widget collection in order of precedence",
 	"_COMMENT4_":"and sections is the array of sections for this preset (or $defaultSections)",
     "presets":{
+    	"mobile":{
+    		"collections":[
+    			{
+	    			"id":"shapes",
+	    			"show":true
+	    		}
+    		],
+    		"sections":[
+				{
+		 			"id":"Foobar",
+					"name": "Foobar",
+			        "includes":[
+		            	"pointtext",
+		            	"circle"
+		            ]
+		         }
+    		]
+    	},
+    	"desktop":{
+    		"collections":[
+    			{
+	    			"id":"shapes",
+	    			"show":true
+	    		}
+    		],
+    		"sections":"$defaultSections"
+    	},
     	"sketchhifi":{
+    		"collections":[
+    			{
+	    			"id":"shapes",
+	    			"show":true
+	    		}
+    		],
+    		"sections":"$defaultSections"
+    	},
+    	"sketchlofi":{
     		"collections":[
     			{
 	    			"id":"shapes",

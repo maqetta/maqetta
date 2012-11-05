@@ -45,6 +45,8 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 					'</span>'+
 					'<span class="maqWidgetsCategory maqWidgetsCategorySeparateLine"></span>'+
 				'</a>',
+	// name of preset for which this PaletteItem object will be included
+	preset: null,
 	// css class for the preset to which this item belongs (preset=desktop, mobile, sketchhifi, sketchlofi)
 	// higher-level logic will hide all folders and items that don't belong to current preset
 	presetClassName:null,

@@ -2013,7 +2013,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 			var parent = widget.getParent();
 			if(parent){
-				parent.selectChild(widget);
+				var parentHelper = parent.getHelper();
+				if (parentHelper && parentHelper.selectChild){
+					parentHelper.selectChild(parent, widget);
+				} else {
+					parent.selectChild(widget);
+				}
 			}
 			
 			if(!this._selection || this._selection.length > 1 || selection.length > 1 || this.getSelection() != widget){

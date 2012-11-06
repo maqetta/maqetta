@@ -278,9 +278,16 @@ var DesignOutlineTreeModel = declare(null, {
 	},
 
 	isToggleOn: function(item) {
+		
 		var widget = this._getWidget(item);
-
-		return (widget.domNode.style.display === 'none');
+		var helper = widget.getHelper();
+		var continueProcessing = true;
+		if(helper && helper.isToggleOn){
+			return helper.isToggleOn(widget);
+		}else{
+			return (widget.domNode.style.display === 'none');
+		}
+		
 	},
 	// end toggle code
 

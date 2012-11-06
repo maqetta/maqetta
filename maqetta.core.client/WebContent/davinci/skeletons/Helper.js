@@ -203,6 +203,23 @@ define(function() {
 //
 //			return children;
 		},
+		/**
+		 * Override the default action, in some cases the children of a widget have been hidden and
+		 * replaced with different widgets at runtime. In cases like this the widget from the html 
+		 * source  does not match the runtime widget and we need to find the corresponding runtime
+		 * widget to select.
+		 *
+		 * Implement this function for widgets whose children are not neatly encapsulated in the
+		 * container node.
+		 * 
+		 * @param  {davinci/ve/_Widget} ParentWidget  the parent widget instance
+		 * @param  {davinci/ve/_Widget} childWidget  the child widget instance.
+		 *             If true, function must "attach" child widget nodes by calling 
+		 *             'require("davinci/ve/widget").getWidget(node)'.
+		 * 
+		 * @return {null} 
+		 */
+		selectChild: function(parentWidget, childWidget){},
 		
 		/**
 		 * Override the default implementation of 'widget.getChildrenData()', which calls
@@ -549,6 +566,14 @@ define(function() {
 		 * @return {boolean}  whether standard toggle processing should proceed
 		 */
 		onToggleVisibility: function(widget, on) {},
+		/**
+		 * Invoked to determine widget visibility
+		 * (e.g.,  by Outline palette for eyeball icon).
+		 * Return true if widget is visible.
+		 * @param  {davinci.ve._Widget} widget  Widget whose visibility is being determined
+		 * @return {boolean}  true = visible, false = hidden 
+		 */
+		isToggleOn: function(widget){},
 
 		/**
 		 * Helper function called whenever a widget-specific property is changed

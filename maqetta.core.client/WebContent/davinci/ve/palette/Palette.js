@@ -279,6 +279,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 				for(var p in presets){
 					this._presetSections[p] = [];
 					var preset = presets[p];
+					var collections = preset.collections;	// Precedence order for the different widget collections
 					// For each preset, widgetPalette.json can either use the $defaultSections list of sections
 					// or a special list of sections defined for this preset
 					var sections = preset.sections == '$defaultSections' ? widgetPalette['$defaultSections'] : preset.sections;
@@ -289,7 +290,8 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 							var section = dojo.clone(sections[s]);
 							// Add preset name to object so downstream logic can add an appropriate CSS class
 							// to the paletteFolder and paletteItem DOM nodes
-							section.preset = p;
+							section.preset = preset;
+							section.presetId = p;
 							section.items = [];
 							var includes = section.includes;
 							if(!includes || !includes.length){
@@ -300,6 +302,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 								// Each item in "includes" property can be an array of strings or string
 								// which we then convert to an array of strings (with just one string value)
 								var includeArray = Lang.isArray(includeValue) ? includeValue : [includeValue];
+								var sectionItems = [];
 								for(var ii=0; ii < includeArray.length; ii++){
 									var includeItem = includeArray[ii];
 									if(includeItem.substr(0,5) === 'type:'){
@@ -310,7 +313,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 											var $wm = Metadata.getLibraryMetadataForType(newItem.type);
 											newItem.$library = $wm;
 											newItem.paletteItemGroup = paletteItemGroupCount;
-											section.items.push(newItem);
+											sectionItems.push(newItem);
 										}
 									}else{
 										var items = Metadata.getWidgetsWithTag(includeItem);
@@ -320,9 +323,37 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 											var $wm = Metadata.getLibraryMetadataForType(newItem.type);
 											newItem.$library = $wm;
 											newItem.paletteItemGroup = paletteItemGroupCount;
-											section.items.push(newItem);
+											sectionItems.push(newItem);
 										}
 									}
+								}
+								// Sort sectionItems based on order in "collections" property
+								var sortedItems = [];
+								// Created a sorted list of items, using preset.collections to define the order
+								// of widgets within this group.
+								if(collections && collections.length){
+									for(var co=0; co<collections.length; co++){
+										var collection = collections[co];
+										var si = 0;
+										while(si < sectionItems.length){
+											var sectionItem = sectionItems[si];
+											if(sectionItem.collection == collection.id){
+												sortedItems.push(sectionItem);
+												sectionItems.splice(si, 1);
+											}else{
+												si++;
+											}
+										}
+									}
+									// Add any remaining section items to end of sortedItems
+									for(var si = 0; si < sectionItems.length; si++){
+										sortedItems.push(sectionItem[si]);
+									}
+								}else{
+									sortedItems = sectionItems;
+								}
+								for(var si=0; si < sortedItems.length; si++){
+									section.items.push(sortedItems[si]);
 								}
 								paletteItemGroupCount++;
 							}
@@ -414,12 +445,13 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		var iconUri = iconFolder + iconFile;
 		var componentIcon = this._getIconUri(component.icon, iconUri);
 		
-		var presetClassName = component.preset ? this._presetClassNamePrefix + component.preset : null;
+		var presetClassName = component.presetId ? this._presetClassNamePrefix + component.presetId : null;
 		var opt = {
 			paletteId: this.id,
 			icon: componentIcon,
 			displayName: /* XXX component.provider.getDescriptorString(component.name) ||*/ component.name,
 			preset: component.preset,
+			presetId: component.presetId,
 			presetClassName: presetClassName
 		};
 		// this._createFolder() has a miniscule chance of not happening synchronously
@@ -450,6 +482,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 						data: item.data || {name:item.name, type: item.type, properties: item.properties, children: item.children},
 						category: component.name,
 						preset: component.preset,
+						presetId: component.presetId,
 						presetClassName: presetClassName,
 						paletteItemGroup: item.paletteItemGroup
 					};
@@ -592,28 +625,6 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	},
 	
 	/**
-	 * When switching to a new editor, update the list of sections
-	 * and widgets shown within each section
-	 * @param event {object}  Two properties: editor and oldEditor
-	 */
-/*FIXME: Maybe not needed because HtmlWidgets.js is already listening
-	_editorSelected: function(event){
-		// Determine which preset applies to the current editor
-		if(!Runtime.currentEditor || Runtime.currentEditor.declaredClass != "davinci.ve.PageEditor" ||
-				!Runtime.currentEditor.getContext){
-			//FIXME: maybe show the palette, but all items would be inactive.
-			return;
-		}
-		var context = Runtime.currentEditor.getContext();
-		var comptype = context.getCompType();
-		var presetClassName = this._presetClassNamePrefix + comptype;
-		//FIXME: Maybe we don't need all of the presetClassName stuff.
-		//Just go through everything in widget palette and set display property
-		//depending on preset and which widget in each group should be active
-	},
-*/
-	
-	/**
 	 * Control visibility of the various paletteFolder and paletteItem controls
 	 * based on the preset that applies to the currently open editor.
 	 */
@@ -652,8 +663,8 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		var children = this.getChildren();
 		for(var i = 0, len = children.length; i < len; i++){
 			var child = children[i];
-			if(child && child.domNode && child.preset){
-				if(child.declaredClass == "davinci.ve.palette.PaletteFolder" && child.preset == comptype){
+			if(child && child.domNode && child.presetId){
+				if(child.declaredClass == "davinci.ve.palette.PaletteFolder" && child.presetId == comptype){
 					child.domNode.style.display = 'block';
 				}else{
 					child.domNode.style.display = 'none';

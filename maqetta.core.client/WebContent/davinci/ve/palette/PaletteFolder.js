@@ -3,8 +3,9 @@ define([
 	"dijit/_WidgetBase",
 	"dojo/dom-class",
 	"dojo/fx",
-	"davinci/Runtime"
-], function(declare, _WidgetBase, domClass, fx, Runtime){
+	"davinci/Runtime",
+	"davinci/ve/metadata"
+], function(declare, _WidgetBase, domClass, fx, Runtime, Metadata){
 
 return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 
@@ -12,8 +13,10 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 	displayName: "",
 	paletteId: "",
 	palette: null,
-	// name of preset for which this PaletteFolder object will be included
+	// pointer to preset to which this PaletteFolder belongs
 	preset: null,
+	// id of preset for which this PaletteFolder object will be included
+	presetId: null,
 	// css class for the preset to which this item belongs (preset=desktop, mobile, sketchhifi, sketchlofi)
 	// higher-level logic will hide all folders and items that don't belong to current preset
 	presetClassName: null,
@@ -109,7 +112,7 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 			if(child != this){
 				continue;
 			}
-/*
+/*FIXME: DELETE THIS
 			for(var j = i + 1; j < len; j++){
 				child = children[j];
 				if(child.declaredClass != "davinci.ve.palette.PaletteItem"){
@@ -130,7 +133,20 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 				var obj = this._paletteItemGroupInfo(children, j);
 				for(var k=j; k <= obj.endIndex; k++){
 					child = children[k];
-					if(k == obj.selectedIndex){
+					var descriptor = Metadata.getWidgetDescriptorForType(child.type);
+					var collectionId = descriptor && descriptor.collection;
+					var show = false;
+					if(child.preset && child.preset.collections){
+						var collections = child.preset.collections;
+						for(var co=0; co < collections.length; co++){
+							var collection = collections[co];
+							if(collection.id && collection.id === collectionId){
+								show = collection.show;
+								break;
+							}
+						}
+					}
+					if(k == obj.selectedIndex && show){
 						if(dojo.style(child.domNode, "display") == "none"){
 							fx.wipeIn({node: child.id, duration: 200}).play();
 						}else{

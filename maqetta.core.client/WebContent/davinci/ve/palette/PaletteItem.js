@@ -49,9 +49,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 	preset: null,
 	// id of preset for which this PaletteItem object will be included
 	presetId: null,
-	// css class for the preset to which this item belongs (preset=desktop, mobile, sketchhifi, sketchlofi)
-	// higher-level logic will hide all folders and items that don't belong to current preset
-	presetClassName:null,
+	presetClassName:null,	// Only used for debugging purposes
 	// All palette items with the same paletteItemGroup will be mutually exclusive in that
 	// only one of these palette items will appear in the widget palette at any time.
 	// (There is UI where the user can switch among the various palette items with a group.)
@@ -61,7 +59,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		this.palette = dijit.byId(this.paletteId);
 		var div = this.domNode = dojo.create('div', { className: 'dojoyPaletteCommon dojoyPaletteItem' });
 		div.innerHTML = this.template;
-		if(this.presetClassName){
+		if(this.presetClassName){	// Only used for debugging purposes
 			domClass.add(div, this.presetClassName);
 		}
 		var a = div.firstChild;

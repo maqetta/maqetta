@@ -17,14 +17,12 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 	preset: null,
 	// id of preset for which this PaletteFolder object will be included
 	presetId: null,
-	// css class for the preset to which this item belongs (preset=desktop, mobile, sketchhifi, sketchlofi)
-	// higher-level logic will hide all folders and items that don't belong to current preset
-	presetClassName: null,
+	presetClassName: null,	// Only used for debugging purposes
 
 	buildRendering: function(){
 		this.palette = dijit.byId(this.paletteId);
 		var div = this.domNode = this.palette.folderTemplate.cloneNode(true);
-		if(this.presetClassName){
+		if(this.presetClassName){	// Only used for debugging purposes
 			domClass.add(div, this.presetClassName);
 		}
 		var a = div.firstChild;
@@ -104,7 +102,7 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 		}
 		var context = Runtime.currentEditor.getContext();
 		var comptype = context.getCompType();
-		var presetClassName = comptype ? this.palette._presetClassNamePrefix + comptype : null;
+		var presetClassName = comptype ? this.palette._presetClassNamePrefix + comptype : null;	// Only used for debugging purposes
 		
 		var children = this.palette.getChildren();
 		for(var i = 0, len = children.length; i < len; i++){
@@ -112,19 +110,6 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 			if(child != this){
 				continue;
 			}
-/*FIXME: DELETE THIS
-			for(var j = i + 1; j < len; j++){
-				child = children[j];
-				if(child.declaredClass != "davinci.ve.palette.PaletteItem"){
-					break;
-				}
-				if(dojo.style(child.domNode, "display") == "none"){
-					fx.wipeIn({node: child.id, duration: 200}).play();
-				}else{
-					fx.wipeOut({node: child.id, duration: 200}).play();
-				}
-			}
-*/
 			for(var j = i + 1; j < len; ){
 				child = children[j];
 				if(child.declaredClass != "davinci.ve.palette.PaletteItem"){

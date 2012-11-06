@@ -39,17 +39,14 @@ define([
 	Preferences,
 	Metadata) {
 
+// Disable dijit's automatic key handlers until there is time to do it right
 return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 
 	descriptors: "", // "fooDescriptor,barDescriptor"
 //	_resource: null,
 //	_context: null,
-/*FIXME: DELETE THIS
-	_folders: {}, //FIXME: not instance safe
-	_folderNodes: {}, //FIXME: not instance safe
-*/
 	_displayShowValue: 'block', // either block or inline-block, depending on editorPrefs.widgetPaletteLayout
-	_presetClassNamePrefix: 'maqPaletteSection_',
+	_presetClassNamePrefix: 'maqPaletteSection_',	// Only used for debugging purposes
 	_presetSections: {},	// Assoc array of all paletteItem objects, indexed by [preset][section]
 	
 	postMixInProperties: function() {
@@ -58,22 +55,13 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	
 	postCreate: function(){
 		dojo.addClass(this.domNode, "dojoyPalette");
-		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', 
-				Workbench.getProject());
-		if(editorPrefs.widgetPaletteLayout == 'icons'){
-			dojo.addClass(this.domNode, "paletteLayoutIcons");
-			this._displayShowValue = 'inline-block';
-		}else{
-			dojo.removeClass(this.domNode, "paletteLayoutIcons");
-			this._displayShowValue = 'block';
-		}
 		this.refresh();
-		this.connectKeyNavHandlers([dojo.keys.UP_ARROW], [dojo.keys.DOWN_ARROW]);
+		// Disable dijit's automatic key handlers until there is time to do it right
+		// As currently implemented, causes hidden palette folders from other presets to appear
+		//this.connectKeyNavHandlers([dojo.keys.UP_ARROW], [dojo.keys.DOWN_ARROW]);
 		connect.subscribe("/davinci/ui/libraryChanged", this, "refresh");
 		connect.subscribe("/davinci/ui/addedCustomWidget", this, "addCustomWidget");
-/*FIXME: Maybe not needed - HtmlWidgets.js is already listening
-		connect.subscribe("/davinci/ui/editorSelected", this._editorSelected.bind(this));
-*/
+		connect.subscribe("/davinci/preferencesChanged", this, "preferencesChanged");
 	},
 	
 	addCustomWidget: function(lib){
@@ -123,9 +111,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 				paletteId: this.id,
 				icon: componentIcon,
 				displayName: /* XXX component.provider.getDescriptorString(component.name) ||*/ component.name
-			};
-			//FIXME: delete this: var folder = this._createFolder(opt);
-			
+			};			
 			// this._createFolder() has a miniscule chance of not happening synchronously
 			var deferred = this._createFolder(opt);
 			deferred.then(function(){
@@ -166,7 +152,8 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	setContext: function(context){
 		this._context = context;
 		this._loadPalette();
-		this.startupKeyNavChildren();
+		// Disable dijit's automatic key handlers until there is time to do it right
+		//this.startupKeyNavChildren();
 
 		// setting context will reset
 		this.filterField.set("value", "");
@@ -176,12 +163,14 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 
 	refresh: function() {
 		delete this._loaded;
+		this._presetSections = {};
 		this._createFolderTemplate();
 		this._createHeader();
 		
 		if (this._context) {
 			this._loadPalette();
-			this.startupKeyNavChildren();
+			// Disable dijit's automatic key handlers until there is time to do it right
+			//this.startupKeyNavChildren();
 		}
 	},
 
@@ -218,53 +207,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		if (customWidgets) {
 			dojo.mixin(libraries, customWidgets);
 		}
-		
-		// Merge descriptors that have the same category
-		// XXX Need a better solution for enumerating through descriptor items and creating
-		//    category groups.
-		var descriptorObject = {};
-		for (var name in libraries) {
-			if (libraries.hasOwnProperty(name)) {
-				var lib = libraries[name].$wm;
-			  if (! lib) {
-			  	continue;
-			  }
 
-			  dojo.forEach(lib.widgets, function(item) {
-			  	// skip untested widgets 
-			  	if (item.category == "untested") {
-						return;
-					}
-					
-					var category = lib.categories[item.category];
-
-					if (!descriptorObject[category.name]) {
-							descriptorObject[category.name] = dojo.clone(category);
-							descriptorObject[category.name].items = [];
-					}
-					var newItem = dojo.clone(item);
-					newItem.$library = lib;
-					descriptorObject[category.name].items.push(newItem);
-			  });
-			}
-		}
-		
-		// Force certain hardcoded ones to top: Containers, Controls, Other, Untested, ...
-		// FIXME: Need a more flexible approach (versus hardcoding in JavaScript)
-		var orderedDescriptors = [];
-		var predefined = ["Dojo Containers", "Dojo Controls", "HTML", "Dojox Mobile", "Clip Art", "Drawing Tools", "Untested Dojo & HTML"];
-		dojo.forEach(predefined, function(name) {
-		    if (descriptorObject[name]) {
-		        orderedDescriptors.push(descriptorObject[name]);
-		        delete descriptorObject[name];
-		    }
-		});
-		// For any categories other than the hardcoded ones.
-		for (var category in descriptorObject) {
-            orderedDescriptors.push(descriptorObject[category]);
-            delete descriptorObject[category];
-        }
-		
 		var paletteItemGroupCount = 0;
 		var widgetPalette = Runtime.getSiteConfigData('widgetPalette');
 		if(!widgetPalette){
@@ -284,7 +227,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 					// or a special list of sections defined for this preset
 					var sections = preset.sections == '$defaultSections' ? widgetPalette['$defaultSections'] : preset.sections;
 					if(!sections || !sections.length){
-						console.warning('No sections defined for preset '+preset.name+' in widgetPalette.json (in siteConfig folder)');
+						console.warning('No sections defined for preset '+p+' in widgetPalette.json (in siteConfig folder)');
 					}else{
 						for(var s=0; s < sections.length; s++){
 							var section = dojo.clone(sections[s]);
@@ -296,35 +239,32 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 							var includes = section.includes;
 							if(!includes || !includes.length){
 								console.warning('No includes property for preset '+p+' in widgetPalette.json (in siteConfig folder)');
+								continue;
 							}
 							for(var inc=0; inc < includes.length; inc++){
 								var includeValue = includes[inc];
 								// Each item in "includes" property can be an array of strings or string
-								// which we then convert to an array of strings (with just one string value)
 								var includeArray = Lang.isArray(includeValue) ? includeValue : [includeValue];
 								var sectionItems = [];
 								for(var ii=0; ii < includeArray.length; ii++){
 									var includeItem = includeArray[ii];
+									var items = [];
 									if(includeItem.substr(0,5) === 'type:'){
 										// explicit widget type
 										var item = Metadata.getWidgetDescriptorForType(includeItem.substr(5));
 										if(item){
-											var newItem = dojo.clone(item);
-											var $wm = Metadata.getLibraryMetadataForType(newItem.type);
-											newItem.$library = $wm;
-											newItem.paletteItemGroup = paletteItemGroupCount;
-											sectionItems.push(newItem);
+											items.push(item);
 										}
 									}else{
-										var items = Metadata.getWidgetsWithTag(includeItem);
-										for(var itemindex=0; itemindex < items.length; itemindex++){
-											var item = items[itemindex];
-											var newItem = dojo.clone(item);
-											var $wm = Metadata.getLibraryMetadataForType(newItem.type);
-											newItem.$library = $wm;
-											newItem.paletteItemGroup = paletteItemGroupCount;
-											sectionItems.push(newItem);
-										}
+										items = Metadata.getWidgetsWithTag(includeItem);
+									}
+									for(var itemindex=0; itemindex < items.length; itemindex++){
+										var item = items[itemindex];
+										var newItem = dojo.clone(item);
+										var $wm = Metadata.getLibraryMetadataForType(newItem.type);
+										newItem.$library = $wm;
+										newItem.paletteItemGroup = paletteItemGroupCount;
+										sectionItems.push(newItem);
 									}
 								}
 								// Sort sectionItems based on order in "collections" property
@@ -357,45 +297,14 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 								}
 								paletteItemGroupCount++;
 							}
-							//orderedDescriptors.push(section);
 							this._presetSections[p].push(section);
 						}
 					}
 				}
 			}
 		}
-
-//FIXME: Pretty sure this has to move into dynamic editor-specific logic
-/*
-		this._generateCssRules(orderedDescriptors);
-		dojo.forEach(orderedDescriptors, function(component) {
-			if (component.name && !this._folders[component.name]) {
-				this._createPalette(component);
-				this._folders[component.name] = true;
-			}
-		}, this);
-*/
-//END FIXME
 		this._loaded = true; // call this only once
 	},
-	
-	// possible to add descriptor and palette items dynamically
-// XXX not used
-//	addDescriptor: function(name){
-//		
-//		//FIXME: Not sure this function ever gets called
-//		//FIXME: Bug here. Can't add widgets to an already-existing section
-//		dojo.forEach(this._getDescriptor(name), 
-//			function(component) { 
-//				if (component.category && !this._folders[component.category]) {
-//					this._createPalette(component);
-//					this._folders[component.category] = true;
-//				}
-//			},
-//			this
-//		);
-//	},
-	
 	
 	// generate CSS Rules for icons based on this._descriptor
 	// TODO: Currently this is used by Outline only, Palette should use
@@ -445,6 +354,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		var iconUri = iconFolder + iconFile;
 		var componentIcon = this._getIconUri(component.icon, iconUri);
 		
+		// Only used for debugging purposes
 		var presetClassName = component.presetId ? this._presetClassNamePrefix + component.presetId : null;
 		var opt = {
 			paletteId: this.id,
@@ -452,7 +362,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 			displayName: /* XXX component.provider.getDescriptorString(component.name) ||*/ component.name,
 			preset: component.preset,
 			presetId: component.presetId,
-			presetClassName: presetClassName
+			presetClassName: presetClassName	// Only used for debugging purposes
 		};
 		// this._createFolder() has a miniscule chance of not happening synchronously
 		var deferred = this._createFolder(opt);
@@ -483,7 +393,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 						category: component.name,
 						preset: component.preset,
 						presetId: component.presetId,
-						presetClassName: presetClassName,
+						presetClassName: presetClassName,	// Only used for debugging purposes
 						paletteItemGroup: item.paletteItemGroup
 					};
 					this._createItem(opt);
@@ -506,16 +416,6 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	},
 
 	_createFolder: function(opt){
-/*
-		//FIXME: With new regime, we are likely to have duplicate folderNodes
-		if(this._folderNodes[opt.displayName]!=null) {
-			return this._folderNodes[opt.displayName];
-		}
-
-		this._folderNodes[opt.displayName] = new PaletteFolder(opt);
-		this.addChild(this._folderNodes[opt.displayName]);
-		return this._folderNodes[opt.displayName];
-*/
 		var deferred = new Deferred();
 		
 		// Must have a circular require() reference going on because
@@ -636,16 +536,21 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		}
 		var context = Runtime.currentEditor.getContext();
 		var comptype = context.getCompType();
-		var presetClassName = this._presetClassNamePrefix + comptype;
-		//FIXME: Maybe we don't need all of the presetClassName stuff.
-		//Just go through everything in widget palette and set display property
-		//depending on preset and which widget in each group should be active
-		
+		var presetClassName = this._presetClassNamePrefix + comptype;	// Only used for debugging purposes
+
+		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', Workbench.getProject());
+		if(editorPrefs.widgetPaletteLayout == 'icons'){
+			dojo.addClass(this.domNode, "paletteLayoutIcons");
+			this._displayShowValue = 'inline-block';
+		}else{
+			dojo.removeClass(this.domNode, "paletteLayoutIcons");
+			this._displayShowValue = 'block';
+		}
+
 		//FIXME: current preset might be different than comptype once various new UI options become available
 		var orderedDescriptions = [];
 		var sections = this._presetSections[comptype];
 		if(!sections){
-			debugger;
 			console.error('Palette.js - no sections for comptype='+comptype);
 		}else{
 			for(var s = 0; s<sections.length; s++){
@@ -672,6 +577,10 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 			}
 		
 		}
+	},
+	
+	preferencesChanged: function() {
+		this.updatePaletteVisibility();
 	},
 	
 	onDragStart: function(e){	

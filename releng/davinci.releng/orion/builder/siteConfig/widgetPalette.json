@@ -1,7 +1,7 @@
 {
 	"_COMMENT1_":"Defines site-specific organization for widget palette",
-    "name":"widgetPalette_dojo_default",
-    "$defaultSections":[
+	"name":"widgetPalette_dojo_default",
+	"$defaultSections":[
 		{
 			"_COMMENT1_":"One entry for each section (==folder) in widget palette",
  			"id":"Foobar",
@@ -12,63 +12,61 @@
 			"_COMMENT5_":"if a string, can be either a string that begins with type:, which is a particular widget type",
 			"_COMMENT6_":"otherwise the string holds a tag, which causes all widgets that match tag to share that item",
 			"_COMMENT7_":"if an array, then it holds a list of strings, each of which can start with type: (widget type) or a tag",
-	        "includes":[
-            	"line",
-            	"type:shapes.Text",
-            	["rectangle","type:shapes.Polyline"]
-            ]
-        }
-    ],
+			"includes":[
+				"line",
+				"type:shapes.Text",
+				["rectangle","type:shapes.Polyline"]
+			]
+	}
+	],
 	"_COMMENT2_":"Should have one each for mobile, desktop, sketchhifi, sketchlofi",
 	"_COMMENT3_":"For each preset, collections is list of each widget collection in order of precedence",
 	"_COMMENT4_":"and sections is the array of sections for this preset (or $defaultSections)",
-    "presets":{
-    	"mobile":{
-    		"collections":[
-    			{
-	    			"id":"shapes",
-	    			"show":true
-	    		}
-    		],
-    		"sections":[
+	"presets":{
+		"mobile":{
+			"collections":[
 				{
-		 			"id":"Foobar",
+					"id":"shapes",
+					"show":true
+				}
+			],
+			"sections":[
+				{
+					"id":"Foobar",
 					"name": "Foobar",
-			        "includes":[
-		            	"pointtext",
-		            	"circle"
-		            ]
-		         }
-    		]
-    	},
-    	"desktop":{
-    		"collections":[
-    			{
-	    			"id":"shapes",
-	    			"show":true
-	    		}
-    		],
-    		"sections":"$defaultSections"
-    	},
-    	"sketchhifi":{
-    		"collections":[
-    			{
-	    			"id":"shapes",
-	    			"show":true
-	    		}
-    		],
-    		"sections":"$defaultSections"
-    	},
-    	"sketchlofi":{
-    		"collections":[
-    			{
-	    			"id":"shapes",
-	    			"show":true
-	    		}
-    		],
-    		"sections":"$defaultSections"
-    	}
-    },
-    "options":{
-    }
+					"includes":[
+						"pointtext",
+						"circle"
+					]
+				}
+			]
+		},
+		"desktop":{
+			"collections":[
+				{
+					"id":"shapes",
+					"show":true
+				}
+			],
+			"sections":"$defaultSections"
+		},
+		"sketchhifi":{
+			"collections":[
+				{
+					"id":"shapes",
+					"show":true
+				}
+			],
+			"sections":"$defaultSections"
+		},
+		"sketchlofi":{
+			"collections":[
+				{
+					"id":"shapes",
+					"show":true
+				}
+			],
+			"sections":"$defaultSections"
+		}
+	}
 }

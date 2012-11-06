@@ -65,6 +65,33 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 	
 	},
 	
+	/**
+	 * Find the currently selected PaletteItem object with the palette item group
+	 * within which the given palItem belongs.
+	 * @param children {array} Array of children for current palette (mostly PaletteFolder and PaletteItem)
+	 * @param startIndex {number} Index into children for first child within palette item group
+	 * @returns { endIndex:{number}, selectedIndex:{number} } 
+	 */
+	_paletteItemGroupInfo: function(children, startIndex){
+		var obj = {};
+		var idx = startIndex;
+		var child = children[idx];
+		var paletteItemGroup = child.paletteItemGroup;
+		do{
+			//FIXME: temporary
+			if(idx == startIndex){
+				obj.selectedIndex = idx;
+			}
+			idx++;
+			if(idx >= children.length){
+				break;
+			}
+			child = children[idx];
+		}while(child.declaredClass == "davinci.ve.palette.PaletteItem" && child.paletteItemGroup === paletteItemGroup);
+		obj.endIndex = idx - 1;
+		return obj;
+	},
+	
 	folderClickHandler: function(evt){
 		
 		// Determine which preset applies to the current editor
@@ -83,17 +110,6 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 				continue;
 			}
 /*
-			//FIXME: Only the IF clause should stay. ELSE clause should be deleted.
-			if(domClass.has(this, presetClassName)){
-				var a = 1;
-				// If folder is open, then wipeOut
-				// If folder is closed, see if children list exists, if so then wipeIn, else create
-				// Remove existing paletteItems for this folder
-				// Add new paletteItems for this folder
-				
-			}else{
-				//FIXME: Legacy logic - should be deleted
-*/
 			for(var j = i + 1; j < len; j++){
 				child = children[j];
 				if(child.declaredClass != "davinci.ve.palette.PaletteItem"){
@@ -105,9 +121,27 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 					fx.wipeOut({node: child.id, duration: 200}).play();
 				}
 			}
-/*
-			}
 */
+			for(var j = i + 1; j < len; ){
+				child = children[j];
+				if(child.declaredClass != "davinci.ve.palette.PaletteItem"){
+					break;
+				}
+				var obj = this._paletteItemGroupInfo(children, j);
+				for(var k=j; k <= obj.endIndex; k++){
+					child = children[k];
+					if(k == obj.selectedIndex){
+						if(dojo.style(child.domNode, "display") == "none"){
+							fx.wipeIn({node: child.id, duration: 200}).play();
+						}else{
+							fx.wipeOut({node: child.id, duration: 200}).play();
+						}
+					}else{
+						dojo.style(child.domNode, "display", "none");
+					}
+				}
+				j = k;
+			}
 			break;
 		}
 		return false;

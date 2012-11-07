@@ -3,6 +3,7 @@ define([
     "dojo/_base/lang",
 	"dojo/_base/connect",
 	"dojo/Deferred",
+	"dijit/focus",
 	"dijit/_WidgetBase",
 	"davinci/Runtime",
 	"davinci/Workbench",
@@ -23,6 +24,7 @@ define([
 	Lang,
 	connect,
 	Deferred,
+	FocusUtils,
 	WidgetBase,
 	Runtime,
 	Workbench,
@@ -48,6 +50,8 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	_displayShowValue: 'block', // either block or inline-block, depending on editorPrefs.widgetPaletteLayout
 	_presetClassNamePrefix: 'maqPaletteSection_',	// Only used for debugging purposes
 	_presetSections: {},	// Assoc array of all paletteItem objects, indexed by [preset][section]
+	raisedItems: [],	// PaletteItems that have "raised" styling
+	sunkenItems: [],	// PaletteItems that have "sunken" styling
 	
 	postMixInProperties: function() {
 		this._resource = commonNls;
@@ -583,6 +587,20 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		this.updatePaletteVisibility();
 	},
 	
+	/**
+	 * Call flat() for all PaletteItems that have raised or sunken styling
+	 */
+	flattenAll: function(){
+		for(var i=0; i<this.raisedItems.length; i++){
+			this.raisedItems[i].flat(this.raisedItems[i].domNode);
+		}
+		this.raisedItems = [];
+		for(var i=0; i<this.sunkenItems.length; i++){
+			this.sunkenItems[i].flat(this.sunkenItems[i].domNode);
+		}
+		this.sunkenItems = [];
+	},
+	
 	onDragStart: function(e){	
 		var data = e.dragSource.data;
 		Metadata.getHelper(data.type, 'tool').then(function(ToolCtor) {
@@ -617,11 +635,19 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	},
 
     onDragEnd: function(e){
+/*
+console.log('onDragEnd pushedItem = null');
 		this.pushedItem = null;
+*/
 		this._context.setActiveTool(null);
 		this._context.setActiveDragDiv(null);
 		dojo.disconnect(this._dragKeyDownListener);
 		dojo.disconnect(this._dragKeyUpListener);
+		if(FocusUtils.curNode && FocusUtils.curNode.blur){
+			FocusUtils.curNode.blur();
+		}
+		this.flattenAll();
+
 	},
 	
 	onDragMove: function(e){

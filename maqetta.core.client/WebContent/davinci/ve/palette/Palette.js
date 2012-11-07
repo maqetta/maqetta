@@ -287,7 +287,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 									}
 									// Add any remaining section items to end of sortedItems
 									for(var si = 0; si < sectionItems.length; si++){
-										sortedItems.push(sectionItem[si]);
+										sortedItems.push(sectionItems[si]);
 									}
 								}else{
 									sortedItems = sectionItems;

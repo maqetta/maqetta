@@ -4,8 +4,8 @@
 	"$defaultSections":[
 		{
 			"_COMMENT1_":"One entry for each section (==folder) in widget palette",
- 			"id":"Foobar",
-			"name": "Foobar",
+ 			"id":"Containers",
+			"name": "Containers",
 			"_COMMENT2_":"includes provides ordered list of widgets to appear in each section",
 			"_COMMENT3_":"each entry in array causes a new item to appear in that section",
 			"_COMMENT4_":"each entry in array can be either a string or an array",
@@ -13,11 +13,32 @@
 			"_COMMENT6_":"otherwise the string holds a tag, which causes all widgets that match tag to share that item",
 			"_COMMENT7_":"if an array, then it holds a list of strings, each of which can start with type: (widget type) or a tag",
 			"includes":[
-				"line",
-				"type:shapes.Text",
-				["rectangle","type:shapes.Polyline"]
+				"AccordionContainer",
+				"BorderContainer",
+				"ContentPane",
+				"Form",
+				"MenuBar",
+				"TabContainer",
+				"TitlePane",
+				"Toolbar",
+				"<div>",
+				"<span>"
 			]
-	}
+		},
+		{
+ 			"id":"Controls",
+			"name": "Controls",
+			"includes":[
+				"Button",
+				"Calendar",
+				"CheckBox",
+				"ColorPalette",
+				"ComboBox",
+				"ComboButton",
+				"CurrencyTextBox",
+				"GridX"
+			]
+		}
 	],
 	"_COMMENT2_":"Should have one each for mobile, desktop, sketchhifi, sketchlofi",
 	"_COMMENT3_":"For each preset, collections is list of each widget collection in order of precedence",
@@ -25,46 +46,53 @@
 	"presets":{
 		"mobile":{
 			"collections":[
-				{
-					"id":"shapes",
-					"show":true
-				}
+				{ "id":"dojoxmobile", "show":true },
+				{ "id":"dijit", "show":false },
+				{ "id":"html", "show":true },
+				{ "id":"clipart", "show":true },
+				{ "id":"shapes", "show":true }
+			],
+			"sections":"$defaultSections"
+		},
+		"desktop":{
+			"collections":[
+				{ "id":"dijit", "show":true },
+				{ "id":"dojoxmobile", "show":false },
+				{ "id":"html", "show":true },
+				{ "id":"clipart", "show":true },
+				{ "id":"shapes", "show":true }
+			],
+			"sections":"$defaultSections"
+		},
+		"sketchhifi":{
+			"collections":[
+				{ "id":"shapes", "show":true },
+				{ "id":"clipart", "show":true },
+				{ "id":"dijit", "show":true },
+				{ "id":"dojoxmobile", "show":true },
+				{ "id":"html", "show":true }
 			],
 			"sections":[
 				{
 					"id":"Foobar",
 					"name": "Foobar",
 					"includes":[
-						"pointtext",
-						"circle"
+						"Line",
+						"type:shapes.Text",
+						["Rectangle","type:shapes.Polyline"],
+						"Help",
+						"Map"
 					]
 				}
 			]
 		},
-		"desktop":{
-			"collections":[
-				{
-					"id":"shapes",
-					"show":true
-				}
-			],
-			"sections":"$defaultSections"
-		},
-		"sketchhifi":{
-			"collections":[
-				{
-					"id":"shapes",
-					"show":true
-				}
-			],
-			"sections":"$defaultSections"
-		},
 		"sketchlofi":{
 			"collections":[
-				{
-					"id":"shapes",
-					"show":true
-				}
+				{ "id":"shapes", "show":true },
+				{ "id":"clipart", "show":true },
+				{ "id":"dijit", "show":true },
+				{ "id":"dojoxmobile", "show":false },
+				{ "id":"html", "show":true }
 			],
 			"sections":"$defaultSections"
 		}

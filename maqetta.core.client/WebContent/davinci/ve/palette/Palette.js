@@ -635,10 +635,6 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	},
 
     onDragEnd: function(e){
-/*
-console.log('onDragEnd pushedItem = null');
-		this.pushedItem = null;
-*/
 		this._context.setActiveTool(null);
 		this._context.setActiveDragDiv(null);
 		dojo.disconnect(this._dragKeyDownListener);

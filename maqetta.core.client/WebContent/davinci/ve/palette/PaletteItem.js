@@ -84,10 +84,8 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		this._hovering = false;
 		this._tooltipShowing = false;
 		var hoverHandler = function(currentTarget){
-			console.dir(currentTarget);
 			if(this._hovering && !this._tooltipShowing){
 				this._tooltipShowing = true;
-				console.log('show tooltip');
 				this._tooltipDialog = new TooltipDialog({
 					style: "width: 300px;",
 					content: "<p>I have a mouse leave event handler that will close the dialog."
@@ -98,19 +96,16 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 				});
 			}else if(!this._hovering && this._tooltipShowing){
 				this._tooltipShowing = false;
-				console.log('hide tooltip');
 				Popup.close(this._tooltipDialog);
 			}
 		}.bind(this);
 		On(a, 'mouseover', function(e){
-			console.log('mouseover');
 			this._hovering = true;
 			setTimeout(function(){
 				hoverHandler(e.currentTarget);
 			}, 750);
 		}.bind(this));
 		On(a, 'mouseout', function(e){
-			console.log('mouseout');
 			this._hovering = false;
 			setTimeout(function(){
 				hoverHandler(e.currentTarget);
@@ -138,13 +133,6 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		dijit.focus(this.domNode);
 	},
 
-/*FIXME: Doesn't seem to be ever used. Commenting out for now. Probably should just delete this.
-	deselect: function(){
-		this.flat(this.domNode);
-		this.palette.selectedItem = null;
-	},
-*/
-
 	itemMouseOverHandler: function(e){
 		var div = this.domNode;
 		if(this.palette.selectedItem == this){
@@ -167,27 +155,13 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 	},
 
 	itemMouseDownHandler: function(e){
-console.log('itemMouseDownHandler entered');
 		var div = this.domNode;
 		this.focus();
 		this.sunken(div);
 		if(this.palette.selectedItem && this.palette.selectedItem != this){
-console.log('itemMouseDownHandler this.palette.selectedItem && this.palette.selectedItem != this');
 			this.flat(this.palette.selectedItem.domNode);
 			this.palette.selectedItem = null;
-/*
-			this.palette.currentItem = null;
-*/
 		}
-
-/*
-		// Sole apparent purpose for pushedItem is to remember the item which
-		// received the mousedown event so that CSS styling can be adjusted
-		// if mouseup on same item as received the mousedown
-console.log('itemMouseDownHandler pushedItem = this');
-		this.palette.pushedItem = this;
-*/
-			
 		DragManager.document = this.palette._context.getDocument();
 		var frameNode = this.palette._context.frameNode;
 		if(frameNode){
@@ -207,33 +181,13 @@ console.log('itemMouseDownHandler pushedItem = this');
 	 */
 	itemMouseUpHandler: function(e){
 		var div= this.domNode;
-console.log('itemMouseUpHandler entered pushedItem='+this.palette.pushedItem);
-/*
-		if(this.palette.pushedItem != this){
-console.log('itemMouseUpHandler pushedItem != this');
-console.log('itemMouseUpHandler pushedItem = null');
-			this.palette.pushedItem = null;
-			this.raised(div);
-			return;
-		}
-*/
 		if(this.palette.selectedItem == this){
 			// User has clicked a second time on same widget.
 			// This toggles the widget into "inactive"
-console.log('itemMouseUpHandler selectedItem == this');
-/*
-			this.raised(div);	//FIXME: Trying this out. Mouseout should remove this
-*/
 			this.palette.selectedItem.flat(this.palette.selectedItem.domNode);		//FIXME: Trying this out
 			this.palette.selectedItem = null;
 			this.palette.sunkenItem = null;
 			this.palette.flattenAll();
-/*
-			this.palette.currentItem = this;
-*/
-/*
-			this.palette.currentItem = null;		//FIXME: Trying this out
-*/
 			this.palette._context.setActiveTool(null);
 			if(FocusUtils.curNode && FocusUtils.curNode == div && FocusUtils.curNode.blur){
 				FocusUtils.curNode.blur();
@@ -242,15 +196,6 @@ console.log('itemMouseUpHandler selectedItem == this');
 			return;
 		}
 		this.palette.selectedItem = this;
-/*
-console.log('itemMouseUpHandler pushedItem = null');
-		this.palette.pushedItem = null;
-*/
-/*		
-		// currentItem holds which widget has been clicked on
-		// and which might be subsequently added to canvas by clicking on canvas
-		this.palette.currentItem = this;
-*/
 		this.sunken(div);		//FIXME: Trying this out
 
 		Metadata.getHelper(this.type, 'tool').then(function(ToolCtor) {
@@ -268,9 +213,6 @@ console.log('itemMouseUpHandler pushedItem = null');
 				this.palette._docMouseUpHandler = null;
 			}
 			this.palette.selectedItem = null;
-/*
-			this.palette.currentItem = null;
-*/
 			this.flat(this.domNode);
 			this.palette._context.dragMoveCleanup();
 		}.bind(this);
@@ -336,8 +278,6 @@ console.log('itemMouseUpHandler pushedItem = null');
 	// raised => styling for items under mouse but not selected
 	// flat => items which are both not selected and not under mouse
 	flat: function(div){
-console.log("flat");
-console.trace();
 		dojo.removeClass(div, "dojoyPaletteItemRaised");
 		dojo.removeClass(div, "dojoyPaletteItemSunken");
 		dojo.addClass(div, "dojoyPaletteItemFlat");
@@ -351,8 +291,6 @@ console.trace();
 	},
 
 	sunken: function(div){
-console.log("sunken");
-console.trace();
 		dojo.removeClass(div, "dojoyPaletteItemFlat");
 		dojo.removeClass(div, "dojoyPaletteItemRaised");
 		dojo.addClass(div, "dojoyPaletteItemSunken");

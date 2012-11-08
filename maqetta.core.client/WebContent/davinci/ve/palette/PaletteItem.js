@@ -47,13 +47,12 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 						'</span>'+
 						'<span class="paletteItemLabelContainer">'+
 							'<span class="paletteItemLabel"></span>'+
-							'<span class="maqWidgetsCategory maqWidgetsCategorySameLine"></span>'+
 						'</span>'+
-						'<span class="maqWidgetsCategory maqWidgetsCategorySeparateLine"></span>'+
 					'</span>'+
 				'</a>',
 	selectedWidgetTemplate: '<span class="paletteItemSelectionContent">'+
-					'<span class="paletteItemSelectedImage"></span>'+
+					'<img class="paletteItemSelectedMoreIcon"></img>'+
+					'<img class="paletteItemSelectedHelpIcon"></img>'+
 				'</span>',
 	// pointer to preset to which this PaletteItem belongs
 	preset: null,
@@ -82,10 +81,6 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		var label = a.querySelector('.paletteItemLabel');
 		label.appendChild(dojo.doc.createTextNode(this.displayName));
 		a.title = this.displayName + ' (category: ' + this.category + ')';
-		var maqWidgetsCategorySameLine = a.querySelector('.maqWidgetsCategorySameLine');
-		maqWidgetsCategorySameLine.textContent = this.category;
-		var maqWidgetsCategorySeparateLine = a.querySelector('.maqWidgetsCategorySeparateLine');
-		maqWidgetsCategorySeparateLine.textContent = this.category;
 		this.domNode.componentClassName = this.name; // ex. "davinci.ve.widget.Hello"
 		dojo.setSelectable(this.domNode, false);
 		/*

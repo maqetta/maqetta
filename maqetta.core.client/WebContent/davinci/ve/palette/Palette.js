@@ -618,18 +618,8 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	},
 	
 	onDragStart: function(e){
-		if(this.selectedItem){
-			var paletteItemSelectionContainer = Query('.paletteItemSelectionContainer', this.selectedItem.domNode)[0];
-			if(paletteItemSelectionContainer){
-				paletteItemSelectionContainer.innerHTML = '';
-			}
-			if(e._dragClone){
-				var paletteItemSelectionContainer = Query('.paletteItemSelectionContainer', e._dragClone)[0];
-				if(paletteItemSelectionContainer){
-					paletteItemSelectionContainer.innerHTML = '';
-				}
-			}
-		}
+		this.removeSelectionAll();
+		this.selectedItem = null;
 		var data = e.dragSource.data;
 		Metadata.getHelper(data.type, 'tool').then(function(ToolCtor) {
 			// Copy the data in case something modifies it downstream -- what types can data.data be?

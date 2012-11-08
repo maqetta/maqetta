@@ -960,6 +960,7 @@ davinci_top_bar .dijitButtonNode {
     height: 100%;
     overflow-x: hidden;
     margin: 2px 3px 3px 4px;
+    overflow-x:visible;
 }
 .dojoyPaletteCommon a {
 	text-decoration: none;
@@ -970,54 +971,65 @@ davinci_top_bar .dijitButtonNode {
 }
 .dojoyPaletteCommon .paletteItemNormalContainer {
 	overflow:hidden;
+	display:inline-block;
+	width:66px;
+	height:86px; 
 }
 .dojoyPaletteCommon .paletteItemSelectionContainer {
 	position:relative;
+	vertical-align: top;
 }
 .dojoyPaletteCommon .paletteItemSelectionContent {
 	display:inline-block; 
 	z-index:1; 
 	position:absolute; 
-	top:-10px;
-	left:-10px;
-	width:68px;
-	padding:10px;
-	height:87px; 
-	background:white;	
+	top:-8px;
+	left:0px;
+	width:66px;
+	height:80px;
+	padding:0px;
 	border:2px solid #999;
 	border-radius:4px;
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, .5);
 	pointer-events:none;
 }
-.dojoyPaletteCommon .paletteItemSelectedImage {
-	display:inline-block;
-	width:50px;
-	height:50px;
-	background:#eee;
-	border:1px solid black;
-	box-shadow: 0px 0px 4px rgba(0, 0, 0, .2);
+.paletteItemSelectedMoreIcon {
+	position:absolute;
+	width:32px;
+	height:32px;
+	background:pink;
+	left:60px;
+	top:-10px;
+}
+.paletteItemSelectedHelpIcon {
+	position:absolute;
+	width:32px;
+	height:32px;
+	background:lightgreen;
+	left:60px;
+	top:50px;
 }
 .dojoyPaletteCommon img {
 	vertical-align: top;
-    padding-right: 4px;
 }
 .dojoyPalette.paletteLayoutIcons .dojoyPaletteItem.dojoyPaletteCommon {
 	display:inline-block;
-	width:75px;
+	width:68px;
+	outline:none;
 }
 .dojoyPalette.paletteLayoutIcons .paletteItemImageContainer {
 	text-align:center;
 	display:block;
 }
 .dojoyPalette.paletteLayoutIcons .paletteItemImageContainer img {
-	width:60px;
+	width:50px;
+	height:50px;
 }
 .dojoyPalette.paletteLayoutIcons .paletteItemLabelContainer {
-	text-align:left;
+	text-align:center;
 	display:block;
 	overflow:hidden;
 	text-overflow:ellipsis;
-	margin-left:10px;
 }
 .dojoyPalette.paletteLayoutIcons .paletteItemLabel {
 }
@@ -1028,7 +1040,9 @@ davinci_top_bar .dijitButtonNode {
     border-style: solid;
     border-color: #D1D1D1 #989898 #989898 white;
     border-top-color: transparent;
-    font-family: tahoma, helvetica, arial, sans-serif;
+    font-family: arial, helvetica, sans-serif;
+    font-size:11px;
+    color:#222;
     cursor: pointer;
     padding: 1px;
 }
@@ -1036,23 +1050,17 @@ davinci_top_bar .dijitButtonNode {
 }
 .dojoyPaletteItem {
     background-color: white;
-    margin: 0 1px 1px 0;
     border-color: white;
 }
 .dojoyPaletteItemFlat {
 	border-color: white;
 	background-color: white;
-	margin: 0 1px 1px 0;
 }
 .dojoyPaletteItemRaised {
 	border-color: white #ACA899 #ACA899 white;
 	background-color: #F0F4FC;
-	margin: 0 1px 1px 0;
 }
 .dojoyPaletteItemSunken {
-	border-color: #ACA899 white white #ACA899;
-	background-color: #D9E9F9;
-	margin: 1px 0 0 1px;
 }
 .dojoyPaletteFolder {
     border-color: #D1D1D1 #989898 #989898 white;

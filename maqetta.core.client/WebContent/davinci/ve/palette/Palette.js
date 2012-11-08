@@ -2,6 +2,7 @@ define([
     "dojo/_base/declare",
     "dojo/_base/lang",
 	"dojo/_base/connect",
+	"dojo/query",
 	"dojo/Deferred",
 	"dijit/focus",
 	"dijit/_WidgetBase",
@@ -23,6 +24,7 @@ define([
 	declare,
 	Lang,
 	connect,
+	Query,
 	Deferred,
 	FocusUtils,
 	WidgetBase,
@@ -516,7 +518,8 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		}else{
 			folder.addChild(node);
 		}
-		var ds = new DragSource(node.domNode, "component", node);
+		var nodeToClone = Query('.paletteItemImage', node.domNode)[0];
+		var ds = new DragSource(node.domNode, "component", node, nodeToClone);
 		ds.targetShouldShowCaret = true;
 		ds.returnCloneOnFailure = false;
 		this.connect(ds, "onDragStart", dojo.hitch(this,function(e){this.onDragStart(e);})); // move start
@@ -601,7 +604,32 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		this.sunkenItems = [];
 	},
 	
-	onDragStart: function(e){	
+	/**
+	 * Remove any selection content for any of the PaletteItems
+	 */
+	removeSelectionAll: function(){
+		var paletteItemSelectionArray = Query('.paletteItemSelectionContent', this.domNode);
+		for(var i=0; i<paletteItemSelectionArray.length; i++){
+			var node = paletteItemSelectionArray[i];
+			if(node && node.parentNode){
+				node.parentNode.innerHTML = '';
+			}
+		}
+	},
+	
+	onDragStart: function(e){
+		if(this.selectedItem){
+			var paletteItemSelectionContainer = Query('.paletteItemSelectionContainer', this.selectedItem.domNode)[0];
+			if(paletteItemSelectionContainer){
+				paletteItemSelectionContainer.innerHTML = '';
+			}
+			if(e._dragClone){
+				var paletteItemSelectionContainer = Query('.paletteItemSelectionContainer', e._dragClone)[0];
+				if(paletteItemSelectionContainer){
+					paletteItemSelectionContainer.innerHTML = '';
+				}
+			}
+		}
 		var data = e.dragSource.data;
 		Metadata.getHelper(data.type, 'tool').then(function(ToolCtor) {
 			// Copy the data in case something modifies it downstream -- what types can data.data be?
@@ -642,6 +670,8 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		if(FocusUtils.curNode && FocusUtils.curNode.blur){
 			FocusUtils.curNode.blur();
 		}
+		this.removeSelectionAll();
+		this.selectedItem = null;
 		this.flattenAll();
 
 	},

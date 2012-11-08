@@ -2,6 +2,7 @@ define([
 	"dojo/_base/declare",
 	"dojo/on",
 	"dojo/_base/event",
+	"dojo/query",
 	"dijit/focus",
 	"dijit/_WidgetBase",
 	"dojo/dom-class",
@@ -15,6 +16,7 @@ define([
 	declare,
 	On,
 	Event,
+	Query,
 	FocusUtils,
 	_WidgetBase,
 	domClass,
@@ -38,15 +40,21 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 	palette: null,
 	category: "",
 	template: '<a href="javascript:void(0)">'+
-					'<span class="paletteItemImageContainer">'+
-						'<img border="0"/>'+
+					'<span class="paletteItemSelectionContainer"></span>'+
+					'<span class="paletteItemNormalContainer">'+
+						'<span class="paletteItemImageContainer">'+
+							'<img class="paletteItemImage" border="0"/>'+
+						'</span>'+
+						'<span class="paletteItemLabelContainer">'+
+							'<span class="paletteItemLabel"></span>'+
+							'<span class="maqWidgetsCategory maqWidgetsCategorySameLine"></span>'+
+						'</span>'+
+						'<span class="maqWidgetsCategory maqWidgetsCategorySeparateLine"></span>'+
 					'</span>'+
-					'<span class="paletteItemLabelContainer">'+
-						'<span class="paletteItemLabel"></span>'+
-						'<span class="maqWidgetsCategory maqWidgetsCategorySameLine"></span>'+
-					'</span>'+
-					'<span class="maqWidgetsCategory maqWidgetsCategorySeparateLine"></span>'+
 				'</a>',
+	selectedWidgetTemplate: '<span class="paletteItemSelectionContent">'+
+					'<span class="paletteItemSelectedImage"></span>'+
+				'</span>',
 	// pointer to preset to which this PaletteItem belongs
 	preset: null,
 	// id of preset for which this PaletteItem object will be included
@@ -159,6 +167,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		this.focus();
 		this.sunken(div);
 		if(this.palette.selectedItem && this.palette.selectedItem != this){
+			this.palette.removeSelectionAll();
 			this.flat(this.palette.selectedItem.domNode);
 			this.palette.selectedItem = null;
 		}
@@ -184,6 +193,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		if(this.palette.selectedItem == this){
 			// User has clicked a second time on same widget.
 			// This toggles the widget into "inactive"
+			this.palette.removeSelectionAll();
 			this.palette.selectedItem.flat(this.palette.selectedItem.domNode);		//FIXME: Trying this out
 			this.palette.selectedItem = null;
 			this.palette.sunkenItem = null;
@@ -194,6 +204,10 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 			}
 
 			return;
+		}else if(this.palette.selectedItem && this.palette.selectedItem != this){
+			this.palette.removeSelectionAll();
+			this.flat(this.palette.selectedItem.domNode);
+			this.palette.selectedItem = null;
 		}
 		this.palette.selectedItem = this;
 		this.sunken(div);		//FIXME: Trying this out
@@ -212,6 +226,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 				dojo.disconnect(this.palette._docMouseUpHandler);
 				this.palette._docMouseUpHandler = null;
 			}
+			this.palette.removeSelectionAll();
 			this.palette.selectedItem = null;
 			this.flat(this.domNode);
 			this.palette._context.dragMoveCleanup();
@@ -235,7 +250,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 				if(this.palette.selectedItem){
 					var selectedItemNode = this.palette.selectedItem.domNode;
 					var node = e.target;
-					while(node.tagName != 'BODY'){
+					while(node && node.tagName != 'BODY'){
 						if(node == selectedItemNode){
 							ancestor = true;
 							break;
@@ -294,7 +309,9 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		dojo.removeClass(div, "dojoyPaletteItemFlat");
 		dojo.removeClass(div, "dojoyPaletteItemRaised");
 		dojo.addClass(div, "dojoyPaletteItemSunken");
-		this.palette.sunkenItems.push(this); // Palette.js will "un-raised" in onDragEnd
+		this.palette.sunkenItems.push(this); // Palette.js will "un-sunken" in onDragEnd
+		var paletteItemSelectionContainer = Query('.paletteItemSelectionContainer', this.domNode)[0];
+		paletteItemSelectionContainer.innerHTML = this.selectedWidgetTemplate;
 	}
 });
 });

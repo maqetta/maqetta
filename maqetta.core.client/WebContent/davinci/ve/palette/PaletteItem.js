@@ -51,8 +51,8 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 					'</span>'+
 				'</a>',
 	selectedWidgetTemplate: '<span class="paletteItemSelectionContent">'+
-					'<img class="paletteItemSelectedMoreIcon"></img>'+
-					'<img class="paletteItemSelectedHelpIcon"></img>'+
+					'<span class="paletteItemSelectedIcon paletteItemSelectedMoreIcon"></span>'+
+					'<span class="paletteItemSelectedIcon paletteItemSelectedHelpIcon"></span>'+
 				'</span>',
 	// pointer to preset to which this PaletteItem belongs
 	preset: null,
@@ -307,6 +307,22 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		this.palette.sunkenItems.push(this); // Palette.js will "un-sunken" in onDragEnd
 		var paletteItemSelectionContainer = Query('.paletteItemSelectionContainer', this.domNode)[0];
 		paletteItemSelectionContainer.innerHTML = this.selectedWidgetTemplate;
+		var paletteItemSelectedMoreIcon = Query('.paletteItemSelectedMoreIcon', div)[0];
+		On(paletteItemSelectedMoreIcon, 'mouseup', function(e){
+			Event.stop(e);
+			this._tooltipDialog = new TooltipDialog({
+				style: "width: 300px;",
+				content: "<p>I have a mouse leave event handler that will close the dialog.</p>"
+			});
+			Popup.open({
+				popup: this._tooltipDialog,
+				around: paletteItemSelectedMoreIcon
+			});
+			setTimeout(function(){
+				Popup.close(this._tooltipDialog);
+			}, 2000);
+		}.bind(this));
+
 	}
 });
 });

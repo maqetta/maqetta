@@ -3,6 +3,7 @@ define([
 	"dojo/on",
 	"dojo/_base/event",
 	"dojo/query",
+	"dojo/dom-construct",
 	"dijit/focus",
 	"dijit/_WidgetBase",
 	"dojo/dom-class",
@@ -17,6 +18,7 @@ define([
 	On,
 	Event,
 	Query,
+	domConstruct,
 	FocusUtils,
 	_WidgetBase,
 	domClass,
@@ -51,6 +53,10 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 					'</span>'+
 				'</a>',
 	selectedWidgetTemplate: '<span class="paletteItemSelectionContent">'+
+					'<span class="paletteItemSelectedStrip paletteItemSelectedStripV paletteItemSelectedStripL"></span>'+
+					'<span class="paletteItemSelectedStrip paletteItemSelectedStripV paletteItemSelectedStripR"></span>'+
+					'<span class="paletteItemSelectedStrip paletteItemSelectedStripH paletteItemSelectedStripT"></span>'+
+					'<span class="paletteItemSelectedStrip paletteItemSelectedStripH paletteItemSelectedStripB"></span>'+
 					'<span class="paletteItemSelectedIcon paletteItemSelectedMoreIcon"></span>'+
 					'<span class="paletteItemSelectedIcon paletteItemSelectedHelpIcon"></span>'+
 				'</span>',
@@ -62,12 +68,16 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 	// All palette items with the same paletteItemGroup will be mutually exclusive in that
 	// only one of these palette items will appear in the widget palette at any time.
 	// (There is UI where the user can switch among the various palette items with a group.)
-	paletteItemGroup:null,
+	_paletteItemGroup:null,
+	// Display name for widget collection for this widget
+	_collectionName:null,
+	_paletteItemMoreConnects:[],
 	
 	buildRendering: function(){
 		this.palette = dijit.byId(this.paletteId);
 		var div = this.domNode = dojo.create('div', { className: 'dojoyPaletteCommon dojoyPaletteItem' });
 		div.innerHTML = this.template;
+		div._paletteItem = this;
 		if(this.presetClassName){	// Only used for debugging purposes
 			domClass.add(div, this.presetClassName);
 		}
@@ -80,7 +90,9 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		var labelContainer = a.querySelector('.paletteItemLabelContainer');
 		var label = a.querySelector('.paletteItemLabel');
 		label.appendChild(dojo.doc.createTextNode(this.displayName));
+/*
 		a.title = this.displayName + ' (category: ' + this.category + ')';
+*/
 		this.domNode.componentClassName = this.name; // ex. "davinci.ve.widget.Hello"
 		dojo.setSelectable(this.domNode, false);
 		/*
@@ -151,10 +163,10 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 			this.sunken(div);
 		}else{
 			this.flat(div);
-		}
+		}/*
 		if(this.tooltip){
 			this.tooltip.close();
-		}
+		}*/
 	},
 
 	itemMouseDownHandler: function(e){
@@ -308,21 +320,87 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		var paletteItemSelectionContainer = Query('.paletteItemSelectionContainer', this.domNode)[0];
 		paletteItemSelectionContainer.innerHTML = this.selectedWidgetTemplate;
 		var paletteItemSelectedMoreIcon = Query('.paletteItemSelectedMoreIcon', div)[0];
-		On(paletteItemSelectedMoreIcon, 'mouseup', function(e){
-			Event.stop(e);
-			this._tooltipDialog = new TooltipDialog({
-				style: "width: 300px;",
-				content: "<p>I have a mouse leave event handler that will close the dialog.</p>"
-			});
-			Popup.open({
-				popup: this._tooltipDialog,
-				around: paletteItemSelectedMoreIcon
-			});
-			setTimeout(function(){
-				Popup.close(this._tooltipDialog);
-			}, 2000);
-		}.bind(this));
-
+		var paletteItemsSameGroup = this.palette.getPaletteItemsSameGroup(this);
+		if(paletteItemsSameGroup.length > 1){
+			paletteItemSelectedMoreIcon.style.display = 'inline-block';
+			// FIXME: Any leakages here?
+			On(paletteItemSelectedMoreIcon, 'mouseup', function(e){
+				Event.stop(e);
+				var paletteItemMoreContent = domConstruct.create("div", {className:"paletteItemMoreContent"});
+				var paletteItemMoreCloseBox = domConstruct.create("button", 
+						{className:"paletteItemMoreCloseBox", style:"position:absolute; right:0px; top:0px;", innerHTML:'X'},
+						paletteItemMoreContent);
+				//FIXME: localization
+				var paletteItemAlternatesLabel = domConstruct.create("div", 
+						{className:"paletteItemAlternatesLabel", innerHTML:'Alternative widgets:'},
+						paletteItemMoreContent);
+				this._paletteItemMoreConnects.push(On(paletteItemMoreCloseBox, 'click', function(e){
+					//FIXME: Why does widget selection go away, even though we stop the event
+					Event.stop(e);
+					this.paletteItemMoreCloseCleanup();
+				}.bind(this)));
+				var paletteItemAlternatesContainer = domConstruct.create("div", 
+						{className:"paletteItemAlternatesContainer"},
+						paletteItemMoreContent);
+				var paletteItemAlternates = [];
+				for(var i=0; i<paletteItemsSameGroup.length; i++){
+					var paletteItemOuter = paletteItemsSameGroup[i];
+					var className = (paletteItemOuter.domNode.style.display == 'none') ? 'paletteItemMoreUnselected' : 'paletteItemMoreSelected';
+					var collectionName = paletteItemOuter._collectionName;
+					var paletteItemAlternate = domConstruct.create("button", 
+							{className:"paletteItemAlternate "+className, innerHTML:collectionName},
+							paletteItemAlternatesContainer);
+					paletteItemAlternates.push(paletteItemAlternate);
+					this._paletteItemMoreConnects.push(On(paletteItemAlternate, 'click', function(collectionName, e){
+						//FIXME: Why does widget selection go away, even though we stop the event
+						Event.stop(e);
+						var newPaletteItem;
+						for(var j=0; j<paletteItemsSameGroup.length; j++){
+							var paletteItemInner = paletteItemsSameGroup[j];
+							if(paletteItemInner._collectionName == collectionName){
+								newPaletteItem = paletteItemInner;
+								break;
+							}
+						}
+						if(newPaletteItem){
+							for(var j=0; j<paletteItemsSameGroup.length; j++){
+								var paletteItemInner = paletteItemsSameGroup[j];
+								paletteItemInner.domNode.style.display = (paletteItemInner == newPaletteItem) ? this.palette._displayShowValue : 'none';
+							}
+						}
+						this.paletteItemMoreCloseCleanup();
+					}.bind(this, collectionName)));
+				}
+				this._tooltipDialog = new TooltipDialog({
+					className: "paletteItemMorePopup",
+					style: "width: auto; ",
+					content: paletteItemMoreContent
+				});
+				Popup.open({
+					popup: this._tooltipDialog,
+					around: paletteItemSelectedMoreIcon,
+					orient:["above-centered"]
+				});
+				/*
+				setTimeout(function(){
+					Popup.close(this._tooltipDialog);
+				}, 2000);
+				*/
+			}.bind(this));
+		}else{
+			paletteItemSelectedMoreIcon.style.display = 'none';
+		}
+	},
+	
+	paletteItemMoreCloseCleanup: function(){
+		// FIXME: Move into separate routine
+		for(var j=0; j<this._paletteItemMoreConnects.length; j++){
+			this._paletteItemMoreConnects[j].remove();
+		};
+		this._paletteItemMoreConnects = [];
+		Popup.close(this._tooltipDialog);
+		this._tooltipDialog.destroyRecursive();
+		this._tooltipDialog = null;
 	}
 });
 });

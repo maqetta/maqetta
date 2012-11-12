@@ -974,10 +974,13 @@ davinci_top_bar .dijitButtonNode {
 	display:inline-block;
 	width:66px;
 	height:86px; 
+	position:relative;
+	z-index:1;
 }
 .dojoyPaletteCommon .paletteItemSelectionContainer {
-	position:relative;
 	vertical-align: top;
+	position:relative;
+	z-index:1;
 }
 .dojoyPaletteCommon .paletteItemSelectionContent {
 	display:inline-block; 
@@ -992,6 +995,39 @@ davinci_top_bar .dijitButtonNode {
 	border-radius:4px;
 	box-shadow: 0px 0px 10px rgba(0, 0, 0, .5);
 	pointer-events:none;
+}
+.paletteItemSelectedStrip {
+	position:absolute;
+	display:block;
+	background:white;
+}
+.paletteItemSelectedStripV {
+	position:absolute;
+	top:0px;
+	width:8px;
+	height:80px;
+}
+.paletteItemSelectedStripL {
+	left:0px;
+	border-top-left-radius:4px;
+	border-bottom-left-radius:4px;
+}
+.paletteItemSelectedStripR {
+	left:58px;
+	border-top-right-radius:4px;
+	border-bottom-right-radius:4px;
+}
+.paletteItemSelectedStripH {
+	position:absolute;
+	left:8px;
+	width:50px;
+	height:8px;
+}
+.paletteItemSelectedStripT {
+	top:0px;
+}
+.paletteItemSelectedStripB {
+	top:72px;
 }
 .paletteItemSelectedIcon {
 	position:absolute;
@@ -1009,6 +1045,10 @@ davinci_top_bar .dijitButtonNode {
 	background-image:url(img/palette_help_active.png);
 	left: 54px;
 	top:67px;
+}
+#maqBody .paletteItemMorePopup .dijitTooltipContainer {
+	background:white;
+	border-color:#222;
 }
 .dojoyPaletteCommon img {
 	vertical-align: top;

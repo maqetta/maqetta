@@ -1,4 +1,12 @@
 {
+	"collections":{
+		"dijit":{
+			"name":"Dijit"
+		},
+		"dojoxmobile":{
+			"name":"Dojo Mobile"
+		}
+	},
     "categories": {
         "containers": {
             "name": "Dojo Containers",

@@ -1,4 +1,9 @@
 {
+	"collections":{
+		"html":{
+			"name":"HTML"
+		}
+	},
     "categories": {
         "html": {
             "name": "HTML",

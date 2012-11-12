@@ -1,4 +1,9 @@
 {
+	"collections":{
+		"dijit":{
+			"name":"Dijit"
+		}
+	},
     "categories": {
         "controls": {
             "name": "Dojo Controls",

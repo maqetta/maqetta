@@ -9,7 +9,9 @@ define([
 	"davinci/Runtime",
 	"davinci/Workbench",
 	"dijit/_KeyNavContainer",
+/*
 	"dijit/Tooltip",
+*/
 	"dijit/form/TextBox",
 	"davinci/ui/dnd/DragSource",
 	"davinci/ve/metadata",
@@ -31,7 +33,9 @@ define([
 	Runtime,
 	Workbench,
 	_KeyNavContainer,
+/*
 	Tooltip,
+*/
 	TextBox,
 	DragSource,
 	Metadata,
@@ -269,7 +273,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 										var newItem = dojo.clone(item);
 										var $wm = Metadata.getLibraryMetadataForType(newItem.type);
 										newItem.$library = $wm;
-										newItem.paletteItemGroup = paletteItemGroupCount;
+										newItem._paletteItemGroup = paletteItemGroupCount;
 										sectionItems.push(newItem);
 									}
 								}
@@ -400,7 +404,8 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 						preset: component.preset,
 						presetId: component.presetId,
 						presetClassName: presetClassName,	// Only used for debugging purposes
-						paletteItemGroup: item.paletteItemGroup
+						_paletteItemGroup: item._paletteItemGroup,
+						_collectionName: (item.$library && item.$library.collections && item.$library.collections[item.collection] && item.$library.collections[item.collection].name)
 					};
 					this._createItem(opt);
 				}, this);
@@ -524,10 +529,11 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		ds.returnCloneOnFailure = false;
 		this.connect(ds, "onDragStart", dojo.hitch(this,function(e){this.onDragStart(e);})); // move start
 		this.connect(ds, "onDragEnd", dojo.hitch(this,function(e){this.onDragEnd(e);})); // move end
+		/*
 		node.tooltip = new Tooltip({
 			label:opt.description, 
 			connectId:[node.id]
-		});
+		});*/
 		return node;
 	},
 	
@@ -615,6 +621,37 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 				node.parentNode.innerHTML = '';
 			}
 		}
+	},
+	
+	/**
+	 * Find all siblings paletteItem's that share the given paletteItemGroup.
+	 * Assumes all widgets with same paletteItemGroup are adjacent siblings
+	 * @param {PaletteItem} one of the PaletteItem's within the paletteItemGroup
+	 * @returns {array}  an array of paletteItem's
+	 */
+	getPaletteItemsSameGroup: function(paletteItem){
+		var paletteItems = [];
+		var paletteItemGroup = paletteItem._paletteItemGroup;
+		var thisPaletteItem = paletteItem;
+		var firstPaletteItem;
+		// Go backwards while still matching
+		while(thisPaletteItem && thisPaletteItem._paletteItemGroup){
+			if(thisPaletteItem._paletteItemGroup == paletteItemGroup){
+				firstPaletteItem = thisPaletteItem;
+				thisPaletteItem = thisPaletteItem && thisPaletteItem.domNode && thisPaletteItem.domNode.previousSibling
+						&& thisPaletteItem.domNode.previousSibling._paletteItem;
+			}else{
+				break;
+			}
+		};
+		// Go forwards while still matching
+		thisPaletteItem = firstPaletteItem;
+		while(thisPaletteItem && thisPaletteItem._paletteItemGroup == paletteItemGroup){
+			paletteItems.push(thisPaletteItem);
+			thisPaletteItem = thisPaletteItem && thisPaletteItem.domNode && thisPaletteItem.domNode.nextSibling
+					&& thisPaletteItem.domNode.nextSibling._paletteItem;
+		}
+		return paletteItems;
 	},
 	
 	onDragStart: function(e){

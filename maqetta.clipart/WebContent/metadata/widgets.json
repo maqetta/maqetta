@@ -1,4 +1,9 @@
 {
+	"collections":{
+		"clipart":{
+			"name":"Clip Art"
+		}
+	},
   "categories": {
       "clipart": {
         "name": "Clip Art",

@@ -68,7 +68,7 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 	
 	/**
 	 * Find the currently selected PaletteItem object with the palette item group
-	 * within which the given palItem belongs.
+	 * within which the given paletteItem belongs.
 	 * @param children {array} Array of children for current palette (mostly PaletteFolder and PaletteItem)
 	 * @param startIndex {number} Index into children for first child within palette item group
 	 * @returns { endIndex:{number}, selectedIndex:{number} } 
@@ -77,9 +77,9 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 		var obj = {};
 		var idx = startIndex;
 		var child = children[idx];
-		var paletteItemGroup = child.paletteItemGroup;
+		var paletteItemGroup = child._paletteItemGroup;
 		do{
-			//FIXME: temporary
+			//FIXME: temporarily pick the first one
 			if(idx == startIndex){
 				obj.selectedIndex = idx;
 			}
@@ -88,7 +88,7 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 				break;
 			}
 			child = children[idx];
-		}while(child.declaredClass == "davinci.ve.palette.PaletteItem" && child.paletteItemGroup === paletteItemGroup);
+		}while(child.declaredClass == "davinci.ve.palette.PaletteItem" && child._paletteItemGroup === paletteItemGroup);
 		obj.endIndex = idx - 1;
 		return obj;
 	},

@@ -1,4 +1,9 @@
 {
+	"collections":{
+		"shapes":{
+			"name":"Drawing Tools"
+		}
+	},
     "categories": {
         "shapes": {
             "name": "Drawing Tools",

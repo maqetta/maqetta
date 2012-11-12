@@ -1048,7 +1048,59 @@ davinci_top_bar .dijitButtonNode {
 }
 #maqBody .paletteItemMorePopup .dijitTooltipContainer {
 	background:white;
-	border-color:#222;
+	border-color:#b6b6b6;
+	border-width:3px;
+	border-radius:12px;
+	box-shadow: 0px 0px 4px rgba(0, 0, 0, .4);
+	padding: 2px 8px 5px;
+}
+.paletteItemMoreContent {
+}
+.paletteItemMoreCloseBox {
+	position: absolute;
+	right: 6px;
+	top: 6px;
+	background-image: url("img/sprite.png");
+	background-repeat: no-repeat;
+	background-position: -43px -41px;
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+}
+.paletteItemAlternatesLabel {
+	font-size: 10px;
+	padding-left:4px;
+	padding-bottom: 3px;
+}
+.paletteItemAlternatesContainer {
+}
+.paletteItemAlternate {
+	margin: 2px 3px;
+	padding: 4px;
+	padding-bottom: 3px;
+	border-radius: 3px;
+	font-size: 12px;
+	border: 1px solid #333;
+	box-shadow: .5px 1px 1px rgba(0, 0, 0, .5);
+	border-color: #CCC;
+	background: #EEE;
+	font-family: Myriad, Helvetica, Tahoma, Arial, clean, sans-serif;
+	font-size: 12px;
+}
+.paletteItemMoreUnselected {
+	background-image: -webkit-linear-gradient(#F4F4F4, #DBDBDB);
+	background-image: -moz-linear-gradient(#F4F4F4, #DBDBDB);
+	background-image: -ms-linear-gradient(#F4F4F4, #DBDBDB);
+	background-image: -o-linear-gradient(#F4F4F4, #DBDBDB);
+	background-image: linear-gradient(#F4F4F4, #DBDBDB);
+}
+.paletteItemMoreSelected {
+	font-weight:bold;
+	background-image: -webkit-linear-gradient(#DBDBDB, #F4F4F4);
+	background-image: -moz-linear-gradient(#DBDBDB, #F4F4F4);
+	background-image: -ms-linear-gradient(#DBDBDB, #F4F4F4);
+	background-image: -o-linear-gradient(#DBDBDB, #F4F4F4);
+	background-image: linear-gradient(#DBDBDB, #F4F4F4);
 }
 .dojoyPaletteCommon img {
 	vertical-align: top;
@@ -1138,8 +1190,8 @@ davinci_top_bar .dijitButtonNode {
 .paletteLayoutIcons .maqWidgetsCategorySeparateLine {
 	display: block;
 	overflow: hidden;
-	text-overflow: ellipsis;}
-
+	text-overflow: ellipsis;
+}
 /* FIXME: Temporary hack to make "Select Files..." command on Add Files dialog 
 	look like a button. Really need to do a UI makeover for Add Files dialog. */
 #btn0.browse {

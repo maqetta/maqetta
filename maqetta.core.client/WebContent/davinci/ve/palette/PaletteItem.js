@@ -327,12 +327,12 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 			On(paletteItemSelectedMoreIcon, 'mouseup', function(e){
 				Event.stop(e);
 				var paletteItemMoreContent = domConstruct.create("div", {className:"paletteItemMoreContent"});
-				var paletteItemMoreCloseBox = domConstruct.create("button", 
-						{className:"paletteItemMoreCloseBox", style:"position:absolute; right:0px; top:0px;", innerHTML:'X'},
+				var paletteItemMoreCloseBox = domConstruct.create("span", 
+						{className:"paletteItemMoreCloseBox"},
 						paletteItemMoreContent);
 				//FIXME: localization
 				var paletteItemAlternatesLabel = domConstruct.create("div", 
-						{className:"paletteItemAlternatesLabel", innerHTML:'Alternative widgets:'},
+						{className:"paletteItemAlternatesLabel", innerHTML:'Alternate widgets:'},
 						paletteItemMoreContent);
 				this._paletteItemMoreConnects.push(On(paletteItemMoreCloseBox, 'click', function(e){
 					//FIXME: Why does widget selection go away, even though we stop the event
@@ -374,7 +374,17 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 				this._tooltipDialog = new TooltipDialog({
 					className: "paletteItemMorePopup",
 					style: "width: auto; ",
-					content: paletteItemMoreContent
+					content: paletteItemMoreContent,
+					onShow: function(e){
+						// Drop down 10px to make it closer to button that launched the TooltipDialog
+						var parentNode = this._tooltipDialog.domNode.parentNode;
+						if(parentNode){
+							var oldTop = parseFloat(parentNode.style.top);
+							if(!isNaN(oldTop)){
+								parentNode.style.top = (oldTop+12)+'px';
+							}
+						}
+					}.bind(this)
 				});
 				Popup.open({
 					popup: this._tooltipDialog,

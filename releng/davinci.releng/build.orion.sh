@@ -142,7 +142,7 @@ populateGit(){
 	    	echo ""
 	    	echo "Switching to tag ${externalTag}"
 	    	cd ${MAQETTA_BUILD_DIR}/repository/maqetta
-	    	git checkout ${externalTag}
+	    	git checkout --force ${externalTag}
 	    fi
 	    #
 	    # Save repository revision level for later referrence

@@ -4,30 +4,36 @@ define([
 	"dojo/_base/event",
 	"dojo/query",
 	"dojo/dom-construct",
+	"dojo/dom-geometry",
 	"dijit/focus",
 	"dijit/_WidgetBase",
 	"dojo/dom-class",
 	"dijit/popup",
+	"dijit/Tooltip",
 	"dijit/TooltipDialog",
 	"davinci/ve/tools/CreateTool",
 	"davinci/ui/dnd/DragManager",
 	"davinci/ve/utils/GeomUtils",
-	"davinci/ve/metadata"
+	"davinci/ve/metadata",
+	"dojo/i18n!davinci/ve/nls/common"
 ], function(
 	declare,
 	On,
 	Event,
 	Query,
 	domConstruct,
+	domGeom,
 	FocusUtils,
 	_WidgetBase,
 	domClass,
 	Popup,
+	Tooltip,
 	TooltipDialog,
 	CreateTool,
 	DragManager,
 	GeomUtils,
-	Metadata
+	Metadata,
+	commonNls
 ){
 
 return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
@@ -149,15 +155,52 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 	},
 
 	itemMouseOverHandler: function(e){
+		this._mouseover = true;
 		var div = this.domNode;
 		if(this.palette.selectedItem == this){
 			;
 		}else{
 			this.raised(div);
 		}
+		setTimeout(function(){
+			if(this._mouseover){
+				this._tooltipPos = domGeom.position(this.domNode, true);
+				var s = '<div class="paletteTooltip">';
+				s += '<div class="paletteTooltipCurrent"><span class="paletteTooltipCurrentWidget">' + this.displayName + '</span> <span class="paletteTooltipCurrentLibrary">(' + this._collectionName + ')</span></div>';
+				var paletteItemsSameGroup = this.palette.getPaletteItemsSameGroup(this);
+				if(paletteItemsSameGroup.length > 1){
+					s += '<div class="paletteTooltipAlternates">' + '<span class="paletteTooltipAlternatesLabel">'+commonNls.alternates+': </span><span class="paletteTooltipAlternatesLibraries">';
+					var firstAlternateAlready = false;
+					for(var i=0; i<paletteItemsSameGroup.length; i++){
+						var paletteItemAlternate = paletteItemsSameGroup[i];
+						if(paletteItemAlternate != this){
+							if(firstAlternateAlready){
+								s += ', ';
+							}
+							s += paletteItemAlternate._collectionName;
+							firstAlternateAlready = true;
+						}
+					}
+					s += '</div>';
+					s += '<div class="paletteTooltipNote">'+commonNls.howToChooseAlternate+'</div>';
+					s += '</div>';
+				}
+				dijit.showTooltip(s, this._tooltipPos);
+				setTimeout(function(){
+					dijit.hideTooltip(this._tooltipPos);
+					this._tooltipPos = null;
+				}.bind(this), 5000);
+			}
+		}.bind(this),750);
+
 	},
 
 	itemMouseOutHandler: function(e){
+		this._mouseover = false;
+		if(this._tooltipPos){
+			dijit.hideTooltip(this._tooltipPos);
+			this._tooltipPos = null;
+		}
 		var div = this.domNode;
 		if(this.palette.selectedItem == this){
 			this.sunken(div);
@@ -317,6 +360,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		dojo.removeClass(div, "dojoyPaletteItemRaised");
 		dojo.addClass(div, "dojoyPaletteItemSunken");
 		this.palette.sunkenItems.push(this); // Palette.js will "un-sunken" in onDragEnd
+		this._selectionShowing = true;
 		var paletteItemSelectionContainer = Query('.paletteItemSelectionContainer', this.domNode)[0];
 		paletteItemSelectionContainer.innerHTML = this.selectedWidgetTemplate;
 		var paletteItemSelectedMoreIcon = Query('.paletteItemSelectedMoreIcon', div)[0];
@@ -324,7 +368,11 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		if(paletteItemsSameGroup.length > 1){
 			paletteItemSelectedMoreIcon.style.display = 'inline-block';
 			// FIXME: Any leakages here?
-			On(paletteItemSelectedMoreIcon, 'mouseup', function(e){
+			On(paletteItemSelectedMoreIcon, 'mousedown, mouseup', function(e){
+				// Prevents mousedown, mouseup from closing selection
+				Event.stop(e);
+			});
+			On(paletteItemSelectedMoreIcon, 'click', function(e){
 				Event.stop(e);
 				var paletteItemMoreContent = domConstruct.create("div", {className:"paletteItemMoreContent"});
 				var paletteItemMoreCloseBox = domConstruct.create("span", 
@@ -334,8 +382,11 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 				var paletteItemAlternatesLabel = domConstruct.create("div", 
 						{className:"paletteItemAlternatesLabel", innerHTML:'Alternate widgets:'},
 						paletteItemMoreContent);
+				this._paletteItemMoreConnects.push(On(paletteItemMoreCloseBox, 'mousedown, mouseup', function(e){
+					// Prevents mousedown, mouseup from closing selection
+					Event.stop(e);
+				}.bind(this)));
 				this._paletteItemMoreConnects.push(On(paletteItemMoreCloseBox, 'click', function(e){
-					//FIXME: Why does widget selection go away, even though we stop the event
 					Event.stop(e);
 					this.paletteItemMoreCloseCleanup();
 				}.bind(this)));
@@ -351,8 +402,11 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 							{className:"paletteItemAlternate "+className, innerHTML:collectionName},
 							paletteItemAlternatesContainer);
 					paletteItemAlternates.push(paletteItemAlternate);
+					this._paletteItemMoreConnects.push(On(paletteItemAlternate, 'mousedown, mouseup', function(e){
+						// Prevents mousedown, mouseup from closing selection
+						Event.stop(e);
+					}.bind(this)));
 					this._paletteItemMoreConnects.push(On(paletteItemAlternate, 'click', function(collectionName, e){
-						//FIXME: Why does widget selection go away, even though we stop the event
 						Event.stop(e);
 						var newPaletteItem;
 						for(var j=0; j<paletteItemsSameGroup.length; j++){
@@ -367,6 +421,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 								var paletteItemInner = paletteItemsSameGroup[j];
 								paletteItemInner.domNode.style.display = (paletteItemInner == newPaletteItem) ? this.palette._displayShowValue : 'none';
 							}
+							newPaletteItem.sunken(newPaletteItem.domNode);
 						}
 						this.paletteItemMoreCloseCleanup();
 					}.bind(this, collectionName)));

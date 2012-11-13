@@ -1102,6 +1102,27 @@ davinci_top_bar .dijitButtonNode {
 	background-image: -o-linear-gradient(#DBDBDB, #F4F4F4);
 	background-image: linear-gradient(#DBDBDB, #F4F4F4);
 }
+.paletteTooltip {
+	font-size:12px;
+}
+.paletteTooltipCurrent {
+	font-size:13px;
+	}
+.paletteTooltipCurrentWidget {
+	font-weight:bold;
+}
+.paletteTooltipCurrentLibrary {
+}
+.paletteTooltipAlternates {
+	padding-top:5px;
+}
+.paletteTooltipAlternatesLabel {
+}
+.paletteTooltipAlternatesLibraries {
+}
+.paletteTooltipNote {
+	padding-top:5px;
+	}
 .dojoyPaletteCommon img {
 	vertical-align: top;
 }

@@ -9,9 +9,6 @@ define([
 	"davinci/Runtime",
 	"davinci/Workbench",
 	"dijit/_KeyNavContainer",
-/*
-	"dijit/Tooltip",
-*/
 	"dijit/form/TextBox",
 	"davinci/ui/dnd/DragSource",
 	"davinci/ve/metadata",
@@ -33,9 +30,6 @@ define([
 	Runtime,
 	Workbench,
 	_KeyNavContainer,
-/*
-	Tooltip,
-*/
 	TextBox,
 	DragSource,
 	Metadata,
@@ -73,7 +67,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		connect.subscribe("/davinci/ui/addedCustomWidget", this, "addCustomWidget");
 		connect.subscribe("/davinci/preferencesChanged", this, "preferencesChanged");
 	},
-	
+
 	addCustomWidget: function(lib){
 		
 		/* make sure the pallette has loaded. if it hasnt, the init will take care of customs */
@@ -529,11 +523,6 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		ds.returnCloneOnFailure = false;
 		this.connect(ds, "onDragStart", dojo.hitch(this,function(e){this.onDragStart(e);})); // move start
 		this.connect(ds, "onDragEnd", dojo.hitch(this,function(e){this.onDragEnd(e);})); // move end
-		/*
-		node.tooltip = new Tooltip({
-			label:opt.description, 
-			connectId:[node.id]
-		});*/
 		return node;
 	},
 	
@@ -605,7 +594,13 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		}
 		this.raisedItems = [];
 		for(var i=0; i<this.sunkenItems.length; i++){
-			this.sunkenItems[i].flat(this.sunkenItems[i].domNode);
+			var paletteItem = this.sunkenItems[i];
+			if(paletteItem._tooltipDialog){
+				//FIXME: Need to generalize for help feature, too
+				paletteItem.paletteItemMoreCloseCleanup();
+			}
+			paletteItem.flat(paletteItem.domNode);
+			paletteItem._selectionShowing = false;
 		}
 		this.sunkenItems = [];
 	},
@@ -621,6 +616,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 				node.parentNode.innerHTML = '';
 			}
 		}
+		//FIXME: should also clean up more and help
 	},
 	
 	/**

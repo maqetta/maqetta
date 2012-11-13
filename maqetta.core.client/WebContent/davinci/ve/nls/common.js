@@ -131,6 +131,10 @@ zazl: "Enable <a href='http://zazl.org' target='_blank'>Zazl Optimizer</a>",
 selectorPrefix: "Selector Prefix",
 component: "Component",
 
+/* Palette*.js */
+alternates: "Alternates",
+howToChooseAlternate: "To choose alternate widget, click-select current widget, then click on up arrow icon.",
+
 __dummy__: ""
 }
 });

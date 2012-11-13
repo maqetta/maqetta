@@ -5,4 +5,3 @@ Bundle-SymbolicName: maqetta.client.plugins.defaults;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
-Eclipse-BundleShape: jar

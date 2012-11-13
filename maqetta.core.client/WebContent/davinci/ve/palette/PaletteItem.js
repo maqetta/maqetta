@@ -77,7 +77,9 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 	_paletteItemGroup:null,
 	// Display name for widget collection for this widget
 	_collectionName:null,
+	//FIXME: Consolidate?
 	_paletteItemMoreConnects:[],
+	_paletteItemHelpConnects:[],
 	
 	buildRendering: function(){
 		this.palette = dijit.byId(this.paletteId);
@@ -163,6 +165,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 			this.raised(div);
 		}
 		setTimeout(function(){
+			//FIXME: Need to put up different tooltips if hovering over the ^ or ? icons
 			if(this._mouseover){
 				if(this._tooltipNode == this.domNode){
 					return;
@@ -376,8 +379,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 			paletteItemSelectedMoreIcon.style.display = 'inline-block';
 			// FIXME: Any leakages here?
 			On(paletteItemSelectedMoreIcon, 'mousedown, mouseup', function(e){
-				// Prevents mousedown, mouseup from closing selection
-				Event.stop(e);
+				Event.stop(e);	// Prevents mousedown, mouseup from closing selection
 			});
 			On(paletteItemSelectedMoreIcon, 'click', function(e){
 				Event.stop(e);
@@ -390,8 +392,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 						{className:"paletteItemAlternatesLabel", innerHTML:'Alternate widgets:'},
 						paletteItemMoreContent);
 				this._paletteItemMoreConnects.push(On(paletteItemMoreCloseBox, 'mousedown, mouseup', function(e){
-					// Prevents mousedown, mouseup from closing selection
-					Event.stop(e);
+					Event.stop(e);	// Prevents mousedown, mouseup from closing selection
 				}.bind(this)));
 				this._paletteItemMoreConnects.push(On(paletteItemMoreCloseBox, 'click', function(e){
 					Event.stop(e);
@@ -410,8 +411,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 							paletteItemAlternatesContainer);
 					paletteItemAlternates.push(paletteItemAlternate);
 					this._paletteItemMoreConnects.push(On(paletteItemAlternate, 'mousedown, mouseup', function(e){
-						// Prevents mousedown, mouseup from closing selection
-						Event.stop(e);
+						Event.stop(e);	// Prevents mousedown, mouseup from closing selection
 					}.bind(this)));
 					this._paletteItemMoreConnects.push(On(paletteItemAlternate, 'click', function(collectionName, e){
 						Event.stop(e);
@@ -438,7 +438,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 					style: "width: auto; ",
 					content: paletteItemMoreContent,
 					onShow: function(e){
-						// Drop down 10px to make it closer to button that launched the TooltipDialog
+						// Drop down 12px to make it closer to button that launched the TooltipDialog
 						var parentNode = this._tooltipDialog.domNode.parentNode;
 						if(parentNode){
 							var oldTop = parseFloat(parentNode.style.top);
@@ -462,6 +462,48 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		}else{
 			paletteItemSelectedMoreIcon.style.display = 'none';
 		}
+		var paletteItemSelectedHelpIcon = Query('.paletteItemSelectedHelpIcon', div)[0];
+		// FIXME: Any leakages here?
+		On(paletteItemSelectedHelpIcon, 'mousedown, mouseup', function(e){
+			Event.stop(e);	// Prevents mousedown, mouseup from closing selection
+		}.bind(this));
+		On(paletteItemSelectedHelpIcon, 'click', function(e){
+			Event.stop(e);
+			var paletteItemHelpContent = domConstruct.create("div", {className:"paletteItemHelpContent"});
+			var paletteItemHelpCloseBox = domConstruct.create("span", 
+					{className:"paletteItemHelpCloseBox"},
+					paletteItemHelpContent);
+			var paletteItemHelpDescription = domConstruct.create("div", 
+					{className:"paletteItemHelpDescription", innerHTML:'some text content'},
+					paletteItemHelpContent);
+			this._paletteItemHelpConnects.push(On(paletteItemHelpCloseBox, 'mousedown, mouseup', function(e){
+				Event.stop(e);	// Prevents mousedown, mouseup from closing selection
+			}.bind(this)));
+			this._paletteItemHelpConnects.push(On(paletteItemHelpCloseBox, 'click', function(e){
+				Event.stop(e);
+				this.paletteItemHelpCloseCleanup();
+			}.bind(this)));
+			this._tooltipDialog = new TooltipDialog({
+				className: "paletteItemHelpPopup",
+				style: "width: auto; ",
+				content: paletteItemHelpContent,
+				onShow: function(e){
+					// Move up 12px to make it closer to button that launched the TooltipDialog
+					var parentNode = this._tooltipDialog.domNode.parentNode;
+					if(parentNode){
+						var oldTop = parseFloat(parentNode.style.top);
+						if(!isNaN(oldTop)){
+							parentNode.style.top = (oldTop-12)+'px';
+						}
+					}
+				}.bind(this)
+			});
+			Popup.open({
+				popup: this._tooltipDialog,
+				around: paletteItemSelectedHelpIcon,
+				orient:["below-centered"]
+			});
+		}.bind(this));
 	},
 	
 	paletteItemMoreCloseCleanup: function(){
@@ -470,6 +512,17 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 			this._paletteItemMoreConnects[j].remove();
 		};
 		this._paletteItemMoreConnects = [];
+		Popup.close(this._tooltipDialog);
+		this._tooltipDialog.destroyRecursive();
+		this._tooltipDialog = null;
+	},
+	
+	paletteItemHelpCloseCleanup: function(){
+		// FIXME: Move into separate routine
+		for(var j=0; j<this._paletteItemHelpConnects.length; j++){
+			this._paletteItemHelpConnects[j].remove();
+		};
+		this._paletteItemHelpConnects = [];
 		Popup.close(this._tooltipDialog);
 		this._tooltipDialog.destroyRecursive();
 		this._tooltipDialog = null;

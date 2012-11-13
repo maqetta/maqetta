@@ -1037,16 +1037,22 @@ davinci_top_bar .dijitButtonNode {
 	height:26px;
 }
 .paletteItemSelectedMoreIcon {
-	background-image:url(img/palette_more_active.png);
+	/*background-image:url(img/palette_more_active.png);*/
+	background-image:url(img/sprite.png);
+	background-position:-65px -41px;
+	background-repeat:no-repeat;
 	left: 54px;
 	top: -14px;
 }
 .paletteItemSelectedHelpIcon {
-	background-image:url(img/palette_help_active.png);
+	/*background-image:url(img/palette_help_active.png);*/
+	background-image:url(img/sprite.png);
+	background-position:-94px -40px;
+	background-repeat:no-repeat;
 	left: 54px;
 	top:67px;
 }
-#maqBody .paletteItemMorePopup .dijitTooltipContainer {
+#maqBody .paletteItemMorePopup .dijitTooltipContainer, #maqBody .paletteItemHelpPopup .dijitTooltipContainer {
 	background:white;
 	border-color:#b6b6b6;
 	border-width:3px;
@@ -1056,16 +1062,25 @@ davinci_top_bar .dijitButtonNode {
 }
 .paletteItemMoreContent {
 }
-.paletteItemMoreCloseBox {
+.paletteItemHelpContent {
+	padding-top:15px;
+	padding-right:12px;
+}
+.paletteItemMoreCloseBox, .paletteItemHelpCloseBox {
 	position: absolute;
-	right: 6px;
-	top: 6px;
+	right: 4px;
 	background-image: url("img/sprite.png");
 	background-repeat: no-repeat;
 	background-position: -43px -41px;
 	width: 16px;
 	height: 16px;
 	display: inline-block;
+}
+.paletteItemMoreCloseBox {
+	top: 6px;
+}
+.paletteItemHelpCloseBox {
+	top: 18px;
 }
 .paletteItemAlternatesLabel {
 	font-size: 10px;

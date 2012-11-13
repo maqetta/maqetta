@@ -164,6 +164,12 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		}
 		setTimeout(function(){
 			if(this._mouseover){
+				if(this._tooltipNode == this.domNode){
+					return;
+				}else if(this._tooltipNode){
+					dijit.hideTooltip(this._tooltipPos);
+				}
+				this._tooltipNode = this.domNode;
 				this._tooltipPos = domGeom.position(this.domNode, true);
 				var s = '<div class="paletteTooltip">';
 				s += '<div class="paletteTooltipCurrent"><span class="paletteTooltipCurrentWidget">' + this.displayName + '</span> <span class="paletteTooltipCurrentLibrary">(' + this._collectionName + ')</span></div>';
@@ -188,6 +194,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 				dijit.showTooltip(s, this._tooltipPos);
 				setTimeout(function(){
 					dijit.hideTooltip(this._tooltipPos);
+					this._tooltipNode = null;
 					this._tooltipPos = null;
 				}.bind(this), 5000);
 			}

@@ -17,8 +17,7 @@ define([
 	"./PaletteItem",
 	"dojo/i18n!davinci/ve/nls/common",
 	"davinci/ve/tools/CreateTool",
-	"davinci/workbench/Preferences",
-	"davinci/ve/metadata"
+	"davinci/workbench/Preferences"
 ], function(
 	declare,
 	Lang,
@@ -38,8 +37,7 @@ define([
 	PaletteItem,
 	commonNls,
 	CreateTool,
-	Preferences,
-	Metadata) {
+	Preferences) {
 
 // Disable dijit's automatic key handlers until there is time to do it right
 return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {

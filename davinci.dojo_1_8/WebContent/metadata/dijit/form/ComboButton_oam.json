@@ -122,10 +122,10 @@
     "content": "<span></span>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>A combination button and drop-down button.\nUsers can click one side to &quot;press&quot; the button, or click an arrow\nicon to display the drop down.\n</p>"
     },
-    "description": {
+    "examples": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<pre><code>&lt;button data-dojo-type=&quot;dijit/form/ComboButton&quot; onClick=&quot;...&quot;&gt;\n    &lt;span&gt;Hello world&lt;/span&gt;\n    &lt;div data-dojo-type=&quot;dijit/Menu&quot;&gt;...&lt;/div&gt;\n&lt;/button&gt;</code></pre>\n<pre><code>var button1 = new ComboButton({label: &quot;hello world&quot;, onClick: foo, dropDown: &quot;myMenu&quot;});\ndojo.body().appendChild(button1.domNode);</code></pre>"
     }
 }

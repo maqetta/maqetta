@@ -814,6 +814,32 @@ define([
         getWidgetDescriptorForType: function(type) {
             return getWidgetDescriptorForType(type);
         },
+                
+        /**
+         * Returns a descriptive property (e.g., description or title) out
+         * of an OpenAjax Metadata object (JS object for the foo_oam.json file).
+         * corresponding to a given widget type.
+         * @param  {String} type  widget type (e.g., 'dijit.form.Button')
+         * @param  {String} propName  property name (e.g., 'description')
+         * @return {null|object} null if property doesn't exist, otherwise an object with two properties:
+         *    type: either 'text/plain' or 'text/html'
+         *    value: the value of the property
+         */       
+        getOamDescriptivePropertyForType: function(type, propName) {
+            var oam = getMetadata(type);
+            if(oam && oam[propName]){
+            	var propValue = oam[propName];
+            	if(typeof(propValue) == 'string'){
+            		return { type:'text/plain', value:propValue};
+            	}else if(typeof propValue.value == 'string'){
+            		return { type:(propValue.type ? propValue.type : 'text/plain'), value:propValue.value };
+            	}else{
+            		return null;
+            	}
+            }else{
+            	return null
+            }
+        },
 
         /**
          * Returns an array of widget descriptors for all widgets

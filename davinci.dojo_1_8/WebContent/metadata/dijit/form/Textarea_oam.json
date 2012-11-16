@@ -89,10 +89,14 @@
     "content": "<textarea type='text'></textarea>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>A textarea widget that adjusts it&#39;s height according to the amount of data.\n</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>A textarea that dynamically expands/contracts (changing it&#39;s height) as\nthe user types, to display all the text without requiring a scroll bar.\n\n</p>\n<p>Takes nearly all the parameters (name, value, etc.) that a vanilla textarea takes.\nRows is not supported since this widget adjusts the height.\n</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;textarea data-dojo-type=&quot;dijit/form/TextArea&quot;&gt;...&lt;/textarea&gt;</code></pre>"
     }
 }

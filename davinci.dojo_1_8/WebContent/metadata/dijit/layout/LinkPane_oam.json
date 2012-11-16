@@ -62,10 +62,14 @@
     "content": "<span></span>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>A ContentPane with an href where (when declared in markup)\nthe title is specified as innerHTML rather than as a title attribute.</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>LinkPane is just a ContentPane that is declared in markup similarly\nto an anchor.  The anchor&#39;s body (the words between <code>&lt;a&gt;</code> and <code>&lt;/a&gt;</code>)\nbecome the title of the widget (used for TabContainer, AccordionContainer, etc.)</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;a href=&quot;foo.html&quot;&gt;my title&lt;/a&gt;</code></pre>"
     }
 }

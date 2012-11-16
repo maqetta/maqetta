@@ -37,10 +37,10 @@
     "content": "<div></div>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>A simple container-type widget.</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>Container is a simple general-purpose container widget.\nIt is a widget, but can be regarded as a simple <code>&lt;div&gt;</code> element.</p>"
     }
 }

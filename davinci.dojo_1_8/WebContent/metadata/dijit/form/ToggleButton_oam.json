@@ -74,10 +74,6 @@
     "content": "<input type='button'></input>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
-    },
-    "description": {
-        "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>A templated button widget that can be in two states (checked or not).\nCan be base class for things like tabs or checkbox or radio buttons.</p>"
     }
 }

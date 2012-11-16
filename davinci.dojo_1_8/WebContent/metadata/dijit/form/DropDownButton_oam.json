@@ -92,10 +92,10 @@
     "content": "<span></span>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>A button with a drop down\n</p>"
     },
-    "description": {
+    "examples": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<pre><code>&lt;button data-dojo-type=&quot;dijit/form/DropDownButton&quot;&gt;\n    Hello world\n    &lt;div data-dojo-type=&quot;dijit/Menu&quot;&gt;...&lt;/div&gt;\n&lt;/button&gt;</code></pre>\n<pre><code>var button1 = new DropDownButton({ label: &quot;hi&quot;, dropDown: new dijit.Menu(...) });\nwin.body().appendChild(button1);</code></pre>"
     }
 }

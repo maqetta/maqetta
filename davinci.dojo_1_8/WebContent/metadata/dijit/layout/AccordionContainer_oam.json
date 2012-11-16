@@ -57,10 +57,10 @@
     "content": "<span></span>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>Holds a set of panes where every pane&#39;s title is visible, but only one pane&#39;s content is visible at a time,\nand switching between panes is visualized by sliding the other panes up/down.</p>"
     },
-    "description": {
+    "examples": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<pre><code>&lt;div data-dojo-type=&quot;dijit/layout/AccordionContainer&quot;&gt;\n    &lt;div data-dojo-type=&quot;dijit/layout/ContentPane&quot; title=&quot;pane 1&quot;&gt;\n    &lt;/div&gt;\n    &lt;div data-dojo-type=&quot;dijit/layout/ContentPane&quot; title=&quot;pane 2&quot;&gt;\n        &lt;p&gt;This is some text&lt;/p&gt;\n    &lt;/div&gt;\n&lt;/div&gt;</code></pre>"
     }
 }

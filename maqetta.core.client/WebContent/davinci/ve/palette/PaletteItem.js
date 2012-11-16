@@ -469,13 +469,40 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		}.bind(this));
 		On(paletteItemSelectedHelpIcon, 'click', function(e){
 			Event.stop(e);
+			var title = Metadata.getOamDescriptivePropertyForType(this.type, 'title');
+			var description = Metadata.getOamDescriptivePropertyForType(this.type, 'description');
+			var helpInnerContent = domConstruct.create("div", {className:"helpInnerContent"});
+			var s = this.name;
+			if(this._collectionName){
+				s += '(' + this._collectionName + ')';
+			};
+			var helpInnerContentType = domConstruct.create("div", 
+					{className:"helpInnerContentType", innerHTML:s }, 
+					helpInnerContent);
+			if(title && title.value){
+				var helpInnerContentSummary = domConstruct.create("div", 
+						{className:"helpInnerContentSummary" }, 
+						helpInnerContent);
+				//FIXME: LOCALIZATION
+				var helpInnerContentSummaryTitle = domConstruct.create("div", 
+						{className:"helpInnerContentSummaryTitle", innerHTML:'Summary:' }, 
+						helpInnerContentSummary);
+				var helpInnerContentSummaryTitle = domConstruct.create("div", 
+						{className:"helpInnerContentSummaryContent"}, helpInnerContentSummary);
+				if(title.type == 'text/html'){
+					helpInnerContentSummaryTitle.innerHTML = title.value;
+				}else{
+					helpInnerContentSummaryTitle.textContent = title.value;
+				}
+			}
 			var paletteItemHelpContent = domConstruct.create("div", {className:"paletteItemHelpContent"});
 			var paletteItemHelpCloseBox = domConstruct.create("span", 
 					{className:"paletteItemHelpCloseBox"},
 					paletteItemHelpContent);
 			var paletteItemHelpDescription = domConstruct.create("div", 
-					{className:"paletteItemHelpDescription", innerHTML:'some text content'},
+					{className:"paletteItemHelpDescription"},
 					paletteItemHelpContent);
+			paletteItemHelpDescription.appendChild(helpInnerContent);
 			this._paletteItemHelpConnects.push(On(paletteItemHelpCloseBox, 'mousedown, mouseup', function(e){
 				Event.stop(e);	// Prevents mousedown, mouseup from closing selection
 			}.bind(this)));

@@ -34,10 +34,10 @@
     "content": "<span></span>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>The OpmlStore implements the dojo/data/api/Read API.</p>"
     },
-    "description": {
+    "examples": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<pre><code>var opmlStore = new dojo.data.OpmlStore({url:&quot;geography.xml&quot;});\nvar opmlStore = new dojo.data.OpmlStore({url:&quot;http://example.com/geography.xml&quot;});</code></pre>"
     }
 }

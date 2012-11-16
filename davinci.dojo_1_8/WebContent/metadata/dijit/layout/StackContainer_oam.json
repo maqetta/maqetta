@@ -51,10 +51,10 @@
     "content": "<span></span>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>A container that has multiple children, but shows only\none child at a time\n</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>A container for widgets (ContentPanes, for example) That displays\nonly one Widget at a time.\n\n</p>\n<p>Publishes topics [widgetId]-addChild, [widgetId]-removeChild, and [widgetId]-selectChild\n\n</p>\n<p>Can be base class for container, Wizard, Show, etc.\n\n</p>\n<p>See <code>StackContainer.ChildWidgetProperties</code> for details on the properties that can be set on\nchildren of a <code>StackContainer</code>.</p>"
     }
 }

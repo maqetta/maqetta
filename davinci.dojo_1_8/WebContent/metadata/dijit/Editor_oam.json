@@ -86,10 +86,10 @@
     "content": "<span></span>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>A rich text Editing widget\n</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>This widget provides basic WYSIWYG editing features, based on the browser&#39;s\nunderlying rich text editing capability, accompanied by a toolbar (<code>dijit.Toolbar</code>).\nA plugin model is available to extend the editor&#39;s capabilities as well as the\nthe options available in the toolbar.  Content generation may vary across\nbrowsers, and clipboard operations may have different results, to name\na few limitations.  Note: this widget should not be used with the HTML\n&lt;TEXTAREA&gt; tag -- see dijit/_editor/RichText for details.</p>"
     }
 }

@@ -143,10 +143,14 @@
     "content": "<input type='text'></input>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>Extends NumberTextBox to add up/down arrows and pageup/pagedown for incremental change to the value\n</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>A <code>dijit/form/NumberTextBox</code> extension to provide keyboard accessible value selection\nas well as icons for spinning direction. When using the keyboard, the typematic rules\napply, meaning holding the key will gradually increase or decrease the value and\naccelerate.\n</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>new NumberSpinner({ constraints:{ max:300, min:100 }}, &quot;someInput&quot;);</code></pre>"
     }
 }

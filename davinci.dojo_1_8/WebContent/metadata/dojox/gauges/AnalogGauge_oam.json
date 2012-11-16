@@ -107,10 +107,14 @@
     "content": "<div></div>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>a gauge built using the dojox.gfx package.\n</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>using dojo.gfx (and thus either SVG or VML based on what is supported), this widget\nbuilds a gauge component, used to display numerical data in a familiar format \n</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;script type=&quot;text/javascript&quot;&gt;\n    require([&quot;dojox/gauges/AnalogGauge&quot;]);\n&lt;/script&gt;\n\n&lt;div    dojoType=&quot;dojox.gauges.AnalogGauge&quot;\n        id=&quot;testGauge&quot;\n        width=&quot;300&quot;\n        height=&quot;200&quot;\n        cx=150\n        cy=175\n        radius=125\n        image=&quot;gaugeOverlay.png&quot;\n        imageOverlay=&quot;false&quot;\n        imageWidth=&quot;280&quot;\n        imageHeight=&quot;155&quot;\n        imageX=&quot;12&quot;\n        imageY=&quot;38&quot;&gt;\n&lt;/div&gt;</code></pre>"
     }
 }

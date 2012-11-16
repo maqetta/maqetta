@@ -84,10 +84,6 @@
     "content": "<span></span>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
-    },
-    "description": {
-        "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>An extended version of dijit.layout.ContentPane.\nSupports infile scripts and external ones declared by <code>&lt;script src=&#39;&#39;...&gt;</code>\nrelative path adjustments (content fetched from a different folder)\n<code>&lt;style&gt;</code> and <code>&lt;link rel=&#39;stylesheet&#39; href=&#39;..&#39;&gt;</code> tags,\ncss paths inside cssText is adjusted (if you set adjustPaths = true)\n\n</p>\n<p>NOTE that dojo.require in script in the fetched file isn&#39;t recommended\nMany widgets need to be required at page load to work properly</p>"
     }
 }

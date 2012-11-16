@@ -80,10 +80,10 @@
     "content": "<input type='checkbox'></input>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>Same as an HTML checkbox, but with fancy styling.\n</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>User interacts with real html inputs.\nOn onclick (which occurs by mouse click, space-bar, or\nusing the arrow keys to switch the selected radio button),\nwe update the state of the checkbox/radio.\n\n</p>\n<p>There are two modes:\n\n</p>\n<ol>\n<li>High contrast mode</li>\n<li>Normal mode</li>\n</ol>\n<p>In case 1, the regular html inputs are shown and used by the user.\nIn case 2, the regular html inputs are invisible but still used by\nthe user. They are turned quasi-invisible and overlay the background-image.</p>"
     }
 }

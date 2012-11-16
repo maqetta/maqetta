@@ -98,10 +98,14 @@
     "content": "<textarea></textarea>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>Non-templated TEXTAREA widget with the capability to adjust its \nheight according to the amount of data.</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>A textarea that dynamically expands/contracts (changing its height) as\nthe user types, to display all the text without requiring a vertical scroll bar.\n\n</p>\n<p>Takes all the parameters (name, value, etc.) that a vanilla textarea takes.\nRows are not supported since this widget adjusts its height.</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;textarea dojoType=&quot;dojox.mobile.ExpandingTextArea&quot;&gt;...&lt;/textarea&gt;</code></pre>"
     }
 }

@@ -40,10 +40,6 @@
     "content": "<span></span>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
-    },
-    "description": {
-        "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>The ItemFileReadStore implements the dojo/data/api/Read API and reads\ndata from JSON files that have contents in this format --\n\n</p>\n<pre><code>{ items: [\n    { name:&#39;Kermit&#39;, color:&#39;green&#39;, age:12, friends:[&#39;Gonzo&#39;, {_reference:{name:&#39;Fozzie Bear&#39;}}]},\n    { name:&#39;Fozzie Bear&#39;, wears:[&#39;hat&#39;, &#39;tie&#39;]},\n    { name:&#39;Miss Piggy&#39;, pets:&#39;Foo-Foo&#39;}\n]}</code></pre>\n<p>Note that it can also contain an &#39;identifier&#39; property that specified which attribute on the items\n\n</p>\n<p>in the array of items that acts as the unique identifier for that item.</p>"
     }
 }

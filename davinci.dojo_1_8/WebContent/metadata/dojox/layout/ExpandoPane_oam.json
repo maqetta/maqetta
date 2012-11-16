@@ -82,10 +82,10 @@
     "content": "<span></span>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>An experimental collapsing-pane for dijit.layout.BorderContainer</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>Works just like a ContentPane inside of a borderContainer. Will expand/collapse on\ncommand, and supports having Layout Children as direct descendants</p>"
     }
 }

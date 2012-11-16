@@ -84,10 +84,14 @@
     "content": "<span></span>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>A pane that &quot;scrolls&quot; its content based on the mouse poisition inside</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>A sizable container that takes it&#39;s content&#39;s natural size and creates\na scroll effect based on the relative mouse position. It is an interesting\nway to display lists of data, or blocks of content, within a confined\nspace.\n\n</p>\n<p>Horizontal scrolling is supported. Combination scrolling is not.</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;div dojoType=&quot;dojox.layout.ScrollPane&quot; style=&quot;width:150px height:300px;&quot;&gt;\n    &lt;!-- any height content --&gt;\n&lt;/div&gt;</code></pre>"
     }
 }

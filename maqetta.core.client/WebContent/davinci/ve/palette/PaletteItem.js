@@ -476,9 +476,17 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 			if(this._collectionName){
 				s += '(' + this._collectionName + ')';
 			};
-			var helpInnerContentType = domConstruct.create("div", 
-					{className:"helpInnerContentType", innerHTML:s }, 
+			var paletteTooltipCurrent = domConstruct.create("div", 
+					{className:"paletteTooltipCurrent" }, 
 					helpInnerContent);
+			var paletteTooltipCurrentWidget = domConstruct.create("span", 
+					{className:"paletteTooltipCurrentWidget", innerHTML:this.name },
+					paletteTooltipCurrent);
+			if(this._collectionName){
+				var paletteTooltipCurrentLibrary = domConstruct.create("span", 
+						{className:"paletteTooltipCurrentLibrary", innerHTML:' ('+this._collectionName+')' }, 
+						paletteTooltipCurrent);
+			}
 			if(title && title.value){
 				var helpInnerContentSummary = domConstruct.create("div", 
 						{className:"helpInnerContentSummary" }, 

@@ -1117,6 +1117,29 @@ davinci_top_bar .dijitButtonNode {
 	background-image: -o-linear-gradient(#DBDBDB, #F4F4F4);
 	background-image: linear-gradient(#DBDBDB, #F4F4F4);
 }
+.paletteItemHelpContent {
+	max-width:500px;
+}
+.paletteItemHelpDescription {
+}
+.helpInnerContent {
+}
+.helpInnerContentType {
+}
+.helpInnerContentSummary {
+}
+.helpInnerContentSummaryTitle {
+	margin:8px 2px;
+	font-weight: bold;
+	font-size: 13px;
+}
+.helpInnerContentSummaryContent {
+	font-size:12px;
+}
+.helpInnerContentSummaryContent p {
+	margin-top: 4px;
+	margin-bottom: 4px;
+}
 .paletteTooltip {
 	font-size:12px;
 }

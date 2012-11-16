@@ -166,7 +166,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		}
 		setTimeout(function(){
 			//FIXME: Need to put up different tooltips if hovering over the ^ or ? icons
-			if(this._mouseover){
+			if(this._mouseover && this.palette.moreItems.length == 0 && this.palette.helpItems.length == 0){
 				if(this._tooltipNode == this.domNode){
 					return;
 				}else if(this._tooltipNode){
@@ -383,6 +383,11 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 			});
 			On(paletteItemSelectedMoreIcon, 'click', function(e){
 				Event.stop(e);
+				if(this._tooltipNode){
+					dijit.hideTooltip(this._tooltipPos);
+					this._tooltipNode = null;
+					this._tooltipPos = null;
+				}
 				if(this._moreShowing){
 					this.paletteItemMoreCloseCleanup();
 				}else{
@@ -457,6 +462,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 						orient:["above-centered"]
 					});
 					this._moreShowing = true;
+					this.palette.moreItems.push(this);
 				}
 			}.bind(this));
 		}else{
@@ -469,6 +475,11 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		}.bind(this));
 		On(paletteItemSelectedHelpIcon, 'click', function(e){
 			Event.stop(e);
+			if(this._tooltipNode){
+				dijit.hideTooltip(this._tooltipPos);
+				this._tooltipNode = null;
+				this._tooltipPos = null;
+			}
 			if(this._helpShowing){
 				this.paletteItemHelpCloseCleanup();
 			}else{
@@ -542,6 +553,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 					orient:["below-centered"]
 				});
 				this._helpShowing = true;
+				this.palette.helpItems.push(this);
 			}
 		}.bind(this));
 	},
@@ -554,6 +566,10 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 			};
 			this._paletteItemMoreConnects = [];
 			this._moreShowing = false;
+			index = this.palette.moreItems.indexOf(this);
+			if(index>=0){
+				this.palette.moreItems.splice(index, 1);
+			}
 		}
 		if(this._tooltipDialog){
 			Popup.close(this._tooltipDialog);
@@ -570,6 +586,10 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 			};
 			this._paletteItemHelpConnects = [];
 			this._helpShowing = false;
+			index = this.palette.helpItems.indexOf(this);
+			if(index>=0){
+				this.palette.helpItems.splice(index, 1);
+			}
 		}
 		if(this._tooltipDialog){
 			Popup.close(this._tooltipDialog);

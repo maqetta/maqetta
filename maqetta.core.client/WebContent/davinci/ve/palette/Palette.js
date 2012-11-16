@@ -50,6 +50,8 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	_presetSections: {},	// Assoc array of all paletteItem objects, indexed by [preset][section]
 	raisedItems: [],	// PaletteItems that have "raised" styling
 	sunkenItems: [],	// PaletteItems that have "sunken" styling
+	moreItems: [],	// PaletteItems that have "more" tooltip dialog showing
+	helpItems: [],	// PaletteItems that have "help" tooltip dialog showing
 	
 	postMixInProperties: function() {
 		this._resource = commonNls;

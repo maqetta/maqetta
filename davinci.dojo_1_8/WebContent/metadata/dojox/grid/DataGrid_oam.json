@@ -150,20 +150,6 @@
             "description": "Set to true if you want to be able to select the text within the grid.",
             "hidden": false
         },
-/*FIXME: Temporarily comment out some properties that result in really ugly attributes in generated source code or are broken.
-        "loadingMessage": {
-            "datatype": "string",
-            "description": "Message that shows while the grid is loading",
-            "hidden": false,
-            "defaultValue": "<span class='dojoxGridLoading'>Loading...</span>"
-        },
-        "errorMessage": {
-            "datatype": "string",
-            "description": "Message that shows when the grid encounters an error loading",
-            "hidden": false,
-            "defaultValue": "<span class='dojoxGridError'>Sorry, an error occurred</span>"
-        },
-*/
         "noDataMessage": {
             "datatype": "string",
             "description": "Message that shows if the grid has no data - wrap it in a\nspan with class 'dojoxGridNoData' if you want it to be\nstyled similar to the loading and error messages",
@@ -207,5 +193,13 @@
             "defaultValue": true
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A widget to transfer values through source and target Wires</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+    }
 }

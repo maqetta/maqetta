@@ -34,13 +34,13 @@
             "title": "Container",
             "description": "This is either \"leftDecoration\" or \"rightDecoration\",\nto indicate whether this rule goes to the left or to the right of the slider.\nNote that on RTL system, \"leftDecoration\" would actually go to the right, and vice-versa.",
             "option": [
-				{
-					"value": "leftDecoration"
-				},
-				{
-					"value": "rightDecoration"
-				}
-           ],
+                {
+                    "value": "leftDecoration"
+                },
+                {
+                    "value": "rightDecoration"
+                }
+            ],
             "hidden": false
         },
         "ruleStyle": {
@@ -49,5 +49,13 @@
             "description": "CSS style to apply to individual hash marks"
         }
     },
-    "content": "<div></div>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A widget to transfer values through source and target Wires</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+    }
 }

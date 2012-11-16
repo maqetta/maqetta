@@ -596,6 +596,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 			if(paletteItem._tooltipDialog){
 				//FIXME: Need to generalize for help feature, too
 				paletteItem.paletteItemMoreCloseCleanup();
+				paletteItem.paletteItemHelpCloseCleanup();
 			}
 			paletteItem.flat(paletteItem.domNode);
 			paletteItem._selectionShowing = false;
@@ -607,6 +608,8 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	 * Remove any selection content for any of the PaletteItems
 	 */
 	removeSelectionAll: function(){
+		this.flattenAll();
+		
 		var paletteItemSelectionArray = Query('.paletteItemSelectionContent', this.domNode);
 		for(var i=0; i<paletteItemSelectionArray.length; i++){
 			var node = paletteItemSelectionArray[i];
@@ -614,7 +617,6 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 				node.parentNode.innerHTML = '';
 			}
 		}
-		//FIXME: should also clean up more and help
 	},
 	
 	/**

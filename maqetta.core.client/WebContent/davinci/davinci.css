@@ -1076,6 +1076,9 @@ davinci_top_bar .dijitButtonNode {
 	height: 16px;
 	display: inline-block;
 }
+.paletteItemMoreCloseBox:hover, .paletteItemHelpCloseBox:hover {
+	cursor:pointer;
+}
 .paletteItemMoreCloseBox {
 	top: 6px;
 }

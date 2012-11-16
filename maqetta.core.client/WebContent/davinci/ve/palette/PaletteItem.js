@@ -383,81 +383,81 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 			});
 			On(paletteItemSelectedMoreIcon, 'click', function(e){
 				Event.stop(e);
-				var paletteItemMoreContent = domConstruct.create("div", {className:"paletteItemMoreContent"});
-				var paletteItemMoreCloseBox = domConstruct.create("span", 
-						{className:"paletteItemMoreCloseBox"},
-						paletteItemMoreContent);
-				//FIXME: localization
-				var paletteItemAlternatesLabel = domConstruct.create("div", 
-						{className:"paletteItemAlternatesLabel", innerHTML:'Alternate widgets:'},
-						paletteItemMoreContent);
-				this._paletteItemMoreConnects.push(On(paletteItemMoreCloseBox, 'mousedown, mouseup', function(e){
-					Event.stop(e);	// Prevents mousedown, mouseup from closing selection
-				}.bind(this)));
-				this._paletteItemMoreConnects.push(On(paletteItemMoreCloseBox, 'click', function(e){
-					Event.stop(e);
+				if(this._moreShowing){
 					this.paletteItemMoreCloseCleanup();
-				}.bind(this)));
-				var paletteItemAlternatesContainer = domConstruct.create("div", 
-						{className:"paletteItemAlternatesContainer"},
-						paletteItemMoreContent);
-				var paletteItemAlternates = [];
-				for(var i=0; i<paletteItemsSameGroup.length; i++){
-					var paletteItemOuter = paletteItemsSameGroup[i];
-					var className = (paletteItemOuter.domNode.style.display == 'none') ? 'paletteItemMoreUnselected' : 'paletteItemMoreSelected';
-					var collectionName = paletteItemOuter._collectionName;
-					var paletteItemAlternate = domConstruct.create("button", 
-							{className:"paletteItemAlternate "+className, innerHTML:collectionName},
-							paletteItemAlternatesContainer);
-					paletteItemAlternates.push(paletteItemAlternate);
-					this._paletteItemMoreConnects.push(On(paletteItemAlternate, 'mousedown, mouseup', function(e){
+				}else{
+					var paletteItemMoreContent = domConstruct.create("div", {className:"paletteItemMoreContent"});
+					var paletteItemMoreCloseBox = domConstruct.create("span", 
+							{className:"paletteItemMoreCloseBox"},
+							paletteItemMoreContent);
+					//FIXME: localization
+					var paletteItemAlternatesLabel = domConstruct.create("div", 
+							{className:"paletteItemAlternatesLabel", innerHTML:'Alternate widgets:'},
+							paletteItemMoreContent);
+					this._paletteItemMoreConnects.push(On(paletteItemMoreCloseBox, 'mousedown, mouseup', function(e){
 						Event.stop(e);	// Prevents mousedown, mouseup from closing selection
 					}.bind(this)));
-					this._paletteItemMoreConnects.push(On(paletteItemAlternate, 'click', function(collectionName, e){
+					this._paletteItemMoreConnects.push(On(paletteItemMoreCloseBox, 'click', function(e){
 						Event.stop(e);
-						var newPaletteItem;
-						for(var j=0; j<paletteItemsSameGroup.length; j++){
-							var paletteItemInner = paletteItemsSameGroup[j];
-							if(paletteItemInner._collectionName == collectionName){
-								newPaletteItem = paletteItemInner;
-								break;
-							}
-						}
-						if(newPaletteItem){
+						this.paletteItemMoreCloseCleanup();
+					}.bind(this)));
+					var paletteItemAlternatesContainer = domConstruct.create("div", 
+							{className:"paletteItemAlternatesContainer"},
+							paletteItemMoreContent);
+					var paletteItemAlternates = [];
+					for(var i=0; i<paletteItemsSameGroup.length; i++){
+						var paletteItemOuter = paletteItemsSameGroup[i];
+						var className = (paletteItemOuter.domNode.style.display == 'none') ? 'paletteItemMoreUnselected' : 'paletteItemMoreSelected';
+						var collectionName = paletteItemOuter._collectionName;
+						var paletteItemAlternate = domConstruct.create("button", 
+								{className:"paletteItemAlternate "+className, innerHTML:collectionName},
+								paletteItemAlternatesContainer);
+						paletteItemAlternates.push(paletteItemAlternate);
+						this._paletteItemMoreConnects.push(On(paletteItemAlternate, 'mousedown, mouseup', function(e){
+							Event.stop(e);	// Prevents mousedown, mouseup from closing selection
+						}.bind(this)));
+						this._paletteItemMoreConnects.push(On(paletteItemAlternate, 'click', function(collectionName, e){
+							Event.stop(e);
+							var newPaletteItem;
 							for(var j=0; j<paletteItemsSameGroup.length; j++){
 								var paletteItemInner = paletteItemsSameGroup[j];
-								paletteItemInner.domNode.style.display = (paletteItemInner == newPaletteItem) ? this.palette._displayShowValue : 'none';
+								if(paletteItemInner._collectionName == collectionName){
+									newPaletteItem = paletteItemInner;
+									break;
+								}
 							}
-							newPaletteItem.sunken(newPaletteItem.domNode);
-						}
-						this.paletteItemMoreCloseCleanup();
-					}.bind(this, collectionName)));
+							if(newPaletteItem){
+								for(var j=0; j<paletteItemsSameGroup.length; j++){
+									var paletteItemInner = paletteItemsSameGroup[j];
+									paletteItemInner.domNode.style.display = (paletteItemInner == newPaletteItem) ? this.palette._displayShowValue : 'none';
+								}
+								newPaletteItem.sunken(newPaletteItem.domNode);
+							}
+							this.paletteItemMoreCloseCleanup();
+						}.bind(this, collectionName)));
+					}
+					this._tooltipDialog = new TooltipDialog({
+						className: "paletteItemMorePopup",
+						style: "width: auto; ",
+						content: paletteItemMoreContent,
+						onShow: function(e){
+							// Drop down 12px to make it closer to button that launched the TooltipDialog
+							var parentNode = this._tooltipDialog.domNode.parentNode;
+							if(parentNode){
+								var oldTop = parseFloat(parentNode.style.top);
+								if(!isNaN(oldTop)){
+									parentNode.style.top = (oldTop+12)+'px';
+								}
+							}
+						}.bind(this)
+					});
+					Popup.open({
+						popup: this._tooltipDialog,
+						around: paletteItemSelectedMoreIcon,
+						orient:["above-centered"]
+					});
+					this._moreShowing = true;
 				}
-				this._tooltipDialog = new TooltipDialog({
-					className: "paletteItemMorePopup",
-					style: "width: auto; ",
-					content: paletteItemMoreContent,
-					onShow: function(e){
-						// Drop down 12px to make it closer to button that launched the TooltipDialog
-						var parentNode = this._tooltipDialog.domNode.parentNode;
-						if(parentNode){
-							var oldTop = parseFloat(parentNode.style.top);
-							if(!isNaN(oldTop)){
-								parentNode.style.top = (oldTop+12)+'px';
-							}
-						}
-					}.bind(this)
-				});
-				Popup.open({
-					popup: this._tooltipDialog,
-					around: paletteItemSelectedMoreIcon,
-					orient:["above-centered"]
-				});
-				/*
-				setTimeout(function(){
-					Popup.close(this._tooltipDialog);
-				}, 2000);
-				*/
 			}.bind(this));
 		}else{
 			paletteItemSelectedMoreIcon.style.display = 'none';
@@ -469,98 +469,113 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		}.bind(this));
 		On(paletteItemSelectedHelpIcon, 'click', function(e){
 			Event.stop(e);
-			var title = Metadata.getOamDescriptivePropertyForType(this.type, 'title');
-			var description = Metadata.getOamDescriptivePropertyForType(this.type, 'description');
-			var helpInnerContent = domConstruct.create("div", {className:"helpInnerContent"});
-			var s = this.name;
-			if(this._collectionName){
-				s += '(' + this._collectionName + ')';
-			};
-			var paletteTooltipCurrent = domConstruct.create("div", 
-					{className:"paletteTooltipCurrent" }, 
-					helpInnerContent);
-			var paletteTooltipCurrentWidget = domConstruct.create("span", 
-					{className:"paletteTooltipCurrentWidget", innerHTML:this.name },
-					paletteTooltipCurrent);
-			if(this._collectionName){
-				var paletteTooltipCurrentLibrary = domConstruct.create("span", 
-						{className:"paletteTooltipCurrentLibrary", innerHTML:' ('+this._collectionName+')' }, 
-						paletteTooltipCurrent);
-			}
-			if(title && title.value){
-				var helpInnerContentSummary = domConstruct.create("div", 
-						{className:"helpInnerContentSummary" }, 
-						helpInnerContent);
-				//FIXME: LOCALIZATION
-				var helpInnerContentSummaryTitle = domConstruct.create("div", 
-						{className:"helpInnerContentSummaryTitle", innerHTML:'Summary:' }, 
-						helpInnerContentSummary);
-				var helpInnerContentSummaryTitle = domConstruct.create("div", 
-						{className:"helpInnerContentSummaryContent"}, helpInnerContentSummary);
-				if(title.type == 'text/html'){
-					helpInnerContentSummaryTitle.innerHTML = title.value;
-				}else{
-					helpInnerContentSummaryTitle.textContent = title.value;
-				}
-			}
-			var paletteItemHelpContent = domConstruct.create("div", {className:"paletteItemHelpContent"});
-			var paletteItemHelpCloseBox = domConstruct.create("span", 
-					{className:"paletteItemHelpCloseBox"},
-					paletteItemHelpContent);
-			var paletteItemHelpDescription = domConstruct.create("div", 
-					{className:"paletteItemHelpDescription"},
-					paletteItemHelpContent);
-			paletteItemHelpDescription.appendChild(helpInnerContent);
-			this._paletteItemHelpConnects.push(On(paletteItemHelpCloseBox, 'mousedown, mouseup', function(e){
-				Event.stop(e);	// Prevents mousedown, mouseup from closing selection
-			}.bind(this)));
-			this._paletteItemHelpConnects.push(On(paletteItemHelpCloseBox, 'click', function(e){
-				Event.stop(e);
+			if(this._helpShowing){
 				this.paletteItemHelpCloseCleanup();
-			}.bind(this)));
-			this._tooltipDialog = new TooltipDialog({
-				className: "paletteItemHelpPopup",
-				style: "width: auto; ",
-				content: paletteItemHelpContent,
-				onShow: function(e){
-					// Move up 12px to make it closer to button that launched the TooltipDialog
-					var parentNode = this._tooltipDialog.domNode.parentNode;
-					if(parentNode){
-						var oldTop = parseFloat(parentNode.style.top);
-						if(!isNaN(oldTop)){
-							parentNode.style.top = (oldTop-12)+'px';
-						}
+			}else{
+				var title = Metadata.getOamDescriptivePropertyForType(this.type, 'title');
+				var description = Metadata.getOamDescriptivePropertyForType(this.type, 'description');
+				var helpInnerContent = domConstruct.create("div", {className:"helpInnerContent"});
+				var s = this.name;
+				if(this._collectionName){
+					s += '(' + this._collectionName + ')';
+				};
+				var paletteTooltipCurrent = domConstruct.create("div", 
+						{className:"paletteTooltipCurrent" }, 
+						helpInnerContent);
+				var paletteTooltipCurrentWidget = domConstruct.create("span", 
+						{className:"paletteTooltipCurrentWidget", innerHTML:this.name },
+						paletteTooltipCurrent);
+				if(this._collectionName){
+					var paletteTooltipCurrentLibrary = domConstruct.create("span", 
+							{className:"paletteTooltipCurrentLibrary", innerHTML:' ('+this._collectionName+')' }, 
+							paletteTooltipCurrent);
+				}
+				if(title && title.value){
+					var helpInnerContentSummary = domConstruct.create("div", 
+							{className:"helpInnerContentSummary" }, 
+							helpInnerContent);
+					//FIXME: LOCALIZATION
+					var helpInnerContentSummaryTitle = domConstruct.create("div", 
+							{className:"helpInnerContentSummaryTitle", innerHTML:'Summary:' }, 
+							helpInnerContentSummary);
+					var helpInnerContentSummaryTitle = domConstruct.create("div", 
+							{className:"helpInnerContentSummaryContent"}, helpInnerContentSummary);
+					if(title.type == 'text/html'){
+						helpInnerContentSummaryTitle.innerHTML = title.value;
+					}else{
+						helpInnerContentSummaryTitle.textContent = title.value;
 					}
-				}.bind(this)
-			});
-			Popup.open({
-				popup: this._tooltipDialog,
-				around: paletteItemSelectedHelpIcon,
-				orient:["below-centered"]
-			});
+				}
+				var paletteItemHelpContent = domConstruct.create("div", {className:"paletteItemHelpContent"});
+				var paletteItemHelpCloseBox = domConstruct.create("span", 
+						{className:"paletteItemHelpCloseBox"},
+						paletteItemHelpContent);
+				var paletteItemHelpDescription = domConstruct.create("div", 
+						{className:"paletteItemHelpDescription"},
+						paletteItemHelpContent);
+				paletteItemHelpDescription.appendChild(helpInnerContent);
+				this._paletteItemHelpConnects.push(On(paletteItemHelpCloseBox, 'mousedown, mouseup', function(e){
+					Event.stop(e);	// Prevents mousedown, mouseup from closing selection
+				}.bind(this)));
+				this._paletteItemHelpConnects.push(On(paletteItemHelpCloseBox, 'click', function(e){
+					Event.stop(e);
+					this.paletteItemHelpCloseCleanup();
+				}.bind(this)));
+				this._tooltipDialog = new TooltipDialog({
+					className: "paletteItemHelpPopup",
+					style: "width: auto; ",
+					content: paletteItemHelpContent,
+					onShow: function(e){
+						// Move up 12px to make it closer to button that launched the TooltipDialog
+						var parentNode = this._tooltipDialog.domNode.parentNode;
+						if(parentNode){
+							var oldTop = parseFloat(parentNode.style.top);
+							if(!isNaN(oldTop)){
+								parentNode.style.top = (oldTop-12)+'px';
+							}
+						}
+					}.bind(this)
+				});
+				Popup.open({
+					popup: this._tooltipDialog,
+					around: paletteItemSelectedHelpIcon,
+					orient:["below-centered"]
+				});
+				this._helpShowing = true;
+			}
 		}.bind(this));
 	},
 	
 	paletteItemMoreCloseCleanup: function(){
-		// FIXME: Move into separate routine
-		for(var j=0; j<this._paletteItemMoreConnects.length; j++){
-			this._paletteItemMoreConnects[j].remove();
-		};
-		this._paletteItemMoreConnects = [];
-		Popup.close(this._tooltipDialog);
-		this._tooltipDialog.destroyRecursive();
-		this._tooltipDialog = null;
+		if(this._moreShowing){
+			// FIXME: Move into separate routine
+			for(var j=0; j<this._paletteItemMoreConnects.length; j++){
+				this._paletteItemMoreConnects[j].remove();
+			};
+			this._paletteItemMoreConnects = [];
+			this._moreShowing = false;
+		}
+		if(this._tooltipDialog){
+			Popup.close(this._tooltipDialog);
+			this._tooltipDialog.destroyRecursive();
+			this._tooltipDialog = null;
+		}
 	},
 	
 	paletteItemHelpCloseCleanup: function(){
-		// FIXME: Move into separate routine
-		for(var j=0; j<this._paletteItemHelpConnects.length; j++){
-			this._paletteItemHelpConnects[j].remove();
-		};
-		this._paletteItemHelpConnects = [];
-		Popup.close(this._tooltipDialog);
-		this._tooltipDialog.destroyRecursive();
-		this._tooltipDialog = null;
+		if(this._helpShowing){
+			// FIXME: Move into separate routine
+			for(var j=0; j<this._paletteItemHelpConnects.length; j++){
+				this._paletteItemHelpConnects[j].remove();
+			};
+			this._paletteItemHelpConnects = [];
+			this._helpShowing = false;
+		}
+		if(this._tooltipDialog){
+			Popup.close(this._tooltipDialog);
+			this._tooltipDialog.destroyRecursive();
+			this._tooltipDialog = null;
+		}
 	}
 });
 });

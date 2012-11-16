@@ -97,7 +97,7 @@ return declare("davinci.html.CSSFile", CSSElement, {
 
 		return this.children.map(function(child) {
 			return child.getText(context);
-		}).join();
+		}).join("");
 	},
 
 	getCSSFile: function() {

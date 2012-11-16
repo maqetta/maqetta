@@ -4,7 +4,7 @@
     "spec": "1.0",
     "version": "1.8",
     "require": [
-     	{
+        {
             "type": "css",
             "src": "dojox/form/resources/TriStateCheckBox.css",
             "$library": "dojo"
@@ -16,7 +16,7 @@
             "$library": "dojo"
         }
     ],
-	"library": {
+    "library": {
         "dojo": {
             "src": "../../../dojo/dojo.js"
         }
@@ -53,26 +53,34 @@
             "title": "State"
         },
         "checked": {
-        	"datatype": "string",
-        	"option": [
-        		{
-        			"value": "true"
-        		},
-        		{
-        			"value": "mixed"
-        		},
-        		{
-        			"value": "false"
-        		}
-        	],
-        	"defaultValue": "false",
-        	"title": "Checked"
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "true"
+                },
+                {
+                    "value": "mixed"
+                },
+                {
+                    "value": "false"
+                }
+            ],
+            "defaultValue": "false",
+            "title": "Checked"
         },
- 		"states": {
-        	"datatype": "string",
-        	"defaultValue": "false, mixed, true",
-        	"title": "States"
+        "states": {
+            "datatype": "string",
+            "defaultValue": "false, mixed, true",
+            "title": "States"
         }
     },
-    "content": "<input></input>"
+    "content": "<input></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A widget to transfer values through source and target Wires</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+    }
 }

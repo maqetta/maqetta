@@ -69,30 +69,11 @@
             "description": "Refresh (re-download) content when pane goes from hidden to shown",
             "hidden": false
         },
-/*FIXME: Temporarily comment out some properties that result in really ugly attributes in generated source code or are broken.
-        "loadingMessage": {
-            "datatype": "string",
-            "description": "Message that shows while downloading",
-            "hidden": false
-        },
-        "errorMessage": {
-            "datatype": "string",
-            "description": "Message that shows if an error occurs",
-            "hidden": false
-        },
-*/
         "doLayout": {
             "datatype": "boolean",
             "description": "- false - don't adjust size of children\n- true - if there is a single visible child widget, set it's size to\nhowever big the ContentPane is",
             "hidden": false
         },
-/*FIXME: Temporarily comment out some properties that result in really ugly attributes in generated source code or are broken.
-        "ioArgs": {
-            "datatype": "json",
-            "description": "Parameters to pass to xhrGet() request, for example:\n\t<div dojoType=\"dijit.layout.ContentPane\" href=\"./bar\" ioArgs=\"{timeout: 500}\">",
-            "hidden": true
-        },
-*/
         "isContainer": {
             "datatype": "boolean",
             "description": "Just a flag indicating that this widget will call resize() on\nits children.   _LayoutWidget based widgets check for\n\n\t\tif(!this.getParent || !this.getParent()){\n\nand if getParent() returns false because !parent.isContainer,\nthen they resize themselves on initialization.",
@@ -100,5 +81,13 @@
             "defaultValue": true
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A widget to transfer values through source and target Wires</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+    }
 }

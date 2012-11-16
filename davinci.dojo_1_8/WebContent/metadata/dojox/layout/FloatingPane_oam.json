@@ -53,18 +53,6 @@
             "datatype": "boolean",
             "title": "Refresh On Show"
         },
-/*FIXME: Temporarily comment out some properties that result in really ugly attributes in generated source code or are broken.
-        "loadingMessage": {
-            "datatype": "string",
-            "defaultValue": "<span class='dijitContentPaneLoading'>Loading...</span>",
-            "title": "Loading Message"
-        },
-        "errorMessage": {
-            "datatype": "string",
-            "defaultValue": "<span class='dijitContentPaneError'>Sorry, an error occurred</span>",
-            "title": "Error Message"
-        },
-*/
         "doLayout": {
             "datatype": "string",
             "defaultValue": "auto",
@@ -139,13 +127,6 @@
             "description": "Execute (eval) scripts that is found in the content",
             "hidden": false
         },
-/*FIXME: Temporarily comment out some properties that result in really ugly attributes in generated source code or are broken.
-        "ioArgs": {
-            "datatype": "json",
-            "description": "makes it possible to add custom args to xhrGet, like ioArgs.headers['X-myHeader'] = 'true'",
-            "hidden": false
-        },
-*/
         "content": {
             "datatype": "string",
             "description": "The innerHTML of the ContentPane.\nNote that the initialization parameter / argument to attr(\"content\", ...)\ncan be a String, DomNode, Nodelist, or _Widget.",
@@ -163,5 +144,13 @@
             "hidden": false
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A widget to transfer values through source and target Wires</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+    }
 }

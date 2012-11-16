@@ -142,7 +142,14 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				style.top = t + "px";
 				style.width = w + "px";
 				style.height = h + "px";
-
+/*20121114 JF DELETE THIS. 
+	Only commenting out for now because there might be cases where
+	visual editor actually needs/uses the logic below, but it just 
+	doesn't make sense. We call context.deselect() above, which
+	deselects all and calls context.focus(null), thereby releasing
+	any outstanding focus objects. Focus only makes sense when there
+	is an active selection, but at this point we have removed
+	the selection.
 				if(w > 4 || h > 4){
 					var box = {l: l, t: t,
 						w: (w > 0 ? w : 1), h: (h > 0 ? h : 1)};
@@ -150,6 +157,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				}else{
 					context.focus(null);
 				}
+*/
 			}
 		}else{
 			var absolute = !this.createWithFlowLayout();

@@ -33,20 +33,48 @@
             "datatype": "string",
             "defaultValue": "slide",
             "option": [
-                {"value": "slide"},
-                {"value": "fade"},
-                {"value": "flip"},
-                {"value": "cover"},
-                {"value": "coverv"},
-                {"value": "dissolve"},
-                {"value": "reveal"},
-                {"value": "revealv"},
-                {"value": "scaleIn"},
-                {"value": "scaleOut"},
-                {"value": "slidev"},
-                {"value": "swirl"},
-                {"value": "zoomIn"},
-                {"value": "zoomOut"}
+                {
+                    "value": "slide"
+                },
+                {
+                    "value": "fade"
+                },
+                {
+                    "value": "flip"
+                },
+                {
+                    "value": "cover"
+                },
+                {
+                    "value": "coverv"
+                },
+                {
+                    "value": "dissolve"
+                },
+                {
+                    "value": "reveal"
+                },
+                {
+                    "value": "revealv"
+                },
+                {
+                    "value": "scaleIn"
+                },
+                {
+                    "value": "scaleOut"
+                },
+                {
+                    "value": "slidev"
+                },
+                {
+                    "value": "swirl"
+                },
+                {
+                    "value": "zoomIn"
+                },
+                {
+                    "value": "zoomOut"
+                }
             ]
         },
         "transitionDir": {
@@ -108,15 +136,19 @@
         "variableHeight": {
             "datatype": "boolean",
             "defaultValue": false
-        }/*,
-        "busy": {
-            "datatype": "boolean",
-            "defaultValue": false
-        }*/,
+        },
         "header": {
             "datatype": "boolean",
             "defaultValue": false
-        },
+        }
     },
-    "content": "<li></li>"
+    "content": "<li></li>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A widget to transfer values through source and target Wires</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+    }
 }

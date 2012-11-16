@@ -31,7 +31,7 @@
             "datatype": "string",
             "description": "Indicates the property to use as the identity property. The values of this property should be unique.",
             "title": "ID Property",
-            defaultValue: "id",
+            "defaultValue": "id",
             "hidden": "true"
         },
         "index": {
@@ -41,5 +41,13 @@
             "hidden": "true"
         }
     },
-    "content": "<div></div>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A widget to transfer values through source and target Wires</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+    }
 }

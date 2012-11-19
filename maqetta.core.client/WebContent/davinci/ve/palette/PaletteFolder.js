@@ -105,45 +105,58 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 		var presetClassName = comptype ? this.palette._presetClassNamePrefix + comptype : null;	// Only used for debugging purposes
 		
 		var children = this.palette.getChildren();
-		for(var i = 0, len = children.length; i < len; i++){
+		for(var i = 0, len = children.length; i < len; ){
 			var child = children[i];
-			if(child != this){
-				continue;
-			}
-			for(var j = i + 1; j < len; ){
-				child = children[j];
-				if(child.declaredClass != "davinci.ve.palette.PaletteItem"){
-					break;
-				}
-				var obj = this._paletteItemGroupInfo(children, j);
-				for(var k=j; k <= obj.endIndex; k++){
-					child = children[k];
-					var descriptor = Metadata.getWidgetDescriptorForType(child.type);
-					var collectionId = descriptor && descriptor.collection;
-					var show = false;
-					if(child.preset && child.preset.collections){
-						var collections = child.preset.collections;
-						for(var co=0; co < collections.length; co++){
-							var collection = collections[co];
-							if(collection.id && collection.id === collectionId){
-								show = collection.show;
-								break;
+			// If we have reached the current PaletteFolder...
+			if(child == this){
+				// Loop through subsequent children and process all PaletteItems
+				// until reaching the next PaletteFolder (or end of list)
+				for(var j = i + 1; j < len; ){
+					child = children[j];
+					if(child.declaredClass != "davinci.ve.palette.PaletteItem"){
+						// Reached next PaletteFolder
+						break;
+					}
+					var obj = this._paletteItemGroupInfo(children, j);
+					for(var k=j; k <= obj.endIndex; k++){
+						child = children[k];
+						// Decide whether the given PaletteItem should be visible
+						// given the current preset ('mobile', 'desktop', 'sketchhifi', or 'sketchlofi')
+						var descriptor = Metadata.getWidgetDescriptorForType(child.type);
+						var collectionId = descriptor && descriptor.collection;
+						var show = false;
+						if(child.preset && child.preset.collections){
+							var collections = child.preset.collections;
+							for(var co=0; co < collections.length; co++){
+								var collection = collections[co];
+								if(collection.id && collection.id === collectionId){
+									show = collection.show;
+									break;
+								}
 							}
 						}
-					}
-					if(k == obj.selectedIndex && show){
-						if(dojo.style(child.domNode, "display") == "none"){
-							fx.wipeIn({node: child.id, duration: 200}).play();
+						if(k == obj.selectedIndex && show){
+							// Toggle visibility depending on whether the PaletteFolder
+							// is open or closed
+							if(dojo.style(child.domNode, "display") == "none"){
+								fx.wipeIn({node: child.id, duration: 200}).play();
+							}else{
+								fx.wipeOut({node: child.id, duration: 200}).play();
+							}
 						}else{
-							fx.wipeOut({node: child.id, duration: 200}).play();
+							dojo.style(child.domNode, "display", "none");
 						}
-					}else{
-						dojo.style(child.domNode, "display", "none");
 					}
+					j = k;
 				}
-				j = k;
+				i = j + 1;
+			}else{
+				// Hide any PaletteItems outside of the current PaletteFolder are visible
+				if(child.declaredClass == "davinci.ve.palette.PaletteItem" && dojo.style(child.domNode, "display") != "none"){
+					fx.wipeOut({node: child.id, duration: 200}).play();
+				}
+				i++;
 			}
-			break;
 		}
 		return false;
 	},

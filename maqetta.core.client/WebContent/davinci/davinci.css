@@ -1132,7 +1132,7 @@ davinci_top_bar .dijitButtonNode {
 .helpInnerContentSummary {
 }
 .helpInnerContentSummaryTitle {
-	margin:8px 2px;
+	margin:8px 0px 2px;
 	font-weight: bold;
 	font-size: 13px;
 }

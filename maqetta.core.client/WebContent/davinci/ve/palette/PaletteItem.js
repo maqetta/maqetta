@@ -501,22 +501,13 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 							{className:"paletteTooltipCurrentLibrary", innerHTML:' ('+this._collectionName+')' }, 
 							paletteTooltipCurrent);
 				}
-				if(title && title.value){
-					var helpInnerContentSummary = domConstruct.create("div", 
-							{className:"helpInnerContentSummary" }, 
-							helpInnerContent);
-					//FIXME: LOCALIZATION
-					var helpInnerContentSummaryTitle = domConstruct.create("div", 
-							{className:"helpInnerContentSummaryTitle", innerHTML:'Summary:' }, 
-							helpInnerContentSummary);
-					var helpInnerContentSummaryTitle = domConstruct.create("div", 
-							{className:"helpInnerContentSummaryContent"}, helpInnerContentSummary);
-					if(title.type == 'text/html'){
-						helpInnerContentSummaryTitle.innerHTML = title.value;
-					}else{
-						helpInnerContentSummaryTitle.textContent = title.value;
-					}
-				}
+				var classes = {
+					 container:'helpInnerContentSummary',
+					 title:'helpInnerContentSummaryTitle',
+					 content:'helpInnerContentSummaryContent'
+				};
+				this._createHelpSection(title, helpInnerContent, commonNls.summary, classes);
+				this._createHelpSection(description, helpInnerContent, commonNls.description, classes);
 				var paletteItemHelpContent = domConstruct.create("div", {className:"paletteItemHelpContent"});
 				var paletteItemHelpCloseBox = domConstruct.create("span", 
 						{className:"paletteItemHelpCloseBox"},
@@ -556,6 +547,36 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 				this.palette.helpItems.push(this);
 			}
 		}.bind(this));
+	},
+	
+	/**
+	 * Builds a section with the help popup. Used for 'title' and 'description'.
+	 * @param metadataValue {object} - OpenAjax Metadata descriptive property, with two sub-properties
+	 * 		metadataValue.type {string} - either 'text/plain' or 'text/html'
+	 * 		metadataValue.value {string} - the actual property value
+	 * @param parentElem {Element} - Section become child content for this element
+	 * @param title {string} - section title string
+	 * @param classes {object} - css classes for the section
+	 * 		container - css class name for container DIV
+	 * 		title_class - css class name for title DIV
+	 * 		content_class - css class name for content DIV
+	 */
+	_createHelpSection: function(metadataValue, parentElem, title, classes){
+		if(metadataValue && metadataValue.value){
+			var SectionDiv = domConstruct.create("div", 
+					{className:classes.container }, 
+					parentElem);
+			var SectionTitle = domConstruct.create("div", 
+					{className:classes.title, innerHTML:title }, 
+					SectionDiv);
+			var SectionContent = domConstruct.create("div", 
+					{className:classes.content}, SectionDiv);
+			if(metadataValue.type == 'text/html'){
+				SectionContent.innerHTML = metadataValue.value;
+			}else{
+				SectionContent.textContent = metadataValue.value;
+			}
+		}
 	},
 	
 	paletteItemMoreCloseCleanup: function(){

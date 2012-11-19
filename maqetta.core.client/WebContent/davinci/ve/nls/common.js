@@ -134,6 +134,8 @@ component: "Component",
 /* Palette*.js */
 alternates: "Alternates",
 howToChooseAlternate: "To choose alternate widget, click-select current widget, then click on up arrow icon.",
+summary: "Summary:",
+description: "Description:",
 
 __dummy__: ""
 }

@@ -4,8 +4,8 @@
 	"$defaultSections":[
 		{
 			"_COMMENT1_":"One entry for each section (==folder) in widget palette",
- 			"id":"Containers",
-			"name": "Containers",
+ 			"id":"Views",
+			"name": "Views",
 			"_COMMENT2_":"includes provides ordered list of widgets to appear in each section",
 			"_COMMENT3_":"each entry in array causes a new item to appear in that section",
 			"_COMMENT4_":"each entry in array can be either a string or an array",
@@ -13,14 +13,50 @@
 			"_COMMENT6_":"otherwise the string holds a tag, which causes all widgets that match tag to share that item",
 			"_COMMENT7_":"if an array, then it holds a list of strings, each of which can start with type: (widget type) or a tag",
 			"includes":[
-				"AccordionContainer",
+				"ScrollableView",
+				"SwapView",
+				"View"
+			]
+		},
+		{
+ 			"id":"Containers",
+			"name": "Containers",
+			"includes":[
+				["AccordionContainer","Accordion"],
 				"BorderContainer",
+				"Container",
 				"ContentPane",
+				"FixedSplitter",
 				"Form",
+				"GridLayout",
+				"Pane",
+				"RoundRect",
+				"ScrollablePane",
 				"TabContainer",
 				"TitlePane",
 				"<div>",
 				"<span>"
+			]
+		},
+		{
+ 			"id":"Heading, Section Labels",
+			"name": "Heading",
+			"includes":[
+				"Heading",
+				"ToolBarButton"
+			]
+		},
+		{
+ 			"id":"Lists",
+			"name": "Lists",
+			"includes":[
+				"RoundRectCategory",
+				"RoundRectList",
+				"RoundRectDataList",
+				"EdgeToEdgeCategory",
+				"EdgeToEdgeList",
+				"EdgeToEdgeDataList",
+				"ListItem"
 			]
 		},
 		{
@@ -32,7 +68,7 @@
 		 			"id":"Buttons",
 					"name": "Buttons",
 					"includes":[
-						"Button",
+						["Button","<button>"],
 						"ComboButton",
 						"DropDownButton",
 						"ToggleButton"
@@ -47,7 +83,46 @@
 						"TriStateCheckBox"
 					]
 				},
-			],
+				{
+		 			"id":"IconContainer",
+					"name": "IconContainer",
+					"includes":[
+						"IconContainer",
+						"IconItem",
+						"IconMenu",
+						"IconMenuItem"
+					]
+				},
+				{
+		 			"id":"Other",
+					"name": "Other",
+					"includes":[
+						"Switch",
+						"Slider",
+						"ProgressIndicator",
+						"SearchBox"
+					]
+				},
+				{
+		 			"id":"Pickers",
+					"name": "Pickers",
+					"includes":[
+						"Carousel",
+						"CarouselItem",
+						"DataCarousel",
+						"DatePicker",
+						"SpinWheel",
+						"SpinWheelSlot",
+						"SpinWheelDatePicker",
+						"SpinWheelTimePicker",
+						"TimePicker",
+						"ValuePicker",
+						"ValuePickerSlot",
+						"ValuePickerDatePicker",
+						"ValuePickerTimePicker"
+					]
+				}
+			]
 		},
 		{
  			"id":"GridsTables",
@@ -67,7 +142,7 @@
  			"id":"Select",
 			"name": "Select from choices",
 			"includes":[
-				"DropDownSelect",
+				["DropDownSelect","<select>"],
 				"FilteringSelect",
 				"MultiSelect"
 			]
@@ -92,12 +167,12 @@
  			"id":"TextBox",
 			"name": "TextBox",
 			"includes":[
-				"TextBox",
+				["TextBox","<input>"],
 				"ComboBox",
 				"CurrencyTextBox",
 				"DateTextBox",
 				"SimpleTextarea",
-				"Textarea",
+				["Textarea","TextArea","ExpandingTextArea"],
 				"ValidationTextBox",
 				"TimeTextBox"
 			]
@@ -106,6 +181,8 @@
  			"id":"Toolbars",
 			"name": "Toolbars and Tabbars",
 			"includes":[
+				"TabBar",
+				"TabBarButton",
 				"Toolbar"
 			]
 		},
@@ -117,12 +194,190 @@
 			]
 		},
 		{
+ 			"id":"HTML",
+			"name": "HTML",
+			"subsections":[
+				{
+		 			"id":"Common",
+					"name": "Common",
+					"includes":[
+						"<a>",
+						"<div>",
+						"<label>",
+						"<span>"
+					]
+				},
+				{
+		 			"id":"Forms",
+					"name": "Forms",
+					"includes":[
+						"<button>",
+						"<fieldset>",
+						"<form>",
+						"<input>",
+						"<select>",
+						"<textarea>"
+					]
+				},
+				{
+		 			"id":"Headers",
+					"name": "Headers",
+					"includes":[
+						"<h1>",
+						"<h2>",
+						"<h3>"
+					]
+				},
+				{
+		 			"id":"ImagesMediaIframes",
+					"name": "Images, Media, Iframes",
+					"includes":[
+						"<audio>",
+						"<embed>",
+						"<img>",
+						"<iframe>"
+					]
+				},
+				{
+		 			"id":"ParagraphsFormatting",
+					"name": "Paragraphs, Breaks, Rules",
+					"includes":[
+						"<b>",
+						"<br>",
+						"<em>",
+						"<hr>",
+						"<i>",
+						"<p>",
+						"<s>",
+						"<strong>",
+						"<u>"
+					]
+				},
+				{
+		 			"id":"Tables",
+					"name": "Tables",
+					"includes":[
+						"<table>"
+					]
+				}
+			]
+		},
+		{
+ 			"id":"Clipart",
+			"name": "Clip Art",
+			"subsections":[
+				{
+		 			"id":"Arrows",
+					"name": "Arrows",
+					"includes":[
+						"ArrowDown",
+						"ArrowLeft",
+						"ArrowRight",
+						"ArrowUp"
+					]
+				},
+				{
+		 			"id":"Community",
+					"name": "Community",
+					"includes":[
+						"Facebook",
+						"Rss",
+						"Twitter"
+					]
+				},
+				{
+		 			"id":"DeviceSilhouettes",
+					"name": "Device Silhouettes",
+					"includes":[
+						"Android_340x480",
+						"Android_480x800",
+						"AndroidTablet",
+						"Blackberry",
+						"iPad",
+						"iPhone"
+					]
+				},
+				{
+		 			"id":"Media",
+					"name": "Media",
+					"includes":[
+						"Camera",
+						"Chat",
+						"Image",
+						"Map",
+						"Microphone",
+						"PlayControl",
+						"StreetMap",
+						"VideoCamera",
+						"VideoPlayer"
+					]
+				},
+				{
+		 			"id":"Miscellaneous",
+					"name": "Miscellaneous",
+					"includes":[
+						"Browser",
+						"Person",
+						"ProfilePicture",
+						"X"
+					]
+				},
+				{
+		 			"id":"User Interface Controls",
+					"name": "UserInterfaceControls",
+					"includes":[
+						"FormattingToolbox",
+						"HScrollBar",
+						"HSplit",
+						"SpinInput",
+						"VScrollBar",
+						"VSplit"
+					]
+				},
+				{
+		 			"id":"User Interface Icons",
+					"name": "UserInterfaceIcons",
+					"includes":[
+						"Close",
+						"Help",
+						"Home",
+						"Lock",
+						"Mail",
+						"Minus",
+						"Next",
+						"Plus",
+						"Previous",
+						"Print",
+						"Search",
+						"ShoppingCart",
+						"Trash"
+					]
+				}
+			]
+		},
+		{
+ 			"id":"DrawingTools",
+			"name": "Drawing Tools",
+			"includes":[
+				"Text",
+				"Line",
+				"Arrow",
+				"Polyline",
+				"PolylineArrow",
+				"Circle",
+				"Rectangle",
+				"RoundedRectangle"
+			]
+		},
+		{
  			"id":"Other",
 			"name": "Other",
 			"includes":[
 				"Calendar",
 				"ColorPalette",
-				"Rating"
+				"Rating",
+				"RichText",
+				"StickyNote"
 			]
 		}
 	],

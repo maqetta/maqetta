@@ -1,17 +1,18 @@
 {
 	"_COMMENT1_":"Defines site-specific organization for widget palette",
 	"name":"widgetPalette_dojo_default",
+	"_COMMENT2_":"One entry for each section (==folder) in widget palette",
+	"_COMMENT3_":"includes provides ordered list of widgets to appear in each section",
+	"_COMMENT4_":"each entry in array causes a new item to appear in that section",
+	"_COMMENT5_":"each entry in array can be either a string or an array",
+	"_COMMENT6_":"if a string, can be either a string that begins with type:, which is a particular widget type",
+	"_COMMENT7_":"otherwise the string holds a tag, which causes all widgets that match tag to share that item",
+	"_COMMENT8_":"if an array, then it holds a list of strings, each of which can start with type: (widget type) or a tag",
 	"$defaultSections":[
 		{
-			"_COMMENT1_":"One entry for each section (==folder) in widget palette",
- 			"id":"Views",
+			"id":"Views",
 			"name": "Views",
-			"_COMMENT2_":"includes provides ordered list of widgets to appear in each section",
-			"_COMMENT3_":"each entry in array causes a new item to appear in that section",
-			"_COMMENT4_":"each entry in array can be either a string or an array",
-			"_COMMENT5_":"if a string, can be either a string that begins with type:, which is a particular widget type",
-			"_COMMENT6_":"otherwise the string holds a tag, which causes all widgets that match tag to share that item",
-			"_COMMENT7_":"if an array, then it holds a list of strings, each of which can start with type: (widget type) or a tag",
+			"_COMMENT1_":"Mobile-only view widgets, often representing a single screen of UI",
 			"includes":[
 				"ScrollableView",
 				"SwapView",
@@ -19,8 +20,20 @@
 			]
 		},
 		{
+ 			"id":"Heading, Section Labels",
+			"name": "Heading",
+			"_COMMENT1_":"Mobile-only Heading widgets, often titles at top of a screen",
+			"includes":[
+				"Heading",
+				"ToolBarButton"
+			]
+		},
+		{
  			"id":"Containers",
 			"name": "Containers",
+			"_COMMENT1_":"Desktop and mobile containers",
+			"_COMMENT2_":"Note that default desktop preset only include desktop widgets",
+			"_COMMENT3_":"and mobile preset only include mobile widgets",
 			"includes":[
 				["AccordionContainer","Accordion"],
 				"BorderContainer",
@@ -29,26 +42,23 @@
 				"FixedSplitter",
 				"Form",
 				"GridLayout",
+				"MenuBar",
 				"Pane",
 				"RoundRect",
 				"ScrollablePane",
 				"TabContainer",
 				"TitlePane",
+				"ToolBar",
+				"<a>",
 				"<div>",
-				"<span>"
-			]
-		},
-		{
- 			"id":"Heading, Section Labels",
-			"name": "Heading",
-			"includes":[
-				"Heading",
-				"ToolBarButton"
+				"<span>",
+				"<table>"
 			]
 		},
 		{
  			"id":"Lists",
 			"name": "Lists",
+			"_COMMENT1_":"Mobile-only List widgets",
 			"includes":[
 				"RoundRectCategory",
 				"RoundRectList",
@@ -76,31 +86,23 @@
 				},
 				{
 		 			"id":"CheckboxesRadios",
-					"name": "Checkboxes and RadioButtons",
+					"name": "Checkboxes, RadioButtons, Switch",
 					"includes":[
 						"CheckBox",
 						"RadioButton",
+						"Switch",
 						"TriStateCheckBox"
 					]
 				},
 				{
 		 			"id":"IconContainer",
 					"name": "IconContainer",
+					"_COMMENT1_":"Mobile-only",
 					"includes":[
 						"IconContainer",
 						"IconItem",
 						"IconMenu",
 						"IconMenuItem"
-					]
-				},
-				{
-		 			"id":"Other",
-					"name": "Other",
-					"includes":[
-						"Switch",
-						"Slider",
-						"ProgressIndicator",
-						"SearchBox"
 					]
 				},
 				{
@@ -121,76 +123,57 @@
 						"ValuePickerDatePicker",
 						"ValuePickerTimePicker"
 					]
+				},
+				{
+					"id":"Select",
+					"name": "Select",
+					"includes":[
+						["DropDownSelect","<select>"],
+						"FilteringSelect",
+						"MultiSelect"
+					]
+				},
+				{
+		 			"id":"SlidersSpinners",
+					"name": "Sliders, Spinners",
+					"includes":[
+						"HorizontalSlider",
+						"NumberSpinner",
+						"Slider",
+						"TimeSpinner",
+						"VerticalSlider"
+					]
+				},
+				{
+		 			"id":"TextBox",
+					"name": "TextBox",
+					"includes":[
+						["TextBox","<input>"],
+						"ComboBox",
+						"CurrencyTextBox",
+						"DateTextBox",
+						"SimpleTextarea",
+						["Textarea","TextArea","ExpandingTextArea"],
+						"ValidationTextBox",
+						"TimeTextBox"
+					]
+				},
+				{
+					"id":"Toolbars",
+					"name": "Toolbars, Tabbars",
+					"includes":[
+						"TabBar",
+						"TabBarButton",
+						"Toolbar"
+					]
+				},
+				{
+		 			"id":"Other",
+					"name": "Other",
+					"includes":[
+						"ProgressIndicator"
+					]
 				}
-			]
-		},
-		{
- 			"id":"GridsTables",
-			"name": "Grids and Tables",
-			"includes":[
-				"GridX"
-			]
-		},
-		{
- 			"id":"Menus",
-			"name": "Menus",
-			"includes":[
-				"MenuBar"
-			]
-		},
-		{
- 			"id":"Select",
-			"name": "Select from choices",
-			"includes":[
-				["DropDownSelect","<select>"],
-				"FilteringSelect",
-				"MultiSelect"
-			]
-		},
-		{
- 			"id":"Sliders",
-			"name": "Sliders",
-			"includes":[
-				"HorizontalSlider",
-				"VerticalSlider"
-			]
-		},
-		{
- 			"id":"Spinners",
-			"name": "Spinners",
-			"includes":[
-				"NumberSpinner",
-				"TimeSpinner"
-			]
-		},
-		{
- 			"id":"TextBox",
-			"name": "TextBox",
-			"includes":[
-				["TextBox","<input>"],
-				"ComboBox",
-				"CurrencyTextBox",
-				"DateTextBox",
-				"SimpleTextarea",
-				["Textarea","TextArea","ExpandingTextArea"],
-				"ValidationTextBox",
-				"TimeTextBox"
-			]
-		},
-		{
- 			"id":"Toolbars",
-			"name": "Toolbars and Tabbars",
-			"includes":[
-				"TabBar",
-				"TabBarButton",
-				"Toolbar"
-			]
-		},
-		{
- 			"id":"Trees",
-			"name": "Trees",
-			"includes":[
-				"Tree"
 			]
 		},
 		{
@@ -313,8 +296,8 @@
 					]
 				},
 				{
-		 			"id":"Miscellaneous",
-					"name": "Miscellaneous",
+		 			"id":"Other",
+					"name": "Other",
 					"includes":[
 						"Browser",
 						"Person",
@@ -375,15 +358,17 @@
 			"includes":[
 				"Calendar",
 				"ColorPalette",
+				"GridX",
 				"Rating",
 				"RichText",
-				"StickyNote"
+				"StickyNote",
+				"Tree"
 			]
 		}
 	],
-	"_COMMENT2_":"Should have one each for mobile, desktop, sketchhifi, sketchlofi",
-	"_COMMENT3_":"For each preset, collections is list of each widget collection in order of precedence",
-	"_COMMENT4_":"and sections is the array of sections for this preset (or $defaultSections)",
+	"_COMMENT11_":"Should have one each for mobile, desktop, sketchhifi, sketchlofi",
+	"_COMMENT12_":"For each preset, collections is list of each widget collection in order of precedence",
+	"_COMMENT13_":"and sections is the array of sections for this preset (or $defaultSections)",
 	"presets":{
 		"mobile":{
 			"collections":[

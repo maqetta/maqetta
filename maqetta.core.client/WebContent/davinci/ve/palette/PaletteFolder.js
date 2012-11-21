@@ -18,6 +18,12 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 	// id of preset for which this PaletteFolder object will be included
 	presetId: null,
 	presetClassName: null,	// Only used for debugging purposes
+	_type: '',		// 'simple' = just has PaletteItem children, or 
+					// 'subsection_container' = has PaletteFolder subsections inside, or
+					// 'subsection' = is a Palette folder that represents a subsection
+	_isOpen: false,		// Indicates whether children PaletteItems for this folder are showing
+	_openSubsection: null,	// For PaletteFolders that have subsections, currently open subsection
+							// PaletteItems within _openSubsection only show is its subsection container is open
 
 	buildRendering: function(){
 		this.palette = dijit.byId(this.paletteId);
@@ -32,6 +38,11 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 		img.src = this.icon;
 		a.appendChild(dojo.doc.createTextNode(this.displayName));
 //		dojo.setSelectable(this.domNode, false);
+		div._paletteFolder = this;
+		this._type = (this.subsections ? 'subsection_container' : (this.subsection ? 'subsection' : 'simple'));
+		if(this._type == 'subsection'){
+			domClass.add(div, 'PaletteFolderSubsection');
+		}
 	},
 
 	postCreate: function(){
@@ -100,60 +111,110 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 				!Runtime.currentEditor.getContext){
 			return;
 		}
-		var context = Runtime.currentEditor.getContext();
-		var comptype = context.getCompType();
-		var presetClassName = comptype ? this.palette._presetClassNamePrefix + comptype : null;	// Only used for debugging purposes
 		
 		var children = this.palette.getChildren();
 		for(var i = 0, len = children.length; i < len; ){
-			var child = children[i];
+			var child_i = children[i];
 			// If we have reached the current PaletteFolder...
-			if(child == this){
-				// Loop through subsequent children and process all PaletteItems
-				// until reaching the next PaletteFolder (or end of list)
-				for(var j = i + 1; j < len; ){
-					child = children[j];
-					if(child.declaredClass != "davinci.ve.palette.PaletteItem"){
-						// Reached next PaletteFolder
-						break;
+			if(child_i == this){
+				// See if this PaletteFolder has subsections
+				// If so, toggle the visibility of the subsections
+				// and hide any PaletteItems in the subsections
+				if(this._type == 'subsection_container'){	// Only PaletteFolder's with child sections have this property
+					// Loop through subsequent children and process all PaletteItems
+					// until reaching the next PaletteFolder that isn't a subsection (or end of list)
+					this._isOpen = !this._isOpen;
+					for(var j = i + 1; j < len; j++){
+						var child_j = children[j];
+						if(child_j.declaredClass == "davinci.ve.palette.PaletteFolder"){
+							if(child_j._type != 'subsection'){	// PaletteFolder's that are subsections have this property
+								// Reached next major section PaletteFolder
+								break;
+							}
+							// Toggle visibility of subsections for this section
+							if(this._isOpen){
+								fx.wipeIn({node: child_j.id, duration: 200}).play();
+								// Flag whether this subsection is open
+								// Subsequent looping with display/hide the PaletteItems for this subsection
+								child_j._isOpen = (child_j == child_j.subsection_container._openSubsection);
+							}else{
+								fx.wipeOut({node: child_j.id, duration: 200}).play();
+								child_j.isOpen = false;
+							}
+						}else{ // child.declaredClass == "davinci.ve.palette.PaletteItem"
+							if(this._isOpen && child_j.PaletteFolderSubsection._isOpen){
+								// Show the PaletteItems for the currently open subsession
+								fx.wipeIn({node: child_j.id, duration: 200}).play();
+							}else{
+								child_j.domNode.style.display = 'none';
+							}
+						}
 					}
-					var obj = this._paletteItemGroupInfo(children, j);
-					for(var k=j; k <= obj.endIndex; k++){
-						child = children[k];
-						// Decide whether the given PaletteItem should be visible
-						// given the current preset ('mobile', 'desktop', 'sketchhifi', or 'sketchlofi')
-						var descriptor = Metadata.getWidgetDescriptorForType(child.type);
-						var collectionId = descriptor && descriptor.collection;
-						var show = false;
-						if(child.preset && child.preset.collections){
-							var collections = child.preset.collections;
-							for(var co=0; co < collections.length; co++){
-								var collection = collections[co];
-								if(collection.id && collection.id === collectionId){
-									show = collection.show;
-									break;
+					i = j;
+				}else{
+					this._isOpen = !this._isOpen;
+					if(this._type == 'subsection'){	
+						this.subsection_container._openSubsection = this._isOpen ? this : null;
+					}
+					
+					// Loop through subsequent children and process all PaletteItems
+					// until reaching the next PaletteFolder (or end of list)
+					for(var j = i + 1; j < len; ){
+						var child_j = children[j];
+						if(child_j.declaredClass != "davinci.ve.palette.PaletteItem"){
+							// Reached next PaletteFolder
+							break;
+						}
+						var obj = this._paletteItemGroupInfo(children, j);
+						for(var k=j; k <= obj.endIndex; k++){
+							var child_k = children[k];
+							// Decide whether the given PaletteItem should be visible
+							// given the current preset ('mobile', 'desktop', 'sketchhifi', or 'sketchlofi')
+							var descriptor = Metadata.getWidgetDescriptorForType(child_k.type);
+							var collectionId = descriptor && descriptor.collection;
+							var show = false;
+							if(child_k.preset && child_k.preset.collections){
+								var collections = child_k.preset.collections;
+								for(var co=0; co < collections.length; co++){
+									var collection = collections[co];
+									if(collection.id && collection.id === collectionId){
+										show = collection.show;
+										break;
+									}
 								}
 							}
-						}
-						if(k == obj.selectedIndex && show){
-							// Toggle visibility depending on whether the PaletteFolder
-							// is open or closed
-							if(dojo.style(child.domNode, "display") == "none"){
-								fx.wipeIn({node: child.id, duration: 200}).play();
+							if(k == obj.selectedIndex && show){
+								// Toggle visibility depending on whether the PaletteFolder
+								// is open or closed
+								if(this._isOpen){
+									fx.wipeIn({node: child_k.id, duration: 200}).play();
+								}else{
+									fx.wipeOut({node: child_k.id, duration: 200}).play();
+								}
 							}else{
-								fx.wipeOut({node: child.id, duration: 200}).play();
+								child_k.domNode.style.display = "none";
 							}
-						}else{
-							dojo.style(child.domNode, "display", "none");
+						}
+						j = k;
+					}
+					i = j;
+				}
+			}else{
+				// Hide any visible PaletteItems outside of the current PaletteFolder
+				if(child_i.declaredClass == "davinci.ve.palette.PaletteItem" && 
+						child_i.domNode.style.display != "none"){
+					fx.wipeOut({node: child_i.id, duration: 200}).play();
+				}
+				// Hide any PaletteFolders that are visible and that are subsections of PaletteFolder's that are closed
+				if(child_i.declaredClass == "davinci.ve.palette.PaletteFolder"){
+					if(child_i._type == 'subsection' && child_i._isOpen && !child_i.subsection_container._isOpen){
+						fx.wipeOut({node: child_i.id, duration: 200}).play();
+						child_i._isOpen = false;
+					}else{
+						if(child_i != this.subsection_container){
+							child_i._isOpen = false;
 						}
 					}
-					j = k;
-				}
-				i = j + 1;
-			}else{
-				// Hide any PaletteItems outside of the current PaletteFolder are visible
-				if(child.declaredClass == "davinci.ve.palette.PaletteItem" && dojo.style(child.domNode, "display") != "none"){
-					fx.wipeOut({node: child.id, duration: 200}).play();
 				}
 				i++;
 			}

@@ -113,12 +113,13 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 			
 			var opt = {
 				paletteId: this.id,
+				subsection_container: null,
 				icon: componentIcon,
 				displayName: /* XXX component.provider.getDescriptorString(component.name) ||*/ component.name
 			};			
 			// this._createFolder() has a miniscule chance of not happening synchronously
 			var deferred = this._createFolder(opt);
-			deferred.then(function(){
+			deferred.then(function(PaletteFolderSection){
 				if(component.items){
 					dojo.forEach(component.items, function(item){
 				        // XXX For now, we want to keep some items hidden. If item.hidden is set, then don't
@@ -143,6 +144,8 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 							paletteId: this.id,
 							type: item.type,
 							data: item.data || {name:item.name, type: item.type, properties: item.properties, children: item.children},
+							PaletteFolderSection: PaletteFolderSection,
+							PaletteFolderSubsection: null,
 							tool: item.tool,
 							category: name
 						};
@@ -212,7 +215,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 			dojo.mixin(libraries, customWidgets);
 		}
 
-		var paletteItemGroupCount = 0;
+		this._paletteItemGroupCount = 0;
 		var widgetPalette = Runtime.getSiteConfigData('widgetPalette');
 		if(!widgetPalette){
 			console.error('widgetPalette.json not defined (in siteConfig folder)');
@@ -226,7 +229,6 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 				for(var p in presets){
 					this._presetSections[p] = [];
 					var preset = presets[p];
-					var collections = preset.collections;	// Precedence order for the different widget collections
 					// For each preset, widgetPalette.json can either use the $defaultSections list of sections
 					// or a special list of sections defined for this preset
 					var sections = preset.sections == '$defaultSections' ? widgetPalette['$defaultSections'] : preset.sections;
@@ -239,67 +241,18 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 							// to the paletteFolder and paletteItem DOM nodes
 							section.preset = preset;
 							section.presetId = p;
-							section.items = [];
-							var includes = section.includes;
-							if(!includes || !includes.length){
-								console.warning('No includes property for preset '+p+' in widgetPalette.json (in siteConfig folder)');
-								continue;
-							}
-							for(var inc=0; inc < includes.length; inc++){
-								var includeValue = includes[inc];
-								// Each item in "includes" property can be an array of strings or string
-								var includeArray = Lang.isArray(includeValue) ? includeValue : [includeValue];
-								var sectionItems = [];
-								for(var ii=0; ii < includeArray.length; ii++){
-									var includeItem = includeArray[ii];
-									var items = [];
-									if(includeItem.substr(0,5) === 'type:'){
-										// explicit widget type
-										var item = Metadata.getWidgetDescriptorForType(includeItem.substr(5));
-										if(item){
-											items.push(item);
-										}
-									}else{
-										items = Metadata.getWidgetsWithTag(includeItem);
-									}
-									for(var itemindex=0; itemindex < items.length; itemindex++){
-										var item = items[itemindex];
-										var newItem = dojo.clone(item);
-										var $wm = Metadata.getLibraryMetadataForType(newItem.type);
-										newItem.$library = $wm;
-										newItem._paletteItemGroup = paletteItemGroupCount;
-										sectionItems.push(newItem);
-									}
-								}
-								// Sort sectionItems based on order in "collections" property
-								var sortedItems = [];
-								// Created a sorted list of items, using preset.collections to define the order
-								// of widgets within this group.
-								if(collections && collections.length){
-									for(var co=0; co<collections.length; co++){
-										var collection = collections[co];
-										var si = 0;
-										while(si < sectionItems.length){
-											var sectionItem = sectionItems[si];
-											if(sectionItem.collection == collection.id){
-												sortedItems.push(sectionItem);
-												sectionItems.splice(si, 1);
-											}else{
-												si++;
-											}
-										}
-									}
-									// Add any remaining section items to end of sortedItems
-									for(var si = 0; si < sectionItems.length; si++){
-										sortedItems.push(sectionItems[si]);
-									}
-								}else{
-									sortedItems = sectionItems;
-								}
-								for(var si=0; si < sortedItems.length; si++){
-									section.items.push(sortedItems[si]);
-								}
-								paletteItemGroupCount++;
+							if(section.subsections && section.subsections.length){
+								var subsections = section.subsections;
+								for(var sub=0; sub < subsections.length; sub++){
+									var subsection = subsections[sub];
+									subsection.preset = preset;
+									subsection.presetId = p;
+									// Stuffs in value for section.items
+									this._createItemsForSection(subsection, preset);
+								}								
+							}else{
+								// Stuffs in value for section.items
+								this._createItemsForSection(section, preset);
 							}
 							this._presetSections[p].push(section);
 						}
@@ -332,6 +285,51 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		}, this);
 	},
 	
+	/**
+	 * Creates the PaletteItems for a given section or subsection (the "component")
+	 * @param {object} component  either a section object or subsection object from widgetPalette.json
+	 * @param {object} params
+	 *    params.presetClassName {string} classname to put onto PaletteItems (for debugging purposes)
+	 */
+	_createPaletteItemsForComponent: function(component, params){
+		if(component.items){
+			dojo.forEach(component.items, function(item){
+		        // XXX For now, we want to keep some items hidden. If item.hidden is set, then don't
+		        //  add this item to palette (see bug 5626).
+		        if (item.hidden) {
+		            return;
+		        }
+
+				var opt = {
+					icon: item.iconBase64 || this._getIconUri(item.icon, "ve/resources/images/file_obj.gif"),
+					displayName:
+						item.$library._maqGetString(item.type) ||
+						item.$library._maqGetString(item.name) ||
+						item.name,
+					description: 
+					    item.$library._maqGetString(item.type+"_description") || 
+					    item.$library._maqGetString(item.name+"_description") || 
+						item.description || 
+						item.type,
+					name: item.name,
+					paletteId: this.id,
+					type: item.type,
+					data: item.data || {name:item.name, type: item.type, properties: item.properties, children: item.children},
+					category: component.name,
+					section: component,
+					preset: component.preset,
+					presetId: component.presetId,
+					presetClassName: params.presetClassName,	// Only used for debugging purposes
+					PaletteFolderSection: params.PaletteFolderSection,
+					PaletteFolderSubsection: params.PaletteFolderSubsection,
+					_paletteItemGroup: item._paletteItemGroup,
+					_collectionName: (item.$library && item.$library.collections && item.$library.collections[item.collection] && item.$library.collections[item.collection].name)
+				};
+				this._createItem(opt);
+			}, this);
+		}
+	},
+	
 	_createPalette: function(component){
 		
 		//FIXME: Hardcode icons for now. Need to make this into configuration metadata feature.
@@ -356,54 +354,54 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		}
 		
 		var iconUri = iconFolder + iconFile;
-		var componentIcon = this._getIconUri(component.icon, iconUri);
 		
 		// Only used for debugging purposes
 		var presetClassName = component.presetId ? this._presetClassNamePrefix + component.presetId : null;
 		var opt = {
 			paletteId: this.id,
-			icon: componentIcon,
+			icon: this._getIconUri(component.icon, iconUri),
 			displayName: /* XXX component.provider.getDescriptorString(component.name) ||*/ component.name,
+			section: component,
+			subsections: component.subsections,
+			subsection_container: null,
 			preset: component.preset,
 			presetId: component.presetId,
 			presetClassName: presetClassName	// Only used for debugging purposes
 		};
 		// this._createFolder() has a miniscule chance of not happening synchronously
 		var deferred = this._createFolder(opt);
-		deferred.then(function(){
-			if(component.items){
-				dojo.forEach(component.items, function(item){
-			        // XXX For now, we want to keep some items hidden. If item.hidden is set, then don't
-			        //  add this item to palette (see bug 5626).
-			        if (item.hidden) {
-			            return;
-			        }
-
-					var opt = {
-						icon: item.iconBase64 || this._getIconUri(item.icon, "ve/resources/images/file_obj.gif"),
-						displayName:
-							item.$library._maqGetString(item.type) ||
-							item.$library._maqGetString(item.name) ||
-							item.name,
-						description: 
-						    item.$library._maqGetString(item.type+"_description") || 
-						    item.$library._maqGetString(item.name+"_description") || 
-							item.description || 
-							item.type,
-						name: item.name,
-						paletteId: this.id,
-						type: item.type,
-						data: item.data || {name:item.name, type: item.type, properties: item.properties, children: item.children},
-						category: component.name,
-						preset: component.preset,
-						presetId: component.presetId,
-						presetClassName: presetClassName,	// Only used for debugging purposes
-						_paletteItemGroup: item._paletteItemGroup,
-						_collectionName: (item.$library && item.$library.collections && item.$library.collections[item.collection] && item.$library.collections[item.collection].name)
-					};
-					this._createItem(opt);
-				}, this);
-			}
+		deferred.then(function(PaletteFolderSection){
+			if(component.subsections && component.subsections.length){
+				for(var i=0; i<component.subsections.length; i++){
+					var subsection = component.subsections[i]
+					var opt2 = {
+							paletteId: this.id,
+							icon: this._getIconUri(subsection.icon, iconUri),
+							displayName: /* XXX component.provider.getDescriptorString(component.name) ||*/ subsection.name,
+							section: component,
+							subsection: subsection,
+							subsection_container: PaletteFolderSection,
+							preset: component.preset,
+							presetId: component.presetId,
+							presetClassName: presetClassName	// Only used for debugging purposes
+						};
+					// this._createFolder() has a miniscule chance of not happening synchronously
+					var deferred = this._createFolder(opt2);
+					deferred.then(function(PaletteFolderSubsection){
+						this._createPaletteItemsForComponent(component.subsections[i], 
+								{ presetClassName:presetClassName,
+									PaletteFolderSection: PaletteFolderSection,
+									PaletteFolderSubsection: PaletteFolderSubsection }
+						);
+					}.bind(this));
+				}
+			}else{
+				this._createPaletteItemsForComponent(component, 
+						{ presetClassName:presetClassName,
+							PaletteFolderSection: PaletteFolderSection,
+							PaletteFolderSubsection: null }
+				);
+			}	
 		}.bind(this));
 	},
 	
@@ -428,7 +426,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		require(["davinci/ve/palette/PaletteFolder"],function(PaletteFolder){
 			var PaletteFolder = new PaletteFolder(opt);
 			this.addChild(PaletteFolder);
-			deferred.resolve();
+			deferred.resolve(PaletteFolder);
 		}.bind(this));
 		return deferred;
 	},
@@ -527,6 +525,83 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	},
 	
 	/**
+	 * Stuffs values into section.items (or subsection.items).
+	 * section.items holds the list of PaletteItems that belong to this section (or subsection)
+	 * of the widget palette. This routine does all of the detailed processing of the "includes"
+	 * property in widgetPalette.json, including the grouping of widgets that represent 
+	 * alternative versions of the same widget, sorting the alternatives by precedence order
+	 * for the various widget libraries for the given "preset" (mobile, desktop, sketchhifi, sketchlofi)
+	 * @param {object} section - section or subsection object from widgetPalette.json file
+	 * @param {object} preset - current preset
+	 */
+	_createItemsForSection: function(section, preset){
+		section.items = [];
+		collections = preset.collections;
+		var includes = section.includes;
+		if(!includes || !includes.length){
+			console.warning('No includes property for preset '+p+' in widgetPalette.json (in siteConfig folder)');
+			return returnItems;
+		}
+		for(var inc=0; inc < includes.length; inc++){
+			var includeValue = includes[inc];
+			// Each item in "includes" property can be an array of strings or string
+			var includeArray = Lang.isArray(includeValue) ? includeValue : [includeValue];
+			var sectionItems = [];
+			for(var ii=0; ii < includeArray.length; ii++){
+				var includeItem = includeArray[ii];
+				var items = [];
+				if(includeItem.substr(0,5) === 'type:'){
+					// explicit widget type
+					var item = Metadata.getWidgetDescriptorForType(includeItem.substr(5));
+					if(item){
+						items.push(item);
+					}
+				}else{
+					items = Metadata.getWidgetsWithTag(includeItem);
+				}
+				for(var itemindex=0; itemindex < items.length; itemindex++){
+					var item = items[itemindex];
+					var newItem = dojo.clone(item);
+					var $wm = Metadata.getLibraryMetadataForType(newItem.type);
+					newItem.$library = $wm;
+					newItem.section = section;
+					newItem._paletteItemGroup = this._paletteItemGroupCount;
+					sectionItems.push(newItem);
+				}
+			}
+			// Sort sectionItems based on order in "collections" property
+			var sortedItems = [];
+			// Created a sorted list of items, using preset.collections to define the order
+			// of widgets within this group.
+			if(collections && collections.length){
+				for(var co=0; co<collections.length; co++){
+					var collection = collections[co];
+					var si = 0;
+					while(si < sectionItems.length){
+						var sectionItem = sectionItems[si];
+						if(sectionItem.collection == collection.id){
+							sortedItems.push(sectionItem);
+							sectionItems.splice(si, 1);
+						}else{
+							si++;
+						}
+					}
+				}
+				// Add any remaining section items to end of sortedItems
+				for(var si = 0; si < sectionItems.length; si++){
+					sortedItems.push(sectionItems[si]);
+				}
+			}else{
+				sortedItems = sectionItems;
+			}
+			for(var si=0; si < sortedItems.length; si++){
+				section.items.push(sortedItems[si]);
+			}
+			this._paletteItemGroupCount++;
+		}
+	},
+	
+	/**
 	 * Control visibility of the various paletteFolder and paletteItem controls
 	 * based on the preset that applies to the currently open editor.
 	 */
@@ -572,7 +647,16 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 			var child = children[i];
 			if(child && child.domNode && child.presetId){
 				if(child.declaredClass == "davinci.ve.palette.PaletteFolder" && child.presetId == comptype){
-					child.domNode.style.display = 'block';
+					// Initially, hide any PaletteFolder's that are contain a subsection.
+					if(child._type == 'subsection'){
+						child.domNode.style.display = 'none';
+					}else{
+						child.domNode.style.display = 'block';
+					}
+					if(child._type == 'subsubsection_container'){
+						child._openSubsection = null;	// Only PaletteFolder's that have subsections use the "_openSubsection" property
+					}
+					child._isOpen = false;
 				}else{
 					child.domNode.style.display = 'none';
 				}

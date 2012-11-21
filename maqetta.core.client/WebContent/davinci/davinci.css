@@ -1222,12 +1222,23 @@ davinci_top_bar .dijitButtonNode {
 }
 .dojoyPaletteFolder {
     border-color: #D1D1D1 #989898 #989898 white;
+    line-height: 18px;
+	height: 18px;
+	font-size:13px;
 }
 .claro .dojoyPaletteFolderLow,
 /*    background-image: url(images/palette-folder-bg.gif); */
 .claro .dojoyPaletteFolderHi {
 /*    background-image: url(images/palette-folder-bg-hi.gif); */
     background: #EAEAEA url(../dijit/themes/claro/images/standardGradient.png) repeat-x scroll left top;
+}
+.dojoyPaletteFolder img {
+	margin-right:4px;
+}
+.PaletteFolderSubsection {
+	padding-left:16px;
+	font-size:12px;
+	font-style:italic;
 }
 .dojoyPaletteSearch {
 /*	font-size: 12px;*/

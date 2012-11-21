@@ -17,10 +17,8 @@
 				"BorderContainer",
 				"ContentPane",
 				"Form",
-				"MenuBar",
 				"TabContainer",
 				"TitlePane",
-				"Toolbar",
 				"<div>",
 				"<span>"
 			]
@@ -28,15 +26,103 @@
 		{
  			"id":"Controls",
 			"name": "Controls",
+			"_COMMENT1_":"each section can either have an array of subsections or an array of includes",
+			"subsections":[
+				{
+		 			"id":"Buttons",
+					"name": "Buttons",
+					"includes":[
+						"Button",
+						"ComboButton",
+						"DropDownButton",
+						"ToggleButton"
+					]
+				},
+				{
+		 			"id":"CheckboxesRadios",
+					"name": "Checkboxes and RadioButtons",
+					"includes":[
+						"CheckBox",
+						"RadioButton",
+						"TriStateCheckBox"
+					]
+				},
+			],
+		},
+		{
+ 			"id":"GridsTables",
+			"name": "Grids and Tables",
 			"includes":[
-				"Button",
-				"Calendar",
-				"CheckBox",
-				"ColorPalette",
-				"ComboBox",
-				"ComboButton",
-				"CurrencyTextBox",
 				"GridX"
+			]
+		},
+		{
+ 			"id":"Menus",
+			"name": "Menus",
+			"includes":[
+				"MenuBar"
+			]
+		},
+		{
+ 			"id":"Select",
+			"name": "Select from choices",
+			"includes":[
+				"DropDownSelect",
+				"FilteringSelect",
+				"MultiSelect"
+			]
+		},
+		{
+ 			"id":"Sliders",
+			"name": "Sliders",
+			"includes":[
+				"HorizontalSlider",
+				"VerticalSlider"
+			]
+		},
+		{
+ 			"id":"Spinners",
+			"name": "Spinners",
+			"includes":[
+				"NumberSpinner",
+				"TimeSpinner"
+			]
+		},
+		{
+ 			"id":"TextBox",
+			"name": "TextBox",
+			"includes":[
+				"TextBox",
+				"ComboBox",
+				"CurrencyTextBox",
+				"DateTextBox",
+				"SimpleTextarea",
+				"Textarea",
+				"ValidationTextBox",
+				"TimeTextBox"
+			]
+		},
+		{
+ 			"id":"Toolbars",
+			"name": "Toolbars and Tabbars",
+			"includes":[
+				"Toolbar"
+			]
+		},
+		{
+ 			"id":"Trees",
+			"name": "Trees",
+			"includes":[
+				"Tree"
+			]
+		},
+		{
+ 			"id":"Other",
+			"name": "Other",
+			"includes":[
+				"Calendar",
+				"ColorPalette",
+				"Rating"
 			]
 		}
 	],

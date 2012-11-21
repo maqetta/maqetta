@@ -960,7 +960,6 @@ davinci_top_bar .dijitButtonNode {
     height: 100%;
     overflow-x: hidden;
     margin: 2px 3px 3px 4px;
-    overflow-x:visible;
 }
 .dojoyPaletteCommon a {
 	text-decoration: none;

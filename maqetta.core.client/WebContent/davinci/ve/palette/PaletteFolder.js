@@ -24,7 +24,7 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 	_isOpen: false,		// Indicates whether children PaletteItems for this folder are showing
 	_openSubsection: null,	// For PaletteFolders that have subsections, currently open subsection
 							// PaletteItems within _openSubsection only show is its subsection container is open
-
+	
 	buildRendering: function(){
 		this.palette = dijit.byId(this.paletteId);
 		var div = this.domNode = this.palette.folderTemplate.cloneNode(true);
@@ -43,6 +43,7 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 		if(this._type == 'subsection'){
 			domClass.add(div, 'PaletteFolderSubsection');
 		}
+		this._children = [];
 	},
 
 	postCreate: function(){
@@ -111,7 +112,6 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 				!Runtime.currentEditor.getContext){
 			return;
 		}
-		
 		var children = this.palette.getChildren();
 		for(var i = 0, len = children.length; i < len; ){
 			var child_i = children[i];
@@ -131,15 +131,20 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 								// Reached next major section PaletteFolder
 								break;
 							}
-							// Toggle visibility of subsections for this section
-							if(this._isOpen){
-								fx.wipeIn({node: child_j.id, duration: 200}).play();
-								// Flag whether this subsection is open
-								// Subsequent looping with display/hide the PaletteItems for this subsection
-								child_j._isOpen = (child_j == child_j.subsection_container._openSubsection);
-							}else{
-								fx.wipeOut({node: child_j.id, duration: 200}).play();
+							if(child_j._children.length == 0){
+								// Never show a subsection that has no children
+								child_j.domNode.style.display = 'none';
 								child_j.isOpen = false;
+							}else{
+								if(this._isOpen){
+									fx.wipeIn({node: child_j.id, duration: 200}).play();
+									// Flag whether this subsection is open
+									// Subsequent looping with display/hide the PaletteItems for this subsection
+									child_j._isOpen = (child_j == child_j.subsection_container._openSubsection);
+								}else{
+									fx.wipeOut({node: child_j.id, duration: 200}).play();
+									child_j.isOpen = false;
+								}
 							}
 						}else{ // child.declaredClass == "davinci.ve.palette.PaletteItem"
 							if(this._isOpen && child_j.PaletteFolderSubsection._isOpen){
@@ -205,16 +210,16 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 						child_i.domNode.style.display != "none"){
 					fx.wipeOut({node: child_i.id, duration: 200}).play();
 				}
-				// Hide any PaletteFolders that are visible and that are subsections of PaletteFolder's that are closed
-				if(child_i.declaredClass == "davinci.ve.palette.PaletteFolder"){
-					if(child_i._type == 'subsection' && child_i._isOpen && !child_i.subsection_container._isOpen){
-						fx.wipeOut({node: child_i.id, duration: 200}).play();
+				// Hide any subsections of top-level PaletteFolder's that are closed
+				if(child_i.declaredClass == "davinci.ve.palette.PaletteFolder" && child_i._type == 'subsection_container'){
+					if(child_i != this.subsection_container){
 						child_i._isOpen = false;
-					}else{
-						if(child_i != this.subsection_container){
-							child_i._isOpen = false;
-						}
 					}
+				}
+				if(child_i.declaredClass == "davinci.ve.palette.PaletteFolder" && child_i._type == 'subsection' &&
+						!child_i.subsection_container._isOpen && child_i.domNode.style.display != 'none'){
+					fx.wipeOut({node: child_i.id, duration: 200}).play();
+					child_i._isOpen = false;
 				}
 				i++;
 			}

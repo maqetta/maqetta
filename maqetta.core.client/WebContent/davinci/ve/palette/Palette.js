@@ -388,6 +388,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 					// this._createFolder() has a miniscule chance of not happening synchronously
 					var deferred = this._createFolder(opt2);
 					deferred.then(function(PaletteFolderSubsection){
+						PaletteFolderSection._children.push(PaletteFolderSubsection);
 						this._createPaletteItemsForComponent(component.subsections[i], 
 								{ presetClassName:presetClassName,
 									PaletteFolderSection: PaletteFolderSection,
@@ -507,13 +508,32 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	},
 	
 	_createItem: function(opt,folder){
-		
-		
+		// See if this proposed PaletteItem's collection property is included in the current preset
+		var collection = Metadata.queryDescriptor(opt.type, 'collection');
+		var presetCollections = (opt.preset && opt.preset.collections);
+		if(!presetCollections || !presetCollections.length){
+			return;
+		}
+		var active = false;
+		for(var i=0; i<presetCollections.length; i++){
+			if(presetCollections[i].id == collection && presetCollections[i].show){
+				active = true;
+				break;
+			}
+		}
+		if(!active){
+			return;
+		}
 		var node = new PaletteItem(opt);
 		if(!folder){
 			this.addChild(node);
 		}else{
 			folder.addChild(node);
+		}
+		if(opt.PaletteFolderSubsection){
+			opt.PaletteFolderSubsection._children.push(node);
+		}else if(opt.PaletteFolderSection){
+			opt.PaletteFolderSection._children.push(node);
 		}
 		var nodeToClone = Query('.paletteItemImage', node.domNode)[0];
 		var ds = new DragSource(node.domNode, "component", node, nodeToClone);
@@ -642,16 +662,21 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		}
 		// Set display property to show only those PaletteFolder's and PaletteItem's
 		// that correspond to the current preset
+		// Set display:none for any PaletteFolders without any visible children
 		var children = this.getChildren();
 		for(var i = 0, len = children.length; i < len; i++){
 			var child = children[i];
 			if(child && child.domNode && child.presetId){
-				if(child.declaredClass == "davinci.ve.palette.PaletteFolder" && child.presetId == comptype){
-					// Initially, hide any PaletteFolder's that are contain a subsection.
-					if(child._type == 'subsection'){
-						child.domNode.style.display = 'none';
+				if(child.declaredClass == "davinci.ve.palette.PaletteFolder"){
+					if(child.presetId == comptype){
+						// Initially, hide any PaletteFolder's that are contain a subsection.
+						if(child._children.length == 0 || child._type == 'subsection'){
+							child.domNode.style.display = 'none';
+						}else{
+							child.domNode.style.display = 'block';
+						}
 					}else{
-						child.domNode.style.display = 'block';
+						child.domNode.style.display = 'none';
 					}
 					if(child._type == 'subsubsection_container'){
 						child._openSubsection = null;	// Only PaletteFolder's that have subsections use the "_openSubsection" property

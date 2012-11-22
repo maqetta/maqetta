@@ -130,7 +130,8 @@
 					"includes":[
 						["DropDownSelect","<select>"],
 						"FilteringSelect",
-						"MultiSelect"
+						"MultiSelect",
+						"<select>"
 					]
 				},
 				{
@@ -296,18 +297,8 @@
 					]
 				},
 				{
-		 			"id":"Other",
-					"name": "Other",
-					"includes":[
-						"Browser",
-						"Person",
-						"ProfilePicture",
-						"X"
-					]
-				},
-				{
 		 			"id":"User Interface Controls",
-					"name": "UserInterfaceControls",
+					"name": "User Interface Controls",
 					"includes":[
 						"FormattingToolbox",
 						"HScrollBar",
@@ -319,7 +310,7 @@
 				},
 				{
 		 			"id":"User Interface Icons",
-					"name": "UserInterfaceIcons",
+					"name": "User Interface Icons",
 					"includes":[
 						"Close",
 						"Help",
@@ -334,6 +325,16 @@
 						"Search",
 						"ShoppingCart",
 						"Trash"
+					]
+				},
+				{
+		 			"id":"Other",
+					"name": "Other",
+					"includes":[
+						"Browser",
+						"Person",
+						"ProfilePicture",
+						"X"
 					]
 				}
 			]

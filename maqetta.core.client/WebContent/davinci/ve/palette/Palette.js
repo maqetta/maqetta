@@ -215,6 +215,25 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 			dojo.mixin(libraries, customWidgets);
 		}
 
+		// Create a master list of widget types.
+		// Used later to make sure that there aren't widgets in widgets.json files
+		// that do not appear anywhere in widget palette
+		var widgetTypeList = [];
+		for(var name in libraries){
+			if (libraries.hasOwnProperty(name)) {
+				var lib = libraries[name].$wm;
+				if (!lib) {
+					continue;
+				}
+				dojo.forEach(lib.widgets, function(item) {
+					// skip untested widgets
+					if (item.category == "untested" || item.hidden) {
+						return;
+					}
+					widgetTypeList.push(item.type);
+				});
+			}
+		}
 		this._paletteItemGroupCount = 0;
 		var widgetPalette = Runtime.getSiteConfigData('widgetPalette');
 		if(!widgetPalette){
@@ -227,16 +246,24 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 				console.warning('No presets defined in widgetPalette.json (in siteConfig folder)');
 			}else{
 				for(var p in presets){
+					var widgetList = widgetTypeList.concat();	// clone the array
 					this._presetSections[p] = [];
 					var preset = presets[p];
-					// For each preset, widgetPalette.json can either use the $defaultSections list of sections
-					// or a special list of sections defined for this preset
-					var sections = preset.sections == '$defaultSections' ? widgetPalette['$defaultSections'] : preset.sections;
+					// For each preset, the 'sections' property can either be a string or an array of section objects.
+					// If a string, then that string is an reference to a sub-property of the top-level 'defs' object 
+					var sections = (typeof preset.sections == 'string') ? 
+							(widgetPalette.defs ? widgetPalette.defs[preset.sections] : undefined) : 
+							preset.sections;
 					if(!sections || !sections.length){
 						console.warning('No sections defined for preset '+p+' in widgetPalette.json (in siteConfig folder)');
 					}else{
 						for(var s=0; s < sections.length; s++){
-							var section = dojo.clone(sections[s]);
+							// For each sections, the value can either be a string or a section objects.
+							// If a string, then that string is an reference to a sub-property of the top-level 'defs' object 
+							var sectionObj = (typeof sections[s] == 'string') ? 
+									(widgetPalette.defs ? widgetPalette.defs[sections[s]] : undefined) : 
+									sections[s];
+							var section = dojo.clone(sectionObj);
 							// Add preset name to object so downstream logic can add an appropriate CSS class
 							// to the paletteFolder and paletteItem DOM nodes
 							section.preset = preset;
@@ -248,19 +275,23 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 									subsection.preset = preset;
 									subsection.presetId = p;
 									// Stuffs in value for section.items
-									this._createItemsForSection(subsection, preset);
+									this._createItemsForSection(subsection, preset, widgetList);
 								}								
 							}else{
 								// Stuffs in value for section.items
-								this._createItemsForSection(section, preset);
+								this._createItemsForSection(section, preset, widgetList);
 							}
 							this._presetSections[p].push(section);
 						}
+					}
+					for(var wi=0; wi<widgetList.length; wi++){
+						console.log('For preset '+p+' Not in widget palette: '+widgetList[wi]);
 					}
 				}
 			}
 		}
 		this._loaded = true; // call this only once
+
 	},
 	
 	// generate CSS Rules for icons based on this._descriptor
@@ -551,10 +582,12 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	 * property in widgetPalette.json, including the grouping of widgets that represent 
 	 * alternative versions of the same widget, sorting the alternatives by precedence order
 	 * for the various widget libraries for the given "preset" (mobile, desktop, sketchhifi, sketchlofi)
+	 * For each widget processed, if widget is in widgetList array, remove from the array
 	 * @param {object} section - section or subsection object from widgetPalette.json file
 	 * @param {object} preset - current preset
+	 * @param {array[string]} widgetList - List of widget types, gets updated by this routine
 	 */
-	_createItemsForSection: function(section, preset){
+	_createItemsForSection: function(section, preset, widgetList){
 		section.items = [];
 		collections = preset.collections;
 		var includes = section.includes;
@@ -615,7 +648,14 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 				sortedItems = sectionItems;
 			}
 			for(var si=0; si < sortedItems.length; si++){
-				section.items.push(sortedItems[si]);
+				var sortedItem = sortedItems[si];
+				var idx = widgetList.indexOf(sortedItem.type);
+				if(idx >= 0){
+					// Remove the current widget type from widgetList array
+					// to indicate that the given widget has been added to palette
+					widgetList.splice(idx, 1);
+				}
+				section.items.push(sortedItem);
 			}
 			this._paletteItemGroupCount++;
 		}

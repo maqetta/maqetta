@@ -8,8 +8,115 @@
 	"_COMMENT6_":"if a string, can be either a string that begins with type:, which is a particular widget type",
 	"_COMMENT7_":"otherwise the string holds a tag, which causes all widgets that match tag to share that item",
 	"_COMMENT8_":"if an array, then it holds a list of strings, each of which can start with type: (widget type) or a tag",
-	"$defaultSections":[
-		{
+	"defs":{
+		"$ClipartSection":{
+			"id":"Clipart",
+			"name": "Clip Art",
+			"subsections":[
+				{
+					"id":"Arrows",
+					"name": "Arrows",
+					"includes":[
+						"ArrowDown",
+						"ArrowLeft",
+						"ArrowRight",
+						"ArrowUp"
+					]
+				},
+				{
+					"id":"Community",
+					"name": "Community",
+					"includes":[
+						"Facebook",
+						"Rss",
+						"Twitter"
+					]
+				},
+				{
+					"id":"DeviceSilhouettes",
+					"name": "Device Silhouettes",
+					"includes":[
+						"Android_340x480",
+						"Android_480x800",
+						"AndroidTablet",
+						"Blackberry",
+						"iPad",
+						"iPhone"
+					]
+				},
+				{
+					"id":"Media",
+					"name": "Media",
+					"includes":[
+						"Camera",
+						"Chat",
+						"Image",
+						"Map",
+						"Microphone",
+						"PlayControl",
+						"StreetMap",
+						"VideoCamera",
+						"VideoPlayer"
+					]
+				},
+				{
+					"id":"User Interface Controls",
+					"name": "User Interface Controls",
+					"includes":[
+						"FormattingToolbox",
+						"HScrollBar",
+						"HSplit",
+						"SpinInput",
+						"VScrollBar",
+						"VSplit"
+					]
+				},
+				{
+					"id":"User Interface Icons",
+					"name": "User Interface Icons",
+					"includes":[
+						"Close",
+						"Help",
+						"Home",
+						"Lock",
+						"Mail",
+						"Minus",
+						"Next",
+						"Plus",
+						"Previous",
+						"Print",
+						"Search",
+						"ShoppingCart",
+						"Trash"
+					]
+				},
+				{
+					"id":"Other",
+					"name": "Other",
+					"includes":[
+						"Browser",
+						"Person",
+						"ProfilePicture",
+						"X"
+					]
+				}
+			]
+		},
+		"$DrawingToolsSection":{
+			"id":"DrawingTools",
+			"name": "Drawing Tools",
+			"includes":[
+				"Text",
+				"Line",
+				"Arrow",
+				"Polyline",
+				"PolylineArrow",
+				"Circle",
+				"Rectangle",
+				"RoundedRectangle"
+			]
+		},
+		"$ViewsSection":{
 			"id":"Views",
 			"name": "Views",
 			"_COMMENT1_":"Mobile-only view widgets, often representing a single screen of UI",
@@ -19,8 +126,8 @@
 				"View"
 			]
 		},
-		{
- 			"id":"Heading, Section Labels",
+		"$HeadingSection":{
+			"id":"Heading, Section Labels",
 			"name": "Heading",
 			"_COMMENT1_":"Mobile-only Heading widgets, often titles at top of a screen",
 			"includes":[
@@ -28,8 +135,8 @@
 				"ToolBarButton"
 			]
 		},
-		{
- 			"id":"Containers",
+		"$ContainersSection":{
+			"id":"Containers",
 			"name": "Containers",
 			"_COMMENT1_":"Desktop and mobile containers",
 			"_COMMENT2_":"Note that default desktop preset only include desktop widgets",
@@ -55,8 +162,8 @@
 				"<table>"
 			]
 		},
-		{
- 			"id":"Lists",
+		"$ListsSection":{
+			"id":"Lists",
 			"name": "Lists",
 			"_COMMENT1_":"Mobile-only List widgets",
 			"includes":[
@@ -69,13 +176,13 @@
 				"ListItem"
 			]
 		},
-		{
- 			"id":"Controls",
+		"$ControlsSection":{
+			"id":"Controls",
 			"name": "Controls",
 			"_COMMENT1_":"each section can either have an array of subsections or an array of includes",
 			"subsections":[
 				{
-		 			"id":"Buttons",
+					"id":"Buttons",
 					"name": "Buttons",
 					"includes":[
 						["Button","<button>"],
@@ -85,7 +192,7 @@
 					]
 				},
 				{
-		 			"id":"CheckboxesRadios",
+					"id":"CheckboxesRadios",
 					"name": "Checkboxes, RadioButtons, Switch",
 					"includes":[
 						"CheckBox",
@@ -95,7 +202,7 @@
 					]
 				},
 				{
-		 			"id":"IconContainer",
+					"id":"IconContainer",
 					"name": "IconContainer",
 					"_COMMENT1_":"Mobile-only",
 					"includes":[
@@ -106,7 +213,7 @@
 					]
 				},
 				{
-		 			"id":"Pickers",
+					"id":"Pickers",
 					"name": "Pickers",
 					"includes":[
 						"Carousel",
@@ -128,6 +235,7 @@
 					"id":"Select",
 					"name": "Select",
 					"includes":[
+						"ComboBox",
 						["DropDownSelect","<select>"],
 						"FilteringSelect",
 						"MultiSelect",
@@ -135,7 +243,7 @@
 					]
 				},
 				{
-		 			"id":"SlidersSpinners",
+					"id":"SlidersSpinners",
 					"name": "Sliders, Spinners",
 					"includes":[
 						"HorizontalSlider",
@@ -146,13 +254,14 @@
 					]
 				},
 				{
-		 			"id":"TextBox",
+					"id":"TextBox",
 					"name": "TextBox",
 					"includes":[
 						["TextBox","<input>"],
 						"ComboBox",
 						"CurrencyTextBox",
 						"DateTextBox",
+						"NumberTextBox",
 						"SimpleTextarea",
 						["Textarea","TextArea","ExpandingTextArea"],
 						"ValidationTextBox",
@@ -169,16 +278,17 @@
 					]
 				},
 				{
-		 			"id":"Other",
+					"id":"Other",
 					"name": "Other",
 					"includes":[
-						"ProgressIndicator"
+						"ProgressIndicator",
+						"SearchBox"
 					]
 				}
 			]
 		},
-		{
- 			"id":"HTML",
+		"$HTMLSection":{
+			"id":"HTML",
 			"name": "HTML",
 			"subsections":[
 				{
@@ -192,7 +302,7 @@
 					]
 				},
 				{
-		 			"id":"Forms",
+					"id":"Forms",
 					"name": "Forms",
 					"includes":[
 						"<button>",
@@ -204,7 +314,7 @@
 					]
 				},
 				{
-		 			"id":"Headers",
+					"id":"Headers",
 					"name": "Headers",
 					"includes":[
 						"<h1>",
@@ -213,17 +323,18 @@
 					]
 				},
 				{
-		 			"id":"ImagesMediaIframes",
+					"id":"ImagesMediaIframes",
 					"name": "Images, Media, Iframes",
 					"includes":[
 						"<audio>",
 						"<embed>",
 						"<img>",
-						"<iframe>"
+						"<iframe>",
+						"<video>"
 					]
 				},
 				{
-		 			"id":"ParagraphsFormatting",
+					"id":"ParagraphsFormatting",
 					"name": "Paragraphs, Breaks, Rules",
 					"includes":[
 						"<b>",
@@ -238,7 +349,7 @@
 					]
 				},
 				{
-		 			"id":"Tables",
+					"id":"Tables",
 					"name": "Tables",
 					"includes":[
 						"<table>"
@@ -246,114 +357,7 @@
 				}
 			]
 		},
-		{
- 			"id":"Clipart",
-			"name": "Clip Art",
-			"subsections":[
-				{
-		 			"id":"Arrows",
-					"name": "Arrows",
-					"includes":[
-						"ArrowDown",
-						"ArrowLeft",
-						"ArrowRight",
-						"ArrowUp"
-					]
-				},
-				{
-		 			"id":"Community",
-					"name": "Community",
-					"includes":[
-						"Facebook",
-						"Rss",
-						"Twitter"
-					]
-				},
-				{
-		 			"id":"DeviceSilhouettes",
-					"name": "Device Silhouettes",
-					"includes":[
-						"Android_340x480",
-						"Android_480x800",
-						"AndroidTablet",
-						"Blackberry",
-						"iPad",
-						"iPhone"
-					]
-				},
-				{
-		 			"id":"Media",
-					"name": "Media",
-					"includes":[
-						"Camera",
-						"Chat",
-						"Image",
-						"Map",
-						"Microphone",
-						"PlayControl",
-						"StreetMap",
-						"VideoCamera",
-						"VideoPlayer"
-					]
-				},
-				{
-		 			"id":"User Interface Controls",
-					"name": "User Interface Controls",
-					"includes":[
-						"FormattingToolbox",
-						"HScrollBar",
-						"HSplit",
-						"SpinInput",
-						"VScrollBar",
-						"VSplit"
-					]
-				},
-				{
-		 			"id":"User Interface Icons",
-					"name": "User Interface Icons",
-					"includes":[
-						"Close",
-						"Help",
-						"Home",
-						"Lock",
-						"Mail",
-						"Minus",
-						"Next",
-						"Plus",
-						"Previous",
-						"Print",
-						"Search",
-						"ShoppingCart",
-						"Trash"
-					]
-				},
-				{
-		 			"id":"Other",
-					"name": "Other",
-					"includes":[
-						"Browser",
-						"Person",
-						"ProfilePicture",
-						"X"
-					]
-				}
-			]
-		},
-		{
- 			"id":"DrawingTools",
-			"name": "Drawing Tools",
-			"includes":[
-				"Text",
-				"Line",
-				"Arrow",
-				"Polyline",
-				"PolylineArrow",
-				"Circle",
-				"Rectangle",
-				"RoundedRectangle"
-			]
-		},
-		{
+		"$AppOtherSection":{
  			"id":"Other",
 			"name": "Other",
 			"includes":[
@@ -365,11 +369,45 @@
 				"StickyNote",
 				"Tree"
 			]
-		}
-	],
+		},
+		"$SketchOtherSection":{
+ 			"id":"Other",
+			"name": "Other",
+			"includes":[
+				"Calendar",
+				"ColorPalette",
+				"GridX",
+				"Rating",
+				"RichText",
+				"StickyNote",
+				"Tree"
+			]
+		},
+		"$appSections":[
+			"$ViewsSection",
+			"$HeadingSection",
+			"$ContainersSection",
+			"$ListsSection",
+			"$ControlsSection",
+			"$HTMLSection",
+			"$ClipartSection",
+			"$DrawingToolsSection",
+			"$AppOtherSection"
+		],
+		"$sketchSections":[
+			"$DrawingToolsSection",
+			"$ClipartSection",
+			"$ControlsSection",
+			"$ContainersSection",
+			"$HTMLSection",
+			"$HeadingSection",
+			"$ListsSection",
+			"$SketchOtherSection"
+		]
+	},
 	"_COMMENT11_":"Should have one each for mobile, desktop, sketchhifi, sketchlofi",
 	"_COMMENT12_":"For each preset, collections is list of each widget collection in order of precedence",
-	"_COMMENT13_":"and sections is the array of sections for this preset (or $defaultSections)",
+	"_COMMENT13_":"and sections is the array of sections for this preset (or $appSections)",
 	"presets":{
 		"mobile":{
 			"collections":[
@@ -379,7 +417,7 @@
 				{ "id":"clipart", "show":true },
 				{ "id":"shapes", "show":true }
 			],
-			"sections":"$defaultSections"
+			"sections":"$appSections"
 		},
 		"desktop":{
 			"collections":[
@@ -389,7 +427,7 @@
 				{ "id":"clipart", "show":true },
 				{ "id":"shapes", "show":true }
 			],
-			"sections":"$defaultSections"
+			"sections":"$appSections"
 		},
 		"sketchhifi":{
 			"collections":[
@@ -399,19 +437,7 @@
 				{ "id":"dojoxmobile", "show":true },
 				{ "id":"html", "show":true }
 			],
-			"sections":[
-				{
-					"id":"Foobar",
-					"name": "Foobar",
-					"includes":[
-						"Line",
-						"type:shapes.Text",
-						["Rectangle","type:shapes.Polyline"],
-						"Help",
-						"Map"
-					]
-				}
-			]
+			"sections":"$sketchSections"
 		},
 		"sketchlofi":{
 			"collections":[
@@ -421,7 +447,7 @@
 				{ "id":"dojoxmobile", "show":false },
 				{ "id":"html", "show":true }
 			],
-			"sections":"$defaultSections"
+			"sections":"$sketchSections"
 		}
 	}
 }

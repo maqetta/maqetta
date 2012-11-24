@@ -36,9 +36,10 @@ define(["dojo/_base/declare",
 		},
 		
 		okButton : function(){
+			var replaceSelection = dojo.attr(this._replaceSelection, "checked");
 			this.value = {'name': dojo.attr(this._dijitName, "value"), 
 					     'group':dojo.attr(this._widgetGroup, "value"),
-					     'replaceSelection':dojo.attr(this._replaceSelection, "value")};
+					     'replaceSelection':dojo.attr(this._replaceSelection, "checked")};
 		},	
 		
 		_getValueAttr : function(){

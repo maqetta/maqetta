@@ -235,13 +235,13 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 			}
 		}
 		this._paletteItemGroupCount = 0;
-		var widgetPalette = Runtime.getSiteConfigData('widgetPalette');
-		if(!widgetPalette){
+		this._widgetPalette = Runtime.getSiteConfigData('widgetPalette');
+		if(!this._widgetPalette){
 			console.error('widgetPalette.json not defined (in siteConfig folder)');
 		}else{
 			// There should be a preset for each of built-in composition types (desktop, mobile, sketchhifi, sketchlofi)
 			// In future, we might allow users to create custom presets
-			var presets = widgetPalette.presets;
+			var presets = this._widgetPalette.presets;
 			if(!presets || typeof presets != 'object'){
 				console.warning('No presets defined in widgetPalette.json (in siteConfig folder)');
 			}else{
@@ -249,10 +249,11 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 					var widgetList = widgetTypeList.concat();	// clone the array
 					this._presetSections[p] = [];
 					var preset = presets[p];
+					var catchAllSection;
 					// For each preset, the 'sections' property can either be a string or an array of section objects.
 					// If a string, then that string is an reference to a sub-property of the top-level 'defs' object 
 					var sections = (typeof preset.sections == 'string') ? 
-							(widgetPalette.defs ? widgetPalette.defs[preset.sections] : undefined) : 
+							(this._widgetPalette.defs ? this._widgetPalette.defs[preset.sections] : undefined) : 
 							preset.sections;
 					if(!sections || !sections.length){
 						console.warning('No sections defined for preset '+p+' in widgetPalette.json (in siteConfig folder)');
@@ -261,7 +262,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 							// For each sections, the value can either be a string or a section objects.
 							// If a string, then that string is an reference to a sub-property of the top-level 'defs' object 
 							var sectionObj = (typeof sections[s] == 'string') ? 
-									(widgetPalette.defs ? widgetPalette.defs[sections[s]] : undefined) : 
+									(this._widgetPalette.defs ? this._widgetPalette.defs[sections[s]] : undefined) : 
 									sections[s];
 							var section = dojo.clone(sectionObj);
 							// Add preset name to object so downstream logic can add an appropriate CSS class
@@ -272,20 +273,35 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 								var subsections = section.subsections;
 								for(var sub=0; sub < subsections.length; sub++){
 									var subsection = subsections[sub];
+									if(subsection.includes && subsection.includes.indexOf("$$AllOthers$$")>=0){
+										catchAllSection = subsection;
+									}
 									subsection.preset = preset;
 									subsection.presetId = p;
 									// Stuffs in value for section.items
-									this._createItemsForSection(subsection, preset, widgetList);
+									this._createSectionItems(subsection, preset, widgetList);
 								}								
 							}else{
 								// Stuffs in value for section.items
-								this._createItemsForSection(section, preset, widgetList);
+								this._createSectionItems(section, preset, widgetList);
+								if(section.includes && section.includes.indexOf("$$AllOthers$$")>=0){
+									catchAllSection = section;
+								}
 							}
 							this._presetSections[p].push(section);
 						}
 					}
 					for(var wi=0; wi<widgetList.length; wi++){
-						console.log('For preset '+p+' Not in widget palette: '+widgetList[wi]);
+						var widgetType = widgetList[wi];
+						if(catchAllSection){
+							var item = Metadata.getWidgetDescriptorForType(widgetType);
+							var newItem = dojo.clone(item);
+							this._prepareSectionItem(newItem, catchAllSection, this._paletteItemGroupCount);
+							catchAllSection.items.push(newItem);
+							this._paletteItemGroupCount++;
+						}else{
+							console.log('For preset '+p+' Not in widget palette: '+widgetList[wi]);
+						}
 					}
 				}
 			}
@@ -545,6 +561,14 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		if(!presetCollections || !presetCollections.length){
 			return;
 		}
+		if(opt.preset && opt.preset.exclude){
+			var exclude = (typeof opt.preset.exclude == 'string') ? 
+					(this._widgetPalette.defs ? this._widgetPalette.defs[opt.preset.exclude] : undefined) : 
+					opt.preset.exclude;
+			if(exclude && exclude.indexOf(opt.type)>=0){
+				return;
+			}
+		}
 		var active = false;
 		for(var i=0; i<presetCollections.length; i++){
 			if(presetCollections[i].id == collection && presetCollections[i].show){
@@ -574,7 +598,17 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		this.connect(ds, "onDragEnd", dojo.hitch(this,function(e){this.onDragEnd(e);})); // move end
 		return node;
 	},
-	
+
+	/**
+	 * Prepare a section item
+	 */
+	_prepareSectionItem: function(item, section, paletteItemGroup){
+		var $wm = Metadata.getLibraryMetadataForType(item.type);
+		item.$library = $wm;
+		item.section = section;
+		item._paletteItemGroup = paletteItemGroup;
+	},
+
 	/**
 	 * Stuffs values into section.items (or subsection.items).
 	 * section.items holds the list of PaletteItems that belong to this section (or subsection)
@@ -587,7 +621,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	 * @param {object} preset - current preset
 	 * @param {array[string]} widgetList - List of widget types, gets updated by this routine
 	 */
-	_createItemsForSection: function(section, preset, widgetList){
+	_createSectionItems: function(section, preset, widgetList){
 		section.items = [];
 		collections = preset.collections;
 		var includes = section.includes;
@@ -615,10 +649,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 				for(var itemindex=0; itemindex < items.length; itemindex++){
 					var item = items[itemindex];
 					var newItem = dojo.clone(item);
-					var $wm = Metadata.getLibraryMetadataForType(newItem.type);
-					newItem.$library = $wm;
-					newItem.section = section;
-					newItem._paletteItemGroup = this._paletteItemGroupCount;
+					this._prepareSectionItem(newItem, section, this._paletteItemGroupCount);
 					sectionItems.push(newItem);
 				}
 			}

@@ -367,7 +367,8 @@
 				"Rating",
 				"RichText",
 				"StickyNote",
-				"Tree"
+				"Tree",
+				"$$AllOthers$$"
 			]
 		},
 		"$SketchOtherSection":{
@@ -380,10 +381,22 @@
 				"Rating",
 				"RichText",
 				"StickyNote",
-				"Tree"
+				"Tree",
+				"$$AllOthers$$"
 			]
 		},
-		"$appSections":[
+		"$mobileSections":[
+			"$ViewsSection",
+			"$HeadingSection",
+			"$ListsSection",
+			"$ControlsSection",
+			"$ContainersSection",
+			"$HTMLSection",
+			"$ClipartSection",
+			"$DrawingToolsSection",
+			"$AppOtherSection"
+		],
+		"$desktopSections":[
 			"$ViewsSection",
 			"$HeadingSection",
 			"$ContainersSection",
@@ -403,11 +416,16 @@
 			"$HeadingSection",
 			"$ListsSection",
 			"$SketchOtherSection"
-		]
+		],
+        "$sketchExcludes": [
+            "dojox.mobile.ScrollableView",
+            "dojox.mobile.SwapView",
+            "dojox.mobile.View"
+        ]
 	},
 	"_COMMENT11_":"Should have one each for mobile, desktop, sketchhifi, sketchlofi",
 	"_COMMENT12_":"For each preset, collections is list of each widget collection in order of precedence",
-	"_COMMENT13_":"and sections is the array of sections for this preset (or $appSections)",
+	"_COMMENT13_":"and sections is the array of sections for this preset (or $desktopSections)",
 	"presets":{
 		"mobile":{
 			"collections":[
@@ -417,7 +435,7 @@
 				{ "id":"clipart", "show":true },
 				{ "id":"shapes", "show":true }
 			],
-			"sections":"$appSections"
+			"sections":"$mobileSections"
 		},
 		"desktop":{
 			"collections":[
@@ -427,7 +445,7 @@
 				{ "id":"clipart", "show":true },
 				{ "id":"shapes", "show":true }
 			],
-			"sections":"$appSections"
+			"sections":"$desktopSections"
 		},
 		"sketchhifi":{
 			"collections":[
@@ -437,7 +455,8 @@
 				{ "id":"dojoxmobile", "show":true },
 				{ "id":"html", "show":true }
 			],
-			"sections":"$sketchSections"
+			"sections":"$sketchSections",
+			"exclude":"$sketchExcludes"
 		},
 		"sketchlofi":{
 			"collections":[
@@ -447,7 +466,8 @@
 				{ "id":"dojoxmobile", "show":false },
 				{ "id":"html", "show":true }
 			],
-			"sections":"$sketchSections"
+			"sections":"$sketchSections",
+			"exclude":"$sketchExcludes"
 		}
 	}
 }

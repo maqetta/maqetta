@@ -52,6 +52,12 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	sunkenItems: [],	// PaletteItems that have "sunken" styling
 	moreItems: [],	// PaletteItems that have "more" tooltip dialog showing
 	helpItems: [],	// PaletteItems that have "help" tooltip dialog showing
+	_userWidgetSection: {
+		"id": "$$UserWidgets$$",
+		"name": "User Widgets",
+		"includes": []
+	},
+
 	
 	postMixInProperties: function() {
 		this._resource = commonNls;
@@ -68,91 +74,98 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		connect.subscribe("/davinci/preferencesChanged", this, "preferencesChanged");
 	},
 
-	addCustomWidget: function(lib){
-		
+	addCustomWidget: function(lib){		
 		/* make sure the pallette has loaded. if it hasnt, the init will take care of customs */
 		if(!this._loaded) return;
-		
-		var libraries = {};
-		
-		dojo.mixin(libraries, {custom:lib});
-		
-		// Merge descriptors that have the same category
-		// XXX Need a better solution for enumerating through descriptor items and creating
-		//    category groups.
-        var descriptorObject = {};
-		for (var name in libraries) {
-			if (libraries.hasOwnProperty(name)) {
-			    var library = libraries[name].$wm;
-			    if (! library) {
-			        continue;
-			    }
-			    
-			    dojo.forEach(library.widgets, function(item) {
-	                var category = library.categories[item.category];
-	                if (!descriptorObject[category.name]) {
-	                    descriptorObject[category.name] = dojo.clone(category);
-	                    descriptorObject[category.name].items = [];
-	                }
-	                var newItem = dojo.clone(item);
-	                newItem.$library = library;
-	                descriptorObject[category.name].items.push(newItem);
-			    });
+		if(!lib || !lib.$wm || !lib.$wm.widgets || !lib.$wm.widgets.length){
+			return;
+		}
+		var context = Runtime.currentEditor.getContext();
+		var comptype = context.getCompType();
+
+		var $library = lib.$wm;
+		var widgets = lib.$wm.widgets;
+		var folderToShow = null;
+		for(var w=0; w<widgets.length; w++){
+			var item = widgets[w];
+			for(var presetId in this._presetSections){
+				var customSection = null;
+				var sections = this._presetSections[presetId];
+				if(!sections){
+					console.error('Palette.js:addCustomWidget - no sections for comptype='+presetId);
+				}else{
+					for(var s = 0; s<sections.length; s++){
+						var section = sections[s];
+						if(section.id == '$$UserWidgets$$'){
+							customSection = section;
+							break;
+						}
+					}
+					if(!customSection){
+						customSection = dojo.clone(this._userWidgetSection);
+						customSection.preset = this._presetSections[presetId];
+						customSection.presetId = presetId;
+						sections.push(customSection);
+						var orderedDescriptors = [customSection];
+						this._generateCssRules(orderedDescriptors);
+						this._createPalette(customSection);
+						customSection._created = true;
+					}
+					var includesValue = 'type:' + item.type;
+					if(customSection.includes.indexOf(includesValue) < 0){
+						customSection.includes.push(includesValue);
+						item.$library = $library;
+						item.section = customSection;
+						item._paletteItemGroup = this._paletteItemGroupCount++;
+						var name = 'custom';
+						var folder = null;
+						var children = this.getChildren();
+						for(var ch=0; ch<children.length; ch++){
+							var child = children[ch];
+							if(child.declaredClass == 'davinci.ve.palette.PaletteFolder'){
+								if(child.presetId == presetId && child.section.id == '$$UserWidgets$$'){
+									folder = child;
+									break;
+								}
+							}
+						}
+						if(folder){
+							folder.domNode.style.display = 'none';
+							var opt = {
+									icon: item.iconBase64 || this._getIconUri(item.icon, "ve/resources/images/file_obj.gif"),
+									displayName:
+										item.$library._maqGetString(item.type) ||
+										item.$library._maqGetString(item.name) ||
+										item.name,
+									description:
+										item.$library._maqGetString(item.type+"_description") ||
+										item.$library._maqGetString(item.name+"_description") ||
+										item.description ||
+										item.type,
+									name: item.name,
+									paletteId: this.id,
+									type: item.type,
+									data: item.data || {name:item.name, type: item.type, properties: item.properties, children: item.children},
+									tool: item.tool,
+									category: name,
+									section: customSection,
+									PaletteFolderSection: folder,
+									PaletteFolderSubsection: null,
+									_paletteItemGroup: item._paletteItemGroup,
+									};
+							var newPaletteItem = this._createItem(opt,folder);
+							newPaletteItem.domNode.style.display = 'none';
+							if(comptype == presetId){
+								folderToShow = folder;
+							}
+						}
+					}
+				}
 			}
 		}
-		this._generateCssRules(descriptorObject);
-		
-		for(var name in descriptorObject){
-			var component = descriptorObject[name];
-			var iconFolder = "ve/resources/images/";
-			var defaultIconFile = "fldr_obj.gif";
-			var iconFile = defaultIconFile;
-			var iconUri = iconFolder + iconFile;
-			
-			var componentIcon = this._getIconUri(component.icon, iconUri);
-			
-			var opt = {
-				paletteId: this.id,
-				subsection_container: null,
-				icon: componentIcon,
-				displayName: /* XXX component.provider.getDescriptorString(component.name) ||*/ component.name
-			};			
-			// this._createFolder() has a miniscule chance of not happening synchronously
-			var deferred = this._createFolder(opt);
-			deferred.then(function(PaletteFolderSection){
-				if(component.items){
-					dojo.forEach(component.items, function(item){
-				        // XXX For now, we want to keep some items hidden. If item.hidden is set, then don't
-				        //  add this item to palette (see bug 5626).
-						
-				        if (item.hidden || this._hasItem(item.type)) {
-				            return;
-				        }
-			
-						var opt = {
-							icon: item.iconBase64 || this._getIconUri(item.icon, "ve/resources/images/file_obj.gif"),
-							displayName:
-								item.$library._maqGetString(item.type) ||
-								item.$library._maqGetString(item.name) ||
-								item.name,
-							description: 
-							    item.$library._maqGetString(item.type+"_description") || 
-							    item.$library._maqGetString(item.name+"_description") || 
-								item.description || 
-								item.type,
-							name: item.name,
-							paletteId: this.id,
-							type: item.type,
-							data: item.data || {name:item.name, type: item.type, properties: item.properties, children: item.children},
-							PaletteFolderSection: PaletteFolderSection,
-							PaletteFolderSubsection: null,
-							tool: item.tool,
-							category: name
-						};
-						this._createItem(opt,folder);
-					}, this);
-				}
-			}.bind(this));
+		if(folderToShow){
+			// open the currently active custom widget folder after creating a new custom widget
+			folderToShow.showHideFolderContents(true);
 		}
 	},
 	
@@ -258,6 +271,17 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 					if(!sections || !sections.length){
 						console.warning('No sections defined for preset '+p+' in widgetPalette.json (in siteConfig folder)');
 					}else{
+						if(customWidgets && customWidgets.custom && customWidgets.custom.$wm && 
+								customWidgets.custom.$wm.widgets && customWidgets.custom.$wm.widgets.length){
+							var custWidgets = customWidgets.custom.$wm.widgets;
+							var userWidgetSection = dojo.clone(this._userWidgetSection);
+							sections = sections.concat(userWidgetSection);
+							var customIncludes = userWidgetSection.includes;
+							for(var cw=0, len=custWidgets.length; cw<len; cw++){
+								var custWidget = custWidgets[cw];
+								customIncludes.push('type:'+custWidget.type);
+							}
+						}
 						for(var s=0; s < sections.length; s++){
 							// For each sections, the value can either be a string or a section objects.
 							// If a string, then that string is an reference to a sub-property of the top-level 'defs' object 
@@ -555,29 +579,36 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	},
 	
 	_createItem: function(opt,folder){
-		// See if this proposed PaletteItem's collection property is included in the current preset
-		var collection = Metadata.queryDescriptor(opt.type, 'collection');
-		var presetCollections = (opt.preset && opt.preset.collections);
-		if(!presetCollections || !presetCollections.length){
-			return;
-		}
-		if(opt.preset && opt.preset.exclude){
-			var exclude = (typeof opt.preset.exclude == 'string') ? 
-					(this._widgetPalette.defs ? this._widgetPalette.defs[opt.preset.exclude] : undefined) : 
-					opt.preset.exclude;
-			if(exclude && exclude.indexOf(opt.type)>=0){
-				return;
+		if(opt.section.id != '$$UserWidgets$$'){
+			// See if this proposed PaletteItem's collection property is included in the current preset
+			var collection = Metadata.queryDescriptor(opt.type, 'collection');
+			var presetCollections;
+			if(opt.preset){
+				presetCollections = opt.preset.collections;
+				if(!presetCollections || !presetCollections.length){
+					return;
+				}
 			}
-		}
-		var active = false;
-		for(var i=0; i<presetCollections.length; i++){
-			if(presetCollections[i].id == collection && presetCollections[i].show){
-				active = true;
-				break;
+			if(opt.preset && opt.preset.exclude){
+				var exclude = (typeof opt.preset.exclude == 'string') ? 
+						(this._widgetPalette.defs ? this._widgetPalette.defs[opt.preset.exclude] : undefined) : 
+						opt.preset.exclude;
+				if(exclude && exclude.indexOf(opt.type)>=0){
+					return;
+				}
 			}
-		}
-		if(!active){
-			return;
+			var active = false;
+			if(presetCollections && presetCollections.length){
+				for(var i=0; i<presetCollections.length; i++){
+					if(presetCollections[i].id == collection && presetCollections[i].show){
+						active = true;
+						break;
+					}
+				}
+				if(!active){
+					return;
+				}
+			}
 		}
 		var node = new PaletteItem(opt);
 		if(!folder){
@@ -587,8 +618,10 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		}
 		if(opt.PaletteFolderSubsection){
 			opt.PaletteFolderSubsection._children.push(node);
+			node.domNode.style.display = opt.PaletteFolderSubsection._isOpen ? this._displayShowValue : 'none';
 		}else if(opt.PaletteFolderSection){
 			opt.PaletteFolderSection._children.push(node);
+			node.domNode.style.display = opt.PaletteFolderSection._isOpen ? this._displayShowValue : 'none';
 		}
 		var nodeToClone = Query('.paletteItemImage', node.domNode)[0];
 		var ds = new DragSource(node.domNode, "component", node, nodeToClone);

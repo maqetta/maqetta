@@ -106,6 +106,13 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 	},
 	
 	folderClickHandler: function(evt){
+		this.showHideFolderContents();
+	},
+	
+	/**
+	 * @param {boolean|null|undefined} forceOpenClose
+	 */
+	showHideFolderContents: function(forceOpenClose){
 		
 		// Determine which preset applies to the current editor
 		if(!Runtime.currentEditor || Runtime.currentEditor.declaredClass != "davinci.ve.PageEditor" ||
@@ -117,13 +124,16 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 			var child_i = children[i];
 			// If we have reached the current PaletteFolder...
 			if(child_i == this){
+				if(this.domNode.style.display == 'none'){
+					fx.wipeIn({node: this.domNode, duration: 200}).play();
+				}
 				// See if this PaletteFolder has subsections
 				// If so, toggle the visibility of the subsections
 				// and hide any PaletteItems in the subsections
 				if(this._type == 'subsection_container'){	// Only PaletteFolder's with child sections have this property
 					// Loop through subsequent children and process all PaletteItems
 					// until reaching the next PaletteFolder that isn't a subsection (or end of list)
-					this._isOpen = !this._isOpen;
+					this._isOpen = typeof forceOpenClose == 'boolean' ? forceOpenClose : !this._isOpen;
 					for(var j = i + 1; j < len; j++){
 						var child_j = children[j];
 						if(child_j.declaredClass == "davinci.ve.palette.PaletteFolder"){
@@ -157,7 +167,7 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 					}
 					i = j;
 				}else{
-					this._isOpen = !this._isOpen;
+					this._isOpen = typeof forceOpenClose == 'boolean' ? forceOpenClose : !this._isOpen;
 					if(this._type == 'subsection'){	
 						this.subsection_container._openSubsection = this._isOpen ? this : null;
 					}
@@ -176,15 +186,20 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 							// Decide whether the given PaletteItem should be visible
 							// given the current preset ('mobile', 'desktop', 'sketchhifi', or 'sketchlofi')
 							var descriptor = Metadata.getWidgetDescriptorForType(child_k.type);
-							var collectionId = descriptor && descriptor.collection;
-							var show = false;
-							if(child_k.preset && child_k.preset.collections){
-								var collections = child_k.preset.collections;
-								for(var co=0; co < collections.length; co++){
-									var collection = collections[co];
-									if(collection.id && collection.id === collectionId){
-										show = collection.show;
-										break;
+							var show;
+							if(descriptor.category == 'custom'){
+								show = true;	// Always show custom widgets
+							}else{
+								var collectionId = descriptor && descriptor.collection;
+								show = false;
+								if(child_k.preset && child_k.preset.collections){
+									var collections = child_k.preset.collections;
+									for(var co=0; co < collections.length; co++){
+										var collection = collections[co];
+										if(collection.id && collection.id === collectionId){
+											show = collection.show;
+											break;
+										}
 									}
 								}
 							}

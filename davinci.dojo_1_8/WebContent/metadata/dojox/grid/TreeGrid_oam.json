@@ -184,10 +184,10 @@
     "content": "<span></span>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>A grid that supports nesting rows - it provides an expando function\nsimilar to dijit.Tree.  It also provides mechanisms for aggregating\nthe values of subrows</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>TreeGrid currently only works on &quot;simple&quot; structures.  That is,\nsingle-view structures with a single row in them.\n\n</p>\n<p>The TreeGrid works using the concept of &quot;levels&quot; - level 0 are the\ntop-level items.</p>"
     }
 }

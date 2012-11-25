@@ -87,13 +87,21 @@ var Runtime = {
 			return this._initializationInfo.workbenchState;
 		}
 	},
-	
-	getDefaultThemeSet: function() {
 
+	/**
+	 * Returns the site-specific data for "name"
+	 * @param name {string}  Site-specific data index (e.g., "defaultThemeSet")
+	 * @returns
+	 */
+	getSiteConfigData: function(name){
 		this.getInitializationInfo();
-		if(this._initializationInfo && this._initializationInfo.defaultThemeSet){
-			return this._initializationInfo.defaultThemeSet;
+		if(this._initializationInfo){
+			return this._initializationInfo[name];
 		} 
+	},
+
+	getDefaultThemeSet: function() {
+		this.getSiteConfigData("defaultThemeSet");
 	},
 	
 	/*

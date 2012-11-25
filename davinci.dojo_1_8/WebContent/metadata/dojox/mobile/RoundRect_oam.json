@@ -37,10 +37,10 @@
     "content": "<div></div>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>A simple round rectangle container.</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>RoundRect is a simple round rectangle container for any HTML\nand/or widgets. You can achieve the same appearance by just\napplying the -webkit-border-radius style to a div tag. However,\nif you use RoundRect, you can get a round rectangle even on\nnon-CSS3 browsers such as (older) IE.</p>"
     }
 }

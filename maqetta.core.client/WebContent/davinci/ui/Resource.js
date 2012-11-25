@@ -79,13 +79,15 @@ var uiResource = {
 		newHTMLDialogSpecificClass: "davinci/ui/widgets/NewHTMLFileOptions",
 		
 		newHTMLMobile: function(){
-			this.newHTML({ 
+			this.newHTML({
+				comptype:'mobile',
 				title:uiNLS.createMobileApplication,
 				dialogSpecificClassOptions:{ showDevices:true, showThemeSetsButton:true }
 			});
 		},
 		newHTMLDesktop: function(){
 			this.newHTML({ 
+				comptype:'desktop',
 				title:uiNLS.createDesktopApplication,
 				dialogSpecificClassOptions:{ showDevices:false, showThemeSetsButton:true },
 				device:'desktop'
@@ -93,6 +95,7 @@ var uiResource = {
 		},
 		newHTMLSketchHiFi: function(){
 			this.newHTML({
+				comptype:'sketchhifi',
 				title:uiNLS.createSketchHiFi,
 				dialogSpecificClassOptions:{ showDevices:false, showThemeSetsButton:true },
 				layout:'absolute', 
@@ -101,6 +104,7 @@ var uiResource = {
 		},
 		newHTMLSketchLoFi: function(){
 			this.newHTML({ 
+				comptype:'sketchlofi',
 				title:uiNLS.createSketchLoFi,
 				dialogSpecificClassOptions:{ showDevices:false, showThemeSetsButton:false },
 				layout:'absolute', 
@@ -140,6 +144,7 @@ var uiResource = {
 					themeSet = newDialog.dialogSpecificWidget ? newDialog.dialogSpecificWidget._selectedThemeSet : null;
 				}
 				var newHtmlParams = {
+					comptype:params.comptype,
 					device:device,
 					flowlayout:flowLayout,
 					theme: theme,

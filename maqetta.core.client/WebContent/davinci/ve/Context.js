@@ -85,7 +85,8 @@ var MOBILE_DEV_ATTR = 'data-maq-device',
 	MOBILE_ORIENT_ATTR = 'data-maq-orientation',
 	MOBILE_ORIENT_ATTR_P6 = 'data-maqetta-device-orientation',
 	PREF_LAYOUT_ATTR = 'data-maq-flow-layout',
-	PREF_LAYOUT_ATTR_P6 = 'data-maqetta-flow-layout';
+	PREF_LAYOUT_ATTR_P6 = 'data-maqetta-flow-layout',
+	COMPTYPE_ATTR = 'data-maq-comptype';
 
 var contextCount = 0;
 
@@ -869,6 +870,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var modelBodyElement = source.getDocumentElement().getChildElement("body");
 			modelBodyElement.setAttribute(MOBILE_DEV_ATTR, newHtmlParams.device);
 			modelBodyElement.setAttribute(PREF_LAYOUT_ATTR, newHtmlParams.flowlayout);
+			modelBodyElement.setAttribute(COMPTYPE_ATTR, newHtmlParams.comptype);
 			if (newHtmlParams.themeSet){
     			var cmd = new ChangeThemeCommand(newHtmlParams.themeSet, this);
     			cmd._dojoxMobileAddTheme(this, newHtmlParams.themeSet.mobileTheme, true); // new file
@@ -1317,6 +1319,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * initial loading.
 	 */
 	onload: function() {
+		// Don't actually get the composition type. Calling this routine
+		// causes a maq-data-comptype attribute to be added to old documents
+		// if it doesn't exist already.
+		this.getCompType();
+		
 		// add the user activity monitoring to the document and add the connects to be 
 		// disconnected latter
 		this._connects = (this._connects || []).concat(UserActivityMonitor.addInActivityMonitor(this.getDocument()));
@@ -2277,6 +2284,18 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var bodyElement=htmlElement.getChildElement("body");
 		bodyElement.addAttribute(PREF_LAYOUT_ATTR,''+flowLayout);
 		return flowLayout;
+	},
+	
+	getCompType: function(){
+		var htmlElement = this.getDocumentElement(),
+			bodyElement = htmlElement.getChildElement("body"),
+			comptype = bodyElement.getAttribute(COMPTYPE_ATTR);
+		if (!comptype){ 
+			var device = this.getMobileDevice();
+			comptype = device ? 'mobile' : 'desktop';
+			bodyElement.addAttribute(COMPTYPE_ATTR,comptype);
+		}
+		return comptype;
 	},
 
 	getActiveTool: function(){

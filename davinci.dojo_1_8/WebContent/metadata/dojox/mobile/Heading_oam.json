@@ -112,10 +112,10 @@
     "content": "<h1 label='Heading'></h1>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>A widget that represents a navigation bar.</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>Heading is a widget that represents a navigation bar, which\nusually appears at the top of an application. It usually\ndisplays the title of the current view and can contain a\nnavigational control. If you use it with\ndojox/mobile/ScrollableView, it can also be used as a fixed\nheader bar or a fixed footer bar. In such cases, specify the\nfixed=&quot;top&quot; attribute to be a fixed header bar or the\nfixed=&quot;bottom&quot; attribute to be a fixed footer bar. Heading can\nhave one or more ToolBarButton widgets as its children.</p>"
     }
 }

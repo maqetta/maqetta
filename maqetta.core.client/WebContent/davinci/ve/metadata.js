@@ -218,7 +218,8 @@ define([
 			//       $wm: {    // from widgets.json
 			//          categories: {}
 			//          widgets: []
-			//          $providedTypes: {}
+			//          $providedTypes: {} - assoc attray, each entry points to a widget descriptor
+			//          $providedTags: {} - assoc array, each entry points to an array of widget descriptors
 			//          $path:
 			//       }
 			//       $callbacks:  JS
@@ -227,12 +228,27 @@ define([
 		}
 
 		var wm = pkg.$wm;
+		
+		function addTag(wm, tag, item){
+			if(typeof wm.$providedTags[tag] == 'undefined'){
+				wm.$providedTags[tag] = [];
+			}
+			wm.$providedTags[tag].push(item);
+		}
         
 		wm.$providedTypes = wm.$providedTypes || {};
+		wm.$providedTags = wm.$providedTags || {};
 
 		wm.widgets.forEach(function(item) {
 			wm.$providedTypes[item.type] = item;
-
+			// In widgets.json, item.tags can be either a string or an array of strings.
+			if(typeof item.tags == 'string'){
+				addTag(wm, item.tags, item);
+			}else if(item.tags && item.tags.length){
+				for(var tagindex=0; tagindex<item.tags.length; tagindex++){
+					addTag(wm, item.tags[tagindex], item);
+				}
+			}
         	if (item.icon && !item.iconLocal) {
                 item.icon = path.append(item.icon).toString();
             }
@@ -319,6 +335,28 @@ define([
             }
         }
         return null;
+    }
+    
+    function getWidgetDescriptorForType(type){
+    	var lib = getLibraryForType(type);
+    	if(lib){
+    		return lib.$wm.$providedTypes[type];
+    	}
+    }
+    
+    function getWidgetsWithTag(tag){
+    	var arr = [];
+        if (tag) {
+            for (var name in libraries) {
+	            if (libraries.hasOwnProperty(name)) {
+	                var lib = libraries[name];
+	                if (lib.$wm && lib.$wm.$providedTags[tag]) {
+	                    arr = arr.concat(lib.$wm.$providedTags[tag]);
+	                }
+	            }
+            }
+        }
+        return arr;
     }
 
     var XXXwarned = false;
@@ -761,6 +799,56 @@ define([
 //    from a packages API (i.e. getPackage().name).
         getLibraryForType: function(type) {
             return getLibraryForType(type);
+        },
+        
+        getLibraryMetadataForType: function(type) {
+            var lib = getLibraryForType(type);
+            return lib ? lib.$wm : null;
+        },
+        
+        /**
+         * Returns the widget descriptor object corresponding to a given widget type.
+         * @param  {String} type 
+         * @return {object}
+         */       
+        getWidgetDescriptorForType: function(type) {
+            return getWidgetDescriptorForType(type);
+        },
+                
+        /**
+         * Returns a descriptive property (e.g., description or title) out
+         * of an OpenAjax Metadata object (JS object for the foo_oam.json file).
+         * corresponding to a given widget type.
+         * @param  {String} type  widget type (e.g., 'dijit.form.Button')
+         * @param  {String} propName  property name (e.g., 'description')
+         * @return {null|object} null if property doesn't exist, otherwise an object with two properties:
+         *    type: either 'text/plain' or 'text/html'
+         *    value: the value of the property
+         */       
+        getOamDescriptivePropertyForType: function(type, propName) {
+            var oam = getMetadata(type);
+            if(oam && oam[propName]){
+            	var propValue = oam[propName];
+            	if(typeof(propValue) == 'string'){
+            		return { type:'text/plain', value:propValue};
+            	}else if(typeof propValue.value == 'string'){
+            		return { type:(propValue.type ? propValue.type : 'text/plain'), value:propValue.value };
+            	}else{
+            		return null;
+            	}
+            }else{
+            	return null
+            }
+        },
+
+        /**
+         * Returns an array of widget descriptors for all widgets
+         * whose 'tags' property includes the given tag
+         * @param  {String} tag 
+         * @return {Array(object)}
+         */       
+        getWidgetsWithTag: function(tag) {
+            return getWidgetsWithTag(tag);
         },
         
         getLibraryBase: function(type) {

@@ -966,18 +966,237 @@ davinci_top_bar .dijitButtonNode {
     color: black;
     white-space: nowrap;
     display: block;
+    overflow: visible;
 }
+.dojoyPaletteCommon .paletteItemNormalContainer {
+	overflow:hidden;
+	display:inline-block;
+	width:66px;
+	height:86px; 
+	position:relative;
+	z-index:1;
+}
+.dojoyPaletteCommon .paletteItemSelectionContainer {
+	vertical-align: top;
+	position:relative;
+	z-index:1;
+}
+.dojoyPaletteCommon .paletteItemSelectionContent {
+	display:inline-block; 
+	z-index:1; 
+	position:absolute; 
+	top:-8px;
+	left:0px;
+	width:66px;
+	height:80px;
+	padding:0px;
+	border:2px solid #999;
+	border-radius:4px;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, .5);
+	pointer-events:none;
+}
+.paletteItemSelectedStrip {
+	position:absolute;
+	display:block;
+	background:white;
+}
+.paletteItemSelectedStripV {
+	position:absolute;
+	top:0px;
+	width:8px;
+	height:80px;
+}
+.paletteItemSelectedStripL {
+	left:0px;
+	border-top-left-radius:4px;
+	border-bottom-left-radius:4px;
+}
+.paletteItemSelectedStripR {
+	left:58px;
+	border-top-right-radius:4px;
+	border-bottom-right-radius:4px;
+}
+.paletteItemSelectedStripH {
+	position:absolute;
+	left:8px;
+	width:50px;
+	height:8px;
+}
+.paletteItemSelectedStripT {
+	top:0px;
+}
+.paletteItemSelectedStripB {
+	top:72px;
+}
+.paletteItemSelectedIcon {
+	position:absolute;
+	display:inline-block;
+	pointer-events:auto;
+	width:26px;
+	height:26px;
+}
+.paletteItemSelectedMoreIcon {
+	/*background-image:url(img/palette_more_active.png);*/
+	background-image:url(img/sprite.png);
+	background-position:-65px -41px;
+	background-repeat:no-repeat;
+	left: 54px;
+	top: -14px;
+}
+.paletteItemSelectedHelpIcon {
+	/*background-image:url(img/palette_help_active.png);*/
+	background-image:url(img/sprite.png);
+	background-position:-94px -40px;
+	background-repeat:no-repeat;
+	left: 54px;
+	top:67px;
+}
+#maqBody .paletteItemMorePopup .dijitTooltipContainer, #maqBody .paletteItemHelpPopup .dijitTooltipContainer {
+	background:white;
+	border-color:#b6b6b6;
+	border-width:3px;
+	border-radius:12px;
+	box-shadow: 0px 0px 4px rgba(0, 0, 0, .4);
+	padding: 2px 8px 5px;
+}
+.paletteItemMoreContent {
+}
+.paletteItemHelpContent {
+	padding-top:15px;
+	padding-right:12px;
+}
+.paletteItemMoreCloseBox, .paletteItemHelpCloseBox {
+	position: absolute;
+	right: 4px;
+	background-image: url("img/sprite.png");
+	background-repeat: no-repeat;
+	background-position: -43px -41px;
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+}
+.paletteItemMoreCloseBox:hover, .paletteItemHelpCloseBox:hover {
+	cursor:pointer;
+}
+.paletteItemMoreCloseBox {
+	top: 6px;
+}
+.paletteItemHelpCloseBox {
+	top: 18px;
+}
+.paletteItemAlternatesLabel {
+	font-size: 10px;
+	padding-left:4px;
+	padding-bottom: 3px;
+}
+.paletteItemAlternatesContainer {
+}
+.paletteItemAlternate {
+	margin: 2px 3px;
+	padding: 4px;
+	padding-bottom: 3px;
+	border-radius: 3px;
+	font-size: 12px;
+	border: 1px solid #333;
+	box-shadow: .5px 1px 1px rgba(0, 0, 0, .5);
+	border-color: #CCC;
+	background: #EEE;
+	font-family: Myriad, Helvetica, Tahoma, Arial, clean, sans-serif;
+	font-size: 12px;
+}
+.paletteItemMoreUnselected {
+	background-image: -webkit-linear-gradient(#F4F4F4, #DBDBDB);
+	background-image: -moz-linear-gradient(#F4F4F4, #DBDBDB);
+	background-image: -ms-linear-gradient(#F4F4F4, #DBDBDB);
+	background-image: -o-linear-gradient(#F4F4F4, #DBDBDB);
+	background-image: linear-gradient(#F4F4F4, #DBDBDB);
+}
+.paletteItemMoreSelected {
+	font-weight:bold;
+	background-image: -webkit-linear-gradient(#DBDBDB, #F4F4F4);
+	background-image: -moz-linear-gradient(#DBDBDB, #F4F4F4);
+	background-image: -ms-linear-gradient(#DBDBDB, #F4F4F4);
+	background-image: -o-linear-gradient(#DBDBDB, #F4F4F4);
+	background-image: linear-gradient(#DBDBDB, #F4F4F4);
+}
+.paletteItemHelpContent {
+	max-width:500px;
+}
+.paletteItemHelpDescription {
+}
+.helpInnerContent {
+}
+.helpInnerContentType {
+}
+.helpInnerContentSummary {
+}
+.helpInnerContentSummaryTitle {
+	margin:8px 0px 2px;
+	font-weight: bold;
+	font-size: 13px;
+}
+.helpInnerContentSummaryContent {
+	font-size:12px;
+}
+.helpInnerContentSummaryContent p {
+	margin-top: 4px;
+	margin-bottom: 4px;
+}
+.paletteTooltip {
+	font-size:12px;
+}
+.paletteTooltipCurrent {
+	font-size:13px;
+	}
+.paletteTooltipCurrentWidget {
+	font-weight:bold;
+}
+.paletteTooltipCurrentLibrary {
+}
+.paletteTooltipAlternates {
+	padding-top:5px;
+}
+.paletteTooltipAlternatesLabel {
+}
+.paletteTooltipAlternatesLibraries {
+}
+.paletteTooltipNote {
+	padding-top:5px;
+	}
 .dojoyPaletteCommon img {
 	vertical-align: top;
-    padding-right: 4px;
 }
+.dojoyPalette.paletteLayoutIcons .dojoyPaletteItem.dojoyPaletteCommon {
+	display:inline-block;
+	width:68px;
+	outline:none;
+}
+.dojoyPalette.paletteLayoutIcons .paletteItemImageContainer {
+	text-align:center;
+	display:block;
+}
+.dojoyPalette.paletteLayoutIcons .paletteItemImageContainer img {
+	width:50px;
+	height:50px;
+}
+.dojoyPalette.paletteLayoutIcons .paletteItemLabelContainer {
+	text-align:center;
+	display:block;
+	overflow:hidden;
+	text-overflow:ellipsis;
+}
+.dojoyPalette.paletteLayoutIcons .paletteItemLabel {
+}
+
 .dojoyPaletteCommon {
 	white-space: nowrap;
     border-width: 1px;
     border-style: solid;
     border-color: #D1D1D1 #989898 #989898 white;
     border-top-color: transparent;
-    font-family: tahoma, helvetica, arial, sans-serif;
+    font-family: arial, helvetica, sans-serif;
+    font-size:11px;
+    color:#222;
     cursor: pointer;
     padding: 1px;
 }
@@ -985,26 +1204,26 @@ davinci_top_bar .dijitButtonNode {
 }
 .dojoyPaletteItem {
     background-color: white;
-    margin: 0 1px 1px 0;
     border-color: white;
 }
 .dojoyPaletteItemFlat {
 	border-color: white;
 	background-color: white;
-	margin: 0 1px 1px 0;
 }
 .dojoyPaletteItemRaised {
 	border-color: white #ACA899 #ACA899 white;
 	background-color: #F0F4FC;
-	margin: 0 1px 1px 0;
 }
 .dojoyPaletteItemSunken {
-	border-color: #ACA899 white white #ACA899;
-	background-color: #D9E9F9;
-	margin: 1px 0 0 1px;
+}
+.dojoyPaletteItemSunken .paletteItemLabel {
+	font-weight:bold;
 }
 .dojoyPaletteFolder {
     border-color: #D1D1D1 #989898 #989898 white;
+    line-height: 18px;
+	height: 18px;
+	font-size:13px;
 }
 .claro .dojoyPaletteFolderLow,
 /*    background-image: url(images/palette-folder-bg.gif); */
@@ -1012,23 +1231,39 @@ davinci_top_bar .dijitButtonNode {
 /*    background-image: url(images/palette-folder-bg-hi.gif); */
     background: #EAEAEA url(../dijit/themes/claro/images/standardGradient.png) repeat-x scroll left top;
 }
+.dojoyPaletteFolder img {
+	margin-right:4px;
+}
+.PaletteFolderSubsection {
+	padding-left:16px;
+	font-size:12px;
+	font-style:italic;
+}
 .dojoyPaletteSearch {
 /*	font-size: 12px;*/
     background-repeat: no-repeat;
     padding-left: 1px;
 }
 
-.maqWidgetsCategory { /* use dijitHidden instead? */
-	display: none
-}
-
-.maqWidgetsFiltered .maqWidgetsCategory {
-	display: inline;
+.maqWidgetsCategory {
     margin-left: 1em;
     color: grey;
     font: italic smaller sans-serif;
 }
-
+.maqWidgetsCategorySameLine {
+	display: inline;
+}
+.paletteLayoutIcons .maqWidgetsCategorySameLine {
+	display:none;
+}
+.maqWidgetsCategorySeparateLine {
+	display: none;
+}
+.paletteLayoutIcons .maqWidgetsCategorySeparateLine {
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 /* FIXME: Temporary hack to make "Select Files..." command on Add Files dialog 
 	look like a button. Really need to do a UI makeover for Add Files dialog. */
 #btn0.browse {

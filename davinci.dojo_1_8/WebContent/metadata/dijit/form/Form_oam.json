@@ -84,10 +84,10 @@
     "content": "<div></div>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>Widget corresponding to HTML form tag, for validation and serialization\n</p>"
     },
-    "description": {
+    "examples": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<pre><code>&lt;form data-dojo-type=&quot;dijit/form/Form&quot; id=&quot;myForm&quot;&gt;\n    Name: &lt;input type=&quot;text&quot; name=&quot;name&quot; /&gt;\n&lt;/form&gt;\nmyObj = {name: &quot;John Doe&quot;};\ndijit.byId(&#39;myForm&#39;).set(&#39;value&#39;, myObj);\n\nmyObj=dijit.byId(&#39;myForm&#39;).get(&#39;value&#39;);</code></pre>"
     }
 }

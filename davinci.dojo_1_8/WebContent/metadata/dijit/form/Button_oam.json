@@ -85,10 +85,14 @@
     "content": "<input type='button'></input>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>Basically the same thing as a normal HTML button, but with special styling.</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>Buttons can display a label, an icon, or both.\nA label should always be specified (through innerHTML) or the label\nattribute.  It can be hidden via showLabel=false.</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;button data-dojo-type=&quot;dijit/form/Button&quot; onClick=&quot;...&quot;&gt;Hello world&lt;/button&gt;</code></pre>\n<pre><code>var button1 = new Button({label: &quot;hello world&quot;, onClick: foo});\ndojo.body().appendChild(button1.domNode);</code></pre>"
     }
 }

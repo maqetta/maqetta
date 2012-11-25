@@ -17,12 +17,12 @@ define(["dojo/_base/declare",
 		data: null, // any user data associated with this ds. (widget, etc.)
 		returnCloneOnFailure: true,
 	
-		constructor: function(node, type, data){
+		constructor: function(node, type, data, nodeToClone){
 			this.data = data;
 			var node = dojo.byId(node);
 			node.dragSource = this; // [custom property]
 			this.domNode = node;
-			this.dragObject = node;
+			this.dragObject = nodeToClone ? nodeToClone : node;
 			this.refNode = node;
 			this.type = type;
 			this.offsetParent = dojo.doc.body;

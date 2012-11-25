@@ -51,10 +51,10 @@
     "content": "<input></input>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>A simple GUI for choosing a date in the context of a monthly calendar.\n</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>See CalendarLite for general description.   Calendar extends CalendarLite, adding:\n\n</p>\n<ul>\n<li>month drop down list</li>\n<li>keyboard navigation</li>\n<li>CSS classes for hover/mousepress on date, month, and year nodes</li>\n<li>support of deprecated methods (will be removed in 2.0)</li>\n</ul>"
     }
 }

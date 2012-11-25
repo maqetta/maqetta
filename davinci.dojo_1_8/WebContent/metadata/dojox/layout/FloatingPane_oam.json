@@ -147,10 +147,10 @@
     "content": "<span></span>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>A non-modal Floating window.</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>Makes a <code>dojox.layout.ContentPane</code> float and draggable by it&#39;s title [similar to TitlePane]\nand over-rides onClick to onDblClick for wipeIn/Out of containerNode\nprovides minimize(dock) / show() and hide() methods, and resize [almost]</p>"
     }
 }

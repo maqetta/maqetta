@@ -67,10 +67,14 @@
     "content": "<span></span>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>A pane with a title on top, that can be expanded or collapsed.\n</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>An accessible container with a title Heading, and a content\nsection that slides open and closed. TitlePane is an extension to\n<code>dijit/layout/ContentPane</code>, providing all the useful content-control aspects from it.\n</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>// load a TitlePane from remote file:\nvar foo = new dijit.TitlePane({ href: &quot;foobar.html&quot;, title:&quot;Title&quot; });\nfoo.startup();</code></pre>\n<pre><code>&lt;!-- markup href example: --&gt;\n&lt;div data-dojo-type=&quot;dijit/TitlePane&quot; data-dojo-props=&quot;href: &#39;foobar.html&#39;, title: &#39;Title&#39;&quot;&gt;&lt;/div&gt;</code></pre>\n<pre><code>&lt;!-- markup with inline data --&gt;\n&lt;div data-dojo-type=&quot;dijit/TitlePane&quot; title=&quot;Title&quot;&gt;\n    &lt;p&gt;I am content&lt;/p&gt;\n&lt;/div&gt;</code></pre>"
     }
 }

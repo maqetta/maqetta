@@ -143,10 +143,10 @@
     "content": "<input type='text'></input>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>A TextBox for entering numbers, with formatting and range checking</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>NumberTextBox is a textbox for entering and displaying numbers, supporting\nthe following main features:\n\n</p>\n<ol>\n<li>Enforce minimum/maximum allowed values (as well as enforcing that the user types\n a number rather than a random string)</li>\n<li>NLS support (altering roles of comma and dot as &quot;thousands-separator&quot; and &quot;decimal-point&quot;\n depending on locale).</li>\n<li>Separate modes for editing the value and displaying it, specifically that\n the thousands separator character (typically comma) disappears when editing\n but reappears after the field is blurred.</li>\n<li>Formatting and constraints regarding the number of places (digits after the decimal point)\n allowed on input, and number of places displayed when blurred (see <code>constraints</code> parameter).</li>\n</ol>"
     }
 }

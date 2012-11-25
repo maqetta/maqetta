@@ -167,18 +167,23 @@ var processWidgetClasses = function(doc, oamJsonFileList){
 				//DEBUGONLY: childElementsFound[child.tagName] = innerText(child);
 				// Step 4: update the descriptive metadata fields in the *_oam.json file.
 				//FIXME: Need to add description, summary->title and example
-				fs.stat( fileName, function( fileName, err, stats ) {
+				fs.stat( fileName, function( fileName, descriptiveProps, err, stats ) {
 					//console.log('inside fs.stat. fileName='+fileName);
 				    if ( err ) throw err;
 				    if ( stats.isFile() ) {
 						//console.log('stat.isFile fileName='+fileName);
-				        fs.readFile( fileName, "utf8", function( fileName, err, data ) {
+				        fs.readFile( fileName, "utf8", function( fileName, descriptiveProps, err, data ) {
 				            if (err) throw err;
 					        //console.log('Successful read of file: '+ fileName + 'data.length=' + data.length);
 					
 							// Use eval() instead of JSON.parse() because some of the oam.json files
 							// contain comments, which are not allowed in JSON
 							eval('var jsObj='+data);
+							// Remove any existing props
+							for(var prop in elementsOfInterest){
+								delete jsObj[elementsOfInterest[prop]];
+							}
+							// Replace with values extracted from details.xml file
 							for(var prop in descriptiveProps){
 								jsObj[elementsOfInterest[prop]] = {};
 								jsObj[elementsOfInterest[prop]].type = 'text/html';
@@ -186,11 +191,11 @@ var processWidgetClasses = function(doc, oamJsonFileList){
 							}
 							var jsonString = JSON.stringify(jsObj, null, "    ");
 							fs.writeFile(fileName, jsonString);
-				        }.bind(this, fileName));
+				        }.bind(this, fileName, descriptiveProps));
 				    } else {
 				        sys.debug( "ERROR: not a valid file: " + fileName );
 				    }
-				}.bind(this, fileName));
+				}.bind(this, fileName, descriptiveProps));
 				fileNameList.splice(index, 1);
 			}
 		}

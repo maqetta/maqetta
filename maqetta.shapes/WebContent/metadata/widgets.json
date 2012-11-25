@@ -1,4 +1,9 @@
 {
+	"collections":{
+		"shapes":{
+			"name":"Drawing Tools"
+		}
+	},
     "categories": {
         "shapes": {
             "name": "Drawing Tools",
@@ -10,6 +15,8 @@
           "name": "Text",
           "type": "shapes.Text",
           "category": "shapes",
+          "collection": "shapes",
+          "tags": "Text",
           "icon": "resources/images/text.gif",
           "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAJEAANXV1h8fH////wAAACH5BAEAAAIALAAAAAAQABAAAAIplI+pq+EPHXKgUhsmONSAfGxcIAplQzJJp46nyrZC3NILVr1TpMv+UgAAOw==",
           "inlineEdit": {
@@ -27,6 +34,8 @@
           "name": "Line",
           "type": "shapes.Line",
           "category": "shapes",
+          "collection": "shapes",
+          "tags": "Line",
           "icon": "resources/images/line.gif",
           "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAJiYmJSUlJGRkYyMjIiIiIODg0lJSUZGRkFBQTw8PDc3NzIyMisrK////wAAAAAAACH5BAEAAA0ALAAAAAAQABAAAAQfsMlJq7046827x8aBJEppmgvTAIEwEHAsF19t33h+RQA7",
           "enablePointerEvents": true,
@@ -43,6 +52,8 @@
           "name": "Arrow",
           "type": "shapes.Line",
           "category": "shapes",
+          "collection": "shapes",
+          "tags": "Arrow",
           "icon": "resources/images/arrow.gif",
           "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAKIAAL+/v5aWlmNjYzMzMxwcHBYWFv///wAAACH5BAEAAAYALAAAAAAQABAAAAMgaLrc/jBKFsBcg9g7iuaFZwlhaZrD1Ikqq35Xdc10PScAOw==",
           "enablePointerEvents": true,
@@ -60,6 +71,8 @@
           "name": "Polyline",
           "type": "shapes.Line",
           "category": "shapes",
+          "collection": "shapes",
+          "tags": "Polyline",
           "icon": "resources/images/polyline.gif",
           "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAJiYmJSUlJGRkYyMjIiIiIODg0lJSUZGRkFBQTw8PDc3NzIyMisrK////wAAAAAAACH5BAEAAA0ALAAAAAAQABAAAAQgsMlJq704a6269xcgjmK3TYR5NqmysurZvvOaviyu7xEAOw==",
           "enablePointerEvents": true,
@@ -77,6 +90,8 @@
           "name": "Polyline Arrow",
           "type": "shapes.Line",
           "category": "shapes",
+          "collection": "shapes",
+          "tags": "PolylineArrow",
           "icon": "resources/images/polylinearrow.gif",
           "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAJiYmJSUlJGRkYyMjIiIiIODg0lJSUZGRkFBQTw8PDc3NzIyMisrK////wAAAAAAACH5BAEAAA0ALAAAAAAQABAAAAQosMlJq704U8U7x0QoEp82kYp5liraEIlJwrHM1RmdpFri76qgcKiJAAA7",
           "enablePointerEvents": true,
@@ -95,6 +110,8 @@
           "name": "Circle",
           "type": "shapes.Circle",
           "category": "shapes",
+          "collection": "shapes",
+          "tags": "Circle",
           "icon": "resources/images/circle.gif",
           "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAANXT1vj4+eLi49ra29nZ2tbW19XV1tTU1dDQ0c3NzpCQkf////7+/u/v7+zs7OPj49HR0c/Pz87Ozs3NzczMzKOjo6GhoZ6enp2dnZycnJubm4+Pj4aGhoWFhYGBgX5+fnR0dGlpaVdXV1VVVVNTU1FRUU5OTkxMTDY2NjMzMzIyMi8vLyoqKiYmJiMjI////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAC8ALAAAAAAQABAAAAaXwJfwFfmcVq7V6RMZDi+mTYJQIEg2povzEqIIGgFGoCGghLRE08SxaLsXjomp6VEI3niBwvMyQRp4bw0IJi8qAwGBbgEDKi8tBQyKbQwFLS8piJMLjCkvJQaAkw0GJS8dGg+bDxodRCMHbIEOByNNLxYgBw9gYg0PByAVThUiGAYDAAMGGSPDTi8QHCQoLCgkHBDQ29wvQQA7",
           "enablePointerEvents": true,
@@ -108,6 +125,8 @@
           "name": "Rectangle",
           "type": "shapes.Rectangle",
           "category": "shapes",
+          "collection": "shapes",
+          "tags": "Rectangle",
           "icon": "resources/images/rectangle.gif",
           "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAANXV1v///0lJSUZGRkJCQkFBQTw8PDg4ODc3NzQ0NDExMS4uLiwsLCoqKv///wAAACH5BAEAAA4ALAAAAAAQABAAAARE0MlJq71V6M25FEAojqEgDUCgriwwSEXKzgAhGfK8AoZ05LoAACFJAHWAhERxpCkki2ZrIWGQrgCGpMHter2YsHg8jgAAOw==",
           "enablePointerEvents": true,
@@ -121,6 +140,8 @@
           "name": "RoundedRectangle",
           "type": "shapes.Rectangle",
           "category": "shapes",
+          "collection": "shapes",
+          "tags": "RoundedRectangle",
           "icon": "resources/images/roundedRectangle.gif",
           "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAANXV1v///8jIyJGRkWdnZ1BQUElJSURERDw8PDQ0NCoqKv///wAAAAAAAAAAAAAAACH5BAEAAAsALAAAAAAQABAAAARHcMlJq72XmM05oYYAjCQpGBIhBmzbAsJ3AG7NAseC0LYLIDpe7wbcDV/AhHAISCwKg2UNMChIFNFSaaCgFBTgcNiKKZvP5wgAOw==",
           "enablePointerEvents": true,

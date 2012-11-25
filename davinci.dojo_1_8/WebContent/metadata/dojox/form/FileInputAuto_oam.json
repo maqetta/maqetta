@@ -102,10 +102,10 @@
     "content": "<input></input>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>An extension on FileInput providing background upload progress\n</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>An extended version of FileInput - when the user focuses away from the input\nthe selected file is posted via ioIframe to the url. example implementation\ncomes with PHP solution for handling upload, and returning required data.\n\n</p>\n<p>notes: the return data from the io.iframe is used to populate the input element with\ndata regarding the results. it will be a JSON object, like:\n\n\n</p>\n<pre><code>results = { size: &quot;1024&quot;, filename: &quot;file.txt&quot; }</code></pre>\n<p>all the parameters allowed to FileInput apply</p>"
     }
 }

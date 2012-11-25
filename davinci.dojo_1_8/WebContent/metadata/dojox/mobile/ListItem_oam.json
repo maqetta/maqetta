@@ -145,10 +145,14 @@
     "content": "<li></li>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>An item of either RoundRectList or EdgeToEdgeList.</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>ListItem represents an item of either RoundRectList or\nEdgeToEdgeList. There are three ways to move to a different view:\nmoveTo, href, and url. You can choose only one of them.\n\n</p>\n<p>A child DOM node (or widget) can have the layout attribute,\nwhose value is &quot;left&quot;, &quot;right&quot;, or &quot;center&quot;. Such nodes will be\naligned as specified.</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;li data-dojo-type=&quot;dojox.mobile.ListItem&quot;&gt;\n    &lt;div layout=&quot;left&quot;&gt;Left Node&lt;/div&gt;\n    &lt;div layout=&quot;right&quot;&gt;Right Node&lt;/div&gt;\n    &lt;div layout=&quot;center&quot;&gt;Center Node&lt;/div&gt;\n&lt;/li&gt;\n\n Note that even if you specify variableHeight=&quot;true&quot; for the list\n and place a tall object inside the layout node as in the example\n below, the layout node does not expand as you may expect,\n because layout node is aligned using float:left, float:right, or\n position:absolute.</code></pre>\n<pre><code>&lt;li data-dojo-type=&quot;dojox.mobile.ListItem&quot; variableHeight=&quot;true&quot;&gt;\n    &lt;div layout=&quot;left&quot;&gt;&lt;img src=&quot;large-picture.jpg&quot;&gt;&lt;/div&gt;\n&lt;/li&gt;</code></pre>"
     }
 }

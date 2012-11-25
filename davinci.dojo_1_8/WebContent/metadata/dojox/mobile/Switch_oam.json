@@ -45,10 +45,10 @@
     "content": "<div></div>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>A toggle switch with a sliding knob.</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>Switch is a toggle switch with a sliding knob. You can either\ntap or slide the knob to toggle the switch. The onStateChanged\nhandler is called when the switch is manipulated.</p>"
     }
 }

@@ -575,7 +575,8 @@ return {
                 "snap": true,
 				"showPossibleParents": false,
                 "cssOverrideWarn": true,
-                "absoluteWidgetsZindex": 900
+                "absoluteWidgetsZindex": 900,
+                "widgetPaletteLayout": "list"	// FIXME: change to "icons"
             }
         }
     ],

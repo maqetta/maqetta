@@ -121,12 +121,21 @@ snapToNearestWidget: "Snap to nearest widget",
 showPossibleParents: "When dragging, show possible parents",
 warnOnCSSOverride: "Warn on CSS Override",
 absoluteWidgetsZindex: "z-index for sketch mode",
+widgetPaletteLayout: "In Palette, display widgets as",
+widgetPaletteShow_Icons: "icons",
+widgetPaletteShow_List: "list",
 liveEdit: "Live Edit",
 zazl: "Enable <a href='http://zazl.org' target='_blank'>Zazl Optimizer</a>",
 
 /* WidgetSelectionPane*/
 selectorPrefix: "Selector Prefix",
 component: "Component",
+
+/* Palette*.js */
+alternates: "Alternates",
+howToChooseAlternate: "To choose alternate widget, click-select current widget, then click on up arrow icon.",
+summary: "Summary:",
+description: "Description:",
 
 __dummy__: ""
 }

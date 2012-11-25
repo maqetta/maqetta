@@ -80,10 +80,14 @@
     "content": "<span></span>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>A modal dialog Widget.</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>Pops up a modal dialog window, blocking access to the screen\nand also graying out the screen Dialog is extended from\nContentPane so it supports all the same parameters (href, etc.).</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;div data-dojo-type=&quot;dijit/Dialog&quot; data-dojo-props=&quot;href: &#39;test.html&#39;&quot;&gt;&lt;/div&gt;</code></pre>\n<pre><code>var foo = new Dialog({ title: &quot;test dialog&quot;, content: &quot;test content&quot; };\nfoo.placeAt(win.body());\nfoo.startup();</code></pre>"
     }
 }

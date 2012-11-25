@@ -158,10 +158,10 @@
     "content": "<input type='text'></input>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>A validating currency textbox</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>CurrencyTextBox is similar to <code>dijit/form/NumberTextBox</code> but has a few\nextra features related to currency:\n\n</p>\n<ol>\n<li>After specifying the currency type (american dollars, euros, etc.) it automatically\n sets parse/format options such as how many decimal places to show.</li>\n<li>The currency mark (dollar sign, euro mark, etc.) is displayed when the field is blurred\n but erased during editing, so that the user can just enter a plain number.</li>\n</ol>"
     }
 }

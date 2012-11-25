@@ -72,10 +72,10 @@
     "content": "<ul></ul>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>A bar widget that has buttons to control visibility of views.</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>TabBar is a container widget that has typically multiple\nTabBarButtons which controls visibility of views. It can be used\nas a tab container.</p>"
     }
 }

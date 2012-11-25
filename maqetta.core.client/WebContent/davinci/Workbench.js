@@ -1204,8 +1204,8 @@ var Workbench = {
 				// expandToSize is what expandPaletteContainer() uses as the
 				// width of the palette when it is in expanded state.
 				paletteCache["left_mainBody"] = {
-					expandToSize:300,
-					initialExpandToSize:300
+					expandToSize:318,
+					initialExpandToSize:318
 				};
 			}
 	

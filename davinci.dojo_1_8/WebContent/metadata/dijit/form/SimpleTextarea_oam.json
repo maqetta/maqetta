@@ -89,10 +89,10 @@
     "content": "<textarea type='text'></textarea>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>A simple textarea that degrades, and responds to\nminimal LayoutContainer usage, and works with dijit/form/Form.\nDoesn&#39;t automatically size according to input, like Textarea.\n</p>"
     },
-    "description": {
+    "examples": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<pre><code>&lt;textarea data-dojo-type=&quot;dijit/form/SimpleTextarea&quot; name=&quot;foo&quot; value=&quot;bar&quot; rows=30 cols=40&gt;&lt;/textarea&gt;</code></pre>\n<pre><code>new SimpleTextarea({ rows:20, cols:30 }, &quot;foo&quot;);</code></pre>"
     }
 }

@@ -128,10 +128,10 @@
     "content": "<input type='text'></input>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>A dijit/form/ValidationTextBox subclass which provides a base class for widgets that have\na visible formatted display value, and a serializable\nvalue in a hidden input field which is actually sent to the server.</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>The visible display may\nbe locale-dependent and interactive.  The value sent to the server is stored in a hidden\ninput field which uses the <code>name</code> attribute declared by the original widget.  That value sent\nto the server is defined by the dijit/form/MappedTextBox.serialize() method and is typically\nlocale-neutral.</p>"
     }
 }

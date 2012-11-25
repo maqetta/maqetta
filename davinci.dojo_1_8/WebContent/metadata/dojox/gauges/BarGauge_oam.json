@@ -102,10 +102,14 @@
     "content": "<span></span>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>a bar graph built using the dojox.gfx package.\n</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>using dojo.gfx (and thus either SVG or VML based on what is supported), this widget\nbuilds a bar graph component, used to display numerical data in a familiar format.\n</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;script type=&quot;text/javascript&quot;&gt;\n    require([&quot;dojox/gauges/BarGauge&quot;]);\n&lt;/script&gt;\n...\n&lt;div    dojoType=&quot;dojox.gauges.BarGauge&quot;\n    id=&quot;testBarGauge&quot;\n    barGaugeHeight=&quot;55&quot;\n    dataY=&quot;25&quot;\n    dataHeight=&quot;25&quot;\n    dataWidth=&quot;225&quot;&gt;\n&lt;/div&gt;</code></pre>"
     }
 }

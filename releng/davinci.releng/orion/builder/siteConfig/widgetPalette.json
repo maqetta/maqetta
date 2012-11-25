@@ -1,0 +1,510 @@
+{
+	"_COMMENT1_":"Defines site-specific organization for widget palette",
+	"name":"widgetPalette_dojo_default",
+	"_COMMENT2_":"One entry for each section (==folder) in widget palette",
+	"_COMMENT3_":"includes provides ordered list of widgets to appear in each section",
+	"_COMMENT4_":"each entry in array causes a new item to appear in that section",
+	"_COMMENT5_":"each entry in array can be either a string or an array",
+	"_COMMENT6_":"if a string, can be either a string that begins with type:, which is a particular widget type",
+	"_COMMENT7_":"otherwise the string holds a tag, which causes all widgets that match tag to share that item",
+	"_COMMENT8_":"if an array, then it holds a list of strings, each of which can start with type: (widget type) or a tag",
+	"defs":{
+		"$ClipartSection_Arrows":{
+			"id":"Arrows",
+			"name": "Arrows",
+			"includes":[
+				"ArrowDown",
+				"ArrowLeft",
+				"ArrowRight",
+				"ArrowUp"
+			]
+		},
+		"$ClipartSection_Community":{
+			"id":"Community",
+			"name": "Community",
+			"includes":[
+				"Facebook",
+				"Rss",
+				"Twitter"
+			]
+		},
+		"$ClipartSection_DeviceSilhouettes":{
+			"id":"DeviceSilhouettes",
+			"name": "Device Silhouettes",
+			"includes":[
+				"Android_340x480",
+				"Android_480x800",
+				"AndroidTablet",
+				"Blackberry",
+				"iPad",
+				"iPhone"
+			]
+		},
+		"$ClipartSection_Media":{
+			"id":"Media",
+			"name": "Media",
+			"includes":[
+				"Camera",
+				"Chat",
+				"Image",
+				"Map",
+				"Microphone",
+				"PlayControl",
+				"StreetMap",
+				"VideoCamera",
+				"VideoPlayer"
+			]
+		},
+		"$ClipartSection_UserInterfaceControls":{
+			"id":"UserInterfaceControls",
+			"name": "User Interface Controls",
+			"includes":[
+				"FormattingToolbox",
+				"HScrollBar",
+				"HSplit",
+				"SpinInput",
+				"VScrollBar",
+				"VSplit"
+			]
+		},
+		"$ClipartSection_UserInterfaceIcons":{
+			"id":"UserInterfaceIcons",
+			"name": "User Interface Icons",
+			"includes":[
+				"Close",
+				"Help",
+				"Home",
+				"Lock",
+				"Mail",
+				"Minus",
+				"Next",
+				"Plus",
+				"Previous",
+				"Print",
+				"Search",
+				"ShoppingCart",
+				"Trash"
+			]
+		},
+		"$ClipartSection_Other":{
+			"id":"Other",
+			"name": "Other",
+			"includes":[
+				"Browser",
+				"Person",
+				"ProfilePicture",
+				"X"
+			]
+		},
+		"$ClipartSection":{
+			"id":"Clipart",
+			"name": "Clip Art",
+			"subsections":[
+				"$ClipartSection_Arrows",
+				"$ClipartSection_Community",
+				"$ClipartSection_DeviceSilhouettes",
+				"$ClipartSection_Media",
+				"$ClipartSection_UserInterfaceControls",
+				"$ClipartSection_UserInterfaceIcons",
+				"$ClipartSection_Other"
+			]
+		},
+		"$DrawingToolsSection":{
+			"id":"DrawingTools",
+			"name": "Drawing Tools",
+			"includes":[
+				"Text",
+				"Line",
+				"Arrow",
+				"Polyline",
+				"PolylineArrow",
+				"Circle",
+				"Rectangle",
+				"RoundedRectangle"
+			]
+		},
+		"$ViewsSection":{
+			"id":"Views",
+			"name": "Views",
+			"_COMMENT1_":"Mobile-only view widgets, often representing a single screen of UI",
+			"includes":[
+				"ScrollableView",
+				"SwapView",
+				"View"
+			]
+		},
+		"$HeadingSection":{
+			"id":"Heading, Section Labels",
+			"name": "Heading",
+			"_COMMENT1_":"Mobile-only Heading widgets, often titles at top of a screen",
+			"includes":[
+				"Heading",
+				"ToolBarButton"
+			]
+		},
+		"$ContainersSection_Dojo":{
+			"id":"ContainersSection_Dojo",
+			"name": "Dojo",
+			"includes":[
+				["AccordionContainer","Accordion"],
+				"BorderContainer",
+				"Container",
+				"ContentPane",
+				"FixedSplitter",
+				"Form",
+				"GridLayout",
+				"MenuBar",
+				"Pane",
+				"RoundRect",
+				"ScrollablePane",
+				"TabContainer",
+				"TitlePane",
+				"ToolBar"
+			]
+		},
+		"$ContainersSection_HTML":{
+			"id":"ContainersSection_HTML",
+			"name": "HTML",
+			"includes":[
+				"<a>",
+				"<div>",
+				"<span>",
+				"<table>"
+			]
+		},
+		"$ContainersSection":{
+			"id":"Containers",
+			"name": "Containers",
+			"_COMMENT1_":"Desktop and mobile containers",
+			"_COMMENT2_":"Note that default desktop preset only include desktop widgets",
+			"_COMMENT3_":"and mobile preset only include mobile widgets",
+			"subsections":[
+				"$ContainersSection_Dojo",
+				"$ContainersSection_HTML"
+			]
+		},
+		"$ListsSection":{
+			"id":"Lists",
+			"name": "Lists",
+			"_COMMENT1_":"Mobile-only List widgets",
+			"includes":[
+				"RoundRectCategory",
+				"RoundRectList",
+				"RoundRectDataList",
+				"EdgeToEdgeCategory",
+				"EdgeToEdgeList",
+				"EdgeToEdgeDataList",
+				"ListItem"
+			]
+		},
+		"$ControlsSection_Buttons":{
+			"id":"Buttons",
+			"name": "Buttons",
+			"includes":[
+				["Button","<button>"],
+				"ComboButton",
+				"DropDownButton",
+				"ToggleButton"
+			]
+		},
+		"$ControlsSection_CheckboxesRadios":{
+			"id":"CheckboxesRadios",
+			"name": "Checkboxes, RadioButtons, Switch",
+			"includes":[
+				"CheckBox",
+				"RadioButton",
+				"Switch",
+				"TriStateCheckBox"
+			]
+		},
+		"$ControlsSection_IconContainer":{
+			"id":"IconContainer",
+			"name": "IconContainer",
+			"_COMMENT1_":"Mobile-only",
+			"includes":[
+				"IconContainer",
+				"IconItem",
+				"IconMenu",
+				"IconMenuItem"
+			]
+		},
+		"$ControlsSection_Pickers":{
+			"id":"Pickers",
+			"name": "Pickers",
+			"includes":[
+				"Carousel",
+				"CarouselItem",
+				"DataCarousel",
+				"DatePicker",
+				"SpinWheel",
+				"SpinWheelSlot",
+				"SpinWheelDatePicker",
+				"SpinWheelTimePicker",
+				"TimePicker",
+				"ValuePicker",
+				"ValuePickerSlot",
+				"ValuePickerDatePicker",
+				"ValuePickerTimePicker"
+			]
+		},
+		"$ControlsSection_Select":{
+			"id":"Select",
+			"name": "Select",
+			"includes":[
+				"ComboBox",
+				["DropDownSelect","<select>"],
+				"FilteringSelect",
+				"MultiSelect",
+				"Select",
+				"<select>"
+			]
+		},
+		"$ControlsSection_SlidersSpinners":{
+			"id":"SlidersSpinners",
+			"name": "Sliders, Spinners",
+			"includes":[
+				"HorizontalSlider",
+				"NumberSpinner",
+				"Slider",
+				"TimeSpinner",
+				"VerticalSlider"
+			]
+		},
+		"$ControlsSection_TextBox":{
+			"id":"TextBox",
+			"name": "TextBox",
+			"includes":[
+				["TextBox","<input>"],
+				"ComboBox",
+				"CurrencyTextBox",
+				"DateTextBox",
+				"DateTimeTextBox",
+				"NumberTextBox",
+				"SimpleTextarea",
+				["Textarea","TextArea","ExpandingTextArea"],
+				"ValidationTextBox",
+				"TimeTextBox"
+			]
+		},
+		"$ControlsSection_Toolbars":{
+			"id":"Toolbars",
+			"name": "Toolbars, ButtonBars",
+			"includes":[
+				"TabBar",
+				"TabBarButton",
+				"Toolbar"
+			]
+		},
+		"$ControlsSection_Other":{
+			"id":"Other",
+			"name": "Other",
+			"includes":[
+				"ProgressIndicator",
+				"Rating",
+				"SearchBox"
+			]
+		},
+		"$ControlsSection":{
+			"id":"Controls",
+			"name": "Controls",
+			"_COMMENT1_":"each section can either have an array of subsections or an array of includes",
+			"subsections":[
+				"$ControlsSection_Buttons",
+				"$ControlsSection_CheckboxesRadios",
+				"$ControlsSection_IconContainer",
+				"$ControlsSection_Pickers",
+				"$ControlsSection_Select",
+				"$ControlsSection_SlidersSpinners",
+				"$ControlsSection_TextBox",
+				"$ControlsSection_Toolbars",
+				"$ControlsSection_Other"
+			]
+		},
+		"$HTMLSection_Common":{
+ 			"id":"Common",
+			"name": "Common",
+			"includes":[
+				"<a>",
+				"<div>",
+				"<label>",
+				"<span>"
+			]
+		},
+		"$HTMLSection_Forms":{
+			"id":"Forms",
+			"name": "Forms",
+			"includes":[
+				"<button>",
+				"<fieldset>",
+				"<form>",
+				"<input>",
+				"<select>",
+				"<textarea>"
+			]
+		},
+		"$HTMLSection_Headers":{
+			"id":"Headers",
+			"name": "Headers",
+			"includes":[
+				"<h1>",
+				"<h2>",
+				"<h3>"
+			]
+		},
+		"$HTMLSection_ImagesMediaIframes":{
+			"id":"ImagesMediaIframes",
+			"name": "Images, Media, Iframes",
+			"includes":[
+				"<audio>",
+				"<embed>",
+				"<img>",
+				"<iframe>",
+				"<video>"
+			]
+		},
+		"$HTMLSection_ParagraphsFormatting":{
+			"id":"ParagraphsFormatting",
+			"name": "Paragraphs, Breaks, Rules",
+			"includes":[
+				"<b>",
+				"<br>",
+				"<em>",
+				"<hr>",
+				"<i>",
+				"<p>",
+				"<s>",
+				"<strong>",
+				"<u>"
+			]
+		},
+		"$HTMLSection_Tables":{
+			"id":"Tables",
+			"name": "Tables",
+			"includes":[
+				"<table>"
+			]
+		},
+		"$HTMLSection":{
+			"id":"HTML",
+			"name": "HTML",
+			"subsections":[
+				"$HTMLSection_Common",
+				"$HTMLSection_Forms",
+				"$HTMLSection_Headers",
+				"$HTMLSection_ImagesMediaIframes",
+				"$HTMLSection_ParagraphsFormatting",
+				"$HTMLSection_Tables"
+			]
+		},
+		"$AppOtherSection":{
+ 			"id":"Other",
+			"name": "Other",
+			"includes":[
+				"Calendar",
+				"ColorPalette",
+				"GridX",
+				"RichText",
+				"StickyNote",
+				"Tree",
+				"$$AllOthers$$"
+			]
+		},
+		"$SketchOtherSection":{
+ 			"id":"Other",
+			"name": "Other",
+			"includes":[
+				"Calendar",
+				"ColorPalette",
+				"GridX",
+				"RichText",
+				"StickyNote",
+				"Tree",
+				"$$AllOthers$$"
+			]
+		},
+		"$mobileSections":[
+			"$ViewsSection",
+			"$HeadingSection",
+			"$ListsSection",
+			"$ControlsSection",
+			"$ContainersSection",
+			"$HTMLSection",
+			"$ClipartSection",
+			"$DrawingToolsSection",
+			"$AppOtherSection"
+		],
+		"$desktopSections":[
+			"$ViewsSection",
+			"$HeadingSection",
+			"$ContainersSection",
+			"$ListsSection",
+			"$ControlsSection",
+			"$HTMLSection",
+			"$ClipartSection",
+			"$DrawingToolsSection",
+			"$AppOtherSection"
+		],
+		"$sketchSections":[
+			"$DrawingToolsSection",
+			"$ClipartSection",
+			"$ControlsSection",
+			"$ContainersSection",
+			"$HTMLSection",
+			"$HeadingSection",
+			"$ListsSection",
+			"$SketchOtherSection"
+		],
+        "$sketchExcludes": [
+            "dojox.mobile.ScrollableView",
+            "dojox.mobile.SwapView",
+            "dojox.mobile.View"
+        ]
+	},
+	"_COMMENT11_":"Should have one each for mobile, desktop, sketchhifi, sketchlofi",
+	"_COMMENT12_":"For each preset, collections is list of each widget collection in order of precedence",
+	"_COMMENT13_":"and sections is the array of sections for this preset (or $desktopSections)",
+	"presets":{
+		"mobile":{
+			"collections":[
+				{ "id":"dojoxmobile", "show":true },
+				{ "id":"dijit", "show":false },
+				{ "id":"html", "show":true },
+				{ "id":"clipart", "show":true },
+				{ "id":"shapes", "show":true }
+			],
+			"sections":"$mobileSections"
+		},
+		"desktop":{
+			"collections":[
+				{ "id":"dijit", "show":true },
+				{ "id":"dojoxmobile", "show":false },
+				{ "id":"html", "show":true },
+				{ "id":"clipart", "show":true },
+				{ "id":"shapes", "show":true }
+			],
+			"sections":"$desktopSections"
+		},
+		"sketchhifi":{
+			"collections":[
+				{ "id":"shapes", "show":true },
+				{ "id":"clipart", "show":true },
+				{ "id":"dijit", "show":true },
+				{ "id":"dojoxmobile", "show":true },
+				{ "id":"html", "show":true }
+			],
+			"sections":"$sketchSections",
+			"exclude":"$sketchExcludes"
+		},
+		"sketchlofi":{
+			"collections":[
+				{ "id":"shapes", "show":true },
+				{ "id":"clipart", "show":true },
+				{ "id":"dijit", "show":true },
+				{ "id":"dojoxmobile", "show":false },
+				{ "id":"html", "show":true }
+			],
+			"sections":"$sketchSections",
+			"exclude":"$sketchExcludes"
+		}
+	}
+}

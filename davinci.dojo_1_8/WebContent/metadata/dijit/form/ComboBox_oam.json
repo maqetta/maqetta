@@ -219,10 +219,10 @@
     "content": "<select></select>",
     "title": {
         "type": "text/html",
-        "value": "<p>A widget to transfer values through source and target Wires</p>"
+        "value": "<p>Auto-completing text box\n</p>"
     },
     "description": {
         "type": "text/html",
-        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+        "value": "<p>The drop down box&#39;s values are populated from an class called\na data provider, which returns a list of values based on the characters\nthat the user has typed into the input box.\nIf OPTION tags are used as the data provider via markup,\nthen the OPTION tag&#39;s child text node is used as the widget value\nwhen selected.  The OPTION tag&#39;s value attribute is ignored.\nTo set the default value when using OPTION tags, specify the selected\nattribute on 1 of the child OPTION tags.\n\n</p>\n<p>Some of the options to the ComboBox are actually arguments to the data\nprovider.</p>"
     }
 }

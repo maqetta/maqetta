@@ -301,6 +301,12 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 							if(section.subsections && section.subsections.length){
 								var subsections = section.subsections;
 								for(var sub=0; sub < subsections.length; sub++){
+									if(typeof subsections[sub] == 'string'){
+										var subsectionObj = this._widgetPalette.defs ? this._widgetPalette.defs[subsections[sub]] : undefined;
+										if(subsectionObj){
+											subsections[sub] = dojo.clone(subsectionObj);
+										}
+									}
 									var subsection = subsections[sub];
 									if(subsection.includes && subsection.includes.indexOf("$$AllOthers$$")>=0){
 										catchAllSection = subsection;

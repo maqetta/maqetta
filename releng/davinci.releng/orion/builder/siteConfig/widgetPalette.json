@@ -9,97 +9,104 @@
 	"_COMMENT7_":"otherwise the string holds a tag, which causes all widgets that match tag to share that item",
 	"_COMMENT8_":"if an array, then it holds a list of strings, each of which can start with type: (widget type) or a tag",
 	"defs":{
+		"$ClipartSection_Arrows":{
+			"id":"Arrows",
+			"name": "Arrows",
+			"includes":[
+				"ArrowDown",
+				"ArrowLeft",
+				"ArrowRight",
+				"ArrowUp"
+			]
+		},
+		"$ClipartSection_Community":{
+			"id":"Community",
+			"name": "Community",
+			"includes":[
+				"Facebook",
+				"Rss",
+				"Twitter"
+			]
+		},
+		"$ClipartSection_DeviceSilhouettes":{
+			"id":"DeviceSilhouettes",
+			"name": "Device Silhouettes",
+			"includes":[
+				"Android_340x480",
+				"Android_480x800",
+				"AndroidTablet",
+				"Blackberry",
+				"iPad",
+				"iPhone"
+			]
+		},
+		"$ClipartSection_Media":{
+			"id":"Media",
+			"name": "Media",
+			"includes":[
+				"Camera",
+				"Chat",
+				"Image",
+				"Map",
+				"Microphone",
+				"PlayControl",
+				"StreetMap",
+				"VideoCamera",
+				"VideoPlayer"
+			]
+		},
+		"$ClipartSection_UserInterfaceControls":{
+			"id":"UserInterfaceControls",
+			"name": "User Interface Controls",
+			"includes":[
+				"FormattingToolbox",
+				"HScrollBar",
+				"HSplit",
+				"SpinInput",
+				"VScrollBar",
+				"VSplit"
+			]
+		},
+		"$ClipartSection_UserInterfaceIcons":{
+			"id":"UserInterfaceIcons",
+			"name": "User Interface Icons",
+			"includes":[
+				"Close",
+				"Help",
+				"Home",
+				"Lock",
+				"Mail",
+				"Minus",
+				"Next",
+				"Plus",
+				"Previous",
+				"Print",
+				"Search",
+				"ShoppingCart",
+				"Trash"
+			]
+		},
+		"$ClipartSection_Other":{
+			"id":"Other",
+			"name": "Other",
+			"includes":[
+				"Browser",
+				"Person",
+				"ProfilePicture",
+				"X"
+			]
+		},
 		"$ClipartSection":{
 			"id":"Clipart",
 			"name": "Clip Art",
 			"subsections":[
-				{
-					"id":"Arrows",
-					"name": "Arrows",
-					"includes":[
-						"ArrowDown",
-						"ArrowLeft",
-						"ArrowRight",
-						"ArrowUp"
-					]
-				},
-				{
-					"id":"Community",
-					"name": "Community",
-					"includes":[
-						"Facebook",
-						"Rss",
-						"Twitter"
-					]
-				},
-				{
-					"id":"DeviceSilhouettes",
-					"name": "Device Silhouettes",
-					"includes":[
-						"Android_340x480",
-						"Android_480x800",
-						"AndroidTablet",
-						"Blackberry",
-						"iPad",
-						"iPhone"
-					]
-				},
-				{
-					"id":"Media",
-					"name": "Media",
-					"includes":[
-						"Camera",
-						"Chat",
-						"Image",
-						"Map",
-						"Microphone",
-						"PlayControl",
-						"StreetMap",
-						"VideoCamera",
-						"VideoPlayer"
-					]
-				},
-				{
-					"id":"User Interface Controls",
-					"name": "User Interface Controls",
-					"includes":[
-						"FormattingToolbox",
-						"HScrollBar",
-						"HSplit",
-						"SpinInput",
-						"VScrollBar",
-						"VSplit"
-					]
-				},
-				{
-					"id":"User Interface Icons",
-					"name": "User Interface Icons",
-					"includes":[
-						"Close",
-						"Help",
-						"Home",
-						"Lock",
-						"Mail",
-						"Minus",
-						"Next",
-						"Plus",
-						"Previous",
-						"Print",
-						"Search",
-						"ShoppingCart",
-						"Trash"
-					]
-				},
-				{
-					"id":"Other",
-					"name": "Other",
-					"includes":[
-						"Browser",
-						"Person",
-						"ProfilePicture",
-						"X"
-					]
-				}
+				"$ClipartSection_Arrows",
+				"$ClipartSection_Community",
+				"$ClipartSection_DeviceSilhouettes",
+				"$ClipartSection_Media",
+				"$ClipartSection_UserInterfaceControls",
+				"$ClipartSection_UserInterfaceIcons",
+				"$ClipartSection_Other"
 			]
 		},
 		"$DrawingToolsSection":{
@@ -135,12 +142,9 @@
 				"ToolBarButton"
 			]
 		},
-		"$ContainersSection":{
-			"id":"Containers",
-			"name": "Containers",
-			"_COMMENT1_":"Desktop and mobile containers",
-			"_COMMENT2_":"Note that default desktop preset only include desktop widgets",
-			"_COMMENT3_":"and mobile preset only include mobile widgets",
+		"$ContainersSection_Dojo":{
+			"id":"ContainersSection_Dojo",
+			"name": "Dojo",
 			"includes":[
 				["AccordionContainer","Accordion"],
 				"BorderContainer",
@@ -155,11 +159,28 @@
 				"ScrollablePane",
 				"TabContainer",
 				"TitlePane",
-				"ToolBar",
+				"ToolBar"
+			]
+		},
+		"$ContainersSection_HTML":{
+			"id":"ContainersSection_HTML",
+			"name": "HTML",
+			"includes":[
 				"<a>",
 				"<div>",
 				"<span>",
 				"<table>"
+			]
+		},
+		"$ContainersSection":{
+			"id":"Containers",
+			"name": "Containers",
+			"_COMMENT1_":"Desktop and mobile containers",
+			"_COMMENT2_":"Note that default desktop preset only include desktop widgets",
+			"_COMMENT3_":"and mobile preset only include mobile widgets",
+			"subsections":[
+				"$ContainersSection_Dojo",
+				"$ContainersSection_HTML"
 			]
 		},
 		"$ListsSection":{
@@ -176,185 +197,203 @@
 				"ListItem"
 			]
 		},
+		"$ControlsSection_Buttons":{
+			"id":"Buttons",
+			"name": "Buttons",
+			"includes":[
+				["Button","<button>"],
+				"ComboButton",
+				"DropDownButton",
+				"ToggleButton"
+			]
+		},
+		"$ControlsSection_CheckboxesRadios":{
+			"id":"CheckboxesRadios",
+			"name": "Checkboxes, RadioButtons, Switch",
+			"includes":[
+				"CheckBox",
+				"RadioButton",
+				"Switch",
+				"TriStateCheckBox"
+			]
+		},
+		"$ControlsSection_IconContainer":{
+			"id":"IconContainer",
+			"name": "IconContainer",
+			"_COMMENT1_":"Mobile-only",
+			"includes":[
+				"IconContainer",
+				"IconItem",
+				"IconMenu",
+				"IconMenuItem"
+			]
+		},
+		"$ControlsSection_Pickers":{
+			"id":"Pickers",
+			"name": "Pickers",
+			"includes":[
+				"Carousel",
+				"CarouselItem",
+				"DataCarousel",
+				"DatePicker",
+				"SpinWheel",
+				"SpinWheelSlot",
+				"SpinWheelDatePicker",
+				"SpinWheelTimePicker",
+				"TimePicker",
+				"ValuePicker",
+				"ValuePickerSlot",
+				"ValuePickerDatePicker",
+				"ValuePickerTimePicker"
+			]
+		},
+		"$ControlsSection_Select":{
+			"id":"Select",
+			"name": "Select",
+			"includes":[
+				"ComboBox",
+				["DropDownSelect","<select>"],
+				"FilteringSelect",
+				"MultiSelect",
+				"Select",
+				"<select>"
+			]
+		},
+		"$ControlsSection_SlidersSpinners":{
+			"id":"SlidersSpinners",
+			"name": "Sliders, Spinners",
+			"includes":[
+				"HorizontalSlider",
+				"NumberSpinner",
+				"Slider",
+				"TimeSpinner",
+				"VerticalSlider"
+			]
+		},
+		"$ControlsSection_TextBox":{
+			"id":"TextBox",
+			"name": "TextBox",
+			"includes":[
+				["TextBox","<input>"],
+				"ComboBox",
+				"CurrencyTextBox",
+				"DateTextBox",
+				"DateTimeTextBox",
+				"NumberTextBox",
+				"SimpleTextarea",
+				["Textarea","TextArea","ExpandingTextArea"],
+				"ValidationTextBox",
+				"TimeTextBox"
+			]
+		},
+		"$ControlsSection_Toolbars":{
+			"id":"Toolbars",
+			"name": "Toolbars, ButtonBars",
+			"includes":[
+				"TabBar",
+				"TabBarButton",
+				"Toolbar"
+			]
+		},
+		"$ControlsSection_Other":{
+			"id":"Other",
+			"name": "Other",
+			"includes":[
+				"ProgressIndicator",
+				"Rating",
+				"SearchBox"
+			]
+		},
 		"$ControlsSection":{
 			"id":"Controls",
 			"name": "Controls",
 			"_COMMENT1_":"each section can either have an array of subsections or an array of includes",
 			"subsections":[
-				{
-					"id":"Buttons",
-					"name": "Buttons",
-					"includes":[
-						["Button","<button>"],
-						"ComboButton",
-						"DropDownButton",
-						"ToggleButton"
-					]
-				},
-				{
-					"id":"CheckboxesRadios",
-					"name": "Checkboxes, RadioButtons, Switch",
-					"includes":[
-						"CheckBox",
-						"RadioButton",
-						"Switch",
-						"TriStateCheckBox"
-					]
-				},
-				{
-					"id":"IconContainer",
-					"name": "IconContainer",
-					"_COMMENT1_":"Mobile-only",
-					"includes":[
-						"IconContainer",
-						"IconItem",
-						"IconMenu",
-						"IconMenuItem"
-					]
-				},
-				{
-					"id":"Pickers",
-					"name": "Pickers",
-					"includes":[
-						"Carousel",
-						"CarouselItem",
-						"DataCarousel",
-						"DatePicker",
-						"SpinWheel",
-						"SpinWheelSlot",
-						"SpinWheelDatePicker",
-						"SpinWheelTimePicker",
-						"TimePicker",
-						"ValuePicker",
-						"ValuePickerSlot",
-						"ValuePickerDatePicker",
-						"ValuePickerTimePicker"
-					]
-				},
-				{
-					"id":"Select",
-					"name": "Select",
-					"includes":[
-						"ComboBox",
-						["DropDownSelect","<select>"],
-						"FilteringSelect",
-						"MultiSelect",
-						"<select>"
-					]
-				},
-				{
-					"id":"SlidersSpinners",
-					"name": "Sliders, Spinners",
-					"includes":[
-						"HorizontalSlider",
-						"NumberSpinner",
-						"Slider",
-						"TimeSpinner",
-						"VerticalSlider"
-					]
-				},
-				{
-					"id":"TextBox",
-					"name": "TextBox",
-					"includes":[
-						["TextBox","<input>"],
-						"ComboBox",
-						"CurrencyTextBox",
-						"DateTextBox",
-						"NumberTextBox",
-						"SimpleTextarea",
-						["Textarea","TextArea","ExpandingTextArea"],
-						"ValidationTextBox",
-						"TimeTextBox"
-					]
-				},
-				{
-					"id":"Toolbars",
-					"name": "Toolbars, Tabbars",
-					"includes":[
-						"TabBar",
-						"TabBarButton",
-						"Toolbar"
-					]
-				},
-				{
-					"id":"Other",
-					"name": "Other",
-					"includes":[
-						"ProgressIndicator",
-						"SearchBox"
-					]
-				}
+				"$ControlsSection_Buttons",
+				"$ControlsSection_CheckboxesRadios",
+				"$ControlsSection_IconContainer",
+				"$ControlsSection_Pickers",
+				"$ControlsSection_Select",
+				"$ControlsSection_SlidersSpinners",
+				"$ControlsSection_TextBox",
+				"$ControlsSection_Toolbars",
+				"$ControlsSection_Other"
+			]
+		},
+		"$HTMLSection_Common":{
+ 			"id":"Common",
+			"name": "Common",
+			"includes":[
+				"<a>",
+				"<div>",
+				"<label>",
+				"<span>"
+			]
+		},
+		"$HTMLSection_Forms":{
+			"id":"Forms",
+			"name": "Forms",
+			"includes":[
+				"<button>",
+				"<fieldset>",
+				"<form>",
+				"<input>",
+				"<select>",
+				"<textarea>"
+			]
+		},
+		"$HTMLSection_Headers":{
+			"id":"Headers",
+			"name": "Headers",
+			"includes":[
+				"<h1>",
+				"<h2>",
+				"<h3>"
+			]
+		},
+		"$HTMLSection_ImagesMediaIframes":{
+			"id":"ImagesMediaIframes",
+			"name": "Images, Media, Iframes",
+			"includes":[
+				"<audio>",
+				"<embed>",
+				"<img>",
+				"<iframe>",
+				"<video>"
+			]
+		},
+		"$HTMLSection_ParagraphsFormatting":{
+			"id":"ParagraphsFormatting",
+			"name": "Paragraphs, Breaks, Rules",
+			"includes":[
+				"<b>",
+				"<br>",
+				"<em>",
+				"<hr>",
+				"<i>",
+				"<p>",
+				"<s>",
+				"<strong>",
+				"<u>"
+			]
+		},
+		"$HTMLSection_Tables":{
+			"id":"Tables",
+			"name": "Tables",
+			"includes":[
+				"<table>"
 			]
 		},
 		"$HTMLSection":{
 			"id":"HTML",
 			"name": "HTML",
 			"subsections":[
-				{
-		 			"id":"Common",
-					"name": "Common",
-					"includes":[
-						"<a>",
-						"<div>",
-						"<label>",
-						"<span>"
-					]
-				},
-				{
-					"id":"Forms",
-					"name": "Forms",
-					"includes":[
-						"<button>",
-						"<fieldset>",
-						"<form>",
-						"<input>",
-						"<select>",
-						"<textarea>"
-					]
-				},
-				{
-					"id":"Headers",
-					"name": "Headers",
-					"includes":[
-						"<h1>",
-						"<h2>",
-						"<h3>"
-					]
-				},
-				{
-					"id":"ImagesMediaIframes",
-					"name": "Images, Media, Iframes",
-					"includes":[
-						"<audio>",
-						"<embed>",
-						"<img>",
-						"<iframe>",
-						"<video>"
-					]
-				},
-				{
-					"id":"ParagraphsFormatting",
-					"name": "Paragraphs, Breaks, Rules",
-					"includes":[
-						"<b>",
-						"<br>",
-						"<em>",
-						"<hr>",
-						"<i>",
-						"<p>",
-						"<s>",
-						"<strong>",
-						"<u>"
-					]
-				},
-				{
-					"id":"Tables",
-					"name": "Tables",
-					"includes":[
-						"<table>"
-					]
-				}
+				"$HTMLSection_Common",
+				"$HTMLSection_Forms",
+				"$HTMLSection_Headers",
+				"$HTMLSection_ImagesMediaIframes",
+				"$HTMLSection_ParagraphsFormatting",
+				"$HTMLSection_Tables"
 			]
 		},
 		"$AppOtherSection":{
@@ -364,7 +403,6 @@
 				"Calendar",
 				"ColorPalette",
 				"GridX",
-				"Rating",
 				"RichText",
 				"StickyNote",
 				"Tree",
@@ -378,7 +416,6 @@
 				"Calendar",
 				"ColorPalette",
 				"GridX",
-				"Rating",
 				"RichText",
 				"StickyNote",
 				"Tree",

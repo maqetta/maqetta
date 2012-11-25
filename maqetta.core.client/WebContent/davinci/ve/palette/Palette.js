@@ -48,6 +48,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	_displayShowValue: 'block', // either block or inline-block, depending on editorPrefs.widgetPaletteLayout
 	_presetClassNamePrefix: 'maqPaletteSection_',	// Only used for debugging purposes
 	_presetSections: {},	// Assoc array of all paletteItem objects, indexed by [preset][section]
+	_presetCreated:{},	// Whether the given preset has created its PaletteFolder and PaletteItems
 	raisedItems: [],	// PaletteItems that have "raised" styling
 	sunkenItems: [],	// PaletteItems that have "sunken" styling
 	moreItems: [],	// PaletteItems that have "more" tooltip dialog showing
@@ -105,11 +106,14 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 						customSection = dojo.clone(this._userWidgetSection);
 						customSection.preset = this._presetSections[presetId];
 						customSection.presetId = presetId;
+						customSection.items = [];
 						sections.push(customSection);
-						var orderedDescriptors = [customSection];
-						this._generateCssRules(orderedDescriptors);
-						this._createPalette(customSection);
-						customSection._created = true;
+						if(this._presetCreated[presetId]){
+							var orderedDescriptors = [customSection];
+							this._generateCssRules(orderedDescriptors);
+							this._createPalette(customSection);
+							customSection._created = true;
+						}
 					}
 					var includesValue = 'type:' + item.type;
 					if(customSection.includes.indexOf(includesValue) < 0){
@@ -117,6 +121,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 						item.$library = $library;
 						item.section = customSection;
 						item._paletteItemGroup = this._paletteItemGroupCount++;
+						customSection.items.push(item);
 						var name = 'custom';
 						var folder = null;
 						var children = this.getChildren();
@@ -737,6 +742,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		}
 		var context = Runtime.currentEditor.getContext();
 		var comptype = context.getCompType();
+		this._presetCreated[comptype] = true;
 		var presetClassName = this._presetClassNamePrefix + comptype;	// Only used for debugging purposes
 
 		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', Workbench.getProject());

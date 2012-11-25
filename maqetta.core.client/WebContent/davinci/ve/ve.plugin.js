@@ -576,7 +576,7 @@ return {
 				"showPossibleParents": false,
                 "cssOverrideWarn": true,
                 "absoluteWidgetsZindex": 900,
-                "widgetPaletteLayout": "list"	// FIXME: change to "icons"
+                "widgetPaletteLayout": "icons"
             }
         }
     ],

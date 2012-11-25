@@ -752,7 +752,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		var presetClassName = this._presetClassNamePrefix + comptype;	// Only used for debugging purposes
 
 		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', Workbench.getProject());
-		if(editorPrefs.widgetPaletteLayout == 'icons'){
+		if(!editorPrefs.widgetPaletteLayout || editorPrefs.widgetPaletteLayout == 'icons'){
 			dojo.addClass(this.domNode, "paletteLayoutIcons");
 			this._displayShowValue = 'inline-block';
 		}else{

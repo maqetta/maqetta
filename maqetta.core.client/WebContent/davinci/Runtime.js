@@ -101,7 +101,7 @@ var Runtime = {
 	},
 
 	getDefaultThemeSet: function() {
-		this.getSiteConfigData("defaultThemeSet");
+		return this.getSiteConfigData("defaultThemeSet");
 	},
 	
 	/*

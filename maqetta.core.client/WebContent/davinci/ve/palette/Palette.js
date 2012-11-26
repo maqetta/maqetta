@@ -532,8 +532,8 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 
 		var input = dojo.doc.createElement("input");
 		div.appendChild(input);
-		this.domNode.appendChild(div);
-
+		this.toolbarDiv.appendChild(div);
+		
 		var searchString =  this._resource["filter"]+"...";
 		this.filterField = new TextBox({style: "width: 99%", placeHolder: searchString}, input);
 		dojo.connect(this.filterField, "onKeyUp", this, "_filter");

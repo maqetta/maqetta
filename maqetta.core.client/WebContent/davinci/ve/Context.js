@@ -7,6 +7,7 @@ define([
 	"dojo/Deferred",
 	"dojo/promise/all",
 	"dojo/_base/connect",
+	"dojo/topic",
 	"dojo/window",
     'system/resource',
     "../UserActivityMonitor",
@@ -47,6 +48,7 @@ define([
 	Deferred,
 	all,
 	connect,
+	Topic,
 	windowUtils,
 	systemResource,
 	UserActivityMonitor,
@@ -2364,6 +2366,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this._activeTool.onMouseUp(event);
 		}
 		this.blockChange(false);
+		Topic.publish("/davinci/ve/context/mouseup", event);
 	},
 
 	onMouseOver: function(event){

@@ -1,13 +1,15 @@
 define([
 	"dojo/_base/declare",
 	"dojo/_base/connect",
+	"dojo/topic",
 	"dojo/_base/array",
 	"dojo/touch",
 	"dojo/mouse", // mouse.isLeft
+	"dojo/dnd/Manager",
 	"dijit/Tree",
 	"../../Workbench",
 	"./_ToggleTreeNode",
-], function(declare, connect, array, touch, mouse, Tree, Workbench, ToggleTreeNode) {
+], function(declare, connect, Topic, array, touch, mouse, DndManager, Tree, Workbench, ToggleTreeNode) {
 
 return declare(Tree, {
 	postCreate: function() {
@@ -37,7 +39,9 @@ return declare(Tree, {
 
 		this._connect("widgetChanged", "_widgetChanged");
 		this.connect(this.domNode, touch.press, "_onMouseDown");
+		Topic.subscribe("/davinci/ve/context/mouseup", this._contextMouseUp.bind(this));
 	},
+	
 
 	/* override to allow us to control the nodes*/
 	_createTreeNode: function(/*Object*/ args) {
@@ -198,6 +202,20 @@ return declare(Tree, {
 
 	destroy: function(){
 		this._handles.forEach(connect.disconnect);
+	},
+	
+	/** 
+	 * This gets called whenever there is a mouseUp over the canvas.
+	 * If an Outline palette DND operation is active, cancel it.
+	 * (See http://dojotoolkit.org/reference-guide/1.8/dojo/dnd.html#dojo-dnd
+	 * and search for "stopDrag" to see why that code below is the way it is.)
+	 */
+	_contextMouseUp: function(e) {
+		if(this.dndController.isDragging){
+			Topic.publish("/dnd/cancel");
+			var manager = DndManager.manager();
+			manager.stopDrag();
+		}
 	}
 });
 

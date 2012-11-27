@@ -98,6 +98,21 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		var labelContainer = a.querySelector('.paletteItemLabelContainer');
 		var label = a.querySelector('.paletteItemLabel');
 		label.appendChild(dojo.doc.createTextNode(this.displayName));
+		
+		// Insert zero-width breaking characters before each uppercase character
+		// or other break chars (e.g., underscore).
+		// Assume widget names are mixed case such as ToolBarButton
+		var displayName = label.textContent;
+		var breakChars = '_-';
+		for(var i=displayName.length-1; i>0; i--){
+			if(breakChars.indexOf(displayName[i])>=0){
+				displayName = displayName.substr(0,i+1)+'&#8203;'+displayName.substr(i+1);
+				label.innerHTML = displayName;
+			}else if(displayName[i].toLowerCase() != displayName[i]){
+				displayName = displayName.substr(0,i)+'&#8203;'+displayName.substr(i);
+				label.innerHTML = displayName;
+			}
+		}
 /*
 		a.title = this.displayName + ' (category: ' + this.category + ')';
 */

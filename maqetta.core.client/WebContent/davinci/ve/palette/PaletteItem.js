@@ -639,6 +639,14 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 			this._tooltipDialog.destroyRecursive();
 			this._tooltipDialog = null;
 		}
+	},
+	
+	//FIXME: the following logic has never been tested because currently
+	//the preference for changing between icon and list view in widget palette
+	//is unavailable
+	updateImgSrc: function(url){
+		var paletteItemImage = this.domNode.querySelector('.paletteItemImage');
+		paletteItemImage.src = url;
 	}
 });
 });

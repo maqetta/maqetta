@@ -137,7 +137,6 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 						if(folder){
 							folder.domNode.style.display = 'none';
 							var opt = {
-									icon: item.iconBase64 || this._getIconUri(item.icon, "ve/resources/images/file_obj.gif"),
 									displayName:
 										item.$library._maqGetString(item.type) ||
 										item.$library._maqGetString(item.name) ||
@@ -159,6 +158,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 									_paletteItemGroup: item._paletteItemGroup,
 									_paletteGroupSelected: true
 									};
+							this._setIconProperties(item, opt);
 							var newPaletteItem = this._createItem(opt,folder);
 							newPaletteItem.domNode.style.display = 'none';
 							if(comptype == presetId){
@@ -385,7 +385,6 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		        }
 
 				var opt = {
-					icon: item.iconBase64 || this._getIconUri(item.icon, "ve/resources/images/file_obj.gif"),
 					displayName:
 						item.$library._maqGetString(item.type) ||
 						item.$library._maqGetString(item.name) ||
@@ -410,6 +409,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 					_paletteGroupSelected: (item._paletteItemGroup != lastPaletteItemGroup),	// Initially, first widget in group is selected
 					_collectionName: (item.$library && item.$library.collections && item.$library.collections[item.collection] && item.$library.collections[item.collection].name)
 				};
+				this._setIconProperties(item, opt);
 				this._createItem(opt);
 				lastPaletteItemGroup = item._paletteItemGroup;
 			}, this);
@@ -636,6 +636,8 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 				}
 			}
 		}
+		//FIXME: temporary
+		opt.icon = opt.iconLarge;
 		var node = new PaletteItem(opt);
 		if(!folder){
 			this.addChild(node);
@@ -822,6 +824,20 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	},
 	
 	preferencesChanged: function() {
+		//FIXME: the following logic has never been tested because currently
+		//the preference for changing between icon and list view in widget palette
+		//is unavailable
+		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', Workbench.getProject());
+		var prop = (!editorPrefs.widgetPaletteLayout || editorPrefs.widgetPaletteLayout == 'icons') ?
+				'iconLarge' : 'icon';
+		var children = this.getChildren();
+		for(var ch=0; ch<children.length; ch++){
+			var child = children[ch];
+			if(child.declaredClass == 'davinci.ve.palette.PaletteItem'){
+				child.updateImgSrc(child[prop]);
+			}
+		}
+		
 		this.updatePaletteVisibility();
 	},
 	
@@ -890,6 +906,18 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 					&& thisPaletteItem.domNode.nextSibling._paletteItem;
 		}
 		return paletteItems;
+	},
+	
+	_setIconProperties: function(item, opt){
+		// for small icons, first look for small icons, else look for large icons, else use file_obj.gif
+		opt.icon = item.iconBase64 || (item.icon && this._getIconUri(item.icon, "ve/resources/images/file_obj.gif")) ||
+			item.iconLargeBase64 || 
+			(item.iconLarge && this._getIconUri(item.iconLarge, "ve/resources/images/file_obj.gif")) ||
+			this._getIconUri(item.icon, "ve/resources/images/file_obj.gif");
+		// for large icons, first look for small icons, else look for large icons, else use file_obj.gif
+		opt.iconLarge = item.iconLargeBase64 || 
+			(item.iconLarge && this._getIconUri(item.iconLarge, "ve/resources/images/file_obj.gif")) ||
+			item.iconBase64 || this._getIconUri(item.icon, "ve/resources/images/file_obj.gif");
 	},
 	
 	onDragStart: function(e){

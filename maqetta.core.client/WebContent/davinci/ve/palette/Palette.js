@@ -157,6 +157,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 									PaletteFolderSection: folder,
 									PaletteFolderSubsection: null,
 									_paletteItemGroup: item._paletteItemGroup,
+									_paletteGroupSelected: true
 									};
 							var newPaletteItem = this._createItem(opt,folder);
 							newPaletteItem.domNode.style.display = 'none';
@@ -375,6 +376,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	 */
 	_createPaletteItemsForComponent: function(component, params){
 		if(component.items){
+			var lastPaletteItemGroup = null;
 			dojo.forEach(component.items, function(item){
 		        // XXX For now, we want to keep some items hidden. If item.hidden is set, then don't
 		        //  add this item to palette (see bug 5626).
@@ -405,9 +407,11 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 					PaletteFolderSection: params.PaletteFolderSection,
 					PaletteFolderSubsection: params.PaletteFolderSubsection,
 					_paletteItemGroup: item._paletteItemGroup,
+					_paletteGroupSelected: (item._paletteItemGroup != lastPaletteItemGroup),	// Initially, first widget in group is selected
 					_collectionName: (item.$library && item.$library.collections && item.$library.collections[item.collection] && item.$library.collections[item.collection].name)
 				};
 				this._createItem(opt);
+				lastPaletteItemGroup = item._paletteItemGroup;
 			}, this);
 		}
 	},
@@ -544,8 +548,9 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		var context = Runtime.currentEditor.getContext();
 		var comptype = context.getCompType();
 		var value = this.filterField.get("value"),
-    	re = new RegExp(value, 'i'),
-      action;
+		re = new RegExp(value, 'i'),
+		action,
+		filterWidgetList = {};
 
       // reset to default state -- only show category headings
 		var displayShowValue = this._displayShowValue;
@@ -566,8 +571,13 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	    		// do nothing
 	    	} else if (child.declaredClass === 'davinci.ve.palette.PaletteFolder') {
 	    		dojo.style(child.domNode, 'display', 'none');
-	    	} else if (child.name && re.test(child.name)) {
-	    		dojo.style(child.domNode, 'display', displayShowValue);
+	    	} else if (child.name && re.test(child.name)){
+	    		if(!filterWidgetList[child.type] && child.presetId == comptype && child._paletteGroupSelected) {
+	    			dojo.style(child.domNode, 'display', displayShowValue);
+	    		}else{
+					dojo.style(child.domNode, 'display', 'none');
+	    		}
+	    		filterWidgetList[child.type] = true;
 	    	} else {
 	    		dojo.style(child.domNode, 'display', 'none');
 	    	}
@@ -634,10 +644,10 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		}
 		if(opt.PaletteFolderSubsection){
 			opt.PaletteFolderSubsection._children.push(node);
-			node.domNode.style.display = opt.PaletteFolderSubsection._isOpen ? this._displayShowValue : 'none';
+			node.domNode.style.display = (opt.PaletteFolderSubsection._isOpen && node.__paletteGroupSelected) ? this._displayShowValue : 'none';
 		}else if(opt.PaletteFolderSection){
 			opt.PaletteFolderSection._children.push(node);
-			node.domNode.style.display = opt.PaletteFolderSection._isOpen ? this._displayShowValue : 'none';
+			node.domNode.style.display = (opt.PaletteFolderSection._isOpen && node.__paletteGroupSelected) ? this._displayShowValue : 'none';
 		}
 		var nodeToClone = Query('.paletteItemImage', node.domNode)[0];
 		var ds = new DragSource(node.domNode, "component", node, nodeToClone);

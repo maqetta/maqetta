@@ -434,7 +434,14 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 							if(newPaletteItem){
 								for(var j=0; j<paletteItemsSameGroup.length; j++){
 									var paletteItemInner = paletteItemsSameGroup[j];
-									paletteItemInner.domNode.style.display = (paletteItemInner == newPaletteItem) ? this.palette._displayShowValue : 'none';
+									if(paletteItemInner == newPaletteItem){
+										paletteItemInner._paletteGroupSelected = true;
+										paletteItemInner.domNode.style.display = this.palette._displayShowValue;
+										
+									}else{
+										paletteItemInner._paletteGroupSelected = false;
+										paletteItemInner.domNode.style.display = 'none';
+									}
 								}
 								newPaletteItem.sunken(newPaletteItem.domNode);
 							}

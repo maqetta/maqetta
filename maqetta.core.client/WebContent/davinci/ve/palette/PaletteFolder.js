@@ -91,8 +91,7 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 		var child = children[idx];
 		var paletteItemGroup = child._paletteItemGroup;
 		do{
-			//FIXME: temporarily pick the first one
-			if(idx == startIndex){
+			if(child._paletteGroupSelected){
 				obj.selectedIndex = idx;
 			}
 			idx++;
@@ -101,6 +100,11 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 			}
 			child = children[idx];
 		}while(child.declaredClass == "davinci.ve.palette.PaletteItem" && child._paletteItemGroup === paletteItemGroup);
+		if(typeof obj.selectedIndex != 'number'){
+			// If no children are flagged as selected, flag the first one as selected
+			obj.selectedIndex = startIndex;
+			children[startIndex]._paletteGroupSelected = true;
+		}
 		obj.endIndex = idx - 1;
 		return obj;
 	},

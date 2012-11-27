@@ -541,6 +541,8 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	},
 	
 	_filter: function(e) {
+		var context = Runtime.currentEditor.getContext();
+		var comptype = context.getCompType();
 		var value = this.filterField.get("value"),
     	re = new RegExp(value, 'i'),
       action;
@@ -549,8 +551,11 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		var displayShowValue = this._displayShowValue;
 	    function resetWidgets(child) {
 	    	if (child.declaredClass != 'dijit.form.TextBox') {
-	    		var style = child.declaredClass === 'davinci.ve.palette.PaletteFolder' ?
-	    			'block' : 'none';
+	    		var style = (child.declaredClass === 'davinci.ve.palette.PaletteFolder' && 
+	    					child.presetId == comptype && 
+	    					child._children.length > 0 &&
+	    					(child._type == 'simple' || child._type == 'subsection_container'))
+	    			? 'block' : 'none';
 	    		dojo.style(child.domNode, 'display', style);
 	    	}
 	    }

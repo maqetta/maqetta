@@ -1088,6 +1088,7 @@ davinci_top_bar .dijitButtonNode {
 	font-size: 10px;
 	padding-left:4px;
 	padding-bottom: 3px;
+	margin-right: 10px;
 }
 .paletteItemAlternatesContainer {
 }
@@ -1245,6 +1246,9 @@ davinci_top_bar .dijitButtonNode {
     padding-left: 1px;
 }
 
+.maqWidgetsFiltered {
+	padding-top: 16px;
+}
 .maqWidgetsCategory {
     margin-left: 1em;
     color: grey;

@@ -646,10 +646,10 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		}
 		if(opt.PaletteFolderSubsection){
 			opt.PaletteFolderSubsection._children.push(node);
-			node.domNode.style.display = (opt.PaletteFolderSubsection._isOpen && node.__paletteGroupSelected) ? this._displayShowValue : 'none';
+			node.domNode.style.display = (opt.PaletteFolderSubsection._isOpen && node._paletteGroupSelected) ? this._displayShowValue : 'none';
 		}else if(opt.PaletteFolderSection){
 			opt.PaletteFolderSection._children.push(node);
-			node.domNode.style.display = (opt.PaletteFolderSection._isOpen && node.__paletteGroupSelected) ? this._displayShowValue : 'none';
+			node.domNode.style.display = (opt.PaletteFolderSection._isOpen && node._paletteGroupSelected) ? this._displayShowValue : 'none';
 		}
 		var nodeToClone = Query('.paletteItemImage', node.domNode)[0];
 		var ds = new DragSource(node.domNode, "component", node, nodeToClone);

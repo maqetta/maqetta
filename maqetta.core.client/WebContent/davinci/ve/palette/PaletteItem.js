@@ -89,6 +89,14 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		if(this.presetClassName){	// Only used for debugging purposes
 			domClass.add(div, this.presetClassName);
 		}
+		
+		// For Selenium
+		var selType = this.type + '__' + this.presetId + '__' + this.PaletteFolderSection.section.id;
+		if(this.PaletteFolderSubsection){
+			selType += '__' + this.PaletteFolderSubsection.subsection.id;
+		}
+		dojo.attr(div, "selType", selType);
+		
 		var a = div.firstChild;
 		dojo.attr(a, "tabIndex", "0");
 		a.onclick = this.palette.nop; // to avoid firing the onbeforeunload event (dojo.event.connect doesn't work for this purpose)

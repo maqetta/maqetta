@@ -970,11 +970,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				this._getDojoScriptValues(config, subs);
 
 				if (this._bootstrapModules) {
-					var mods = '';
-					this._bootstrapModules.split(',').forEach(function(mod) {
-						mods += ',\'' + mod + '\'';
-					});
-					subs.additionalModules = mods;
+					subs.additionalModules = ',' + this._bootstrapModules.split(',').map(function(mid) {
+						return '\'' + mid + '\'';
+					}).join(',');
 				}
 			}
 

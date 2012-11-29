@@ -979,11 +979,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 
 			if(source.themeCssFiles) { // css files need to be added to doc before body content
-				subs.themeCssFiles = '' +
-				source.themeCssFiles.map(function(file) {
+				subs.themeCssFiles = source.themeCssFiles.map(function(file) {
 					return '<link rel="stylesheet" type="text/css" href="' + file + '">';
-				}).join() +
-				'';
+				}).join('');
 			}
 
 			window["loading" + this._id] = function(parser, htmlUtil) {

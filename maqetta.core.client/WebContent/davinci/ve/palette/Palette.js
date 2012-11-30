@@ -574,12 +574,12 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	    	} else if (child.declaredClass === 'davinci.ve.palette.PaletteFolder') {
 	    		dojo.style(child.domNode, 'display', 'none');
 	    	} else if (child.name && re.test(child.name)){
-	    		if(!filterWidgetList[child.type] && child.presetId == comptype && child._paletteGroupSelected) {
+	    		if(child.presetId == comptype && child._paletteGroupSelected && !filterWidgetList[child.type]) {
 	    			dojo.style(child.domNode, 'display', displayShowValue);
+		    		filterWidgetList[child.type] = true;
 	    		}else{
 					dojo.style(child.domNode, 'display', 'none');
 	    		}
-	    		filterWidgetList[child.type] = true;
 	    	} else {
 	    		dojo.style(child.domNode, 'display', 'none');
 	    	}

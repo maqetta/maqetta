@@ -3,6 +3,7 @@ define([
     "dojo/_base/lang",
 	"dojo/_base/connect",
 	"dojo/query",
+	"dojo/dom-class",
 	"dojo/Deferred",
 	"dijit/focus",
 	"dijit/_WidgetBase",
@@ -23,6 +24,7 @@ define([
 	Lang,
 	connect,
 	Query,
+	domClass,
 	Deferred,
 	FocusUtils,
 	WidgetBase,
@@ -651,7 +653,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 			opt.PaletteFolderSection._children.push(node);
 			node.domNode.style.display = (opt.PaletteFolderSection._isOpen && node._paletteGroupSelected) ? this._displayShowValue : 'none';
 		}
-		var nodeToClone = Query('.paletteItemImage', node.domNode)[0];
+		var nodeToClone = Query('.paletteItemImageContainer', node.domNode)[0];
 		var ds = new DragSource(node.domNode, "component", node, nodeToClone);
 		ds.targetShouldShowCaret = true;
 		ds.returnCloneOnFailure = false;
@@ -937,6 +939,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		// posting a list of possible parent widgets for the new widget
 		// and register the dragClongDiv with Context
 		if(e._dragClone){
+			domClass.add(e._dragClone, 'paletteDragContainer');
 			dojo.create('div',{className:'maqCandidateParents'}, e._dragClone);
 		}
 		//FIXME: Attach dragClone and event listeners to tool instead of context?

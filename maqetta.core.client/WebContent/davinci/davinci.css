@@ -2165,6 +2165,12 @@ td.welcome_section_cell {
 	line-height: 1.5em;
 }
 
+.paletteDragContainer {
+}
+.paletteDragContainer .paletteItemImage {
+	width:30px;
+	height:30px;
+}
 .maqParentListDiv {
 	position:absolute;
 	z-index:1000000;

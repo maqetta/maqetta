@@ -25,5 +25,9 @@
 			"description": "Defines the number of visible options in the drop-down list",
 		}
 	},
-	"content": "<select></select>"
+	"content": "<select></select>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>The HTML select element represents a control for selecting amongst a set of options, usually presented as a menu of choices.</p>"
+	}
 }

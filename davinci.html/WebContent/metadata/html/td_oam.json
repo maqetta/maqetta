@@ -136,5 +136,9 @@
 			"hidden": true
 		}
 	},
-	"content": "<td></td>"
+	"content": "<td></td>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>The HTML td element represents a data cell within an HTML table.</p>"
+	}
 }

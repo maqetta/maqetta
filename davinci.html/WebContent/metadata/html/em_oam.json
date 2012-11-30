@@ -8,5 +8,9 @@
 			"datatype": "string"
 		}
 	},
-	"content": "<em></em>"
+	"content": "<em></em>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>HTML element for indicating text emphasis (e.g., italics).</p>"
+	}
 }

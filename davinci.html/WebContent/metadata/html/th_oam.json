@@ -136,5 +136,9 @@
 			"hidden": true
 		}
 	},
-	"content": "<th></th>"
+	"content": "<th></th>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>The HTML th element represents a header cell within an HTML table.</p>"
+	}
 }

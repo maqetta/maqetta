@@ -64,5 +64,9 @@
 			"hidden": true
 		}
 	},
-	"content": "<tr></tr>"
+	"content": "<tr></tr>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>The HTML tr element is a container for a row of cells in a table.</p>"
+	}
 }

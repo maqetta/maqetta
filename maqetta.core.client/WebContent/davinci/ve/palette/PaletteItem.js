@@ -8,6 +8,7 @@ define([
 	"dijit/focus",
 	"dijit/_WidgetBase",
 	"dojo/dom-class",
+	"dojox/html/entities",
 	"dijit/popup",
 	"dijit/Tooltip",
 	"dijit/TooltipDialog",
@@ -26,6 +27,7 @@ define([
 	FocusUtils,
 	_WidgetBase,
 	domClass,
+	Entities,
 	Popup,
 	Tooltip,
 	TooltipDialog,
@@ -115,10 +117,10 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		for(var i=displayName.length-1; i>0; i--){
 			if(breakChars.indexOf(displayName[i])>=0){
 				displayName = displayName.substr(0,i+1)+'&#8203;'+displayName.substr(i+1);
-				label.innerHTML = displayName;
+				label.innerHTML = Entities.encode(displayName);
 			}else if(displayName[i].toLowerCase() != displayName[i]){
 				displayName = displayName.substr(0,i)+'&#8203;'+displayName.substr(i);
-				label.innerHTML = displayName;
+				label.innerHTML = Entities.encode(displayName);
 			}
 		}
 /*
@@ -198,7 +200,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 				this._tooltipNode = this.domNode;
 				this._tooltipPos = domGeom.position(this.domNode, true);
 				var s = '<div class="paletteTooltip">';
-				s += '<div class="paletteTooltipCurrent"><span class="paletteTooltipCurrentWidget">' + this.displayName + '</span> <span class="paletteTooltipCurrentLibrary">(' + this._collectionName + ')</span></div>';
+				s += '<div class="paletteTooltipCurrent"><span class="paletteTooltipCurrentWidget">' + Entities.encode(this.displayName) + '</span> <span class="paletteTooltipCurrentLibrary">(' + this._collectionName + ')</span></div>';
 				var paletteItemsSameGroup = this.palette.getPaletteItemsSameGroup(this);
 				if(paletteItemsSameGroup.length > 1){
 					s += '<div class="paletteTooltipAlternates">' + '<span class="paletteTooltipAlternatesLabel">'+commonNls.alternates+': </span><span class="paletteTooltipAlternatesLibraries">';
@@ -516,16 +518,13 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 				var title = Metadata.getOamDescriptivePropertyForType(this.type, 'title');
 				var description = Metadata.getOamDescriptivePropertyForType(this.type, 'description');
 				var helpInnerContent = domConstruct.create("div", {className:"helpInnerContent"});
-				var s = this.name;
-				if(this._collectionName){
-					s += '(' + this._collectionName + ')';
-				};
 				var paletteTooltipCurrent = domConstruct.create("div", 
 						{className:"paletteTooltipCurrent" }, 
 						helpInnerContent);
 				var paletteTooltipCurrentWidget = domConstruct.create("span", 
-						{className:"paletteTooltipCurrentWidget", innerHTML:this.name },
+						{className:"paletteTooltipCurrentWidget"},
 						paletteTooltipCurrent);
+				paletteTooltipCurrentWidget.textContent = this.name;
 				if(this._collectionName){
 					var paletteTooltipCurrentLibrary = domConstruct.create("span", 
 							{className:"paletteTooltipCurrentLibrary", innerHTML:' ('+this._collectionName+')' }, 

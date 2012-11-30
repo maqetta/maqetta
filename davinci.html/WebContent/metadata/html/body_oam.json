@@ -28,5 +28,9 @@
             "src": ""
         }
     },
-    "content": ""
+    "content": "",
+	"title": {
+		"type": "text/html",
+		"value": "<p>The HTML body element represents the main content of the document.</p>"
+	}
 }

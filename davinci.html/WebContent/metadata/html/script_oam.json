@@ -12,5 +12,9 @@
 			"format": "url"
 		}
 	},
-	"content": "<script></script>"
+	"content": "<script></script>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>HTML script element, typically for inline JavaScript logic or referencing an external JavaScript file.</p>"
+	}
 }

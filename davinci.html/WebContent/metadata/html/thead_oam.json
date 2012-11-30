@@ -64,5 +64,9 @@
 			"hidden": true
 		}
 	},
-	"content": "<thead></thead>"
+	"content": "<thead></thead>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>The HTML tfoot element represents the block of rows that consist of the column labels (headers) for the parent table element.</p>"
+	}
 }

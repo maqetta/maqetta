@@ -31,5 +31,13 @@
 			"unconstrained": "true"
 		}
 	},
-	"content": "<a></a>"
+	"content": "<a></a>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>HTML hyperlink or HTML anchor element.</p>"
+	},
+	"description": {
+		"type": "text/html",
+		"value": "<p>If the a element has an href attribute, then it represents a hyperlink (a hypertext anchor) labeled by its contents.</p><p>If the a element has no href attribute, then the element represents a placeholder for where a link might otherwise have been placed, if it had been relevant, consisting of just the element's contents.</p>"
+	}
 }

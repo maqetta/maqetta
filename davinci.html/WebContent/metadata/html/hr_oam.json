@@ -3,5 +3,9 @@
 	"name": "html.hr",
 	"spec": "1.0",
 	"version": "1.0",
-	"content": "<hr>"
+	"content": "<hr>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>HTML element for indicating a horizontal rule.</p>"
+	}
 }

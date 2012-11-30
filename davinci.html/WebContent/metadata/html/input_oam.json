@@ -262,5 +262,13 @@
 			"hidden": true
 		}
 	},
-	"content": "<input></input>"
+	"content": "<input></input>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>The HTML input element represents a typed data field, usually with a form control to allow the user to edit the data.</p>"
+	},
+	"description": {
+		"type": "text/html",
+		"value": "<p>The type attribute controls the data type (and associated control) of the element. Many different possible types, including text, button, checkbox, radio and file.</p>"
+	}
 }

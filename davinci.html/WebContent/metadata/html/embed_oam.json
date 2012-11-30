@@ -24,5 +24,13 @@
 			"hidden": true
 		}	  
 	},
-	"content": "<embed></embed>"
+	"content": "<embed></embed>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>The HTML embed element represents an integration point for an external (typically non-HTML) application or interactive content.</p>"
+	},
+	"description": {
+		"type": "text/html",
+		"value": "<p>The src attribute gives the address of the resource being embedded. The attribute, if present, must contain a valid non-empty URL potentially surrounded by spaces.</p><p>The type attribute, if present, gives the MIME type by which the plugin to instantiate is selected. The value must be a valid MIME type. If both the type attribute and the src attribute are present, then the type attribute must specify the same type as the explicit Content-Type metadata of the resource given by the src attribute.</p>"
+	}
 }

@@ -64,5 +64,9 @@
 			"hidden": true
 		}
 	},
-	"content": "<tfoot></tfoot>"
+	"content": "<tfoot></tfoot>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>The HTML tfoot element represents the block of rows that consist of the column summaries (footers) for the parent table element.</p>"
+	}
 }

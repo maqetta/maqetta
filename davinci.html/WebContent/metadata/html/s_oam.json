@@ -8,5 +8,9 @@
 			"datatype": "string"
 		}
 	},
-	"content": "<s></s>"
+	"content": "<s></s>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>HTML element for indicating strike-through text.</p>"
+	}
 }

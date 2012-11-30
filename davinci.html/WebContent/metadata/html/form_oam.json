@@ -89,5 +89,9 @@
 			"description": "Specifies where to display the response that is received after submitting the form"
 		}
 	},
-	"content": "<form></form>"
+	"content": "<form></form>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>The HTML form element represents a collection of form-associated elements, some of which can represent editable values that can be submitted to a server for processing.</p>"
+	}
 }

@@ -8,5 +8,9 @@
 			"datatype": "string"
 		}
 	},
-	"content": "<strong></strong>"
+	"content": "<strong></strong>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>HTML element for styling text strongly (e.g., boldface).</p>"
+	}
 }

@@ -41,6 +41,11 @@ return declare("davinci.review.editor.Context", [Context], {
 					var userDoc = event && event.target && event.target.contentDocument;
 					var userWindow = userDoc && userDoc.defaultView && userDoc.defaultView.window;
 					var deviceName = this.frame.contentDocument.body.getAttribute('data-maq-device');
+					var deviceNameM6 = this.frame.contentDocument.body.getAttribute('data-maqetta-device');
+					if(!deviceName && deviceNameM6){
+						// Migrate old M6 attribute name to new M7-or-later attribute name
+						deviceName = deviceNameM6;
+					}
 					var svgfilename = (!deviceName || deviceName == 'none' || deviceName == 'desktop') 
 							? null : "app/preview/images/" + deviceName + ".svg";
 					if (svgfilename) {

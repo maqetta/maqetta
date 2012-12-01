@@ -971,7 +971,7 @@ davinci_top_bar .dijitButtonNode {
 	overflow:hidden;
 	display:inline-block;
 	width:66px;
-	height:76px; 
+	height:81px; 
 	position:relative;
 	z-index:1;
 }
@@ -987,7 +987,7 @@ davinci_top_bar .dijitButtonNode {
 	top:-8px;
 	left:0px;
 	width:66px;
-	height:80px;
+	height:85px;
 	padding:0px;
 	border:2px solid #999;
 	border-radius:4px;
@@ -1169,8 +1169,8 @@ davinci_top_bar .dijitButtonNode {
 .dojoyPalette.paletteLayoutIcons .dojoyPaletteItem.dojoyPaletteCommon {
 	display:inline-block;
 	width:68px;
-	height:90px;
-	line-height:90px;
+	height:95px;
+	line-height:95px;
 	outline:none;
 }
 .dojoyPalette.paletteLayoutIcons .dojoyPaletteItem.dojoyPaletteCommon a {
@@ -1186,6 +1186,7 @@ davinci_top_bar .dijitButtonNode {
 	height:50px;
 }
 .dojoyPalette.paletteLayoutIcons .paletteItemLabelContainer {
+	padding-top:5px;
 	text-align:center;
 	display:block;
 	overflow:hidden;

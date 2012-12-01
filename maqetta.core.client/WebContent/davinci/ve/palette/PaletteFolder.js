@@ -171,7 +171,12 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 						}else{ // child.declaredClass == "davinci.ve.palette.PaletteItem"
 							if(this._isOpen && child_j.PaletteFolderSubsection._isOpen){
 								// Show the PaletteItems for the currently open subsession
-								fx.wipeIn({node: child_j.id, duration: 100}).play();
+								fx.wipeIn({node: child_j.id, duration: 100, onEnd: function(node){
+									setTimeout(function(){
+										// setTimeout because Dojo puts height:auto on after onEnd function
+										node.style.height = '';
+									},1);
+								}.bind(this,child_j.domNode)}).play();
 							}else{
 								child_j.domNode.style.display = 'none';
 							}
@@ -219,7 +224,12 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 								// Toggle visibility depending on whether the PaletteFolder
 								// is open or closed
 								if(this._isOpen){
-									fx.wipeIn({node: child_k.id, duration: 100}).play();
+									fx.wipeIn({node: child_k.id, duration: 100, onEnd: function(node){
+										setTimeout(function(){
+											// setTimeout because Dojo puts height:auto on after onEnd function
+											node.style.height = '';
+										},1);
+									}.bind(this,child_k.domNode)}).play();
 								}else{
 									fx.wipeOut({node: child_k.id, duration: 100}).play();
 								}

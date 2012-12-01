@@ -1,9 +1,9 @@
 {
-	"collections":{
-		"dijit":{
-			"name":"Dijit"
-		}
-	},
+    "collections": {
+        "dijit": {
+            "name": "Dijit"
+        }
+    },
     "categories": {
         "controls": {
             "name": "Dojo Controls",
@@ -56,7 +56,9 @@
             "helper": "./gridx/GridHelper",
             "inlineEdit": "./gridx/GridWizardInput",
             "isControl": true,
-            "initialSize": "auto"
+            "initialSize": "auto",
+            "iconLarge": "resources/imagesLarge/GridX.png",
+            "iconLargeBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAcdJREFUeNrsmL1OwzAQx+vEoW4i0koM3dgYWKEDEoIOVAy8LwwoSBSGMhQkxMYD8AYhVT4crk0V02BcU6VygbuojdTcNT+f/3exQy6DUWPzjMLn4uxoo5iubh6sxkYaYiHWP8OixSlJkuvhmBBiECXP8/N+z3EcgRWGITAN+gcGsYLhE2B0Oh2BFcfxLGepOtK2JZOeZVyRAEpthUPFCgyBxfk0MudZNJmo8gzHFyMNog5ROxTWYqzEEFgwLPhOkzR6j4zMoGPTEkNgzYWfJtEkUqtSki1loUCITiW1WkxSiXOsONv2fEWw9P9lqILJsojC4fOtJVjFgLIsqX12OP+Bc5lXgQWt6+X1zWCDAIAqlmVB5efHvX24liuTDleD+8fByaGOsIK78eC0p5Mk6KK3o+cZxiKWbVPXdblG0j3Pa7fbOglwPc/3fa2H4AxAggVWNP7lxexsNZvNej1Lht/wqC4X0frL7do9v8XS3GvAnWr3rAwAl4F/Z3WKkkfJo+RR8ih5lDxKHrWFkl+v5Cmle7s7YRgazBBsPwFjAYsx1u12YUttEAt2qYyxBSz4qSQ1aNV3EEvfJmAlItYqDWK11rJW+xBgAFkM0cDDpa59AAAAAElFTkSuQmCC"
         }
     ]
 }

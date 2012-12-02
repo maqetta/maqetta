@@ -25,10 +25,14 @@
         }
     ],
     "property": {
-    	"content":{
+        "content": {
             "datatype": "string",
             "defaultValue": "Text"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Drawing tool: Text</p>"
+    }
 }

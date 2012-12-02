@@ -25,14 +25,18 @@
         }
     ],
     "property": {
-    	"rx":{
+        "rx": {
             "datatype": "number",
             "defaultValue": "40"
         },
-    	"ry":{
+        "ry": {
             "datatype": "number",
             "defaultValue": "40"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Drawing tool: Circle</p>"
+    }
 }

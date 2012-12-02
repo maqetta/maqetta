@@ -25,28 +25,46 @@
         }
     ],
     "property": {
-    	"points":{
+        "points": {
             "datatype": "string",
             "defaultValue": "0,0,100,0"
         },
-    	"startarrow":{
+        "startarrow": {
             "datatype": "string",
             "option": [
-                {"value": "forward"},
-                {"value": "backward"},
-                {"value": "none"}
+                {
+                    "value": "forward"
+                },
+                {
+                    "value": "backward"
+                },
+                {
+                    "value": "none"
+                }
             ],
             "defaultValue": "forward"
         },
-    	"endarrow":{
+        "endarrow": {
             "datatype": "string",
             "option": [
-                {"value": "forward"},
-                {"value": "backward"},
-                {"value": "none"}
+                {
+                    "value": "forward"
+                },
+                {
+                    "value": "backward"
+                },
+                {
+                    "value": "none"
+                }
             ],
             "defaultValue": "none"
-        },
+        }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Drawing tool: Line (potentially with arrowheads)</p>"
+    }
+}"
+    }
 }

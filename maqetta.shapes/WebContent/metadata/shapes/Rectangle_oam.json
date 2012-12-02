@@ -25,18 +25,22 @@
         }
     ],
     "property": {
-    	"width":{
+        "width": {
             "datatype": "number",
             "defaultValue": "80"
         },
-    	"height":{
+        "height": {
             "datatype": "number",
             "defaultValue": "80"
-         },
-     	"cornerRadius":{
-             "datatype": "number",
-             "defaultValue": "0"
+        },
+        "cornerRadius": {
+            "datatype": "number",
+            "defaultValue": "0"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Drawing tool: rectangular shape (potentially rounded)</p>"
+    }
 }

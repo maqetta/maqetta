@@ -25,7 +25,7 @@
         }
     ],
     "property": {
-         "orientation": {
+        "orientation": {
             "datatype": "string",
             "option": [
                 {
@@ -44,5 +44,9 @@
             "title": "Preserve aspect ratio"
         }
     },
-    "content": "<div></div>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Clipart icon: iPhone</p>"
+    }
 }

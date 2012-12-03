@@ -252,6 +252,9 @@ define([
         	if (item.icon && !item.iconLocal) {
                 item.icon = path.append(item.icon).toString();
             }
+        	if (item.iconLarge && !item.iconLargeLocal) {
+                item.iconLarge = path.append(item.iconLarge).toString();
+            }
             item.widgetClass = wm.categories[item.category].widgetClass;
         });
         

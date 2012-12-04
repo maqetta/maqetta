@@ -6,6 +6,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 import java.util.Scanner;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,17 +69,16 @@ public class GetInitializationInfo extends Command {
 	    	       if (file.endsWith(".json") || file.endsWith(".JSON"))
 	    	       {
 	    	    	   try {
-	    	    		   File f = new File(siteConfigDir+"/"+file);
 	    	    		   String fileNameWithOutExt = file.replaceFirst("[.][^.]+$", "");
-	    	    		   String output = new Scanner(f).useDelimiter("\\Z").next();
+	    	    		   String output = this.readFile(siteConfigDir+"/"+file);
 	    	    		   JSONObject j = new JSONObject(output);
 	    	    		   ret = ret + ",\n\t'"+fileNameWithOutExt+"': "+output;
 	    	    		}
 	    	    		catch(JSONException ex) {
-	    	    			System.err.println("not valid json");
+	    	    			System.err.println("maqetta.server.orion.command.GetInitializationInfo "+siteConfigDir+"/"+file + " not valid json");
 	    	    		} 
-	    	    	    catch (FileNotFoundException e) {
-							// TODO Auto-generated catch block
+	    	    	   catch (IOException e) {
+	    	    		   System.err.println("maqetta.server.orion.command.GetInitializationInfo "+siteConfigDir+"/"+file + " error reading file");
 							e.printStackTrace();
 						}
 	    	        }
@@ -89,5 +91,18 @@ public class GetInitializationInfo extends Command {
     	  this.siteConigJson = ret;
     	  return this.siteConigJson;
     }
+    
+    private String readFile(String path) throws IOException {
+    	  FileInputStream stream = new FileInputStream(new File(path));
+    	  try {
+    	    FileChannel fc = stream.getChannel();
+    	    MappedByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
+    	    /* Instead of using default, pass in a decoder. */
+    	    return Charset.defaultCharset().decode(bb).toString();
+    	  }
+    	  finally {
+    	    stream.close();
+    	  }
+    	}
 
 }

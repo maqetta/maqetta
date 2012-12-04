@@ -11,6 +11,9 @@ define([
 	"davinci/Workbench",
 	"dijit/_KeyNavContainer",
 	"dijit/form/TextBox",
+	"dijit/form/DropDownButton",
+	"dijit/DropDownMenu",
+	"dijit/MenuItem",
 	"davinci/ui/dnd/DragSource",
 	"davinci/ve/metadata",
 	"davinci/library",
@@ -32,6 +35,9 @@ define([
 	Workbench,
 	_KeyNavContainer,
 	TextBox,
+	DropDownButton,
+	DropDownMenu,
+	MenuItem,
 	DragSource,
 	Metadata,
 	Library,
@@ -85,6 +91,10 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		}
 		var context = Runtime.currentEditor.getContext();
 		var comptype = context.getCompType();
+		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', Workbench.getProject());
+		if(editorPrefs.showAllWidgets){
+			comptype = (comptype == 'mobile') ? "$ALLMOBILE" : "$ALLDESKTOP";
+		}
 
 		var $library = lib.$wm;
 		var widgets = lib.$wm.widgets;
@@ -537,20 +547,84 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	_createHeader: function(){
 		var div = dojo.doc.createElement("div");
 		div.className = "dojoyPaletteCommon";
+		var table = dojo.doc.createElement("table");
+		table.className = "dojoyPaletteHeaderTable";
+		div.appendChild(table);
+		var tr = dojo.doc.createElement("tr");
+		table.appendChild(tr);
+		var td1 = dojo.doc.createElement("td");
+		td1.className = "dojoyPaletteHeaderTableCol1";
+		tr.appendChild(td1);
+		var td2 = dojo.doc.createElement("td");
+		td2.className = "dojoyPaletteHeaderTableCol2";
+		tr.appendChild(td2);
 
 		var input = dojo.doc.createElement("input");
-		div.appendChild(input);
+		td1.appendChild(input);
 		this.toolbarDiv.appendChild(div);
 		
 		var searchString =  this._resource["filter"]+"...";
 		this.filterField = new TextBox({style: "width: 99%", placeHolder: searchString}, input);
 		dojo.connect(this.filterField, "onKeyUp", this, "_filter");
 
+		var menu = new DropDownMenu({ style: "display: none;"});
+		var menuItem1 = new MenuItem({
+			id: 'PaletteMenuShowSuggested',
+		    label: commonNls.showSuggestedWidgets,
+		    iconClass: "dojoyPaletteMenuItemCheckMark",
+		    onClick: function(){
+		    	this._updateShowAllWidgetsPreference(false);
+		    }.bind(this)
+		});
+		menu.addChild(menuItem1);
+		var menuItem2 = new MenuItem({
+			id: 'PaletteMenuShowAll',
+		    label: commonNls.showAllWidgets,
+		    iconClass: "dojoyPaletteMenuItemCheckMark",
+		    onClick: function(){
+		    	this._updateShowAllWidgetsPreference(true);
+		    }.bind(this)
+		});
+		menu.addChild(menuItem2);
+		var button = new DropDownButton({
+		    showLabel: false,
+		    dropDown: menu
+		});
+		td2.appendChild(button.domNode);
+
+	},
+	
+	_updateShowAllWidgetsPreference: function(newValue){
+		var id = 'davinci.ve.editorPrefs';
+		var base = Workbench.getProject();
+		var editorPrefs = Preferences.getPreferences(id, base);
+		editorPrefs.showAllWidgets = newValue;
+		Preferences.savePreferences(id, base, editorPrefs);
+	},
+	
+	_updateShowAllWidgetsMenu: function(newValue){
+		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', Workbench.getProject());
+		var PaletteMenuShowSuggested = dijit.byId('PaletteMenuShowSuggested');
+		var PaletteMenuShowAll = dijit.byId('PaletteMenuShowAll');
+		var visible = 'dojoyPaletteMenuItemCheckMark';
+		var invisible = 'dojoyPaletteMenuItemCheckMark dojoyPaletteMenuItemCheckMarkOff';
+		if(editorPrefs.showAllWidgets){
+			PaletteMenuShowSuggested.set('iconClass', invisible);
+			PaletteMenuShowAll.set('iconClass', visible);
+		}else{
+			PaletteMenuShowSuggested.set('iconClass', visible);
+			PaletteMenuShowAll.set('iconClass', invisible);
+		}
 	},
 	
 	_filter: function(e) {
 		var context = Runtime.currentEditor.getContext();
 		var comptype = context.getCompType();
+		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', Workbench.getProject());
+		if(editorPrefs.showAllWidgets){
+			comptype = (comptype == 'mobile') ? "$ALLMOBILE" : "$ALLDESKTOP";
+		}
+
 		var value = this.filterField.get("value"),
 		re = new RegExp(value, 'i'),
 		action,
@@ -767,12 +841,17 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 				!Runtime.currentEditor.getContext){
 			return;
 		}
+		this._updateShowAllWidgetsMenu();
 		var context = Runtime.currentEditor.getContext();
 		var comptype = context.getCompType();
+		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', Workbench.getProject());
+		if(editorPrefs.showAllWidgets){
+			comptype = (comptype == 'mobile') ? "$ALLMOBILE" : "$ALLDESKTOP";
+		}
+
 		this._presetCreated[comptype] = true;
 		var presetClassName = this._presetClassNamePrefix + comptype;	// Only used for debugging purposes
 
-		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', Workbench.getProject());
 		if(!editorPrefs.widgetPaletteLayout || editorPrefs.widgetPaletteLayout == 'icons'){
 			dojo.addClass(this.domNode, "paletteLayoutIcons");
 			this._displayShowValue = 'inline-block';

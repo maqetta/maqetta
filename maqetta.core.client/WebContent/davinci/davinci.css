@@ -961,6 +961,33 @@ davinci_top_bar .dijitButtonNode {
     overflow-x: hidden;
     margin: 2px 3px 3px 4px;
 }
+.dojoyPaletteHeaderTable {
+	width:100%;
+  	border-collapse:collapse;
+}
+.dojoyPaletteHeaderTable td {
+	padding:0;
+}
+.dojoyPaletteHeaderTableCol2 {
+	width:16px;
+}
+.dojoyPaletteHeaderTableCol2 .dijitDropDownButton .dijitButtonNode {
+	border:none;
+	background:none;
+}
+.dojoyPaletteHeaderTableCol2 .dijitDropDownButton .dijitArrowButtonInner {
+	background-image:url(img/sprite.png);
+	background-position: -18px -39px;
+}
+.dojoyPaletteMenuItemCheckMark {
+	background-image:url('../dijit/themes/claro/images/checkmarkNoBorder.png');
+	width:16px;
+	height:16px;
+	display:inline-block;
+}
+.dojoyPaletteMenuItemCheckMarkOff {
+	visibility:hidden;
+}
 .dojoyPaletteCommon a {
 	text-decoration: none;
     color: black;
@@ -1184,6 +1211,7 @@ davinci_top_bar .dijitButtonNode {
 .dojoyPalette.paletteLayoutIcons .paletteItemImageContainer img {
 	width:50px;
 	height:50px;
+	box-shadow: 0px 0px 3px rgba(0, 0, 0, .24);
 }
 .dojoyPalette.paletteLayoutIcons .paletteItemLabelContainer {
 	padding-top:5px;

@@ -136,6 +136,8 @@ alternates: "Alternates",
 howToChooseAlternate: "To choose alternate widget, click-select current widget, then click on up arrow icon.",
 summary: "Summary:",
 description: "Description:",
+showSuggestedWidgets: "Suggested Widgets",
+showAllWidgets: "All Widgets",
 
 __dummy__: ""
 }

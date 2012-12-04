@@ -66,15 +66,15 @@ define(["dojo/_base/declare",
 
 			var valid = this._projectName.isValid();
 
-			this._okButton.set( 'disabled', !valid);
+			this._okButton.set('disabled', !valid);
 		},
 		
-		okButton: function(){
-			var newProjectName = dojo.attr(this._projectName, "value");
-			var isEclipse = dojo.attr(this._eclipseSupport,'checked');
+		okButton: function() {
+			var newProjectName = this._projectName.get("value");
+			var isEclipse = dojo.attr(this._eclipseSupport, 'checked');
 
-			Resource.createProject(newProjectName, true, isEclipse).then(function(){
-				if(isEclipse){
+			Resource.createProject(newProjectName, isEclipse).then(function() {
+				if (isEclipse) {
 					Preferences.savePreferences(
 							'davinci.ui.ProjectPrefs',
 							newProjectName,
@@ -89,7 +89,7 @@ define(["dojo/_base/declare",
 				if (Workbench.singleProjectMode()) {
 					Workbench.loadProject(newProjectName);
 				}
-			})
+			});
 		},
 		
 		_getEclipseProjectAttr: function(){

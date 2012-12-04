@@ -525,6 +525,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 */
 	getMobileDevice: function() {
         var bodyElement = this.getDocumentElement().getChildElement("body");
+        if (!bodyElement) {
+        	return undefined;
+        }
         var attvalue = bodyElement.getAttribute(MOBILE_DEV_ATTR);
         var attvalueP6 = bodyElement.getAttribute(MOBILE_DEV_ATTR_P6);
 		if(!attvalue && attvalueP6){
@@ -1241,8 +1244,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
         
         //FIXME: Temporary fix for #3030. Strip out any </br> elements
         //before stuffing the content into the document.
-        var brRE = /<\s*\/\s*br\s*>/gi;
-        var content = content.replace(brRE, "");
+        content = content.replace(/<\s*\/\s*br\s*>/gi, "");
 
         // Set content
 		//  Content may contain inline scripts. We use dojox.html.set() to pull
@@ -1279,17 +1281,18 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 		// Convert all text nodes that only contain white space to empty strings
 		containerNode.setAttribute('data-maq-ws','collapse');
-		var model_bodyElement = this._srcDocument.getDocumentElement().getChildElement("body");
-		model_bodyElement.addAttribute('data-maq-ws','collapse');
+		var modelBodyElement = this._srcDocument.getDocumentElement().getChildElement("body");
+		if (modelBodyElement) {
+			modelBodyElement.addAttribute('data-maq-ws', 'collapse');	
+		}
+
 		// Set the mobile agaent if there is a device on the body
 		// We need to ensure it is set before the require of deviceTheme is executed
 		var djConfig = this.getDojo().config;  // TODO: use require
 		var bodyElement = this.getDocumentElement().getChildElement("body");
-		var device = bodyElement.getAttribute(MOBILE_DEV_ATTR);
+		var device = bodyElement && bodyElement.getAttribute(MOBILE_DEV_ATTR);
 		if (device && djConfig) {
-			var ua = Silhouette.getMobileTheme(device + '.svg');
-			ua = ua || "other";
-			djConfig.mblUserAgent = ua;
+			djConfig.mblUserAgent = Silhouette.getMobileTheme(device + '.svg') || "other";
 		} 
 				
 		// Collapses all text nodes that only contain white space characters into empty string.
@@ -1347,9 +1350,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			connect.publish('/davinci/ui/context/loaded', [this]);
 			this.editor.setDirty(this.hasDirtyResources());
 		}.bind(this), 500);
-
-
-	   
 	},
 
 	/**
@@ -1615,8 +1615,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * @param url {string}
 	 */
     unloadStyleSheet: function(url) {
-        var self = this;
-		var doc = this.getDocument();
 		var dj = this.getDojo(); // TODO: use require
 		var links = dj.query('link');
         links.some(function(val, idx) {
@@ -1636,7 +1634,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	        // FIXME: Shouldn't hardcode this sort of thing
 			var isAppCss = (url.indexOf('app.css') > -1);
 			var appCssImport;
-			var styleElem = this.model.find({'elementType':"HTMLElement",'tag':'style'}, true);
+			var styleElem = this.model.find({elementType: "HTMLElement", tag: 'style'}, true);
 			if(styleElem){
 				var kids = styleElem.children;
 				for(var i=0; i<kids.length; i++){
@@ -1660,7 +1658,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this.editor.setDirty(true); // a rule change so the CSS files are dirty. we need to save on exit
 			this.hotModifyCssRule(e); 
 		}
-
 	},
 
 	
@@ -1932,7 +1929,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	
 			if (!metadata.queryDescriptor(widget.type, "isInvisible")) {
 				//Get the margin box (deferring to helper when available)
-				var box = null;
 				var helper = widget.getHelper();
 				if(helper && helper.getMarginBoxPageCoords){
 					box = helper.getMarginBoxPageCoords(widget);
@@ -2253,12 +2249,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		}
 	},
-	
+
+	//FIXME: getter seems to have side-effects.
 	getFlowLayout: function() {
-		var htmlElement = this.getDocumentElement(),
-			bodyElement = htmlElement.getChildElement("body"),
-			flowLayout = bodyElement.getAttribute(PREF_LAYOUT_ATTR),
-			flowLayoutP6 = bodyElement.getAttribute(PREF_LAYOUT_ATTR_P6);
+		var bodyElement = this.getDocumentElement().getChildElement("body"),
+			flowLayout = bodyElement && bodyElement.getAttribute(PREF_LAYOUT_ATTR),
+			flowLayoutP6 = bodyElement && bodyElement.getAttribute(PREF_LAYOUT_ATTR_P6);
 		if(!flowLayout && flowLayoutP6){
 			// Migrate from old attribute name (data-maqetta-flow-layout) to new attribute name (data-maq-flow-layout)
 			bodyElement.removeAttribute(PREF_LAYOUT_ATTR_P6);
@@ -2278,20 +2274,20 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	setFlowLayout: function(flowLayout){
-		var htmlElement=this.getDocumentElement();
-		var bodyElement=htmlElement.getChildElement("body");
-		bodyElement.addAttribute(PREF_LAYOUT_ATTR,''+flowLayout);
+		var bodyElement = this.getDocumentElement().getChildElement("body");
+		if (bodyElement) {
+			bodyElement.addAttribute(PREF_LAYOUT_ATTR, ''+flowLayout);
+		}
 		return flowLayout;
 	},
 	
 	getCompType: function(){
-		var htmlElement = this.getDocumentElement(),
-			bodyElement = htmlElement.getChildElement("body"),
-			comptype = bodyElement.getAttribute(COMPTYPE_ATTR);
-		if (!comptype){ 
+		var bodyElement = this.getDocumentElement().getChildElement("body"),
+			comptype = bodyElement && bodyElement.getAttribute(COMPTYPE_ATTR);
+		if (bodyElement && !comptype){ 
 			var device = this.getMobileDevice();
 			comptype = device ? 'mobile' : 'desktop';
-			bodyElement.addAttribute(COMPTYPE_ATTR,comptype);
+			bodyElement.addAttribute(COMPTYPE_ATTR, comptype);
 		}
 		return comptype;
 	},
@@ -2309,26 +2305,27 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this._activeTool = this._defaultTool;
 		}
 		this._activeTool.activate(this);
-		connect.publish("/davinci/ve/activeToolChanged",[this, tool]);
+		connect.publish("/davinci/ve/activeToolChanged", [this, tool]);
 	},
 	
 	// getter/setter for currently active drag/drop object
 	getActiveDragDiv: function(){
-		return(this._activeDragDiv);
+		return this._activeDragDiv;
 	},
+
 	setActiveDragDiv: function(activeDragDiv){
 		this._activeDragDiv = activeDragDiv;
 	},
 	
 	blockChange: function(shouldBlock){
-			this._blockChange = shouldBlock;
+		this._blockChange = shouldBlock;
 	},
 	
 	/**
 	 * Returns true if the given node is part of the focus (ie selection) chrome
 	 */
 	isFocusNode: function(node){
-		if(this._selection && this._selection.length > 0 && this._focuses && this._focuses.length >= this._selection.length){
+		if(this._selection && this._selection.length && this._focuses && this._focuses.length >= this._selection.length){
 			for(var i=0; i<this._selection.length; i++){
 				if(this._focuses[i].isFocusNode(node)){
 					return true;
@@ -2346,15 +2343,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	onDblClick: function(event){
-
 	},
-	
 
 	onMouseMove: function(event){
 		if(this._activeTool && this._activeTool.onMouseMove && !this._blockChange){
 			this._activeTool.onMouseMove(event);
 		}
-		
 	},
 
 	onMouseUp: function(event){
@@ -2369,14 +2363,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if(this._activeTool && this._activeTool.onMouseOver){
 			this._activeTool.onMouseOver(event);
 		}
-		
 	},
 
 	onMouseOut: function(event){
 		if(this._activeTool && this._activeTool.onMouseOut){
 			this._activeTool.onMouseOut(event);
 		}
-		
 	},
 	
 	onExtentChange: function(focus, oldBox, newBox, applyToWhichStates){
@@ -3546,7 +3538,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var sm = sceneManagers[smIndex];
 			scenesInfo[smIndex] = { sm:sm, sceneContainers:[] };
 			var allSceneContainers = sm.getAllSceneContainers();
-			for(var i=0; i<allSceneContainers.length; i++){
+			for(i=0; i<allSceneContainers.length; i++){
 				var o = {};
 				var sceneContainer = allSceneContainers[i];
 				var currentScene = sm.getCurrentScene(sceneContainer);
@@ -3570,27 +3562,31 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var statesInfo = statesScenes.statesInfo;
 		if(statesInfo){
 			for(var i=0; i<statesInfo.length; i++){
-				var xpath = statesInfo[i].currentStateXPath;
-				var id = this.model.evaluate(xpath).getAttribute('id'),
-					widget = Widget.byId(id, this.getDocument()),
-					node = widget.domNode;
-				States.setState(statesInfo[i].state, node, {focus:statesInfo[i].focus});
+				var info = statesInfo[i],
+					xpath = info.currentStateXPath,
+					element = this.model.evaluate(xpath);
+				if (!element) { continue; }
+				var widget = Widget.byId(element.getAttribute('id'), this.getDocument());
+				States.setState(info.state, widget.domNode, {focus: info.focus});
 			}
 		}
+
 		var scenesInfo = statesScenes.scenesInfo;
-		var sceneManagers = this.sceneManagers;
 		for(var smIndex in scenesInfo){
-			var sm = scenesInfo[smIndex].sm;
-			var allSceneContainers = scenesInfo[smIndex].sceneContainers;
-			for(var i=0; i<allSceneContainers.length; i++){
-				var sceneContainer = allSceneContainers[i];
-				var xpath = sceneContainer.sceneContainerXPath;
-				var id = this.model.evaluate(xpath).getAttribute('id'),
-					widget = Widget.byId(id, this.getDocument()),
+			var sm = scenesInfo[smIndex].sm,
+				allSceneContainers = scenesInfo[smIndex].sceneContainers;
+			for(i=0; i<allSceneContainers.length; i++){
+				var sceneContainer = allSceneContainers[i],
+					xpath = sceneContainer.sceneContainerXPath,
+					element = this.model.evaluate(xpath);
+				if (!element) { continue; }
+				var widget = Widget.byId(element.getAttribute('id'), this.getDocument()),
 					sceneContainerNode = widget.domNode;
+
 				xpath = sceneContainer.currentSceneXPath;
-				id = this.model.evaluate(xpath).getAttribute('id');
-				sm.selectScene({ sceneContainerNode:sceneContainerNode, sceneId:id });
+				element = this.model.evaluate(xpath);
+				if (!element) { continue; }
+				sm.selectScene({ sceneContainerNode: sceneContainerNode, sceneId: element.getAttribute('id') });
 			}
 		}
 	},
@@ -3613,11 +3609,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	       	 helper.then(function(result){
 	       		 if (result.helper) {
 	       			 this.theme.helper = result.helper;
-	       			if (result.helper.widgetAddedOrDeleted){
-		    			 result.helper.widgetAddedOrDeleted(this,  resetEverything); 
-					 }
+	       			 if (result.helper.widgetAddedOrDeleted){
+	       				 result.helper.widgetAddedOrDeleted(this, resetEverything); 
+	       			 }
 	       		 }
-	    	 }.bind(this));
+	       	 }.bind(this));
 		}
 	},
 
@@ -3764,7 +3760,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 */
 	reorderPreserveSiblingOrder: function(origArray){
 		var newArray = [];
-		for(var i=0; i<origArray.length; i++){
+		for(var i=0; i<origArray.length; i++){ //FIXME: use Array.concat to do a shallow copy
 			newArray[i] = origArray[i];
 		}
 		var j=0;

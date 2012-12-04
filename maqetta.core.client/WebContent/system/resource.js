@@ -111,11 +111,11 @@ var Resource = {
 		parent.getChildren(onComplete, onError);
 	},
 	
-	createProject: function(projectName, initContent, eclipseSupport){
+	createProject: function(projectName, eclipseSupport) {
 		return xhr.get({
 			url: "cmd/createProject",
 			handleAs: "text",
-			content: {name: projectName, initContent: initContent, eclipseSupport: eclipseSupport}
+			content: {name: projectName, eclipseSupport: eclipseSupport}
 		});
 	},
 	

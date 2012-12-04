@@ -43,7 +43,7 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 		dojo.attr(a, "tabIndex", "0");
 		a.onclick = this.palette.nop; // to avoid firing the onbeforeunload event (dojo.event.connect doesn't work for this purpose)
 		var img = a.firstChild;
-		img.src = this.icon;
+		img.src = this.iconBase64 ? this.iconBase64 : this.icon;
 		a.appendChild(dojo.doc.createTextNode(this.displayName));
 //		dojo.setSelectable(this.domNode, false);
 		div._paletteFolder = this;

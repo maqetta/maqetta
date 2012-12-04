@@ -448,6 +448,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		var opt = {
 			paletteId: this.id,
 			icon: this._getIconUri(component.icon, iconUri),
+			iconBase64: component.iconBase64,
 			displayName: /* XXX component.provider.getDescriptorString(component.name) ||*/ component.name,
 			section: component,
 			subsections: component.subsections,
@@ -465,6 +466,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 					var opt2 = {
 							paletteId: this.id,
 							icon: this._getIconUri(subsection.icon, iconUri),
+							iconBase64: subsection.iconBase64,
 							displayName: /* XXX component.provider.getDescriptorString(component.name) ||*/ subsection.name,
 							section: component,
 							subsection: subsection,

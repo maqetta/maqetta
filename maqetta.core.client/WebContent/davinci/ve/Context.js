@@ -525,6 +525,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 */
 	getMobileDevice: function() {
         var bodyElement = this.getDocumentElement().getChildElement("body");
+        if (!bodyElement) {
+        	return undefined;
+        }
         var attvalue = bodyElement.getAttribute(MOBILE_DEV_ATTR);
         var attvalueP6 = bodyElement.getAttribute(MOBILE_DEV_ATTR_P6);
 		if(!attvalue && attvalueP6){
@@ -3546,7 +3549,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var sm = sceneManagers[smIndex];
 			scenesInfo[smIndex] = { sm:sm, sceneContainers:[] };
 			var allSceneContainers = sm.getAllSceneContainers();
-			for(var i=0; i<allSceneContainers.length; i++){
+			for(i=0; i<allSceneContainers.length; i++){
 				var o = {};
 				var sceneContainer = allSceneContainers[i];
 				var currentScene = sm.getCurrentScene(sceneContainer);
@@ -3570,27 +3573,31 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var statesInfo = statesScenes.statesInfo;
 		if(statesInfo){
 			for(var i=0; i<statesInfo.length; i++){
-				var xpath = statesInfo[i].currentStateXPath;
-				var id = this.model.evaluate(xpath).getAttribute('id'),
-					widget = Widget.byId(id, this.getDocument()),
-					node = widget.domNode;
-				States.setState(statesInfo[i].state, node, {focus:statesInfo[i].focus});
+				var info = statesInfo[i],
+					xpath = info.currentStateXPath,
+					element = this.model.evaluate(xpath);
+				if (!element) { continue; }
+				var widget = Widget.byId(element.getAttribute('id'), this.getDocument());
+				States.setState(info.state, widget.domNode, {focus: info.focus});
 			}
 		}
+
 		var scenesInfo = statesScenes.scenesInfo;
-		var sceneManagers = this.sceneManagers;
 		for(var smIndex in scenesInfo){
-			var sm = scenesInfo[smIndex].sm;
-			var allSceneContainers = scenesInfo[smIndex].sceneContainers;
-			for(var i=0; i<allSceneContainers.length; i++){
-				var sceneContainer = allSceneContainers[i];
-				var xpath = sceneContainer.sceneContainerXPath;
-				var id = this.model.evaluate(xpath).getAttribute('id'),
-					widget = Widget.byId(id, this.getDocument()),
+			var sm = scenesInfo[smIndex].sm,
+				allSceneContainers = scenesInfo[smIndex].sceneContainers;
+			for(i=0; i<allSceneContainers.length; i++){
+				var sceneContainer = allSceneContainers[i],
+					xpath = sceneContainer.sceneContainerXPath,
+					element = this.model.evaluate(xpath);
+				if (!element) { continue; }
+				var widget = Widget.byId(element.getAttribute('id'), this.getDocument()),
 					sceneContainerNode = widget.domNode;
+
 				xpath = sceneContainer.currentSceneXPath;
-				id = this.model.evaluate(xpath).getAttribute('id');
-				sm.selectScene({ sceneContainerNode:sceneContainerNode, sceneId:id });
+				element = this.model.evaluate(xpath);
+				if (!element) { continue; }
+				sm.selectScene({ sceneContainerNode: sceneContainerNode, sceneId: element.getAttribute('id') });
 			}
 		}
 	},
@@ -3613,11 +3620,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	       	 helper.then(function(result){
 	       		 if (result.helper) {
 	       			 this.theme.helper = result.helper;
-	       			if (result.helper.widgetAddedOrDeleted){
-		    			 result.helper.widgetAddedOrDeleted(this,  resetEverything); 
-					 }
+	       			 if (result.helper.widgetAddedOrDeleted){
+	       				 result.helper.widgetAddedOrDeleted(this, resetEverything); 
+	       			 }
 	       		 }
-	    	 }.bind(this));
+	       	 }.bind(this));
 		}
 	},
 
@@ -3764,7 +3771,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 */
 	reorderPreserveSiblingOrder: function(origArray){
 		var newArray = [];
-		for(var i=0; i<origArray.length; i++){
+		for(var i=0; i<origArray.length; i++){ //FIXME: use Array.concat to do a shallow copy
 			newArray[i] = origArray[i];
 		}
 		var j=0;

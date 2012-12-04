@@ -225,5 +225,35 @@
 		<li>When you enter text in the Filter input field, any widgets that contain the text will be displayed. All other widgets will be filtered out.</li>
 	</ol>
 
+	<h2 class="test_section">Show suggested vs show all</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Open at least one file of each composition type: mobile app, desktop app, sketch hi-fi, sketch lo-fi</li>
+		<li>Open up the menu at the top/right of the widget palette. You should see two menu items, 
+			"Suggested widgets" and "All widgets", and by default "Suggested widgets" should be checked.</li>
+		<li>For each of the four composition types, in the Widget palette, open up Controls/Buttons section.
+			Click on "Button" to select it. Click on the caret icon on top/right to show the list of alternative widgets.
+			<ul>
+				<li>For mobile app, you should see Dojo Mobile and HTML, but not Dijit.</li>
+				<li>For desktop app, you should see Dijit and HTML, but not Dojo Mobile.</li>
+				<li>For the two sketch modes, you should see Dijit, Dojo Mobile and HTML.</li>
+			</ul>
+		</li>
+		<li>Choose the "All widgets" option from the menu. After selecting it, look at the menu again.
+			The "All widgets" option should be checked now.</li>
+		<li>For each of the four composition types, in the Widget palette, open up Controls/Buttons section.
+			Click on "Button" to select it. Click on the caret icon on top/right to show the list of alternative widgets.
+			<ul>
+				<li>For mobile app, you should see Dojo Mobile, Dijit and HTML in that order.</li>
+				<li>For desktop app, you should see Dijit, Dojo Mobile and HTML in that order.</li>
+				<li>For the two sketch modes, you should see Dijit, Dojo Mobile and HTML.</li>
+			</ul>
+		</li>
+	</ol>
+	<h3 class="expectedResults_subsection">Expected results</h3>
+	<ol class="expectedResults">
+		<li>As described above.</li>
+	</ol>
+
 </body>
 </html>

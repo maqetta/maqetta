@@ -235,12 +235,6 @@
 		<delete dir="${target.folder}/WebContent/dojox/"/>
 		<mkdir dir="${target.folder}/WebContent/dojo/"/>
 
-		<!-- remove tests in the src directory, if present, to reduce the size of the image.
-		  Did this earlier.  Should not have to do it again here. -->
-		<delete quiet="true" includeemptydirs="true">
-			<fileset dir="${target.folder}/WebContent/release/dojo" includes="**/tests/**" />
-		</delete>
-
 		<delete quiet="true" includeemptydirs="true">
 			<fileset dir="${target.folder}/WebContent/release/dojo" includes="**/*.uncompressed.js" />
 		</delete>

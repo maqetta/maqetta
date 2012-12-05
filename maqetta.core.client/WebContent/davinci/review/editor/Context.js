@@ -24,10 +24,12 @@ return declare("davinci.review.editor.Context", [Context], {
 				
 		var containerNode = this.containerNode; 
 		var versionInfo = this.resourceFile.parent;
-		if (!versionInfo.width)
+		if (!versionInfo.width) {
 			containerNode.style.overflowX = "hidden";
-		if (!versionInfo.height)
+		}
+		if (!versionInfo.height) {
 			containerNode.style.overflowY = "hidden";
+		}
 		if (!this.frame) {
 			this.frame = dojo.create("iframe", dojo.mixin(this.iframeattrs, {
 				style: {

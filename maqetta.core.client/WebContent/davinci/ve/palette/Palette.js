@@ -429,29 +429,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	},
 	
 	_createPalette: function(component){
-		
-		//FIXME: Hardcode icons for now. Need to make this into configuration metadata feature.
-		//See bug 7642
-		var iconFolder = "ve/resources/images/";
-		var icon_table = {
-			"Dojo Containers":"dojo-objects.png",
-			"Dojo Controls":"dojo-objects.png",
-			"HTML":"html-widgets.png",
-			"Drawing Tools":"drawing-tools-widgets.png",
-			"Clip Art":"clipart-widgets.png",
-			"Untested Dojo & HTML":"untested.gif",
-//			"jQuery UI":"jquery-wdgts.gif",
-//			"YUI":"yui-widgets.gif",
-			"Lotus One UI":"lts-widgets.gif",
-			"Dojox Mobile":"dojox.mobile.cat.gif"
-		};
-		var defaultIconFile = "fldr_obj.gif";
-		var iconFile = icon_table[component.name];
-		if(!iconFile){
-			iconFile = defaultIconFile;
-		}
-		
-		var iconUri = iconFolder + iconFile;
+		var iconUri = "ve/resources/images/fldr_obj.gif";
 		
 		// Only used for debugging purposes
 		var presetClassName = component.presetId ? this._presetClassNamePrefix + component.presetId : null;
@@ -477,7 +455,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 							paletteId: this.id,
 							icon: this._getIconUri(subsection.icon, iconUri),
 							iconBase64: subsection.iconBase64,
-							displayName: /* XXX component.provider.getDescriptorString(component.name) ||*/ subsection.name,
+							displayName: subsection.name,
 							section: component,
 							subsection: subsection,
 							subsection_container: PaletteFolderSection,

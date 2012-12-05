@@ -133,11 +133,14 @@ component: "Component",
 
 /* Palette*.js */
 alternates: "Alternates",
+alternateWidgets: "Alternate widgets:",
 howToChooseAlternate: "To choose alternate widget, click-select current widget, then click on up arrow icon.",
 summary: "Summary:",
 description: "Description:",
 showSuggestedWidgets: "Suggested Widgets",
 showAllWidgets: "All Widgets",
+MoreIconTitleString: "Click here to see alternative similar widgets",
+HelpIconTitleString: "Click here to see descriptive info about this widget",
 
 __dummy__: ""
 }

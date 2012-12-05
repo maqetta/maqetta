@@ -65,8 +65,8 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 					'<span class="paletteItemSelectedStrip paletteItemSelectedStripV paletteItemSelectedStripR"></span>'+
 					'<span class="paletteItemSelectedStrip paletteItemSelectedStripH paletteItemSelectedStripT"></span>'+
 					'<span class="paletteItemSelectedStrip paletteItemSelectedStripH paletteItemSelectedStripB"></span>'+
-					'<span class="paletteItemSelectedIcon paletteItemSelectedMoreIcon"></span>'+
-					'<span class="paletteItemSelectedIcon paletteItemSelectedHelpIcon"></span>'+
+					'<span class="paletteItemSelectedIcon paletteItemSelectedMoreIcon" title="'+commonNls.MoreIconTitleString+'"></span>'+
+					'<span class="paletteItemSelectedIcon paletteItemSelectedHelpIcon" title="'+commonNls.HelpIconTitleString+'"></span>'+
 				'</span>',
 	// pointer to preset to which this PaletteItem belongs
 	preset: null,
@@ -105,7 +105,6 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		var img = a.querySelector('img');
 
 		img.src = this.icon;
-		var labelContainer = a.querySelector('.paletteItemLabelContainer');
 		var label = a.querySelector('.paletteItemLabel');
 		label.appendChild(dojo.doc.createTextNode(this.displayName));
 		
@@ -123,48 +122,14 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 				label.innerHTML = displayName;
 			}
 		}
-/*
-		a.title = this.displayName + ' (category: ' + this.category + ')';
-*/
 		this.domNode.componentClassName = this.name; // ex. "davinci.ve.widget.Hello"
 		dojo.setSelectable(this.domNode, false);
-		/*
-		this._hovering = false;
-		this._tooltipShowing = false;
-		var hoverHandler = function(currentTarget){
-			if(this._hovering && !this._tooltipShowing){
-				this._tooltipShowing = true;
-				this._tooltipDialog = new TooltipDialog({
-					style: "width: 300px;",
-					content: "<p>I have a mouse leave event handler that will close the dialog."
-				});
-				Popup.open({
-					popup: this._tooltipDialog,
-					around: this.domNode
-				});
-			}else if(!this._hovering && this._tooltipShowing){
-				this._tooltipShowing = false;
-				Popup.close(this._tooltipDialog);
-			}
-		}.bind(this);
-		On(a, 'mouseover', function(e){
-			this._hovering = true;
-			setTimeout(function(){
-				hoverHandler(e.currentTarget);
-			}, 750);
-		}.bind(this));
-		On(a, 'mouseout', function(e){
-			this._hovering = false;
-			setTimeout(function(){
-				hoverHandler(e.currentTarget);
-			}, 10);
-		}.bind(this));
-		*/
 	},
 
 	postCreate: function(){
-		this.connect(this.domNode, "onmouseover", "itemMouseOverHandler");
-		this.connect(this.domNode, "onmouseout", "itemMouseOutHandler");
+		var paletteItemNormalContainer = Query('.paletteItemNormalContainer', this.domNode)[0];
+		this.connect(paletteItemNormalContainer, "onmouseover", "itemMouseOverHandler");
+		this.connect(paletteItemNormalContainer, "onmouseout", "itemMouseOutHandler");
 		this.connect(this.domNode, "onmousedown", "itemMouseDownHandler");
 		this.connect(this.domNode, "onmouseup", "itemMouseUpHandler");
 		this.connect(this.domNode, "onkeydown", "itemKeyDownHandler");
@@ -190,7 +155,6 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 			this.raised(div);
 		}
 		setTimeout(function(){
-			//FIXME: Need to put up different tooltips if hovering over the ^ or ? icons
 			if(this._mouseover && this.palette.moreItems.length == 0 && this.palette.helpItems.length == 0){
 				if(this._tooltipNode == this.domNode){
 					return;
@@ -234,6 +198,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 		this._mouseover = false;
 		if(this._tooltipPos){
 			dijit.hideTooltip(this._tooltipPos);
+			this._tooltipNode = null;
 			this._tooltipPos = null;
 		}
 		var div = this.domNode;
@@ -241,10 +206,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 			this.sunken(div);
 		}else{
 			this.flat(div);
-		}/*
-		if(this.tooltip){
-			this.tooltip.close();
-		}*/
+		}
 	},
 
 	itemMouseDownHandler: function(e){
@@ -279,7 +241,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 			// User has clicked a second time on same widget.
 			// This toggles the widget into "inactive"
 			this.palette.removeSelectionAll();
-			this.palette.selectedItem.flat(this.palette.selectedItem.domNode);		//FIXME: Trying this out
+			this.palette.selectedItem.flat(this.palette.selectedItem.domNode);
 			this.palette.selectedItem = null;
 			this.palette.sunkenItem = null;
 			this.palette.flattenAll();
@@ -295,7 +257,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 			this.palette.selectedItem = null;
 		}
 		this.palette.selectedItem = this;
-		this.sunken(div);		//FIXME: Trying this out
+		this.sunken(div);
 
 		Metadata.getHelper(this.type, 'tool').then(function(ToolCtor) {
 			var tool = new (ToolCtor || CreateTool)(dojo.clone(this.data));
@@ -420,9 +382,8 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 					var paletteItemMoreCloseBox = domConstruct.create("span", 
 							{className:"paletteItemMoreCloseBox"},
 							paletteItemMoreContent);
-					//FIXME: localization
 					var paletteItemAlternatesLabel = domConstruct.create("div", 
-							{className:"paletteItemAlternatesLabel", innerHTML:'Alternate widgets:'},
+							{className:"paletteItemAlternatesLabel", innerHTML:commonNls.alternateWidgets },
 							paletteItemMoreContent);
 					this._paletteItemMoreConnects.push(On(paletteItemMoreCloseBox, 'mousedown, mouseup', function(e){
 						Event.stop(e);	// Prevents mousedown, mouseup from closing selection
@@ -437,7 +398,7 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 					var paletteItemAlternates = [];
 					for(var i=0; i<paletteItemsSameGroup.length; i++){
 						var paletteItemOuter = paletteItemsSameGroup[i];
-						var className = (paletteItemOuter.domNode.style.display == 'none') ? 'paletteItemMoreUnselected' : 'paletteItemMoreSelected';
+						var className = paletteItemOuter._paletteGroupSelected ? 'paletteItemMoreSelected' : 'paletteItemMoreUnselected';
 						var collectionName = paletteItemOuter._collectionName;
 						var paletteItemAlternate = domConstruct.create("button", 
 								{className:"paletteItemAlternate "+className, innerHTML:collectionName},
@@ -610,7 +571,6 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 	
 	paletteItemMoreCloseCleanup: function(){
 		if(this._moreShowing){
-			// FIXME: Move into separate routine
 			for(var j=0; j<this._paletteItemMoreConnects.length; j++){
 				this._paletteItemMoreConnects[j].remove();
 			};
@@ -630,7 +590,6 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 	
 	paletteItemHelpCloseCleanup: function(){
 		if(this._helpShowing){
-			// FIXME: Move into separate routine
 			for(var j=0; j<this._paletteItemHelpConnects.length; j++){
 				this._paletteItemHelpConnects[j].remove();
 			};

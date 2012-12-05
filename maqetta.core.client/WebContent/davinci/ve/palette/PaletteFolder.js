@@ -45,7 +45,6 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 		var img = a.firstChild;
 		img.src = this.iconBase64 ? this.iconBase64 : this.icon;
 		a.appendChild(dojo.doc.createTextNode(this.displayName));
-//		dojo.setSelectable(this.domNode, false);
 		div._paletteFolder = this;
 		this._type = (this.subsections ? 'subsection_container' : (this.subsection ? 'subsection' : 'simple'));
 		if(this._type == 'subsection'){
@@ -246,6 +245,10 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 				if(child_i.declaredClass == "davinci.ve.palette.PaletteItem" && 
 						child_i.domNode.style.display != "none"){
 					fx.wipeOut({node: child_i.id, duration: 100}).play();
+				}
+				// Hide any sections of top-level PaletteFolder's that are closed
+				if(child_i.declaredClass == "davinci.ve.palette.PaletteFolder" && child_i._type == 'simple'){
+					child_i._isOpen = false;
 				}
 				// Hide any subsections of top-level PaletteFolder's that are closed
 				if(child_i.declaredClass == "davinci.ve.palette.PaletteFolder" && child_i._type == 'subsection_container'){

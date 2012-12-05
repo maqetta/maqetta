@@ -24,18 +24,24 @@ return declare("davinci.review.editor.Context", [Context], {
 				
 		var containerNode = this.containerNode; 
 		var versionInfo = this.resourceFile.parent;
-		if (!versionInfo.width)
+		if (!versionInfo.width) {
 			containerNode.style.overflowX = "hidden";
-		if (!versionInfo.height)
+		}
+		if (!versionInfo.height) {
 			containerNode.style.overflowY = "hidden";
+		}
 		if (!this.frame) {
+			var baseUrl = this.baseURL;
+			if (this.getPreference("zazl")) {
+				baseUrl += '?zazl=true';
+			}
 			this.frame = dojo.create("iframe", dojo.mixin(this.iframeattrs, {
 				style: {
 					border: "0",
 					width: versionInfo.width && versionInfo.height ? versionInfo.width + "px" : "100%",
 					height: versionInfo.width && versionInfo.height ? versionInfo.height + "px" : "100%"
 				},
-				src: this.baseURL,
+				src: baseURL,
 				onload: dojo.hitch(this,function(event){
 					this._domIsReady = true;
 					var userDoc = event && event.target && event.target.contentDocument;
@@ -69,7 +75,7 @@ return declare("davinci.review.editor.Context", [Context], {
 						if (!args || !Runtime.currentEditor || Runtime.currentEditor.declaredClass != "davinci.review.editor.ReviewEditor") { 
 							return; 
 						}
-						var state = args.newState || "Normal";
+//						var state = args.newState || "Normal";
 						var dv = userWindow.davinci;
 						if(dv && dv.states && dv.states.setState){
 /*FIXME: Shouldn't be necessary - event was spawned because state just changed. No need to change it again.

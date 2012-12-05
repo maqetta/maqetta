@@ -6,7 +6,7 @@
 	"content": "<div></div>",
 	"title": {
 		"type": "text/html",
-		"value": "<p>Overlay annotation ("sticky notes") containing rich text content. Allow easy creation of multiple lines of formatted text and/or lists (bulleted or numbered).</p>"
+		"value": "<p>Overlay annotation (\"sticky notes\") containing rich text content. Allow easy creation of multiple lines of formatted text and/or lists (bulleted or numbered).</p>"
 	},
 	"description": {
 		"type": "text/html",

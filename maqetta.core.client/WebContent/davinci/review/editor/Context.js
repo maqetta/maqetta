@@ -31,9 +31,9 @@ return declare("davinci.review.editor.Context", [Context], {
 			containerNode.style.overflowY = "hidden";
 		}
 		if (!this.frame) {
-			var baseUrl = this.baseURL;
+			var baseURL = this.baseURL;
 			if (this.getPreference("zazl")) {
-				baseUrl += '?zazl=true';
+				baseURL += '?zazl=true';
 			}
 			this.frame = dojo.create("iframe", dojo.mixin(this.iframeattrs, {
 				style: {

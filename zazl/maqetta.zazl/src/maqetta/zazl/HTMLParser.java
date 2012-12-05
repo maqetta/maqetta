@@ -42,7 +42,8 @@ public class HTMLParser extends DefaultFilter {
 		String projectPath = pathInfo.substring(pathInfo.indexOf(WS_WORKSPACE)+WS_WORKSPACE.length());
 		projectPath = projectPath.substring(0, projectPath.lastIndexOf('/'));
 		int removeCount = projectPath.indexOf("WebContent") == -1 ? 1 : 2;
-		int segCount = countSegments(projectPath) - removeCount;
+		boolean isReview = projectPath.indexOf("/.review") != -1;
+		int segCount = isReview ? 0 : countSegments(projectPath) - removeCount;
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < segCount; i++) {
 			sb.append("../");

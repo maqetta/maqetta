@@ -66,7 +66,7 @@ return declare("davinci.review.editor.ReviewEditor", ModelEditor, {
 		var designerName = this.resourceFile.parent.designerId;
 		// Compose a URL like http://localhost:8080/davinci/review/user/heguyi/ws/workspace/.review/snapshot/20100101/folder1/sample1.html
 		var baseUrl = locationPath.append("user").append(designerName)
-			.append("ws").append("workspace").append(filename).toString();
+			.append("ws").append("workspace").append(filename.replace(/:/g, "%3A")).toString();
 
 		var containerNode = dojo.query('.silhouette_div_container',this._designCP.domNode)[0];
 		this.context = new Context({

@@ -23,7 +23,6 @@
 		}
 	},
 	"content": "<option></option>",
-	"content": "<em></em>",
 	"title": {
 		"type": "text/html",
 		"value": "<p>The HTML option element represents an option in a select element or as part of a list of suggestions in a datalist element.</p>"

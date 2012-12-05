@@ -9,7 +9,6 @@
 		}
 	},
 	"content": "<u></u>",
-	"content": "<em></em>",
 	"title": {
 		"type": "text/html",
 		"value": "<p>HTML element for indicating underlined text.</p>"

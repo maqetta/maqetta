@@ -63,11 +63,11 @@
         "single": {
             "datatype": "boolean",
             "defaultValue": false
-        },
+        }/*,
         "editable": {
             "datatype": "boolean",
             "defaultValue": false
-        }
+        }*/
     },
     "content": "<ul></ul>",
     "title": {

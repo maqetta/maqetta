@@ -103,11 +103,11 @@
                     "value": "multiple"
                 }
             ]
-        },
+        }/*,
         "editable": {
             "datatype": "boolean",
             "defaultValue": false
-        },
+        }*/,
         "query": {
             "datatype": "json",
             "hidden": true

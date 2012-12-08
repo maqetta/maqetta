@@ -687,6 +687,7 @@
             "resizable": "none",
             "allowedParent": "html.tr",
             "allowedChild": "ANY",
+            "refreshParentOnPropChange": "html.table",
             "inlineEdit": "./html/table/TableCellInput",
             "helper": "./html/table/CellHelper"
         },
@@ -713,6 +714,7 @@
             "resizable": "none",
             "allowedParent": "html.tr",
             "allowedChild": "ANY",
+            "refreshParentOnPropChange": "html.table",
             "inlineEdit": "./html/table/TableCellInput",
             "helper": "./html/table/CellHelper"
         },

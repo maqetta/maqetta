@@ -152,14 +152,35 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 		// we redraw the parent widget (e.g., HorizontalSlider) so that it can properly take 
 		// the new value in to account. Here, we execute a ModifyCommand (with no actual
 		// modifications) to cause the parent to refresh itself.
-		if (this._isRefreshParentOnPropChange(widget)) {
+		var refreshParent = this._isRefreshParentOnPropChange(widget);
+		if (refreshParent) {
 			// Note we're executing the ModifyCommand directly as opposed to adding to it to the 
 			// command stack since we're not really changing anything on the parent and don't
 			// need to allow user to undo it.
-			var command =
-					new davinci.ve.commands.ModifyCommand(parentWidget,
+			var ancestor;
+			if(typeof refreshParent == 'string'){
+				// If refreshParentOnPropChange is a string, then it represents a widget type name
+				// Search through ancestors until finding that type
+				ancestor = parentWidget;
+				while(ancestor && ancestor.domNode && ancestor.type != refreshParent && ancestor.domNode.tagName != "BODY"){
+					if(!ancestor.domNode || ancestor.domNode.tagName == "BODY"){
+						ancestor = null;
+						break;
+					}
+					ancestor = ancestor.getParent();
+				}
+			}else{
+				ancestor = parentWidget;
+			}
+			// Note we're executing the ModifyCommand directly as opposed to adding to it to the 
+			// command stack since we're not really changing anything on the parent and don't
+			// need to allow user to undo it.
+			if(ancestor){
+				var command =
+					new davinci.ve.commands.ModifyCommand(ancestor,
 							null, null, parentWidget._edit_context);
-			command.execute();
+				command.execute();
+			}
 		}
 		
 		dojo.publish("/davinci/ui/widgetPropertiesChanged", [[newWidget]]);
@@ -197,9 +218,9 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 	 * 
 	 * @param  {davinci.ve._Widget} widget
 	 * 				The widget instance whose properties are being modified.
-	 * @return {boolean} 'true'
+	 * @return {String"boolean} 
 	 * 				if parent widget has the 'refreshParentOnPropChange' attribute set
-	 * 				in its metadata
+	 * 				in its metadata, returns that value
 	 */
 	_isRefreshParentOnPropChange: function(widget) {
 		return davinci.ve.metadata.queryDescriptor(widget.type, "refreshParentOnPropChange");
@@ -258,14 +279,32 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 		// we redraw the parent widget (e.g., HorizontalSlider) so that it can properly take 
 		// the new value in to account. Here, we execute a ModifyCommand (with no actual
 		// modifications) to cause the parent to refresh itself.
-		if (this._isRefreshParentOnPropChange(widget)) {
+		var refreshParent = this._isRefreshParentOnPropChange(widget);
+		if (refreshParent) {
+			var ancestor;
+			if(typeof refreshParent == 'string'){
+				// If refreshParentOnPropChange is a string, then it represents a widget type name
+				// Search through ancestors until finding that type
+				ancestor = parent;
+				while(ancestor && ancestor.domNode && ancestor.type != refreshParent && ancestor.domNode.tagName != "BODY"){
+					if(!ancestor.domNode || ancestor.domNode.tagName == "BODY"){
+						ancestor = null;
+						break;
+					}
+					ancestor = ancestor.getParent();
+				}
+			}else{
+				ancestor = parent;
+			}
 			// Note we're executing the ModifyCommand directly as opposed to adding to it to the 
 			// command stack since we're not really changing anything on the parent and don't
 			// need to allow user to undo it.
-			var command =
-					new davinci.ve.commands.ModifyCommand(parent,
+			if(ancestor){
+				var command =
+					new davinci.ve.commands.ModifyCommand(ancestor,
 							null, null, parent._edit_context);
-			command.execute();
+				command.execute();
+			}
 		}
 		
 		dojo.publish("/davinci/ui/widgetPropertiesChanged", [[newWidget]]);

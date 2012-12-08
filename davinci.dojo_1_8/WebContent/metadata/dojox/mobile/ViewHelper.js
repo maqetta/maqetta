@@ -240,12 +240,17 @@ ViewHelper.prototype = {
 	 * @return {davinci.ve._Widget} One of the elements in the allowedParentList
 	 */
 	chooseParent: function(allowedParentList){
-		if(allowedParentList.length>1 && domClass.contains(allowedParentList[allowedParentList.length-1].domNode,"mblView")){
-			return allowedParentList[allowedParentList.length-2];
-		}else{
-			return allowedParentList[allowedParentList.length-1];
+		for(var i = allowedParentList.length-1; i>=0; i--){
+			// Look for a view in the allowedParent list
+			if(i>0 && domClass.contains(allowedParentList[i].domNode,"mblView")){
+				// If a view is found, return it's parent
+				return allowedParentList[i-1];
+			}
 		}
-
+		// Otherwise, return the BODY
+		if(allowedParentList.length>=1 && allowedParentList[0].domNode.tagName == 'BODY'){
+			return allowedParentList[0];
+		}
 	},
 	
 	/**

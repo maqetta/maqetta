@@ -104,8 +104,7 @@ define(["davinci/de/widgets/NewDijit",
 			return parent;
 		},
 		
-		createDijit : function(widgetData, model, resource, context,selection){
-			
+		createDijit : function(widgetData, model, resource, context, selection){
 			var qualifiedWidget = widgetData.group + "." + widgetData.name;
 			
 			
@@ -134,12 +133,24 @@ define(["davinci/de/widgets/NewDijit",
 			/* packages.json metadata */
 			var customWidgetsJson = dojo.clone(dt.WIDGETS_JSON);
 			
-			
-			customWidgetsJson.widgets.push({name:widgetData.name, 
-											description: "Custom user widget " + widgetData.name, 
-											type:qualifiedWidget/*.replace(/\./g,"/")*/, category:"custom", 
-											iconLocal:true, icon:"app/davinci/img/maqetta.png" 
-										   })
+			var widgetsObj = {name:widgetData.name, 
+				description: "Custom user widget " + widgetData.name, 
+				type:qualifiedWidget/*.replace(/\./g,"/")*/, 
+				category:"custom", 
+				iconLocal:true, 
+				icon:"app/davinci/img/maqetta.png"
+			};
+			var topElementModel = selection[0]._srcElement;
+			for(var i=0, atts=topElementModel.attributes, len=atts.length; i<len; i++){
+				var att = atts[i];
+				if(!att.noPersist){
+					if(!widgetsObj.properties){
+						widgetsObj.properties = {};
+					}
+					widgetsObj.properties[att.name] = att.value;
+				}
+			}
+			customWidgetsJson.widgets.push(widgetsObj)
 			customWidgets.setContents(dojo.toJson(customWidgetsJson));
 	
 			

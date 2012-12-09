@@ -390,7 +390,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var libraries = metadata.query(type, 'library'),
 			libs = {},
 			context = this;
-
 		function loadLibrary(libId, lib) {
 			if (libs.hasOwnProperty(libId)) {
 				return true;
@@ -411,7 +410,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 			// If 'library' element points to the main library JS (rather than
 			// just base directory), then load that file now.
-			if (lib.src.substr(-3) === '.js') {
+			if (lib && lib.src && lib.src.substr(-3) === '.js') {
 				// XXX For now, lop off relative bits and use remainder as main
 				// library file.  In the future, we should use info from
 				// package.json and library.js to find out what part of this
@@ -449,7 +448,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			// If this require belongs under a library, load library file first
 			// (if necessary).
 			if (r.$library) {
-				if (!loadLibrary(r.$library)) {
+				if (!loadLibrary(r.$library, libraries[r.$library])) {
 					return false; // break 'every' loop
 				}
 			}

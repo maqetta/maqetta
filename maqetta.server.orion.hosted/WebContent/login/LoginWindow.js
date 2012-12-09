@@ -146,6 +146,10 @@ define(['domReady'], function(domReady) {
 	}
 
 	function confirmResetUser() {
+		var login = document.getElementById("resetEmail").value;
+		if (!validateEmail(login)){
+			return;
+		}
 		var mypostrequest = new XMLHttpRequest();
 		mypostrequest.onreadystatechange = function() {
 			
@@ -154,7 +158,6 @@ define(['domReady'], function(domReady) {
 					setResetMessage(false, "No user found.");
 				} else {
 					setResetMessage(false, "Password reset email sent");
-
 				}
 			}
 		};
@@ -323,6 +326,14 @@ define(['domReady'], function(domReady) {
 		if (!validateEmail(login)){
 			return;
 		}
+		mypostrequest.onreadystatechange = function() {
+			if (mypostrequest.readyState === 4) {
+				if (mypostrequest.responseText == "USER_ALREADY_EXISTS") {
+					document.getElementById("errorMessage").innerHTML = "Email is already registered.";
+					document.getElementById("errorWin").style.visibility = '';
+				}
+			}
+		};
 		var parameters = "login=" + encodeURIComponent(login) ;
 		mypostrequest.open("POST", "../maqetta/cmd/register", true);
 		mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");

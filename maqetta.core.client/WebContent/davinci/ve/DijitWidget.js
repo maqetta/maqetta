@@ -158,10 +158,7 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 	},
 
     _removeChildFromDom: function(/*Widget*/child) {
-    	 var helper = this.getHelper();
- 		if (helper && helper.removeChild) {
- 			helper.removeChild(this, child);
- 		} else if (this.dijitWidget.removeChild && child.dijitWidget) {
+        if (this.dijitWidget.removeChild && child.dijitWidget) {
             this.dijitWidget.removeChild(child.dijitWidget);
         } else {
             this.inherited(arguments);

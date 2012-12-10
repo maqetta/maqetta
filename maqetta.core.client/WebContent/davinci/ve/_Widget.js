@@ -722,7 +722,12 @@ return declare("davinci.ve._Widget", null, {
 		this._srcElement.removeChild(child._srcElement);
 
 		// remove from VE DOM
-		this._removeChildFromDom.apply(this, arguments);
+		var helper = this.getHelper();
+		if (helper && helper.removeChild) {
+			helper.removeChild(this, child);
+		} else {
+			this._removeChildFromDom.apply(this, arguments);
+		}
 	},
 
 	_removeChildFromDom: function(child) {

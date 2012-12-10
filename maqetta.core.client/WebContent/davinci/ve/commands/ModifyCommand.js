@@ -60,7 +60,8 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 			properties: dojo.mixin({}, this._oldData.properties, this._properties),
 			children: (this._children || typeof this._children == 'string') ? this._children : this._oldData.children,
 			scripts: dojo.mixin({}, this._oldData.scripts, this._scripts),
-			states: this._oldData.states,
+			maqAppStates: this._oldData.maqAppStates,
+			maqDeltas: this._oldData.maqDeltas,
 			context: context
 		};
 		for(var prop in this._newData.properties){

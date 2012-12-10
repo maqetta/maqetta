@@ -163,7 +163,7 @@ var veStates = declare(maqettaStates, {
 			var stateContainerNode = stateContainers[i];
 			var currentState = this.getState(stateContainerNode);
 			var focus = (focusState && stateContainerNode == focusState.stateContainerNode && currentState == focusState.state);
-			this.setState(currentState, stateContainerNode, { focus:focus, updateWhenCurrent:true, silent:true });	
+			this.setState(currentState, stateContainerNode, { focus:focus, updateWhenCurrent:true, silent:false });	
 		}
 	},
 	

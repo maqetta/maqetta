@@ -33,7 +33,7 @@ ListItemHelper.prototype = {
 		arr.forEach(dijitWidget.containerNode.children, function(node) {
 			// don't record the label
 			if (node === dijitWidget.labelNode) {
-				return false;
+				return;
 			}
 
 			if (attach) {

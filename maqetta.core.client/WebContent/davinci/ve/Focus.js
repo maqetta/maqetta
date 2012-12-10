@@ -242,6 +242,12 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var frameSizeBorderAdjust = 4;
 
 		var focusContainer = dojo.byId('focusContainer');
+		if(!focusContainer){
+			// Occasionally, timing is such that first time this routine is called,
+			// focusContainer doesn't exist yet. No problem, this routine will get
+			// called later again after the focusContainer has been created.
+			return;
+		}
 		var focusContainerBounds = GeomUtils.getBorderBoxPageCoords(focusContainer);
 		var context = this._context;
 		var parentbounds = context.getParentIframeBounds();

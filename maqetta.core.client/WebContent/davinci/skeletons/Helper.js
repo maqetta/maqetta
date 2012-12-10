@@ -21,6 +21,17 @@ define(function() {
 		 *             a position name.  Defaults to "last".
 		 */
 		addChild: function(parentWidget, childWidget, index) {},
+		
+		/**
+		 * Override the default "remove child" action when removing the child widget
+		 * from the Visual Editor DOM (the default implementation varies depending
+		 * on the widget type).
+		 * 
+		 * @param {davinci/ve/_Widget} parentWidget  a (Maqetta) widget instance
+		 * @param {davinci/ve/_Widget} childWidget
+		 *             the (Maqetta) widget instance to remove from 'parentWidget'
+		 */
+		removeChild: function(parentWidget, childWidget) {},
 
 		/**
 		 * Check that there are no discrepencies with 'value'.

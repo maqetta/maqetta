@@ -1070,7 +1070,7 @@
             },
             "hidden": "true",
             "resizable": "none",
-            "helper": "maq-metadata-dojo/dojox/form/TriStateCheckboxHelper",
+            "helper": "./dojox/form/TriStateCheckboxHelper",
             "iconLarge": "resources/imagesLarge/TriStateCheckBox.png",
             "iconLargeBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAo9JREFUeNpi3LrnOMPgAyxA7OVsMajctG3vCSaGQQlGnTXqLFrmRDTw58+ffacfEG+Ek6kCCwsLzZ31/ft3IOlmqUKM/l3H7wDV8/Ly0iO0IIzeNZfxay4O0UVWT1tnIQM9JXF+LpAaUX52iMjrjz+B5Mdvfy7de0nXtIUMnr/5/paVkYWZ6enbH8yMDH//M3z9+i3GDRS/e45fYmDQHRhn/f77H4gYGP5BuD9//MgK1ICwr18AOstl4AsIZDeF583QMTIcsHIL6JRkTwUg+vjxA9xNAekTlVWUefn4Bixtffr4CcIoijCAu0lLW0tGVvb7398DWcoD4wvOhruJnYNjICsfPn4+YHwBXUNPNxGORHERXn4eJW5O1ryWVaYm+goKshwwN334OnDOevDyHShIuXiFpFiZ2DlefPwGLEkHpqpGq1sGSwsCXgcProYNsJWiKPL/61ei0g43NzfVWzXYnQVM1OLi4r9/E1UssbKyctAgY7JgtYmkAGBkZKRT2qKFTaNdjKHVxQCasOv4PeJNcLNUQjOBJl0MiAletmpEjTgcvoVpAk26GHCRczee4zfBSEMSqwlkdjGA4PCVp8QEhhAfJy6pd5++U7OL8fMvsaUaEyMDExMjHlnqdDGI0YJSMrMwA72ER5ZMZ1Gaz4HOYmLCIzswzmJnZWZmYcQjOzDOYmNlZmNhwiNLTWdxsPz98YeZqNBiYwYGF27Zf1RzFtBNpEUi7rRFfiQK8LD++PEDrTUGIonrYrAys7DiTlsM/1ko6mL8+vmLjZ0NQpLUxWBlZSJPlrZdDDxl6YB1MYB18ODqYgBFVCUYKTKBFl0Myk2gSReDchNo1cWg0ITRLgapOXHb3hODzVkAAQYAsLf1zY6o2XIAAAAASUVORK5CYII="
         },

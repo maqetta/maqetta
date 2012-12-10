@@ -9,21 +9,18 @@ define(function() {
 	Helper.prototype = {
 
 		/**
-		 * Override the default action in 'DijitWidget.addChild()', which simply calls `addChild()`
-		 * on the associated Dijit widget instance (i.e. `widget.dijitWidget`).
+		 * Override the default "add child" action when adding the child widget
+		 * to the Visual Editor DOM (the default implementation varies depending
+		 * on the widget type).
 		 * 
-		 * NOTE: Only applies to widgets of class "dijit", which are instances of DijitWidget.
-		 *
-		 * XXX This should be refactored in such a way that it is available to all widget types,
-		 *     not just DijitWidget instances (or remove from DijitWidget).
-		 * 
-		 * @param {davinci/ve/DijitWidget} widget  the (Maqetta) widget instance
-		 * @param {dijit/_Widget} dijitWidget  the Dijit widget instance
+		 * @param {davinci/ve/_Widget} parentWidget  a (Maqetta) widget instance
+		 * @param {davinci/ve/_Widget} childWidget
+		 *             the (Maqetta) widget instance to add to 'parentWidget'
 		 * @param {Number|String} [index]
 		 *             The equivalent of the 'pos' parameter to 'dojo.place()', can be a number or
 		 *             a position name.  Defaults to "last".
 		 */
-		addChild: function(widget, dijitWidget, index) {},
+		addChild: function(parentWidget, childWidget, index) {},
 
 		/**
 		 * Check that there are no discrepencies with 'value'.

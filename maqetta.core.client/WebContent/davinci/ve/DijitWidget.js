@@ -140,107 +140,30 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 		}
 	},
 	
-	addChild: function(child, index) {
-		if (this.dijitWidget.addChild && child.dijitWidget) {
-			if (typeof index === 'number' && index >= 0) {
-				var children = this.getChildren();
-				if(index < children.length) {
-					this._srcElement.insertBefore(child._srcElement,
-						children[index]._srcElement);
-				}else{
-					this._srcElement.addChild(child._srcElement);
-				}
-				if (! this.acceptsHTMLChildren) {
-					this._addChildHelper(child, index);
-				} else {
-					// See comment for _addChildHooked() for more info.
-					this._addChildHooked(child, index);
-				}
-			} else {
-				this._srcElement.addChild(child._srcElement);
-				this._addChildHelper(child);
-			}
+	_addChildToDom: function(child, index) {
+		// Dijit's addChild() only works for widgets whose children are all Dijit
+		// widgets themselves.  Therefore, we only call that function if the
+		// widget does not accept HTML children.
+		if (!this.acceptsHTMLChildren) {
+			this.dijitWidget.addChild(child.dijitWidget, index);
 		} else {
-			var helper = this.getHelper();
-			if (helper && helper.addChild701) {
-				var children = this.getChildren();
-				helper.addChild701(this, child, index);
-				if(index === undefined || index === null || index === -1) {
-					this._srcElement.addChild(child._srcElement);
-				}else{
-					if(index < children.length) {
-						this._srcElement.insertBefore(child._srcElement,children[index]._srcElement);
-					}else{
-						this._srcElement.addChild(child._srcElement);
-					}
-				}
-			}else{
-				this.inherited(arguments);
+			this.inherited(arguments);
+
+			// See impl of dijit._Container.addChild()
+			var dw = child.dijitWidget;
+			if (dw && this.dijitWidget._started && !dw._started) {
+				child.startup();
 			}
 		}
 	},
-	
-	_addChildHelper: function(childWidget, index) {
-		var helper = this.getHelper();
-		if (helper && helper.addChild) {
-			helper.addChild(this, childWidget.dijitWidget, index);
-		}else if (helper && helper.addChild701) {
-				helper.addChild701(this, childWidget, index);
-		} else {
-			// Some widgets such as dijit.form.DataList don't have a startup
-			// method, but addChild expects there will always be one.
-			// Address #3449
-			if(!childWidget.dijitWidget.startup){
-				childWidget.dijitWidget.startup = function(){};
-			}
-			this.dijitWidget.addChild(childWidget.dijitWidget, index);
-		}
-	},
 
-	// #514, #741, #856 - Some Dojox Mobile containers mixin dijit._Container
-	// (thereby adding addChild()), yet still allow HTML (non-Dojo)
-	// children. We still need to call addChild() when the child is another
-	// Dijit/Dojox widget, but there is a problem -- internally, the Dojo
-	// code only returns children which are Dijit/Dojox widgets, ignoring
-	// any of our HTML widgets. To work around this, we temporarily replace
-	// the Dijit/Dojox widget's getChildren() with our own, which returns all
-	// Maqetta managed children.
-	_addChildHooked: function(widget, index) {
-		var parentDijitWidget = this.dijitWidget,
-			_getChildren = parentDijitWidget.getChildren;
-		parentDijitWidget.getChildren = dojo.hitch(this, this.getChildren);
-	
-		var helper = this.getHelper();
-		if (helper && helper.addChild) {
-			helper.addChild(this, widget.dijitWidget, index);
-		}else if (helper && helper.addChild701) {
-				helper.addChild701(this, widget, index);
-		} else {
-			// Some widgets such as dijit.form.DataList don't have a startup
-			// method, but addChild expects there will always be one.
-			// Address #3449
-			if(!widget.dijitWidget.startup){
-				widget.dijitWidget.startup = function(){};
-			}
-			parentDijitWidget.addChild(widget.dijitWidget, index);
-		}
-
-		parentDijitWidget.getChildren = _getChildren;
-	},
-
-    removeChild: function(/*Widget*/child) {
-        if (!child) {
-            return;
-        }
-
+    _removeChildFromDom: function(/*Widget*/child) {
         if (this.dijitWidget.removeChild && child.dijitWidget) {
             this.dijitWidget.removeChild(child.dijitWidget);
-            this._srcElement.removeChild(child._srcElement);
         } else {
             this.inherited(arguments);
         }
     },
-
 
     _getPropertyValue: function(name) {
         return this.dijitWidget.get(name);

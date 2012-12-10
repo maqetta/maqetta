@@ -1,7 +1,8 @@
 define([
-	"davinci/ve/widget",
 	"dojo/dom-construct",
-], function(Widget, DomConstruct) {
+	"dojo/_base/array",
+	"davinci/ve/widget"
+], function(domConstruct, arr, Widget) {
                          
 var ListItemHelper = function() {};
 ListItemHelper.prototype = {
@@ -24,68 +25,40 @@ ListItemHelper.prototype = {
 			}, true);
 		}
 	},
-	
-	getChildrenData: function(/*Widget*/ widget, /*Object*/ options){
-		var data = [];
-
-		// hack - always add the text first
-		data.push(widget.dijitWidget.labelNode.innerHTML);
-
-		// now add any children
-		dojo.forEach(widget.getChildren(), function(w) {
-				data.push(w.getData());
-		});
-		
-
-		return data;
-	},
 
 	getChildren: function(widget, attach) {
+		var dijitWidget = widget.dijitWidget;
 		var children = [];
 
-		// Dijit specific code here.  We only want items inside the box node, and not
-		// the label node (for now).
-		if (widget && widget.dijitWidget && widget.dijitWidget.box) {
-			dojo.forEach(widget.dijitWidget.box.children, function(node) {
-				// the label
-				if(dojo.hasClass(node, "mblListItemLabel")) {
-					return;
+		arr.forEach(dijitWidget.containerNode.children, function(node) {
+			// don't record the label
+			if (node === dijitWidget.labelNode) {
+				return false;
+			}
+
+			if (attach) {
+				children.push(require("davinci/ve/widget").getWidget(node));
+			} else {
+				var widget = node._dvWidget;
+				if (widget) {
+					children.push(widget);
 				}
-				if (attach) {
-					children.push(require("davinci/ve/widget").getWidget(node));
-				} else {
-					var widget = node._dvWidget;
-					if (widget) {
-						children.push(widget);
-					}
-				}
-			});
-		}
+			}
+		});
 
 		return children;
 	},
 
-	getContainerNode: function(widget) {
-		var node;
-
-		// Dijit specific code here.
-		if (widget && widget.dijitWidget && widget.dijitWidget.box) {
-			node = widget.dijitWidget.box;
-		}
-
-		return node;
-	},
-
 	addChild: function(widget, child, index) {
-		var node = this.getContainerNode(widget);
+		var node = widget.getContainerNode();
 
 		// +1 as we have the label
 		var place;
 		if (typeof(index) == "number") {
-			place = index+1
+			place = index + 1;
 		}
 		
-		DomConstruct.place(child.domNode, node, place);
+		domConstruct.place(child.domNode, node, place);
 	}
 };
 

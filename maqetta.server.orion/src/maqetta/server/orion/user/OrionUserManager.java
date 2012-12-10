@@ -15,12 +15,8 @@ import org.eclipse.orion.server.configurator.ConfiguratorActivator;
 import org.eclipse.orion.server.core.LogHelper;
 import org.eclipse.orion.server.core.authentication.IAuthenticationService;
 import org.eclipse.orion.server.core.users.OrionScope;
-import org.eclipse.orion.server.useradmin.IOrionCredentialsService;
-import org.eclipse.orion.server.useradmin.UserConstants;
-import org.eclipse.orion.server.useradmin.UserServiceHelper;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IStorage;
-import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
 import org.osgi.service.prefs.BackingStoreException;
 
@@ -57,21 +53,12 @@ public class OrionUserManager extends UserManagerImpl {
 		// noop for orion
 	}
 
-	private boolean checkUserExists(String key, String val) {
-		IOrionCredentialsService userAdmin = UserServiceHelper.getDefault().getUserStore();
-		org.eclipse.orion.server.useradmin.User user = (org.eclipse.orion.server.useradmin.User) userAdmin
-				.getUser(key, val);
-		return (user != null);
-	}
-
 	protected boolean checkUserExists(String userName) {
-		assertValidUserId(userName);
-
-		return checkUserExists(UserConstants.KEY_UID, userName);
+		return OrionPersonManager.getOrionUser(userName) != null;
 	}
 
 	protected boolean checkUserExistsByEmail(String email) {
-		return checkUserExists(UserConstants.KEY_LOGIN, email);
+		return OrionPersonManager.getOrionUserByEmail(email) != null;
 	}
 
 	public IUser getUser(String userName) {

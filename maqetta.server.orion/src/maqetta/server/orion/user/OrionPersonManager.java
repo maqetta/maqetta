@@ -1,19 +1,17 @@
 package maqetta.server.orion.user;
 
-//import java.io.File;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Set;
 
 import maqetta.core.server.user.manager.PersonManagerImpl;
 
 import org.davinci.server.user.IPerson;
 import org.davinci.server.user.UserException;
-import org.eclipse.orion.server.useradmin.IOrionCredentialsService;
 import org.eclipse.orion.server.useradmin.User;
 import org.eclipse.orion.server.useradmin.UserConstants;
 import org.eclipse.orion.server.useradmin.UserServiceHelper;
 
+@SuppressWarnings("restriction")
 public class OrionPersonManager extends PersonManagerImpl {
 
 	public OrionPersonManager() {
@@ -34,9 +32,7 @@ public class OrionPersonManager extends PersonManagerImpl {
 			if (this.email != null)
 				return this.email;
 
-			// UserServiceHelper.getDefault().getUserProfileService().getUserProfileNode(this.name, false);
-			IOrionCredentialsService userAdmin = UserServiceHelper.getDefault().getUserStore();
-			User user = (User) userAdmin.getUser(UserConstants.KEY_UID, this.getUserID());
+			User user = getOrionUser(this.getUserID());
 			if (user != null) {
 				this.email = user.getLogin();
 			} else {
@@ -61,12 +57,6 @@ public class OrionPersonManager extends PersonManagerImpl {
 		}
 	}
 
-	private void assertValidUserId(String uid) {
-		if (uid.indexOf("@") != -1) {
-			throw new Error("Invalid user ID");
-		}
-	}
-
 	public IPerson addPerson(String userName, String password, String email) throws UserException {
 		assertValidUserId(userName);
 
@@ -85,12 +75,6 @@ public class OrionPersonManager extends PersonManagerImpl {
 		return person;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.davinci.server.user.impl.UserManager#login(java.lang.String,
-	 * java.lang.String)
-	 */
 	public IPerson login(String userName, String password) {
 		assertValidUserId(userName);
 
@@ -107,19 +91,6 @@ public class OrionPersonManager extends PersonManagerImpl {
 		return null;
 	}
 
-	private void checkValidUserName(String userName) throws UserException {
-		if (userName.indexOf(' ') >= 0) {
-			throw new UserException(UserException.INVALID_USER_NAME);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.davinci.server.user.impl.UserManager#isValidPassword(java.lang.String
-	 * , java.lang.String)
-	 */
 	public boolean isValidPassword(String userName, String password) {
 		return true;
 	}
@@ -144,16 +115,16 @@ public class OrionPersonManager extends PersonManagerImpl {
 	}
 
 	public IPerson getPersonByEmail(String email) {
-		IPerson match = null;
-		Iterator peopleIterator = persons.values().iterator();
-		while (peopleIterator.hasNext() && match == null) {
-			IPerson person = (IPerson) peopleIterator.next();
-			String personEmail = person.getEmail();
-			if (personEmail != null && personEmail.equals(email)) {
-				match = person;
+		User user = getOrionUserByEmail(email);
+		if (user != null) {
+			try {
+				return addPerson(user.getUid(), null, email);
+			} catch (UserException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
-		return match;
+		return null;
 	}
 
 	/* no need to load the users */
@@ -178,5 +149,24 @@ public class OrionPersonManager extends PersonManagerImpl {
 
 	public String getPhotoRepositoryPath() {
 		return "not-implemented";
+	}
+
+	private static void assertValidUserId(String uid) {
+		if (uid.indexOf("@") != -1) {
+			throw new Error("Invalid user ID");
+		}
+	}
+
+	protected static User getOrionUser(String key, String val) {
+		return UserServiceHelper.getDefault().getUserStore().getUser(key, val);
+	}
+
+	protected static User getOrionUser(String userName) {
+		assertValidUserId(userName);
+		return getOrionUser(UserConstants.KEY_UID, userName);
+	}
+
+	protected static User getOrionUserByEmail(String email) {
+		return getOrionUser(UserConstants.KEY_LOGIN, email);
 	}
 }

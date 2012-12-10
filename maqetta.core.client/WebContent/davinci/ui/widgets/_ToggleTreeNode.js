@@ -35,9 +35,10 @@ define(["dojo/_base/declare",
 		templateString: treeNodeTemplate,
 	
 		_onToggleClick: function(/*Event*/e){
-			var result = this.tree.model.toggle(this.item, !this.toggle, this);
+			var newToggleValue = !this.toggle;
+			var result = this.tree.model.toggle(this.item, newToggleValue, this);
 			if (result !== false) {
-				this._setToggleAttr(!this.toggle);
+				this._setToggleAttr(newToggleValue);
 			}
 		},
 	

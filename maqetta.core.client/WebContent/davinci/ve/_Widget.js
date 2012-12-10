@@ -174,39 +174,46 @@ return declare("davinci.ve._Widget", null, {
 		return this.styleNode || this.domNode; // for Textarea on FF2
 	},
 
-	addChild: function (child,index)
-	{
-		if(!child) {
-			return;
-		}
-
-		var containerNode;
-
-		// let helpers override container node
-		var helper = this.getHelper();
-		if (helper && helper.getContainerNode) {
-			containerNode = helper.getContainerNode(this);
-		} else {
-			containerNode = this.getContainerNode();
-		}
-
-		if(containerNode) {
-			//TODO use dojo.place?
-			if(index === undefined || index === null || index === -1) {
-				containerNode.appendChild(child.domNode);
+	addChild: function(child, index) {
+		var containerNode = this.getContainerNode();
+		if (containerNode) {
+			// add to model (source)
+			if (index === undefined || index === null || index === -1) {
 				this._srcElement.addChild(child._srcElement);
-			}else{
+			} else {
 				var children = this.getChildren();
-				if(index < children.length) {
-					containerNode.insertBefore(child.domNode, children[index].domNode);
+				if (index < children.length) {
 					this._srcElement.insertBefore(child._srcElement,children[index]._srcElement);
-				}else{
-					containerNode.appendChild(child.domNode);
+				} else {
 					this._srcElement.addChild(child._srcElement);
 				}
 			}
+
+			// add to VE DOM
+			var helper = this.getHelper();
+			if (helper && helper.addChild) {
+				helper.addChild(this, child, index);
+			} else {
+				this._addChildToDom.apply(this, arguments);
+			}
 		}
 	},
+
+	_addChildToDom: function(child, index) {
+		var node = child.domNode;
+		var containerNode = this.getContainerNode();
+		if (index === undefined || index === null || index === -1) {
+			containerNode.appendChild(node);
+		} else {
+			var children = this.getChildren();
+			if (index < children.length) {
+				containerNode.insertBefore(node, children[index].domNode);
+			} else {
+				containerNode.appendChild(node);
+			}
+		}
+	},
+
 	getParent: function() {
 		return require("davinci/ve/widget").getEnclosingWidget(this.domNode.parentNode) || this.domNode.parentNode;
 	},
@@ -710,14 +717,18 @@ return declare("davinci.ve._Widget", null, {
 		}
 	},
 
-	removeChild: function( /*Widget*/child) {
-		if(!child) {
-			return;
-		}
-		var containerNode = this.getContainerNode();
-		if(containerNode) {
-			containerNode.removeChild(child.domNode);
-			this._srcElement.removeChild(child._srcElement);
+	removeChild: function(/*Widget*/child) {
+		// remove from model (source)
+		this._srcElement.removeChild(child._srcElement);
+
+		// remove from VE DOM
+		this._removeChildFromDom.apply(this, arguments);
+	},
+
+	_removeChildFromDom: function(child) {
+		var node = child.domNode;
+		if (node && node.parentNode) {
+			node.parentNode.removeChild(node);
 		}
 	},
 

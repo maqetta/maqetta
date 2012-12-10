@@ -1,9 +1,11 @@
 define([
 	"dojo/_base/declare",
+	"dojo/dom-construct",
 	"./ViewHelper",
 	"davinci/ve/widget"
 ], function(
 	declare,
+	domConstruct,
 	ViewHelper,
 	Widget
 ) {
@@ -22,7 +24,7 @@ return declare(ViewHelper, {
 
 	},
 
-	addChild701: function(parentWidget, childWidget, index) {
+	addChild: function(parentWidget, childWidget, index) {
 		var parentDijitWidget = parentWidget.dijitWidget,
 			childDomNode = childWidget.domNode,
 			children = parentWidget.getChildren(),
@@ -30,14 +32,16 @@ return declare(ViewHelper, {
 			footer = parentDijitWidget.fixedFooter,
 			containerNode = parentDijitWidget.containerNode;
 		if(childDomNode == header){
-			dojo.place(childDomNode, parentWidget.domNode, 0);
+			domConstruct.place(childDomNode, parentWidget.domNode, 0);
 		}else if(childDomNode == footer){
-			dojo.place(childDomNode, parentWidget.domNode, undefined);
+			domConstruct.place(childDomNode, parentWidget.domNode, "last");
 		}else{
-			var refSibling = (typeof index == 'number' && index >= 0 && index < children.length) ? children[index] : undefined;
+			var refSibling = (typeof index == 'number' && index >= 0 && index < children.length) ?
+					children[index] : undefined;
 			var adjustedIndex;
 			if(refSibling){
-				// Have to use childNodes because dojo.place deals with DOM nodes, not element children 
+				// Have to use childNodes because dojo.place deals with
+				// DOM nodes, not element children
 				for(var i=0; i<containerNode.childNodes.length; i++){
 					var node = containerNode.childNodes[i];
 					if(node.nodeType == 1){
@@ -49,7 +53,7 @@ return declare(ViewHelper, {
 				}
 			}
 			// make sure we place widgets in the containerNode
-			dojo.place(childDomNode, containerNode, adjustedIndex);
+			domConstruct.place(childDomNode, containerNode, adjustedIndex);
 		}
 	},
 
@@ -92,10 +96,6 @@ return declare(ViewHelper, {
 			children.push(getWidget(footer));
 		}
 		return children;
-	},
-
-	getContainerNode: function(widget) {
-		return widget.dijitWidget.containerNode;
 	}
 
 });

@@ -26,13 +26,33 @@ ListItemHelper.prototype = {
 		}
 	},
 
+	getChildrenData: function(/*Widget*/ widget, /*Object*/ options) {
+		var data = [];
+
+		// always add the text first
+		data.push(widget.dijitWidget.labelNode.innerHTML);
+
+		// now add any children
+		widget.getChildren().forEach(function(w) {
+			data.push(w.getData());
+		});
+
+		return data;
+	},
+
 	getChildren: function(widget, attach) {
 		var dijitWidget = widget.dijitWidget;
 		var children = [];
 
 		arr.forEach(dijitWidget.containerNode.children, function(node) {
-			// don't record the label
-			if (node === dijitWidget.labelNode) {
+			// Enabling some ListItem properties can create DOM children.  We
+			// want to ignore those since they aren't proper "widgets" in the
+			// Maqetta sense.
+			if (node === dijitWidget.labelNode ||
+					node === dijitWidget.iconNode ||
+					node === dijitWidget.rightIconNode ||
+					node === dijitWidget.rightIcon2Node ||
+					node === dijitWidget.deleteIconNode) {
 				return;
 			}
 

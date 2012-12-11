@@ -39,7 +39,7 @@ public class Version{
 	private boolean hasRestarted = false;
 
 	static {
-		formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+		formatter = new SimpleDateFormat(Constants.DATE_PATTERN);
 		formatter.setCalendar(Calendar.getInstance(new SimpleTimeZone(0, "GMT")));	
 	}
 

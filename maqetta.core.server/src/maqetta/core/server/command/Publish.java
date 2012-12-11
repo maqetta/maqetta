@@ -39,20 +39,20 @@ public class Publish extends Command {
 
 		Version version = null;
 		Boolean isUpdate = req.getParameter("isUpdate") != null ? 
-				(req.getParameter("isUpdate").equals("true") ? true : false) : false;
+				req.getParameter("isUpdate").equals("true") : false;
 		String vTime = req.getParameter("vTime");
 		Boolean isRestart = req.getParameter("isRestart") != null ? 
-				(req.getParameter("isRestart").equals("true") ? true : false) : false;
+				req.getParameter("isRestart").equals("true") : false;
 		String emailsStr = req.getParameter("emails");
 		String message = req.getParameter("message");
 		String versionTitle = req.getParameter("versionTitle");
 		String[] resources = req.getParameterValues("resources");
 		String desireWidth = req.getParameter("desireWidth");
 		String desireHeight = req.getParameter("desireHeight");
-		Boolean savingDraft = req.getParameter("savingDraft") == null ? false : true;
+		Boolean savingDraft = req.getParameter("savingDraft") != null;
 		String dueDate = req.getParameter("dueDate");
 		Boolean receiveEmail = req.getParameter("receiveEmail") != null ? 
-				(req.getParameter("receiveEmail").equals("true") ? true : false) : false;
+				req.getParameter("receiveEmail").equals("true") : false;
 
 		String[] emails = emailsStr.split(",");
 		List<Reviewer> reviewers = new ArrayList<Reviewer>();
@@ -61,7 +61,7 @@ public class Publish extends Command {
 
 		if (!isUpdate) {
 			Date currentTime = new Date();
-			SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATE_PATTERN);
+			SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATE_PATTERN_SHORT);
 			formatter.setCalendar(Calendar.getInstance(new SimpleTimeZone(0, "GMT")));
 			String timeVersion = formatter.format(currentTime);
 			

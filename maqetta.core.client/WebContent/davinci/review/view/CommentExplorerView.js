@@ -394,12 +394,13 @@ var CommentExplorerView = declare(ViewPart, {
 			});
 			template.detail_creator = creatorString;
 			
-			//Creation date
-			var timeStampDate = stamp.fromISOString(item.timeStamp);
+			//Creation date - use short format, but tolerate RFC3339
+			var stampArgs = item.timeStamp.match(/^(\d{4})(\d{2})(\d{2})\T(\d{2})(\d{2})(\d{2})\Z$/);
+			var timeStampDate = stamp.fromISOString(stampArgs ? dojo.replace("{1}-{2}-{3}T{4}:{5}:{6}Z", stampArgs) : item.timeStamp);
 			template.detail_creationDate = locale.format(timeStampDate, {
 				formatLength:'medium'
 			});
-			
+
 			template.detail_files = "";
 			item.getChildren(function(children) {
 				dojo.forEach(children, function(i) {
@@ -427,7 +428,6 @@ var CommentExplorerView = declare(ViewPart, {
 				}), 1000);
 			}.bind(this));
 		}
-
 	},
 
 	_leave: function(node) {

@@ -20,8 +20,9 @@ public class Constants {
 	public static final String REVIEW_COOKIE_FILENAME = "davinci_commentFileName";
 	
 	public static final String FAKE_REVIEWER = "davinci.review.fakeReviewer";
-	
+
 	public static final String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+	public static final String DATE_PATTERN_SHORT = "yyyyMMdd'T'HHmmss'Z'";
 
 	public static final String EXTENSION_POINT_MAIL_CONFIG = "mailConfig";
 	public static final String EP_TAG_MAIL_CONFIG = "mailConfig";

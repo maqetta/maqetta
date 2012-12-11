@@ -1,4 +1,5 @@
 define([
+	"require",
 	"dojo/_base/declare",
 	"dojo/_base/window",
 	"dojo/_base/lang",
@@ -8,6 +9,7 @@ define([
 	"./metadata"
 //	"./widget"
 ], function(
+	require,
 	declare,
 	dwindow,
 	dlang,

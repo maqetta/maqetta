@@ -32,9 +32,11 @@ return declare("davinci.review.editor.Context", [Context], {
 		}
 		if (!this.frame) {
 			var baseURL = this.baseURL;
+/*
 			if (this.getPreference("zazl")) {
 				baseURL += '?zazl=true';
 			}
+*/
 			this.frame = dojo.create("iframe", dojo.mixin(this.iframeattrs, {
 				style: {
 					border: "0",

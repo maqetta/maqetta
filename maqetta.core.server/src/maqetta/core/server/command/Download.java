@@ -261,15 +261,25 @@ public class Download extends Command {
 		}
     }
 
-    private InputStream getBuildStream(URL resultURL, String name) throws IOException {
+    private void transferBuildStream(URL resultURL, String dirString, ZipOutputStream zos) throws IOException {
 		ZipInputStream zis = new ZipInputStream(new BufferedInputStream(resultURL.openStream()));
 		ZipEntry entry;
-		while ((entry = zis.getNextEntry()) != null) {
-			if (entry.getName().equals(name)) {
-				return zis;
-   			}
-		}
-		return null;
+        byte[] readBuffer = new byte[2156];
+        int bytesIn;
+
+        try {
+	        while ((entry = zis.getNextEntry()) != null) {
+	        	String pathString = dirString.concat(entry.getName());
+				// place the zip entry in the ZipOutputStream object
+				zos.putNextEntry(new ZipEntry(pathString));
+	            // now write the content of the file to the ZipOutputStream
+				while ((bytesIn = zis.read(readBuffer)) != -1) {
+					zos.write(readBuffer, 0, bytesIn);
+				}
+			}
+        } finally {
+        	zis.close();
+        }
     }
 
     private String sanitizeFileName(String fileName) {
@@ -316,9 +326,9 @@ public class Download extends Command {
         zipFiles(dirList, root, zos,includeLibs);
     }
 
-    private  void zipFiles(IVResource[] files, IPath root, ZipOutputStream zos, boolean includeLibs) throws IOException {
+    private void zipFiles(IVResource[] files, IPath root, ZipOutputStream zos, boolean includeLibs) throws IOException {
         byte[] readBuffer = new byte[2156];
-        int bytesIn = 0;
+        int bytesIn;
         // loop through dirList, and zip the files
         for (int i = 0; i < files.length; i++) {
             if (files[i].isDirectory()) {
@@ -327,39 +337,41 @@ public class Download extends Command {
             }
             if(!includeLibs && files[i] instanceof VLibraryResource)
             	continue;
-            
-            InputStream is = null;
-            try {
-            	if (this.buildURL != null && files[i].getPath().equals("lib/dojo/dojo/dojo.js")) {
-            		is = getBuildStream(this.buildURL, "dojo.js");
-            	} else {
-            		is = files[i].getInputStreem();            
-            	}
 
-            	IPath filePath = new Path(files[i].getPath());
-	            String pathString = filePath.removeFirstSegments(filePath.matchingFirstSegments(root)).toString();
-	            
-	            if(pathString==null) return;
-	            
-	            /* remove leading characters that confuse and anger windows built in archive util */
-	            if(pathString.length() > 1 && pathString.indexOf("./")==0)
-	        	   pathString = pathString.substring(2);
-	
-	            if(!addEntry(pathString)) continue;
-	            
-	            ZipEntry anEntry = new ZipEntry(pathString);
-	                // place the zip entry in the ZipOutputStream object
-	            zos.putNextEntry(anEntry);
-	                // now write the content of the file to the ZipOutputStream
-	            while ((bytesIn = is.read(readBuffer)) != -1) {
-	              zos.write(readBuffer, 0, bytesIn);
-	            }
-            } finally {
-                // close the Stream
-            	if (is != null) is.close();
-            	files[i].removeWorkingCopy();
-            }
+        	IPath filePath = new Path(files[i].getPath());
+            String pathString = filePath.removeFirstSegments(filePath.matchingFirstSegments(root)).toString();
+            
+            if(pathString==null) return;
+            
+            /* remove leading characters that confuse and anger windows built in archive util */
+            if(pathString.length() > 1 && pathString.indexOf("./")==0)
+        	   pathString = pathString.substring(2);
+
+            if(!addEntry(pathString)) continue;
+
+            String dirString = pathString.substring(0, pathString.lastIndexOf('/') + 1);
+ 
+            if (this.buildURL != null && files[i].getPath().equals("lib/dojo/dojo/dojo.js")) {
+        		// substitute built version of dojo.js provided by the webservice, along with associated generated layers like nls
+        		transferBuildStream(this.buildURL, dirString, zos);
+        	} else {
+        		// copy stream to zip directly
+                InputStream is = null;
+                try {
+            		is = files[i].getInputStreem();            
+
+		            // place the zip entry in the ZipOutputStream object
+		            zos.putNextEntry(new ZipEntry(pathString));
+		            // now write the content of the file to the ZipOutputStream
+		            while ((bytesIn = is.read(readBuffer)) != -1) {
+		              zos.write(readBuffer, 0, bytesIn);
+		            }
+                } finally {
+                    // close the Stream
+                	if (is != null) is.close();
+                	files[i].removeWorkingCopy();
+                }
+        	}
        }
     }
-
 }

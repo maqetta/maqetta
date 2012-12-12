@@ -58,7 +58,38 @@ return declare(ContainerInput, {
 			}
 			if (i < children.length) {
 				var child = children[i];
-				this._attr(child, text);
+				// Massage the data object
+				var data = child.getData();
+				var dataChildren = data.children;
+				var found = false;
+				for(var j=dataChildren.length-1; j>=0; j--){
+					var dataChild = dataChildren[j];
+					if(typeof dataChild == 'string'){
+						// Remove any content that isn't a Maqetta widget
+						dataChildren.splice(j, 1);
+					}else{
+						var className = dataChild.properties && dataChild.properties['class'];
+						if(typeof className == 'string'){
+							var classes = className.split(' ');
+							if(!found && classes.indexOf('mblListItemLabel') >=0){
+								dataChild.children = text;
+								found = true;
+							}
+						}
+					}
+				}
+				if(!found){
+					// If there isn't an mblListItemLabel, add it now
+					dataChildren.push({
+                		"type": "html.label",
+                		"properties":{
+                   			"class": "mblListItemLabel",
+                		},
+                		"children": text,
+                		tagName: "label"
+                	});
+				}
+				this._attr(child, dataChildren);
 			} else {
 				this._addChildOfTypeWithProperty(widget, this.getChildType(widget.type), text);
 			}
@@ -126,19 +157,17 @@ return declare(ContainerInput, {
 		for (var i = 0; i < children.length; i++) {
 			var child = children[i];
 			var dijitWidget = child.dijitWidget;
-			var labelNode = dijitWidget.labelNode;
-			var text = labelNode ? lang.trim(labelNode.innerHTML) : '';
-			var textBoxNode = dijitWidget.domNode;
-			var text = "";
-			for (var j=0; j<textBoxNode.childNodes.length; j++){
-				var n = textBoxNode.childNodes[j];
-				if(n.nodeType === 1){	// element
-					if(domClass.contains(n, 'mblListItemLabel')){
-						// Don't show the markup around mblListItemLabel nodes
-						text += lang.trim(n.innerHTML);
+			var listItemLabelNodes = query('.mblListItemLabel', dijitWidget.domNode);
+			var childNodes = dijitWidget.domNode.childNodes;
+			var text = '';
+			for(var j=0; j<childNodes.length; j++){
+				var innerChild = childNodes[j];
+				if(innerChild.nodeType == 3){
+					text += innerChild.textContent;
+				}else if(innerChild.nodeType == 1){
+					if(domClass.contains(innerChild, 'mblListItemLabel')){
+						text += lang.trim(innerChild.innerHTML);
 					}
-				}else if(n.nodeType === 3){	//textNode
-					text += n.nodeValue;
 				}
 			}
 			// remove extraneous whitespace, particularly newlines

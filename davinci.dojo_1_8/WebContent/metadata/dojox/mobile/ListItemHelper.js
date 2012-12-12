@@ -15,12 +15,15 @@ ListItemHelper.prototype = {
 		// then this built-in onclick handler will launch an animated
 		// transition to make that view visible. This is good for runtime execution,
 		// but we don't want this onclick handler to execute in the page editor.
-		// So, register a onClick function that returns false, which causes
+		// So, register a onClick (and onTouchStart) function that returns false, which causes
 		// the ListItem widget to forgo its normal processing.
 		// But the click event will bubble up to ancestor widgets, and therefore
 		// will be caught by Maqetta and will cause a selection action to occur.
 		if(dijitWidget){
 			dijitWidget.onClick = function(){
+				return false;
+			}
+			dijitWidget.onTouchStart = function(){
 				return false;
 			}
 		}
@@ -67,18 +70,6 @@ ListItemHelper.prototype = {
 		});
 
 		return children;
-	},
-
-	addChild: function(widget, child, index) {
-		var node = widget.getContainerNode();
-
-		// +1 as we have the label
-		var place;
-		if (typeof(index) == "number") {
-			place = index + 1;
-		}
-		
-		domConstruct.place(child.domNode, node, place);
 	}
 };
 

@@ -153,12 +153,13 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 		// we redraw the parent widget (e.g., HorizontalSlider) so that it can properly take 
 		// the new value in to account. Here, we execute a ModifyCommand (with no actual
 		// modifications) to cause the parent to refresh itself.
-		var refreshParent = this._isRefreshParentOnPropChange(widget);
+		var ancestor;
+				
+		var refreshParent = this._isRefreshParentOnPropChange(newWidget);
 		if (refreshParent) {
 			// Note we're executing the ModifyCommand directly as opposed to adding to it to the 
 			// command stack since we're not really changing anything on the parent and don't
 			// need to allow user to undo it.
-			var ancestor;
 			if(typeof refreshParent == 'string'){
 				// If refreshParentOnPropChange is a string, then it represents a widget type name
 				// Search through ancestors until finding that type
@@ -173,15 +174,24 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 			}else{
 				ancestor = parentWidget;
 			}
-			// Note we're executing the ModifyCommand directly as opposed to adding to it to the 
-			// command stack since we're not really changing anything on the parent and don't
-			// need to allow user to undo it.
-			if(ancestor){
-				var command =
-					new davinci.ve.commands.ModifyCommand(ancestor,
-							null, null, parentWidget._edit_context);
-				command.execute();
-			}
+		}
+		
+		// refreshAncestorDownwards is based on the "refreshOnDescendantChange" metadata property
+		// where the ancestor widget says "if any descendants are changed, the refresh me"
+		var refreshAncestorDownwards = this._isRefreshOnDescendantChange(newWidget);
+		if (refreshAncestorDownwards) {
+			// if not undefined, refreshAncestorDownwards will hold the ancestor widget that needs to be refreshed
+			ancestor = refreshAncestorDownwards;
+		}
+		
+		// Note we're executing the ModifyCommand directly as opposed to adding to it to the 
+		// command stack since we're not really changing anything on the parent and don't
+		// need to allow user to undo it.
+		if(ancestor){
+			var command =
+				new davinci.ve.commands.ModifyCommand(ancestor,
+						null, null, parentWidget._edit_context);
+			command.execute();
 		}
 		
 		dojo.publish("/davinci/ui/widgetPropertiesChanged", [[newWidget]]);
@@ -214,19 +224,43 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 	},
 	
 	/**
-	 * Check if the parent widget needs to be refreshed after a property 
-	 * has changed.
+	 * Check if an ancestor widget needs to be refreshed after a property 
+	 * has changed based on "refreshParentOnPropChange" property in widgets.json file.
 	 * 
 	 * @param  {davinci.ve._Widget} widget
 	 * 				The widget instance whose properties are being modified.
-	 * @return {String"boolean} 
-	 * 				if parent widget has the 'refreshParentOnPropChange' attribute set
+	 * @return {String|boolean} 
+	 * 				if widget has the 'refreshParentOnPropChange' attribute set
 	 * 				in its metadata, returns that value
 	 */
 	_isRefreshParentOnPropChange: function(widget) {
 		return davinci.ve.metadata.queryDescriptor(widget.type, "refreshParentOnPropChange");
 	},
-
+	
+	/**
+	 * Check if an ancestor widget needs to be refreshed due to a change with
+	 * one of its children (in particular, this widget) based on "refreshOnDescendantChange"
+	 * property for an ancestor widget.
+	 * 
+	 * @param  {davinci.ve._Widget} widget
+	 * 				The widget instance that has been modified.
+	 * @return {null | davinci.ve._Widget} 
+	 * 				if ancestor widget has the 'refreshOnDescendantChange' attribute set
+	 * 				in its metadata, returns that ancestor widget
+	 */
+	_isRefreshOnDescendantChange: function(widget) {
+		var ancestor;
+		var w = widget;
+		while(w && w.domNode && w.domNode.tagName != "BODY"){
+			var parent = w.getParent();
+			if(parent && davinci.ve.metadata.queryDescriptor(parent.type, "refreshOnDescendantChange")){
+				ancestor = parent;
+			}
+			w = parent;
+		}
+		return ancestor;
+	},
+	
 	undo: function(){
 
 		if(!this._newId || !this._oldData){
@@ -275,14 +309,17 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 		
 		// Recompute styling properties in case we aren't in Normal state
 		States.resetState(newWidget.domNode);
-		
+	
 		// Some properties (such as HorizontalSliderRule's 'container' property) require that
 		// we redraw the parent widget (e.g., HorizontalSlider) so that it can properly take 
 		// the new value in to account. Here, we execute a ModifyCommand (with no actual
 		// modifications) to cause the parent to refresh itself.
-		var refreshParent = this._isRefreshParentOnPropChange(widget);
-		if (refreshParent) {
-			var ancestor;
+		var ancestor;
+		
+		// refreshAncestorUpwards is based on the "refreshParentOnPropChange" metadata property
+		// where the child widget says "if I am changed, the refresh my parent (or ancestor)"
+		var refreshAncestorUpwards = this._isRefreshParentOnPropChange(widget);
+		if (refreshAncestorUpwards) {
 			if(typeof refreshParent == 'string'){
 				// If refreshParentOnPropChange is a string, then it represents a widget type name
 				// Search through ancestors until finding that type
@@ -297,15 +334,24 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 			}else{
 				ancestor = parent;
 			}
-			// Note we're executing the ModifyCommand directly as opposed to adding to it to the 
-			// command stack since we're not really changing anything on the parent and don't
-			// need to allow user to undo it.
-			if(ancestor){
-				var command =
-					new davinci.ve.commands.ModifyCommand(ancestor,
-							null, null, parent._edit_context);
-				command.execute();
-			}
+		}
+		
+		// refreshAncestorDownwards is based on the "refreshOnDescendantChange" metadata property
+		// where the ancestor widget says "if any descendants are changed, the refresh me"
+		var refreshAncestorDownwards = this._isRefreshOnDescendantChange(newWidget);
+		if (refreshAncestorDownwards) {
+			// if not undefined, refreshAncestorDownwards will hold the ancestor widget that needs to be refreshed
+			ancestor = refreshAncestorDownwards;
+		}
+		
+		// Note we're executing the ModifyCommand directly as opposed to adding to it to the 
+		// command stack since we're not really changing anything on the parent and don't
+		// need to allow user to undo it.
+		if(ancestor){
+			var command =
+				new davinci.ve.commands.ModifyCommand(ancestor,
+						null, null, parent._edit_context);
+			command.execute();
 		}
 		
 		dojo.publish("/davinci/ui/widgetPropertiesChanged", [[newWidget]]);

@@ -1,6 +1,7 @@
 define([
 	"require",
 	"dojo/_base/declare",
+	"dojo/query",
 	"dijit/_WidgetBase",
 	"dojo/dnd/Mover",
 	"dojo/dnd/Moveable",
@@ -8,7 +9,7 @@ define([
 	"davinci/ve/States",
 	"davinci/ve/utils/GeomUtils"
 ],
-function(require, declare, _WidgetBase, Mover, Moveable, Metadata, States, GeomUtils) {
+function(require, declare, Query, _WidgetBase, Mover, Moveable, Metadata, States, GeomUtils) {
 	
 // Nobs and frame constants
 var LEFT = 0,	// nob and frame
@@ -110,6 +111,38 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 				return;
 			}
 			self._inline = inline;
+			
+			/* THE COMMENTED OUT CODE BELOW ACTUALLY WORKS BUT NO WIDGETS ARE USING IT TODAY
+			 * SO COMMENTING OUT OF PRODUCT.
+			// Check ancestors for 'inlineEditDescendantIntercept' property.
+			// If ancestor has such a property and if the current node matches
+			// one of the selectors specific in that property's array
+			var p = widget.getParent();
+			var ancestor;
+			while_loop:
+			while(p && p.domNode && p.domNode.tagName != 'BODY'){
+				var inlineEditDescendantIntercept = Metadata.queryDescriptor(p.type, 'inlineEditDescendantIntercept');
+				if(inlineEditDescendantIntercept && inlineEditDescendantIntercept.length){
+					for(var i=0; i<inlineEditDescendantIntercept.length; i++){
+						var selector = inlineEditDescendantIntercept[i];
+						var nodelist = Query(selector, p.domNode);
+						for(var j=0; j<nodelist.length; j++){
+							if(nodelist[j] == widget.domNode){
+								ancestor = p;
+								break while_loop;
+							}
+						}
+					}
+				}
+				p = p.getParent();
+			}
+			if(ancestor){
+				context.deselect(widget);
+				context.select(ancestor);
+				var parentFocusObject = context.getFocus(ancestor);
+				parentFocusObject.showInline(ancestor);
+			}else 
+			*/
 			if (inline.useParent) {
 				var parentWidget = widget.getParent();
 				if (parentWidget) {

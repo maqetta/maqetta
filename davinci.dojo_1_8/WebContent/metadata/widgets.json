@@ -2474,14 +2474,33 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADlck9jf6ra/zGiKukNvpERvo/P3/Ex7r0x9sUx8r1KHuVKHuFaOv3io0bnW78jg8////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABEALAAAAAAQABAAAAVWYCSOZGmeptEwbNs2hmgwgWHfd8DETQD9wKAh0IgsDBBEcGlQRBLIpfTwdFiv2CsVKp1GCkhlF2IgRAaC8c8gGEQeAAFuLgA8RI8BYM/nD+4ogYKDgiEAOw==",
             "allowedChild": "dojox.mobile.ListItem",
             "inlineEdit": "./dojox/mobile/EdgeToEdgeListInput",
+            "refreshOnDescendantChange": true,
             "children": [
                 {
                     "type": "dojox.mobile.ListItem",
-                    "children": "Item 1"
+                    "children":[
+                    	{
+                    		"type": "html.label",
+                    		"properties":{
+                       			"class": "mblListItemLabel",
+                    		},
+                    		"children": "Item 1",
+                    		"content": "<label></label>"
+                    	}
+                    ]
                 },
                 {
                     "type": "dojox.mobile.ListItem",
-                    "children": "Item 2"
+                    "children":[
+                    	{
+                    		"type": "html.label",
+                    		"properties":{
+                       			"class": "mblListItemLabel",
+                    		},
+                    		"children": "Item 2",
+                    		"content": "<label></label>"
+                    	}
+                    ]
                 }
             ],
             "helper": "./dojox/mobile/InitialSizeHelper",
@@ -2557,14 +2576,33 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAC5KhTJRijdakzlckztfljtglj5kmz9mnT5lmkFqoEJqoEVyp0ZxpkVypkl3q0p4q0x9sU+CtU1+sVCDtVSLvVKHuVOHuVWLvVaOv7nW7////////wAAAAAAAAAAAAAAACH5BAEAABsALAAAAAAQABAAAAVa4CaOZCliaKquG6a9cAxjG6UBNxAIxyJVFc1lY5EZX5XNJMNsOpuRjeRohGwct9yu9ws+NgyqrLFJPM9MxcYgjiE2hCxAx/MBNYXNoA0b6AeAgYKCJoWGhyIhADs=",
             "allowedChild": "dojox.mobile.ListItem",
             "inlineEdit": "./dojox/mobile/EdgeToEdgeListInput",
+            "refreshOnDescendantChange": true,
             "children": [
                 {
                     "type": "dojox.mobile.ListItem",
-                    "children": "Item 1"
+                    "children":[
+                    	{
+                    		"type": "html.label",
+                    		"properties":{
+                       			"class": "mblListItemLabel",
+                    		},
+                    		"children": "Item 1",
+                    		"content": "<label></label>"
+                    	}
+                    ]
                 },
                 {
                     "type": "dojox.mobile.ListItem",
-                    "children": "Item 2"
+                    "children":[
+                    	{
+                    		"type": "html.label",
+                    		"properties":{
+                       			"class": "mblListItemLabel",
+                    		},
+                    		"children": "Item 2",
+                    		"content": "<label></label>"
+                    	}
+                    ]
                 }
             ],
             "helper": "./dojox/mobile/InitialSizeHelper",

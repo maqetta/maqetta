@@ -49,8 +49,6 @@ return declare("davinci.ve.commands.AddCommand", null, {
 		this._data.properties.id= this._id;
 		this._data.context = context;
 		
-
-
 		// TODO: this._index is typically a number... when is it passed in as a widget?
 		if(this._index && typeof this._index != "number") {
 			if (this._index.domNode){ // widget
@@ -79,9 +77,46 @@ return declare("davinci.ve.commands.AddCommand", null, {
 			context.widgetChanged(context.WIDGET_ADDED, widget);
 		}
 
+		// Some situations require that we recreate an ancestor widget (e.g., RoundRectList) so that we
+		// will invoke the widget library creation logic to re-initialize everything properly
+		var ancestor = this._isRefreshOnDescendantChange(widget);
+		
+		// Note we're executing the ModifyCommand directly as opposed to adding to it to the 
+		// command stack since we're not really changing anything on the parent and don't
+		// need to allow user to undo it.
+		if(ancestor){
+			var command =
+				new davinci.ve.commands.ModifyCommand(ancestor,
+						null, null, parent._edit_context);
+			command.execute();
+		}
 
 		// Recompute styling properties in case we aren't in Normal state
 		States.resetState(widget.domNode);
+	},
+	
+	/**
+	 * Check if an ancestor widget needs to be refreshed due to a change with
+	 * one of its children (in particular, this widget) based on "refreshOnDescendantChange"
+	 * property for an ancestor widget.
+	 * 
+	 * @param  {davinci.ve._Widget} widget
+	 * 				The widget instance that has been modified.
+	 * @return {null | davinci.ve._Widget} 
+	 * 				if ancestor widget has the 'refreshOnDescendantChange' attribute set
+	 * 				in its metadata, returns that ancestor widget
+	 */
+	_isRefreshOnDescendantChange: function(widget) {
+		var ancestor;
+		var w = widget;
+		while(w && w.domNode && w.domNode.tagName != "BODY"){
+			var parent = w.getParent();
+			if(parent && davinci.ve.metadata.queryDescriptor(parent.type, "refreshOnDescendantChange")){
+				ancestor = parent;
+			}
+			w = parent;
+		}
+		return ancestor;
 	},
 
 	undo: function(){
@@ -99,6 +134,10 @@ return declare("davinci.ve.commands.AddCommand", null, {
 			return;
 		}
 
+		// Some situations require that we recreate an ancestor widget (e.g., RoundRectList) so that we
+		// will invoke the widget library creation logic to re-initialize everything properly
+		var ancestor = this._isRefreshOnDescendantChange(widget);
+
 		var context = widget.getContext();
 		if(context){
 			context.detach(widget);
@@ -113,6 +152,16 @@ return declare("davinci.ve.commands.AddCommand", null, {
 		widget.destroyWidget();  
 		if(context){
 			context.widgetAddedOrDeleted();
+		}
+		
+		// Note we're executing the ModifyCommand directly as opposed to adding to it to the 
+		// command stack since we're not really changing anything on the parent and don't
+		// need to allow user to undo it.
+		if(ancestor){
+			var command =
+				new davinci.ve.commands.ModifyCommand(ancestor,
+						null, null, parent._edit_context);
+			command.execute();
 		}
 
 		// Recompute styling properties in case we aren't in Normal state

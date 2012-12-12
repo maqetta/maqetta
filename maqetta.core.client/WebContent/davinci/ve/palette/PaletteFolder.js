@@ -247,7 +247,7 @@ return declare("davinci.ve.palette.PaletteFolder", _WidgetBase, {
 					fx.wipeOut({node: child_i.id, duration: 100}).play();
 				}
 				// Hide any sections of top-level PaletteFolder's that are closed
-				if(child_i.declaredClass == "davinci.ve.palette.PaletteFolder" && child_i._type == 'simple'){
+				if(child_i.declaredClass == "davinci.ve.palette.PaletteFolder" && (child_i._type == 'simple' || child_i._type == 'subsection')){
 					child_i._isOpen = false;
 				}
 				// Hide any subsections of top-level PaletteFolder's that are closed

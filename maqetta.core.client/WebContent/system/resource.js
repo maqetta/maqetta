@@ -15,7 +15,7 @@ var Resource = {
 
 	resourceChanged: function(type,changedResource){
 		
-		if(changedResource == system.resource.getRoot()){
+		if (type !== 'deleted' && changedResource == system.resource.getRoot()) {
 			changedResource.reload();
 			system.resource.getRoot().getChildrenSync(dojo.hitch(system.resource,function(children){
 				system.resource.onChildrenChange(system.resource.getRoot(),children);

@@ -86,12 +86,13 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 	},
 
 	getParent: function() {
-		var widget;
 		if(!this.dijitWidget || !this.dijitWidget.domNode || !this.dijitWidget.domNode.parentNode){
 			return;
 		}
+		var veWidget = require("davinci/ve/widget");
+		var widget = this.dijitWidget;
 		do{
-			widget = require("davinci/ve/widget").getEnclosingWidget(this.dijitWidget.domNode.parentNode);
+			widget = veWidget.getEnclosingWidget(widget.domNode.parentNode);
 		}while(widget && widget.dijitWidget && widget.dijitWidget.declaredClass.split(".").pop().charAt(0) == "_");
 			// skip intermediates, like _AccordionInnerContentPane
 			//TODO: use widget.getParent() and have it support this behavior?

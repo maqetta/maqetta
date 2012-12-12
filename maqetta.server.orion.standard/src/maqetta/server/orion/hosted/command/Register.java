@@ -36,6 +36,11 @@ public class Register  extends Command {
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
     	
     	String emailAdd = req.getParameter("login");
+    	if (ServerManager.getServerManger().getUserManager().isValidUserByEmail(emailAdd)) {
+    		this.responseString = "USER_ALREADY_EXISTS";
+    		return;
+    	}
+    	
     	String randomToken = System.currentTimeMillis() + "_" + generator.nextInt();
     	
     	String requestUrl = req.getRequestURL().toString();

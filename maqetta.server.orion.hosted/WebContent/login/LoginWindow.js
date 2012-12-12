@@ -331,6 +331,9 @@ define(['domReady'], function(domReady) {
 				if (mypostrequest.responseText == "USER_ALREADY_EXISTS") {
 					document.getElementById("errorMessage").innerHTML = "Email is already registered.";
 					document.getElementById("errorWin").style.visibility = '';
+					document.getElementById('login').value = login;
+					document.getElementById('loginContainer').style.visibility = '';
+					document.getElementById('orionRegister').style.visibility = '';
 				}
 			}
 		};

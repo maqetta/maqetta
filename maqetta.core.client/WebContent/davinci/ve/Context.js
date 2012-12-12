@@ -3336,8 +3336,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				mblLoadCompatPattern=re;
 			}
 			this._addCssForDevice(ua, themeMap, this);
-
-			deviceTheme.themeMap = themeMap;		// djConfig.themeMap = themeMap;
+			if (!Theme.themeMapsEqual(deviceTheme.themeMap, themeMap)) {
+				loading = false;
+				deviceTheme.themeMap = themeMap;		// djConfig.themeMap = themeMap;
+			}
+			
 			if (themeFiles) {
 				djConfig.mblThemeFiles = themeFiles;
 			} else {

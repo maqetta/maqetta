@@ -339,6 +339,12 @@ define([
 	        return o1 === o2;
 	    }
 	},
+	
+	themeMapsEqual: function(o1,o2){
+		var o1Str = JSON.stringify(o1);
+		var o2Str = JSON.stringify(o2);
+		return o1Str === o2Str;
+	},
 
 	singleMobileTheme: function (themeSet) {
 	    //returns true if all mobile device use the same theme

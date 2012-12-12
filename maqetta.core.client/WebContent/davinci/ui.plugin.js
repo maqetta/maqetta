@@ -275,6 +275,7 @@ return {
                    label: "Review...",
                    menubarPath: "davinci.open/openTheme"
                },
+/* Commenting out for M8 - UI is all messed up now
                {
                    id: "openProject",
                    run: function() {
@@ -286,6 +287,7 @@ return {
                    label: "Project...",
                    menubarPath: "davinci.open/openProject"
                },
+*/
                {
                    id: "orionNavigator",
                    run: function() {

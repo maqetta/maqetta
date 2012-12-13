@@ -598,6 +598,9 @@ createWidget: function(widgetData) {
 	if(helper && helper.cleanSrcElement){
 		helper.cleanSrcElement(widget._srcElement);
 	}
+	if(helper && helper.postCreateWidget){
+		helper.postCreateWidget(widget);
+	}
 
 	return widget;
 },

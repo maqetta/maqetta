@@ -315,12 +315,15 @@
 		    		on the canvas. If you drag out a rectangle, then widgets that are resizable will have an initial
 		    		size that matches the size of the rectangle you dragged out. 
 		    		<br/><br/>
-		    		The sections of the Palette are as follows:
+		    		Maqetta shows a different list of sections in the Palette depending
+		    		on the type of composition (mobile application vs. desktop application vs. sketch).
+		    		For a desktop application, the Palette has the following top-level sections:
     				<ul class='cheatsheet_desc_list'>
-    					<li><strong>Dojo Containers</strong> - Dojo desktop widgets (from the Dijit library) that can contain other widgets.
-   							These include BorderContainer, TabContainer, Accordion, Toolbar and Menubar.
+    					<li><strong>Containers</strong> - Widgets that can contain other widgets.
+   							These include various Dojo containers such as
+   							BorderContainer, TabContainer, Accordion, Toolbar and Menubar.
    							BorderContainer is the commonly used for controlling layouts, particularly fullscreen layouts.</li>
-    					<li><strong>Dojo Controls</strong> - Dojo desktop widgets (from the Dijit library) that are primitive controls.
+    					<li><strong>Controls</strong> - Widgets that are primitive controls.
     							This section contains a long list of widgets that commonly used controls such as textboxes, buttons, lists, sliders, date pickers.</li>
     					<li><strong>HTML</strong> - HTML elements that are commonly used in web applications.
    							Some notes:
@@ -330,9 +333,6 @@
    								<li><code>&lt;table&gt;</code> is commonly used for achieving row/column layouts</li>
    							</ul>
     					</li>	
-    					<li><strong>Dojox Mobile</strong> - Dojo Mobile widgets. These widgets have been designed
-    						to look and act like native controls on mobile devices.
-    						This section contains a long list of widgets that contain both container widgets and primitive widgets.</li>
     					<li><strong>Clip Art</strong> - A collection of resizable, commonly-used user interface clip art.
     						Includes small-size icons such as "close", "help", "home" along with a few larger
     						placeholder graphics such as "map" and "image". Also includes device silhouettes
@@ -340,6 +340,8 @@
     					<li><strong>Drawing Tools</strong> - Simple drawing tool widgets such as Rectangle and Arrow. 
     						These widgets are added to the page in absolute mode even if the current setting
     						is "flow".</li>
+    					<li><strong>Other</strong> - Catch-all section for any widgets that
+    						aren't in any of the above categories.</li>
     				</ul>
 		    	</div>
 		    </div>

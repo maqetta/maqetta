@@ -53,6 +53,7 @@ ListItemHelper.prototype = {
 			// Maqetta sense.
 			if (node === dijitWidget.labelNode ||
 					node === dijitWidget.iconNode ||
+					node === dijitWidget.rightTextNode ||
 					node === dijitWidget.rightIconNode ||
 					node === dijitWidget.rightIcon2Node ||
 					node === dijitWidget.deleteIconNode) {

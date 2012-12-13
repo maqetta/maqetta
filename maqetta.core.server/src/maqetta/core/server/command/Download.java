@@ -120,7 +120,7 @@ public class Download extends Command {
     		String result = null;
     		while (result == null) {
                 // now poll for a response with a "result" property
-        		URL status = new URL(statusCookie);
+        		URL status = new URL(new URL(buildBase), statusCookie);
     			InputStream is = status.openStream();
     			try {
                     int size;
@@ -295,7 +295,6 @@ public class Download extends Command {
     	for(int i=0;i<this.zippedEntries.size();i++){
     		String entry = (String)zippedEntries.get(i);
     		if(entry.compareTo(path)==0) return false;
-    		
     	}
     	zippedEntries.add(path);
     	return true;

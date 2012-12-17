@@ -46,6 +46,13 @@ DataListHelper.prototype = {
 		},
 		
 		create: function(widget, srcElement){
+			// FIXME #3652 I believe this method is no longer needed after adding
+			// the postCreateWidget helper. But it is late in M8 testing and I am 
+			// leaving it for safety... 
+			this.postCreateWidget(widget);
+		},
+		
+		postCreateWidget: function(widget){
 			if (widget.dijitWidget){
 				widget.dijitWidget.getChildren = this.getChildren;
 				widget.dijitWidget.startup = this.startup;

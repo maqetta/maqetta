@@ -1371,6 +1371,25 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		all(prereqs).then(function() {
 			this.getGlobal()["require"]("dojo/ready")(function(){
 				try {
+					// M8: Temporary hack for #3584.  Should be moved to a helper method if we continue to need this.
+					// Because of a race condition, override _getValuesAttr with a fixed value rather than querying
+					// individual slots.
+					try {
+						var swdp = this.getGlobal()["require"]("dojox/mobile/SpinWheelDatePicker");
+						if (swdp && swdp.prototype) {
+							var sup = swdp.prototype._getValuesAttr;
+							swdp.prototype._getValuesAttr = function() {
+								var v = sup.apply(this);
+								if (v && !v[0]) {
+									v = ["2013", "Jan", "1"];
+								}
+								return v;
+							};
+						}
+					}catch(e){
+						// ignore
+					}
+
 					this.getGlobal()["require"]("dojo/parser").parse(containerNode).then(function(){
 						promise.resolve();						
 

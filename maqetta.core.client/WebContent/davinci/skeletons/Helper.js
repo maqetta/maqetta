@@ -73,6 +73,19 @@ define(function() {
 		 * @param  {davinci/html/HTMLElement} srcElement
 		 */
 		cleanSrcElement: function(srcElement) {},
+		
+		/**
+		 * Invoked after new widget is created but before being adding a new widget to the page; 
+		 * when changing properties on a widget (and the widget is recreated); or for each widget
+		 *  when loading a page into the visual editor.
+		 *
+		 * XXX This is invoked from widget.createWidget().  
+		 * 
+		 * @param  {davinci/ve/_Widget} widget
+		 *             the widget instance that is being created
+		 * 
+		 */
+		postCreateWidget: function(widget){},
 
 		/**
 		 * Invoked when adding a new widget to the page; when changing properties on a widget (and

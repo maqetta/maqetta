@@ -3480,7 +3480,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		
 		var widgetType = theme.loader.getType(widget);
 		var meta = theme.loader.getMetaData(widgetType);
-		if (!meta && this.cssFiles){
+		
+		var isHtmlWidget = false;
+		var parts = (typeof widgetType == 'string') ? widgetType.split('.') : null;
+		if(parts && parts[0] == 'html'){
+			isHtmlWidget = true;
+		}
+		if (!meta && this.cssFiles && !isHtmlWidget){
 			// chack the dynamiclly added files
 			for (var i = 0; i < this.cssFiles.length; i++){
 				var dTheme = Theme.getThemeByCssFile(this.cssFiles[i]);

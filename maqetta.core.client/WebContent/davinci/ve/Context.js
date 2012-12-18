@@ -3,6 +3,9 @@ define([
     "dojo/_base/declare",
     "dojo/_base/lang",
     "dojo/_base/xhr",
+    "dojo/dom-class",
+    "dojo/dom-construct",
+    "dojo/dom-style",
 	"dojo/query",
 	"dojo/Deferred",
 	"dojo/promise/all",
@@ -44,6 +47,9 @@ define([
 	declare,
 	lang,
 	xhr,
+	domClass,
+	domConstruct,
+	domStyle,
 	query,
 	Deferred,
 	all,
@@ -174,12 +180,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		 * but using the model for now.
 		 * 
 		 */
-		var path = this.getModel().fileName;
-		return new Path(path);
+		return new Path(this.getModel().fileName);
 	},
 
-
-	
 	activate: function(){
 		if(this.isActive()){
 			return;
@@ -197,7 +200,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this._onLoadHelpers();
 
 		var containerNode = this.getContainerNode();
-		dojo.addClass(containerNode, "editContextContainer");
+		domClass.add(containerNode, "editContextContainer");
 		
 		this._connects = [
 			connect.connect(this._commandStack, "onExecute", this, "onCommandStackExecute"),
@@ -240,19 +243,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		//this._menu.unBindDomNode(containerNode);
 
 		this.select(null);
-		dojo.removeClass(containerNode, "editContextContainer");
-		dojo.forEach(this.getTopWidgets(), this.detach, this);
+		domClass.remove(containerNode, "editContextContainer");
+		this.getTopWidgets().forEach(this.detach, this);
 		this.unloadStyleSheet(this._contentStyleSheet);
 	},
 
 	attach: function(widget){
-		if(!widget){
+		if(!widget || widget._edit_focus){
 			return;
 		}
-		if(widget._edit_focus){
-			return;
-		}
-		var type = widget.declaredClass;
 
 		if(!widget._srcElement){
 			widget._srcElement=this._srcDocument.findElement(widget.id);
@@ -299,16 +298,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// Recurse down widget hierarchy
 		dojo.forEach(widget.getChildren(true), this.attach, this);
 	},
-	
-	getBodyId: function(){
-		/* return the ID of the body element */
-		
-		var bodyNode = this.model.find({elementType:'HTMLElement', tag:'body'}, true),
-			id = bodyNode.find({elementType:'HTMLAttribute', name:'id'}, true);
-		return id.value;
-	},
 
-	
 	detach: function(widget) {
 		// FIXME: detaching context prevent destroyWidget from working
 		//widget._edit_context = undefined;
@@ -356,7 +346,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 
-	getSource: function(options){
+	getSource: function(){
 		return this._srcDocument.getText();
 	},
 
@@ -364,14 +354,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return this._srcDocument.getDocumentElement();
 	},
 
-	getDocumentLocation: function(options){
+	getDocumentLocation: function(){
 		return this._srcDocument.fileName;
 	},
 
+	//FIXME: Inline
 	getBaseResource: function(options){
 		return systemResource.findResource(this.getDocumentLocation());
 	},
 
+	//FIXME: private/protected?
 	getLibraryBase: function(id, version){
 		return Library.getLibRoot(id,version, this.getBase()) || "";
 	},
@@ -500,22 +492,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}, this);
 
 		return all(promises);
-	},
-
-	_getWidgetFolder: function(){
-		
-		var base = this.getBase();
-		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
-		if(!prefs.widgetFolder){
-			prefs.widgetFolder = "WebContent/lib/custom";
-			Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
-		}
-	
-		var folder = prefs.widgetFolder;
-		while(folder.length>1 && (folder.charAt(0)=="." || folder.charAt(0)=="/")) {
-			folder = folder.substring(1);
-		}
-		return folder;
 	},
 
 	/**
@@ -673,7 +649,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		return this._themeMetaCache;
 	},
-	
+
+	// FIXME: remove.  call metadata.loadThemeMeta directly
 	loadThemeMeta: function(model){
 		// try to find the theme using path magic
 
@@ -708,7 +685,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}	
 		
 	},
-	
+
+	//FIXME: unused?
 	getResourcePath: function() {
 		return this.getFullResourcePath().removeLastSegments(1);
 	},
@@ -726,12 +704,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		return this._fullResourcePath;
 	},
-	
-	getCurrentHtmlFolderPath: function(){
-		var currentHtmlFilePath = this.getFullResourcePath();
-		var currentHtmlFolderPath = currentHtmlFilePath.getParentPath();
-		return currentHtmlFolderPath;
-	},
 
 	getCurrentBasePath: function(){
 		var base = new Path(Workbench.getProject());
@@ -743,15 +715,22 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		return basePath;
 	},
-	
+
+	//FIXME: private. inline?
+	getCurrentHtmlFolderPath: function(){
+		var currentHtmlFilePath = this.getFullResourcePath();
+		return currentHtmlFilePath.getParentPath();
+	},
+
+	//FIXME: private
 	getRelativeFileString: function(filename){
 		var currentHtmlFolderPath = this.getCurrentHtmlFolderPath();
 		var folderPath = this.getCurrentBasePath();
 		var filePath = folderPath.append(filename);
-		var relativeFile = filePath.relativeTo(currentHtmlFolderPath).toString();
-		return relativeFile;
+		return filePath.relativeTo(currentHtmlFolderPath).toString();
 	},
-	
+
+	//FIXME: consider inlining.  Is caching necessary?
 	getAppCssRelativeFile: function(){
 		if(!this._appCssRelativeFile){
 			this._appCssRelativeFile = this.getRelativeFileString('app.css');
@@ -759,6 +738,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return this._appCssRelativeFile;
 	},
 	
+	//FIXME: consider inlining.  Is caching necessary?
 	getAppJsRelativeFile: function(){
 		if(!this._appJsRelativeFile){
 			this._appJsRelativeFile = this.getRelativeFileString('app.js');
@@ -766,7 +746,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return this._appJsRelativeFile;
 	},
 	
-    /* ensures the file has a valid theme.  Adds the users default if its not there alread */
+    /* ensures the file has a valid theme.  Adds the users default if its not there already */
     loadTheme: function(newHtmlParms){
     	/* 
     	 * Ensure the model has a default theme.  Defaulting to Claro for now, should
@@ -944,7 +924,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			
 			var containerNode = this.containerNode;
 			containerNode.style.overflow = "hidden";
-			var frame = dojo.create("iframe", this.iframeattrs, containerNode);
+			var frame = domConstruct.create("iframe", this.iframeattrs, containerNode);
 			frame.dvContext = this;
 			this.frameNode = frame;
 			/* this defaults to the base page */
@@ -1114,7 +1094,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	_getLoaderPackages: function() {
-		var libs = Library.getUserLibs(this.getBase()),
+		var base = this.getBase(),
+			libs = Library.getUserLibs(base),
 			dojoBase,
 			packages = [];
 		
@@ -1128,8 +1109,23 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		});
 
 		// Add namespace for custom widgets
-// FIXME: should add this only when compound widgets are part of the page
-		libs = libs.concat({ id: 'widgets', root: this._getWidgetFolder() });
+		// FIXME: should add this only when compound widgets are part of the page
+
+		var getWidgetFolder = function(){
+			var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base);
+			if(!prefs.widgetFolder) {
+				prefs.widgetFolder = "WebContent/lib/custom";
+				Preferences.savePreferences('davinci.ui.ProjectPrefs', base, prefs);
+			}
+		
+			var folder = prefs.widgetFolder;
+			while(folder.length>1 && (folder.charAt(0)=="." || folder.charAt(0)=="/")) {
+				folder = folder.substring(1);
+			}
+			return folder;
+		};
+
+		libs = libs.concat({ id: 'widgets', root: getWidgetFolder() });
 
 		libs.forEach(function(lib) {
 			var id = lib.id;
@@ -1222,7 +1218,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var active = this.isActive();
 		if(active){
 			this.select(null);
-			dojo.forEach(this.getTopWidgets(), this.detach, this);
+			this.getTopWidgets().forEach(this.detach, this);
 		}
 		var states = {},
 		    containerNode = this.getContainerNode();
@@ -1230,14 +1226,14 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if (data.maqAppStates) {
 			states.body = data.maqAppStates;
 		}
-		dojo.forEach(this.getTopWidgets(), function(w){
+		this.getTopWidgets().forEach(function(w){
 			if(w.getContext()){
 				w.destroyWidget();
 			}
 		});
 
 		// remove all registered widgets
-        this.getDijit().registry.forEach(function(w) {
+        this.getGlobal().dijit.registry.forEach(function(w) { //FIXME: use require?
               w.destroy();           
         });
         
@@ -1287,7 +1283,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 		// Set the mobile agaent if there is a device on the body
 		// We need to ensure it is set before the require of deviceTheme is executed
-		var djConfig = this.getDojo().config;  // TODO: use require
+		var djConfig = this.getGlobal().dojo.config;  // TODO: use require
 		var bodyElement = this.getDocumentElement().getChildElement("body");
 		var device = bodyElement && bodyElement.getAttribute(MOBILE_DEV_ATTR);
 		if (device && djConfig) {
@@ -1422,7 +1418,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		/*
 		promise.otherwise(function(e){
 			// remove all registered widgets, some may be partly constructed.
-			this.getDijit().registry.forEach(function(w){
+			this.getGlobal().dijit.registry.forEach(function(w){
 				  w.destroy();			 
 			});
 
@@ -1524,10 +1520,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if(oldBodyClasses != newBodyClasses){
 			var containerNode = this.getContainerNode();
 			if(oldBodyClasses){
-				dojo.removeClass(containerNode, oldBodyClasses);
+				domClass.remove(containerNode, oldBodyClasses);
 			}
 			if(newBodyClasses){
-				dojo.addClass(containerNode, newBodyClasses);
+				domClass.add(containerNode, newBodyClasses);
 			}
 		}
 
@@ -1577,19 +1573,19 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * @param url {string}
 	 */
 	loadStyleSheet: function(url) {
-        // don't add if stylesheet is already loaded in the page
-		var doc = this.getDocument();
-		var dj = this.getDojo(); // TODO: use require
-		var links = dj.query('link');
-		var found = links.some(function(val) {
+		var doc = this.getDocument(),
+			query = this.getGlobal()["require"]("dojo/query"),
+			links = query('link');
+
+		if (links.some(function(val) {
 			return val.getAttribute('href') === url;
-		});
-		if (found) {
+		})) {
+	        // don't add if stylesheet is already loaded in the page
 			return;
 		}
 
 		dojo.withDoc(doc, function() {
-	        var link = dojo.create('link', {
+	        var newLink = domConstruct.create('link', {
 	            rel: 'stylesheet',
 	            type: 'text/css',
 	            href: url
@@ -1599,31 +1595,28 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	        var headElem = doc.getElementsByTagName('head')[0],
 				isAppCss = url.indexOf('app.css') > -1,
 				isContentCss = url.indexOf('content.css') > -1,
-				appCssLink, contentCssLink, appCssIndex, contentCssIndex;
-			for(var i=0; i<links.length; i++){
-				if(links[i].href.indexOf('app.css') > -1){
-					appCssLink = links[i];
-					appCssIndex = i;
-				}else if(links[i].href.indexOf('content.css') > -1){
-					contentCssLink = links[i];
-					contentCssIndex = i;
+				appCssLink, contentCssLink;
+
+			links.forEach(function(link) {
+				if(link.href.indexOf('app.css') > -1){
+					appCssLink = link;
+				}else if(link.href.indexOf('content.css') > -1){
+					contentCssLink = link;
 				}
-			}
-			var index,
-				beforeChild;
+			});
+
+			var beforeChild;
 			if(!isContentCss){
 				if(isAppCss && contentCssLink){
 					beforeChild = contentCssLink;
-					index = contentCssIndex;
 				}else{
 					beforeChild = appCssLink;
-					index = appCssIndex;
 				}
 			}
 			if(beforeChild){
-				headElem.insertBefore(link, beforeChild);
+				headElem.insertBefore(newLink, beforeChild);
 			}else{
-		        headElem.appendChild(link);
+		        headElem.appendChild(newLink);
 			}
 		});
 	},
@@ -1633,14 +1626,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * @param url {string}
 	 */
     unloadStyleSheet: function(url) {
-		var dj = this.getDojo(); // TODO: use require
-		var links = dj.query('link');
-        links.some(function(val, idx) {
-            if (val.getAttribute('href') === url) {
-                dojo.destroy(val);
-                return true; // break
-            }
-        });
+		var query = this.getGlobal()["require"]("dojo/query");
+		query('link').filter(function(node) {
+            return node.getAttribute('href') == url;
+		}).forEach(domConstruct.destroy);
     },
 
 	addModeledStyleSheet: function(url, skipDomUpdate) {
@@ -1650,7 +1639,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if (!this.model.hasStyleSheet(url)) {
 			// Make sure app.css is the last CSS file within the list of @import statements
 	        // FIXME: Shouldn't hardcode this sort of thing
-			var isAppCss = (url.indexOf('app.css') > -1);
+			var isAppCss = url.indexOf('app.css') > -1;
 			var appCssImport;
 			var styleElem = this.model.find({elementType: "HTMLElement", tag: 'style'}, true);
 			if(styleElem){
@@ -1665,12 +1654,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this.model.addStyleSheet(url, undefined, undefined, beforeChild);
 			
 			for (var css in this.model._loadedCSS) {
-				this._loadedCSSConnects.push(connect.connect(this.model._loadedCSS[css], 'onChange', this,
-						'_themeChange'));
+				this._loadedCSSConnects.push(
+					connect.connect(this.model._loadedCSS[css], 'onChange', this, '_themeChange'));
 			}
 		}
 	},
 
+	//FIXME: refactor with hotModifyCSSRule to another module and use in both PageEditor and ThemeEditor
 	_themeChange: function(e){
 		if (e && e.elementType === 'CSSRule'){
 			this.editor.setDirty(true); // a rule change so the CSS files are dirty. we need to save on exit
@@ -1678,7 +1668,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 	},
 
-	
 	// Temporarily stuff a unique class onto element with each _preserveStates call.
 	// Dojo will sometimes replace the widget's root node with a different root node
 	// and transfer IDs and other properties to subnodes. However, Dojo doesn't mess
@@ -1707,7 +1696,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				cache[tempClass].style = node.style.cssText;
 			}else{
 				// Shouldn't be here
-				debugger;
+				console.error('Context._preserveStates: fail'); // FIXME: throw on error?
 			}
 		}
 	},
@@ -1822,7 +1811,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// values for their current state (which was set to initial state earlier
 		// in this routine).
 		var allStateContainers = davinci.ve.states.getAllStateContainers(this.rootNode);
-		var statesInfo = [];
+		var statesInfo = []; //FIXME: unused?
 		for(var i=0; i<allStateContainers.length; i++){
 			var stateContainer = allStateContainers[i];
 			if(stateContainer._maqAppStates && typeof stateContainer._maqAppStates.current == 'string'){
@@ -1868,6 +1857,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return doc ? windowUtils.get(doc) : null;
 	},
 
+	//DEPRECATED
 	getDojo: function(){
 		var win = this.getGlobal();
 		//FIXME: Aren't we asking for downstream bugs if we return "dojo", which is Maqetta's dojo
@@ -1875,6 +1865,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return (win && win.dojo) || dojo;
 	},
 
+	//DEPRECATED
 	getDijit: function(){
 		var win = this.getGlobal();
 		return win && win.dijit || dijit;
@@ -1900,7 +1891,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	getTopWidgets: function(){
-		var topWidgets=[];
+		var topWidgets = [];
 		for(var node = this.rootNode.firstChild; node; node = node.nextSibling){
 			if(node.nodeType == 1 && node._dvWidget){
 				topWidgets.push(node._dvWidget);
@@ -1909,7 +1900,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return topWidgets;
 	},
 
-	//FIXME: remove?
+	//FIXME: move to CreateTool.js
 	getContentPosition: function(position){
 		if(!position){
 			return undefined;
@@ -2114,10 +2105,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				}else{
 					while(domNode && domNode.tagName != 'BODY'){
 						// Sometimes browsers haven't set up defaultView yet,
-						// and dojo.style will raise exception if defaultView isn't there yet
+						// and domStyle.get will raise exception if defaultView isn't there yet
 						if(domNode && domNode.ownerDocument && domNode.ownerDocument.defaultView){
-							var computed_style_display = dojo.style(domNode, 'display');
-							if(computed_style_display == 'none'){
+							var computedStyleDisplay = domStyle.get(domNode, 'display');
+							if(computedStyleDisplay == 'none'){
 								this.deselect(widget);
 								break;
 							}
@@ -2139,6 +2130,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * Sees if (pageX,pageY) is within bounds of any of the selection rectangles
 	 * If so, return the corresponding selected widget
 	 */
+	//FIXME: move to SelectTool.js?
 	checkFocusXY: function(pageX, pageY){
 		var selection = this.getSelection();
 		for(var i=0; i<selection.length; i++){
@@ -2152,6 +2144,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	// Hide all focus objects associated with current selection
+	//FIXME: move to SelectTool.js?
 	selectionHideFocus: function(){
 		var selection = this.getSelection();
 		for(var i=0; i<selection.length; i++){
@@ -2160,13 +2153,28 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	// Show all focus objects associated with current selection
+	//FIXME: move to SelectTool.js?
 	selectionShowFocus: function(){
 		var selection = this.getSelection();
 		for(var i=0; i<selection.length; i++){
 			this._focuses[i].show(selection[i], {});
 		}
 	},
-	
+
+	/**
+	 * Returns true if the given node is part of the focus (ie selection) chrome
+	 */
+	isFocusNode: function(node){
+		if(this._selection && this._selection.length && this._focuses && this._focuses.length >= this._selection.length){
+			for(var i=0; i<this._selection.length; i++){
+				if(this._focuses[i].isFocusNode(node)){
+					return true;
+				}
+			}
+		}
+		return false;
+	},
+
 	focus: function(state, index, inline){
 		this._focuses = this._focuses || [];
 		var clear = false;
@@ -2236,8 +2244,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		}
 	},
-	
 
+	//FIXME: refactor.  Does not need to be in Context.js
 	getPreference: function(name){
 		if(!name){
 			return undefined;
@@ -2327,6 +2335,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	// getter/setter for currently active drag/drop object
+	// FIXME: remove getter/setter
 	getActiveDragDiv: function(){
 		return this._activeDragDiv;
 	},
@@ -2337,20 +2346,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	
 	blockChange: function(shouldBlock){
 		this._blockChange = shouldBlock;
-	},
-	
-	/**
-	 * Returns true if the given node is part of the focus (ie selection) chrome
-	 */
-	isFocusNode: function(node){
-		if(this._selection && this._selection.length && this._focuses && this._focuses.length >= this._selection.length){
-			for(var i=0; i<this._selection.length; i++){
-				if(this._focuses[i].isFocusNode(node)){
-					return true;
-				}
-			}
-		}
-		return false;
 	},
 
 	onMouseDown: function(event){
@@ -2516,7 +2511,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		}, this);
 
-		// ALP->WBR: do we still need this? move to ThemeEditor's context?
+		//FIXME: ALP->WBR: do we still need this? move to ThemeEditor's context?
 		if (this.editor.editorID == 'davinci.themeEdit.ThemeEditor'){
 			var helper = Theme.getHelper(this.visualEditor.theme);
 			if(helper && helper.onContentChange){
@@ -2546,6 +2541,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		connect.publish("/davinci/ui/widgetSelected",[selection]);
 	},
 
+	//FIXME: candidate to move to a separate module
 	hotModifyCssRule: function(r){
 		
 		function updateSheet(sheet, rule){
@@ -2571,7 +2567,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					}
 					
 				}
-				if (rule.properties.length > 0) { // only inser rule if it has properties
+				if (rule.properties.length) { // only insert rule if it has properties
 					var text = rule.getText({noComments:true});
 //					console.log("------------  Hot Modify Insert " + foundSheet.href +  "index " +r+" ----------------:=\n" + text + "\n");
 					foundSheet.insertRule(text, r);
@@ -2613,13 +2609,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		});
 	},
 
+	//FIXME: does not need to be in Context.js. Refactor with modifyRule
 	ruleSetAllProperties: function(rule, values){
 		rule.removeAllProperties();
 		for(i = 0;i<values.length;i++){
 			rule.addProperty(values[i].name, values[i].value); // #23 all we want to put back is the values
 		}
 	},
-	
+
+	//FIXME: refactor. move code to ModifyRuleCommand?
 	modifyRule: function(rule, values){
 		var i,
 			p,
@@ -2702,7 +2700,17 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		
 		//this.hotModifyCssRule(rule); // #23 this get called by _themeChange
 	},
-	
+
+	//FIXME: move to Cascade.js
+	getBodyId: function(){
+		/* return the ID of the body element */
+		
+		var bodyNode = this.model.find({elementType:'HTMLElement', tag:'body'}, true),
+			id = bodyNode.find({elementType:'HTMLAttribute', name:'id'}, true);
+		return id.value;
+	},
+
+	//FIXME: refactor. Move to Cascade.js?
 	getRelativeMetaTargetSelector: function(target){
 		
 		var theme = this.getThemeMeta();
@@ -2730,7 +2738,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return theme.metadata.getRelativeStyleSelectorsText(widgetType, state, null, target, this.getTheme().className);
 		
 	},
-		
+
+	//FIXME: refactor. Move to Cascade.js?  make private?
 	getSelector: function(widget, target){
 		// return rules based on metadata IE theme
 		
@@ -2766,39 +2775,35 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		}
 	},
-	
+
+	//FIXME: refactor. Move to Cascade.js?
 	getMetaTargets: function(widget, target){
 		var name = this.getSelector(widget, target),
-			model = this.getModel();
-		var rules = model.getRule(name); 
+			rules = this.getModel().getRule(name); 
 		/*
 		 * getRule returns all rules that match the selector, this can be to many in the case of combined rules
 		 * so weed them out so we have an exact match to the metaData
 		 */
-		var retRules = [];
-		rules.forEach(function(rule){
-			if (rule.getSelectorText() === name) {
-				retRules.push(rule);
-			}
-		}.bind(this));
-		
-		return retRules; // model.getRule(name);
+		return rules.filter(function(rule){
+			return rule.getSelectorText() == name;
+		});
 	},
-	
+
 	/* returns the top/target dom node for a widget for a specific property */
-	
+	//FIXME: refactor. Move to Cascade.js?
 	getWidgetTopDom: function (widget,propertyTarget){
 	
 		var selector = this.getSelector(widget, propertyTarget);
 		// find the DOM node associated with this rule.
-		function findTarget(target, rule){
+		var findTarget = function(target, rule){
 			if(rule.matches(target)) {
 				return target;
 			}
 			for(var i = 0;i<target.children.length;i++){
 				return findTarget(target.children[i], rule); //FIXME: return stops for-loop at i=0
 			}
-		}
+		};
+
 		if(selector){
 			var rule = new CSSRule();
 			rule.setText(selector + "{}");
@@ -2806,7 +2811,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		return null;
 	},
-	
+
+	//FIXME: refactor. Move to Cascade.js?	
 	getSelectionCssRules: function(targetDomNode){
 		this._cssCache = this._cssCache || {}; // prevent undefined exception in theme editor
 		var hashDomNode = function (node) {
@@ -2846,7 +2852,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 		return {rules:null, matchLevels:null};
 	},
-	
+
+	//FIXME: refactor. Move to Cascade.js?  need to account for polymorphism in themeEditor/Context
 	getStyleAttributeValues: function(widget){
 		//FIXME: This totally seems to have missed the array logic
 		var vArray = widget ? widget.getStyleValues() : [];
@@ -3110,7 +3117,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		}
 
-		if (! scriptText) {
+		if (!scriptText) {
 			// create a new script element
 			var script = new HTMLElement('script');
 			script.addAttribute('type', 'text/javascript');
@@ -3147,7 +3154,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	/**
-	 * Add element to <head> of document.  Modeled on dojo.create().
+	 * Add element to <head> of document.  Modeled on domConstruct.create().
 	 */
 	_addHeadElement: function(tag, attrs/*, refNode, pos*/, allowDup) {
 		var head = this.getDocumentElement().getChildElement('head');
@@ -3176,7 +3183,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		
 		// add to DOM...
 		dojo.withGlobal(this.getGlobal(), function() {
-			dojo.create(tag, attrs, query('head')[0]);
+			domConstruct.create(tag, attrs, query('head')[0]);
 		});
 	},
 	
@@ -3210,11 +3217,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					queryStr += '[' + name + '="' + attrs[name] + '"]';
 				}
 			}
-			//dojo.destroy(query(queryStr)[0]);
-			var n = query(queryStr)[0];
-			if (n){ // throws exception if n is null
-			    dojo.destroy(n);
-			}
+			query(queryStr).orphan();
 		});
 	},
 
@@ -3253,7 +3256,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var dojoScript = this._getDojoJsElem(),
 			djConfig = dojoScript.getAttribute('data-dojo-config');
 		djConfig = djConfig ? require.eval("({ " + djConfig + " })", "data-dojo-config") : {};
-		var regEx ='';
+		var regEx = "";
 		/*
 		 * This is nasty, but djConfig.mblLoadCompatPattern is a regexp and if you attempt to 
 		 * JSON.stringfy a regexp you get "{}" not very useful
@@ -3289,9 +3292,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var str = JSON.stringify(djConfig).slice(1, -1).replace(/"/g, "'");
 		/*
 		 * This is where we add the regexp string to the stringified object.
-		 * Read the not above about why this is need.
+		 * Read the note above about why this is needed.
 		 */
-		str = str + regEx,
+		str += regEx,
 		dojoScript.setAttribute('data-dojo-config', str);
 	},
 
@@ -3325,9 +3328,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// monitoring of which stylesheets get loaded for a given theme
 
 		try {
-			var dm = this.getGlobal()['require']('dojox/mobile');
-			var deviceTheme = this.getGlobal()['require']('dojox/mobile/deviceTheme');
-			var djConfig = this.getDojo().config,  // TODO: use require
+			var innerRequire = this.getGlobal()['require'],
+				dm = innerRequire('dojox/mobile'),
+				deviceTheme = innerRequire('dojox/mobile/deviceTheme'),
+				djConfig = this.getGlobal().dojo.config,  // TODO: use require
 				djConfigModel = this._getDojoJsElem().getAttribute('data-dojo-config'),
 				ua = djConfig.mblUserAgent || 'none',
 				themeMap,
@@ -3425,7 +3429,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			cp = this._chooseParent,
 			widgets = params.widgets,
 			data = params.data,
-			eventTarget = params.eventTarget,
+//			eventTarget = params.eventTarget,
 			position = params.position,
 			absolute = params.absolute,
 			currentParent = params.currentParent,
@@ -3440,19 +3444,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// inner function that gets called recurively for each widget in document
 		// The "this" object for this function is the Context object
 		var _updateThisWidget = function(widget){
-			if(params.widgets){
-				if(params.widgets.indexOf(widget) >= 0){
-					// Drag operations shouldn't apply to any of the widget being dragged
-						return;
-					}
-				}
+			if(widgets && widgets.indexOf(widget) >= 0){
+				// Drag operations shouldn't apply to any of the widget being dragged
+				return;
+			}
 			
-			var node = widget.domNode,
-				dj = this.getDojo(),  // TODO: use require
-				computed_style = dj.style(node);
+			var innerStyle = this.getGlobal()['require']('dojo/dom-style'),
+				computedStyle = innerStyle.get(widget.domNode);
 
 			if(doSnapLinesX || doSnapLinesY){
-				Snap.findSnapOpportunities(this, widget, computed_style, doSnapLinesX, doSnapLinesY);
+				Snap.findSnapOpportunities(this, widget, computedStyle, doSnapLinesX, doSnapLinesY);
 			}
 			cp.findParentsXY({data:data, widget:widget, absolute:absolute, position:position, doCursor:doCursor, beforeAfter:beforeAfter});
 			dojo.forEach(widget.getChildren(), function(w){
@@ -3489,7 +3490,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		Snap.clearSnapLines(this);
 		this._chooseParent.cleanup(this);
 	},
-	
+
+	//FIXME: refactor. move to Cascade.js?
 	getThemeMetaDataByWidget: function(widget){
 		
 		var theme = this.getThemeMeta();
@@ -3662,7 +3664,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 	},
 	
-	// move to SelectTool.js?
+	//FIXME: move to SelectTool.js?
 	getPageLeftTop: function(node){
 		var leftAdjust = node.offsetLeft;
 		var topAdjust = node.offsetTop;
@@ -3690,8 +3692,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			dirty = baseRes.isDirty();
 		}
 		
-		if(dirty)
+		if(dirty) {
 			return dirty;
+		}
 		var visitor = {
 			visit: function(node){
 				if((node.elementType=="HTMLFile" || node.elementType=="CSSFile") && node.isDirty()){
@@ -3702,11 +3705,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		};
 		
 		this.getModel().visit(visitor);
-		if (dirty){
-			return dirty;
+
+		if (!dirty) {
+			dirty = this.dirtyDynamicCssFiles(this.cssFiles);
 		}
-		
-		dirty = this.dirtyDynamicCssFiles(this.cssFiles);
+
 		return dirty;
 
 	},
@@ -3716,9 +3719,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * In the returned result, parents are listed before their children.
 	 */
 	getAllWidgets: function(){
-		var result=[];
-		function find(widget)
-		{
+		var result = [];
+		function find(widget) {
 			result.push(widget);
 			widget.getChildren().forEach(function(child) {
 				find(child);
@@ -3736,30 +3738,29 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	getParentIframeBounds: function(){
 		var parentIframe = this.getParentIframe();
 		if(parentIframe){
-			var box = GeomUtils.getBorderBoxPageCoords(parentIframe);
-			return box;
+			return GeomUtils.getBorderBoxPageCoords(parentIframe);
 		}
 	},
 	
 	/**
 	 * Returns {l:,t:,w:,h:} of the ContentPane holding design view relative to outer frame holding the Maqetta app
 	 */
+	//FIXME: unused?
 	getDesignPaneBounds: function(){
-		var parentIframe = this.getParentIframe();
-		var node = parentIframe;
-		var designCP;
+		var node = this.getParentIframe(),
+			designCP;
+
 		while(node && node.tagName != 'BODY'){
-			if(dojo.hasClass(node, 'designCP')){
+			if(domClass.contains(node, 'designCP')){
 				designCP = node;
 			}
 			node = node.parentNode;
 		}
 		if(designCP){
-			var box = GeomUtils.getBorderBoxPageCoords(designCP);
-			return box;
-		}else{
-			console.error('Context.js:getDesignPaneBounds. No designCP');
+			return GeomUtils.getBorderBoxPageCoords(designCP);
 		}
+
+		console.error('Context.js:getDesignPaneBounds. No designCP');
 	},
 	
 	/**
@@ -3773,23 +3774,19 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * Clear any cached widget bounds
 	 */
 	clearCachedWidgetBounds: function(){
-		var allWidgets = this.getAllWidgets();
-		for(var i=0; i<allWidgets.length; i++){
-			var domNode = allWidgets[i].domNode;
-			if(domNode){
+		this.getAllWidgets().forEach(function(widget) {
+			var domNode = widget.domNode;
+			if (domNode) {
 				GeomUtils.clearGeomCache(domNode);
-			}
-		}
+			}			
+		});
 	},
 	
 	/**
 	 * Reorder a list of widgets to preserve sibling order for widgets in the list
 	 */
 	reorderPreserveSiblingOrder: function(origArray){
-		var newArray = [];
-		for(var i=0; i<origArray.length; i++){ //FIXME: use Array.concat to do a shallow copy
-			newArray[i] = origArray[i];
-		}
+		var newArray = [].concat(origArray); // shallow copy
 		var j=0;
 		while(j < (newArray.length - 1)){
 			var refWidget = newArray[j];
@@ -3826,17 +3823,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	
 	_updateWidgetHash: function(){
 		this.widgetHash = {};
-		var allWidgets = this.getAllWidgets();
-		for(var i=0; i<allWidgets.length; i++){
-			var widget = allWidgets[i];
+		this.getAllWidgets().forEach(function(widget) {
 			var id = widget.id;
 			if(id){
 				this.widgetHash[id] = widget;
 			}
-		}
-
+		}, this);
 	}
-
 });
 
 });

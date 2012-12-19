@@ -3,11 +3,11 @@ define([
     "davinci/Workbench",
 	"dojo/_base/connect",
 	"davinci/ve/tools/CreateTool",
+	"davinci/ve/utils/GeomUtils",
 	"davinci/commands/CompoundCommand",
-	"davinci/ve/commands/ModifyCommand",
 	"davinci/ve/commands/StyleCommand",
 	"davinci/ve/widget"
-], function(Runtime, Workbench, connect, CreateTool, CompoundCommand, ModifyCommand, StyleCommand, widgetUtils) {
+], function(Runtime, Workbench, connect, CreateTool, GeomUtils, CompoundCommand, StyleCommand, widgetUtils) {
 
 var _ShapeHelper = function() {};
 _ShapeHelper.prototype = {
@@ -94,7 +94,7 @@ _ShapeHelper.prototype = {
 			if(!tool){
 				return;
 			}
-			if(tool.isInstanceOf(davinci.ve.tools.CreateTool)){
+			if(tool.isInstanceOf(CreateTool)){
 				var fakeEvent = this._makeFakeEvent(e);
 				tool.onMouseDown(fakeEvent);
 				return;
@@ -167,7 +167,7 @@ _ShapeHelper.prototype = {
 			if(!tool){
 				return;
 			}
-			if(tool.isInstanceOf(davinci.ve.tools.CreateTool)){
+			if(tool.isInstanceOf(CreateTool)){
 				var fakeEvent = this._makeFakeEvent(e);
 				tool.onMouseUp(fakeEvent);
 				return;
@@ -301,13 +301,13 @@ _ShapeHelper.prototype = {
 	 */
 	_makeFakeEvent: function(e){
 		var currentEditor = Runtime.currentEditor;
-		var context = (currentEditor.getContext && currentEditor.getContext());
+		var context = currentEditor.getContext && currentEditor.getContext();
 		var fakeEvent = {};
 		for(var prop in e){
 			fakeEvent[prop] = e[prop];
 		}
 		fakeEvent.target = context.rootNode;
-		var parentIframeBounds = context.getParentIframeBounds();
+		var parentIframeBounds = GeomUtils.getBorderBoxPageCoords(context.getParentIframe());
 		fakeEvent.pageX -= parentIframeBounds.l;
 		fakeEvent.pageY -= parentIframeBounds.t;
 		return fakeEvent;

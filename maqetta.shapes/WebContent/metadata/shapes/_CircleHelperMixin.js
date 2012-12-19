@@ -1,15 +1,16 @@
 define([
     "davinci/Workbench",
     "davinci/workbench/Preferences",
-	"davinci/ve/commands/ModifyCommand"
-], function(Workbench, Preferences, ModifyCommand) {
+	"davinci/ve/commands/ModifyCommand",
+	"davinci/ve/utils/GeomUtils"
+], function(Workbench, Preferences, ModifyCommand, GeomUtils) {
 
 var _CircleHelperMixin = function() {};
 _CircleHelperMixin.prototype = {
 
 	onCreateResize: function(compoundCommand, widget, width, height){
 		var valuesObject = this._updateCenterAndRadius(widget, width/2, height/2);
-		compoundCommand.add(davinci.ve.commands.ModifyCommand(widget, valuesObject, null));
+		compoundCommand.add(ModifyCommand(widget, valuesObject, null));
 	},
 
 	dragPointsStrings:['left_top','center_top','right_top','right_middle',
@@ -82,9 +83,9 @@ _CircleHelperMixin.prototype = {
 			console.error('_RectShapeHelperMixin dragEndPointDelta(): index='+index);
 			return;
 		}
-        var context = this._widget ? this._widget.getContext() : undefined;
+        var context = this._widget && this._widget.getContext();
         if(context){
-            var parentIframeBounds = context.getParentIframeBounds();
+            var parentIframeBounds = GeomUtils.getBorderBoxPageCoords(context.getParentIframe());
             pageX -= parentIframeBounds.l;
             pageY -= parentIframeBounds.t;
         }
@@ -203,7 +204,7 @@ _CircleHelperMixin.prototype = {
 		var dijitWidget = widget.dijitWidget;
 		var valuesObject = this._updateCenterAndRadius(widget, dijitWidget._rx, dijitWidget._ry);
 		command.add(new ModifyCommand(widget, valuesObject, null));
-        var context = this._widget ? this._widget.getContext() : undefined;
+        var context = this._widget && this._widget.getContext();
         context.dragMoveCleanup();
 	},
     
@@ -218,7 +219,6 @@ _CircleHelperMixin.prototype = {
 		valuesObject.rx = rx;
 		valuesObject.ry = ry;
 		return valuesObject;
-	
     }
 };
 

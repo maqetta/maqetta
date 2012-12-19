@@ -1,15 +1,16 @@
 define([
     "davinci/Workbench",
     "davinci/workbench/Preferences",
-	"davinci/ve/commands/ModifyCommand"
-], function(Workbench, Preferences, ModifyCommand) {
+	"davinci/ve/commands/ModifyCommand",
+	"davinci/ve/utils/GeomUtils"
+], function(Workbench, Preferences, ModifyCommand, GeomUtils) {
 
 var _RectHelperMixin = function() {};
 _RectHelperMixin.prototype = {
 
 	onCreateResize: function(compoundCommand, widget, width, height){
 		var valuesObject = {width:width, height:height};
-		compoundCommand.add(davinci.ve.commands.ModifyCommand(widget, valuesObject, null));
+		compoundCommand.add(ModifyCommand(widget, valuesObject, null));
 	},
 
 	dragPointsStrings:['left_top','right_top','right_bottom','left_bottom'],
@@ -72,9 +73,9 @@ _RectHelperMixin.prototype = {
 			console.error('_RectShapeHelperMixin dragEndPointDelta(): index='+index);
 			return;
 		}
-        var context = this._widget ? this._widget.getContext() : undefined;
+        var context = this._widget && this._widget.getContext();
         if(context){
-            var parentIframeBounds = context.getParentIframeBounds();
+            var parentIframeBounds = GeomUtils.getBorderBoxPageCoords(context.getParentIframe());
             pageX -= parentIframeBounds.l;
             pageY -= parentIframeBounds.t;
         }

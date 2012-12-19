@@ -895,7 +895,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				// If so, then apply the move to that state.
 				applyToWhichStates = States.propertyDefinedForAnyCurrentState(this._moverWidget.domNode, ['left','top','right','bottom']) ;
 			}
-			var offsetParentLeftTop = this._context.getPageLeftTop(this._moverWidget.domNode.offsetParent);
+			var offsetParentLeftTop = this._getPageLeftTop(this._moverWidget.domNode.offsetParent);
 			var newLeft =  (moverBox.l - offsetParentLeftTop.l);
 			var newTop = (moverBox.t - offsetParentLeftTop.t);
 			var dx = newLeft - this._moverStartLocations[index].l;
@@ -939,7 +939,20 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			this._setTarget(targetNode);
 		}
 	},
-	
+
+	_getPageLeftTop: function(node){
+		var leftAdjust = node.offsetLeft,
+			topAdjust = node.offsetTop,
+			pn = node.offsetParent;
+
+		while(pn && pn.tagName != 'BODY'){
+			leftAdjust += pn.offsetLeft;
+			topAdjust += pn.offsetTop;
+			pn = pn.offsetParent;
+		}
+		return {l:leftAdjust, t:topAdjust};
+	},
+
 	_areaSelectInit: function(initPageX, initPageY){
 		this._areaSelect = { x:initPageX, y:initPageY, attached:false };
 		this._areaSelectDiv = dojo.create('div',

@@ -2747,7 +2747,7 @@ return declare([ThemeModifier], {
 		//	  See bug 7585.
 		if (!isDojoJS && !skipDomUpdate) {
 			var context = this,
-				absoluteUrl = new dojo._Url(this.getDocument().baseURI, url).toString();
+				absoluteUrl = new dojo._Url(this.getDocument().baseURI, url).toString(); //FIXME: use require.toUrl
 			// This xhrGet() used to include `handleAs: "javascript"`, surrounded
 			// by a `dojo.withGlobal`.  However, `dojo.eval` regressed in Dojo 1.7,
 			// such that it no longer evals using `dojo.global` -- instead evaling
@@ -3509,28 +3509,7 @@ return declare([ThemeModifier], {
 			return GeomUtils.getBorderBoxPageCoords(parentIframe);
 		}
 	},
-	
-	/**
-	 * Returns {l:,t:,w:,h:} of the ContentPane holding design view relative to outer frame holding the Maqetta app
-	 */
-	//FIXME: unused?
-	getDesignPaneBounds: function(){
-		var node = this.getParentIframe(),
-			designCP;
 
-		while(node && node.tagName != 'BODY'){
-			if(domClass.contains(node, 'designCP')){
-				designCP = node;
-			}
-			node = node.parentNode;
-		}
-		if(designCP){
-			return GeomUtils.getBorderBoxPageCoords(designCP);
-		}
-
-		console.error('Context.js:getDesignPaneBounds. No designCP');
-	},
-	
 	/**
 	 * Returns the container node for all of the focus chrome DIVs
 	 */

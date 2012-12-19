@@ -214,46 +214,14 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		this._nobs[LEFT_BOTTOM].style.display = display.left_bottom;
 		this._nobs[RIGHT_TOP].style.display = display.right_top;
 		this._nobs[RIGHT_BOTTOM].style.display = display.right_bottom;
-		if(this._resizeLeft){
-			this._nobs[LEFT].style.cursor = this._frames[LEFT].style.cursor = "w-resize";
-		}else{
-			this._nobs[LEFT].style.cursor = this._frames[LEFT].style.cursor = "auto";
-		}
-		if(this._resizeRight){
-			this._nobs[RIGHT].style.cursor = this._frames[RIGHT].style.cursor = "e-resize";
-		}else{
-			this._nobs[RIGHT].style.cursor = this._frames[RIGHT].style.cursor = "auto";
-		}
-		if(this._resizeTop){
-			this._nobs[TOP].style.cursor = this._frames[TOP].style.cursor = "n-resize";
-		}else{
-			this._nobs[TOP].style.cursor = this._frames[TOP].style.cursor = "auto";
-		}
-		if(this._resizeBottom){
-			this._nobs[BOTTOM].style.cursor = this._frames[BOTTOM].style.cursor = "s-resize";
-		}else{
-			this._nobs[BOTTOM].style.cursor = this._frames[BOTTOM].style.cursor = "auto";
-		}
-		if(display.left_top != "none"){
-			this._nobs[LEFT_TOP].style.cursor = "nw-resize";
-		}else{
-			this._nobs[LEFT_TOP].style.cursor = "auto";
-		}
-		if(display.left_bottom != "none"){
-			this._nobs[LEFT_BOTTOM].style.cursor = "sw-resize";
-		}else{
-			this._nobs[LEFT_BOTTOM].style.cursor = "auto";
-		}
-		if(display.right_top != "none"){
-			this._nobs[RIGHT_TOP].style.cursor = "ne-resize";
-		}else{
-			this._nobs[RIGHT_TOP].style.cursor = "auto";
-		}
-		if(display.right_bottom != "none"){
-			this._nobs[RIGHT_BOTTOM].style.cursor = "se-resize";
-		}else{
-			this._nobs[RIGHT_BOTTOM].style.cursor = "auto";
-		}
+		this._nobs[LEFT].style.cursor = this._frames[LEFT].style.cursor = this._resizeLeft ? "w-resize" : "auto";
+		this._nobs[RIGHT].style.cursor = this._frames[RIGHT].style.cursor = this._resizeRight ? "e-resize" : "auto";
+		this._nobs[TOP].style.cursor = this._frames[TOP].style.cursor = this._resizeTop ? "n-resize" : "auto";
+		this._nobs[BOTTOM].style.cursor = this._frames[BOTTOM].style.cursor = this._resizeBottom ? "s-resize" : "auto";
+		this._nobs[LEFT_TOP].style.cursor = display.left_top != "none" ? "nw-resize" : "auto";
+		this._nobs[LEFT_BOTTOM].style.cursor = display.left_bottom != "none" ? "sw-resize" : "auto";
+		this._nobs[RIGHT_TOP].style.cursor = display.right_top != "none" ? "ne-resize" : "auto";
+		this._nobs[RIGHT_BOTTOM].style.cursor = display.right_bottom != "none" ? "se-resize" : "auto";
 	},
 
 	/**
@@ -285,7 +253,6 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var parentbounds = GeomUtils.getBorderBoxPageCoords(parentIframe);
 		rect.l += parentbounds.l;
 		rect.t += parentbounds.t;
-		var htmlElement = parentIframe.contentDocument.documentElement;
 		var bodyElement = parentIframe.contentDocument.body;
 		rect.l -= GeomUtils.getScrollLeft(bodyElement);
 		rect.t -= GeomUtils.getScrollTop(bodyElement);
@@ -313,7 +280,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		if(offScreenAdjust && body){
 			// Determine if parts of selection are off screen
 			// If so, shift selection DIVs to make it visible
-			var farthestLest, farthestTop, farthestRight, farthestBottom;
+			var farthestLeft, farthestTop, farthestRight, farthestBottom;
 			var canvasLeft = GeomUtils.getScrollLeft(body);
 			var canvasTop = GeomUtils.getScrollTop(body);;
 			var canvasRight = canvasLeft + body.clientWidth;
@@ -738,13 +705,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 	 * Returns true if the given node is part of the focus (ie selection) chrome
 	 */
 	isFocusNode: function(node){
-		if(dojo.hasClass(node, 'focusDragDiv') || 
+		return dojo.hasClass(node, 'focusDragDiv') || 
 				dojo.hasClass(node, 'editFocusNob') || dojo.hasClass(node, 'editFocusFrame') ||
-				dojo.hasClass(node, 'maqFocus') || dojo.hasClass(node, 'editFocusStdChrome')){
-			return true;
-		}else{
-			return false;
-		}
+				dojo.hasClass(node, 'maqFocus') || dojo.hasClass(node, 'editFocusStdChrome');
 	},
 
     /**************************************

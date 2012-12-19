@@ -3444,20 +3444,7 @@ return declare([ThemeModifier], {
 			delete this.widgetHash[widget.id];
 		}
 	},
-	
-	//FIXME: move to SelectTool.js?
-	getPageLeftTop: function(node){
-		var leftAdjust = node.offsetLeft;
-		var topAdjust = node.offsetTop;
-		var pn = node.offsetParent;
-		while(pn && pn.tagName != 'BODY'){
-			leftAdjust += pn.offsetLeft;
-			topAdjust += pn.offsetTop;
-			pn = pn.offsetParent;
-		}
-		return {l:leftAdjust, t:topAdjust};
-	},
-	
+
 	resizeAllWidgets: function () {
 		this.getTopWidgets().forEach(function (widget) {
 			if (widget.resize) {

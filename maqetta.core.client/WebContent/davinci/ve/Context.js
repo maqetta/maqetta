@@ -32,7 +32,6 @@ define([
 	"../html/HtmlFileXPathAdapter",
 	"./HTMLWidget",
 	"../html/CSSModel", // shorthands
-	"../html/CSSRule",
 	"../html/CSSImport",
 	"../html/HTMLElement",
 	"../html/HTMLText",
@@ -76,7 +75,6 @@ define([
 	HtmlFileXPathAdapter,
 	HTMLWidget,
 	CSSModel,
-	CSSRule,
 	CSSImport,
 	HTMLElement,
 	HTMLText,
@@ -98,7 +96,7 @@ var MOBILE_DEV_ATTR = 'data-maq-device',
 
 var contextCount = 0;
 
-return declare("davinci.ve.Context", [ThemeModifier], {
+return declare([ThemeModifier], {
 
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit/dijit",
@@ -2701,158 +2699,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		//this.hotModifyCssRule(rule); // #23 this get called by _themeChange
 	},
 
-	//FIXME: move to Cascade.js
-	getBodyId: function(){
-		/* return the ID of the body element */
-		
-		var bodyNode = this.model.find({elementType:'HTMLElement', tag:'body'}, true),
-			id = bodyNode.find({elementType:'HTMLAttribute', name:'id'}, true);
-		return id.value;
-	},
-
-	//FIXME: refactor. Move to Cascade.js?
-	getRelativeMetaTargetSelector: function(target){
-		
-		var theme = this.getThemeMeta();
-		if(!theme) {
-			return [];
-		}
-/*FIXME: OLD LOGIC
-//FIXME: Ramifications if nested states?
-//FIXME: getState(node)?
-		var state = davinci.ve.states.getState();
-		
-		if(!state) {
-			state = "Normal";
-		}
-*/
-		var state = "Normal";
-		var widget = this.getSelection();
-		if(!widget.length){
-			return [];
-		}
-		widget = widget[0];
-		
-		var widgetType = theme.loader.getType(widget);
-	
-		return theme.metadata.getRelativeStyleSelectorsText(widgetType, state, null, target, this.getTheme().className);
-		
-	},
-
-	//FIXME: refactor. Move to Cascade.js?  make private?
-	getSelector: function(widget, target){
-		// return rules based on metadata IE theme
-		
-		var theme = this.getThemeMeta();
-		if(!theme){
-			return [];
-		}
-		// Note: Let's be careful to not get confused between the states in theme metadata
-		// and the user-defined interactive states that are part of a user-created HTML page
-		// For theme editor, we need to use whatever state is selected in States palette
-		// For page editor, always use "Normal"
-		var state = "Normal";
-/*FIXME: OLD LOGIC
-		if (this.editor.editorID == 'davinci.themeEdit.ThemeEditor'){
-//FIXME: Ramifications if nested states? (Maybe OK: theme editor specific)
-//getState(node)
-			state = davinci.ve.states.getState();
-		}
-*/
-		
-		var widgetType = theme.loader.getType(widget),
-			selectors = theme.metadata.getStyleSelectors(widgetType,state);
-
-		if(selectors){
-			for(var name in selectors){
-				for(var i = 0; i < selectors[name].length; i++){
-					for(var s = 0 ; s < target.length; s++) {
-						if(target[s] == selectors[name][i]){
-							return name;
-						}
-					}
-				}
-			}
-		}
-	},
-
-	//FIXME: refactor. Move to Cascade.js?
-	getMetaTargets: function(widget, target){
-		var name = this.getSelector(widget, target),
-			rules = this.getModel().getRule(name); 
-		/*
-		 * getRule returns all rules that match the selector, this can be to many in the case of combined rules
-		 * so weed them out so we have an exact match to the metaData
-		 */
-		return rules.filter(function(rule){
-			return rule.getSelectorText() == name;
-		});
-	},
-
-	/* returns the top/target dom node for a widget for a specific property */
-	//FIXME: refactor. Move to Cascade.js?
-	getWidgetTopDom: function (widget,propertyTarget){
-	
-		var selector = this.getSelector(widget, propertyTarget);
-		// find the DOM node associated with this rule.
-		var findTarget = function(target, rule){
-			if(rule.matches(target)) {
-				return target;
-			}
-			for(var i = 0;i<target.children.length;i++){
-				return findTarget(target.children[i], rule); //FIXME: return stops for-loop at i=0
-			}
-		};
-
-		if(selector){
-			var rule = new CSSRule();
-			rule.setText(selector + "{}");
-			return findTarget(widget.domNode || widget, rule);
-		}
-		return null;
-	},
-
-	//FIXME: refactor. Move to Cascade.js?	
-	getSelectionCssRules: function(targetDomNode){
-		this._cssCache = this._cssCache || {}; // prevent undefined exception in theme editor
-		var hashDomNode = function (node) {
-			return node.id + "_" + node.className;
-		};
-		var selection = this.getSelection();
-		if (!targetDomNode && !selection.length) {
-			return {rules:null, matchLevels:null};
-		}
-		
-		var targetDom = targetDomNode || selection[0].domNode || selection[0],
-			domHash = hashDomNode(targetDom);
-		
-		/*
-		if(this._cssCache[domHash])
-			return this._cssCache[domHash];
-		*/
-		
-		if(selection.length){
-			var match = this._cssCache[domHash] = this.model.getMatchingRules(targetDom, true);
-			if (this.cssFiles) {
-				this.cssFiles.forEach(function(file){
-					file.getMatchingRules(targetDom, match.rules, match.matchLevels); // adds the dynamic rules to the match
-				});
-				//this.cssFiles[0].getMatchingRules(targetDom, match.rules, match.matchLevels); // adds the dynamic rules to the match
-			}
-			match.rules.forEach(function(rule) {
-				/* remove stale elements from the cache if they change */
-				var handle = dojo.hitch(rule, "onChange", this, function(){
-					delete this._cssCache[domHash];
-					connect.unsubscribe(handle);
-				});
-			}, this);
-			
-			return match;
-		}
-
-		return {rules:null, matchLevels:null};
-	},
-
 	//FIXME: refactor. Move to Cascade.js?  need to account for polymorphism in themeEditor/Context
 	getStyleAttributeValues: function(widget){
 		//FIXME: This totally seems to have missed the array logic
@@ -3491,40 +3337,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this._chooseParent.cleanup(this);
 	},
 
-	//FIXME: refactor. move to Cascade.js?
-	getThemeMetaDataByWidget: function(widget){
-		
-		var theme = this.getThemeMeta();
-		if (!theme) {
-			return null;
-		}
-		
-		var widgetType = theme.loader.getType(widget);
-		var meta = theme.loader.getMetaData(widgetType);
-		
-		var isHtmlWidget = false;
-		var parts = (typeof widgetType == 'string') ? widgetType.split('.') : null;
-		if(parts && parts[0] == 'html'){
-			isHtmlWidget = true;
-		}
-		if (!meta && this.cssFiles && !isHtmlWidget){
-			// chack the dynamiclly added files
-			for (var i = 0; i < this.cssFiles.length; i++){
-				var dTheme = Theme.getThemeByCssFile(this.cssFiles[i]);
-				if (dTheme) {
-					var themeMeta = Library.getThemeMetadata(dTheme);
-					// found a theme for this css file, check for widget meta data
-					meta = themeMeta.loader.getMetaData(widgetType);
-					if (meta){
-						break;
-					}
-				}
-			}
-			
-		}
-		return meta;
-	},
-	
 	registerSceneManager: function(sceneManager){
 		if(!sceneManager || !sceneManager.id){
 			return;

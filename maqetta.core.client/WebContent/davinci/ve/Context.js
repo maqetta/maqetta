@@ -1878,17 +1878,6 @@ return declare([ThemeModifier], {
 		return topWidgets;
 	},
 
-	//FIXME: move to CreateTool.js
-	getContentPosition: function(position){
-		if(!position){
-			return undefined;
-		}
-		if(position.target){ // event
-			position = {x: position.pageX, y: position.pageY};
-		}
-		return position;
-	},
-
 	getCommandStack: function(){
 		return this._commandStack;
 	},

@@ -70,12 +70,22 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		this._context.dragMoveCleanup();
 	},
 
+	_getContentPosition: function(position){
+		if(!position){
+			return undefined;
+		}
+		if(position.target){ // event
+			position = {x: position.pageX, y: position.pageY};
+		}
+		return position;
+	},
+
 	onMouseDown: function(event){
 		// This function gets called if user does a 2-click widget addition:
 		// 1) Click on widget in widget palette to select
 		// 2) Click on canvas to indicate drop location
 		this._target = Widget.getEnclosingWidget(event.target);
-		this._mdPosition = this._context.getContentPosition(event); // mouse down position
+		this._mdPosition = this.getContentPosition(event); // mouse down position
 		this._dragRect = null;
 	},
 
@@ -95,7 +105,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			// Only perform drag operation if widget is resizable
 			if(this._resizable){
 				context.deselect();				
-				var p = context.getContentPosition(event);
+				var p = this._getContentPosition(event);
 				var l, t, w, h;
 				var pos_x = true;
 				var pos_y = true;
@@ -221,7 +231,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		// If _mdPosition has a value, then user did a 2-click widget addition (see onMouseDown())
 		// If so, then use mousedown position, else get current position
 		var size, target, w, h;
-		var p = context.getContentPosition(event);
+		var p = this._getContentPosition(event);
 		if(this._mdPosition){
 			var pos_x = true;
 			var pos_y = true;
@@ -611,7 +621,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				deferred.reject(new Error("Failed to create widget"));
 			}
 	
-			var command = new davinci.commands.CompoundCommand();
+			var command = new CompoundCommand();
 	
 			if(this.createNewWidget()){
 				args.size = this._getInitialSize(w, args);

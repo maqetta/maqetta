@@ -1246,18 +1246,18 @@ define(["dojo/_base/declare",
 				this._editor = this.context.editor; // due to async editor selection getting published before the cascade is built
 				                                    // so best to set this here on widget selection
 				this._topWidgetDom = this._getWidgetTopDom(this._widget, this.target) || this._widget.domNode || this._widget;
-			}else
+			} else {
 				this._topWidgetDom = null;
-			
+			}
+
 			this._updateCascadeList();	
-		
 		},
 		
-		_getBaseLocation : function(){
-			return this._editor.getContext().getBaseResource();
+		_getBaseLocation: function(){
+			return systemResource.findResource(this._editor.getContext().getDocumentLocation());
 		},
 		
-		_editorSelected : function(editorChange){
+		_editorSelected: function(editorChange){
 			this._editor = editorChange.editor;
 			var context;
 			if(this._editor && this._editor.getContext){
@@ -1283,10 +1283,12 @@ define(["dojo/_base/declare",
 			this._updateCascadeList();
 		},
 		
-		_onFieldFocus : function(){
-			if(this.context)
+		_onFieldFocus: function(){
+			if(this.context) {
 				this.context.blockChange(true);
+			}
 		},
+
 		_destroy: function(){
 			var containerNode = (this.cascadeTableDiv);
 			dojo.forEach(dojo.query("[widgetId]", containerNode).map(dijit.byNode), function(w){
@@ -1299,9 +1301,10 @@ define(["dojo/_base/declare",
 			this._handles = [];
 		},
 		
-		_onFieldBlur : function(){
-			if(this.context)
-				this.context.blockChange(false);		
+		_onFieldBlur: function(){
+			if(this.context) {
+				this.context.blockChange(false);
+			}
 		},
 		
 		_getClasses : function(target){
@@ -1313,8 +1316,9 @@ define(["dojo/_base/declare",
 			/* have to filter out dupes */
 			for(var i = 0;i<classes.length;i++){
 				for(var j=i+1;j<classes.length;j++){
-					if(classes[j]==classes[i])
+					if(classes[j]==classes[i]) {
 						classes.splice(j,1);
+					}
 				}
 			}
 			

@@ -356,11 +356,6 @@ return declare([ThemeModifier], {
 		return this._srcDocument.fileName;
 	},
 
-	//FIXME: Inline
-	getBaseResource: function(options){
-		return systemResource.findResource(this.getDocumentLocation());
-	},
-
 	//FIXME: private/protected?
 	getLibraryBase: function(id, version){
 		return Library.getLibRoot(id,version, this.getBase()) || "";
@@ -547,8 +542,7 @@ return declare([ThemeModifier], {
         // when the page is loaded the device matches what is in the doc
         // but we need to get dojo in sync.
         try {
-        	var ua = Silhouette.getMobileTheme(device + '.svg');
-      		ua = ua || "other";
+        	var ua = Silhouette.getMobileTheme(device + '.svg') || "other";
     		// dojox/mobile specific CSS file handling
       		this._configDojoxMobile();
     		//var deviceTheme = this.getGlobal()['require']('dojox/mobile/deviceTheme');
@@ -623,7 +617,7 @@ return declare([ThemeModifier], {
 	
 	getTheme: function(){
         if (!this.theme) {
-            var theme = this.loadThemeMeta(this._srcDocument);
+            var theme = metadata.loadThemeMeta(this._srcDocument);
             if (theme) { // wdr #1024
                 this._themeUrl = theme.themeUrl;
                 this._themeMetaCache = theme.themeMetaCache;
@@ -634,7 +628,7 @@ return declare([ThemeModifier], {
         	       		 if (result.helper) {
         	       			 this.theme.helper = result.helper;
         	       		 }
-        	    	 }.bind(this));
+                	}.bind(this));
         		}
             }
         }
@@ -648,15 +642,6 @@ return declare([ThemeModifier], {
 		return this._themeMetaCache;
 	},
 
-	// FIXME: remove.  call metadata.loadThemeMeta directly
-	loadThemeMeta: function(model){
-		// try to find the theme using path magic
-
-		var ro = metadata.loadThemeMeta(model);
-		//this.editor._visualChanged(); // do not know why we are calling this handler method inline
-		return ro;
-	},
-	
 	setSource: function(source, callback, scope, initParams){
 		dojo.withDoc(this.getDocument(), "_setSource", this, arguments);
 	},
@@ -1336,7 +1321,7 @@ return declare([ThemeModifier], {
 		}
 		this._configDojoxMobile(true); // loading
 		/*
-		 * Need to let the widgets get parsed, and things finsh loading async
+		 * Need to let the widgets get parsed, and things finish loading async
 		 */
 		window.setTimeout(function(){
 			this.widgetAddedOrDeleted();
@@ -3499,7 +3484,7 @@ return declare([ThemeModifier], {
 	
 	hasDirtyResources: function(){
 		var dirty = false;
-		var baseRes = this.getBaseResource(); // theme editors don't have a base resouce. 
+		var baseRes = systemResource.findResource(this.getDocumentLocation()); // theme editors don't have a base resouce. 
 		if (baseRes){
 			dirty = baseRes.isDirty();
 		}

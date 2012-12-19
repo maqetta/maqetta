@@ -4,12 +4,11 @@ define([
 	"dojo/query",
 	"dijit/_WidgetBase",
 	"dojo/dnd/Mover",
-	"dojo/dnd/Moveable",
 	"./metadata",
 	"davinci/ve/States",
 	"davinci/ve/utils/GeomUtils"
 ],
-function(require, declare, Query, _WidgetBase, Mover, Moveable, Metadata, States, GeomUtils) {
+function(require, declare, Query, _WidgetBase, Mover, Metadata, States, GeomUtils) {
 	
 // Nobs and frame constants
 var LEFT = 0,	// nob and frame
@@ -160,10 +159,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 	inlineEditActive: function(){
 		if(this._inline && this._inline.inlineEditActive){
 			return this._inline.inlineEditActive();
-		}else{
-			return false;
 		}
-		
+
+		return false;
 	},
 
 	hide: function(inline){
@@ -283,10 +281,10 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		}
 		var focusContainerBounds = GeomUtils.getBorderBoxPageCoords(focusContainer);
 		var context = this._context;
-		var parentbounds = context.getParentIframeBounds();
+		var parentIframe = context.getParentIframe();
+		var parentbounds = GeomUtils.getBorderBoxPageCoords(parentIframe);
 		rect.l += parentbounds.l;
 		rect.t += parentbounds.t;
-		var parentIframe = context.getParentIframe();
 		var htmlElement = parentIframe.contentDocument.documentElement;
 		var bodyElement = parentIframe.contentDocument.body;
 		rect.l -= GeomUtils.getScrollLeft(bodyElement);
@@ -435,7 +433,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			var node = this._selectedWidget.domNode;
 			marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(node);
 		}
-		var parentIframeOffset = this._context.getParentIframeBounds();
+		var parentIframeOffset = GeomUtils.getBorderBoxPageCoords(this._context.getParentIframe());
 		this._moverStart = { moverLeft:l, moverTop:t,
 				l:marginBoxPageCoords.l+parentIframeOffset.l, t:marginBoxPageCoords.t+parentIframeOffset.t,
 				w:marginBoxPageCoords.w, h:marginBoxPageCoords.h };
@@ -449,7 +447,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		this._mover = new Mover(this._moverDragDiv, event, this);
 		dojo.stopEvent(event);
 
-		this._mouseDownInfo = { widget:this._selectedWidget, pageX:event.pageX+parentIframeOffset.l, pageY:event.pageY+parentIframeOffset.t, dateValue:(new Date()).valueOf() };
+		this._mouseDownInfo = { widget:this._selectedWidget, pageX:event.pageX+parentIframeOffset.l, pageY:event.pageY+parentIframeOffset.t, dateValue: Date.now() };
 		
 		// Temporarily stash the mousedown event so that the upcoming
 		// onMoveStop handler can process that event.
@@ -558,7 +556,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		}
 
 		var rect = dojo.mixin({}, this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent);
-		var parentIframeOffset = this._context.getParentIframeBounds();
+		var parentIframeOffset = GeomUtils.getBorderBoxPageCoords(this._context.getParentIframe());
 		rect.l -= parentIframeOffset.l;
 		rect.t -= parentIframeOffset.t;
 		this._updateFocusChrome(
@@ -636,7 +634,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 				}
 				var rect = dojo.mixin({}, newBox);
 				if(rect.hasOwnProperty('l')){
-					var parentIframeOffset = this._context.getParentIframeBounds();
+					var parentIframeOffset = GeomUtils.getBorderBoxPageCoords(this._context.getParentIframe());
 					rect.l -= parentIframeOffset.l;
 					rect.t -= parentIframeOffset.t;
 				}
@@ -655,7 +653,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			var clickInteral = 750;	// .75seconds: allow for leisurely click action
 			var dblClickInteral = 750;	// .75seconds: big time slot for tablets
 			var clickDistance = 10;	// within 10px: inexact for tablets
-			var dateValue = (new Date()).valueOf();
+			var dateValue = Date.now();
 
 			this._mouseDownInfo = null;
 			

@@ -1,8 +1,9 @@
 define([
 	"davinci/Workbench",
     "davinci/workbench/Preferences",
-	"davinci/ve/commands/ModifyCommand"
-], function(Workbench, Preferences, ModifyCommand) {
+	"davinci/ve/commands/ModifyCommand",
+	"davinci/ve/utils/GeomUtils"
+], function(Workbench, Preferences, ModifyCommand, GeomUtils) {
 
 var _PathHelperMixin = function() {};
 _PathHelperMixin.prototype = {
@@ -93,7 +94,7 @@ _PathHelperMixin.prototype = {
 		
         var context = this._widget ? this._widget.getContext() : undefined;
         if(context){
-            var parentIframeBounds = context.getParentIframeBounds();
+            var parentIframeBounds = GeomUtils.getBorderBoxPageCoords(context.getParentIframe());
             pageX -= parentIframeBounds.l;
             pageY -= parentIframeBounds.t;
         }

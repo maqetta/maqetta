@@ -3479,7 +3479,6 @@ return declare([ThemeModifier], {
 		}
 
 		return dirty;
-
 	},
 	
 	/**
@@ -3498,16 +3497,6 @@ return declare([ThemeModifier], {
 			find(this.rootWidget);
 		}
 		return result;
-	},
-	
-	/**
-	 * Returns {l:,t:,w:,h:} of the user document iframe relative to outer frame holding the Maqetta app
-	 */
-	getParentIframeBounds: function(){
-		var parentIframe = this.getParentIframe();
-		if(parentIframe){
-			return GeomUtils.getBorderBoxPageCoords(parentIframe);
-		}
 	},
 
 	/**

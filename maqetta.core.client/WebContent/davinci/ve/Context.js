@@ -669,11 +669,6 @@ return declare([ThemeModifier], {
 		
 	},
 
-	//FIXME: unused?
-	getResourcePath: function() {
-		return this.getFullResourcePath().removeLastSegments(1);
-	},
-
 	getBase: function(){
 		if(davinci.Workbench.singleProjectMode()) {
 			return Workbench.getProject();

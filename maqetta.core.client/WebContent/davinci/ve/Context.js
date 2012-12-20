@@ -96,7 +96,7 @@ var MOBILE_DEV_ATTR = 'data-maq-device',
 
 var contextCount = 0;
 
-return declare([ThemeModifier], {
+return declare("davinci.ve.Context", [ThemeModifier], {
 
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit/dijit",

@@ -42,20 +42,6 @@ var Runtime = {
 	subscriptions: [],
 	currentSelection: [],
 	commandStack: new CommandStack(),
-	
-	addPlugin: function(pluginName) {
-		url = pluginName + ".plugin";
-		dojo.xhrGet( {
-			// The following URL must match that used to test
-			// the server.
-			url:url,
-			handleAs:"json",
-			sync:true,
-			load: function(responseObject, ioArgs) {
-				Runtime._loadPlugin(responseObject,url);
-			}
-		});
-	},
 
 	getInitializationInfo: function() {
 		

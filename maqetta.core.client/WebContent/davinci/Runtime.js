@@ -43,35 +43,12 @@ var Runtime = {
 	currentSelection: [],
 	commandStack: new CommandStack(),
 
-	getInitializationInfo: function() {
-		
-		if(this._initializationInfo) {
-			return this._initializationInfo;
-		}
-		this._initializationInfo = Runtime.serverJSONRequest({
-			url: "cmd/getInitializationInfo",
-			handleAs: "json",
-			content:{},
-			sync:true
-		});
-
-		return this._initializationInfo;
-	},
-
 	getUser: function() {
-
-		this.getInitializationInfo();
-		if(this._initializationInfo){
-			return this._initializationInfo.userInfo;
-		}
+		return this._initializationInfo.userInfo;
 	},
 
 	getWorkbenchState: function() {
-
-		this.getInitializationInfo();
-		if(this._initializationInfo){
-			return this._initializationInfo.workbenchState;
-		}
+		return this._initializationInfo.workbenchState;
 	},
 
 	/**
@@ -80,10 +57,7 @@ var Runtime = {
 	 * @returns
 	 */
 	getSiteConfigData: function(name){
-		this.getInitializationInfo();
-		if(this._initializationInfo){
-			return this._initializationInfo[name];
-		} 
+		return this._initializationInfo[name];
 	},
 
 	getDefaultThemeSet: function() {

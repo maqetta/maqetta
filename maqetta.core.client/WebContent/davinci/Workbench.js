@@ -341,13 +341,26 @@ var Workbench = {
 			Workbench._repositionFocusContainer();
 		});
 
-		var d = metadata.init().then(function(){
+		var d = xhr.get({
+	    	url: "cmd/getInitializationInfo",
+	    	handleAs: "json"
+	    }).then(function(result){
+	    	Runtime._initializationInfo = result;
+
+	    	var userInfo = result.userInfo;
+	    	Runtime.isLocalInstall = userInfo.userId == 'maqettaUser';
+
+			// Needed by review code
+            Runtime.userName = userInfo.userId;
+            Runtime.userEmail = userInfo.email;
+            return metadata.init();
+	    }).then(function(){
 			var perspective = Runtime.initialPerspective || "davinci.ui.main";
 			Workbench.showPerspective(perspective);
 			Workbench._updateTitle();
 			initializeWorkbenchState();			
 		});
-	
+
 		dojo.query('.loading').orphan();
 
 		Workbench._lastAutoSave = Date.now();
@@ -2080,11 +2093,10 @@ var Workbench = {
 		}
 		
 		this._updateWorkbench.then(dojo.hitch(this,function(){
-			this._updateWorkbench = dojo.xhrPut({
+			this._updateWorkbench = xhr.put({
 				url: "cmd/setWorkbenchState",
 				putData: dojo.toJson(Workbench._state),
-				handleAs:"text",
-				sync:false
+				handleAs:"text"
 			});
 		}));
 		

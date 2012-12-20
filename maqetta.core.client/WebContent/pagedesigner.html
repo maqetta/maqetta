@@ -46,20 +46,6 @@
 
 			require(["dojo/i18n!davinci/nls/webContent", "dojo/domReady!"], function (webContent) {
 				var run = function() {
-					var userInfo;
-					
-					var result = Runtime.getUser();
-					
-                    if (result) {
-                        Runtime.userName=result.userId;
-                        Runtime.userEmail=result.email;
-					} else {
-						//do nothing
-					}
-					if (!result || result.userId=='maqettaUser') {
-						Runtime.isLocalInstall=true;
-					}
-					
 					// set up for review and commenting...
 					var designerName  = dojo.cookie("davinci_designer");
 					var reviewVersion = dojo.cookie("davinci_version");

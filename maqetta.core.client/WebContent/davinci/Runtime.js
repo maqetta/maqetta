@@ -160,12 +160,10 @@ var Runtime = {
 
 	getUserWorkspaceUrl: function(){
 		var loc = this.location();
-		//FIXME: replace this stuff with a regexp
 		if (loc.charAt(loc.length-1)=='/'){
 			loc=loc.substring(0,loc.length-1);
 		}
-		var workspaceUrl=loc+'/user/'+Runtime.userName+'/ws/workspace/';
-		return workspaceUrl;
+		return loc+'/user/'+Runtime.userName+'/ws/workspace/';
 	},
 
 	run: function() {
@@ -259,7 +257,6 @@ var Runtime = {
 	
 	destroy: function() {
 		dojo.forEach(Runtime.subscriptions, dojo.unsubscribe);
-		UserActivityMonitor.destroy();
 	},
 	
 	_addExtension: function(id, extension, pluginID) {

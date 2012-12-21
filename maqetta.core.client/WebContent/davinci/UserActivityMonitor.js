@@ -1,45 +1,26 @@
 define([
+    "dojo/_base/xhr",
 	"dojo/i18n!./nls/webContent"
 ], function(
+	xhr,
 	webContent
 ) {
 
 var UserActivityMonitor = {
-	subscriptions: [],
-	
-	subscribe: function(topic,func) {
-		this.subscriptions.push(dojo.subscribe(topic,this,func));
-	},
-	
-	destroy: function() {
-		dojo.forEach(this.subscriptions, dojo.unsubscribe);
-	},
-	
-	
 	/*
 	 *  Sets up Maqetta to monitor interaction with the server and the workspace
 	 */
-	setUpInActivityMonitor: function(doc) {
-		if (!this._runtime){
-			// we need to wait to add runtime to avoid chicken or egg
-			try{
-				this._runtime = require("davinci/Runtime");
-	       }catch(e){
-	            console.warn("FAILED: failure for loading davinci/Runtime");
-	            return;
-	       }
-		} 
-		if (this._runtime.singleUserMode()) {
+	setUpInActivityMonitor: function(doc, Runtime) {
+		if (Runtime.singleUserMode()) {
 			this._MaxInactiveInterval = -1; // no timeout
 		} else {
 			this._firstPoll = true;
 			this._MaxInactiveInterval = 60 * 5; // defalt this will be changed when we get from server
 			this.keepAlive(); // get the timeout value
 			this.addInActivityMonitor(doc);
-			this.subscribe('/dojo/io/load', this.lastServerConnection);
+			Runtime.subscribe('/dojo/io/load', this.lastServerConnection);
 			this.userActivity(); // prime the value
 		}
-		
 	},
 	
 	/*
@@ -87,16 +68,14 @@ var UserActivityMonitor = {
 	},
 	
 	/* 
-	 *  This method quereis the server to find the seesion timeout value and also 
+	 *  This method queries the server to find the session timeout value and also 
 	 *  let the user we are still working here so don't time us out
 	 */
 	keepAlive: function(){
-		var deferred = dojo.xhrGet({
+		xhr.get({
 			url: "cmd/keepalive",
-			sync: false,
-			handleAs: "json",
-		});
-		deferred.then(function(result) {
+			handleAs: "json"
+		}).then(function(result) {
 			if (result.MaxInactiveInterval) {
 				this._MaxInactiveInterval = result.MaxInactiveInterval;
 				if (this._firstPoll) {
@@ -106,14 +85,14 @@ var UserActivityMonitor = {
 			} else {
 			    console.warn("Unknown error: result="+result);
 			}
-		    }.bind(this), function(error) {
-		    	console.warn("MaxInactiveInterval error", error);
+		}.bind(this), function(error) {
+			console.warn("MaxInactiveInterval error", error);
 	    });
 	},
 	
 	/*
-	 * this method is subscribed to /dojo/io/load and will be invoked whenever we have succesfull
-	 * io with the server. When ths method is invoked we will reset the server poll timer to 80%
+	 * this method is subscribed to /dojo/io/load and will be invoked whenever we have successful
+	 * io with the server. When the method is invoked we will reset the server poll timer to 80%
 	 * of the server session timeout value. if the timer pop's we will call keepAlive to let the server 
 	 * know we are still working
 	 */
@@ -127,7 +106,6 @@ var UserActivityMonitor = {
 				this.keepAlive();
 			}.bind(this), t); // _MaxInactiveInterval is in seconds so poll 30 seconds early
 		}
-		
 	},
 	
 	/*
@@ -147,11 +125,10 @@ var UserActivityMonitor = {
 			if(--counter === 0){
 				window.clearInterval(this.countdown);
 				delete this.countdown;
-				this._runtime.logoff();
+				require("davinci/Workbench").logoff();
 			} else {
 				var span = dojo.byId('org.maqetta.idleWarning');
 				span.innerHTML = dojo.string.substitute(webContent.idleSessionMessage, {seconds: counter});
-				
 			}
 		}.bind(this), 1000);
 	},
@@ -166,7 +143,6 @@ var UserActivityMonitor = {
 		warning.parentNode.removeChild(warning);
 		this.userActivity();
 	}
-	
 };
 
 return UserActivityMonitor;

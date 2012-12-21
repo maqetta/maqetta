@@ -192,7 +192,7 @@ var Runtime = {
 				window.davinciBackspaceKeyTime = Date.now();
 			}
 		});	
-		UserActivityMonitor.setUpInActivityMonitor(dojo.doc);
+		UserActivityMonitor.setUpInActivityMonitor(dojo.doc, this);
 
 		// add key press listener
 		dojo.connect(dojo.doc.documentElement, "onkeydown", this, "_handleGlobalDocumentKeyEvent");
@@ -377,23 +377,6 @@ var Runtime = {
 
 		return resultObj;
 	},
-
-	logoff: function(args) {
-		var loading = dojo.create("div",null, dojo.body(), "first");
-		loading.innerHTML='<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Logging off...</td></tr></table>'; // FIXME: i18n
-		dojo.addClass(loading, 'loading');
-		require("davinci/Workbench").unload();
-		Runtime.serverJSONRequest({
-			url:"cmd/logoff", handleAs:"text", sync:true
-		});
-		var newLocation = Runtime.location(); //
-		var lastChar=newLocation.length-1;
-		if (newLocation.charAt(lastChar)=='/') {
-			newLocation=newLocation.substr(0,lastChar);
-		}
-		location.href = newLocation+"/welcome";
-	},
-
 
 	registerKeyBinding: function(keyBinding, pluginAction) {
 		if (!this._globalKeyBindings) {

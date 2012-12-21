@@ -372,6 +372,27 @@ var Workbench = {
 		Workbench._autoSave();
 	},
 
+	logoff: function(args) {
+		var loading = dojo.create("div", {
+				'class': 'loading',
+				innerHTML: '<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Logging off...</td></tr></table>' // FIXME: i18n
+			}, dojo.body(), "first");
+
+		Workbench.unload();
+
+		xhr.get({
+			url: "cmd/logoff",
+			handleAs: "text"
+		}).then(function(result) {
+			var newLocation = Workbench.location();
+			var lastChar = newLocation.length - 1;
+			if (newLocation.charAt(lastChar) == '/') {
+				newLocation = newLocation.substr(0,lastChar);
+			}
+			location.href = newLocation + "/welcome";
+		});
+	},
+
 	/**
 	 * Creates a toolbar widget out of the definitions in the plugin file(s)
 	 * @param {string} toolbarProp  The property name from plugin file that corresponds to this particular toolbar

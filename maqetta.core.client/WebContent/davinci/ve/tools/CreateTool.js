@@ -85,7 +85,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		// 1) Click on widget in widget palette to select
 		// 2) Click on canvas to indicate drop location
 		this._target = Widget.getEnclosingWidget(event.target);
-		this._mdPosition = this.getContentPosition(event); // mouse down position
+		this._mdPosition = this._getContentPosition(event); // mouse down position
 		this._dragRect = null;
 	},
 

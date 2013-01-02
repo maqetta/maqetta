@@ -1604,10 +1604,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * @param url {string}
 	 */
     unloadStyleSheet: function(url) {
-		var query = this.getGlobal()["require"]("dojo/query");
-		query('link').filter(function(node) {
-            return node.getAttribute('href') == url;
-		}).forEach(domConstruct.destroy);
+    	var userWin = this.getGlobal();
+    	if(userWin && userWin["require"]){
+    		var query = userWin["require"]("dojo/query");
+    		query('link').filter(function(node) {
+                return node.getAttribute('href') == url;
+    		}).forEach(domConstruct.destroy);
+    	}
     },
 
 	addModeledStyleSheet: function(url, skipDomUpdate) {

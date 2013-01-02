@@ -49,7 +49,6 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 	},
 
 	deactivate: function(){
-	
 		this._setTarget(null);
 	},
 
@@ -65,12 +64,11 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		this._shiftKey = event.shiftKey;
 		this._spaceKey = false;
 		this._sKey = false;
-		var createMover = false;
 		this._areaSelectClear();
 
 		// See if mouse is within selection rectangle for a primitive widget
 		// Sometimes that rectangle is a bit bigger than _getTarget or getEnclosingWidget
-		var widget = context.checkFocusXY(event.pageX, event.pageY);
+		var widget = this._checkFocusXY(event.pageX, event.pageY);
 		if(widget && Metadata.getAllowedChild(widget.type)[0] !== 'NONE'){
 			widget = null;
 		}
@@ -733,7 +731,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			console.error('SelectTool.js onMove error. move widget is not selected');
 			return;
 		}
-		this._context.selectionHideFocus();
+		this._selectionHideFocus();
 		
 		// If event.target isn't a subnode of current proposed parent widget, 
 		// then need to recompute proposed parent widget
@@ -927,7 +925,7 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		this._updateMoveCursor();
 		context.dragMoveCleanup();
 		cp.parentListDivDelete();
-		context.selectionShowFocus();
+		this._selectionShowFocus();
 		
 		// Attempt to restore the "target" rectangle (i.e., editFeedback)
 		// over current widget to intercept mouse events that the widget
@@ -1037,7 +1035,41 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			o.h = startY - endY;
 		}
 		return o;
-	}
+	},
 
+	/**
+	 * Sees if (pageX,pageY) is within bounds of any of the selection rectangles
+	 * If so, return the corresponding selected widget
+	 */
+	_checkFocusXY: function(pageX, pageY){
+		var context = this._context,
+			selection = context.getSelection();
+		for(var i=0; i<selection.length; i++){
+			var box = context._focuses[i].getBounds();
+			if(pageX >= box.l && pageX <= box.l + box.w &&
+					pageY >= box.t && pageY <= box.t + box.h){
+				return selection[i];
+			}
+		}
+		return null;
+	},
+
+	// Hide all focus objects associated with current selection
+	_selectionHideFocus: function(){
+		var context = this._context,
+			selection = context.getSelection();
+		for(var i=0; i<selection.length; i++){
+			context._focuses[i].hide();
+		}
+	},
+
+	// Show all focus objects associated with current selection
+	_selectionShowFocus: function(){
+		var context = this._context,
+			selection = context.getSelection();
+		for(var i=0; i<selection.length; i++){
+			context._focuses[i].show(selection[i], {});
+		}
+	}
 });
 });

@@ -2095,41 +2095,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var i = this.getSelection().indexOf(widget);
 		return i == -1 ? null : this._focuses[i];
 	},
-	
-	/**
-	 * Sees if (pageX,pageY) is within bounds of any of the selection rectangles
-	 * If so, return the corresponding selected widget
-	 */
-	//FIXME: move to SelectTool.js?
-	checkFocusXY: function(pageX, pageY){
-		var selection = this.getSelection();
-		for(var i=0; i<selection.length; i++){
-			var box = this._focuses[i].getBounds();
-			if(pageX >= box.l && pageX <= box.l + box.w &&
-					pageY >= box.t && pageY <= box.t + box.h){
-				return selection[i];
-			}
-		}
-		return null;
-	},
-	
-	// Hide all focus objects associated with current selection
-	//FIXME: move to SelectTool.js?
-	selectionHideFocus: function(){
-		var selection = this.getSelection();
-		for(var i=0; i<selection.length; i++){
-			this._focuses[i].hide();
-		}
-	},
-	
-	// Show all focus objects associated with current selection
-	//FIXME: move to SelectTool.js?
-	selectionShowFocus: function(){
-		var selection = this.getSelection();
-		for(var i=0; i<selection.length; i++){
-			this._focuses[i].show(selection[i], {});
-		}
-	},
 
 	/**
 	 * Returns true if the given node is part of the focus (ie selection) chrome

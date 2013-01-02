@@ -182,7 +182,7 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
     
     removeThemeSet: function(themeSet){
         
-        var themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly, true);
+        var themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly);
         // remove the desktop theme
         if (themeSet.desktopTheme){
             for (var i = 0; i < themeData.length; i++){
@@ -200,7 +200,7 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
     },
     
     addThemeSet: function(themeSet){
-        var themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly, true);
+        var themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly);
         // add the desktop theme
         if (themeSet.desktopTheme){
             for (var i = 0; i < themeData.length; i++){

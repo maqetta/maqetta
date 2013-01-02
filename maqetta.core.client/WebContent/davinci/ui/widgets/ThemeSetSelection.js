@@ -101,7 +101,7 @@ define(["dojo/_base/declare",
 	    
 	    addThemes: function(themeSet){
 	
-	        this._themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly, true);
+	        this._themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly);
 	        var dtSelect = dijit.byId('theme_select_desktop_theme_select');
 	        dtSelect.options = [];
 	        var androidSelect = dijit.byId('theme_select_android_select');

@@ -227,7 +227,7 @@ define([
 	},
 	
 	getTheme:  function(name, flushCache){
-	    var themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly, flushCache);
+	    var themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly);
 	    for (var i = 0; i < themeData.length; i++){
 	        if(themeData[i] && themeData[i].name === name){
 	            return themeData[i];
@@ -278,7 +278,7 @@ define([
 	},
 
 	getDojoxMobileThemesFromThemeMap: function(context, themeMap) {
-	    var themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly, true);
+	    var themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly);
 	    var mobileTheme = [];
 	    themeMap.forEach(function(item, idx, arr) {
 	        for (var i = 0; i < themeData.length; i++){

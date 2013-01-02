@@ -39,7 +39,7 @@ dojo.subscribe("/davinci/resource/resourceChanged",this, function(type,changedRe
 	
 	var Workbench = require("davinci/Workbench");
 	var base = Workbench.getProject();
-	if(type=='deleted' || type=='renamed'){
+	if(type=='deleted' || type=='renamed' || type=='created'){
 		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base);
 		var projectThemeBase = new Path(base).append(prefs.themeFolder);
 		var resourcePath = new Path(changedResource.getPath());

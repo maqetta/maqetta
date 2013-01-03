@@ -26,6 +26,7 @@ return declare("davinci.actions.OpenThemeEditor", null, {
 		var newTheme = this._themeChooser.attr('value');
 		this._themeChooser.onClose();
 		this._themeChooser.destroy();
+		debugger;
 		Workbench.openEditor({
 			fileName: newTheme.file,
 			content: newTheme

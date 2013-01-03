@@ -781,7 +781,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var body = model.find({elementType:'HTMLElement', tag:'body'},true);
 		body.setAttribute("class", defaultTheme.className);
 		/* add the css */
-		var filePath = defaultTheme.file.getPath();
+		var filePath = defaultTheme.getFile().getPath();
 		defaultTheme.files.forEach(function(file) {
 			var url = new Path(filePath).removeLastSegments(1).append(file).relativeTo(this.getPath(), true);
 			this.addModeledStyleSheet(url.toString(), true);

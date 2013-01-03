@@ -64,7 +64,7 @@ define([
 	CloneTheme: function(name, version, selector, directory, originalTheme, renameFiles){
 	    
 		var deferreds = [];
-		var fileBase = originalTheme.file.parent;
+		var fileBase = originalTheme.getFile().parent;
 		var themeRootPath = new Path(directory).removeLastSegments(0);
 		var resource = systemResource.findResource(themeRootPath.toString());
 		if (resource.readOnly()) {
@@ -72,14 +72,14 @@ define([
 		}
 		systemResource.createResource(directory, true);
 		var themeRoot = systemResource.findResource(directory);
-		var fileName = originalTheme.file.getName();
+		var fileName = originalTheme.getFile().getName();
 		var directoryPath = new Path(themeRoot.getPath());
 		var lastSeg = directoryPath.lastSegment();
 		/* create the .theme file */
 		var themeFile = themeRoot.createResource(lastSeg + ".theme");
 		var themeCssFile = themeRoot.createResource(lastSeg + ".css"); // create the delta css file
 		var themePath = this.getThemeLocation();
-		var orgPath = originalTheme.file.parent.getPath();
+		var orgPath = originalTheme.getFile().parent.getPath();
 		
 		function adjustPaths(fileNames){
 			// #23 adjust for path to where file in relation to the new theme is located
@@ -262,7 +262,7 @@ define([
 	        if(mobileTheme[i].theme != this.none_theme && mobileTheme[i].theme != this.default_theme){
 	            var theme = this.getTheme(mobileTheme[i].theme);
 	            if (theme){ // user may have deleted theme
-	                var ssPath = new Path(theme.file.parent.getPath()).append(theme.files[0]);
+	                var ssPath = new Path(theme.getFile().parent.getPath()).append(theme.files[0]);
 	                var resourcePath = context.getFullResourcePath();
 	                var filename = ssPath.relativeTo(resourcePath, true).toString();
 	                if (mobileTheme[i].device === this.other_device){
@@ -283,7 +283,7 @@ define([
 	    themeMap.forEach(function(item, idx, arr) {
 	        for (var i = 0; i < themeData.length; i++){
 	            var theme = themeData[i];
-	            var ssPath = new Path(theme.file.parent.getPath()).append(theme.files[0]);
+	            var ssPath = new Path(theme.getFile().parent.getPath()).append(theme.files[0]);
 	            var resourcePath = context.getFullResourcePath();
 	            var filename = ssPath.relativeTo(resourcePath, true).toString();
 	            if (filename == item[2][0]){

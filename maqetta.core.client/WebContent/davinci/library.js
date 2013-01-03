@@ -89,7 +89,7 @@ getThemes: function(base, workspaceOnly, flushCache){
 		var rlt = [];
 		if(_themesCache[base]){
 			rlt = workspaceOnly ?
-				_themesCache[base].filter(function(entry) { return !entry.file.isVirtual(); })
+				_themesCache[base].filter(function(entry) { return !entry.getFile().isVirtual(); })
 				: _themesCache[base];
 		}
 		return rlt;
@@ -101,10 +101,31 @@ getThemes: function(base, workspaceOnly, flushCache){
 
 	var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base),
 		projectThemeBase = new Path(base).append(prefs.themeFolder);
-	var allThemes = system.resource.findResource("*.theme", false, projectThemeBase.toString());
 	
-		_themesCache[base] = [];
-		for (var i = 0; i < allThemes.length; i++){
+	var test = Runtime.serverJSONRequest({
+			url: "cmd/getThemes",
+			handleAs: "json",
+			content:{},
+			content:{
+				path: "*.theme",
+				ignoreCase: true,
+				workspaceOnly: false,
+				inFolder: projectThemeBase.toString()
+			},
+			sync:true
+		});
+
+//	var allThemes = system.resource.findResource("*.theme", false, projectThemeBase.toString());
+		test.forEach(function(theme){
+			theme.getFile = function(){
+				debugger;
+					var f = system.resource.findResource(this.path[0]);
+					return f;
+				}.bind(theme);
+		}.bind(this));
+	
+		_themesCache[base] = test; //[];
+/*		for (var i = 0; i < allThemes.length; i++){
 			if (allThemes[i]){
 				var t = JSON.parse(allThemes[i].getContentSync());
 				t.file = allThemes[i];
@@ -114,18 +135,8 @@ getThemes: function(base, workspaceOnly, flushCache){
 				// but until the root cause of #2635 is found we will play it safe
 				console.error('library.getThemes: undefined theme returned by system.resource.findResource("*.theme", false, projectThemeBase.toString());');
 			}
-		}
+		}*/
 
-	/*_themesCache[base] = allThemes.map(function(theme) {
-		if (theme){
-			var t = JSON.parse(theme.getContentSync());
-			t.file = theme;
-			return t;
-		} else {
-			console.error('library.getThemes: undefined theme returned by system.resource.findResource("*.theme", false, projectThemeBase.toString());');
-		}
-	});
-*/
 	return result();
 },
 
@@ -136,7 +147,12 @@ getThemeMetadata: function(theme) {
 		return _themesMetaCache[theme.name];
 	}
 
-	var parent = new Path(theme.file.getPath()).removeLastSegments();
+/*	if (!theme.file) {
+		// first time the theme is used so load the theme resource file
+		theme.file = theme.getFile(); //system.resource.findResource(theme.path[0]);
+	}*/
+	var parent = new Path(theme.getFile().getPath()).removeLastSegments();
+	
 	var themeCssFiles = theme.files.filter(function(file) {
 		return file.indexOf(".css")>-1;
 	}).map(parent.append, parent);

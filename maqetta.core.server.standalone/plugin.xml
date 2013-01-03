@@ -76,6 +76,8 @@
                class="maqetta.core.server.command.Download" />
          <command path="findResource" 
                class="maqetta.core.server.command.FindResource" />
+         <command path="getThemes" 
+               class="maqetta.core.server.command.GetThemes" />
          <command path="getPlugins" 
                class="maqetta.core.server.command.GetPlugins" />
           <command path="getLibRoots" 

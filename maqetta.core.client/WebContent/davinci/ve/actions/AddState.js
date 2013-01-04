@@ -6,12 +6,34 @@ define([
 	"davinci/Runtime",
 	"davinci/Workbench",
 	"davinci/ve/States",
+	"davinci/commands/CompoundCommand",
+	"davinci/ve/commands/StyleCommand",
 	"davinci/actions/Action",
 	"dojo/i18n!davinci/ve/nls/ve",
 	"dojo/i18n!dijit/nls/common",
 	"dojo/text!./templates/AddState.html",
-	"dijit/form/TextBox"
-], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, Runtime, Workbench, States, Action, veNls, commonNls, templateString){
+	"dijit/form/TextBox",
+	"dijit/form/Select",
+	"dijit/form/CheckBox",
+	"dijit/form/Button"
+], function(
+	declare,
+	_WidgetBase,
+	_TemplatedMixin,
+	_WidgetsInTemplateMixin,
+	Runtime,
+	Workbench,
+	States,
+	CompoundCommand,
+	StyleCommand,
+	Action,
+	veNls,
+	commonNls,
+	templateString,
+	TextBox,
+	Select,
+	CheckBox,
+	Button){
 
 var AddStateWidget = declare("davinci.ve.actions.AddStateWidget", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 	templateString: templateString,
@@ -19,6 +41,10 @@ var AddStateWidget = declare("davinci.ve.actions.AddStateWidget", [_WidgetBase, 
 
 	veNls: veNls,
 	commonNls: commonNls,
+	
+	postCreate: function(){
+		this.addStateRemoveFromBase.set('checked', true);
+	},
 
 	_isValid: function() { 
 		var state = this.input.get("value");
@@ -45,7 +71,37 @@ var AddStateWidget = declare("davinci.ve.actions.AddStateWidget", [_WidgetBase, 
 	onOk: function() {
 		var newState = this.input.get("value");
 		if(newState){
+			var command = new CompoundCommand();
+			//FIXME: Need to make this into a command so that it is undoable
 			States.add(this.node, newState);
+			var context;
+			if(Runtime.currentEditor && Runtime.currentEditor.currentEditor && Runtime.currentEditor.currentEditor.context){
+				context = Runtime.currentEditor.currentEditor.context;
+			}else{
+				console.error('AddState.js - cannot determine context.')
+				return;
+			}
+			var widgetsToMove = [];
+			var allVisibleWidgets = context.getAllVisibleWidgets();
+			var moveWhichWidgets = this.moveWhichWidgets.get('value');
+			if(moveWhichWidgets == 'allVisible'){
+				widgetsToMove = allVisibleWidgets;
+			}else if(moveWhichWidgets == 'allSelected'){
+				widgetsToMove = context.getSelection();
+			}
+			var removeFromBase = this.addStateRemoveFromBase.get('checked');
+			for(var i=0; i< allVisibleWidgets.length; i++){
+				var widget = allVisibleWidgets[i];
+				var moveThisWidget = (widgetsToMove.indexOf(widget) >= 0);
+				var displayValue = moveThisWidget ? '' : 'none';
+				command.add(new StyleCommand(widget, [{'display':displayValue}], newState));
+				if(removeFromBase && moveThisWidget){
+					command.add(new StyleCommand(widget, [{'display':'none'}], null));
+				}
+			}
+			context.getCommandStack().execute(command);
+			//FIXME: setting focus:true should be undoable
+			States.setState(newState, context.rootNode, {focus:true});
 		}
 	},
 

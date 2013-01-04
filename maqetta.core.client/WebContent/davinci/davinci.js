@@ -70,6 +70,7 @@ davinci/davinci = {
 	"./ve/actions/AddState",
 	"./ve/actions/RemoveState",
 	"./ve/actions/ModifyState",
+	"./ve/actions/UpdateState",
 
 	// editorClasses
 	"./ve/PageEditor",

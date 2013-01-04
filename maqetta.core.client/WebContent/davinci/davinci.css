@@ -1557,6 +1557,13 @@ background-position: -75px -745px;
 	white-space:nowrap;
 	line-height:30px;
 }
+.updateStateIcon {
+	background-image: url(img/sprite.png);
+	background-position: -25px -649px;
+}
+.updateStateIcon.updateStateIconDisabled {
+	background-position: -25px -649px;
+}
 .states_rename_table td {
 	white-space:nowrap;
 }

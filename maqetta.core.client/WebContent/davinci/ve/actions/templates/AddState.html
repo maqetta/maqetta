@@ -2,6 +2,20 @@
 	<div class="dijitDialogPaneContentArea">
 		${veNls.stateLabel}: <input dojoAttachPoint="input" dojoType="dijit.form.TextBox" dojoAttachEvent="onKeyUp:_onKeyPress" type="text"></input>
 	</div>
+	<div class="addStateDialogOptions">
+		<div class='addStateDialogMoveWhichDiv'>
+			<label>${veNls.addStateMoveWhichWidgets}</label>
+			<select dojoAttachPoint="moveWhichWidgets" dojoType="dijit.form.Select" value="allVisible">
+				<option value="allVisible">${veNls.addStateAllVisibleLabel}</option>
+				<option value="allSelected">${veNls.addStateAllSelectedLabel}</option>
+				<option value="empty">${veNls.addStateEmptyLabel}</option>
+			</select>
+		</div>
+		<div class='addStateDialogRemoveFromBaseDiv'>
+			<input dojoAttachPoint="addStateRemoveFromBase" dojoType="dijit.form.CheckBox" dojoAttachEvent="onKeyUp:_onKeyPress" type="checkbox"></input>
+			<label>${veNls.addStateRemoveFromNormal}</label>
+		</div>
+	</div>
 				
 	<div class="dijitDialogPaneActionBar">
 		<button dojoType='dijit.form.Button' dojoAttachPoint="okButton" dojoAttachEvent='onClick:onOk' disabled label='${veNls.createLabel}' class="maqPrimaryButton" type="submit"></button>

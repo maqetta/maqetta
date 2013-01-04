@@ -34,6 +34,11 @@ define({ root:
 		//actions/AddState.js, ModifyState.js, RenameState.js, StateContainer.js
 		"createNewState":"Create New State",
 		"createLabel":"Create",
+		"addStateMoveWhichWidgets":"Move which widgets to new scene:",
+		"addStateAllVisibleLabel":"Visible widgets",
+		"addStateAllSelectedLabel":"Selected widgets",
+		"addStateEmptyLabel":"None (new empty scene)",
+		"addStateRemoveFromNormal":"Widgets added to new state should be removed from base state",
 		"modifyState":"Modify State",
 		"modifyLabel":"Update",
 		"stateLabel":"Name",

@@ -1662,7 +1662,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	_preserveStates: function(node, cache){
 		var statesAttributes = davinci.ve.states.retrieve(node);
 //FIXME: Need to generalize this to any states container
-		if (node.tagName != "BODY" && (statesAttributes.maqAppStates || statesAttributes.maqDeltas)) {
+		if (node.tagName.toUpperCase() != "BODY" && (statesAttributes.maqAppStates || statesAttributes.maqDeltas)) {
 			var tempClass = this.maqTempClassPrefix + this.maqTempClassCount;
 			node.className = node.className + ' ' + tempClass;
 			this.maqTempClassCount++;
@@ -1711,7 +1711,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 			var widget = Widget.getWidget(node);
 //FIXME: Need to generalize beyond just BODY
-			var isBody = (node.tagName == 'BODY');
+			var isBody = (node.tagName.toUpperCase() == 'BODY');
 //FIXME: Temporary - doesn't yet take into account nested state containers
 			var srcElement = widget._srcElement;
 			maqAppStatesString = maqDeltasString = maqAppStates = maqDeltas = null;
@@ -1776,7 +1776,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			
 //FIXME: Need to generalize beyond just BODY
 /*FIXME: OLD LOGIC
-			if(node.tagName != 'BODY'){
+			if(node.tagName.toUpperCase() != 'BODY'){
 */
 			if(maqDeltas){
 				davinci.states.transferElementStyle(node, cache[id].style);
@@ -2073,7 +2073,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				if(domNode.offsetLeft==0 && domNode.offsetTop==0 && domNode.offsetWidth==0 && domNode.offsetHeight==0){
 					this.deselect(widget);
 				}else{
-					while(domNode && domNode.tagName != 'BODY'){
+					while(domNode && domNode.tagName.toUpperCase() != 'BODY'){
 						// Sometimes browsers haven't set up defaultView yet,
 						// and domStyle.get will raise exception if defaultView isn't there yet
 						if(domNode && domNode.ownerDocument && domNode.ownerDocument.defaultView){
@@ -3461,6 +3461,55 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				find(child);
 			});
 		}
+		if(this.rootWidget){
+			find(this.rootWidget);
+		}
+		return result;
+	},
+	
+	_isVisible: function(widget){
+		var domNode = widget ? widget.domNode : null;
+		if(domNode){
+			if(domNode.offsetLeft==0 && domNode.offsetTop==0 && domNode.offsetWidth==0 && domNode.offsetHeight==0){
+				return false;
+			}else{
+				while(domNode && domNode.tagName.toUpperCase() != 'BODY'){
+					// Sometimes browsers haven't set up defaultView yet,
+					// and domStyle.get will raise exception if defaultView isn't there yet
+					if(domNode && domNode.ownerDocument && domNode.ownerDocument.defaultView){
+						var computedStyleDisplay = domStyle.get(domNode, 'display');
+						if(computedStyleDisplay == 'none'){
+							return false;
+						}
+					}
+					domNode = domNode.parentNode;
+				}
+				return true;
+			}
+		}else{
+			return false;
+		}
+	},
+	
+	/**
+	 * Returns an array of all widgets in the current document
+	 * that do not have display:none and have non-zero values for offsetLeft/Right/Top/Bottom
+	 * and do not have ancestors with display:none or zero values for offsetLeft/Right/Top/Bottom
+	 * Do not include the BODY widget
+	 * In the returned result, parents are listed before their children.
+	 */
+	getAllVisibleWidgets: function(){
+		var result = [];
+		var find = function(widget) {
+			if(widget.domNode && this._isVisible(widget)){
+				if(widget.domNode.tagName.toUpperCase() != 'BODY'){
+					result.push(widget);
+				}
+				widget.getChildren().forEach(function(child) {
+					find(child);
+				});
+			}
+		}.bind(this);
 		if(this.rootWidget){
 			find(this.rootWidget);
 		}

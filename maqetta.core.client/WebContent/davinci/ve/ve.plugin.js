@@ -243,6 +243,13 @@ return {
 						action: "davinci/ve/actions/ModifyState",
 						label: "Modify State",
 						toolbarPath: "states1"
+					},
+					{
+						id: "updateState",
+						iconClass: 'viewActionIcon updateStateIcon',
+						action: "davinci/ve/actions/UpdateState",
+						label: "Update State",
+						toolbarPath: "states1"
 					}
 
                 ]

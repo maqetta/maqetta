@@ -55,7 +55,6 @@ public class GetThemes extends Command {
     		catch(JSONException ex) {
     			System.err.println("maqetta.core.server.command.GetThemes "+f.getPath() + " not valid json");
     		} 
-    	   	System.err.println(output);
         }
         ret = ret + "]";
         this.responseString =  ret; //Resource.foundVRsourcesToJson(foundFiles, user);

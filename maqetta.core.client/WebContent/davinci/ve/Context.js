@@ -3467,11 +3467,14 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return result;
 	},
 	
-	_isVisible: function(widget){
+	_getEffectiveDisplayValue: function(widget){
 		var domNode = widget ? widget.domNode : null;
+		var displayValue = 'none';
 		if(domNode){
+			displayValue = domStyle.get(domNode, 'display');
+			// If offsetLeft/Right/Top/Bottom are all zero, then widget is not visible
 			if(domNode.offsetLeft==0 && domNode.offsetTop==0 && domNode.offsetWidth==0 && domNode.offsetHeight==0){
-				return false;
+				displayValue = 'none';
 			}else{
 				while(domNode && domNode.tagName.toUpperCase() != 'BODY'){
 					// Sometimes browsers haven't set up defaultView yet,
@@ -3479,41 +3482,48 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					if(domNode && domNode.ownerDocument && domNode.ownerDocument.defaultView){
 						var computedStyleDisplay = domStyle.get(domNode, 'display');
 						if(computedStyleDisplay == 'none'){
-							return false;
+							displayValue = 'none';
+							break;
 						}
 					}
 					domNode = domNode.parentNode;
 				}
-				return true;
 			}
 		}else{
-			return false;
+			displayValue = 'none';
 		}
+		return displayValue;
 	},
 	
 	/**
-	 * Returns an array of all widgets in the current document
-	 * that do not have display:none and have non-zero values for offsetLeft/Right/Top/Bottom
+	 * Returns the list of all currently visible widgets in the current document, 
+	 * along with their effective display values.
+	 * Visible widgets are ones that do not have display:none and 
+	 * have non-zero values for offsetLeft/Right/Top/Bottom
 	 * and do not have ancestors with display:none or zero values for offsetLeft/Right/Top/Bottom
-	 * Do not include the BODY widget
+	 * @return {object} An object consisting of two arrays:
+	 * { allWidgets:{array of widgets}, effectiveDisplay:{array of 'display' values}
+	 * The two arrays align exactly - effectiveDisplay[i] is the 'display' value for allWidgets[i].
+	 * Does not include the BODY widget
 	 * In the returned result, parents are listed before their children.
 	 */
-	getAllVisibleWidgets: function(){
-		var result = [];
+	getAllWidgetsEffectiveDisplay: function(){
+		var allWidgets = [];
+		var effectiveDisplay = [];
 		var find = function(widget) {
-			if(widget.domNode && this._isVisible(widget)){
-				if(widget.domNode.tagName.toUpperCase() != 'BODY'){
-					result.push(widget);
-				}
-				widget.getChildren().forEach(function(child) {
-					find(child);
-				});
+			var effectiveDisplayValue = this._getEffectiveDisplayValue(widget);
+			if(widget.domNode.tagName.toUpperCase() != 'BODY'){
+				allWidgets.push(widget);
+				effectiveDisplay.push(effectiveDisplayValue);
 			}
+			widget.getChildren().forEach(function(child) {
+				find(child);
+			});
 		}.bind(this);
 		if(this.rootWidget){
 			find(this.rootWidget);
 		}
-		return result;
+		return {allWidgets:allWidgets, effectiveDisplay:effectiveDisplay};
 	},
 
 	/**

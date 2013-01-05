@@ -81,24 +81,68 @@ var AddStateWidget = declare("davinci.ve.actions.AddStateWidget", [_WidgetBase, 
 				console.error('AddState.js - cannot determine context.')
 				return;
 			}
-			var widgetsToMove = [];
-			var allVisibleWidgets = context.getAllVisibleWidgets();
+			
+			var obj = context.getAllWidgetsEffectiveDisplay();
+			var allWidgets = obj.allWidgets;	// Array of all widgets
+			var effectiveDisplay = obj.effectiveDisplay;	// Corresponding array of effective 'display' values
+			
+			var widgetsToShowInNewState = [];
 			var moveWhichWidgets = this.moveWhichWidgets.get('value');
 			if(moveWhichWidgets == 'allVisible'){
-				widgetsToMove = allVisibleWidgets;
+				for(var i=0; i<allWidgets.length; i++){
+					if(effectiveDisplay[i] != 'none'){
+						widgetsToShowInNewState.push(allWidgets[i]);
+					}
+				}
 			}else if(moveWhichWidgets == 'allSelected'){
-				widgetsToMove = context.getSelection();
+				widgetsToShowInNewState = context.getSelection().slice(0);	// clone operation
+			}
+			var widgetsToShowInNewState_Adjusted = widgetsToShowInNewState.slice(0);	// clone operation
+			
+			// Make sure that all visible descendants for any selected containers
+			// will be visible in the new state
+			for(var i=0; i< allWidgets.length; i++){
+				var widget = allWidgets[i];
+				var displayValue = effectiveDisplay[i];
+				if(displayValue != 'none' && widgetsToShowInNewState_Adjusted.indexOf(widget) < 0){
+					var parent = widget.getParent();
+					while(parent && parent.domNode && parent.domNode.tagName.toUpperCase() != 'BODY'){
+						if(widgetsToShowInNewState_Adjusted.indexOf(parent) >= 0){
+							widgetsToShowInNewState_Adjusted.push(widget);
+							break;
+						}
+						parent = parent.getParent();
+					}
+				}
+			}
+			
+			// Make sure any container widget gets shown in new state when 
+			// that container has a descendant in widgetsToShowInNewState_Adjusted
+			for(var i=0; i< widgetsToShowInNewState_Adjusted.length; i++){
+				var widget = widgetsToShowInNewState_Adjusted[i];
+				var parent = widget.getParent();
+				while(parent && parent.domNode && parent.domNode.tagName.toUpperCase() != 'BODY'){
+					var showIndex = widgetsToShowInNewState_Adjusted.indexOf(parent);
+					if(showIndex < 0){
+						widgetsToShowInNewState_Adjusted.push(parent);
+					}
+					parent = parent.getParent();
+				}
 			}
 			var removeFromBase = this.addStateRemoveFromBase.get('checked');
-			for(var i=0; i< allVisibleWidgets.length; i++){
-				var widget = allVisibleWidgets[i];
-				var moveThisWidget = (widgetsToMove.indexOf(widget) >= 0);
-				var displayValue = moveThisWidget ? '' : 'none';
+			
+			// Create StyleCommands for each widget to set its 'display' value for new state
+			// If removeFromBase value has been set, then any widgets moved to new state
+			// will be removed from the base/NORMAL state.
+			for(var i=0; i< allWidgets.length; i++){
+				var widget = allWidgets[i];
+				var displayValue = (widgetsToShowInNewState_Adjusted.indexOf(widget) >= 0) ? effectiveDisplay[i] : 'none';
 				command.add(new StyleCommand(widget, [{'display':displayValue}], newState));
-				if(removeFromBase && moveThisWidget){
+				if(removeFromBase && (widgetsToShowInNewState.indexOf(widget) >= 0)){
 					command.add(new StyleCommand(widget, [{'display':'none'}], null));
 				}
 			}
+			
 			context.getCommandStack().execute(command);
 			//FIXME: setting focus:true should be undoable
 			States.setState(newState, context.rootNode, {focus:true});

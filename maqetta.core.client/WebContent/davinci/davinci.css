@@ -2559,3 +2559,13 @@ td.welcome_section_cell {
 	margin-bottom: 10px;
 	font-weight: bold;
 }
+.maqBaseStateShiningThrough {
+	border-radius: 6px;
+	margin-left: -5px;
+	position: absolute;
+	pointer-events: none;
+	border: 3px solid rgba(255, 0, 0, .1);
+	padding: 2px;
+	margin-top: -5px;
+	margin-top: -5px;
+}

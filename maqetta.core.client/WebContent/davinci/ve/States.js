@@ -2,13 +2,16 @@ define([
         "dojo/_base/declare",
         "dojo/_base/connect",
     	"dojo/query",
-        "davinci/Runtime",
+    	"dojo/dom-class",
+    	"davinci/Runtime",
+    	"davinci/Workbench",
         "davinci/maqetta/AppStates",
     	"./utils/GeomUtils",
         "./commands/EventCommand",
         "./commands/StyleCommand",
-    	"davinci/ve/utils/StyleArray"
-], function(declare, connect, query, Runtime, maqettaStates, GeomUtils, EventCommand, StyleCommand, StyleArray){
+    	"davinci/ve/utils/StyleArray",
+    	"davinci/workbench/Preferences"
+], function(declare, connect, query, domClass, Runtime, Workbench, maqettaStates, GeomUtils, EventCommand, StyleCommand, StyleArray, Preferences){
 
 var veStates = declare(maqettaStates, {
 	
@@ -331,6 +334,20 @@ var veStates = declare(maqettaStates, {
 	},
 	
 	/**
+	 * Returns true if the highlightBaseWidgets feature can be active at this time.
+	 * Only true when user has selected a custom state.
+	 */
+	
+	highlightBaseWidgetsActive: function(context){
+		if(!context){
+			return false;
+		}
+		// FIXME: assumes only state container is root node of doc
+		var state = this.getState(context.rootNode);
+		return state;	// undefined => default/base/Normal state
+	},
+	
+	/**
 	 * Update all of the highlights that show which widgets appear in a custom state
 	 * but which are actually visible on the base state and "shining through" to custom state
 	 */
@@ -338,8 +355,25 @@ var veStates = declare(maqettaStates, {
 		if(!context){
 			return;
 		}
+		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Workbench.getProject());
+		var highlightBaseWidgets = editorPrefs.highlightBaseWidgets;
+		var highlightBaseWidgetsActive = this.highlightBaseWidgetsActive(context);
+		var iconNode = query('.highlightBaseWidgetsIcon')[0];
+		if(iconNode){
+			if(highlightBaseWidgetsActive){
+				domClass.remove(iconNode, 'highlightBaseWidgetsIconDisabled');
+			}else{
+				domClass.add(iconNode, 'highlightBaseWidgetsIconDisabled');
+			}
+			if(highlightBaseWidgets){
+				domClass.add(iconNode, 'highlightBaseWidgetsIconOn');
+				domClass.remove(iconNode, 'highlightBaseWidgetsIconOff');
+			}else{
+				domClass.add(iconNode, 'highlightBaseWidgetsIconOff');
+				domClass.remove(iconNode, 'highlightBaseWidgetsIconOn');
+			}
+		}
 		// FIXME: assumes only state container is root node of doc
-		// FIXME: Move to ve/States.js?
 		var state = this.getState(context.rootNode);
 		var focusContainer = dojo.byId('focusContainer');
 		if(focusContainer){
@@ -348,7 +382,7 @@ var veStates = declare(maqettaStates, {
 				var div = shiningThroughDivs[i];
 				div.parentNode.removeChild(div);
 			}
-			if(state){
+			if(state && highlightBaseWidgets){
 				var allWidgets = context.getAllWidgets();
 				var widgetsNotInBaseState = [];
 				for(var i=0; i<allWidgets.length; i++){

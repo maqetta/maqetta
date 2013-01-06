@@ -250,6 +250,13 @@ return {
 						action: "davinci/ve/actions/UpdateState",
 						label: "Update State",
 						toolbarPath: "states1"
+					},
+					{
+						id: "highlightBaseWidgets",
+						iconClass: 'viewActionIcon highlightBaseWidgetsIcon',
+						action: "davinci/ve/actions/HighlightBaseWidgets",
+						label: "For custom state, highlight widgets shining through from Normal state",
+						toolbarPath: "states1"
 					}
 
                 ]

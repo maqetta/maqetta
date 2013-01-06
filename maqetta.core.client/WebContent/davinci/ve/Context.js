@@ -3377,6 +3377,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if(this.editor && this.editor.editorContainer && this.editor.editorContainer.updateToolbars){
 			this.editor.editorContainer.updateToolbars();
 		}
+		//Update all of the highlights that show which widgets appear in a custom state
+		// but which are actually visible on the base state and "shining through" to custom state
+		States.updateHighlightsBaseStateWidgets(this);
 	},
 
 	/**

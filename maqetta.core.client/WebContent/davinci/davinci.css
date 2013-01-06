@@ -2564,8 +2564,12 @@ td.welcome_section_cell {
 	margin-left: -5px;
 	position: absolute;
 	pointer-events: none;
-	border: 3px solid rgba(255, 0, 0, .1);
+	border: 2px solid red;
 	padding: 2px;
-	margin-top: -5px;
-	margin-top: -5px;
+	margin-top: -4px;
+	margin-top: -4px;
+	opacity:.03;
+	/* 3x3 red check image */
+	background-image:url('data:image/gif;base64,R0lGODlhAwADAJEAAAAAAP////8AAP///yH5BAEAAAMALAAAAAADAAMAAAIEnCc3BQA7');
+	background-repeat:repeat;
 }

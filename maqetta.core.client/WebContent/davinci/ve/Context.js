@@ -1960,56 +1960,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				this.updateFocus(selection[i], i);			
 			}
 		}
-		// FIXME: assumes only state container is root node of doc
-		// FIXME: Move to ve/States.js?
-		var state = States.getState(this.rootNode);
-		var focusContainer = dojo.byId('focusContainer');
-		if(state && focusContainer){
-			var shiningThroughDivs = query('.maqBaseStateShiningThrough', focusContainer);
-			for(var i=0; i<shiningThroughDivs.length; i++){
-				var div = shiningThroughDivs[i];
-				div.parentNode.removeChild(div);
-			}
-			var allWidgets = this.getAllWidgets();
-			var widgetsNotInBaseState = [];
-			for(var i=0; i<allWidgets.length; i++){
-				var widget = allWidgets[i];
-				if(widget.domNode && widget.domNode.tagName && widget.domNode.tagName.toUpperCase() == 'BODY'){
-					continue;
-				}
-				var obj = this._getEffectiveDisplayValue(widget, state);
-				var effectiveDisplayValue = obj.effectiveDisplayValue;
-				var effectiveState = obj.effectiveState;
-				if(effectiveDisplayValue != 'none' && effectiveState == 'undefined'){
-					widgetsNotInBaseState.push(widget);
-				}
-			}
-			var doc = this.getDocument();
-			var focusContainerBounds = GeomUtils.getBorderBoxPageCoords(focusContainer);
-			var parentIframe = this.getParentIframe();
-			var parentIFrameBounds = GeomUtils.getBorderBoxPageCoords(parentIframe);
-			var iframeFocusContainerAdjustLeft = parentIFrameBounds.l - focusContainerBounds.l;
-			var iframeFocusContainerAdjustTop = parentIFrameBounds.t - focusContainerBounds.t;
-			var bodyElement = doc.body;
-			var scrollLeft = GeomUtils.getScrollLeft(bodyElement);
-			var scrollTop = GeomUtils.getScrollTop(bodyElement);
-			for(var j=0; j<widgetsNotInBaseState.length; j++){
-				var domNode = widgetsNotInBaseState[j].domNode;
-				if(domNode){
-					//FIXME: use dojo.position instead?
-					var rect = GeomUtils.getBorderBoxPageCoords(domNode);
-					rect.l += (iframeFocusContainerAdjustLeft - scrollLeft);
-					rect.t += (iframeFocusContainerAdjustTop - scrollTop);
-					var div = doc.createElement('div');
-					div.className = 'maqBaseStateShiningThrough';
-					div.style.left = rect.l + 'px';
-					div.style.top = rect.t + 'px';
-					div.style.width = rect.w + 'px';
-					div.style.height = rect.h + 'px';
-					focusContainer.appendChild(div);
-				}
-			}
-		}
+		//Update all of the highlights that show which widgets appear in a custom state
+		// but which are actually visible on the base state and "shining through" to custom state
+		States.updateHighlightsBaseStateWidgets(this);
 	},
 	
 	select: function(widget, add, inline){
@@ -3527,7 +3480,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * 		effectiveDisplayValue {string} none|block|inline-block|etc
 	 * 		effectiveState {string} where "undefined" represents the base/NORMAL state
 	 */
-	_getEffectiveDisplayValue: function(widget, state){
+	getEffectiveDisplayValue: function(widget, state){
 		var domNode = widget ? widget.domNode : null;
 		var effectiveDisplayValue = 'none';
 		// Quirk in code: Normal state is represented as "undefined" in data structures
@@ -3592,7 +3545,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var allWidgets = [];
 		var effectiveDisplay = [];
 		var find = function(widget) {
-			var obj = this._getEffectiveDisplayValue(widget);
+			var obj = this.getEffectiveDisplayValue(widget);
 			var effectiveDisplayValue = obj.effectiveDisplayValue;
 			if(widget.domNode.tagName.toUpperCase() != 'BODY'){
 				allWidgets.push(widget);

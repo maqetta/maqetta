@@ -31,14 +31,16 @@ define({ root:
 		"selectAncestorTitle":"Select ancestor",
 		"selectAncestorLabel":"Select ancestor (closest ancestor listed first):",
 		
-		//actions/AddState.js, ModifyState.js, RenameState.js, StateContainer.js
+		//actions/AddState.js, UpdateState.js, ModifyState.js, RenameState.js, StateContainer.js
 		"createNewState":"Create New State",
+		"updateCurrentState":"Update Current State",
 		"createLabel":"Create",
-		"addStateMoveWhichWidgets":"Move which widgets to new scene:",
+		"updateLabel":"Update",
+		"addStateMoveWhichWidgets":"Widgets to show in this state:",
 		"addStateAllVisibleLabel":"Visible widgets",
 		"addStateAllSelectedLabel":"Selected widgets",
 		"addStateEmptyLabel":"None (new empty scene)",
-		"addStateRemoveFromNormal":"Widgets added to new state should be removed from base state",
+		"addStateRemoveFromNormal":"Remove widgets shown in this state from base state",
 		"modifyState":"Modify State",
 		"modifyLabel":"Update",
 		"stateLabel":"Name",

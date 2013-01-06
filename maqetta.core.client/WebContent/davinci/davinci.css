@@ -2586,8 +2586,26 @@ td.welcome_section_cell {
 	padding: 2px;
 	margin-top: -4px;
 	margin-top: -4px;
-	opacity:.03;
+	opacity:.08;
 	/* 3x3 red check image */
 	background-image:url('data:image/gif;base64,R0lGODlhAwADAJEAAAAAAP////8AAP///yH5BAEAAAMALAAAAAADAAMAAAIEnCc3BQA7');
 	background-repeat:repeat;
+}
+.addStateNameDiv label {
+	margin-right:8px;
+}
+.addStateNameDiv {
+	margin-bottom:24px;
+}
+.addStateNameDiv .dijitTextBox {
+	width:18em;
+}
+.addStateDialogOptions {
+	margin:4px 0;
+}
+.addStateDialogMoveWhichDiv label {
+	margin-right:8px;
+}
+.addStateDialogRemoveFromBaseDiv {
+	margin:8px 0;
 }

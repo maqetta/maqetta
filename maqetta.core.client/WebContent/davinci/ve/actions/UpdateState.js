@@ -40,9 +40,7 @@ return declare("davinci.ve.actions.UpdateState", [Action], {
 		if(addStateNameDiv){
 			addStateNameDiv.style.display = 'none';
 		}
-		var maqPrimaryButtonNode = dialog.domNode.querySelector('.maqPrimaryButton');
-		var maqPrimaryButton = registry.byNode(maqPrimaryButtonNode);
-		maqPrimaryButton.set('label', veNls.updateLabel);
+		w.okButton.set("label", veNls.updateLabel);
 	}
 });
 });

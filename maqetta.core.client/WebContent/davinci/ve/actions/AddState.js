@@ -32,6 +32,8 @@ return declare("davinci.ve.actions.AddState", [Action], {
 		var w = new davinci.ve.actions._AddUpdateStateWidget({node: statesFocus.stateContainerNode });
 
 		Workbench.showModal(w, veNls.createNewState, null, null, true);
+		w.okButton.set("disabled", true);
+
 	}
 });
 });

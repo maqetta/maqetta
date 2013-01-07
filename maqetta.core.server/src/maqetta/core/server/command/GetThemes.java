@@ -43,10 +43,11 @@ public class GetThemes extends Command {
         String ret = "[";
         String delem = " ";
         for (int i = 0; i < foundFiles.length; i++) {
-        	IVResource f = foundFiles[i];
-        	InputStream in = f.getInputStreem();
-        	String output = this.fromStream(in);
+    		IVResource f = foundFiles[i];
+        	InputStream in = null;
         	try {
+            	in = f.getInputStreem();
+            	String output = this.fromStream(in);
         		JSONObject j = new JSONObject(output);
         		j.append("path", f.getPath());
         		ret = ret + delem + j.toString();
@@ -54,7 +55,17 @@ public class GetThemes extends Command {
     		}
     		catch(JSONException ex) {
     			System.err.println("maqetta.core.server.command.GetThemes "+f.getPath() + " not valid json");
-    		} 
+    		}
+        	catch (IOException e) {
+        		System.err.println("maqetta.core.server.command.GetThemes "+f.getPath() + " Error reading file");
+    		} finally {
+    			try {
+    				if (in != null)
+    					in.close();
+    			} catch (IOException ex) {
+    				System.err.println("maqetta.core.server.command.GetThemes "+f.getPath() + " Error closing");
+    			}
+    		}
         }
         ret = ret + "]";
         this.responseString =  ret; //Resource.foundVRsourcesToJson(foundFiles, user);

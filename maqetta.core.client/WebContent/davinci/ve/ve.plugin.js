@@ -227,35 +227,37 @@ return {
 						id: "addState",
 						iconClass: 'viewActionIcon addStateIcon',
 						action: "davinci/ve/actions/AddState",
-						label: "Add State",
+						label: "Add state",
 						toolbarPath: "states1"
 					},
 					{
 						id: "removeState",
 						iconClass: 'viewActionIcon removeStateIcon',
 						action: "davinci/ve/actions/RemoveState",
-						label: "Remove State",
+						label: "Remove state",
 						toolbarPath: "states1"
 					},
 					{
 						id: "modifyState",
 						iconClass: 'viewActionIcon modifyStateIcon',
 						action: "davinci/ve/actions/ModifyState",
-						label: "Modify State",
+						label: "Modify state",
 						toolbarPath: "states1"
 					},
 					{
 						id: "updateState",
+						className: "updateStateButton",
 						iconClass: 'viewActionIcon updateStateIcon',
 						action: "davinci/ve/actions/UpdateState",
-						label: "Update State",
+						label: "Update state",
 						toolbarPath: "states1"
 					},
 					{
 						id: "highlightBaseWidgets",
+						className: "highlightBaseWidgetsButton",
 						iconClass: 'viewActionIcon highlightBaseWidgetsIcon',
 						action: "davinci/ve/actions/HighlightBaseWidgets",
-						label: "For custom state, highlight widgets shining through from Normal state",
+						label: "When in custom state, highlight widgets from Normal/base state",
 						toolbarPath: "states1"
 					}
 

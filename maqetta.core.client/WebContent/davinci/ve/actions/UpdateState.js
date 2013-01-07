@@ -30,17 +30,19 @@ return declare("davinci.ve.actions.UpdateState", [Action], {
 		if(!statesFocus || !statesFocus.stateContainerNode){
 			return;
 		}
-
-		var w = new davinci.ve.actions._AddUpdateStateWidget({node: statesFocus.stateContainerNode });
-		var dialog = Workbench.showModal(w, veNls.updateCurrentState, null, null, true);
-		
-		// Tweak the AddState.html template to hide the state name DIV
-		// and change the button label from "Create" to "Update"
-		var addStateNameDiv = dialog.domNode.querySelector('.addStateNameDiv');
-		if(addStateNameDiv){
-			addStateNameDiv.style.display = 'none';
+		if(States.updateStateActive(context)){
+			var w = new davinci.ve.actions._AddUpdateStateWidget({node: statesFocus.stateContainerNode });
+			var dialog = Workbench.showModal(w, veNls.updateCurrentState, null, null, true);
+			
+			// Tweak the AddState.html template to hide the state name DIV
+			// and change the button label from "Create" to "Update"
+			var addStateNameDiv = dialog.domNode.querySelector('.addStateNameDiv');
+			if(addStateNameDiv){
+				addStateNameDiv.style.display = 'none';
+			}
+			w.okButton.set("label", veNls.updateLabel);
 		}
-		w.okButton.set("label", veNls.updateLabel);
+
 	}
 });
 });

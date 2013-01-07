@@ -1559,19 +1559,16 @@ background-position: -75px -745px;
 }
 .updateStateIcon {
 	background-image: url(img/sprite.png);
-	background-position: -25px -649px;
+	background-position: 0px -1801px;
 }
 .updateStateIcon.updateStateIconDisabled {
-	background-position: -25px -649px;
+	background-position: -20px -1801px;
 }
 .highlightBaseWidgetsIcon {
 	background-image: url(img/sprite.png);
 }
 .highlightBaseWidgetsIconOn {
 	background-position: 0px -950px;
-}
-.highlightBaseWidgetsIconDisabled {
-	cursor:default;
 }
 .highlightBaseWidgetsIconOn.highlightBaseWidgetsIconDisabled {
 	background-position: 0px -968px;

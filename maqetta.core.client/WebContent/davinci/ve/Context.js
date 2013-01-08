@@ -3538,17 +3538,18 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * Visible widgets are ones that do not have display:none and 
 	 * have non-zero values for offsetLeft/Right/Top/Bottom
 	 * and do not have ancestors with display:none or zero values for offsetLeft/Right/Top/Bottom
+	 * @param [{state}] state Optional - retrieve info for a particular state (if null, get base state)
 	 * @return {object} An object consisting of two arrays:
 	 * { allWidgets:{array of widgets}, effectiveDisplay:{array of 'display' values}
 	 * The two arrays align exactly - effectiveDisplay[i] is the 'display' value for allWidgets[i].
 	 * Does not include the BODY widget
 	 * In the returned result, parents are listed before their children.
 	 */
-	getAllWidgetsEffectiveDisplay: function(){
+	getAllWidgetsEffectiveDisplay: function(state){
 		var allWidgets = [];
 		var effectiveDisplay = [];
 		var find = function(widget) {
-			var obj = this.getEffectiveDisplayValue(widget);
+			var obj = this.getEffectiveDisplayValue(widget, state);
 			var effectiveDisplayValue = obj.effectiveDisplayValue;
 			if(widget.domNode.tagName.toUpperCase() != 'BODY'){
 				allWidgets.push(widget);

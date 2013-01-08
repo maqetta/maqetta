@@ -7,6 +7,7 @@ define([
 	"dijit/_WidgetsInTemplateMixin",
 	"davinci/Runtime",
 	"davinci/Workbench",
+	"davinci/workbench/Preferences",
 	"davinci/ve/States",
 	"davinci/commands/CompoundCommand",
 	"davinci/ve/commands/StyleCommand",
@@ -27,6 +28,7 @@ define([
 	_WidgetsInTemplateMixin,
 	Runtime,
 	Workbench,
+	Preferences,
 	States,
 	CompoundCommand,
 	StyleCommand,
@@ -83,11 +85,24 @@ return declare("davinci.ve.actions._AddUpdateStateWidget", [_WidgetBase, _Templa
 	},
 
 	onOk: function() {
+		var context;
+		if(Runtime.currentEditor && Runtime.currentEditor.currentEditor && Runtime.currentEditor.currentEditor.context){
+			context = Runtime.currentEditor.currentEditor.context;
+		}else{
+			console.error('_AddUpdateStateWidget.js (from '+this._calledBy+' - cannot determine context.')
+			return;
+		}
+		var statesFocus = States.getFocus(context.rootNode);
+		if(!statesFocus || !statesFocus.stateContainerNode){
+			return;
+		}
+		var currentState = States.getState(statesFocus.stateContainerNode);
 		var newState = this.input.get("value");
-		if(newState){
-			var command = new CompoundCommand();
-			//FIXME: Need to make this into a command so that it is undoable
-			States.add(this.node, newState);
+		var applyToState = this._calledBy == 'AddState' ? newState : currentState;
+
+		// Proceed if either the state name input box has a value (ie non-empty string)
+		// or if the dialog was invoked by UpdateState.js (in which case input box is hidden)
+		if(newState || (this._calledBy == 'UpdateState' && currentState)){
 			var context;
 			if(Runtime.currentEditor && Runtime.currentEditor.currentEditor && Runtime.currentEditor.currentEditor.context){
 				context = Runtime.currentEditor.currentEditor.context;
@@ -95,8 +110,13 @@ return declare("davinci.ve.actions._AddUpdateStateWidget", [_WidgetBase, _Templa
 				console.error('AddState.js - cannot determine context.')
 				return;
 			}
+			var command = new CompoundCommand();
+			if(newState){
+				//FIXME: Need to make this into a command so that it is undoable
+				States.add(this.node, newState);
+			}
 			
-			var obj = context.getAllWidgetsEffectiveDisplay();
+			var obj = context.getAllWidgetsEffectiveDisplay(currentState);
 			var allWidgets = obj.allWidgets;	// Array of all widgets
 			var effectiveDisplay = obj.effectiveDisplay;	// Corresponding array of effective 'display' values
 			
@@ -151,7 +171,7 @@ return declare("davinci.ve.actions._AddUpdateStateWidget", [_WidgetBase, _Templa
 			for(var i=0; i< allWidgets.length; i++){
 				var widget = allWidgets[i];
 				var displayValue = (widgetsToShowInNewState_Adjusted.indexOf(widget) >= 0) ? effectiveDisplay[i] : 'none';
-				command.add(new StyleCommand(widget, [{'display':displayValue}], newState));
+				command.add(new StyleCommand(widget, [{'display':displayValue}], applyToState));
 				if(removeFromBase && (widgetsToShowInNewState.indexOf(widget) >= 0)){
 					command.add(new StyleCommand(widget, [{'display':'none'}], null));
 				}
@@ -159,7 +179,14 @@ return declare("davinci.ve.actions._AddUpdateStateWidget", [_WidgetBase, _Templa
 			
 			context.getCommandStack().execute(command);
 			//FIXME: setting focus:true should be undoable
-			States.setState(newState, context.rootNode, {focus:true});
+			States.setState(applyToState, context.rootNode, {focus:true});
+			
+			var editorPrefsId = 'davinci.ve.editorPrefs';
+			var projectBase = Workbench.getProject();
+			var editorPrefs = Preferences.getPreferences(editorPrefsId, projectBase);
+			editorPrefs.statesMoveWhich = moveWhichWidgets;
+			editorPrefs.statesRemoveFromBase = removeFromBase;
+			Preferences.savePreferences(editorPrefsId, projectBase, editorPrefs);
 		}
 	},
 

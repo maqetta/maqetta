@@ -2,6 +2,7 @@ define([
 	"dojo/_base/declare",
 	"davinci/Runtime",
 	"davinci/Workbench",
+	"davinci/workbench/Preferences",
 	"dijit/registry",
 	"davinci/ve/States",
 	"davinci/actions/Action",
@@ -11,6 +12,7 @@ define([
 	declare,
 	Runtime,
 	Workbench,
+	Preferences,
 	registry,
 	States,
 	Action,
@@ -32,6 +34,7 @@ return declare("davinci.ve.actions.UpdateState", [Action], {
 		}
 		if(States.updateStateActive(context)){
 			var w = new davinci.ve.actions._AddUpdateStateWidget({node: statesFocus.stateContainerNode });
+			w._calledBy = 'UpdateState';
 			var dialog = Workbench.showModal(w, veNls.updateCurrentState, null, null, true);
 			
 			// Tweak the AddState.html template to hide the state name DIV
@@ -41,6 +44,16 @@ return declare("davinci.ve.actions.UpdateState", [Action], {
 				addStateNameDiv.style.display = 'none';
 			}
 			w.okButton.set("label", veNls.updateLabel);
+			
+			var editorPrefsId = 'davinci.ve.editorPrefs';
+			var projectBase = Workbench.getProject();
+			var editorPrefs = Preferences.getPreferences(editorPrefsId, projectBase);
+			if(editorPrefs && typeof editorPrefs.statesMoveWhich == 'string'){
+				w.moveWhichWidgets.set('value', editorPrefs.statesMoveWhich);
+			}
+			if(editorPrefs && typeof editorPrefs.statesRemoveFromBase == 'boolean'){
+				w.addStateRemoveFromBase.set('checked', editorPrefs.statesRemoveFromBase);			
+			}
 		}
 
 	}

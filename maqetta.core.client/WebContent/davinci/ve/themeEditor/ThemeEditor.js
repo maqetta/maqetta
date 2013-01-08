@@ -146,22 +146,35 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 	
 	selectSubwidget: function(widget, subwidget){
 		if (!widget || !subwidget || subwidget == 'WidgetOuterContainer') { return; }
-		var widgetType = this._theme.getWidgetType(widget);
-		var domNode = this._theme.getDomNode(widget.domNode, widgetType, subwidget);
-		var box = this.getRelativeBox(domNode);
-		var frame = this.getContext().getDocument().createElement("div");
-		frame.className = "editSubwidgetFocusFrame";
-		frame.id = "editSubwidgetFocusFrame";
-		frame.style.position = "absolute";
-		var padding = 2; // put some space between the subwidget and box
-		frame.style.width = domNode.offsetWidth + (padding * 2) + "px";
-		frame.style.height = domNode.offsetHeight + (padding * 2) + "px";
-		frame.style.top =  (box.t - padding) + "px";
-		frame.style.left = (box.l - padding) + "px"; 
-		frame.style.padding = padding + 'px';
-		frame.style.display = "block";
-		this._selectedWidget.domNode.parentNode.appendChild(frame);
+		var domNode;
+		/*if (this._theme._theme.helper && this._theme._theme.helper.getDomNode) {
+			domNode = this._theme._theme.helper.getDomNode(this.visualEditor.context, widget, subwidget);
+		} 
+		if (!domNode) {
+			var widgetType = this._theme.getWidgetType(widget);
+			domNode = this._theme.getDomNode(widget.domNode, widgetType, subwidget);
+		}*/
+		var frame;
+		if (this._theme._theme.helper && this._theme._theme.helper.selectSubwidget) {
+			frame = this._theme._theme.helper.selectSubwidget(this.visualEditor.context, widget, subwidget);
+		}  
+		if (!frame) {
+			var box = this.getRelativeBox(domNode);
+			/*var*/ frame = this.getContext().getDocument().createElement("div");
+			frame.className = "editSubwidgetFocusFrame";
+			frame.id = "editSubwidgetFocusFrame";
+			frame.style.position = "absolute";
+			var padding = 2; // put some space between the subwidget and box
+			frame.style.width = domNode.offsetWidth + (padding * 2) + "px";
+			frame.style.height = domNode.offsetHeight + (padding * 2) + "px";
+			frame.style.top =  (box.t - padding) + "px";
+			frame.style.left = (box.l - padding) + "px"; 
+			frame.style.padding = padding + 'px';
+			frame.style.display = "block";
+			this._selectedWidget.domNode.parentNode.appendChild(frame);
+		}
 		this._subWidgetFocusFrame = frame;
+		
 
 	},
 	
@@ -643,6 +656,19 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 			
 			this.metaDataLoader = new query(metaResources);
 			this._theme = new CSSThemeProvider(metaResources, this.theme);
+			var helper;
+		    if (this.theme && this.theme.helper){
+		         helper = Theme.getHelper(this.theme);
+		         if (helper && helper.then){ // it might not be loaded yet so check for a deferred
+		        	 helper.then(function(result){
+		        		 if (result.helper){
+		        			 this.theme.helper = result.helper;
+		    			 }
+		        	 }.bind(this));
+		          } else {
+		        	  this.theme.helper = helper; 
+		          }
+		    }
 			// connect to the css files, so we can update the canvas when the model changes
 			var cssFiles = context._getCssFiles();	
 			

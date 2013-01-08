@@ -20,6 +20,7 @@ return {
 
 	
 	onContentChange: function(context, theme){
+
 		if(!context || !context.editor || !context.editor.isActiveEditor()){
 			return;
 		}
@@ -50,7 +51,66 @@ return {
 				},50);
 			}	
 		}
-	}
+		debugger;
+		var cb = context.getDijit().byId('mobile_attributes');
+		var dj = context.getDojo();
+		//dj.require("dojo.aspect");
+		var c = dj.connect(cb, "openDropDown", function(){
+			  debugger;
+			  if (!cb._mqRunOnce) {
+				 cb._mqRunOnce = true;
+			  	cb.dropDown.onPage(1);
+			  }
+			}.bind(cb));
+		//cb.set('pageSize', 3);
+		cb._onFocus();
+		//window.setTimeout(function(){cb.dropDown.onPage(1);},1000)
+		
+	},
+	
+	getDomNode: function(context, widget, subwidget){
+		
+		debugger;
+		var dj = context.getDojo();
+		var nodes = dj.query(".mblComboBoxMenuItem", context.rootNode);
+		return nodes[0];
+		
+	},
+	
+	selectSubwidget: function(context, widget, subwidget){
+		var domNode,
+			frame;
+		
+		debugger;
+		if (widget.type == "dojox.mobile.ComboBox" ) {
+			var dj = context.getDojo();
+			if (subwidget == "ComboBoxMenuPrevious/Next") {
+				var nodes = dj.query(".mblComboBoxMenuNextButton", context.rootNode);
+				domNode = nodes[0];
+			} else if (subwidget == "CombBoxMenuItem") {
+				var nodes = dj.query(".mblComboBoxMenuItem", context.rootNode);
+				domNode = nodes[1];
+			}
+			
+		}
+		if (domNode) {
+			//var box = this.getRelativeBox(domNode);
+			var frame = context.getDocument().createElement("div");
+			frame.className = "editSubwidgetFocusFrame";
+			frame.id = "editSubwidgetFocusFrame";
+			frame.style.position = "absolute";
+			var padding = 2; // put some space between the subwidget and box
+			frame.style.width = domNode.offsetWidth + (padding * 2) + "px";
+			frame.style.height = domNode.offsetHeight + (padding * 2) + "px";
+			frame.style.top =  (domNode.offsetTop - padding) + "px";
+			frame.style.left = (domNode.offsetLeft - padding) + "px"; 
+			frame.style.padding = padding + 'px';
+			frame.style.display = "block";
+			domNode.parentNode.parentNode.parentNode.appendChild(frame);
+		}
+		return frame;
+
+	},
   
 };
 

@@ -8,6 +8,7 @@
 <script type="text/javascript" src="/maqetta/app/static/lib/dojo/1.8/dojo/dojo.js" data-dojo-config="parseOnLoad: true, async: true, 'themeMap':[['.*',null,[]]],'mblThemeFiles':[]"></script>
 <script type="text/javascript">
 require([
+    "dojo/aspect",
     "dojox/mobile",
     "dojox/mobile/parser",
     "dojox/mobile/View",
@@ -399,21 +400,19 @@ require([
          </tr>
          <tr>
           <td>ComboBox list:</td>
+          	<datalist id="states">
+          		<select data-dojo-type="dijit.form.DataList" data-dojo-props='id:"states"' >
+					<option value="1">ComboBox Item 1</option>
+					<option value="2">ComboBox Item 2</option>
+					<option value="3">ComboBox Item 3</option>
+					<option value="4">ComboBox Item 4</option>
+					<option value="5">ComboBox Item 5</option>
+					<option value="6">ComboBox Item 6</option>
+				</select>
+			</datalist>
           <td style="height:120px; vertical-align: top;">
            <div class="theming-widget" style="margin-left: 5px;">
-            <div class="dijitPopup mblComboBoxMenuPopup dvThemeWidget">
-             <div class="mblReset mblComboBoxMenu">
-              <div>
-                <div class="mblReset mblComboBoxMenuItem mblComboBoxMenuPreviousButton" role="option">Previous choices</div>
-                <div class="mblReset mblComboBoxMenuItem themeEditorComboBoxItemLocator" role="option">ComboBox Item 1</div>
-                <div class="mblReset mblComboBoxMenuItem" role="option">ComboBox Item 2</div>
-                <div class="mblReset mblComboBoxMenuItem mblComboBoxMenuNextButton" role="option">More choices</div>
-              </div>
-              <div style="position: absolute; overflow-x: hidden; overflow-y: hidden; right: 2px; width: 5px; top: 4px; height: 34px; -webkit-mask-image: -webkit-canvas(scrollBarMaskV); " class="mblScrollBarWrapper">
-               <div style="position: absolute; background-color: rgb(96, 96, 96); font-size: 1px; border-top-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; border-bottom-left-radius: 2px; -webkit-transform-origin-x: 0px; -webkit-transform-origin-y: 0px; z-index: 2147483647; width: 5px; height: 29px; opacity: 0; " class=""></div>
-              </div>
-             </div>
-            </div>
+            <input id="mobile_attributes" data-dojo-type="dojox.mobile.ComboBox" value="" list="states" pageSize= "3" class="dvThemeWidget"></input>
            </div>
           </td>
          </tr>

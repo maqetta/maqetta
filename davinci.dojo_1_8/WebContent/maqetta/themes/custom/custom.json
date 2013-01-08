@@ -1,112 +1,4 @@
 {
-    "html": {
-        "div": {
-            "displayName": "Combobox",
-            "rootSelectors": [
-                ".mblComboBoxMenu"
-            ],
-            "states": {
-                "Normal": {
-                    "selectors": {
-                        ".dijitPopup": [
-                            "margin",
-                            "margin-top",
-                            "margin-right",
-                            "margin-bottom",
-                            "margin-left",
-                            "padding",
-                            "padding-top",
-                            "padding-right",
-                            "padding-bottom",
-                            "padding-left",
-                            "position",
-                            "border",
-                            "-webkit-box-shadow",
-                            "-webkit-border-radius",
-                            "border-image"
-                        ],
-                        ".mblComboBoxMenu": [
-                            "overflow-y",
-                            "position",
-                            "overflow",
-                            "overflow-x",
-                            "border",
-                            "border-color",
-                            "border-style",
-                            "border-width",
-                            "border-top-width",
-                            "border-right-width",
-                            "border-bottom-width",
-                            "border-left-width",
-                            "border-top-style",
-                            "border-right-style",
-                            "border-bottom-style",
-                            "border-left-style",
-                            "border-top-color",
-                            "border-right-color",
-                            "border-bottom-color",
-                            "border-left-color",
-                            "-webkit-border-radius",
-                            "border-radius",
-                            "border-top-left-radius",
-                            "border-top-right-radius",
-                            "border-bottom-right-radius",
-                            "border-bottom-left-radius",
-                            "background-color",
-                            "background-image",
-                            "background-position",
-                            "background-position-x",
-                            "background-position-y",
-                            "background-repeat",
-                            "background-origin",
-                            "background-size",
-                            "background-clip",
-                            "color",
-                            "border-image"
-                        ]
-                    },
-                    "query": ""
-                }
-            },
-            "subwidgets": {
-                "ComboBoxMenuPrevious/Next": {
-                    "displayName": "MenuPrevious/Next",
-                    "states": {
-                        "Normal": {
-                            "selectors": {
-                                ".mblComboBoxMenuPreviousButton, .mblComboBoxMenuNextButton": [
-                                    "$std_10"
-                                ]
-                            },
-                            "query": ".mblComboBoxMenuPreviousButton"
-                        }
-                    }
-                },
-                "CombBoxMenuItem": {
-                    "displayName": "CombBoxMenuItem",
-                    "states": {
-                        "Normal": {
-                            "selectors": {
-                                ".mblComboBoxMenuItem": [
-                                    "$std_10"
-                                ]
-                            },
-                            "query": ".themeEditorComboBoxItemLocator"
-                        },
-                        "Selected": {
-                            "selectors": {
-                                ".mblComboBoxMenuItemSelected": [
-                                    "$std_10"
-                                ]
-                            },
-                            "query": ".themeEditorComboBoxItemLocator",
-                            "simulate": "mblComboBoxMenuItemSelected"
-                        }
-                    }
-                }
-            }
-        }
-    },
     "dojox": {
         "$allHeadingBackground": {
             "displayName": "Heading Background",
@@ -1503,6 +1395,112 @@
                         ]
                     },
                     "query": ""
+                }
+            }
+        },
+        "ComboBox": {
+            "displayName": "ComboBox",
+            "rootSelectors": [
+                ".mblComboBoxMenu"
+            ],
+            "states": {
+                "Normal": {
+                    "selectors": {
+                        ".dijitPopup": [
+                            "margin",
+                            "margin-top",
+                            "margin-right",
+                            "margin-bottom",
+                            "margin-left",
+                            "padding",
+                            "padding-top",
+                            "padding-right",
+                            "padding-bottom",
+                            "padding-left",
+                            "position",
+                            "border",
+                            "-webkit-box-shadow",
+                            "-webkit-border-radius",
+                            "border-image"
+                        ],
+                        ".mblComboBoxMenu": [
+                            "overflow-y",
+                            "position",
+                            "overflow",
+                            "overflow-x",
+                            "border",
+                            "border-color",
+                            "border-style",
+                            "border-width",
+                            "border-top-width",
+                            "border-right-width",
+                            "border-bottom-width",
+                            "border-left-width",
+                            "border-top-style",
+                            "border-right-style",
+                            "border-bottom-style",
+                            "border-left-style",
+                            "border-top-color",
+                            "border-right-color",
+                            "border-bottom-color",
+                            "border-left-color",
+                            "-webkit-border-radius",
+                            "border-radius",
+                            "border-top-left-radius",
+                            "border-top-right-radius",
+                            "border-bottom-right-radius",
+                            "border-bottom-left-radius",
+                            "background-color",
+                            "background-image",
+                            "background-position",
+                            "background-position-x",
+                            "background-position-y",
+                            "background-repeat",
+                            "background-origin",
+                            "background-size",
+                            "background-clip",
+                            "color",
+                            "border-image"
+                        ]
+                    },
+                    "query": ""
+                }
+            },
+            "subwidgets": {
+                "ComboBoxMenuPrevious/Next": {
+                    "displayName": "MenuPrevious/Next",
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".mblComboBoxMenuPreviousButton, .mblComboBoxMenuNextButton": [
+                                    "$std_10"
+                                ]
+                            },
+                            "query": ".mblComboBoxMenuPreviousButton"
+                        }
+                    }
+                },
+                "CombBoxMenuItem": {
+                    "displayName": "CombBoxMenuItem",
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".mblComboBoxMenuItem": [
+                                    "$std_10"
+                                ]
+                            },
+                            "query": ".themeEditorComboBoxItemLocator"
+                        },
+                        "Selected": {
+                            "selectors": {
+                                ".mblComboBoxMenuItemSelected": [
+                                    "$std_10"
+                                ]
+                            },
+                            "query": ".themeEditorComboBoxItemLocator",
+                            "simulate": "mblComboBoxMenuItemSelected"
+                        }
+                    }
                 }
             }
         }

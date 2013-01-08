@@ -391,91 +391,91 @@ var veStates = declare(maqettaStates, {
 		if(!context){
 			return;
 		}
-		// Sometimes this routine is called as part of commandStack processing,
-		// which does a dojo.withDoc(userdoc). This ensures we have the right document.
-		dojoWin.withDoc(appDocument, function(){
-			var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Workbench.getProject());
-			var highlightBaseWidgets = editorPrefs.highlightBaseWidgets;
-			var highlightBaseWidgetsActive = this.highlightBaseWidgetsActive(context);
-			var highlightBaseWidgetsButton = query('.highlightBaseWidgetsButton')[0];
-			var highlightBaseWidgetsButtonWidget = registry.byNode(highlightBaseWidgetsButton);
-			var iconNode = query('.highlightBaseWidgetsIcon')[0];
-			if(highlightBaseWidgetsButtonWidget && iconNode){
-				if(highlightBaseWidgetsActive){
-					domClass.remove(iconNode, 'highlightBaseWidgetsIconDisabled');
-					highlightBaseWidgetsButtonWidget.set('disabled', false);
-				}else{
-					domClass.add(iconNode, 'highlightBaseWidgetsIconDisabled');
-					highlightBaseWidgetsButtonWidget.set('disabled', true);
+		// Have to use a setTimeout because widgets that have embedded SVG content
+		// (shapes and clipart) will not have proper size until the SVG content is
+		// loaded, and that content is loaded asynchronously by some browsers.
+		// This is a safe operation to put into a setTimeout because the only
+		// changes that happen are on the decorative chrome that overlays the widgets
+		// on the canvas.
+		setTimeout(function(){
+			// Sometimes this routine is called as part of commandStack processing,
+			// which does a dojo.withDoc(userdoc). This ensures we have the right document.
+			dojoWin.withDoc(appDocument, function(){
+				var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Workbench.getProject());
+				var highlightBaseWidgets = editorPrefs.highlightBaseWidgets;
+				var highlightBaseWidgetsActive = this.highlightBaseWidgetsActive(context);
+				var highlightBaseWidgetsButton = query('.highlightBaseWidgetsButton')[0];
+				var highlightBaseWidgetsButtonWidget = registry.byNode(highlightBaseWidgetsButton);
+				var iconNode = query('.highlightBaseWidgetsIcon')[0];
+				if(highlightBaseWidgetsButtonWidget && iconNode){
+					if(highlightBaseWidgetsActive){
+						domClass.remove(iconNode, 'highlightBaseWidgetsIconDisabled');
+						highlightBaseWidgetsButtonWidget.set('disabled', false);
+					}else{
+						domClass.add(iconNode, 'highlightBaseWidgetsIconDisabled');
+						highlightBaseWidgetsButtonWidget.set('disabled', true);
+					}
+					if(highlightBaseWidgets){
+						domClass.add(iconNode, 'highlightBaseWidgetsIconOn');
+						domClass.remove(iconNode, 'highlightBaseWidgetsIconOff');
+					}else{
+						domClass.add(iconNode, 'highlightBaseWidgetsIconOff');
+						domClass.remove(iconNode, 'highlightBaseWidgetsIconOn');
+					}
 				}
-				if(highlightBaseWidgets){
-					domClass.add(iconNode, 'highlightBaseWidgetsIconOn');
-					domClass.remove(iconNode, 'highlightBaseWidgetsIconOff');
-				}else{
-					domClass.add(iconNode, 'highlightBaseWidgetsIconOff');
-					domClass.remove(iconNode, 'highlightBaseWidgetsIconOn');
-				}
-			}
-			// FIXME: assumes only state container is root node of doc
-			var state = this.getState(context.rootNode);
-			var focusContainer = dojo.byId('focusContainer');
-			if(focusContainer){
-				var shiningThroughDivs = query('.maqBaseStateShiningThrough', focusContainer);
-				for(var i=0; i<shiningThroughDivs.length; i++){
-					var div = shiningThroughDivs[i];
-					div.parentNode.removeChild(div);
-				}
-				if(state && highlightBaseWidgets){
-					// Have to use a setTimeout because widgets that have embedded SVG content
-					// (shapes and clipart) will not have proper size until the SVG content is
-					// loaded, and that content is loaded asynchronously by some browsers.
-					// This is a safe operation to put into a setTimeout because the only
-					// changes that happen are on the decorative chrome that overlays the widgets
-					// on the canvas.
-					setTimeout(function(){
-						var allWidgets = context.getAllWidgets();
-						var widgetsNotInBaseState = [];
-						for(var i=0; i<allWidgets.length; i++){
-							var widget = allWidgets[i];
-							if(widget.domNode && widget.domNode.tagName && widget.domNode.tagName.toUpperCase() == 'BODY'){
-								continue;
+				// FIXME: assumes only state container is root node of doc
+				var state = this.getState(context.rootNode);
+				var focusContainer = dojo.byId('focusContainer');
+				if(focusContainer){
+					var shiningThroughDivs = query('.maqBaseStateShiningThrough', focusContainer);
+					for(var i=0; i<shiningThroughDivs.length; i++){
+						var div = shiningThroughDivs[i];
+						div.parentNode.removeChild(div);
+					}
+					if(state && highlightBaseWidgets){
+							var allWidgets = context.getAllWidgets();
+							var widgetsNotInBaseState = [];
+							for(var i=0; i<allWidgets.length; i++){
+								var widget = allWidgets[i];
+								if(widget.domNode && widget.domNode.tagName && widget.domNode.tagName.toUpperCase() == 'BODY'){
+									continue;
+								}
+								var obj = context.getEffectiveDisplayValue(widget, state);
+								var effectiveDisplayValue = obj.effectiveDisplayValue;
+								var effectiveState = obj.effectiveState;
+								if(effectiveDisplayValue != 'none' && effectiveState == 'undefined'){
+									widgetsNotInBaseState.push(widget);
+								}
 							}
-							var obj = context.getEffectiveDisplayValue(widget, state);
-							var effectiveDisplayValue = obj.effectiveDisplayValue;
-							var effectiveState = obj.effectiveState;
-							if(effectiveDisplayValue != 'none' && effectiveState == 'undefined'){
-								widgetsNotInBaseState.push(widget);
-							}
-						}
-						var doc = context.getDocument();
-						var focusContainerBounds = GeomUtils.getBorderBoxPageCoords(focusContainer);
-						var parentIframe = context.getParentIframe();
-						var parentIFrameBounds = GeomUtils.getBorderBoxPageCoords(parentIframe);
-						var iframeFocusContainerAdjustLeft = parentIFrameBounds.l - focusContainerBounds.l;
-						var iframeFocusContainerAdjustTop = parentIFrameBounds.t - focusContainerBounds.t;
-						var bodyElement = doc.body;
-						var scrollLeft = GeomUtils.getScrollLeft(bodyElement);
-						var scrollTop = GeomUtils.getScrollTop(bodyElement);
-						for(var j=0; j<widgetsNotInBaseState.length; j++){
-							var domNode = widgetsNotInBaseState[j].domNode;
-							if(domNode){
-								//FIXME: use dojo.position instead?
-								var rect = GeomUtils.getBorderBoxPageCoords(domNode);
-								rect.l += (iframeFocusContainerAdjustLeft - scrollLeft);
-								rect.t += (iframeFocusContainerAdjustTop - scrollTop);
-								var div = doc.createElement('div');
-								div.className = 'maqBaseStateShiningThrough';
-								div.style.left = rect.l + 'px';
-								div.style.top = rect.t + 'px';
-								div.style.width = rect.w + 'px';
-								div.style.height = rect.h + 'px';
-								focusContainer.appendChild(div);
-							}
-						}					
-					}.bind(this), 10);
+							var doc = context.getDocument();
+							var focusContainerBounds = GeomUtils.getBorderBoxPageCoords(focusContainer);
+							var parentIframe = context.getParentIframe();
+							var parentIFrameBounds = GeomUtils.getBorderBoxPageCoords(parentIframe);
+							var iframeFocusContainerAdjustLeft = parentIFrameBounds.l - focusContainerBounds.l;
+							var iframeFocusContainerAdjustTop = parentIFrameBounds.t - focusContainerBounds.t;
+							var bodyElement = doc.body;
+							var scrollLeft = GeomUtils.getScrollLeft(bodyElement);
+							var scrollTop = GeomUtils.getScrollTop(bodyElement);
+							for(var j=0; j<widgetsNotInBaseState.length; j++){
+								var domNode = widgetsNotInBaseState[j].domNode;
+								if(domNode){
+									//FIXME: use dojo.position instead?
+									var rect = GeomUtils.getBorderBoxPageCoords(domNode);
+									rect.l += (iframeFocusContainerAdjustLeft - scrollLeft);
+									rect.t += (iframeFocusContainerAdjustTop - scrollTop);
+									var div = doc.createElement('div');
+									div.className = 'maqBaseStateShiningThrough';
+									div.style.left = rect.l + 'px';
+									div.style.top = rect.t + 'px';
+									div.style.width = rect.w + 'px';
+									div.style.height = rect.h + 'px';
+									focusContainer.appendChild(div);
+								}
+							}					
+					}
 				}
-			}
-		}.bind(this));
+			}.bind(this));
+		}.bind(this), 10);
 	},
 
 	initialize: function() {

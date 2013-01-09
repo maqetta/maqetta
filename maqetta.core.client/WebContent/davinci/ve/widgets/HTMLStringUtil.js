@@ -351,7 +351,7 @@ define([
 			var propertyGroupDIV = Util._searchUpByTagClass(thisPropertyRowTR, "DIV", "propGroup");
 			var sectionKey = dojo.attr(propertyGroupDIV, "propGroup");
 			var propName = dojo.attr(thisPropertyRowTR, "propName");
-			var SwitchingStyleView = require("../views/SwitchingStyleView");
+			var SwitchingStyleView = require("davinci/ve/views/SwitchingStyleView");
 			var sectionTitle = SwitchingStyleView.prototype.sectionTitleFromKey(sectionKey);
 
 			if(Runtime.supportsCSS3Transitions){

@@ -169,7 +169,7 @@ return declare("davinci.ve.RebuildPage", Context, {
 
     changeThemeBase: function(theme, resourcePath){
     	
-		var parentPath = new Path(theme.file.parent.getPath());
+		var parentPath = new Path(theme.getFile().parent.getPath());
 		theme.files.forEach(function(file) {
 			var filename = parentPath.append(file);
 			var relativePath = filename.relativeTo(resourcePath, true);

@@ -1,13 +1,10 @@
 package org.maqetta.server;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.util.Collection;
-
-import org.apache.commons.io.filefilter.IOFileFilter;
 
 /* 
  * This is an interface for actual server storage.  Instead of using

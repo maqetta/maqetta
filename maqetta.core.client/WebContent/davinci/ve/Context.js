@@ -31,7 +31,6 @@ define([
 	"../XPathUtils",
 	"../html/HtmlFileXPathAdapter",
 	"./HTMLWidget",
-	"../html/CSSModel", // shorthands
 	"../html/CSSImport",
 	"../html/HTMLElement",
 	"../html/HTMLText",
@@ -74,7 +73,6 @@ define([
 	XPathUtils,
 	HtmlFileXPathAdapter,
 	HTMLWidget,
-	CSSModel,
 	CSSImport,
 	HTMLElement,
 	HTMLText,
@@ -783,7 +781,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var body = model.find({elementType:'HTMLElement', tag:'body'},true);
 		body.setAttribute("class", defaultTheme.className);
 		/* add the css */
-		var filePath = defaultTheme.file.getPath();
+		var filePath = defaultTheme.getFile().getPath();
 		defaultTheme.files.forEach(function(file) {
 			var url = new Path(filePath).removeLastSegments(1).append(file).relativeTo(this.getPath(), true);
 			this.addModeledStyleSheet(url.toString(), true);
@@ -2545,98 +2543,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		dojo.some(sheets, function(sheet) {
 			return updateSheet(sheet, r);
 		});
-	},
-
-	//FIXME: does not need to be in Context.js. Refactor with modifyRule
-	ruleSetAllProperties: function(rule, values){
-		rule.removeAllProperties();
-		for(i = 0;i<values.length;i++){
-			rule.addProperty(values[i].name, values[i].value); // #23 all we want to put back is the values
-		}
-	},
-
-	//FIXME: refactor. move code to ModifyRuleCommand?
-	modifyRule: function(rule, values){
-		var i,
-			p,
-			prop,
-			existingProps = [];
-		var removedProp = []; //#2166
-		// Remove any properties within rule that are listed in the "values" parameter 
-		for(i = 0;i<values.length;i++){
-			for(var name in values[i]){
-				var prop = rule.getProperty(name);
-				if (prop) {
-					removedProp.push(prop); //#2166
-				}
-				rule.removeProperty(name);
-			}
-		}
-		// Create a merged list of properties from existing rule and "values" parameter
-		for(p=0; p<rule.properties.length; p++){
-			prop = rule.properties[p];
-			var o = {};
-			o[prop.name] = prop.value;
-			existingProps.push(o);
-		}
-		var cleaned = existingProps.concat(dojo.clone(values));
-		// return a sorted array of sorted style values.
-		function indexOf(value){
-			for(var i=0;i<cleaned.length;i++){
-				if(cleaned[i].hasOwnProperty(value)){
-					return i;
-				}
-			}
-			return -1;
-		}
-		var shorthands = CSSModel.shorthand;
-		var lastSplice = 0;
-		/* re-order the elements putting short hands first */
-		for(i=0;i<shorthands.length;i++) {
-			var index = indexOf(shorthands[i][0]);
-			if(index>-1) {
-				var element = cleaned[index];
-				cleaned.splice(index,1);
-				cleaned.splice(lastSplice,0, element);
-				lastSplice++;
-			}
-		}
-		// Clear out all remaining prop declarations in the rule
-		for(p=rule.properties.length-1; p>=0; p--){
-			prop = rule.properties[p];
-			if(prop){
-				removedProp.push(rule.getProperty(prop.name)); //#2166
-				rule.removeProperty(prop.name);
-			}
-		}
-		// Add all prop declarations back in, in proper order
-		for(i = 0;i<cleaned.length;i++){
-			for(var name in cleaned[i]){
-				if (cleaned[i][name] && cleaned[i][name] !== '') { 
-					rule.addProperty(name, cleaned[i][name]);
-					//#2166 find the old prop to grab comments if any
-					for (var x = 0; x < removedProp.length; x++) {
-						if (removedProp[x].name === name) {
-							var newProp = rule.getProperty(name, cleaned[i][name]);
-							if (removedProp[x].comment) { 
-								// add back the comments before this prop from the old CSS file
-								newProp.comment = removedProp[x].comment; 
-							}
-							if (removedProp[x].postComment) { 
-								// add back the comments after this prop from the old CSS file
-								newProp.postComment = removedProp[x].postComment; 
-							}
-							removedProp.splice(x,1); // trim out the prop so we don't process this more than once
-							break;
-						}
-						
-					}
-					//#2166 find the old prop to grab comments if any
-				}
-			}
-		}
-		
-		//this.hotModifyCssRule(rule); // #23 this get called by _themeChange
 	},
 
 	//FIXME: refactor. Move to Cascade.js?  need to account for polymorphism in themeEditor/Context

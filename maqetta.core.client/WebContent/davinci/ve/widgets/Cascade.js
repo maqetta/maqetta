@@ -1063,7 +1063,7 @@ define(["dojo/_base/declare",
 								targetFile:dynamicThemeUrl, className: null,
 								value:null, matchLevel:matchLevel, type:'proposal'});
 						}
-						if (this.context._themeUrl && !this.context.theme.file.readOnly()) { // add rule for static file, in most cases desktop
+						if (this.context._themeUrl && !this.context.theme.getFile().readOnly()) { // add rule for static file, in most cases desktop
 							deltas.push({rule:null, ruleString:name, 
 								targetFile:this.context._themeUrl, className: null,
 								value:null, matchLevel:matchLevel, type:'proposal', proposalTarget: 'theme'});

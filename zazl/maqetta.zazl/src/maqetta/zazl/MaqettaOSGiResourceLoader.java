@@ -51,7 +51,12 @@ public class MaqettaOSGiResourceLoader extends OSGiResourceLoader {
 			} else {
 				user = userManager.getSingleUser();
 			}
-			int removecount = user.getResource(ipath.segment(0)+"/.project") == null ? 1 : 2;
+			int removecount = 0;
+			if (ipath.segment(0).equals(".review")) {
+				removecount = 4;
+			} else {
+				removecount = user.getResource(ipath.segment(0)+"/.project") == null ? 1 : 2;
+			}
 			ILibInfo[] projectLibs = user.getLibs(ipath.segment(0));
 			url = scanSrcLibs(ipath, removecount, projectLibs);
 			if (url != null) {

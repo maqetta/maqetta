@@ -3,11 +3,9 @@ package maqetta.server.orion;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.orion.internal.server.servlets.workspace.WebProject;
-import org.maqetta.server.IStorage;
 
+@SuppressWarnings("restriction")
 public class VOrionProjectStorage extends VOrionStorage {
 	WebProject proj;
 	

@@ -227,7 +227,7 @@ return declare([Context], {
 	     * so use the path theme file to find the html
 	     *
 	     */  
-	    var path = this.theme.file.getPath();
+	    var path = this.theme.getFile().getPath();
 	    path = path.substring(0, path.lastIndexOf('/'));
 	    path = path + '/' + this.theme.themeEditorHtmls[0];
 	    return path;

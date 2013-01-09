@@ -147,7 +147,7 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
             var resourcePath = this._context.getFullResourcePath();
           
            
-            var ssPath = new davinci.model.Path(newThemeInfo.file.parent.getPath()).append(newThemeInfo.files[0]);
+            var ssPath = new davinci.model.Path(newThemeInfo.getFile().parent.getPath()).append(newThemeInfo.files[0]);
             var newFileObj = ssPath.relativeTo(resourcePath, true);
             var newFileName = newFileObj.toString();
             header.styleSheets[header.styleSheets.length] = newFileName;

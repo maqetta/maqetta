@@ -11,6 +11,7 @@ define([
 	"davinci/ve/States",
 	"davinci/commands/CompoundCommand",
 	"davinci/ve/commands/StyleCommand",
+	"davinci/ve/commands/AppStateCommand",
 	"davinci/actions/Action",
 	"dojo/i18n!davinci/ve/nls/ve",
 	"dojo/i18n!dijit/nls/common",
@@ -32,6 +33,7 @@ define([
 	States,
 	CompoundCommand,
 	StyleCommand,
+	AppStateCommand,
 	Action,
 	veNls,
 	commonNls,
@@ -112,8 +114,12 @@ return declare("davinci.ve.actions._AddUpdateStateWidget", [_WidgetBase, _Templa
 			}
 			var command = new CompoundCommand();
 			if(newState){
-				//FIXME: Need to make this into a command so that it is undoable
-				States.add(this.node, newState);
+				command.add(new AppStateCommand({
+					action:'add',
+					state:newState,
+					stateContainerNode:this.node,
+					context:context
+				}));
 			}
 			
 			var obj = context.getAllWidgetsEffectiveDisplay(currentState);

@@ -324,7 +324,7 @@ States.prototype = {
 		if(params && params.hasOwnProperty('initial')){
 			if(params.initial){
 				node._maqAppStates.initial = newState;
-			}else if(node._maqAppStates.initial == newState){
+			}else if(node._maqAppStates.initial){
 				delete node._maqAppStates.initial;
 			}
 		}
@@ -805,15 +805,24 @@ States.prototype = {
 	 * Adds a state to the list of states declared by the node.
 	 * Right now, node must by the BODY element.
 	 * Subscribe using davinci.states.subscribe("/davinci/states/state/added", callback).
+	 * @param node {Element} State container node
+	 * @param state {string} Name of state to add
+	 * @param params [{object}] Optional parameters:
+	 *    params.index - Splice the new state into the list of states at this position
 	 */
-	add: function(node, state){ 
+	add: function(node, state, params){ 
 		if (!node || this.hasState(node, state)) {
 			//FIXME: This should probably be an error of some sort
 			return;
 		}
+		var stateIndex = params && params.index;
 		node._maqAppStates = node._maqAppStates || {};
 		node._maqAppStates.states = node._maqAppStates.states || [];
-		node._maqAppStates.states.push(state);
+		if(typeof stateIndex == 'number' && stateIndex >= 0){
+			node._maqAppStates.states.splice(stateIndex, 0, state);
+		}else{
+			node._maqAppStates.states.push(state);
+		}
 		connect.publish("/davinci/states/state/added", [{node:node, state:state}]);
 		this._updateSrcState (node);
 	},

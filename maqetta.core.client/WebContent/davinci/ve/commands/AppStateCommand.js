@@ -16,7 +16,12 @@ return declare("davinci.ve.commands.AppStateCommand", null, {
 	 *		params.action {string} add|delete|modify
 	 *		params.state {string} name of custom state
 	 *		params.stateContainerNode {Element} state container node
-	 *		params.context {object} Context object for current doc
+	 *		(the following parameters only apply to 'modify')
+	 *		params.newState {string} New state name
+	 *		params.initialState {undefined|"undefined"|{string}} Initial state for this state container
+	 *				if undefined, don't change anything
+	 *				if "undefined", set initial state to undefined state
+	 *				if a string other than "undefined", set initial state to that state
 	 */
 	constructor: function(params){
 		if(!params){
@@ -34,7 +39,6 @@ return declare("davinci.ve.commands.AppStateCommand", null, {
 	_validParams: function(){
 		return (this._params &&
 			this._actions.indexOf(this._params.action) >= 0) &&
-			this._params.state && 
 			this._params.stateContainerNode && 
 			this._params.stateContainerId && 
 			this._params.stateContainerXpath && 
@@ -74,10 +78,46 @@ return declare("davinci.ve.commands.AppStateCommand", null, {
 			return;
 		}
 		if(action == 'add'){
+			// No need to worry about preserving maqDeltas information for undo for
+			// add state command because AddState.js creates a giant CompoundCommand
+			// which includes both the AppStateCommand({action:'add',...}) and all of the
+			// appropriate StyleCommands.
 			States.add(stateContainerNode, state);
 		}else if(action == 'remove'){
+			// However, for removing a state, RemoveState.js simply creates
+			// an AppStateCommand({action:'remove', ...}), and the States.remove()
+			// call therein has a side-effect of removing any maqDeltas settings
+			// corresponding to that particular state. To make undo work properly,
+			// need to stash away all of the maqDeltas for all of the affected nodes
+			// so they can be restored with an undo operation.
+			this._stateIndex = stateContainerNode._maqAppStates && 
+					stateContainerNode._maqAppStates.states && 
+					stateContainerNode._maqAppStates.states.indexOf(state);
+			this._preservedNodesId = [];
+			this._preservedNodesXpath = [];
+			this._preservedStateValues = [];
+			this._preserveStateFromNodeRecursive(stateContainerNode, state);
 			States.remove(stateContainerNode, state);
+		}else if(action == 'modify'){
+			if(this._params.newState){
+				this._traverseRenameState(this._params.state, this._params.newState);
+			}
+			if(typeof this._params.initialState == 'string'){
+				this._oldInitialState = States.getInitial(stateContainerNode);
+				
+				// Hacky approach. The string "undefined" says to set initial state to NORMAL/base state
+				// which has the value undefined (not the string, but JavaScript undefined type).
+				var initialState = (this._params.initialState == "undefined") ? undefined : this._params.initialState;
+				if(this._params.newState && initialState == this._params.state){
+					initialState = this._params.newState;
+				}
+				States.setState(initialState, stateContainerNode, 
+						{initial:initialState, updateWhenCurrent:true});
+			}
 		}
+		var currentState = States.getState(stateContainerNode);
+		States.setState(currentState, stateContainerNode, 
+				{focus:currentState, updateWhenCurrent:true});
 	},
 
 	undo: function(){
@@ -93,9 +133,115 @@ return declare("davinci.ve.commands.AppStateCommand", null, {
 		if(action == 'add'){
 			States.remove(stateContainerNode, state);
 		}else if(action == 'remove'){
-			States.add(stateContainerNode, state);
+			States.add(stateContainerNode, state, {index:this._stateIndex});
+			this._restoreState(state);
+			States.setState(state, stateContainerNode, {focus:true});
+		}else if(action == 'modify'){
+			if(typeof this._params.initialState == 'string'){
+				States.setState(this._oldInitialState, stateContainerNode, 
+						{initial:this._oldInitialState, updateWhenCurrent:true});
+			}
+			if(this._params.newState){
+				this._traverseRenameState(this._params.newState, this._params.state);
+			}
+		}
+		var currentState = States.getState(stateContainerNode);
+		States.setState(currentState, stateContainerNode, 
+				{focus:currentState, updateWhenCurrent:true});
+	},
+	
+	_preserveStateFromNodeRecursive: function(node, state){
+		var widget = node._dvWidget;
+		if(!node || !widget || !state){
+			return;
+		}
+		this._preserveStateFromNode(node, state);
+		var children = widget.getChildren();
+		for(var i=0; i<children.length; i++){
+			this._preserveStateFromNodeRecursive(children[i].domNode, state);
+		}
+	},
+		
+	// Preserve all references to given "state" from given node
+	// onto the "this" object
+	_preserveStateFromNode: function(node, state){
+		if(node && node._maqDeltas && node._maqDeltas[state] && node._dvWidget && node._dvWidget._srcElement){
+			this._preservedNodesId.push(node.id);
+			this._preservedNodesXpath.push(XPathUtils.getXPath(node._dvWidget._srcElement,
+					HtmlFileXPathAdapter));
+			this._preservedStateValues.push(lang.clone(node._maqDeltas[state]));
+		}
+	},
+	
+	_restoreState: function(state){
+		var context = this._params.context;
+		if(!context || !this._preservedNodesId){
+			return;
+		}
+		var userDoc = context.getDocument();
+		if(!userDoc){
+			return;
+		}
+		for(var i=0; i<this._preservedNodesId.length; i++){
+			var id = this._preservedNodesId[i];
+			var xpath = this._preservedNodesXpath[i];
+			var node = userDoc.getElementById(id);
+			if(!node){
+				var element = context.model.evaluate(xpath);
+				if (element) {
+					node = userDoc.getElementById(element.getAttribute('id'));
+				}
+			}
+			if(node){
+				if(!node._maqDeltas){
+					node._maqDeltas = {};
+				}
+				node._maqDeltas[state] = lang.clone(this._preservedStateValues[i]);
+				States._updateSrcState(node);
+			}
+		}
+	},
+	
+	_traverseRenameState: function(oldName, newName){
+		var stateContainerNode = this._getStateContainerNode();
+		if(!stateContainerNode){
+			return;
+		}
+		States.rename(stateContainerNode, {oldName:oldName, newName:newName});
+		var containerSrcElement = stateContainerNode._dvWidget && stateContainerNode._dvWidget._srcElement;
+		if(containerSrcElement){
+			var currentElement = null;
+			var anyAttributeChanges = false;
+			var value_regex = /^(.*davinci.states.setState\s*\(\s*)('[^']*'|"[^"]*")([^\)]*\).*)$/;
+			var quoted_state_regex = /^(['"])(.*)(['"])$/;
+			containerSrcElement.visit({ visit: dojo.hitch(this, function(node) {
+				if (node.elementType == "HTMLElement") {
+					currentElement = node;
+				}else if (node.elementType == "HTMLAttribute") {
+					var attrName = node.name;
+					if(attrName && attrName.substr(0,2).toLowerCase() == 'on'){
+						var value = node.value;
+						var outerMatches = value.match(value_regex);
+						if(outerMatches){
+							// If here, the event attribute appears to have davinci.states.setState(blah) inside
+							var innerMatches = outerMatches[2].match(quoted_state_regex);
+							if(innerMatches){
+								// If here, then innerMatches[2] contains the set state value
+								if(innerMatches[2] == oldName){
+									// If here, we need to replace the state name
+									var newValue = outerMatches[1] + innerMatches[1] + newName + innerMatches[3] + outerMatches[3];
+									currentElement.setAttribute(attrName, newValue);
+									anyAttributeChanges = true;
+								}
+							}
+						}
+					}
+				}
+			})});
+			if(anyAttributeChanges){
+				editor._visualChanged();
+			}
 		}
 	}
-
 });
 });

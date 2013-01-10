@@ -23,16 +23,16 @@ return declare("davinci.ve.actions.RemoveState", [Action], {
 		}
 		var node = statesFocus.stateContainerNode;
 		var state = state = davinci.ve.states.getState(node);
-		var command = new CompoundCommand();
 		if(state){
+			var command = new CompoundCommand();
 			command.add(new AppStateCommand({
 				action:'remove',
 				state:state,
 				stateContainerNode:node,
 				context:context
 			}));
+			context.getCommandStack().execute(command);
 		}
-		context.getCommandStack().execute(command);
 	}
 });
 });

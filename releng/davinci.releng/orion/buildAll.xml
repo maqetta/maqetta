@@ -22,6 +22,7 @@
 		<antcall target="scrubFeatures"/>
 		<antcall target="MaqettaOrionHosted"/>
     	
+        <antcall target="war"/>
 	</target>
 
     <target name="init">
@@ -157,6 +158,59 @@
 			<property name="archiveNamePrefix" value="maqetta-orion-hosted-${buildLabel}"/>
 		</ant>
     </target>
+
+	<target name="war" if="run.external.targets">
+		<!-- build servlet bridge separately first because it is not part of the feature built -->
+		<antcall target="buildPlugin">
+			<param name="pluginName" value="org.eclipse.equinox.servletbridge"/>
+		</antcall>
+		<delete>
+			<fileset dir="${buildDirectory}/${buildLabel}" includes="org.eclipse.equinox.servletbridge*.jar">
+			</fileset>
+		</delete>
+		<ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
+			<property name="builder" value="${basedir}/warFile"/>
+			<property name="warProject" value="davinci.war"/>
+			<property name="warFileName" value="maqetta.war"/>
+			
+			<property name="dojo.cache.directory" value="${dojo.cache.directory}"/>
+		</ant>
+	</target>
+
+	<target name="buildPlugin">
+		<property name="pluginDestination" value="${buildDirectory}/${buildLabel}"/>
+		<property name="dojo.cache.directory" value="${dojo.cache.directory}"/>
+		<eclipse.generateFeature
+			featureId="${pluginName}.feature"
+			buildDirectory="${buildDirectory}"
+			baseLocation="${baseLocation}"
+			productFile="${product}"
+			verify="false"
+			pluginPath="${buildDirectory}"
+			pluginList="${pluginName}"
+			includeLaunchers="false"
+		/>
+		<ant antfile="build.xml" dir="${eclipse.pdebuild.scripts}">
+			<property name="component" value="${pluginName}.feature"/>
+			<property name="builder" value="${basedir}/genericPlugin"/>
+			<property name="outputUpdateJars" value="true"/>
+			<property name="topLevelElementId " value="${pluginName}.feature"/>
+			<property name="javacfailonerror" value="true"/>
+		</ant>
+
+		<!-- at this point the plugin is in a zip file,  unzip the jar to the desired location -->
+		<property name="tmpDir" value="${buildDirectory}/tempJar"/>
+		<mkdir dir="${tmpDir}"/>
+		<unzip dest="${tmpDir}" src="${buildDirectory}/${buildLabel}/${pluginName}.feature-release.zip"/>
+		<move toDir="${pluginDestination}">
+			<fileset file="${tmpDir}/eclipse/plugins/*.jar">
+			</fileset>
+		</move>
+		
+		<delete dir="${tmpDir}"/>
+		<delete file="${buildDirectory}/${buildLabel}/${pluginName}.feature-release.zip"/>
+		<delete dir="${buildDirectory}/features/${pluginName}.feature"/>
+	</target>
 
     <target name="clean">
         <defaultexcludes remove="**/.gitignore"/>

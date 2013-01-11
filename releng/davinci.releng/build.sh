@@ -193,7 +193,7 @@ fi
 
 echo "Switching Equinox to branch ${equinoxBranch}..."
 cd ${equinoxRepo}
-git checkout -f -B ${equinoxBranch} remotes/origin/${equinoxBranch}
+git checkout -f -b ${equinoxBranch} remotes/origin/${equinoxBranch}
 
 
 #

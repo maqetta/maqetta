@@ -250,9 +250,14 @@ public class LdapAuthenticationService implements IAuthenticationService {
 				logger.info("authenticate dn, email, displayname" + " "+dn+ " "+email+ " "+displayname);
 				//String json = userHash.get("jsonAttrib").toString();
 				authenticate(dn, password);
-				User user = userAdmin.getUser("login", login); //$NON-NLS-1$
+				/*
+				 * FIXME At the present time Maqetta expects the login name to be the email,
+				 * So we want to use the email to create/get user from orion so that 
+				 * Maqetta remains happy
+				 */
+				User user = userAdmin.getUser("login", email/*login*/); //$NON-NLS-1$
 				if (user == null) {
-					user = createOrionUser(login);
+					user = createOrionUser(email/*login*/);
 				}
 				return user;
 			}

@@ -15,12 +15,13 @@
         <tstamp>
             <format property="maqBuildTime" timezone="GMT-05:00" pattern="yyyy-MM-dd-HH:mm:ss"/>
         </tstamp>
+<!-- XXX disable while testing build		
         <antcall target="clean"/>
-		<!-- base maqetta out of common.xml -->
-		
+
 		<antcall target="MaqettaOrion"/>
 		<antcall target="scrubFeatures"/>
 		<antcall target="MaqettaOrionHosted"/>
+-->
     	
         <antcall target="war"/>
 	</target>
@@ -183,7 +184,6 @@
 		<eclipse.generateFeature
 			featureId="${pluginName}.feature"
 			buildDirectory="${buildDirectory}"
-			baseLocation="${baseLocation}"
 			productFile="${product}"
 			verify="false"
 			pluginPath="${buildDirectory}"

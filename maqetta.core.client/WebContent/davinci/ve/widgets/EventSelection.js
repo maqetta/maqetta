@@ -1,12 +1,18 @@
 define(["dojo/_base/declare",
 		"dojo/_base/connect",
+		'system/resource',
+		'davinci/Workbench',
+		'davinci/model/Path',
+		'davinci/workbench/Preferences',
 		"../../workbench/ViewLite",
 		"./HTMLStringUtil",
 		"davinci/ve/States",
         "../commands/ModifyCommand"
-],function(declare, connect, ViewLite, HTMLStringUtil, States, ModifyCommand){
+],function(declare, connect, Resource, Workbench, Path, Preferences, ViewLite, HTMLStringUtil, States, ModifyCommand){
 
 var getEventSelectionValues = function(root){
+	var items = [""];
+	
 	var states = [];
 	var stateContainers = root && States.getAllStateContainers(root);
 	if(stateContainers){
@@ -15,14 +21,60 @@ var getEventSelectionValues = function(root){
 			states = states.concat(statesList);
 		}
 	}
-	var items = [""];
-
 	for(var i=0; i<states.length; i++){
 		var val = "State:" + states[i];
 		if(items.indexOf(val) < 0){
 			items.push(val);
 		}
 	}
+	
+	var base = Workbench.getProject();
+	var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+	if(prefs.webContentFolder!=null && prefs.webContentFolder!=""){
+		var fullPath = new Path(base).append(prefs.webContentFolder);
+		base = fullPath.toString();
+		folder = Resource.findResource(base);
+	}else{
+		folder= Resource.findResource(base);
+	}
+	var samplesPath = new Path(base).append('samples');
+	var samplesFolder = Resource.findResource(samplesPath.toString());
+	var themePath = new Path(base).append(prefs.themeFolder);
+	var themeFolder = Resource.findResource(themePath.toString());
+	var customWidgetPath = new Path(base).append(prefs.widgetFolder);
+	var customWidgetFolder = Resource.findResource(customWidgetPath.toString());
+	var htmlFiles = [];
+	function recurseFindHtmlFiles(folder){
+		folder.getChildren(function(children){	// onComplete
+			for(var i=0; i<children.length; i++){
+				var child = children[i];
+				if(child.elementType == 'Folder'){
+					//FIXME: compare against theme folder, custom widget folder and samples folder
+					if(!child._readOnly && child != samplesFolder && child != themeFolder && child != customWidgetFolder){
+						recurseFindHtmlFiles(child);
+					}
+				}else if(child.extension.toLowerCase() == 'html' || child.extension.toLowerCase() == 'htm'){
+					htmlFiles.push(child);
+				}
+			}
+		}.bind(htmlFiles), function(a, b){	// onError
+			console.error('EventSelection.js: folder.getChildren error');
+		});
+	}
+	recurseFindHtmlFiles(folder);
+	var basePathString = folder.getPath().toString()+'/';
+	for(var i=0; i<htmlFiles.length; i++){
+		var htmlFile = htmlFiles[i];
+		var htmlFilePath = htmlFile.getPath().toString();
+		if(htmlFilePath.indexOf(basePathString) == 0){
+			htmlFilePath = htmlFilePath.substr(basePathString.length);
+		}
+		var val = "File:" + htmlFilePath;
+		if(items.indexOf(val) < 0){
+			items.push(val);
+		}
+	}
+	
 	return items;
 };
 

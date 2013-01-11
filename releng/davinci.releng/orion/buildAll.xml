@@ -194,7 +194,7 @@
 			<property name="component" value="${pluginName}.feature"/>
 			<property name="builder" value="${basedir}/genericPlugin"/>
 			<property name="outputUpdateJars" value="true"/>
-			<property name="topLevelElementId " value="${pluginName}.feature"/>
+			<property name="topLevelElementId" value="${pluginName}.feature"/>
 			<property name="javacfailonerror" value="true"/>
 		</ant>
 

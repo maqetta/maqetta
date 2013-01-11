@@ -64,6 +64,7 @@ return {
         {
             name: "Project",
             id: "project",
+            hide:true,	//FIXME: temporarily don't show project setting preferences. See #3657, #3658
             category: "",
             pageContent: "Project Settings here"
         },
@@ -71,7 +72,6 @@ return {
             name: "Project Settings",
             id: "ProjectPrefs",
             category: "davinci.ui.project",
-
             pane: "davinci/ui/ProjectPreferences",
             defaultValues: {
                 "webContentFolder": "",

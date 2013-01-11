@@ -18,7 +18,7 @@ var getEventSelectionValues = function(root){
 	var items = [""];
 
 	for(var i=0; i<states.length; i++){
-		var val = states[i] + ":State";
+		var val = "State:" + states[i];
 		if(items.indexOf(val) < 0){
 			items.push(val);
 		}
@@ -30,8 +30,9 @@ var getEventScriptFromValue = function(value) {
 	value.replace(/'/,"\\'");
 	value.replace(/"/,'\\"');
 	
-	if (value && value.match(/.*:State$/)) {
-		value = "davinci.states.setState('" + value.substring(0, value.length - ":State".length) + "')";
+	var stateString = 'State:';
+	if (value && value.match(/^State:.*/)) {
+		value = "davinci.states.setState('" + value.substring(stateString.length) + "')";
 	}
 	
 	return value;
@@ -40,7 +41,7 @@ var getEventScriptFromValue = function(value) {
 var getValueFromEventScript = function(value) {
 	if (value && value.match(/^davinci.states.setState\('.*'\)$/)) {
 		var state = value.substring("davinci.states.setState('".length, value.length - 2); //FIXME: use regexp match
-		value = state + ":State";
+		value = "State:" + state;
 	}
 	return value;
 };

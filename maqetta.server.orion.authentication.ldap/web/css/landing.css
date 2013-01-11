@@ -1,0 +1,444 @@
+body {
+	font: 14px/18px 'Lucida Sans Unicode', 'Lucida Grande', "HelveticaNeue","Helvetica Neue",Helvetica,Arial,sans-serif;
+	color: #333;
+	background:#fafafa;
+	min-height:400px;
+	clear: both;
+	overflow:hidden;
+}
+
+/*Remove button padding in FF*/
+input::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+input[type="button"]:active {
+	padding: 0;
+}
+
+.orion-banner{
+	margin: 0;
+	border: 0;
+	background: #333;
+	background: -webkit-linear-gradient(29deg, rgb(51, 51, 51) 0%,rgb(72, 72, 72) 100%);
+	background: -o-linear-gradient(29deg, rgb(51, 51, 51) 0%,rgb(72, 72, 72) 100%);
+	background: -ms-linear-gradient(29deg, rgb(51, 51, 51) 0%,rgb(72, 72, 72) 100%);
+	background: -moz-linear-gradient(29deg, rgb(51, 51, 51) 0%,rgb(72, 72, 72) 100%);
+	background: linear-gradient(29deg, rgb(51, 51, 51) 0%,rgb(72, 72, 72) 100%);
+	height: 100px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 8px;
+	padding-right: 8px;
+	vertical-align: baseline;
+	position:absolute;
+	width:100%;
+}
+
+
+
+.orion-twitter-link{
+	background: url('combined.png');
+	height:16px;
+	width:20px;
+	float:right;
+	margin-right:20px;
+	margin-top:65px;
+	background-position: 0 -362px;
+}
+
+.orion-nav-bar{
+	padding-top: 7px;
+	padding-right: 5px;
+}
+
+
+
+
+.orion-logo{
+	background: url('combined.png');
+	background-position: 0 -160px; 
+	float:left;
+	height:86px;
+	width:114px;
+}
+
+.orion-rss-link{
+	background: url('combined.png') no-repeat;
+	height:16px;
+	width:20px;
+	float:right;
+	margin-right:20px;
+	margin-top:65px;
+	background-position: 0 -296px;
+}
+
+
+.orion-slogan{
+	width:320px;
+	float:right;
+	text-transform:lowercase;
+	padding-top:20px;
+}
+
+.orion-slogan-highlight{
+	color:#ffc000;
+	font-size:30px;
+	color:#222;
+	font-size:20px;
+	font-weight: bold;
+	line-height:26px;
+	display:inline;
+	font-weight:bold;
+	margin-right:3px;
+}
+
+
+.orion-slogan-lowlight{
+	font-size:35px;
+	font-weight: normal;
+	font-size:20px;
+	line-height:35px;
+	color:#222;
+	color:#777;
+	display:inline;
+	font-weight:bold;
+
+}
+
+.orion-welcome-area {
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: block;
+	width: 520px;
+	height: 331px;
+	opacity: 0.8;
+	background: url('combined.png');
+	background-position: 0 -428px; 
+}
+
+.orion-welcome-area-text {
+	font-size:12px;
+	position: absolute;
+	background: white;
+	opacity:0.8;
+	height:108px;
+	width:480px;
+	top:180px;
+	padding:20px;
+}
+
+.orion-welcome-area-text-content {
+	background: white;
+	font-size:12px;
+	opacity:1;
+	width:100%;
+	width:480px;
+	color:black;
+	font-weight:bold;
+}
+
+
+.orion-landing-area {
+	position: absolute;
+	left: 50%;
+	top: 350px;
+	vertical-align: top;
+	height: 328px;
+	width: 838px;
+	margin: -154px 0 0 -418px;
+	min-height:400px;
+}
+
+.orion-login, .orion-register, .orion-open, .orion-signup, .orion-reset, .orion-error{
+	border-radius: 4px;
+	border: solid 1px #CCC;
+}
+
+.orion-register {
+	position: absolute;
+	top: 207px;
+	left: 536px;
+	width: 300px;
+	height: 101px;
+}
+
+.orion-login{
+	position: absolute;
+	top: 0;
+	left: 536px;
+	width: 300px;
+	height: 150px;
+}
+
+.orion-signup, .orion-reset  {
+	position: absolute;
+	top: 0;
+	left: 536px;
+	width: 300px;
+	height: 222px;
+}
+
+.orion-login, .orion-register, .orion-open, .orion-signup, .orion-reset {
+	background: white;
+	/* box-shadow: 0 1px 0 rgba(0,0,0,.1); */
+	padding:10px;
+}
+
+.orion-login-header, .orion-reset-header {
+	font-weight: bold;
+	font-size:15px;
+	padding-bottom: 10px;
+	margin-bottom:5px;
+	border-bottom: solid 1px #EEE;
+	color:#666;
+}
+
+.orion-open-header	{
+	font-weight: bold;
+	font-size:15px;
+	padding-bottom: 10px;
+	margin-bottom:5px;
+	color:#666;
+	vertical-align: 8px;
+	padding-right: 20px;
+	float:left;
+	line-height: 48px;
+}
+
+.orion-register-header{
+	font-weight: bold;
+	font-size:15px;
+	float:left;
+	margin-bottom:5px;
+	color:#666;
+	vertical-align: 8px;
+	padding-right: 20px;
+	padding-bottom: 10px;
+	display:inline;
+	/* border-bottom: solid 1px #EEE; */
+}
+
+.orion-reset-note {
+	padding-bottom: 10px;
+}
+
+.orion-text-input {
+	display: inline-block;
+	width: 100%;
+	padding: 4px;
+	margin: 0;
+	margin-top:5px;
+	outline: none;
+	background-color: white;
+	border: none;
+	border-radius: 3px;	
+	font-family: Verdana, Arial, Helvetica, Myriad, Tahoma, clean, sans-serif;
+	font-size: 14px;
+	color:#999;
+}
+
+.orion-input-holder {
+	padding-bottom: 5px;
+	margin-bottom: 7px;
+	border-bottom: dashed 1px #DDD;
+}
+
+
+.orion-register-input-holder, .orion-reset-input-holder {
+	padding-bottom: 5px;
+	margin-bottom: 15px;
+	border-bottom: dashed 1px #DDD;
+}
+
+.orion-login-button-holder {
+	padding-top:1px;
+	float:right;
+}
+
+.orion-login-forgot-holder {
+	padding-top:10px;
+	padding-left:5px;
+	float:left;
+}
+
+.orion-login-button, .orion-send-button {
+	background:#ffc000;
+	border-radius:4px;
+	height:30px;
+	width:80px;
+	border: solid 1px #CCC;
+	color:#666;
+	font-size:12px;
+	font-weight:bold;
+	margin-left: 5px;
+}
+
+.orion-login-button:hover, .orion-send-button:hover {
+	background:white;
+	color:#ffc000;
+}
+
+.orion-register-button {
+	background:#666;
+	border-radius:4px;
+	height:30px;
+	width:80px;
+	border: solid 1px #CCC;
+	color:white;
+	font-size:12px;
+	font-weight:bold;
+	margin-left: 5px;
+}
+
+.orion-register-button:hover {
+	background:white;
+	color:#666;
+}
+
+.orion-cancel-button {
+	background:white;
+	border-radius:4px;
+	height:30px;
+	width:80px;
+	border: solid 1px #CCC;
+	color:#666;
+	font-size:12px;
+	font-weight:bold;
+}
+
+.orion-cancel-button:hover{
+	background:#666;
+	color:white;
+}
+
+.orion-or-div {
+	margin:17px;
+	top:10px;
+	height:30px;
+	vertical-align:middle;
+	display:inline;
+	line-height:33px;
+}
+
+.orion-forgot-password{
+	font-size: 9pt;
+	color:#999;
+	margin-top:15px;
+	cursor: default;
+	text-decoration: underline;
+}
+
+.orion-forgot-password:hover{
+	color: #333;
+	text-decoration: none;
+}
+
+.orion-open {
+	position: absolute;
+	top: 256px;
+	left: 536px;
+	width: 300px;
+	height: 47px;
+	padding-top: 15px;
+}
+
+.orion-register {
+	position: absolute;
+	top: 187px;
+	left: 536px;
+	width: 300px;
+	height: 35px;
+}
+
+.orion-open-images{
+	padding-top:5px;
+	display:inline;
+}
+
+.orion-error{
+	color: #B94A48;
+	background-color: #F2DEDE;
+	border-color: #EED3D7;
+	width: 852px;
+	margin-right:0;
+	position: absolute;
+	top: 345px;
+	padding:5px;
+	padding-right:0;
+}
+
+a.loginwindow {
+	font-style: italic;
+	text-decoration: none;
+	font-weight: normal;
+	color: #316AC5;
+}
+
+.open-accounts {
+	top: 182px;
+	left: 536px;
+	position: absolute;
+	font-weight: bold;
+	padding-top: 55px;
+	margin-right: 5px;
+	width: 320px;
+	display: inline-block;
+	height: 90px;
+	vertical-align: middle;
+	border-radius: 4px;
+	border: solid 1px #CCC;
+	background: white;
+	box-shadow: 0 1px 0 rgba(0,0,0,.1);
+}
+
+.yahooIcon{
+	background: url('combined.png') no-repeat;
+	background-position: 0 -809px;
+	width: 35px; 
+	height: 29px;
+	margin-top: 6px;
+	opacity:0.7;
+}
+
+.yahooIcon:hover{
+	opacity:1;
+}
+
+.openIdIcon{
+	background: url('combined.png') no-repeat;
+	background-position: 0 -80px;
+	width: 33px; 
+	height: 33px;
+	opacity:0.7;
+	margin-top:2px;
+	margin-left:2px;
+}
+
+.openIdIcon:hover{
+	opacity:1;
+}
+
+.googleIcon{	
+	background: url('combined.png') no-repeat;
+	background-position: 0 0;
+	width: 28px;
+	height: 32px;
+	margin-left: 7px;
+	opacity: 0.7;
+	margin-top: 3px;
+}
+
+.googleIcon:hover{
+	opacity:1;
+}
+
+.openIdWrapper{
+	padding:5px;
+	margin:5px;
+	border: 1px solid #CCC;
+	border-radius:4px;
+	float:left;
+}

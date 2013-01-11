@@ -178,7 +178,7 @@ return declare("davinci.ve.actions._AddUpdateStateWidget", [_WidgetBase, _Templa
 				var widget = allWidgets[i];
 				var showInNewStateIndex = widgetsToShowInNewState_Adjusted.indexOf(widget);
 				var displayValue = (showInNewStateIndex >= 0) ? effectiveDisplay[i] : 'none';
-				if(showInNewStateIndex >= 0 || removeFromBase){
+				if(showInNewStateIndex >= 0){
 					command.add(new StyleCommand(widget, [{'display':displayValue}], applyToState));
 				}
 				if(removeFromBase && (widgetsToShowInNewState.indexOf(widget) >= 0)){

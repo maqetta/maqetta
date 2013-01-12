@@ -16,7 +16,9 @@ define([
 	"dojo/i18n!dijit/nls/common",
 	"dojo/text!./templates/ModifyState.html",
 	"dijit/form/TextBox",
-	"dijit/form/ValidationTextBox"
+	"dijit/form/ValidationTextBox",
+	"davinci/commands/CompoundCommand",
+	"davinci/ve/commands/AppStateCommand"
 ], function(
 		declare, 
 		Deferred, 
@@ -34,7 +36,10 @@ define([
 		veNls, 
 		commonNls, 
 		templateString, 
-		TextBox){
+		TextBox,
+		ValidationTextBox,
+		CompoundCommand,
+		AppStateCommand){
 
 var dialogCreateDeferred = null;
 
@@ -147,51 +152,28 @@ var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_Widget
 		if(!statesFocus || !statesFocus.stateContainerNode){
 			return;
 		}
+		var newName;
 		if(this.newName && this.newName !== this._statesFocus.state){
-			States.rename(statesFocus.stateContainerNode, {oldName:this._statesFocus.state, newName:this.newName});
-			var containerSrcElement = statesFocus.stateContainerNode._dvWidget && statesFocus.stateContainerNode._dvWidget._srcElement;
-			if(containerSrcElement){
-				var currentElement = null;
-				var anyAttributeChanges = false;
-				var value_regex = /^(.*davinci.states.setState\s*\(\s*)('[^']*'|"[^"]*")([^\)]*\).*)$/;
-				var quoted_state_regex = /^(['"])(.*)(['"])$/;
-				containerSrcElement.visit({ visit: dojo.hitch(this, function(node) {
-					if (node.elementType == "HTMLElement") {
-						currentElement = node;
-					}else if (node.elementType == "HTMLAttribute") {
-						var attrName = node.name;
-						if(attrName && attrName.substr(0,2).toLowerCase() == 'on'){
-							var value = node.value;
-							var outerMatches = value.match(value_regex);
-							if(outerMatches){
-								// If here, the event attribute appears to have davinci.states.setState(blah) inside
-								var innerMatches = outerMatches[2].match(quoted_state_regex);
-								if(innerMatches){
-									// If here, then innerMatches[2] contains the set state value
-									if(innerMatches[2] == this._statesFocus.state){
-										// If here, we need to replace the state name
-										var newValue = outerMatches[1] + innerMatches[1] + this.newName + innerMatches[3] + outerMatches[3];
-										currentElement.setAttribute(attrName, newValue);
-										anyAttributeChanges = true;
-									}
-								}
-							}
-						}
-					}
-				})});
-				if(anyAttributeChanges){
-					editor._visualChanged();
-				}
-			}
-
+			newName = this.newName;
 		}
+		var initialState;
 		var initialStateOn = this.initialState.get('checked');
-		if(initialStateOn !== this.oldInitialStateOn){	
-			// Get statesFocus again in case state was renamed.
-			statesFocus = States.getFocus(context.rootNode);
-			// Call setState() to cause updates everywhere.
-			var initialState = initialStateOn ? statesFocus.state : null;
-			States.setState(statesFocus.state, statesFocus.stateContainerNode, { initial:initialState, updateWhenCurrent:true });
+		if(initialStateOn !== this.oldInitialStateOn){
+			// Hacky code - AppStateCommand looks for string "undefined" to represent NORMAL/base state
+			var stateName = statesFocus.state ? statesFocus.state : "undefined";
+			initialState = initialStateOn ? stateName : null;
+		}
+		if(newName || initialState){
+			var command = new CompoundCommand();
+			command.add(new AppStateCommand({
+				action:'modify',
+				state:statesFocus.state,
+				stateContainerNode:statesFocus.stateContainerNode,
+				context:context,
+				newState:newName,
+				initialState:initialState
+			}));
+			context.getCommandStack().execute(command);
 		}
 		
 		this.onClose();

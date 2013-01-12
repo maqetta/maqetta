@@ -1,7 +1,6 @@
 package maqetta.server.orion;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,9 +9,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.orion.internal.server.core.IWebResourceDecorator;
-import org.eclipse.orion.internal.server.servlets.ProtocolConstants;
 import org.eclipse.orion.internal.server.servlets.workspace.WebProject;
-import org.eclipse.orion.server.core.LogHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

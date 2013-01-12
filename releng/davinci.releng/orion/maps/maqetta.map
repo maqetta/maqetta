@@ -18,6 +18,7 @@ plugin@org.apache.commons.fileupload=GIT,repo=git://github.com/maqetta/maqetta.g
 #  plugin@davinci.product=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/releng/davinci.product
 plugin@maqetta.server.orion.hosted=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.server.orion.hosted
 plugin@maqetta.server.orion.standard=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.server.orion.standard
+plugin@maqetta.server.orion.authentication.ldap=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.server.orion.authentication.ldap
 
 #
 # maqetta features

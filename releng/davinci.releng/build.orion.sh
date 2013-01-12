@@ -97,10 +97,13 @@ updateBaseBuilder () {
 	cd ${supportDir}
     if [ ! -d org.eclipse.releng.basebuilder_${basebuilderBranch} ]; then
         echo "[start - `date +%H\:%M\:%S`] Get org.eclipse.releng.basebuilder_${basebuilderBranch}"
-        cmd="cvs -d :pserver:anonymous@dev.eclipse.org:/cvsroot/eclipse $quietCVS ex -r $basebuilderBranch -d org.eclipse.releng.basebuilder_${basebuilderBranch} org.eclipse.releng.basebuilder"
         #cmd="git clone git://dev.eclipse.org/org.eclipse.releng/org.eclipse.releng.basebuilder.git -b ${basebuilderBranch} org.eclipse.releng.basebuilder_${basebuilderBranch}"
+        cmd="wget --no-verbose -O __bb.tar.gz http://git.eclipse.org/c/platform/eclipse.platform.releng.basebuilder.git/snapshot/${basebuilderBranch}.tar.gz"
         echo $cmd
         $cmd
+        tar xpzf __bb.tar.gz
+        rm __bb.tar.gz
+        mv ${basebuilderBranch} org.eclipse.releng.basebuilder_${basebuilderBranch}
         echo "[finish - `date +%H\:%M\:%S`] Done getting org.eclipse.releng.basebuilder_${basebuilderBranch}"
     fi
 

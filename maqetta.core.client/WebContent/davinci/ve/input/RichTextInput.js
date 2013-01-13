@@ -3,7 +3,6 @@ define([
 	"davinci/ve/input/SmartInput",
 	"davinci/commands/CompoundCommand",
 	"davinci/ve/commands/ModifyRichTextCommand",
-	"davinci/ve/tools/CreateTool",
 	"davinci/XPathUtils",
 	"davinci/html/HtmlFileXPathAdapter",
 	"dijit/Editor",  // we need editor in order for the editor to be displayed
@@ -13,7 +12,7 @@ define([
 	"dojox/html/entities",
 	"dojo/i18n!../nls/ve",
 	"dojo/i18n!dijit/nls/common"
-], function(declare, SmartInput, CompoundCommand, ModifyRichTextCommand, CreateTool, 
+], function(declare, SmartInput, CompoundCommand, ModifyRichTextCommand, 
 		XPathUtils, HtmlFileXPathAdapter, Editor, LinkDialog, 
 		TextColor, FontChoice, Entities, veNls, commonNls){
 
@@ -80,11 +79,6 @@ return declare("davinci.ve.input.RichTextInput", [SmartInput], {
         values.richText = Entities.encode( values.richText, customMap);
         
         var compoundCommand = new CompoundCommand();
-        
-		// If preference says to add new widgets to the current custom state,
-		// then add appropriate StyleCommands
-		CreateTool.prototype.checkAddToCurrentState(compoundCommand, this._widget);
-		
 		var modifyCommand = new ModifyRichTextCommand(this._widget, values, context);
 		compoundCommand.add(modifyCommand);
 		

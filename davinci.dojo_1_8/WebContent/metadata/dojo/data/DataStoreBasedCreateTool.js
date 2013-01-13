@@ -9,6 +9,7 @@ define([
 	"davinci/ve/commands/MoveCommand",
 	"davinci/ve/commands/ResizeCommand",
 	"davinci/ve/commands/StyleCommand",
+	"davinci/ve/tools/CreateTool",
 	"./DataStoreBasedWidgetInput"
 ], function(
 	declare,
@@ -21,6 +22,7 @@ define([
 	MoveCommand,
 	ResizeCommand,
 	StyleCommand,
+	CreateTool,
 	DataStoreBasedWidgetInput
 ) {
 
@@ -121,7 +123,11 @@ return declare(CreateTool, {
 			command.add(new AddCommand(store, args.parent, index));
 			index = (index !== undefined && index >= 0 ? index + 1 : undefined);
 			command.add(new AddCommand(dataStoreBasedWidget, args.parent, index));
-			
+	        
+			// If preference says to add new widgets to the current custom state,
+			// then add appropriate StyleCommands
+			CreateTool.prototype.checkAddToCurrentState(command, dataStoreBasedWidget);
+		
 			if(args.position){
 				var absoluteWidgetsZindex = this._context.getPreference('absoluteWidgetsZindex');
 				command.add(new StyleCommand(dataStoreBasedWidget, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));

@@ -1,7 +1,9 @@
 define([
 	"davinci/ve/widget",
-	"davinci/ve/commands/AddCommand"
-], function(Widget, AddCommand) {
+	"davinci/commands/CompoundCommand",
+	"davinci/ve/commands/AddCommand",
+	"davinci/ve/tools/CreateTool"
+], function(Widget, CompoundCommand, AddCommand, CreateTool) {
 
 	return {
 		// override CreateTool.create() to force the DataList to the top of the HTML file under the root
@@ -42,9 +44,14 @@ define([
 				}
 				dataListWidget.domNode.style.display = 'none';
 			
-				var command = new AddCommand(dataListWidget, args.parent, args.index);
+				var compoundCommand = new CompoundCommand();
+				compoundCommand.add(new AddCommand(dataListWidget, args.parent, args.index));
+		        
+				// If preference says to add new widgets to the current custom state,
+				// then add appropriate StyleCommands
+				CreateTool.prototype.checkAddToCurrentState(compoundCommand, dataListWidget);
 			
-				this._context.getCommandStack().execute(command);
+				this._context.getCommandStack().execute(compoundCommand);
 			}.bind(this));
 		}
 	};

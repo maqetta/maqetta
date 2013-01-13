@@ -88,6 +88,10 @@ return declare(CreateTool, {
 		command.add(new AddCommand( dataListWidget, bodyWidget , 0 ));
 		index = (index !== undefined && index >= 0 ? index + 1 : undefined);
 		command.add(new AddCommand(comboBoxWidget, args.parent, index));
+        
+		// If preference says to add new widgets to the current custom state,
+		// then add appropriate StyleCommands
+		CreateTool.prototype.checkAddToCurrentState(command, comboBoxWidget);	
 		
 		if(args.position){
 			var absoluteWidgetsZindex = this._context.getPreference('absoluteWidgetsZindex');

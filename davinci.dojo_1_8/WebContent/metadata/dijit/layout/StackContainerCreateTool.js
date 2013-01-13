@@ -77,6 +77,12 @@ return declare(CreateTool, {
 		command.add(new AddCommand(controller, args.parent, args.index));
 		var index = (args.index !== undefined && args.index >= 0 ? args.index + 1 : undefined);
 		command.add(new AddCommand(container, args.parent, index));
+        
+		// If preference says to add new widgets to the current custom state,
+		// then add appropriate StyleCommands
+		CreateTool.prototype.checkAddToCurrentState(command, controller);
+		CreateTool.prototype.checkAddToCurrentState(command, container);
+	
 		if(args.position){
 			command.add(new MoveCommand(controller, args.position.x, args.position.y - 30));
 			command.add(new MoveCommand(container, args.position.x, args.position.y));

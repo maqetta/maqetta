@@ -250,7 +250,15 @@ return {
 						iconClass: 'viewActionIcon updateStateIcon',
 						action: "davinci/ve/actions/UpdateState",
 						label: "Update state",
-						toolbarPath: "states1"
+						toolbarPath: "states2"
+					},
+					{
+						id: "NewWidgetsCurrentState",
+						className: "newWidgetsCurrentStateButton",
+						iconClass: 'viewActionIcon newWidgetsCurrentStateIcon',
+						action: "davinci/ve/actions/NewWidgetsCurrentState",
+						label: "Toggle whether new widgets go to background or current state",
+						toolbarPath: "states3"
 					},
 					{
 						id: "highlightBaseWidgets",
@@ -258,7 +266,7 @@ return {
 						iconClass: 'viewActionIcon highlightBaseWidgetsIcon',
 						action: "davinci/ve/actions/HighlightBaseWidgets",
 						label: "When in custom state, highlight widgets from Normal/base state",
-						toolbarPath: "states1"
+						toolbarPath: "states3"
 					}
 
                 ]

@@ -1564,6 +1564,21 @@ background-position: -75px -745px;
 .updateStateIcon.updateStateIconDisabled {
 	background-position: -20px -1801px;
 }
+.newWidgetsCurrentStateIcon {
+	background-image: url(img/sprite.png);
+}
+.newWidgetsCurrentStateIconOn {
+	background-position: -40px -1870px;
+}
+.newWidgetsCurrentStateIconOn.newWidgetsCurrentStateIconDisabled {
+	background-position: -60px -1870px;
+}
+.newWidgetsCurrentStateIconOff {
+	background-position: 0px -1870px;
+}
+.newWidgetsCurrentStateIconOff.newWidgetsCurrentStateIconDisabled {
+	background-position: -20px -1870px;
+}
 .highlightBaseWidgetsIcon {
 	background-image: url(img/sprite.png);
 }

@@ -12,8 +12,10 @@ define([
         "./commands/EventCommand",
         "./commands/StyleCommand",
     	"davinci/ve/utils/StyleArray",
-    	"davinci/workbench/Preferences"
-], function(declare, connect, query, domClass, dojoWin, registry, Runtime, Workbench, maqettaStates, GeomUtils, EventCommand, StyleCommand, StyleArray, Preferences){
+    	"davinci/workbench/Preferences",
+        "dojo/i18n!davinci/ve/nls/ve"
+], function(declare, connect, query, domClass, dojoWin, registry, Runtime, Workbench, 
+		maqettaStates, GeomUtils, EventCommand, StyleCommand, StyleArray, Preferences, veNls){
 
 // Some of the logic in this file is invoked via commandStack processing,
 // which does a dojo.withDoc() to set the document to the user's document
@@ -348,7 +350,7 @@ var veStates = declare(maqettaStates, {
 		return state;	// undefined => default/base/Normal state
 	},
 	
-	_updateUpdateStateIcon: function(context){
+	updateStateIcons: function(context){
 		// Sometimes this routine is called as part of commandStack processing,
 		// which does a dojo.withDoc(userdoc). This ensures we have the right document.
 		dojoWin.withDoc(appDocument, function(){
@@ -364,6 +366,27 @@ var veStates = declare(maqettaStates, {
 					updateStateButtonWidget.set('disabled', true);
 				}
 			}
+			var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Workbench.getProject());
+			var newWidgetsCurrentState = editorPrefs.newWidgetsCurrentState;
+			var newWidgetsCurrentStateButton = query('.newWidgetsCurrentStateButton')[0];
+			var newWidgetsCurrentStateButtonWidget = registry.byNode(newWidgetsCurrentStateButton);
+			var iconNode = query('.newWidgetsCurrentStateIcon')[0];
+			if(newWidgetsCurrentStateButtonWidget && iconNode){
+				if(this.newWidgetsCurrentStateActive(context)){
+					domClass.remove(iconNode, 'newWidgetsCurrentStateIconDisabled');
+					newWidgetsCurrentStateButtonWidget.set('title', veNls.NewWidgetsCurrentStateTitleCurrentState);
+				}else{
+					domClass.add(iconNode, 'newWidgetsCurrentStateIconDisabled');
+					newWidgetsCurrentStateButtonWidget.set('title', veNls.NewWidgetsCurrentStateTitleBackground);
+				}
+				if(newWidgetsCurrentState){
+					domClass.remove(iconNode, 'newWidgetsCurrentStateIconOn');
+					domClass.add(iconNode, 'newWidgetsCurrentStateIconOff');
+				}else{
+					domClass.remove(iconNode, 'newWidgetsCurrentStateIconOff');
+					domClass.add(iconNode, 'newWidgetsCurrentStateIconOn');
+				}
+			}
 		}.bind(this));
 	},
 	
@@ -372,6 +395,14 @@ var veStates = declare(maqettaStates, {
 	 * Only true when user has selected a custom state.
 	 */
 	updateStateActive: function(context){
+		return this._customStateActive(context);
+	},
+	
+	/**
+	 * Returns true if the newWidgetsCurrentState feature can be active at this time.
+	 * Only true when user has selected a custom state.
+	 */
+	newWidgetsCurrentStateActive: function(context){
 		return this._customStateActive(context);
 	},
 	
@@ -512,7 +543,7 @@ var veStates = declare(maqettaStates, {
 					// Note: updateHighlightsBaseStateWidgets() updates the state of 
 					// the highlightBaseWidgets icon (called by updateFocusAll())
 					context.updateFocusAll();
-					this._updateUpdateStateIcon(context);
+					this.updateStateIcons(context);
 				}
 			}));
 			
@@ -571,7 +602,7 @@ var veStates = declare(maqettaStates, {
 				// Note: updateHighlightsBaseStateWidgets() updates the state of 
 				// the highlightBaseWidgets icon (called by updateFocusAll())
 				context.updateFocusAll();
-				this._updateUpdateStateIcon(context);
+				this.updateStateIcons(context);
 			}));
 			
 			connect.subscribe('/davinci/ui/context/statesLoaded', dojo.hitch(this, function() {
@@ -579,7 +610,7 @@ var veStates = declare(maqettaStates, {
 				// Note: updateHighlightsBaseStateWidgets() updates the state of 
 				// the highlightBaseWidgets icon (called by updateFocusAll())
 				context.updateFocusAll();
-				this._updateUpdateStateIcon(context);
+				this.updateStateIcons(context);
 			}));
 			
 			this.subscribed = true;

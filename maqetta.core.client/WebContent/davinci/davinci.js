@@ -71,6 +71,7 @@ davinci/davinci = {
 	"./ve/actions/RemoveState",
 	"./ve/actions/ModifyState",
 	"./ve/actions/UpdateState",
+	"./ve/actions/NewWidgetsCurrentState",
 	"./ve/actions/HighlightBaseWidgets",
 	
 	// editorClasses

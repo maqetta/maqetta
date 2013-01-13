@@ -58,6 +58,8 @@ define({ root:
 		"EnableApplicationStatesCurrentWidget":"Currently selected widget",
 		"EnableApplicationStatesCurrentStates":"Current application states",
 		"EnableApplicationStatesNone":"(none)",
+		"NewWidgetsCurrentStateTitleBackground":"Toggle whether new widgets go to background or selected state (current value: background)",
+		"NewWidgetsCurrentStateTitleCurrentState":"Toggle whether new widgets go to background or selected state (current value: selected state)",
 		
 		//input/RichTextInput.js
 		"richTextInputHelp":"Provides Rich Text (word processor-like) editing of HTML.",

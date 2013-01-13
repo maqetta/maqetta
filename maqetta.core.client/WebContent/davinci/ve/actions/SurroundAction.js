@@ -8,9 +8,10 @@ define([
     	"davinci/ve/commands/MoveCommand",
     	"davinci/ve/commands/ResizeCommand",
     	"davinci/ve/commands/ReparentCommand",
+    	"davinci/ve/tools/CreateTool",
     	"davinci/ve/widget",
     	"davinci/ve/utils/GeomUtils"
-], function(declare, Array, ContextAction, CompoundCommand, AddCommand, StyleCommand, MoveCommand, ResizeCommand, ReparentCommand, Widget, GeomUtils){
+], function(declare, Array, ContextAction, CompoundCommand, AddCommand, StyleCommand, MoveCommand, ResizeCommand, ReparentCommand, CreateTool, Widget, GeomUtils){
 
 
 return declare("davinci.ve.actions.SurroundAction", [ContextAction], {
@@ -56,6 +57,11 @@ return declare("davinci.ve.actions.SurroundAction", [ContextAction], {
 			});
 		}
 		command.add(new AddCommand(newWidget, parent, parent.indexOf(first)));
+		
+		// If preference says to add new widgets to the current custom state,
+		// then add appropriate StyleCommands
+		CreateTool.prototype.checkAddToCurrentState(command, newWidget);
+
 		if(allAbsolute){
 			command.add(new StyleCommand(newWidget, [{'position':'absolute'}]));
 			Array.forEach(selection, function(w, i){

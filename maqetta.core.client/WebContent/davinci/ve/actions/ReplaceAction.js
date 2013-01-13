@@ -5,9 +5,10 @@ define([
 	"davinci/commands/CompoundCommand",
 	"davinci/ve/commands/AddCommand",
 	"davinci/ve/commands/MoveCommand",
+	"davinci/ve/tools/CreateTool",
 	"davinci/ve/widget",
 	"davinci/ve/utils/GeomUtils"
-], function(declare, DomStyle, ContextAction, CompoundCommand, AddCommand, MoveCommand, widgetUtils, GeomUtils){
+], function(declare, DomStyle, ContextAction, CompoundCommand, AddCommand, MoveCommand, CreateTool, widgetUtils, GeomUtils){
 
 
 return declare("davinci.ve.actions.ReplaceAction", [ContextAction], {
@@ -38,6 +39,11 @@ return declare("davinci.ve.actions.ReplaceAction", [ContextAction], {
 						}, this);
 						if(newwidget){
 							compoundCommand.add(new AddCommand(newwidget, w.getParent(), undefined));
+							
+							// If preference says to add new widgets to the current custom state,
+							// then add appropriate StyleCommands
+							CreateTool.prototype.checkAddToCurrentState(compoundCommand, newwidget);
+
 							newselection.push(newwidget);
 							var position = (w && w.domNode) ? DomStyle.get(w.domNode, 'position') : null;
 							var absolute = (position == 'absolute');

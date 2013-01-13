@@ -67,13 +67,15 @@ return declare("davinci.ve.commands.ModifyRichTextCommand", null, {
 			this._newData = {type: this._oldData.type,
 				properties: dojo.mixin({}, this._oldData.properties, this._properties),
 				children: this._newText,
-				states: this._oldData.states,
+				maqStates: this._oldData.maqStates,
+				maqDeltas: this._oldData.maqDeltas,
 				context:this._context
 			};
 			this._oldData = {type: this._oldData.type,
 				properties: dojo.mixin({}, this._oldData.properties, this._properties),
 				children: this._oldText,
-				states: this._oldData.states,
+				maqStates: this._oldData.maqStates,
+				maqDeltas: this._oldData.maqDeltas,
 				context:this._context
 			};
 		}

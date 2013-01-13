@@ -128,6 +128,11 @@ return declare("davinci.ve.tools.PasteTool", CreateTool, {
 							}
 
 							command.add(new AddCommand(w, args.parent || this._context.getContainerNode(), index));
+							
+							// If preference says to add new widgets to the current custom state,
+							// then add appropriate StyleCommands
+							this.checkAddToCurrentState(command, w);
+							
 							_continue(w);
 						}
 					}.bind(this));

@@ -6,9 +6,10 @@ define([
     	"../ve/commands/AddCommand",
     	"../ve/commands/MoveCommand",
     	"../ve/commands/ResizeCommand",
+    	"../ve/tools/CreateTool",
     	"../ve/widget",
     	"../ve/metadata"
-], function(declare, Action, Workbench, CompoundCommand, AddCommand, MoveCommand, ResizeCommand, widgetUtils, Metadata){
+], function(declare, Action, Workbench, CompoundCommand, AddCommand, MoveCommand, ResizeCommand, CreateTool, widgetUtils, Metadata){
 
 return declare("davinci.actions.StickyNoteAction", Action, {
 
@@ -38,6 +39,10 @@ return declare("davinci.actions.StickyNoteAction", Action, {
 			command.add(new AddCommand(widget,
 					/* args.parent ||*/ e.getContext().getContainerNode()/*,*/
 				 /*args.index*/));
+			
+			// If preference says to add new widgets to the current custom state,
+			// then add appropriate StyleCommands
+			CreateTool.prototype.checkAddToCurrentState(command, widget);
 	
 //			if(args.position){
 //				command.add(new MoveCommand(widget, args.position.x, args.position.y));
@@ -51,6 +56,7 @@ return declare("davinci.actions.StickyNoteAction", Action, {
 					h = args.size && args.size.h;
 				command.add(new ResizeCommand(widget, w, h));
 			}
+			
 			e.getContext().getCommandStack().execute(command);
 			Metadata.getSmartInput(widget.type).then(function(inlineEdit){			
 				if (inlineEdit && inlineEdit.displayOnCreate) {

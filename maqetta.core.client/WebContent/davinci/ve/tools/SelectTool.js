@@ -15,6 +15,7 @@ define(["dojo/_base/declare",
 		"../commands/MoveCommand",
 		"../commands/ResizeCommand",
 		"../commands/ModifyCommand",
+		"../tools/CreateTool",
 		"../States",
 		"../utils/GeomUtils"
 ], function(
@@ -35,6 +36,7 @@ define(["dojo/_base/declare",
 		MoveCommand,
 		ResizeCommand,
 		ModifyCommand,
+		CreateTool,
 		States,
 		GeomUtils
 ){
@@ -468,6 +470,11 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 								return;
 							}
 							compoundCommand.add(new AddCommand(newwidget, ppw.parent, idx));
+							
+							// If preference says to add new widgets to the current custom state,
+							// then add appropriate StyleCommands
+							CreateTool.prototype.checkAddToCurrentState(compoundCommand, newwidget);
+
 							newselection.push(newwidget);
 						}else{
 							compoundCommand.add(new ReparentCommand(w, ppw.parent, idx));
@@ -531,6 +538,11 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 						}else{
 							compoundCommand.add(new AddCommand(newwidget, parentWidget, widx));
 						}
+						
+						// If preference says to add new widgets to the current custom state,
+						// then add appropriate StyleCommands
+						CreateTool.prototype.checkAddToCurrentState(compoundCommand, newwidget);
+
 						newselection.push(newwidget);
 					}, this);
 					newWidget = newselection[index];

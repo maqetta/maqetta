@@ -6,6 +6,7 @@ define(["dojo/_base/declare",
 		"../widget",
 		"dojo/Deferred",
 		"dojo/promise/all",
+		"davinci/ve/States",
 		"davinci/commands/CompoundCommand",
 		"../commands/AddCommand",
 		"../commands/MoveCommand",
@@ -20,6 +21,7 @@ define(["dojo/_base/declare",
 		Widget,
 		Deferred,
 		all,
+		States,
 		CompoundCommand,
 		AddCommand,
 		MoveCommand,
@@ -646,6 +648,9 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 						helper.onCreateResize(command, w, width, height);
 					}
 				}
+				// If preference says to add new widgets to the current custom state,
+				// then add appropriate StyleCommands
+				this.checkAddToCurrentState(command, w);
 			}
 			var w_id = w.id;
 			// Custom CreateTools might define this function
@@ -908,6 +913,26 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 	// really has been completed.
 	// Currently used by LineCreateTool.js in the shapes library.
 	mouseUpProcessingCompleted: function(){
+	},
+	
+	// If preference says to add new widgets to the current custom state,
+	// then add appropriate StyleCommands
+	checkAddToCurrentState: function(command, widget){
+		var context = widget._edit_context;
+		// If preference says to add new widgets to the current custom state,
+		// then add appropriate StyleCommands
+		var statesFocus = States.getFocus(context.rootNode);
+		if(statesFocus && statesFocus.stateContainerNode){
+			var currentState = States.getState(statesFocus.stateContainerNode);
+			var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', 
+					Workbench.getProject());
+			//FIXME: NEED TO ADD UI for editorPrefs.newWidgetsIntoCustomState
+			if(currentState && /*editorPrefs.newWidgetsIntoCustomState*/ true){
+				command.add(new StyleCommand(widget, [{display:'none'}]));
+				//FIXME: what display value???
+				command.add(new StyleCommand(widget, [{display:'initial'}], currentState));
+			}
+		}
 	}
 
 });

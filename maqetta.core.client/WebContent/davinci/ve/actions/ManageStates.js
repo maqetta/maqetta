@@ -7,7 +7,7 @@ define([
 	"davinci/ve/States",
 	"davinci/actions/Action",
 	"dojo/i18n!davinci/ve/nls/ve",
-	"davinci/ve/actions/_AddUpdateStateWidget"
+	"davinci/ve/actions/_AddManageStatesWidget"
 ], function(
 	declare,
 	Runtime,
@@ -17,9 +17,9 @@ define([
 	States,
 	Action,
 	veNls,
-	_AddUpdateStateWidget){
+	_AddManageStatesWidget){
 
-return declare("davinci.ve.actions.UpdateState", [Action], {
+return declare("davinci.ve.actions.ManageStates", [Action], {
 
 	run: function(){
 		var context;
@@ -32,9 +32,9 @@ return declare("davinci.ve.actions.UpdateState", [Action], {
 		if(!statesFocus || !statesFocus.stateContainerNode){
 			return;
 		}
-		if(States.updateStateActive(context)){
-			var w = new davinci.ve.actions._AddUpdateStateWidget({node: statesFocus.stateContainerNode });
-			w._calledBy = 'UpdateState';
+		if(States.manageStatesActive(context)){
+			var w = new davinci.ve.actions._AddManageStatesWidget({node: statesFocus.stateContainerNode });
+			w._calledBy = 'ManageStates';
 			var dialog = Workbench.showModal(w, veNls.updateCurrentState, null, null, true);
 			
 			// Tweak the AddState.html template to hide the state name DIV

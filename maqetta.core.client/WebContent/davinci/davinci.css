@@ -1557,11 +1557,11 @@ background-position: -75px -745px;
 	white-space:nowrap;
 	line-height:30px;
 }
-.updateStateIcon {
+.manageStatesIcon {
 	background-image: url(img/sprite.png);
 	background-position: 0px -1801px;
 }
-.updateStateIcon.updateStateIconDisabled {
+.manageStatesIcon.manageStatesIconDisabled {
 	background-position: -20px -1801px;
 }
 .newWidgetsCurrentStateIcon {

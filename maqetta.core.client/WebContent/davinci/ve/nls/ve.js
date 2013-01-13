@@ -31,7 +31,7 @@ define({ root:
 		"selectAncestorTitle":"Select ancestor",
 		"selectAncestorLabel":"Select ancestor (closest ancestor listed first):",
 		
-		//actions/AddState.js, UpdateState.js, ModifyState.js, RenameState.js, StateContainer.js
+		//actions/AddState.js, ManageStates.js, ModifyState.js, RenameState.js, StateContainer.js
 		"createNewState":"Create New State",
 		"updateCurrentState":"Update Current State",
 		"createLabel":"Create",

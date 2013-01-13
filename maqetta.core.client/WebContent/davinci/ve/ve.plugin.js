@@ -245,10 +245,10 @@ return {
 						toolbarPath: "states1"
 					},
 					{
-						id: "updateState",
-						className: "updateStateButton",
-						iconClass: 'viewActionIcon updateStateIcon',
-						action: "davinci/ve/actions/UpdateState",
+						id: "manageStates",
+						className: "manageStatesButton",
+						iconClass: 'viewActionIcon manageStatesIcon',
+						action: "davinci/ve/actions/ManageStates",
 						label: "Update state",
 						toolbarPath: "states2"
 					},

@@ -43,7 +43,7 @@ define([
 	CheckBox,
 	Button){
 
-return declare("davinci.ve.actions._AddUpdateStateWidget", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
+return declare("davinci.ve.actions._AddManageStatesWidget", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 	templateString: templateString,
 	widgetsInTemplate: true,
 
@@ -55,7 +55,7 @@ return declare("davinci.ve.actions._AddUpdateStateWidget", [_WidgetBase, _Templa
 	},
 
 	_isValid: function() {
-		// Special check for UpdateState.js dialog, which hides the state name field
+		// Special check for ManageStates.js dialog, which hides the state name field
 		// found in the template. If the DIV surrounding the state name field is hidden (display:none),
 		// then activate the OK button
 		var addStateNameDiv = this.domNode.querySelector('.addStateNameDiv');
@@ -91,7 +91,7 @@ return declare("davinci.ve.actions._AddUpdateStateWidget", [_WidgetBase, _Templa
 		if(Runtime.currentEditor && Runtime.currentEditor.currentEditor && Runtime.currentEditor.currentEditor.context){
 			context = Runtime.currentEditor.currentEditor.context;
 		}else{
-			console.error('_AddUpdateStateWidget.js (from '+this._calledBy+' - cannot determine context.')
+			console.error('_AddManageStatesWidget.js (from '+this._calledBy+' - cannot determine context.')
 			return;
 		}
 		var statesFocus = States.getFocus(context.rootNode);
@@ -103,8 +103,8 @@ return declare("davinci.ve.actions._AddUpdateStateWidget", [_WidgetBase, _Templa
 		var applyToState = this._calledBy == 'AddState' ? newState : currentState;
 
 		// Proceed if either the state name input box has a value (ie non-empty string)
-		// or if the dialog was invoked by UpdateState.js (in which case input box is hidden)
-		if(newState || (this._calledBy == 'UpdateState' && currentState)){
+		// or if the dialog was invoked by ManageStates.js (in which case input box is hidden)
+		if(newState || (this._calledBy == 'ManageStates' && currentState)){
 			var context;
 			if(Runtime.currentEditor && Runtime.currentEditor.currentEditor && Runtime.currentEditor.currentEditor.context){
 				context = Runtime.currentEditor.currentEditor.context;

@@ -27,7 +27,7 @@ define([
 	domConstruct,
 	On,
 	domStyle,
-	event,
+	Event,
 	_WidgetBase,
 	_TemplatedMixin,
 	_WidgetsInTemplateMixin,
@@ -107,11 +107,66 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 			editorPrefs.statesMoveWhich = moveWhichWidgets;
 			Preferences.savePreferences(editorPrefsId, projectBase, editorPrefs);
 		}.bind(this));
+		var manageStatesCheckCurrentStateOnly = this.domNode.querySelector('.manageStatesCheckCurrentStateOnly');
+		if(manageStatesCheckCurrentStateOnly){
+			On(manageStatesCheckCurrentStateOnly, 'click', function(event){
+				Event.stop(event);
+				this._acceleratorClicked('current');
+			}.bind(this));
+		}
+		var manageStatesCheckAll = this.domNode.querySelector('.manageStatesCheckAll');
+		if(manageStatesCheckAll){
+			On(manageStatesCheckAll, 'click', function(event){
+				Event.stop(event);
+				this._acceleratorClicked('all');
+			}.bind(this));
+		}
+		var manageStatesUncheckAll = this.domNode.querySelector('.manageStatesUncheckAll');
+		if(manageStatesUncheckAll){
+			On(manageStatesUncheckAll, 'click', function(event){
+				Event.stop(event);
+				this._acceleratorClicked('none');
+			}.bind(this));
+		}
 		setTimeout(function(){
 			// use setTimeout because onchange handlers are triggered asynchronously
 			// immediately after the current UI thread completes
 			this.anyCheckBoxChanges = false;
 		}.bind(this), 10);
+	},
+	
+	/**
+	 * User clicked on one of the accelerators
+	 * @param value {'current'|'all'|'none'}
+	 */
+	_acceleratorClicked: function(type){
+		var context = this._getContext();
+		if(!context){
+			return;
+		}
+		var statesFocus = States.getFocus(context.rootNode);
+		if(!statesFocus || !statesFocus.stateContainerNode){
+			return;
+		}
+		var currentState = States.getState(statesFocus.stateContainerNode);
+		for(var i=0; i<this._states.length; i++){
+			var state = this._states[i];
+			if(state == 'undefined' || state == States.NORMAL){
+				state = undefined;
+			}
+			if(type == 'current'){
+				if(state == currentState && statesFocus.stateContainerNode == this._stateContainers[i]){
+					this._checkBoxes[i].set('checked', true);
+				}else{
+					this._checkBoxes[i].set('checked', false);
+				}
+			}else if(type == 'all'){
+				this._checkBoxes[i].set('checked', true);
+			}else if(type == 'none'){
+				this._checkBoxes[i].set('checked', false);
+			}
+		}
+		
 	},
 
 	_isValid: function() {

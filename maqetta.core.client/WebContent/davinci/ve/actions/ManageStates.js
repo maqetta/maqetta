@@ -7,7 +7,7 @@ define([
 	"davinci/ve/States",
 	"davinci/actions/Action",
 	"dojo/i18n!davinci/ve/nls/ve",
-	"davinci/ve/actions/_AddManageStatesWidget"
+	"davinci/ve/actions/_ManageStatesWidget"
 ], function(
 	declare,
 	Runtime,
@@ -17,7 +17,7 @@ define([
 	States,
 	Action,
 	veNls,
-	_AddManageStatesWidget){
+	_ManageStatesWidget){
 
 return declare("davinci.ve.actions.ManageStates", [Action], {
 
@@ -33,27 +33,17 @@ return declare("davinci.ve.actions.ManageStates", [Action], {
 			return;
 		}
 		if(States.manageStatesActive(context)){
-			var w = new davinci.ve.actions._AddManageStatesWidget({node: statesFocus.stateContainerNode });
+			var w = new davinci.ve.actions._ManageStatesWidget({node: statesFocus.stateContainerNode });
 			w._calledBy = 'ManageStates';
-			var dialog = Workbench.showModal(w, veNls.updateCurrentState, null, null, true);
-			
-			// Tweak the AddState.html template to hide the state name DIV
-			// and change the button label from "Create" to "Update"
-			var addStateNameDiv = dialog.domNode.querySelector('.addStateNameDiv');
-			if(addStateNameDiv){
-				addStateNameDiv.style.display = 'none';
-			}
 			w.okButton.set("label", veNls.updateLabel);
-			
 			var editorPrefsId = 'davinci.ve.editorPrefs';
 			var projectBase = Workbench.getProject();
 			var editorPrefs = Preferences.getPreferences(editorPrefsId, projectBase);
 			if(editorPrefs && typeof editorPrefs.statesMoveWhich == 'string'){
 				w.moveWhichWidgets.set('value', editorPrefs.statesMoveWhich);
 			}
-			if(editorPrefs && typeof editorPrefs.statesRemoveFromBase == 'boolean'){
-				w.addStateRemoveFromBase.set('checked', editorPrefs.statesRemoveFromBase);			
-			}
+			w.updateDialog();
+			var dialog = Workbench.showModal(w, veNls.manageStates, null, null, true);
 		}
 
 	}

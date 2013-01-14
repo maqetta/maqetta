@@ -1,0 +1,30 @@
+<div>
+	<div class="dijitDialogPaneContentArea">
+		<div class="addStateDialogOptions">
+			<div class='addStateDialogMoveWhichDiv'>
+				<label>${veNls.manageStatesApplyTo}</label>
+				<select dojoAttachPoint="moveWhichWidgets" dojoType="dijit.form.Select" value="allVisible">
+					<option value="allVisible">${veNls.addStateAllVisibleLabel}</option>
+					<option value="allSelected">${veNls.addStateAllSelectedLabel}</option>
+				</select>
+			</div>
+			<div class='manageStatesNoWidgets'>
+				<span class='manageStatesNoVisibleWidgets'>${veNls.manageStatesNoVisibleWidgets}</span>
+				<span class='manageStatesNoSelectedWidgets'>${veNls.manageStatesNoSelectedWidgets}</span>
+			</div>
+			<div class='manageStatesStatesListDiv'>
+				<!-- Filled in by JavaScript -->
+			</div>
+			<div class='manageStatesSelectActionsDiv'>
+				<a href='' class='manageStatesSelectCurrentStateOnly'>${veNls.manageStatesSelectCurrentStateOnly}</a>
+				<a href='' class='manageStatesSelectAll'>${veNls.manageStatesSelectAll}</a>
+				<a href='' class='manageStatesDeselectAll'>${veNls.manageStatesDeselectAll}</a>
+			</div>
+			
+		</div>	
+	</div>
+	<div class="dijitDialogPaneActionBar">
+		<button dojoType='dijit.form.Button' dojoAttachPoint="okButton" dojoAttachEvent='onClick:onOk' label='${veNls.createLabel}' class="maqPrimaryButton" type="submit"></button>
+		<button dojoType='dijit.form.Button' dojoAttachEvent='onClick:onCancel' label='${commonNls.buttonCancel}' class="maqSecondaryButton"></button>
+	</div>
+</div>

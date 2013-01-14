@@ -104,7 +104,7 @@ public class LdapLoginServlet extends OrionServlet {
 		String xRequestedWith = req.getHeader("X-Requested-With"); //$NON-NLS-1$
 
 		if (version == null && !"XMLHttpRequest".equals(xRequestedWith)) { //$NON-NLS-1$
-			String url = "/w3login/LoginWindow.html";
+			String url = "/ldaplogin/LoginWindow.html";
 			if (req.getParameter("redirect") != null) {
 				url += "?redirect=" + req.getParameter("redirect");
 			}

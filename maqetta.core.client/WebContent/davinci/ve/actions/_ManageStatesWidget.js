@@ -50,7 +50,7 @@ define([
 return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 	templateString: templateString,
 	widgetsInTemplate: true,
-	_anyCheckBoxChanges: false,
+	anyCheckBoxChanges: false,
 	_states:[],				// array of all states in doc
 	_stateContainers:[],	// array of all corresponding stateContainer nodes
 	_checkBoxes:[],	// TriStateCheckBoxes for each of the states
@@ -63,7 +63,6 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 		if(!context){
 			return;
 		}
-		this._anyCheckBoxChanges = false;
 		var rootNode = context.rootNode;
 		var manageStatesStatesListDiv = this.domNode.querySelector('.manageStatesStatesListDiv');
 		if(manageStatesStatesListDiv){
@@ -88,9 +87,14 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 				td = domConstruct.create('td', {'class':'manageStatesCheckboxCell'}, tr);
 				var div = domConstruct.create('div', {id:'manageStatesTriState_'+i, 'class':'manageStatesCheckboxCell'}, td);
 				this._checkBoxes[i] = new TriStateCheckBox({}, div);
-				On(this._checkBoxes[i], 'change', function(){
-					this._anyCheckBoxChanges = true;
-				}.bind(this));
+				On(this._checkBoxes[i], 'change', function(checkBox){
+					this.anyCheckBoxChanges = true;
+					var checked = checkBox.get('checked');
+					if(checked){
+						// Force 'mixed' to go to true
+						checkBox.set('checked', true);
+					}
+				}.bind(this, this._checkBoxes[i]));
 				domConstruct.create('td', {'class':'manageStatesStateNameCell', innerHTML:this._states[i]}, tr);
 			}
 		}
@@ -103,6 +107,11 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 			editorPrefs.statesMoveWhich = moveWhichWidgets;
 			Preferences.savePreferences(editorPrefsId, projectBase, editorPrefs);
 		}.bind(this));
+		setTimeout(function(){
+			// use setTimeout because onchange handlers are triggered asynchronously
+			// immediately after the current UI thread completes
+			this.anyCheckBoxChanges = false;
+		}.bind(this), 10);
 	},
 
 	_isValid: function() {
@@ -238,7 +247,7 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 	},
 
 	onOk: function() {
-		if(!this._anyCheckBoxChanges){
+		if(!this.anyCheckBoxChanges){
 			return;
 		}
 		var context = this._getContext();
@@ -254,7 +263,7 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 			}
 			var value = this._checkBoxes[i].get('checked');
 			if(value === true || value === false){
-				for(var j=0; i<widgets.length; j++){
+				for(var j=0; j<widgets.length; j++){
 					var widget = widgets[j];
 					if(!command){
 						command = new CompoundCommand();

@@ -184,7 +184,13 @@ return {
                     label: "Move to back",
                     action: "davinci/ve/actions/MoveToBackAction",
                     menubarPath: "davinci.edit/cut"
-                }/*,
+                },
+                {
+                iconClass: "editActionIcon",
+                label: "Manage States...",
+                action: "davinci/ve/actions/ManageStates",
+                menubarPath: "davinci.edit/cut"
+            	}/*,
                 {
                     iconClass: "editActionIcon",
                     label: "Application States...",
@@ -249,7 +255,7 @@ return {
 						className: "manageStatesButton",
 						iconClass: 'viewActionIcon manageStatesIcon',
 						action: "davinci/ve/actions/ManageStates",
-						label: "Update state",
+						label: "Manage states for currently selected widgets",
 						toolbarPath: "states2"
 					},
 					{

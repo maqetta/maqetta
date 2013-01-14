@@ -2,6 +2,7 @@ define([
 	"dojo/_base/declare",
 	"davinci/Runtime",
 	"davinci/Workbench",
+	"davinci/ve/actions/ContextAction",
 	"davinci/workbench/Preferences",
 	"dijit/registry",
 	"davinci/ve/States",
@@ -12,6 +13,7 @@ define([
 	declare,
 	Runtime,
 	Workbench,
+	ContextAction,
 	Preferences,
 	registry,
 	States,
@@ -19,7 +21,7 @@ define([
 	veNls,
 	_ManageStatesWidget){
 
-return declare("davinci.ve.actions.ManageStates", [Action], {
+return declare("davinci.ve.actions.ManageStates", [ContextAction], {
 
 	run: function(){
 		var context;
@@ -35,14 +37,28 @@ return declare("davinci.ve.actions.ManageStates", [Action], {
 		var w = new davinci.ve.actions._ManageStatesWidget({node: statesFocus.stateContainerNode });
 		w._calledBy = 'ManageStates';
 		w.okButton.set("label", veNls.updateLabel);
-		var editorPrefsId = 'davinci.ve.editorPrefs';
-		var projectBase = Workbench.getProject();
-		var editorPrefs = Preferences.getPreferences(editorPrefsId, projectBase);
-		if(editorPrefs && typeof editorPrefs.statesMoveWhich == 'string'){
-			w.moveWhichWidgets.set('value', editorPrefs.statesMoveWhich);
-		}
 		w.updateDialog();
 		var dialog = Workbench.showModal(w, veNls.manageStates, null, null, true);
+	},
+
+	isEnabled: function(context){
+		context = this.fixupContext(context);
+		var e = Workbench.getOpenEditor();
+		if (e && context) {
+			if(e.declaredClass == 'davinci.ve.PageEditor'){
+				return (context.getSelection().length > 0);
+			}else{
+				return false;
+			}
+		}else{
+			return false;
+		}
+	},
+
+	shouldShow: function(context){
+		context = this.fixupContext(context);
+		var editor = context ? context.editor : null;
+		return (editor && editor.declaredClass == 'davinci.ve.PageEditor');
 	}
 });
 });

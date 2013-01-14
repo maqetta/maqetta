@@ -76,10 +76,27 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 			this._states = obj.states;
 			this._stateContainers = obj.stateContainers;
 			
-			manageStatesStatesListDiv.style.width = '350px';
+			manageStatesStatesListDiv.style.width = '100%';
 			manageStatesStatesListDiv.style.height = '100px';
 			manageStatesStatesListDiv.style.border = '1px solid black';
 			manageStatesStatesListDiv.style.overflowY = 'scroll';
+			var manageStatesCheckAcceleratorsTable = this.domNode.querySelector('.manageStatesCheckAcceleratorsTable');
+			if(manageStatesCheckAcceleratorsTable){
+				manageStatesCheckAcceleratorsTable.style.width = '100%';
+			}
+			var manageStatesCheckCurrentStateOnlyCell = this.domNode.querySelector('.manageStatesCheckCurrentStateOnlyCell');
+			if(manageStatesCheckCurrentStateOnlyCell){
+				manageStatesCheckCurrentStateOnlyCell.style.textAlign = 'left';
+			}
+			var manageStatesCheckAllCell = this.domNode.querySelector('.manageStatesCheckAllCell');
+			if(manageStatesCheckAllCell){
+				manageStatesCheckAllCell.style.textAlign = 'center';
+			}
+			var manageStatesUncheckAllCell = this.domNode.querySelector('.manageStatesUncheckAllCell');
+			if(manageStatesUncheckAllCell){
+				manageStatesUncheckAllCell.style.textAlign = 'right';
+			}
+			
 			//Create table with TriStateCheckBox in col 1 and state name in col 2
 			var table, tr, td;
 			table = domConstruct.create('table', 
@@ -105,17 +122,6 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 				domConstruct.create('td', {'class':'manageStatesStateNameCell', innerHTML:this._states[i]}, tr);
 			}
 		}
-		this._handlers.push(
-			On(this.moveWhichWidgets, 'change', function(){
-				this.updateDialog();
-				var moveWhichWidgets = this.moveWhichWidgets.get('value');
-				var editorPrefsId = 'davinci.ve.editorPrefs';
-				var projectBase = Workbench.getProject();
-				var editorPrefs = Preferences.getPreferences(editorPrefsId, projectBase);
-				editorPrefs.statesMoveWhich = moveWhichWidgets;
-				Preferences.savePreferences(editorPrefsId, projectBase, editorPrefs);
-			}.bind(this))
-		);
 		var manageStatesCheckCurrentStateOnly = this.domNode.querySelector('.manageStatesCheckCurrentStateOnly');
 		if(manageStatesCheckCurrentStateOnly){
 			this._handlers.push(
@@ -251,20 +257,10 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 			return;
 		}
 		var currentState = States.getState(statesFocus.stateContainerNode);
-		var moveWhichWidgets = this.moveWhichWidgets.get('value');
 		var obj = context.getAllWidgetsEffectiveDisplay(currentState);
 		var allWidgets = obj.allWidgets;	// Array of all widgets
 		var effectiveDisplay = obj.effectiveDisplay;	// Corresponding array of effective 'display' values
-		var widgets = [];
-		if(moveWhichWidgets == 'allVisible'){
-			for(var i=0; i<allWidgets.length; i++){
-				if(effectiveDisplay[i].indexOf('none') != 0){
-					widgets.push(allWidgets[i]);
-				}
-			}
-		}else if(moveWhichWidgets == 'allSelected'){
-			widgets = context.getSelection().slice(0);	// clone operation
-		}
+		var widgets = context.getSelection().slice(0);	// clone operation
 		return widgets;
 	},
 
@@ -278,18 +274,6 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 			return;
 		}
 		var widgets = this._getAllEffectedWidgets();
-		var moveWhichWidgets = this.moveWhichWidgets.get('value');
-		var manageStatesNoVisibleWidgets = this.domNode.querySelector('.manageStatesNoVisibleWidgets');
-		var manageStatesNoSelectedWidgets = this.domNode.querySelector('.manageStatesNoSelectedWidgets');
-		manageStatesNoVisibleWidgets.style.display = 'none';
-		manageStatesNoSelectedWidgets.style.display = 'none';
-		if(widgets.length == 0){
-			if(moveWhichWidgets == 'allVisible'){
-				manageStatesNoVisibleWidgets.style.display = 'inline';
-			}else if(moveWhichWidgets == 'allSelected'){
-				manageStatesNoSelectedWidgets.style.display = 'inline';
-			}
-		}
 		for(var i=0; i<this._states.length; i++){
 			var state = this._states[i];
 			if(state == States.NORMAL || state == 'undefined'){

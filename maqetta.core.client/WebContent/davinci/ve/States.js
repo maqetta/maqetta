@@ -360,8 +360,10 @@ var veStates = declare(maqettaStates, {
 			if(manageStatesButtonWidget && iconNode){
 				if(this.manageStatesActive(context)){
 					domClass.remove(iconNode, 'manageStatesIconDisabled');
+					manageStatesButtonWidget.set('disabled', false);
 				}else{
 					domClass.add(iconNode, 'manageStatesIconDisabled');
+					manageStatesButtonWidget.set('disabled', true);
 				}
 			}
 			var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Workbench.getProject());
@@ -393,7 +395,7 @@ var veStates = declare(maqettaStates, {
 	 * Only true when user has selected a custom state.
 	 */
 	manageStatesActive: function(context){
-		return this._customStateActive(context);
+		return context && context.getSelection().length;
 	},
 	
 	/**
@@ -608,6 +610,11 @@ var veStates = declare(maqettaStates, {
 				// Note: updateHighlightsBaseStateWidgets() updates the state of 
 				// the highlightBaseWidgets icon (called by updateFocusAll())
 				context.updateFocusAll();
+				this.updateStateIcons(context);
+			}));
+			
+			connect.subscribe("/davinci/ui/widgetSelected", dojo.hitch(this, function() {
+				var context = this.getContext();
 				this.updateStateIcons(context);
 			}));
 			

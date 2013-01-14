@@ -1,33 +1,26 @@
 <div>
 	<div class="dijitDialogPaneContentArea">
 		<div class="addStateDialogOptions">
-			<div class='addStateDialogMoveWhichDiv'>
-				<label>${veNls.manageStatesApplyTo}</label>
-				<select dojoAttachPoint="moveWhichWidgets" dojoType="dijit.form.Select" value="allVisible">
-					<option value="allVisible">${veNls.addStateAllVisibleLabel}</option>
-					<option value="allSelected">${veNls.addStateAllSelectedLabel}</option>
-				</select>
-			</div>
-			<div class='manageStatesNoWidgets'>
-				<span class='manageStatesNoVisibleWidgets'>${veNls.manageStatesNoVisibleWidgets}</span>
-				<span class='manageStatesNoSelectedWidgets'>${veNls.manageStatesNoSelectedWidgets}</span>
+			<div class='manageStatesWhichStates'>
+				${veNls.manageStatesWhichStates}
 			</div>
 			<div class='manageStatesStatesListDiv'>
 				<!-- Filled in by JavaScript -->
 			</div>
 			<div class='manageStatesCheckAcceleratorsDiv'>
-				<div class='manageStatesCheckAccelerators'>
-					${veNls.manageStatesCheckAccelerators}
-				</div>
-				<div class='manageStatesCheckInnerDiv'>
-					<a href='' class='manageStatesCheckCurrentStateOnly'>${veNls.manageStatesCheckCurrentStateOnly}</a>
-				</div>
-				<div class='manageStatesCheckInnerDiv'>
-					<a href='' class='manageStatesCheckAll'>${veNls.manageStatesCheckAll}</a>
-				</div>
-				<div class='manageStatesCheckInnerDiv'>
-					<a href='' class='manageStatesUncheckAll'>${veNls.manageStatesUncheckAll}</a>
-				</div>
+				<table class='manageStatesCheckAcceleratorsTable'>
+					<tr>
+						<td class='manageStatesCheckCurrentStateOnlyCell'>
+							<a href='' class='manageStatesCheckCurrentStateOnly'>${veNls.manageStatesCheckCurrentStateOnly}</a>
+						</td>
+						<td class='manageStatesCheckAllCell'>
+							<a href='' class='manageStatesCheckAll'>${veNls.manageStatesCheckAll}</a>
+						</td>
+						<td class='manageStatesUncheckAllCell'>
+							<a href='' class='manageStatesUncheckAll'>${veNls.manageStatesUncheckAll}</a>
+						</td>
+					</tr>
+				</table>
 			</div>
 			
 		</div>	

@@ -54,9 +54,14 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 	_states:[],				// array of all states in doc
 	_stateContainers:[],	// array of all corresponding stateContainer nodes
 	_checkBoxes:[],	// TriStateCheckBoxes for each of the states
+	_handlers:[],
 
 	veNls: veNls,
 	commonNls: commonNls,
+	
+	constructor: function(){
+		this.handlers = [];
+	},
 	
 	postCreate: function(){
 		var context = this._getContext();
@@ -87,46 +92,56 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 				td = domConstruct.create('td', {'class':'manageStatesCheckboxCell'}, tr);
 				var div = domConstruct.create('div', {id:'manageStatesTriState_'+i, 'class':'manageStatesCheckboxCell'}, td);
 				this._checkBoxes[i] = new TriStateCheckBox({}, div);
-				On(this._checkBoxes[i], 'change', function(checkBox){
-					this.anyCheckBoxChanges = true;
-					var checked = checkBox.get('checked');
-					if(checked){
-						// Force 'mixed' to go to true
-						checkBox.set('checked', true);
-					}
-				}.bind(this, this._checkBoxes[i]));
+				this._handlers.push(
+					On(this._checkBoxes[i], 'change', function(checkBox){
+						this.anyCheckBoxChanges = true;
+						var checked = checkBox.get('checked');
+						if(checked){
+							// Force 'mixed' to go to true
+							checkBox.set('checked', true);
+						}
+					}.bind(this, this._checkBoxes[i]))
+				);
 				domConstruct.create('td', {'class':'manageStatesStateNameCell', innerHTML:this._states[i]}, tr);
 			}
 		}
-		On(this.moveWhichWidgets, 'change', function(){
-			this.updateDialog();
-			var moveWhichWidgets = this.moveWhichWidgets.get('value');
-			var editorPrefsId = 'davinci.ve.editorPrefs';
-			var projectBase = Workbench.getProject();
-			var editorPrefs = Preferences.getPreferences(editorPrefsId, projectBase);
-			editorPrefs.statesMoveWhich = moveWhichWidgets;
-			Preferences.savePreferences(editorPrefsId, projectBase, editorPrefs);
-		}.bind(this));
+		this._handlers.push(
+			On(this.moveWhichWidgets, 'change', function(){
+				this.updateDialog();
+				var moveWhichWidgets = this.moveWhichWidgets.get('value');
+				var editorPrefsId = 'davinci.ve.editorPrefs';
+				var projectBase = Workbench.getProject();
+				var editorPrefs = Preferences.getPreferences(editorPrefsId, projectBase);
+				editorPrefs.statesMoveWhich = moveWhichWidgets;
+				Preferences.savePreferences(editorPrefsId, projectBase, editorPrefs);
+			}.bind(this))
+		);
 		var manageStatesCheckCurrentStateOnly = this.domNode.querySelector('.manageStatesCheckCurrentStateOnly');
 		if(manageStatesCheckCurrentStateOnly){
-			On(manageStatesCheckCurrentStateOnly, 'click', function(event){
-				Event.stop(event);
-				this._acceleratorClicked('current');
-			}.bind(this));
+			this._handlers.push(
+				On(manageStatesCheckCurrentStateOnly, 'click', function(event){
+					Event.stop(event);
+					this._acceleratorClicked('current');
+				}.bind(this))
+			);
 		}
 		var manageStatesCheckAll = this.domNode.querySelector('.manageStatesCheckAll');
 		if(manageStatesCheckAll){
-			On(manageStatesCheckAll, 'click', function(event){
-				Event.stop(event);
-				this._acceleratorClicked('all');
-			}.bind(this));
+			this._handlers.push(
+				On(manageStatesCheckAll, 'click', function(event){
+					Event.stop(event);
+					this._acceleratorClicked('all');
+				}.bind(this))
+			);
 		}
 		var manageStatesUncheckAll = this.domNode.querySelector('.manageStatesUncheckAll');
 		if(manageStatesUncheckAll){
-			On(manageStatesUncheckAll, 'click', function(event){
-				Event.stop(event);
-				this._acceleratorClicked('none');
-			}.bind(this));
+			this._handlers.push(
+				On(manageStatesUncheckAll, 'click', function(event){
+					Event.stop(event);
+					this._acceleratorClicked('none');
+				}.bind(this))
+			);
 		}
 		setTimeout(function(){
 			// use setTimeout because onchange handlers are triggered asynchronously
@@ -336,6 +351,14 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 
 	onCancel: function() {
 		this.onClose();
+	},
+
+	destroy: function(){
+		this.inherited(arguments);
+		for(var i=0; i<this._handlers.length; i++){
+			this._handlers[i].remove();
+		}
+		this._handlers = [];
 	}
 });
 

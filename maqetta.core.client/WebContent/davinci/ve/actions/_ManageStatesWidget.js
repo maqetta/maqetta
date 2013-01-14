@@ -188,7 +188,7 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 		var widgets = [];
 		if(moveWhichWidgets == 'allVisible'){
 			for(var i=0; i<allWidgets.length; i++){
-				if(effectiveDisplay[i] != 'none'){
+				if(effectiveDisplay[i].indexOf('none') != 0){
 					widgets.push(allWidgets[i]);
 				}
 			}
@@ -208,6 +208,7 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 			return;
 		}
 		var widgets = this._getAllEffectedWidgets();
+		var moveWhichWidgets = this.moveWhichWidgets.get('value');
 		var manageStatesNoVisibleWidgets = this.domNode.querySelector('.manageStatesNoVisibleWidgets');
 		var manageStatesNoSelectedWidgets = this.domNode.querySelector('.manageStatesNoSelectedWidgets');
 		manageStatesNoVisibleWidgets.style.display = 'none';
@@ -228,7 +229,7 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 			for(var j=0; j<widgets.length; j++){
 				var widget = widgets[j];
 				var obj = context.getEffectiveDisplayValue(widget, state);
-				if(obj.effectiveDisplayValue != 'none'){
+				if(obj.effectiveDisplayValue.indexOf('none') != 0){
 					if(!state && obj.effectiveState == 'undefined'){
 						count++;
 					}else if(state && obj.effectiveState == state){

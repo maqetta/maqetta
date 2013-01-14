@@ -32,20 +32,17 @@ return declare("davinci.ve.actions.ManageStates", [Action], {
 		if(!statesFocus || !statesFocus.stateContainerNode){
 			return;
 		}
-		if(States.manageStatesActive(context)){
-			var w = new davinci.ve.actions._ManageStatesWidget({node: statesFocus.stateContainerNode });
-			w._calledBy = 'ManageStates';
-			w.okButton.set("label", veNls.updateLabel);
-			var editorPrefsId = 'davinci.ve.editorPrefs';
-			var projectBase = Workbench.getProject();
-			var editorPrefs = Preferences.getPreferences(editorPrefsId, projectBase);
-			if(editorPrefs && typeof editorPrefs.statesMoveWhich == 'string'){
-				w.moveWhichWidgets.set('value', editorPrefs.statesMoveWhich);
-			}
-			w.updateDialog();
-			var dialog = Workbench.showModal(w, veNls.manageStates, null, null, true);
+		var w = new davinci.ve.actions._ManageStatesWidget({node: statesFocus.stateContainerNode });
+		w._calledBy = 'ManageStates';
+		w.okButton.set("label", veNls.updateLabel);
+		var editorPrefsId = 'davinci.ve.editorPrefs';
+		var projectBase = Workbench.getProject();
+		var editorPrefs = Preferences.getPreferences(editorPrefsId, projectBase);
+		if(editorPrefs && typeof editorPrefs.statesMoveWhich == 'string'){
+			w.moveWhichWidgets.set('value', editorPrefs.statesMoveWhich);
 		}
-
+		w.updateDialog();
+		var dialog = Workbench.showModal(w, veNls.manageStates, null, null, true);
 	}
 });
 });

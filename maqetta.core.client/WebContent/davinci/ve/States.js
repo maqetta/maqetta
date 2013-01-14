@@ -360,10 +360,8 @@ var veStates = declare(maqettaStates, {
 			if(manageStatesButtonWidget && iconNode){
 				if(this.manageStatesActive(context)){
 					domClass.remove(iconNode, 'manageStatesIconDisabled');
-					manageStatesButtonWidget.set('disabled', false);
 				}else{
 					domClass.add(iconNode, 'manageStatesIconDisabled');
-					manageStatesButtonWidget.set('disabled', true);
 				}
 			}
 			var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Workbench.getProject());

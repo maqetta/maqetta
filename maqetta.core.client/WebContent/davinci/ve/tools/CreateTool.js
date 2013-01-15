@@ -1,4 +1,5 @@
 define(["dojo/_base/declare",
+        "dojo/dom-style",
 		"../tools/_Tool",
 		"davinci/Workbench",
 		"davinci/workbench/Preferences",
@@ -14,6 +15,7 @@ define(["dojo/_base/declare",
 		"../commands/StyleCommand"
 ], function(
 		declare,
+		domStyle,
 		_Tool,
 		Workbench,
 		Preferences,
@@ -926,11 +928,10 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			var currentState = States.getState(statesFocus.stateContainerNode);
 			var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', 
 					Workbench.getProject());
-			//FIXME: NEED TO ADD UI for editorPrefs.newWidgetsIntoCustomState
-			if(currentState && /*editorPrefs.newWidgetsIntoCustomState*/ true){
+			if(currentState && editorPrefs.newWidgetsCurrentState){
+				var displayValue = domStyle.get(widget.domNode, 'display');
 				command.add(new StyleCommand(widget, [{display:'none'}]));
-				//FIXME: what display value???
-				command.add(new StyleCommand(widget, [{display:'initial'}], currentState));
+				command.add(new StyleCommand(widget, [{display:displayValue}], currentState));
 			}
 		}
 	}

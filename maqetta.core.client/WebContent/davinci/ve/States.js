@@ -380,11 +380,11 @@ var veStates = declare(maqettaStates, {
 					newWidgetsCurrentStateButtonWidget.set('title', veNls.NewWidgetsCurrentStateTitleBackground);
 				}
 				if(newWidgetsCurrentState){
-					domClass.remove(iconNode, 'newWidgetsCurrentStateIconOn');
-					domClass.add(iconNode, 'newWidgetsCurrentStateIconOff');
-				}else{
 					domClass.remove(iconNode, 'newWidgetsCurrentStateIconOff');
 					domClass.add(iconNode, 'newWidgetsCurrentStateIconOn');
+				}else{
+					domClass.remove(iconNode, 'newWidgetsCurrentStateIconOn');
+					domClass.add(iconNode, 'newWidgetsCurrentStateIconOff');
 				}
 			}
 		}.bind(this));

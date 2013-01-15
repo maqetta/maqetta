@@ -323,7 +323,7 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 					if(!command){
 						command = new CompoundCommand();
 					}
-					var displayValue = value ? '' : 'none !important';
+					var displayValue = value ? '' : 'none';
 					command.add(new StyleCommand(widget, [{'display':displayValue}], state));
 				}
 			}

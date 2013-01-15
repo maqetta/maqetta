@@ -244,7 +244,7 @@ var DesignOutlineTreeModel = declare(null, {
 	
 	_toggle: function(widget, on, node) {
 		var visible = !on;
-		var value = visible ? "" : "none !important";
+		var value = visible ? "" : "none";
 		var state;
 		var statesFocus = States.getFocus(widget.domNode.ownerDocument.body);
 		if(statesFocus){

@@ -20,9 +20,10 @@ define(["dojo/_base/declare",
 		templateString: templateString,
 		
 		_fileNameValidationRegExp: "[a-zA-z0-9_.]+", //Numbers, letters, "_", and "."
-		_fileNameMaxLength: 50, 
+		_fileNameMaxLength: 50,
 		
 		postMixInProperties: function() {
+			this._projectName = Workbench.getProject();
 			dojo.mixin(this, uiNLS);
 			dojo.mixin(this, commonNLS);
 			this.inherited(arguments);
@@ -184,7 +185,7 @@ define(["dojo/_base/declare",
 						}
 						*/
 						
-					}
+					};
 				}
 				var fileName = dojo.attr( this.__fileName, "value");
 				if (fileName.slice(-4) != ".zip") {

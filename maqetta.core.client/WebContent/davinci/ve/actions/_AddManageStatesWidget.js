@@ -49,10 +49,6 @@ return declare("davinci.ve.actions._AddManageStatesWidget", [_WidgetBase, _Templ
 
 	veNls: veNls,
 	commonNls: commonNls,
-	
-	postCreate: function(){
-		this.addStateRemoveFromBase.set('checked', true);
-	},
 
 	_isValid: function() {
 		// Special check for ManageStates.js dialog, which hides the state name field
@@ -104,7 +100,7 @@ return declare("davinci.ve.actions._AddManageStatesWidget", [_WidgetBase, _Templ
 
 		// Proceed if either the state name input box has a value (ie non-empty string)
 		// or if the dialog was invoked by ManageStates.js (in which case input box is hidden)
-		if(newState || (this._calledBy == 'ManageStates' && currentState)){
+		if(newState){
 			var context;
 			if(Runtime.currentEditor && Runtime.currentEditor.currentEditor && Runtime.currentEditor.currentEditor.context){
 				context = Runtime.currentEditor.currentEditor.context;
@@ -121,81 +117,7 @@ return declare("davinci.ve.actions._AddManageStatesWidget", [_WidgetBase, _Templ
 					context:context
 				}));
 			}
-			
-			var obj = context.getAllWidgetsEffectiveDisplay(currentState);
-			var allWidgets = obj.allWidgets;	// Array of all widgets
-			var effectiveDisplay = obj.effectiveDisplay;	// Corresponding array of effective 'display' values
-			
-			var widgetsToShowInNewState = [];
-			var moveWhichWidgets = this.moveWhichWidgets.get('value');
-			if(moveWhichWidgets == 'allVisible'){
-				for(var i=0; i<allWidgets.length; i++){
-					if(effectiveDisplay[i] != 'none'){
-						widgetsToShowInNewState.push(allWidgets[i]);
-					}
-				}
-			}else if(moveWhichWidgets == 'allSelected'){
-				widgetsToShowInNewState = context.getSelection().slice(0);	// clone operation
-			}
-			var widgetsToShowInNewState_Adjusted = widgetsToShowInNewState.slice(0);	// clone operation
-			
-			// Make sure that all visible descendants for any selected containers
-			// will be visible in the new state
-			for(var i=0; i< allWidgets.length; i++){
-				var widget = allWidgets[i];
-				var displayValue = effectiveDisplay[i];
-				if(displayValue != 'none' && widgetsToShowInNewState_Adjusted.indexOf(widget) < 0){
-					var parent = widget.getParent();
-					while(parent && parent.domNode && parent.domNode.tagName.toUpperCase() != 'BODY'){
-						if(widgetsToShowInNewState_Adjusted.indexOf(parent) >= 0){
-							widgetsToShowInNewState_Adjusted.push(widget);
-							break;
-						}
-						parent = parent.getParent();
-					}
-				}
-			}
-			
-			// Make sure any container widget gets shown in new state when 
-			// that container has a descendant in widgetsToShowInNewState_Adjusted
-			for(var i=0; i< widgetsToShowInNewState_Adjusted.length; i++){
-				var widget = widgetsToShowInNewState_Adjusted[i];
-				var parent = widget.getParent();
-				while(parent && parent.domNode && parent.domNode.tagName.toUpperCase() != 'BODY'){
-					var showIndex = widgetsToShowInNewState_Adjusted.indexOf(parent);
-					if(showIndex < 0){
-						widgetsToShowInNewState_Adjusted.push(parent);
-					}
-					parent = parent.getParent();
-				}
-			}
-			var removeFromBase = this.addStateRemoveFromBase.get('checked');
-			
-			// Create StyleCommands for each widget to set its 'display' value for new state
-			// If removeFromBase value has been set, then any widgets moved to new state
-			// will be removed from the base/NORMAL state.
-			for(var i=0; i< allWidgets.length; i++){
-				var widget = allWidgets[i];
-				var showInNewStateIndex = widgetsToShowInNewState_Adjusted.indexOf(widget);
-				var displayValue = (showInNewStateIndex >= 0) ? effectiveDisplay[i] : 'none';
-				if(showInNewStateIndex >= 0){
-					command.add(new StyleCommand(widget, [{'display':displayValue}], applyToState));
-				}
-				if(removeFromBase && (widgetsToShowInNewState.indexOf(widget) >= 0)){
-					command.add(new StyleCommand(widget, [{'display':'none'}], null));
-				}
-			}
-			
 			context.getCommandStack().execute(command);
-			//FIXME: setting focus:true should be undoable
-			States.setState(applyToState, context.rootNode, {focus:true});
-			
-			var editorPrefsId = 'davinci.ve.editorPrefs';
-			var projectBase = Workbench.getProject();
-			var editorPrefs = Preferences.getPreferences(editorPrefsId, projectBase);
-			editorPrefs.statesMoveWhich = moveWhichWidgets;
-			editorPrefs.statesRemoveFromBase = removeFromBase;
-			Preferences.savePreferences(editorPrefsId, projectBase, editorPrefs);
 		}
 	},
 

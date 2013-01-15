@@ -36,16 +36,6 @@ return declare("davinci.ve.actions.AddState", [Action], {
 
 		Workbench.showModal(w, veNls.createNewState, null, null, true);
 		w.okButton.set("disabled", true);
-		
-		var editorPrefsId = 'davinci.ve.editorPrefs';
-		var projectBase = Workbench.getProject();
-		var editorPrefs = Preferences.getPreferences(editorPrefsId, projectBase);
-		if(editorPrefs && typeof editorPrefs.statesMoveWhich == 'string'){
-			w.moveWhichWidgets.set('value', editorPrefs.statesMoveWhich);
-		}
-		if(editorPrefs && typeof editorPrefs.statesRemoveFromBase == 'boolean'){
-			w.addStateRemoveFromBase.set('checked', editorPrefs.statesRemoveFromBase);			
-		}
 	}
 });
 });

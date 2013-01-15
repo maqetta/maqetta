@@ -2609,7 +2609,7 @@ td.welcome_section_cell {
 	margin-right:8px;
 }
 .addStateNameDiv {
-	margin-bottom:24px;
+	margin-bottom:8px;
 }
 .addStateNameDiv .dijitTextBox {
 	width:18em;
@@ -2622,4 +2622,24 @@ td.welcome_section_cell {
 }
 .addStateDialogRemoveFromBaseDiv {
 	margin:8px 0;
+}
+.manageStatesWhichStates {
+	margin-bottom:4px;
+}
+.manageStatesStatesListDiv {
+	padding:3px;
+}
+.manageStatesCheckAcceleratorsDiv {
+	margin-top:4px;
+	margin-bottom: 8px;
+}
+.manageStatesCheckboxCell {
+	width:20px;
+	height:20px;
+	text-align:center;
+	vertical-align:middle;
+}
+.manageStatesStateNameCell {
+	height:20px;
+	vertical-align:center;
 }

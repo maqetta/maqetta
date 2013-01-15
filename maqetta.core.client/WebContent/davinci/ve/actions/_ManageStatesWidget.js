@@ -111,11 +111,13 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 				this._checkBoxes[i] = new TriStateCheckBox({}, div);
 				this._handlers.push(
 					On(this._checkBoxes[i], 'change', function(checkBox){
-						this.anyCheckBoxChanges = true;
-						var checked = checkBox.get('checked');
-						if(checked){
-							// Force 'mixed' to go to true
-							checkBox.set('checked', true);
+						if(!this._programmaticChangesInProcess){
+							this.anyCheckBoxChanges = true;
+							var checked = checkBox.get('checked');
+							if(checked){
+								// Force 'mixed' to go to true
+								checkBox.set('checked', true);
+							}
 						}
 					}.bind(this, this._checkBoxes[i]))
 				);
@@ -269,6 +271,7 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 		if(!context){
 			return;
 		}
+		this._programmaticChangesInProcess = true;
 		var statesFocus = States.getFocus(context.rootNode);
 		if(!statesFocus || !statesFocus.stateContainerNode){
 			return;
@@ -299,6 +302,12 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 				this._checkBoxes[i].set('checked', 'mixed');
 			}
 		}
+		setTimeout(function(){
+			// Use a setTimeout because onchange is triggered after the current UI thread completes
+			// Make sure that _programmaticChangesInProcess is still true while the
+			// onchange handle has a change to do its thing
+			this._programmaticChangesInProcess = false;
+		}.bind(this), 10);
 	},
 
 	onOk: function() {

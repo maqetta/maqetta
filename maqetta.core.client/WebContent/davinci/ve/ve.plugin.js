@@ -494,7 +494,13 @@ return {
                            label: "Surround with &lt;SPAN&gt;",
                            action: "davinci/ve/actions/SurroundAction",
                            surroundWithTagName:'span'
-                       }/*,
+                       },
+                       {
+                           iconClass: "editActionIcon",
+                           label: "Manage States...",
+                           action: "davinci/ve/actions/ManageStates",
+                           menubarPath: "davinci.edit/cut"
+                       	}/*,
                        {
                            iconClass: "editActionIcon",
                            label: "Application States...",

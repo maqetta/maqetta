@@ -31,6 +31,7 @@ define(["dojo/_base/declare",
 		/* templated attach points, custom input section */
 		
 		/* check box for rewrite dojo */
+		/*
 		__rewriteDojo : null,
 		__rewriteDojoURL : null,
 		__fileName : null,
@@ -39,10 +40,14 @@ define(["dojo/_base/declare",
 		_selectionDiv : null,
 		_okButton : null,
 		_tableDiv : null,
+		*/
 	
 		buildRendering: function(){
 			this.inherited(arguments);
-			
+			this._buildUITable();
+		},
+
+		_buildUITable: function() {
 			this._handles = [];
 			this._userLibs = Library.getUserLibs(this.getRoot());
 			var uiArray = [];
@@ -200,10 +205,10 @@ define(["dojo/_base/declare",
 					});
 		
 					var options = {};
-					if (this.__optimize.getValue()) {
+					if (this.__optimize && this.__optimize.getValue()) {
 						options.build = "1";
 					}
-					if (this.__fullSource.getValue()) {
+					if (this.__fullSource && this.__fullSource.getValue()) {
 						options.fullsource = "1";
 					}
 					

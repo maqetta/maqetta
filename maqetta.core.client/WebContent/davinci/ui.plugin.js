@@ -558,7 +558,7 @@ return {
                                 }
                             );
                         },
-                        label: "Download Entire Workspace",
+                        label: "Download Entire Project",
                         toolbarPath: "download"
                     },
                     {

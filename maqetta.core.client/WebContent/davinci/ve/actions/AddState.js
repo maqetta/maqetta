@@ -6,7 +6,7 @@ define([
 	"davinci/ve/States",
 	"davinci/actions/Action",
 	"dojo/i18n!davinci/ve/nls/ve",
-	"davinci/ve/actions/_AddUpdateStateWidget"
+	"davinci/ve/actions/_AddManageStatesWidget"
 ], function(
 	declare,
 	Runtime,
@@ -15,7 +15,7 @@ define([
 	States,
 	Action,
 	veNls,
-	_AddUpdateStateWidget){
+	_AddManageStatesWidget){
 
 return declare("davinci.ve.actions.AddState", [Action], {
 
@@ -31,21 +31,11 @@ return declare("davinci.ve.actions.AddState", [Action], {
 			return;
 		}
 
-		var w = new davinci.ve.actions._AddUpdateStateWidget({node: statesFocus.stateContainerNode });
+		var w = new davinci.ve.actions._AddManageStatesWidget({node: statesFocus.stateContainerNode });
 		w._calledBy = 'AddState';
 
 		Workbench.showModal(w, veNls.createNewState, null, null, true);
 		w.okButton.set("disabled", true);
-		
-		var editorPrefsId = 'davinci.ve.editorPrefs';
-		var projectBase = Workbench.getProject();
-		var editorPrefs = Preferences.getPreferences(editorPrefsId, projectBase);
-		if(editorPrefs && typeof editorPrefs.statesMoveWhich == 'string'){
-			w.moveWhichWidgets.set('value', editorPrefs.statesMoveWhich);
-		}
-		if(editorPrefs && typeof editorPrefs.statesRemoveFromBase == 'boolean'){
-			w.addStateRemoveFromBase.set('checked', editorPrefs.statesRemoveFromBase);			
-		}
 	}
 });
 });

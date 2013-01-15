@@ -4,6 +4,7 @@
 @import url("../dojox/layout/resources/ResizeHandle.css");
 @import url("../dojox/html/resources/ellipsis.css");
 @import url("../dojox/form/resources/UploaderFileList.css");
+@import url("../dojox/form/resources/TriStateCheckBox.css");
 
 @import url("syntaxColors.css");
 @import url("propview.css");
@@ -1557,12 +1558,12 @@ background-position: -75px -745px;
 	white-space:nowrap;
 	line-height:30px;
 }
-.updateStateIcon {
+.manageStatesIcon {
 	background-image: url(img/sprite.png);
-	background-position: 0px -1801px;
+	background-position: 0px -1548px;
 }
-.updateStateIcon.updateStateIconDisabled {
-	background-position: -20px -1801px;
+.manageStatesIcon.manageStatesIconDisabled {
+	background-position: -20px -1548px;
 }
 .newWidgetsCurrentStateIcon {
 	background-image: url(img/sprite.png);
@@ -2608,7 +2609,7 @@ td.welcome_section_cell {
 	margin-right:8px;
 }
 .addStateNameDiv {
-	margin-bottom:24px;
+	margin-bottom:8px;
 }
 .addStateNameDiv .dijitTextBox {
 	width:18em;
@@ -2621,4 +2622,24 @@ td.welcome_section_cell {
 }
 .addStateDialogRemoveFromBaseDiv {
 	margin:8px 0;
+}
+.manageStatesWhichStates {
+	margin-bottom:4px;
+}
+.manageStatesStatesListDiv {
+	padding:3px;
+}
+.manageStatesCheckAcceleratorsDiv {
+	margin-top:4px;
+	margin-bottom: 8px;
+}
+.manageStatesCheckboxCell {
+	width:20px;
+	height:20px;
+	text-align:center;
+	vertical-align:middle;
+}
+.manageStatesStateNameCell {
+	height:20px;
+	vertical-align:center;
 }

@@ -70,7 +70,7 @@ davinci/davinci = {
 	"./ve/actions/AddState",
 	"./ve/actions/RemoveState",
 	"./ve/actions/ModifyState",
-	"./ve/actions/UpdateState",
+	"./ve/actions/ManageStates",
 	"./ve/actions/NewWidgetsCurrentState",
 	"./ve/actions/HighlightBaseWidgets",
 	

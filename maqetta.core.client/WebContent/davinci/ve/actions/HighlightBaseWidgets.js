@@ -17,16 +17,14 @@ return declare("davinci.ve.actions.HighlightBaseWidgets", [Action], {
 		}else{
 			return;
 		}
-		if(States.highlightBaseWidgetsActive(context)){
-			var id = 'davinci.ve.editorPrefs';
-			var base = Workbench.getProject();
-			var editorPrefs = Preferences.getPreferences(id, base);
-			editorPrefs.highlightBaseWidgets = editorPrefs.highlightBaseWidgets ? false : true;
-			Preferences.savePreferences(id, base, editorPrefs);
-			// Causes base widget highlighting to be redone,
-			// and also causes icon on StatesView toolbar to get updated
-			context.updateFocusAll();	
-		}
+		var id = 'davinci.ve.editorPrefs';
+		var base = Workbench.getProject();
+		var editorPrefs = Preferences.getPreferences(id, base);
+		editorPrefs.highlightBaseWidgets = editorPrefs.highlightBaseWidgets ? false : true;
+		Preferences.savePreferences(id, base, editorPrefs);
+		// Causes base widget highlighting to be redone,
+		// and also causes icon on StatesView toolbar to get updated
+		context.updateFocusAll();	
 	}
 });
 });

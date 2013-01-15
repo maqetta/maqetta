@@ -374,17 +374,17 @@ var veStates = declare(maqettaStates, {
 			if(newWidgetsCurrentStateButtonWidget && iconNode){
 				if(this.newWidgetsCurrentStateActive(context)){
 					domClass.remove(iconNode, 'newWidgetsCurrentStateIconDisabled');
-					newWidgetsCurrentStateButtonWidget.set('title', veNls.NewWidgetsCurrentStateTitleCurrentState);
 				}else{
 					domClass.add(iconNode, 'newWidgetsCurrentStateIconDisabled');
-					newWidgetsCurrentStateButtonWidget.set('title', veNls.NewWidgetsCurrentStateTitleBackground);
 				}
 				if(newWidgetsCurrentState){
 					domClass.remove(iconNode, 'newWidgetsCurrentStateIconOff');
 					domClass.add(iconNode, 'newWidgetsCurrentStateIconOn');
+					newWidgetsCurrentStateButtonWidget.set('title', veNls.NewWidgetsCurrentStateTitleCurrentState);
 				}else{
 					domClass.remove(iconNode, 'newWidgetsCurrentStateIconOn');
 					domClass.add(iconNode, 'newWidgetsCurrentStateIconOff');
+					newWidgetsCurrentStateButtonWidget.set('title', veNls.NewWidgetsCurrentStateTitleBackground);
 				}
 			}
 		}.bind(this));
@@ -441,10 +441,8 @@ var veStates = declare(maqettaStates, {
 				if(highlightBaseWidgetsButtonWidget && iconNode){
 					if(highlightBaseWidgetsActive){
 						domClass.remove(iconNode, 'highlightBaseWidgetsIconDisabled');
-						highlightBaseWidgetsButtonWidget.set('disabled', false);
 					}else{
 						domClass.add(iconNode, 'highlightBaseWidgetsIconDisabled');
-						highlightBaseWidgetsButtonWidget.set('disabled', true);
 					}
 					if(highlightBaseWidgets){
 						domClass.add(iconNode, 'highlightBaseWidgetsIconOn');

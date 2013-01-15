@@ -1560,10 +1560,10 @@ background-position: -75px -745px;
 }
 .manageStatesIcon {
 	background-image: url(img/sprite.png);
-	background-position: 0px -1801px;
+	background-position: 0px -1548px;
 }
 .manageStatesIcon.manageStatesIconDisabled {
-	background-position: -20px -1801px;
+	background-position: -20px -1548px;
 }
 .newWidgetsCurrentStateIcon {
 	background-image: url(img/sprite.png);

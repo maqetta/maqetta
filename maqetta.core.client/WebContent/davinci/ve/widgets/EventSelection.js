@@ -10,6 +10,16 @@ define(["dojo/_base/declare",
         "../commands/ModifyCommand"
 ],function(declare, connect, Resource, Workbench, Path, Preferences, ViewLite, HTMLStringUtil, States, ModifyCommand){
 
+var StateColonString = 'State:';
+var StatePatternDisplay=new RegExp('^'+StateColonString+'.*');
+var SetStateString = 'davinci.states.setState';
+var StatePatternSource=/^\s*davinci\.states\.setState\s*\(\s*([\'"])((?:(?!\1).)*)\1\s*\)\s*$/;
+
+var FileColonString = 'File:';
+var FilePatternDisplay=new RegExp('^'+FileColonString+'.*');
+var LocationHrefString = 'location.href';
+var FilePatternSource=/^\s*location\.href\s*\=\s*([\'"])((?:(?!\1).)*)\1\s*$/;
+
 var getEventSelectionValues = function(root){
 	var items = [""];
 	
@@ -22,7 +32,7 @@ var getEventSelectionValues = function(root){
 		}
 	}
 	for(var i=0; i<states.length; i++){
-		var val = "State:" + states[i];
+		var val = StateColonString + states[i];
 		if(items.indexOf(val) < 0){
 			items.push(val);
 		}
@@ -49,7 +59,6 @@ var getEventSelectionValues = function(root){
 			for(var i=0; i<children.length; i++){
 				var child = children[i];
 				if(child.elementType == 'Folder'){
-					//FIXME: compare against theme folder, custom widget folder and samples folder
 					if(!child._readOnly && child != samplesFolder && child != themeFolder && child != customWidgetFolder){
 						recurseFindHtmlFiles(child);
 					}
@@ -69,7 +78,7 @@ var getEventSelectionValues = function(root){
 		if(htmlFilePath.indexOf(basePathString) == 0){
 			htmlFilePath = htmlFilePath.substr(basePathString.length);
 		}
-		var val = "File:" + htmlFilePath;
+		var val = FileColonString + htmlFilePath;
 		if(items.indexOf(val) < 0){
 			items.push(val);
 		}
@@ -82,18 +91,29 @@ var getEventScriptFromValue = function(value) {
 	value.replace(/'/,"\\'");
 	value.replace(/"/,'\\"');
 	
-	var stateString = 'State:';
-	if (value && value.match(/^State:.*/)) {
-		value = "davinci.states.setState('" + value.substring(stateString.length) + "')";
+	if (value && value.match(StatePatternDisplay)) {
+		value = SetStateString + "('" + value.substring(StateColonString.length) + "')";
+	}
+	if (value && value.match(FilePatternDisplay)) {
+		value = LocationHrefString + "=\'" + value.substring(FileColonString.length) + "\'";
 	}
 	
 	return value;
 };
 
 var getValueFromEventScript = function(value) {
-	if (value && value.match(/^davinci.states.setState\('.*'\)$/)) {
-		var state = value.substring("davinci.states.setState('".length, value.length - 2); //FIXME: use regexp match
-		value = "State:" + state;
+	var match;
+	if(value){
+		match = value.match(StatePatternSource);
+		if(match){
+			var state = match[2];
+			value = StateColonString + state;
+		}
+		match = value.match(FilePatternSource);
+		if(match){
+			var filename = match[2];
+			value = FileColonString + filename;
+		}
 	}
 	return value;
 };

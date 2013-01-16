@@ -1,12 +1,28 @@
 define(["dojo/_base/declare",
 		"dojo/_base/connect",
+		'system/resource',
+		'davinci/Workbench',
+		'davinci/model/Path',
+		'davinci/workbench/Preferences',
 		"../../workbench/ViewLite",
 		"./HTMLStringUtil",
 		"davinci/ve/States",
         "../commands/ModifyCommand"
-],function(declare, connect, ViewLite, HTMLStringUtil, States, ModifyCommand){
+],function(declare, connect, Resource, Workbench, Path, Preferences, ViewLite, HTMLStringUtil, States, ModifyCommand){
+
+var StateColonString = 'State:';
+var StatePatternDisplay=new RegExp('^'+StateColonString+'.*');
+var SetStateString = 'davinci.states.setState';
+var StatePatternSource=/^\s*davinci\.states\.setState\s*\(\s*([\'"])((?:(?!\1).)*)\1\s*\)\s*$/;
+
+var FileColonString = 'File:';
+var FilePatternDisplay=new RegExp('^'+FileColonString+'.*');
+var LocationHrefString = 'location.href';
+var FilePatternSource=/^\s*location\.href\s*\=\s*([\'"])((?:(?!\1).)*)\1\s*$/;
 
 var getEventSelectionValues = function(root){
+	var items = [""];
+	
 	var states = [];
 	var stateContainers = root && States.getAllStateContainers(root);
 	if(stateContainers){
@@ -15,14 +31,59 @@ var getEventSelectionValues = function(root){
 			states = states.concat(statesList);
 		}
 	}
-	var items = [""];
-
 	for(var i=0; i<states.length; i++){
-		var val = states[i] + ":State";
+		var val = StateColonString + states[i];
 		if(items.indexOf(val) < 0){
 			items.push(val);
 		}
 	}
+	
+	var base = Workbench.getProject();
+	var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+	if(prefs.webContentFolder!=null && prefs.webContentFolder!=""){
+		var fullPath = new Path(base).append(prefs.webContentFolder);
+		base = fullPath.toString();
+		folder = Resource.findResource(base);
+	}else{
+		folder= Resource.findResource(base);
+	}
+	var samplesPath = new Path(base).append('samples');
+	var samplesFolder = Resource.findResource(samplesPath.toString());
+	var themePath = new Path(base).append(prefs.themeFolder);
+	var themeFolder = Resource.findResource(themePath.toString());
+	var customWidgetPath = new Path(base).append(prefs.widgetFolder);
+	var customWidgetFolder = Resource.findResource(customWidgetPath.toString());
+	var htmlFiles = [];
+	function recurseFindHtmlFiles(folder){
+		folder.getChildren(function(children){	// onComplete
+			for(var i=0; i<children.length; i++){
+				var child = children[i];
+				if(child.elementType == 'Folder'){
+					if(!child._readOnly && child != samplesFolder && child != themeFolder && child != customWidgetFolder){
+						recurseFindHtmlFiles(child);
+					}
+				}else if(child.extension.toLowerCase() == 'html' || child.extension.toLowerCase() == 'htm'){
+					htmlFiles.push(child);
+				}
+			}
+		}.bind(htmlFiles), function(a, b){	// onError
+			console.error('EventSelection.js: folder.getChildren error');
+		});
+	}
+	recurseFindHtmlFiles(folder);
+	var basePathString = folder.getPath().toString()+'/';
+	for(var i=0; i<htmlFiles.length; i++){
+		var htmlFile = htmlFiles[i];
+		var htmlFilePath = htmlFile.getPath().toString();
+		if(htmlFilePath.indexOf(basePathString) == 0){
+			htmlFilePath = htmlFilePath.substr(basePathString.length);
+		}
+		var val = FileColonString + htmlFilePath;
+		if(items.indexOf(val) < 0){
+			items.push(val);
+		}
+	}
+	
 	return items;
 };
 
@@ -30,17 +91,29 @@ var getEventScriptFromValue = function(value) {
 	value.replace(/'/,"\\'");
 	value.replace(/"/,'\\"');
 	
-	if (value && value.match(/.*:State$/)) {
-		value = "davinci.states.setState('" + value.substring(0, value.length - ":State".length) + "')";
+	if (value && value.match(StatePatternDisplay)) {
+		value = SetStateString + "('" + value.substring(StateColonString.length) + "')";
+	}
+	if (value && value.match(FilePatternDisplay)) {
+		value = LocationHrefString + "=\'" + value.substring(FileColonString.length) + "\'";
 	}
 	
 	return value;
 };
 
 var getValueFromEventScript = function(value) {
-	if (value && value.match(/^davinci.states.setState\('.*'\)$/)) {
-		var state = value.substring("davinci.states.setState('".length, value.length - 2); //FIXME: use regexp match
-		value = state + ":State";
+	var match;
+	if(value){
+		match = value.match(StatePatternSource);
+		if(match){
+			var state = match[2];
+			value = StateColonString + state;
+		}
+		match = value.match(FilePatternSource);
+		if(match){
+			var filename = match[2];
+			value = FileColonString + filename;
+		}
 	}
 	return value;
 };

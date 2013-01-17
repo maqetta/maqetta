@@ -35,9 +35,10 @@ public class UserManagerImpl implements IUserManager {
     	try{
         	this.baseDirectory= ServerManager.getServerManger().getBaseDirectory();
         	this.usersCount = this.baseDirectory.list().length;
-    	}catch(Exception ex){
-    		System.out.println("FATAL ERROR Starting maqetta: " + ex);
-    		
+    	}catch(RuntimeException re){
+    		System.out.println("FATAL ERROR Starting maqetta: " + re);
+    		re.printStackTrace();
+    		throw re;
     	}
         if (ServerManager.DEBUG_IO_TO_CONSOLE) {
             System.out.println("\nSetting [user space] to: " + baseDirectory.getAbsolutePath());

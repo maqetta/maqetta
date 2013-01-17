@@ -79,6 +79,13 @@ public class LdapAuthenticationService implements IAuthenticationService {
 	private static String CONFIG_USER_FILTER = "maqetta.auth.ldap.user.filter";
 	private static String CONFIG_USER_DISPLAYNAME = "maqetta.auth.ldap.user.displayname";
 	private static String CONFIG_USER_EMAIL = "maqetta.auth.ldap.user.email";
+	private static String CONFIG_SECURITY_PRINCIPAL = "maqetta.auth.ldap.bind.user";
+	private static String CONFIG_SECURITY_CREDENTIALS = "maqetta.auth.ldap.bind.password";
+	private static String CONFIG_KEYSTORE = "maqetta.auth.ldap.keystore";
+	private static String CONFIG_KEYSTOREPASSWORD = "maqetta.auth.ldap.keystorepassword";
+	private static String CONFIG_TRUSTSTORE = "maqetta.auth.ldap.truststore";
+	private static String CONFIG_TRUSTSTOREPASSWORD = "maqetta.auth.ldap.truststorepassword";
+	private static String CONFIG_TRUSTSTORETYPE = "maqetta.auth.ldap.truststoretype";
 	
 	private static String PROVIDER_URL = PreferenceHelper.getString(CONFIG_PROVIDER_URL, null); 
 	private static String LOOKUP_PROVIDER_URL = PreferenceHelper.getString(CONFIG_LOOKUP_PROVIDER_URL, PROVIDER_URL); 
@@ -93,13 +100,39 @@ public class LdapAuthenticationService implements IAuthenticationService {
 	private static String USER_FILTER = PreferenceHelper.getString(CONFIG_USER_FILTER, "email"); 
 	private static String USER_DISPLAYNAME = PreferenceHelper.getString(CONFIG_USER_DISPLAYNAME, "displayname");
 	private static String USER_EMAIL = PreferenceHelper.getString(CONFIG_USER_EMAIL, "email");
-
+	private static String TRUSTSTORE = PreferenceHelper.getString(CONFIG_TRUSTSTORE, null);
+	private static String TRUSTSTOREPW = PreferenceHelper.getString(CONFIG_TRUSTSTOREPASSWORD, null);
+	private static String TRUSTSTORETYPE = PreferenceHelper.getString(CONFIG_TRUSTSTORETYPE, null);
+	private static String KEYSTORE = PreferenceHelper.getString(CONFIG_KEYSTORE, null);
+	private static String KEYSTOREPW = PreferenceHelper.getString(CONFIG_KEYSTOREPASSWORD, null);
+	private static String BIND_USER =  PreferenceHelper.getString(CONFIG_SECURITY_PRINCIPAL, null);
+	private static String BIND_PASSWORD = PreferenceHelper.getString(CONFIG_SECURITY_CREDENTIALS, null);
+	
+		
 	static {
 		//if there is no list of users authorised to create accounts, it means everyone can create accounts
 		allowAnonymousAccountCreation = PreferenceHelper.getString(ServerConstants.CONFIG_AUTH_USER_CREATION, null) == null; //$NON-NLS-1$
 
 		//if there is an alternate URI to handle registrations retrieve it.
 		registrationURI = PreferenceHelper.getString(ServerConstants.CONFIG_AUTH_REGISTRATION_URI, null);
+	}
+
+	public LdapAuthenticationService(){
+		// only have to set the system property once
+		if (TRUSTSTORE != null)
+			System.setProperty("javax.net.ssl.trustStore",TRUSTSTORE);
+
+		if (TRUSTSTOREPW != null)
+			System.setProperty("javax.net.ssl.trustStorePassword",TRUSTSTOREPW);
+		
+		if (TRUSTSTORETYPE != null)
+			System.setProperty("javax.net.ssl.trustStoreType",TRUSTSTORETYPE);
+		
+		if (KEYSTORE != null)
+			System.setProperty("javax.net.ssl.keyStore",KEYSTORE);
+		
+		if (KEYSTOREPW != null)
+			System.setProperty("javax.net.ssl.keyStorePassword",KEYSTOREPW);
 	}
 
 	public Properties getDefaultAuthenticationProperties() {
@@ -391,6 +424,13 @@ public class LdapAuthenticationService implements IAuthenticationService {
         props.setProperty(Context.SECURITY_AUTHENTICATION, LOOKUP_SECURITY_AUTHENTICATION);
         if (LOOKUP_SECURITY_PROTOCOL != null) {
         	props.setProperty(Context.SECURITY_PROTOCOL, LOOKUP_SECURITY_PROTOCOL);
+        }
+        // If LDAP requires authentication to search
+        if (BIND_USER != null) {
+        	props.setProperty(Context.SECURITY_PRINCIPAL,BIND_USER);
+        }
+        if (BIND_PASSWORD != null) {
+          	props.setProperty(Context.SECURITY_CREDENTIALS,BIND_PASSWORD);
         }
 
         // Get the environment properties (props) for creating initial

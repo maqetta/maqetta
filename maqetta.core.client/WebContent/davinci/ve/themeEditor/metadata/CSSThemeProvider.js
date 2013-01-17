@@ -1,4 +1,4 @@
-define(["dojo/_base/declare", "davinci/ve/utils/URLRewrite"], function(declare, URLRewrite) {
+define(["dojo/_base/declare", "davinci/ve/utils/URLRewrite", "davinci/ve/States"], function(declare, URLRewrite, States) {
 
 //TODO: Create custom HTML metadata provider similar to CSS
 
@@ -90,7 +90,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 			console.log('metadata:getStyleSelectors no widgetType');
 			return;
 		}
-		if(!state) state = 'Normal';
+		if(!state || state == States.NORMAL) state = 'Normal';
 		var selectors;
 		var p = widgetType.split('.');
 		var w = p[0];
@@ -123,7 +123,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 			console.log('metadata:getElementStyleProperties no widgetType');
 			return;
 		}
-		if(!state) state = 'Normal';
+		if(!state || state==States.NORMAL) state = 'Normal';
 		var elementProps;
 		var p = widgetType.split('.');
 		var w = p[0];
@@ -156,7 +156,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 	},
 	_createDefaultSelectors: function(widgetName, state){
 		var selector;
-		if (state == 'Normal'){
+		if (state == 'Normal' || state == States.NORMAL){
 			selector = '.'+this._theme.className+' .' + widgetName;
 		} else {
 			selector = '.'+this._theme.className+' .' + widgetName + state;
@@ -273,11 +273,11 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 					cssClass = cssClass.replace(this._theme.className,'');
 					s = s + ' ' + cssClass;
 				}
-				if(state != 'Normal'){
+				if(state != 'Normal' && state != States.NORMAL){
 						s = w + state + ' ' + s; // add the default state class
 					}
 			}
-			if (state != 'Normal'){ // Normal is the base class do not remove it.
+			if (state != 'Normal' && state != States.NORMAL){ // Normal is the base class do not remove it.
 			    this._simulateState(q, s, mode, updateWidget);
 			}
 		}
@@ -285,7 +285,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 		for(var sub in widget.subwidgets){
 			var subwidget = widget.subwidgets[sub];
 			// some widgets do not start in a normal state. like TabContainer
-			if (state === 'Normal' && init == true && mode === 'remove' && subwidget.startState){
+			if ((state === 'Normal' ||  state == States.NORMAL) && init == true && mode === 'remove' && subwidget.startState){
 				state = subwidget.startState;
 			} 
 			if (subwidget.states[''+state]){ // only add if subwidget has this state
@@ -304,11 +304,11 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 						cssClass = cssClass.replace(this._theme.className,'');
 						s = s + ' ' + cssClass;
 					}
-					if(state != 'Normal'){
+					if(state != 'Normal' && state != States.NORMAL){
 							s = w + state + ' ' + s; // add the default state class
 						}
 				}
-				if (state != 'Normal'){ // Normal is the base class do not remove it.
+				if (state != 'Normal' && state != States.NORMAL){ // Normal is the base class do not remove it.
 	                this._simulateState(q, s, mode, updateWidget);
 	            }
 				/*query = q; //push(q);
@@ -318,7 +318,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 				if(!n){ // might already be at the top node.
 					n = updateWidget.domNode;
 				}
-				if (state != 'Normal'){ // Normal is the base class do not remove it.
+				if (state != 'Normal' && state != States.NORMAL){ // Normal is the base class do not remove it.
 					if(mode == 'add'){
 						dojo.addClass(n,simulate);
 					} else { 
@@ -336,7 +336,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 		this._updateStyle(node, widgetType, state, 'add');
 	},
 	removeStyleValues: function(node, widgetType, state, subwidget){
-		if(state && state != 'Normal'){
+		if(state && state != 'Normal' && state != States.NORMAL){
 			this._updateStyle(node, widgetType, state, 'remove');
 		}
 		
@@ -347,7 +347,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 		this._updateStyle(node, null, state, 'add');
 	},
 	removeWidgetStyleValues: function(node, state){
-		//if(state && state != 'Normal'){
+		//if(state && state != 'Normal' && state != States.NORMAL){
 			this._updateStyle(node, null, state, 'remove');
 		//}
 		
@@ -559,7 +559,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 		if (!this._widgets){
 			return false;
 		}
-		if (widget.id === 'all' && state != 'Normal'){
+		if (widget.id === 'all' && state != 'Normal' && state != States.NORMAL){
 			return false;
 		}
 		var widgetType = widget.type;

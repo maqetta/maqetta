@@ -9,7 +9,7 @@
         <env-entry>
                 <env-entry-name>maqetta.baseDirectory</env-entry-name>
                 <env-entry-type>java.lang.String</env-entry-type>
-                <env-entry-value>/davinciUsers</env-entry-value>
+                <env-entry-value>/tmp/davinciUsers</env-entry-value>
                
         </env-entry> 
 

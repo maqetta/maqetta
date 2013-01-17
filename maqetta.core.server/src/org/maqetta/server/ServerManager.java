@@ -53,7 +53,7 @@ public class ServerManager implements IServerManager {
         }
 
         String base = System.getProperty(IDavinciServerConstants.BASE_DIRECTORY_PROPERTY);
-        ServerManager.IN_WAR = Boolean.parseBoolean(this.getDavinciProperty(IDavinciServerConstants.INWAR_PROPERTY));
+        ServerManager.IN_WAR = true;//Boolean.parseBoolean(this.getDavinciProperty(IDavinciServerConstants.INWAR_PROPERTY));
 
     }
 

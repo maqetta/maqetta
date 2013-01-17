@@ -355,8 +355,8 @@ define(["dojo/_base/declare",
 			// Note: Let's be careful to not get confused between the states in theme metadata
 			// and the user-defined interactive states that are part of a user-created HTML page
 			// For theme editor, we need to use whatever state is selected in States palette
-			// For page editor, always use "Normal"
-			var state = "Normal";
+			// For page editor, always use States.NORMAL
+			var state = States.NORMAL;
 	/*FIXME: OLD LOGIC
 			if (this.context.editor.editorID == 'davinci.themeEdit.ThemeEditor'){
 	//FIXME: Ramifications if nested states? (Maybe OK: theme editor specific)
@@ -762,11 +762,11 @@ define(["dojo/_base/declare",
 			}
 			
 			// Add checkboxes to allow user to control whether the current style settings
-			// should apply to the "Normal" style or the current interactive states.
+			// should apply to the States.NORMAL style or the current interactive states.
 			// FIXME: This feature just has to have bugs. For example, I don't see
-			// logic for displaying the current property value when the state != "Normal"
+			// logic for displaying the current property value when the state != States.NORMAL
 			// FIXME: Ultimately, we will want to allow the user to select any number
-			// of interactive states, not just "Normal" or the current state
+			// of interactive states, not just States.NORMAL or the current state
 			// FIXME: The default value of this checkbox should be true if there
 			// is a custom value for the property for the current state, else false.
 			this._widgetState = this._whichStateInputElement = undefined;
@@ -964,9 +964,10 @@ define(["dojo/_base/declare",
 			// Note: Let's be careful to not get confused between the states in theme metadata
 			// and the user-defined interactive states that are part of a user-created HTML page
 			// For theme editor, we need to use whatever state is selected in States palette
-			// For page editor, always use "Normal"
-			var state = "Normal";
+			// For page editor, always use States.NORMAL
+			var state = States.NORMAL;
 			if (this._editor.editorID == 'davinci.themeEdit.ThemeEditor'){
+				state = 'Normal';
 				state = state || States.getState();
 			}
 
@@ -1026,7 +1027,7 @@ define(["dojo/_base/declare",
 		
 		_addDeltaRules : function(widget, values){
 
-			var state = "Normal";
+			var state = States.NORMAL;
 			var lastElementStyle = -1;
 			var deltas = [];
 			var cssFiles = this.context._getCssFiles();
@@ -1037,6 +1038,7 @@ define(["dojo/_base/declare",
 				dynamicThemeReadOnly = file._readOnly;
 			}
 			if (this._editor.editorID == 'davinci.themeEdit.ThemeEditor'){
+				state = "Normal";
 				state = state || States.getState();
 			}
 			var meta = this._getThemeMetaDataByWidget(widget);
@@ -1336,10 +1338,11 @@ define(["dojo/_base/declare",
 			var state = davinci.ve.states.getState();
 			
 			if(!state) {
-				state = "Normal";
+				state = States.NORMAL;
 			}
 	*/
-			var state = "Normal";
+			debugger;
+			var state = States.NORMAL;
 			var widget = this.context.getSelection();
 			if(!widget.length){
 				return [];

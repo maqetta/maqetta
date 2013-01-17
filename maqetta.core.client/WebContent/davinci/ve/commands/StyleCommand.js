@@ -13,12 +13,13 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 
 	constructor: function(widget, values, applyToWhichState){
 	
+		var veStates = require("davinci/ve/States");
 		this._newValues = values;
 		this._id = widget ? widget.id : undefined;
 		// applyToWhichState controls whether style change is attached to Normal or other states
-		//   (null|undefined|"undefined"|"Normal") => apply to Normal state
+		//   (null|undefined|"undefined"|veStates.NORMAL) => apply to Normal state
 		//   other string => apply to that particular state
-		this._applyToStateIndex = (!applyToWhichState || applyToWhichState=='Normal' || applyToWhichState=='undefined')
+		this._applyToStateIndex = (!applyToWhichState || applyToWhichState==veStates.NORMAL || applyToWhichState=='undefined')
 									? 'undefined' : applyToWhichState;
 	},
 

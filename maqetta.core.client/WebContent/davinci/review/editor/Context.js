@@ -77,7 +77,7 @@ return declare("davinci.review.editor.Context", [Context], {
 							if (!args || !Runtime.currentEditor || Runtime.currentEditor.declaredClass != "davinci.review.editor.ReviewEditor") { 
 								return; 
 							}
-//							var state = args.newState || "Normal";
+//							var state = args.newState || AppStates.NORMAL;
 							var dv = userWindow.davinci;
 							if(dv && dv.states && dv.states.setState){
 /*FIXME: Shouldn't be necessary - event was spawned because state just changed. No need to change it again.

@@ -100,7 +100,7 @@ var veStates = declare(maqettaStates, {
 			case "style":
 				var currentStatesList = this.getStatesListCurrent(node);
 				for(var i=0; i<currentStatesList.length; i++){
-					currentStatesList[i] = 'Normal';
+					currentStatesList[i] = this.NORMAL;
 				}
 				var normalValueArray = this.getStyle(node, currentStatesList, name);
 				if (normalValueArray) {
@@ -121,7 +121,7 @@ var veStates = declare(maqettaStates, {
 			case "style":
 				var currentStatesList = this.getStatesListCurrent(node);
 				for(var i=0; i<currentStatesList.length; i++){
-					currentStatesList[i] = 'Normal';
+					currentStatesList[i] = this.NORMAL;
 				}
 				var normalValueArray = this.getStyle(node, currentStatesList, name);
 				if (normalValueArray) {
@@ -275,14 +275,14 @@ var veStates = declare(maqettaStates, {
 
 	/**
 	 * Returns array index into states object for given state
-	 * Mostly used so that a null or undefined or 'Normal' state will get converted to string 'undefined'
+	 * Mostly used so that a null or undefined or this.NORMAL state will get converted to string 'undefined'
 	 * to compensate for screwy way that States.js is currently implemented
 	 * @param {string|null|undefined} state  Current state
 	 * @returns {string}  Returns either original state string or 'undefined'
 	 */
 	_getStateIndex:function(state){
 		var stateIndex;
-		if(!state || state == 'Normal' || state == 'undefined'){
+		if(!state || state == this.NORMAL || state == 'undefined'){
 			//FIXME: we are using 'undefined' as name of Normal state due to accidental programming
 			stateIndex = 'undefined';
 		}else{
@@ -299,7 +299,7 @@ var veStates = declare(maqettaStates, {
 	getApplyToStateIndex:function(applyToWhichStates){
 		var currentState = this.getState();
 		var state;
-		if(applyToWhichStates === "current" && currentState && currentState != 'Normal' && currentState != 'undefined'){
+		if(applyToWhichStates === "current" && currentState && currentState != this.NORMAL && currentState != 'undefined'){
 			state = currentState;
 		}else{
 			state = undefined;

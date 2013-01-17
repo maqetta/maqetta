@@ -4,7 +4,7 @@ function(connect, domStyle, dom, dhtml, dwindow, darray, dparser, require, JSON,
 var States = function(){};
 States.prototype = {
 
-	NORMAL: "Normal",
+	NORMAL: "Background",
 	DELTAS_ATTRIBUTE: "data-maq-deltas",
 	DELTAS_ATTRIBUTE_P6: "dvStates",	// Attribute name used in Preview6 or earlier
 	APPSTATES_ATTRIBUTE: "data-maq-appstates",
@@ -203,12 +203,12 @@ States.prototype = {
 	 */ 
 	getStates: function(node){
 		var states = node && node._maqAppStates;
-		var names = ["Normal"];
+		var names = [this.NORMAL];
 		if(states){
 			var statesList = states.states ? states.states : [];
 			for(var i=0; i<statesList.length; i++){
 				var name = statesList[i];
-				if(name != 'Normal'){
+				if(name != this.NORMAL){
 					names.push(name);
 				}
 			}

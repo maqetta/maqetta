@@ -27,9 +27,9 @@ return declare("davinci.ve.commands.ResizeCommand", null, {
 		this._newBox = {w: width, h: height};
 		
 		// applyToWhichState controls whether style change is attached to Normal or other states
-		//   (null|undefined|"undefined"|"Normal") => apply to Normal state
+		//   (null|undefined|"undefined"|States.NORMAL) => apply to Normal state
 		//   other string => apply to that particular state
-		this._applyToStateIndex = (!applyToWhichState || applyToWhichState=='Normal' || applyToWhichState=='undefined')
+		this._applyToStateIndex = (!applyToWhichState || applyToWhichState==States.NORMAL || applyToWhichState=='undefined')
 									? 'undefined' : applyToWhichState;
 	},
 

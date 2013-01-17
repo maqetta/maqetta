@@ -200,7 +200,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					if(!this._cached || !this._currentPage || !this._cached[this._currentPage]){
 						return;
 					}
-					var state = args.newState || "Normal";
+					var state = args.newState || AppStates.NORMAL;
 //FIXME: Maybe should convert to JSON until just before sending to server
 					this._cached[this._currentPage].pageState = state;
 					var stateList = this._cached[this._currentPage].pageStateList = this._context.getCurrentStates();
@@ -536,7 +536,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 					dojo.fromJson(comment.viewSceneList) : [];
 		}
 //FIXME: switch to current states?
-		this._cached[pageName].pageState = "Normal";
+		this._cached[pageName].pageState = AppStates.NORMAL
 		this._cached[pageName].pageStateList = this._context.getCurrentStates();
 //		this._cached[pageName].viewScene = "";
 		this._cached[pageName].viewSceneList = this._context.getCurrentScenes();

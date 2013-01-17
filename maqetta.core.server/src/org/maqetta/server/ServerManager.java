@@ -84,11 +84,13 @@ public class ServerManager implements IServerManager {
 	 */
     public String getDavinciProperty(String propertyName) {
         String property = null;
+        System.err.println("getDavinciProperty IN_WAR="+ServerManager.IN_WAR+" propertyName="+propertyName);
         if (ServerManager.IN_WAR) {
             try {
                 Context env = (Context) new InitialContext().lookup("java:comp/env");
                 property = (String) env.lookup(propertyName);
             } catch (NameNotFoundException e) {
+            	e.printStackTrace();
                 // ignore
             } catch (NamingException e) {
                 e.printStackTrace();
@@ -96,13 +98,13 @@ public class ServerManager implements IServerManager {
 
             // String property
             // =this.servletConfig.getServletContext().getInitParameter(propertyName);
-            if(ServerManager.DEBUG_IO_TO_CONSOLE)
+//            if(ServerManager.DEBUG_IO_TO_CONSOLE)
             	System.out.println("servlet parm '" + propertyName + "' is : " + property);
 
         }
         if (property == null) {
             property = System.getProperty(propertyName);
-            if(ServerManager.DEBUG_IO_TO_CONSOLE)
+//            if(ServerManager.DEBUG_IO_TO_CONSOLE)
             	System.out.println("servlet parm '" + propertyName + "' is : " + property);
         }
         return property;
@@ -238,6 +240,7 @@ public class ServerManager implements IServerManager {
     	if(this.userDir ==null){
     	
 	    	 String basePath = getDavinciProperty(IDavinciServerConstants.BASE_DIRECTORY_PROPERTY);
+	    	 System.err.println("getBaseDirectory basePath="+basePath);
 	         
 	         if (basePath != null && basePath.length() > 0) {
 	             IStorage dir = new StorageFileSystem(basePath);

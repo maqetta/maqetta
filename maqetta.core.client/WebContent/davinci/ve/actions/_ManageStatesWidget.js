@@ -121,7 +121,9 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 						}
 					}.bind(this, this._checkBoxes[i]))
 				);
-				domConstruct.create('td', {'class':'manageStatesStateNameCell', innerHTML:this._states[i]}, tr);
+				var state = this._states[i];
+				var stateDisplayName = state == 'Normal' ? 'Background' : state;
+				domConstruct.create('td', {'class':'manageStatesStateNameCell', innerHTML:stateDisplayName}, tr);
 			}
 		}
 		var manageStatesCheckCurrentStateOnly = this.domNode.querySelector('.manageStatesCheckCurrentStateOnly');

@@ -414,7 +414,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 							sceneContainerNode:node, parentItem:currentParentItem, children:[]};
 					for(var st=0; st<appstates.length; st++){
 						var state = appstates[st];
-						var span = that._treeNodeContent(state);
+						var stateDisplayValue = (state == 'Normal') ? 'Background' : state;
+						var span = that._treeNodeContent(stateDisplayValue);
 						var isFocus = (appStateFocus && appStateFocus.stateContainerNode == node && appStateFocus.state == currentState);
 						var isCurrent = (state === currentState);
 						var isInitial = (state === initialState);

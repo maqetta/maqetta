@@ -32,7 +32,9 @@ var getEventSelectionValues = function(root){
 		}
 	}
 	for(var i=0; i<states.length; i++){
-		var val = StateColonString + states[i];
+		var state = states[i];
+		var stateDisplayName = state == 'Normal' ? 'Background' : state;
+		var val = StateColonString + stateDisplayName;
 		if(items.indexOf(val) < 0){
 			items.push(val);
 		}
@@ -92,7 +94,9 @@ var getEventScriptFromValue = function(value) {
 	value.replace(/"/,'\\"');
 	
 	if (value && value.match(StatePatternDisplay)) {
-		value = SetStateString + "('" + value.substring(StateColonString.length) + "')";
+		var state = value.substring(StateColonString.length);
+		var stateRuntimeValue = state == 'Background' ? 'Normal' : state;
+		value = SetStateString + "('" + stateRuntimeValue + "')";
 	}
 	if (value && value.match(FilePatternDisplay)) {
 		value = LocationHrefString + "=\'" + value.substring(FileColonString.length) + "\'";

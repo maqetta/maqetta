@@ -127,7 +127,7 @@ States.prototype = {
 	 * @returns {[string]}  An array of strings, one item for each state that 
 	 *       that is defined by a parent state container.
 	 *       Note that there might be duplicate names.
-	 *       "Normal" is only added once even if there are multiple
+	 *       this.NORMAL is only added once even if there are multiple
 	 *       state containers.
 	 */ 
 	getAllStatesForNode: function(node){
@@ -280,7 +280,7 @@ States.prototype = {
 	 * by publishing a /maqetta/appstates/state/changed event, which indirectly causes
 	 * the _update() routine to be called for the given node.
 	 * 
-	 * @param {null|undefined|string} newState  If null|undefined, switch to "Normal" state, else to "newState"
+	 * @param {null|undefined|string} newState  If null|undefined, switch to this.NORMAL state, else to "newState"
 	 * @param {Element|Event} ElemOrEvent  Identifies state container.
 	 *        If an Element, then either the given Element is the state container
 	 *        or we will march up the ancestor tree until finding the state container.
@@ -376,7 +376,7 @@ States.prototype = {
 	 * Internal routine, calls by setState() if the "set focus" flag says that we should
 	 * set the document-level "focus" to a particular state within a particular state container.
 	 * This feature is primarily used by design-time tools.
-	 * @param {null|undefined|string} state  If null|undefined, set focus to "Normal" state, else to "newState"
+	 * @param {null|undefined|string} state  If null|undefined, set focus to this.NORMAL state, else to "newState"
 	 * @param {Element} node  Identifies state container.
 	 */
 	_setFocus: function(newState, node){
@@ -647,7 +647,7 @@ States.prototype = {
 	
 	/**
 	 * Utility routine to clean up styling on a given "node"
-	 * to reset CSS properties for "Normal" state.
+	 * to reset CSS properties for this.NORMAL state.
 	 * First, remove any properties that were defined for "oldState".
 	 * Then, add properties defined for Normal state.
 	 * @param {Element} node

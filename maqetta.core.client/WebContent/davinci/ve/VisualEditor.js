@@ -195,10 +195,10 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 	 * Creates and executes an appropriate StyleCommand for the operation.
 	 * @param {object} value
 	 *		value.appliesTo {string|object} - either 'inline' or a CSSRule object
-	 *		applyToWhichStates - controls whether style change is attached to Normal or other states:
+	 *		applyToWhichStates - controls whether style change is attached to States.NORMAL or other states:
 	 *			"current" => apply to currently active state
 	 *			[...array of strings...] => apply to these states (may not yet be implemented)
-	 *			any other value (null/undefined/"Normal"/etc) => apply to Normal state
+	 *			any other value (null/undefined/States.NORMAL/etc) => apply to States.NORMAL state
 	 *		values [object]  Array of property values. Each item in array is an object with one property
 	 *						<propname>:<propvalue>, where <propname> is name of styling property and <propvalue> is value string
 	 */

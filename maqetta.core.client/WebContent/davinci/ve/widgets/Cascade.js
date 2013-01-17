@@ -260,7 +260,7 @@ define(["dojo/_base/declare",
 			// applyToWhichStates controls whether style change is attached to Normal or other states
 			//   "current" => apply to currently active state
 			//   [...array of strings...] => apply to these states (may not yet be implemented)
-			//   any other value (null/undefined/"Normal"/etc) => apply to Normal state
+			//   any other value (null/undefined/States.NORMAL/etc) => apply to States.NORMAL state
 			var applyToWhichStates = undefined;
 			if(this._whichStateInputElement && this._whichStateInputElement.checked){
 				applyToWhichStates = this._whichState;
@@ -1341,7 +1341,6 @@ define(["dojo/_base/declare",
 				state = States.NORMAL;
 			}
 	*/
-			debugger;
 			var state = States.NORMAL;
 			var widget = this.context.getSelection();
 			if(!widget.length){

@@ -57,7 +57,7 @@ var EnableApplicationStatesWidget = declare("davinci.ve.actions.EnableApplicatio
 				var description = veNls.DisableAsStateContainerDescription;
 				var states = States.getStates(widget.domNode);
 				if(states.length > 1){
-					states.splice(0, 1); // Remove "Normal"
+					states.splice(0, 1); // Remove this.NORMAL
 					this.statesListDiv.innerHTML = veNls.EnableApplicationStatesCurrentStates + ': ' + states.join(', ');
 					description += ' ' + veNls.DisableAsStateContainerDataLoss;
 				}else{

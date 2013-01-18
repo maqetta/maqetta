@@ -15,12 +15,10 @@ import javax.servlet.ServletConfig;
 
 import org.davinci.ajaxLibrary.ILibraryManager;
 import org.davinci.ajaxLibrary.LibraryManager;
-
 import org.davinci.server.internal.Activator;
 import org.davinci.server.internal.IRegistryListener;
-
-import org.davinci.server.user.IUserManager;
 import org.davinci.server.user.IPersonManager;
+import org.davinci.server.user.IUserManager;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -45,21 +43,20 @@ public class ServerManager implements IServerManager {
 
     public static boolean DEBUG_IO_TO_CONSOLE;
     public static boolean LOCAL_INSTALL;
-    public static boolean IN_WAR;
+
+    public enum SetBoolean {
+    	FALSE, TRUE, UNDEFINED
+    };
+    public static SetBoolean IN_WAR;
 
     {
-    	ServerManager.IN_WAR = false;
+    	ServerManager.IN_WAR = SetBoolean.UNDEFINED;
         String localInstall = this.getDavinciProperty(IDavinciServerConstants.LOCAL_INSTALL);
         if (localInstall != null) {
             ServerManager.LOCAL_INSTALL = Boolean.parseBoolean(localInstall);
         } else {
             ServerManager.LOCAL_INSTALL = false;
         }
-
-        String base = System.getProperty(IDavinciServerConstants.BASE_DIRECTORY_PROPERTY);
-        ServerManager.IN_WAR = Boolean.parseBoolean(this.getDavinciProperty(IDavinciServerConstants.INWAR_PROPERTY));
-     
-        
     }
 
     	public SmtpPop3Mailer getMailer(){
@@ -95,26 +92,30 @@ public class ServerManager implements IServerManager {
 	 */
     public String getDavinciProperty(String propertyName) {
         String property = null;
-        if (ServerManager.IN_WAR) {
-            try {
-                Context env = (Context) new InitialContext().lookup("java:comp/env");
+    	SetBoolean inWar = ServerManager.IN_WAR;
+    	if (inWar != SetBoolean.FALSE) { // inWar == SetBoolean.TRUE || inWar == SetBoolean.UNDEFINED
+	    	try {
+				Context env = (Context) new InitialContext().lookup("java:comp/env");
+				if (inWar == SetBoolean.UNDEFINED) {
+					// call to InitialContext.lookup succeeded; assume we're in a WAR
+					ServerManager.IN_WAR = SetBoolean.TRUE;
+				}
                 property = (String) env.lookup(propertyName);
-            } catch (NameNotFoundException e) {
-                // ignore
-            } catch (NamingException e) {
-                e.printStackTrace();
-            }
-
-            // String property
-            // =this.servletConfig.getServletContext().getInitParameter(propertyName);
-            if(ServerManager.DEBUG_IO_TO_CONSOLE)
-            	System.out.println("servlet parm '" + propertyName + "' is : " + property);
-
-        }
+	    	} catch (NameNotFoundException e) {
+	    		// do nothing; fall through to `System.getProperty` block
+			} catch (NamingException e) {
+				if (inWar == SetBoolean.TRUE) {
+					e.printStackTrace();
+				}
+				// call to InitialContext.lookup failed; assume we're running standalone
+				ServerManager.IN_WAR = SetBoolean.FALSE;
+			}
+    	}
         if (property == null) {
             property = System.getProperty(propertyName);
-            if(ServerManager.DEBUG_IO_TO_CONSOLE)
-            	System.out.println("servlet parm '" + propertyName + "' is : " + property);
+        }
+        if (ServerManager.DEBUG_IO_TO_CONSOLE) {
+        	System.out.println("servlet parm '" + propertyName + "' is : " + property);
         }
         return property;
     }
@@ -256,6 +257,7 @@ public class ServerManager implements IServerManager {
 	                 userDir = dir;
 	             } else {
 	                 System.err.println("FATAL!!!!! User directory does not exist.");
+	                 throw new RuntimeException("User directory does not exist.");
 	             }
 	         }
 	         if (userDir == null) {

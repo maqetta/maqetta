@@ -52,6 +52,7 @@
 			},
 			
 			getAuthForm : function(notify){
+				debugger;
 				return qualifyURL(notify ? ('/ldaplogin/LoginWindow.html?redirect='+notify+'?key=ldapUser') : '/ldaplogin/LoginWindow.html');
 			},
 			
@@ -65,7 +66,7 @@
 			
 			};
 			var serviceProps = {
-				name : "LDAP",
+				name : "ldaplogin",
 			};
 			provider.registerServiceProvider("orion.core.auth", serviceImpl, serviceProps);
 			provider.connect();

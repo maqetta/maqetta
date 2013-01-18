@@ -4,7 +4,7 @@
    <service>
       <provide interface="org.eclipse.orion.server.core.authentication.IAuthenticationService"/>
    </service>
-   <property name="orion.auth.name" type="String" value="LDAP"/>
+   <property name="orion.auth.name" type="String" value="ldaplogin"/>
    <reference bind="setHttpService" cardinality="1..1" interface="org.osgi.service.http.HttpService" name="HttpService" policy="static" unbind="unsetHttpService"/>
    <reference bind="setUserAdmin" cardinality="1..1" interface="org.eclipse.orion.server.useradmin.IOrionCredentialsService" name="UserAdmin" policy="dynamic" unbind="unsetUserAdmin"/>
    <reference bind="bindUserProfileService" cardinality="1..1" interface="org.eclipse.orion.server.user.profile.IOrionUserProfileService" name="IOrionUserProfileService" policy="dynamic" unbind="unbindUserProfileService"/>

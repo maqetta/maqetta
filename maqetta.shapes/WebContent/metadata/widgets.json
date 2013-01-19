@@ -141,12 +141,11 @@
             "tags": "Rectangle",
             "icon": "resources/images/rectangle.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAANXV1v///0lJSUZGRkJCQkFBQTw8PDg4ODc3NzQ0NDExMS4uLiwsLCoqKv///wAAACH5BAEAAA4ALAAAAAAQABAAAARE0MlJq71V6M25FEAojqEgDUCgriwwSEXKzgAhGfK8AoZ05LoAACFJAHWAhERxpCkki2ZrIWGQrgCGpMHter2YsHg8jgAAOw==",
-            "enablePointerEvents": true,
-            "resizable": "none",
-            "resizableOnCreate": "both",
             "forceAbsolute": true,
-            "showStandardSelectionChrome": false,
-            "helper": "./shapes/RectangleHelper",
+            "properties": {
+                "style": "width:80px; height:80px; border-width:4px; border-style:solid; border-color:black;"
+            },
+            "allowedChild": "ANY",
             "iconLarge": "resources/imagesLarge/Rectangle.png",
             "iconLargeBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAHtJREFUeNrs1zEOgCAMhWE0HKmDu5v3hUlmGXooPYBhUcmT/C9h5qM0aTql/Qh6idfZ1kXKlEudg2RgwYIFC9Zrw+c2Ztbhencfolrt1zxP+zdoeViwYMGCBQsWLFiwBlvIeq5l/6/Wd6sYLQ8LFixYsGRnYi5VjXUKMAA7xRDjvVZMSwAAAABJRU5ErkJggg=="
         },
@@ -158,15 +157,11 @@
             "tags": "RoundedRectangle",
             "icon": "resources/images/roundedRectangle.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAANXV1v///8jIyJGRkWdnZ1BQUElJSURERDw8PDQ0NCoqKv///wAAAAAAAAAAAAAAACH5BAEAAAsALAAAAAAQABAAAARHcMlJq72XmM05oYYAjCQpGBIhBmzbAsJ3AG7NAseC0LYLIDpe7wbcDV/AhHAISCwKg2UNMChIFNFSaaCgFBTgcNiKKZvP5wgAOw==",
-            "enablePointerEvents": true,
-            "resizable": "none",
-            "resizableOnCreate": "both",
             "forceAbsolute": true,
-            "showStandardSelectionChrome": false,
             "properties": {
-                "cornerRadius": "10"
+                "style": "width:80px; height:80px; border-width:4px; border-style:solid; border-color:black; border-radius:10px;"
             },
-            "helper": "./shapes/RectangleHelper",
+            "allowedChild": "ANY",
             "iconLarge": "resources/imagesLarge/RoundedRectangle.png",
             "iconLargeBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAaBJREFUeNrsmLFrwkAUxlUyu+kgjs4SkUAnl0II3RxcHIL/hjgH/4QEJ2dBnCoh1CVLBSGGjCGjuDgpWURRv3rgkrSkcoGUvgd5y12+73eXy11e8u8fn7nshYDr7fUlU0zzxbKQy2QQFmERFmERFrfD54fwPG88HruuezgcuPgVi0VRFHu9Xr1efwZrt9sNh0PbtvlOA4Zn36PVavX7/VKp9DuswWDgOE65XFYUBYPDKHlhYfpN0wRZGIaj0Si+Hz5srpGYTqfNZrPT6ez3+2sKAVmIwwJG0VYgxS95LCZkjpMUXWEQfxglfRODIECu1WrpvWtMnBklxbpcLl9thRS3DybOjGg7JSzCIizCIizCIqx/h1WpVJC32216xkycGSXFQs2EbBjG8XhMgwmyEH8YJcVSVRV1nO/73W53MpmcTideQJCCIGQhDgsYxXbLo8yI/Xe62Ww0TVutVik9REmSUPNVq9Vo03yx/LZOxA26rluWNZvN1uv1+XzmU8ULQqPRaLfbsiw/X+zL96ANgrAIi7AI649iCewMyhrWTYABACaCF4klU8wXAAAAAElFTkSuQmCC"
         }

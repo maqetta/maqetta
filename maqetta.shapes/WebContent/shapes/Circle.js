@@ -1,20 +1,10 @@
 define([
 	"dojo/_base/declare",
-	"shapes/_Shape",
+	"dijit/_WidgetBase",
 	"shapes/_CircleMixin"
-], function(declare, _Shape, _CircleMixin){
+], function(declare, _WidgetBase, _CircleMixin){
 	
-	return declare("shapes.Circle", [_Shape, _CircleMixin], {
-			
-		rx:null,
-		defaultRx:'40',
-		ry:null,
-		defaultRy:'40',
-
-		buildRendering: function(){
-			this.inherited(arguments);	
-			this.createGraphics();
-		}
+	return declare("shapes.Circle", [_WidgetBase, _CircleMixin], {
 
 	});
 });

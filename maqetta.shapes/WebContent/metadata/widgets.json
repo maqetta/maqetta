@@ -20,15 +20,17 @@
             "icon": "resources/images/text.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAJEAANXV1h8fH////wAAACH5BAEAAAIALAAAAAAQABAAAAIplI+pq+EPHXKgUhsmONSAfGxcIAplQzJJp46nyrZC3NILVr1TpMv+UgAAOw==",
             "inlineEdit": {
-                "property": "content",
-                "displayOnCreate": true
+                "property": "textContent",
+                "displayOnCreate": true,
+                "supportsHTML": true,
+                "helpText": "If you use any markup characters (&lt;,&gt;,&amp;), you need to specify whether the text represents literal (plain) text or HTML markup that should be parsed (using an innerHTML assignment)."
             },
             "properties": {
                 "style": "font-size:14px"
             },
+            "children": "Text",
             "resizable": "none",
             "forceAbsolute": true,
-            "helper": "./shapes/TextHelper",
             "iconLarge": "resources/imagesLarge/Text.png",
             "iconLargeBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAATBJREFUeNrs2LsNgzAUBdAkomYBGAAWgPShyg6IQViAHsk1E0CVVE6diAXYgwWSFywhgsA42IWLeyUkI36HZzAyxxt/HuyLQ8v1crbKdH+8TgcrAxZYYNkybsnDOa/r2viF8zz3PG8/y3Xdtm2NsyQmJdY0RVGQcrOijLHFw6uqEncYRZFuJ44JwzBJksVNXddNV9euSrsJlu/7uo98EASisWZSz8iV96ASa+w1fRbVe9bQHSDoRJu3qF6wsQe0WFQw/VKJxHHsDjHwyGdZZoq1+Q7+xzI1XIVD8E0ECyywwAILLLDAAgsssCSZTfZnqzvi7D6y7/t2COec2tNNaZqKHxY0/VKZ55hkNU1TlqWkfqJmjDHFueFPbvz5tixEwpsIFlg25Dtu3R8v21gfAQYA+Qfn1Fsoy6UAAAAASUVORK5CYII="
         },

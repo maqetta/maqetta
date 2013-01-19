@@ -17,11 +17,6 @@
             "format": "amd",
             "src": "shapes/Rectangle",
             "$library": "shapes"
-        },
-        {
-            "type": "css",
-            "src": "shapes.css",
-            "$library": "shapes"
         }
     ],
     "content": "<div></div>",

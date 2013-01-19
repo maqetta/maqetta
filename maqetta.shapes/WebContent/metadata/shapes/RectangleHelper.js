@@ -15,12 +15,12 @@ return declare([], {
 		var dijitWidget = widget.dijitWidget;
 		
 		// Migrate files from Release 8 or earlier. 
-		// Identifty those widgets by either having cx, cy, rx, and ry properties
+		// Identifty those widgets by either having width and height properties
 		// or having width=height=0px (where user accepted the default size)
 		var computedStyleWidth = parseFloat(domStyle.get(domNode,'width'));
 		var computedStyleHeight = parseFloat(domStyle.get(domNode,'height'));
-		var crprops = (dijitWidget.cx && dijitWidget.cy && dijitWidget.rx && dijitWidget.ry);
-		if(crprops || !computedStyleWidth || !computedStyleHeight){
+		var oldprops = (dijitWidget.width && dijitWidget.height);
+		if(oldprops || !computedStyleWidth || !computedStyleHeight){
 			// domStyle check sees if any CSS styling has been applied (CSS style sheets or element.style)
 			var domStyleStrokeWidthPx = domStyle.get(domNode, 'strokeWidth');
 			var domStyleStrokeWidth = domStyleStrokeWidthPx ? parseFloat(domStyleStrokeWidthPx) : null;
@@ -48,35 +48,27 @@ return declare([], {
 			domNode.style.backgroundColor = (domStyleFill && domStyleFill != '#000' && domStyleFill != '#000000' && domStyleFill != 'black' && domStyleFill != 'rgb(0,0,0)') ? 
 					domStyleFill : (elementStyleFill ? elementStyleFill : '');
 
-			if(crprops){
+			if(oldprops){
 				var oldLeft = parseFloat(domStyle.get(domNode, 'left'));
 				var oldTop = parseFloat(domStyle.get(domNode, 'top'));
 				domNode.style.left = (oldLeft + borderWidth/2) + 'px';
 				domNode.style.top = (oldTop + borderWidth/2) + 'px';
-				domNode.style.width = ((dijitWidget.rx-borderWidth/2) * 2) + 'px';
-				domNode.style.height = ((dijitWidget.ry-borderWidth/2) * 2) + 'px';
-				delete dijitWidget.cx;
-				delete dijitWidget.cy;
-				delete dijitWidget.rx;
-				delete dijitWidget.ry;
-				srcElement.removeAttribute('cx');
-				srcElement.removeAttribute('cy');
-				srcElement.removeAttribute('rx');
-				srcElement.removeAttribute('ry');
+				domNode.style.width = (dijitWidget.width-borderWidth) + 'px';
+				domNode.style.height = (dijitWidget.height-borderWidth) + 'px';
+				delete dijitWidget.width;
+				delete dijitWidget.height;
+				srcElement.removeAttribute('width');
+				srcElement.removeAttribute('height');
 			}else{
 				domNode.style.width = '80px';
 				domNode.style.height = '80px';
 			}
 		}
-		//Don't stuff border-radius values into srcElement
-		var old_borderTopLeftRadius = domNode.style.borderTopLeftRadius;
-		domNode.style.borderTopLeftRadius = '';
-		var old_borderTopRightRadius = domNode.style.borderTopRightRadius;
-		domNode.style.borderTopRightRadius = '';
-		var old_bottomLeftRadius = domNode.style.bottomLeftRadius;
-		domNode.style.bottomLeftRadius = '';
-		var old_borderBottomRightRadius = domNode.style.borderBottomRightRadius;
-		domNode.style.borderBottomRightRadius = '';
+		if(dijitWidget.cornerradius){
+			domNode.style.borderRadius = dijitWidget.cornerradius + 'px';
+			delete dijitWidget.cornerradius;
+			srcElement.removeAttribute('cornerradius');
+		}
 		var oldCssText = srcElement.getAttribute('style');
 		if(oldCssText != domNode.style.cssText){
 			srcElement.addAttribute('style', domNode.style.cssText);
@@ -87,10 +79,6 @@ return declare([], {
 				context._markDirtyAtLoadTime = true;
 			}
 		}
-		domNode.style.borderTopLeftRadius = old_borderTopLeftRadius;
-		domNode.style.borderTopRightRadius = old_borderTopRightRadius;
-		domNode.style.bottomLeftRadius = old_bottomLeftRadius;
-		domNode.style.borderBottomRightRadius = old_borderBottomRightRadius;
 	}
 
 });

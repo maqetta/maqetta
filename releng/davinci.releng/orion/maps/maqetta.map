@@ -1,50 +1,50 @@
 #
 # maqetta plugins
 #
-plugin@davinci.dojo_1_8=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/davinci.dojo_1_8
-plugin@maqetta.clipart=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.clipart
-plugin@davinci.core=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/davinci.core
-plugin@davinci.gridx=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/davinci.gridx
-plugin@maqetta.core.client=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.core.client
-plugin@maqetta.server.orion=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.server.orion
-plugin@davinci.html=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/davinci.html
-plugin@maqetta.core.server=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.core.server
-plugin@maqetta.shapes=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.shapes
-#  plugin@davinci.joomla=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/davinci.joomla
-plugin@maqetta.client.orion=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.client.orion
-plugin@maqetta.client.plugins.defaults=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.client.plugins.defaults
-#  plugin@maqetta.core.server.standalone=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.core.server.standalone
-plugin@org.apache.commons.fileupload=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/org.apache.commons.fileupload
-#  plugin@davinci.product=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/releng/davinci.product
-plugin@maqetta.server.orion.hosted=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.server.orion.hosted
-plugin@maqetta.server.orion.standard=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.server.orion.standard
+plugin@davinci.dojo_1_8=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/davinci.dojo_1_8
+plugin@maqetta.clipart=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.clipart
+plugin@davinci.core=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/davinci.core
+plugin@davinci.gridx=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/davinci.gridx
+plugin@maqetta.core.client=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.core.client
+plugin@maqetta.server.orion=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.server.orion
+plugin@davinci.html=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/davinci.html
+plugin@maqetta.core.server=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.core.server
+plugin@maqetta.shapes=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.shapes
+#  plugin@davinci.joomla=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/davinci.joomla
+plugin@maqetta.client.orion=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.client.orion
+plugin@maqetta.client.plugins.defaults=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.client.plugins.defaults
+#  plugin@maqetta.core.server.standalone=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.core.server.standalone
+plugin@org.apache.commons.fileupload=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/org.apache.commons.fileupload
+#  plugin@davinci.product=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/releng/davinci.product
+plugin@maqetta.server.orion.hosted=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.server.orion.hosted
+plugin@maqetta.server.orion.standard=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.server.orion.standard
 
 #
 # maqetta features
 #
-feature@maqetta.orion.feature=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.orion.feature
-feature@maqetta.orion.hosted.feature=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.orion.hosted.feature
+feature@maqetta.orion.feature=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.orion.feature
+feature@maqetta.orion.hosted.feature=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.orion.hosted.feature
 
 #
 # zazl plugins
 #
-plugin@maqetta.zazl=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/maqetta.zazl
-plugin@org.cyberneko.html=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/dependencies/org.cyberneko.html
-plugin@org.dojotoolkit.compressor=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/optimizer/org.dojotoolkit.compressor
-plugin@org.dojotoolkit.compressor.shrinksafe=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/optimizer/org.dojotoolkit.compressor.shrinksafe
-plugin@org.dojotoolkit.json=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/optimizer/org.dojotoolkit.json
-plugin@org.dojotoolkit.optimizer=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/optimizer/org.dojotoolkit.optimizer
-plugin@org.dojotoolkit.optimizer.amd=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/optimizer/org.dojotoolkit.optimizer.amd
-plugin@org.dojotoolkit.optimizer.amd.rhinoast=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/optimizer/org.dojotoolkit.optimizer.amd.rhinoast
-plugin@org.dojotoolkit.optimizer.servlet=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/optimizer/org.dojotoolkit.optimizer.servlet
-plugin@org.dojotoolkit.server.util=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/optimizer/org.dojotoolkit.server.util
-plugin@org.dojotoolkit.server.util.js=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/optimizer/org.dojotoolkit.server.util.js
-plugin@org.dojotoolkit.shrinksafe=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/dependencies/org.dojotoolkit.shrinksafe
-plugin@org.json.js=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/dependencies/org.json.js
-plugin@org.mozilla.javascript=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/dependencies/org.mozilla.javascript
-fragment@org.dojotoolkit.optimizer.amd.fragment=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/org.dojotoolkit.optimizer.amd.fragment
+plugin@maqetta.zazl=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/maqetta.zazl
+plugin@org.cyberneko.html=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/dependencies/org.cyberneko.html
+plugin@org.dojotoolkit.compressor=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/optimizer/org.dojotoolkit.compressor
+plugin@org.dojotoolkit.compressor.shrinksafe=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/optimizer/org.dojotoolkit.compressor.shrinksafe
+plugin@org.dojotoolkit.json=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/optimizer/org.dojotoolkit.json
+plugin@org.dojotoolkit.optimizer=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/optimizer/org.dojotoolkit.optimizer
+plugin@org.dojotoolkit.optimizer.amd=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/optimizer/org.dojotoolkit.optimizer.amd
+plugin@org.dojotoolkit.optimizer.amd.rhinoast=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/optimizer/org.dojotoolkit.optimizer.amd.rhinoast
+plugin@org.dojotoolkit.optimizer.servlet=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/optimizer/org.dojotoolkit.optimizer.servlet
+plugin@org.dojotoolkit.server.util=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/optimizer/org.dojotoolkit.server.util
+plugin@org.dojotoolkit.server.util.js=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/optimizer/org.dojotoolkit.server.util.js
+plugin@org.dojotoolkit.shrinksafe=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/dependencies/org.dojotoolkit.shrinksafe
+plugin@org.json.js=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/dependencies/org.json.js
+plugin@org.mozilla.javascript=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/dependencies/org.mozilla.javascript
+fragment@org.dojotoolkit.optimizer.amd.fragment=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/org.dojotoolkit.optimizer.amd.fragment
 
 #
 # zazl feature
 #
-feature@maqetta.zazl.feature=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/maqetta.zazl.feature
+feature@maqetta.zazl.feature=GIT,tag=war-build,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/maqetta.zazl.feature

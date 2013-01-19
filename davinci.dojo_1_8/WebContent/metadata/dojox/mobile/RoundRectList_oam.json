@@ -97,11 +97,11 @@
                     "value": "multiple"
                 }
             ]
-        }/*,
+        },
         "editable": {
             "datatype": "boolean",
             "defaultValue": false
-        }*/
+        }
     },
     "content": "<ul></ul>",
     "title": {

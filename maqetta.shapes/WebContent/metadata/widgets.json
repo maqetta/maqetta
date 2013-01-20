@@ -20,12 +20,15 @@
             "icon": "resources/images/text.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAJEAANXV1h8fH////wAAACH5BAEAAAIALAAAAAAQABAAAAIplI+pq+EPHXKgUhsmONSAfGxcIAplQzJJp46nyrZC3NILVr1TpMv+UgAAOw==",
             "inlineEdit": {
-                "property": "content",
-                "displayOnCreate": true
+                "property": "textContent",
+                "displayOnCreate": true,
+                "supportsHTML": true,
+                "helpText": "If you use any markup characters (&lt;,&gt;,&amp;), you need to specify whether the text represents literal (plain) text or HTML markup that should be parsed (using an innerHTML assignment)."
             },
             "properties": {
                 "style": "font-size:14px"
             },
+            "children": "Text",
             "resizable": "none",
             "forceAbsolute": true,
             "helper": "./shapes/TextHelper",
@@ -124,11 +127,11 @@
             "tags": "Circle",
             "icon": "resources/images/circle.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAANXT1vj4+eLi49ra29nZ2tbW19XV1tTU1dDQ0c3NzpCQkf////7+/u/v7+zs7OPj49HR0c/Pz87Ozs3NzczMzKOjo6GhoZ6enp2dnZycnJubm4+Pj4aGhoWFhYGBgX5+fnR0dGlpaVdXV1VVVVNTU1FRUU5OTkxMTDY2NjMzMzIyMi8vLyoqKiYmJiMjI////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAC8ALAAAAAAQABAAAAaXwJfwFfmcVq7V6RMZDi+mTYJQIEg2povzEqIIGgFGoCGghLRE08SxaLsXjomp6VEI3niBwvMyQRp4bw0IJi8qAwGBbgEDKi8tBQyKbQwFLS8piJMLjCkvJQaAkw0GJS8dGg+bDxodRCMHbIEOByNNLxYgBw9gYg0PByAVThUiGAYDAAMGGSPDTi8QHCQoLCgkHBDQ29wvQQA7",
-            "enablePointerEvents": true,
-            "resizable": "none",
-            "resizableOnCreate": "both",
             "forceAbsolute": true,
-            "showStandardSelectionChrome": false,
+            "properties": {
+                "style": "width:80px; height:80px; border-width:3px; border-style:solid; border-color:black;"
+            },
+            "allowedChild": "ANY",
             "helper": "./shapes/CircleHelper",
             "iconLarge": "resources/imagesLarge/Circle.png",
             "iconLargeBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRJREFUeNrsmL9rWlEUx5PUQTLq4o/iUHSIi6AQikiGdCso2YSUFATH/Dm6idkEtyA0kwkkBCqCogRiQKEQq+mgztnaDx64BGnfe95nwqO8A3ncmHe+fu83554fd/tb8/uW88zDz+dPHx3F6eKytbPlSHNpubRcWk7JW3r2+PjY7/cHg8FoNJpOp4vFgg99Pl8oFIpGo3t7e4lEIhKJvB2tTqdzdXV1c3Pz9PS08qdfS+t2u6yDweDBwcHh4WEqlXpdWpPJ5Pz8vNFozOdzfkUMJEEY5EEkPkE2xENChETOer3ebDZzudzR0VE4HH4VWu12u1ar3d7eskYAZEAMJHn5TiAQSCaTLBASOREVac/OzobD4fHx8f7+vtUvo1T/tmDX19cnJyewYevVanU2m1nx4jVexgVH3AGx4gUlj0WdKpXK/f0922XTmUzG4p79fn+hUIjFYsgsIF6v14pmHivxBKhwOj09jcfj68Yv2+CElkolCYPw0uzmLWKceAIInTQ4ieGIOyBAAWg3nRKwnDsWHCXr/7t/aQYICwCBtUWLo0QukEi3n7sl9gEEVp8WiYdDzoJcQPDapwUIUCyABVyTFimR9EPOJD9tqtgBBSCwgGvSIlnzJI+v5Ew7BhSAClyHFmWEJ7Vls92BAAq4Di0KHE/q3WZpCaCA69CSXkVq8AZNAAX8P+pOqRimamuYAAq4Di1R2zg2NUwAjWNjxzQ2jU+yhgmg8UnaMT3JklQ3xUklUuO8Y0RLEqkqQRsxKTsqqerQUmVHCrZ9TqpISwnSTxBSpFV7Y9OkpVEFW5+WammkGbTDSTWA0t7Y7U6lAVStsx4nHHEHRDWDdmmpdplOnH5cQzNcpJFXrbOpy7svX4uxD+9NmREQ4/G41+vd3d09Pz8TsLu7u1ZinAmWmezh4QFOxWIxnU6beg1//LQ6vnJ2mKVkfC2Xy61W66/j68v8pMZXaeTXGl/XmKoBRTaGPjlQGEoYD/vSKGsM+9uMsOveNBtcjaw0onpXIxeXLZ0bm9TS8vm8sy6SVA3Astmse0np0nJpubTe1DySVZ1G648AAwAVGkKKToyxwgAAAABJRU5ErkJggg=="
@@ -141,11 +144,11 @@
             "tags": "Rectangle",
             "icon": "resources/images/rectangle.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAANXV1v///0lJSUZGRkJCQkFBQTw8PDg4ODc3NzQ0NDExMS4uLiwsLCoqKv///wAAACH5BAEAAA4ALAAAAAAQABAAAARE0MlJq71V6M25FEAojqEgDUCgriwwSEXKzgAhGfK8AoZ05LoAACFJAHWAhERxpCkki2ZrIWGQrgCGpMHter2YsHg8jgAAOw==",
-            "enablePointerEvents": true,
-            "resizable": "none",
-            "resizableOnCreate": "both",
             "forceAbsolute": true,
-            "showStandardSelectionChrome": false,
+            "properties": {
+                "style": "width:80px; height:80px; border-width:3px; border-style:solid; border-color:black;"
+            },
+            "allowedChild": "ANY",
             "helper": "./shapes/RectangleHelper",
             "iconLarge": "resources/imagesLarge/Rectangle.png",
             "iconLargeBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAHtJREFUeNrs1zEOgCAMhWE0HKmDu5v3hUlmGXooPYBhUcmT/C9h5qM0aTql/Qh6idfZ1kXKlEudg2RgwYIFC9Zrw+c2Ztbhencfolrt1zxP+zdoeViwYMGCBQsWLFiwBlvIeq5l/6/Wd6sYLQ8LFixYsGRnYi5VjXUKMAA7xRDjvVZMSwAAAABJRU5ErkJggg=="
@@ -158,14 +161,11 @@
             "tags": "RoundedRectangle",
             "icon": "resources/images/roundedRectangle.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAANXV1v///8jIyJGRkWdnZ1BQUElJSURERDw8PDQ0NCoqKv///wAAAAAAAAAAAAAAACH5BAEAAAsALAAAAAAQABAAAARHcMlJq72XmM05oYYAjCQpGBIhBmzbAsJ3AG7NAseC0LYLIDpe7wbcDV/AhHAISCwKg2UNMChIFNFSaaCgFBTgcNiKKZvP5wgAOw==",
-            "enablePointerEvents": true,
-            "resizable": "none",
-            "resizableOnCreate": "both",
             "forceAbsolute": true,
-            "showStandardSelectionChrome": false,
             "properties": {
-                "cornerRadius": "10"
+                "style": "width:80px; height:80px; border-width:3px; border-style:solid; border-color:black; border-radius:10px;"
             },
+            "allowedChild": "ANY",
             "helper": "./shapes/RectangleHelper",
             "iconLarge": "resources/imagesLarge/RoundedRectangle.png",
             "iconLargeBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAaBJREFUeNrsmLFrwkAUxlUyu+kgjs4SkUAnl0II3RxcHIL/hjgH/4QEJ2dBnCoh1CVLBSGGjCGjuDgpWURRv3rgkrSkcoGUvgd5y12+73eXy11e8u8fn7nshYDr7fUlU0zzxbKQy2QQFmERFmERFrfD54fwPG88HruuezgcuPgVi0VRFHu9Xr1efwZrt9sNh0PbtvlOA4Zn36PVavX7/VKp9DuswWDgOE65XFYUBYPDKHlhYfpN0wRZGIaj0Si+Hz5srpGYTqfNZrPT6ez3+2sKAVmIwwJG0VYgxS95LCZkjpMUXWEQfxglfRODIECu1WrpvWtMnBklxbpcLl9thRS3DybOjGg7JSzCIizCIizCIqx/h1WpVJC32216xkycGSXFQs2EbBjG8XhMgwmyEH8YJcVSVRV1nO/73W53MpmcTideQJCCIGQhDgsYxXbLo8yI/Xe62Ww0TVutVik9REmSUPNVq9Vo03yx/LZOxA26rluWNZvN1uv1+XzmU8ULQqPRaLfbsiw/X+zL96ANgrAIi7AI649iCewMyhrWTYABACaCF4klU8wXAAAAAElFTkSuQmCC"

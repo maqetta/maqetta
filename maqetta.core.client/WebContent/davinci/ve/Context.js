@@ -1319,7 +1319,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		window.setTimeout(function(){
 			this.widgetAddedOrDeleted();
 			connect.publish('/davinci/ui/context/loaded', [this]);
-			this.editor.setDirty(this.hasDirtyResources());
+			if(this._markDirtyAtLoadTime){
+				// Hack to allow certain scenarios to force the document to appear
+				// as dirty at document load time
+				this.editor.setDirty(true);
+				delete this._markDirtyAtLoadTime;
+				this.editor.save(true);		// autosave
+			}else{
+				this.editor.setDirty(this.hasDirtyResources());
+			}
 		}.bind(this), 500);
 	},
 
@@ -3334,6 +3342,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	hasDirtyResources: function(){
+		if(this._htmlFileDirtyOnLoad){}
 		var dirty = false;
 		var baseRes = systemResource.findResource(this.getDocumentLocation()); // theme editors don't have a base resouce. 
 		if (baseRes){

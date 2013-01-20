@@ -55,26 +55,6 @@ lastMapTag=${mapsTagTag}
 			<iu id="org.eclipse.equinox.executable.feature.group" version=""/>
 		</p2.mirror>
 	</target>
-
-	
-	
-	<!-- git submodules update for the maqetta repo -->
-	<target name="cloneMaqetta">
-			<property name='gitRepoFolder' value="${base}/gitClones/git___github_com_maqetta_maqetta_git"/>
-			<echo message="Fetching and Updating git submodule in ${gitRepoFolder}"/>
-		<mkdir dir="${gitRepoFolder}"/>
-		 <exec executable = "git" dir = "${gitRepoFolder}">
-			<arg value = "clone" />
-			<arg value = "git://github.com/maqetta/maqetta.git" />
-		 	<arg value = "${gitRepoFolder}" />
-		 </exec>
-		 <exec executable = "git" dir = "${gitRepoFolder}">
-			     <arg value = "submodule" />
-				 <arg value = "update" />
-				 <arg value = "--init" />
-				 <arg value = "--recursive" />
-			  </exec>
-	</target>
 	
 	
 	
@@ -82,8 +62,6 @@ lastMapTag=${mapsTagTag}
 	<!-- Steps to do before setup -->
 	<!-- ===================================================================== -->
 	<target name="preSetup">
-		<antcall target="cloneMaqetta"/>
-		
 	    <!-- emf needs to be part of the "runnable" target, since Eclipse wants to "require" EMF, 
 	         not "include" it -->
 		

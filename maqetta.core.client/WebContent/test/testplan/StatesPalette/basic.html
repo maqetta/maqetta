@@ -55,6 +55,72 @@
 				The Calendar should disappear in the "ddd" state.</li>
 	</ol>
 
+	<h2 class="test_section">(continuation of previous) Verifying Undo</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>(continuing on the same file created in the previous test)</li>
+		<li>Create a new state named "eee"</li>
+		<li>Issue an undo command.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>The "eee" state should no longer appear in the Scenes palette.</li>
+            	</ul>
+            </div>
+		</li>
+		<li>Issue an redo command.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>The "eee" state should re-appear in the Scenes palette.</li>
+            	</ul>
+            </div>
+		</li>
+		<li>Select the "eee" state. Using the "Modify state" icon (3rd icon in the palette), bring up the Modify State dialog.
+			In the dialog, change the state name from "eee" to "fff", and click on the checkbox to set
+			state "fff" to be the initial state.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>The "eee" state be replaced by an "fff" state in the Scenes palette.</li>
+            		<li>The "fff" state should have a checkmark to show that it will be the initial runtime state.</li>
+            	</ul>
+            </div>
+		</li>
+		<li>Issue an undo command.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>The "fff" state should be renamed back to "eee" and the checkmark should return to the Normal/Background state.</li>
+            	</ul>
+            </div>
+		</li>
+		<li>Issue a redo command.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>The "fff" state should reappear with a checkmark.</li>
+            	</ul>
+            </div>
+		</li>
+		<li>Select the "ffff" state. Click on the delete state icon to remove the "fff" state.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>The "fff" state disappear from the Scenes palette.</li>
+            	</ul>
+            </div>
+		</li>
+		<li>Issue an undo command.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>The "fff" state should reappear.</li>
+            	</ul>
+            </div>
+		</li>
+		<li>Issue a redo command.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>The "fff" state disappear again.</li>
+            	</ul>
+            </div>
+		</li>
+	</ol>
+
 	<h2 class="test_section">(continuation of previous) Adding interactivity</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">

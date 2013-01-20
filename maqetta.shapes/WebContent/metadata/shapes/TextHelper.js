@@ -19,15 +19,12 @@ return declare([], {
 		// or having width=height=0px (where user accepted the default size)
 		var computedStyleWidth = parseFloat(domStyle.get(domNode,'width'));
 		var computedStyleHeight = parseFloat(domStyle.get(domNode,'height'));
-		if(dijitWidget.content || !computedStyleWidth || !computedStyleHeight){
+		if(dijitWidget.content){
 			if(dijitWidget.content){
 				domNode.innerHTML = dijitWidget.content;
 				srcElement.addText(dijitWidget.content);
 				delete dijitWidget.content;
 				srcElement.removeAttribute('content');
-			}else{
-				domNode.innerHTML = 'Text';
-				srcElement.addText('Text');
 			}
 			var oldLeft = parseFloat(domStyle.get(domNode, 'left'));
 			var oldTop = parseFloat(domStyle.get(domNode, 'top'));

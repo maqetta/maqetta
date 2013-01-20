@@ -64,22 +64,32 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 	},
 	
 	postCreate: function(){
+		var table, tr, td, span;
 		var context = this._getContext();
 		if(!context){
 			return;
 		}
 		var rootNode = context.rootNode;
 		var manageStatesStatesListDiv = this.domNode.querySelector('.manageStatesStatesListDiv');
-		if(manageStatesStatesListDiv){
+		var manageStatesTableDiv = this.domNode.querySelector('.manageStatesTableDiv');
+		var manageStatesHeaderCheckboxCell = this.domNode.querySelector('.manageStatesHeaderCheckboxCell');
+		var manageStatesHeaderVisibilityCell = this.domNode.querySelector('.manageStatesHeaderVisibilityCell');
+		if(manageStatesStatesListDiv && manageStatesTableDiv && 
+				manageStatesHeaderCheckboxCell && manageStatesHeaderVisibilityCell){
 			//Get list of all states (and corresponding stateContainers) in the doc
 			var obj = this._getAllStatesInDoc();
 			this._states = obj.states;
 			this._stateContainers = obj.stateContainers;
 			
+			manageStatesHeaderCheckboxCell.style.width = veNls.manageStatesHeaderCheckboxCellWidth;
+			manageStatesHeaderVisibilityCell.style.width = veNls.manageStatesHeaderVisibilityCellWidth;
+			
 			manageStatesStatesListDiv.style.width = '100%';
-			manageStatesStatesListDiv.style.height = '100px';
-			manageStatesStatesListDiv.style.border = '1px solid black';
-			manageStatesStatesListDiv.style.overflowY = 'scroll';
+										
+			manageStatesTableDiv.style.border = '1px solid black';
+			manageStatesTableDiv.style.overflowY = 'scroll';
+			manageStatesTableDiv.style.height = '100px';
+			
 			var manageStatesCheckAcceleratorsTable = this.domNode.querySelector('.manageStatesCheckAcceleratorsTable');
 			if(manageStatesCheckAcceleratorsTable){
 				manageStatesCheckAcceleratorsTable.style.width = '100%';
@@ -98,15 +108,17 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 			}
 			
 			//Create table with TriStateCheckBox in col 1 and state name in col 2
-			var table, tr, td;
 			table = domConstruct.create('table', 
 					{'class':'manageStatesStatesListTable',
 					style:'width:100%',
 					border:0, cellspacing:0, cellpadding:3}, 
-					manageStatesStatesListDiv);
+					manageStatesTableDiv);
 			for(var i=0; i<this._states.length; i++){
 				tr = domConstruct.create('tr', {}, table);
-				td = domConstruct.create('td', {'class':'manageStatesCheckboxCell'}, tr);
+				td = domConstruct.create('td', 
+						{'class':'manageStatesCheckboxCell', 
+						style:'width:'+veNls.manageStatesHeaderCheckboxCellWidth+';'}, 
+						tr);
 				var div = domConstruct.create('div', {id:'manageStatesTriState_'+i, 'class':'manageStatesCheckboxCell'}, td);
 				this._checkBoxes[i] = new TriStateCheckBox({}, div);
 				this._handlers.push(
@@ -121,6 +133,13 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 						}
 					}.bind(this, this._checkBoxes[i]))
 				);
+				td = domConstruct.create('td', 
+						{'class':'manageStatesVisibilityCell', 
+						style:'width:'+veNls.manageStatesHeaderVisibilityCellWidth+';'}, 
+						tr);
+				span = domConstruct.create('span', 
+						{'class':'manageStatesVisibilitySpan'}, 
+						td);
 				var state = this._states[i];
 				var stateDisplayName = state == 'Normal' ? 'Background' : state;
 				domConstruct.create('td', {'class':'manageStatesStateNameCell', innerHTML:stateDisplayName}, tr);

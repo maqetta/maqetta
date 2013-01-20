@@ -2633,11 +2633,20 @@ td.welcome_section_cell {
 	margin-top:4px;
 	margin-bottom: 8px;
 }
-.manageStatesCheckboxCell {
-	width:20px;
+.manageStatesHeaderCheckboxCell, .manageStatesHeaderVisibilityCell {
+	text-align:center;
+}
+.manageStatesCheckboxCell, .manageStatesVisibilityCell {
 	height:20px;
 	text-align:center;
 	vertical-align:middle;
+}
+.manageStatesVisibilitySpan {
+	display:inline-block;
+	width:16px;
+	height:16px;
+	background-image: url('img/sprite.png');
+	background-position: -84px -1523px;
 }
 .manageStatesStateNameCell {
 	height:20px;

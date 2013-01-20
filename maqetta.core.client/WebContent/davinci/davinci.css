@@ -2639,7 +2639,23 @@ td.welcome_section_cell {
 	text-align:center;
 	vertical-align:middle;
 }
+.manageStatesCheckbox {
+	width:16px;
+	height:16px;
+	background-image: url('img/sprite.png');
+}
+.manageStatesCheckboxAllVisible {
+	background-position: -84px -1523px;
+}
+.manageStatesCheckboxNoneVisible {
+	background-position: -84px -266px;
+}
+.manageStatesCheckboxSomeVisible {
+	background:gray;
+}
 .manageStatesStateNameCell {
 	height:20px;
 	vertical-align:center;
+	padding-left:4px;
 }
+

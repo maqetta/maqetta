@@ -3,6 +3,7 @@ define([
 	"dojo/dom-construct",
 	"dojo/on",
 	"dojo/dom-style",
+	"dojo/dom-class",
 	"dojo/_base/event",
 	"dijit/_WidgetBase",
 	"dijit/_TemplatedMixin",
@@ -17,16 +18,13 @@ define([
 	"dojo/i18n!davinci/ve/nls/ve",
 	"dojo/i18n!dijit/nls/common",
 	"dojo/text!./templates/ManageStates.html",
-	"dijit/form/TextBox",
-	"dijit/form/Select",
-	"dijit/form/CheckBox",
-	"dojox/form/TriStateCheckBox",
 	"dijit/form/Button"
 ], function(
 	declare,
 	domConstruct,
 	On,
 	domStyle,
+	domClass,
 	Event,
 	_WidgetBase,
 	_TemplatedMixin,
@@ -41,11 +39,11 @@ define([
 	veNls,
 	commonNls,
 	templateString,
-	TextBox,
-	Select,
-	CheckBox,
-	TriStateCheckBox,
 	Button){
+
+var NONE_VISIBLE = 0;
+var ALL_VISIBLE = 1;
+var SOME_VISIBLE = 2;
 
 return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 	templateString: templateString,
@@ -98,7 +96,7 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 			}
 			
 			//Create table with TriStateCheckBox in col 1 and state name in col 2
-			var table, tr, td;
+			var table, tr, td, div;
 			table = domConstruct.create('table', 
 					{'class':'manageStatesStatesListTable',
 					style:'width:100%',
@@ -107,20 +105,20 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 			for(var i=0; i<this._states.length; i++){
 				tr = domConstruct.create('tr', {}, table);
 				td = domConstruct.create('td', {'class':'manageStatesCheckboxCell'}, tr);
-				var div = domConstruct.create('div', {id:'manageStatesTriState_'+i, 'class':'manageStatesCheckboxCell'}, td);
-				this._checkBoxes[i] = new TriStateCheckBox({}, div);
-				this._handlers.push(
-					On(this._checkBoxes[i], 'change', function(checkBox){
-						if(!this._programmaticChangesInProcess){
-							this.anyCheckBoxChanges = true;
-							var checked = checkBox.get('checked');
-							if(checked){
-								// Force 'mixed' to go to true
-								checkBox.set('checked', true);
-							}
-						}
-					}.bind(this, this._checkBoxes[i]))
-				);
+				this._checkBoxes[i] = domConstruct.create('div', {id:'manageStatesCheckBox_'+i, 'class':'manageStatesCheckbox'}, td);
+				On(this._checkBoxes[i], 'click', function(checkbox, event){
+					this.anyCheckBoxChanges = true;
+					domClass.remove(checkbox, 'manageStatesCheckboxNoneVisible');
+					domClass.remove(checkbox, 'manageStatesCheckboxAllVisible');
+					domClass.remove(checkbox, 'manageStatesCheckboxSomeVisible');
+					if(checkbox._checkValue == ALL_VISIBLE){
+						checkbox._checkValue = NONE_VISIBLE;
+						domClass.add(checkbox, 'manageStatesCheckboxNoneVisible');
+					}else{
+						checkbox._checkValue = ALL_VISIBLE;
+						domClass.add(checkbox, 'manageStatesCheckboxAllVisible');
+					}
+				}.bind(this, this._checkBoxes[i]));
 				var state = this._states[i];
 				var stateDisplayName = state == 'Normal' ? 'Background' : state;
 				domConstruct.create('td', {'class':'manageStatesStateNameCell', innerHTML:stateDisplayName}, tr);
@@ -153,11 +151,7 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 				}.bind(this))
 			);
 		}
-		setTimeout(function(){
-			// use setTimeout because onchange handlers are triggered asynchronously
-			// immediately after the current UI thread completes
-			this.anyCheckBoxChanges = false;
-		}.bind(this), 10);
+		this.anyCheckBoxChanges = false;
 	},
 	
 	/**
@@ -179,16 +173,24 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 			if(state == 'undefined' || state == States.NORMAL){
 				state = undefined;
 			}
+			var checkbox = this._checkBoxes[i];
+			domClass.remove(checkbox, 'manageStatesCheckboxNoneVisible');
+			domClass.remove(checkbox, 'manageStatesCheckboxAllVisible');
+			domClass.remove(checkbox, 'manageStatesCheckboxSomeVisible');
 			if(type == 'current'){
 				if(state == currentState && statesFocus.stateContainerNode == this._stateContainers[i]){
-					this._checkBoxes[i].set('checked', true);
+					checkbox._checkValue = ALL_VISIBLE;
+					domClass.add(checkbox, 'manageStatesCheckboxAllVisible');
 				}else{
-					this._checkBoxes[i].set('checked', false);
+					checkbox._checkValue = NONE_VISIBLE;
+					domClass.add(checkbox, 'manageStatesCheckboxNoneVisible');
 				}
 			}else if(type == 'all'){
-				this._checkBoxes[i].set('checked', true);
+				checkbox._checkValue = ALL_VISIBLE;
+				domClass.add(checkbox, 'manageStatesCheckboxAllVisible');
 			}else if(type == 'none'){
-				this._checkBoxes[i].set('checked', false);
+				checkbox._checkValue = NONE_VISIBLE;
+				domClass.add(checkbox, 'manageStatesCheckboxNoneVisible');
 			}
 		}
 		
@@ -273,7 +275,6 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 		if(!context){
 			return;
 		}
-		this._programmaticChangesInProcess = true;
 		var statesFocus = States.getFocus(context.rootNode);
 		if(!statesFocus || !statesFocus.stateContainerNode){
 			return;
@@ -296,20 +297,21 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 					}
 				}
 			}
+			domClass.remove(this._checkBoxes[i], 'manageStatesCheckboxNoneVisible');
+			domClass.remove(this._checkBoxes[i], 'manageStatesCheckboxAllVisible');
+			domClass.remove(this._checkBoxes[i], 'manageStatesCheckboxSomeVisible');
+			var checkbox = this._checkBoxes[i];
 			if(count == 0){
-				this._checkBoxes[i].set('checked', false);
+				checkbox._checkValue = NONE_VISIBLE;
+				domClass.add(checkbox, 'manageStatesCheckboxNoneVisible');
 			}else if(count == widgets.length){
-				this._checkBoxes[i].set('checked', true);
+				checkbox._checkValue = ALL_VISIBLE;
+				domClass.add(checkbox, 'manageStatesCheckboxAllVisible');
 			}else{
-				this._checkBoxes[i].set('checked', 'mixed');
+				checkbox._checkValue = SOME_VISIBLE;
+				domClass.add(checkbox	, 'manageStatesCheckboxSomeVisible');
 			}
 		}
-		setTimeout(function(){
-			// Use a setTimeout because onchange is triggered after the current UI thread completes
-			// Make sure that _programmaticChangesInProcess is still true while the
-			// onchange handle has a change to do its thing
-			this._programmaticChangesInProcess = false;
-		}.bind(this), 10);
 	},
 
 	onOk: function() {
@@ -327,14 +329,14 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 			if(state == States.NORMAL || state == 'undefined'){
 				state = undefined;
 			}
-			var value = this._checkBoxes[i].get('checked');
-			if(value === true || value === false){
+			var value = this._checkBoxes[i]._checkValue;
+			if(value === NONE_VISIBLE || value === ALL_VISIBLE){
 				for(var j=0; j<widgets.length; j++){
 					var widget = widgets[j];
 					if(!command){
 						command = new CompoundCommand();
 					}
-					var displayValue = value ? '' : 'none';
+					var displayValue = value == ALL_VISIBLE ? '' : 'none';
 					command.add(new StyleCommand(widget, [{'display':displayValue}], state));
 				}
 			}

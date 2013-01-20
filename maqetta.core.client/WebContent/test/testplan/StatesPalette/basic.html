@@ -46,7 +46,7 @@
 		<li>Click on the "Save" icon on the main toolbar to save the new file. <span style="color:red">The asterisks that indicates that the file is "dirty" should go away.</span></li>
 		<li>Click on the "X" close button for the editor tab for this file</li>
 		<li>In the Files palette, double-click on the file you just created to re-open the file.</li>
-		<li>In the States palette, alternatively click on "Normal", "aaa" and "ddd".</li> </li>
+		<li>In the States palette, alternatively click on "Background", "aaa" and "ddd".</li> </li>
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
@@ -87,7 +87,7 @@
 		<li>Issue an undo command.
             <div class='expectedResults_subsection'>
             	<ul>
-            		<li>The "fff" state should be renamed back to "eee" and the checkmark should return to the Normal/Background state.</li>
+            		<li>The "fff" state should be renamed back to "eee" and the checkmark should return to the Background/Background state.</li>
             	</ul>
             </div>
 		</li>
@@ -126,7 +126,7 @@
 	<ol class="steps">
 		<li>(continuing on the same file created in the previous test)</li>
 		<li>Select the first button widget. On the Properties palette, go to the onclick property
-				and use the dropdown menu to choose the option to switch to the "Normal" state</li>
+				and use the dropdown menu to choose the option to switch to the "Background" state</li>
 		<li>Select the second button widget. On the Properties palette, go to the onclick property
 				and use the dropdown menu to choose the option to switch to the "aaa" state</li>
 		<li>Select the third button widget. On the Properties palette, go to the onclick property
@@ -145,6 +145,57 @@
 				The Calendar should disappear when you click on the third button.</li>
 	</ol>
 
+	<h2 class="test_section">(continuation of previous) Testing icons 4-6</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>(continuing on the same file created in the previous test)</li>
+		<li>In States palette, click on Background State. Select the TextBox widget.
+			Click on 4th icon in Scenes palette to bring up the Manage States dialog.
+			See which checkboxes are checked.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>Only Background should be checked when the dialog is opened.</li>
+            	</ul>
+            </div>
+			In the dialog, uncheck the Background state and check the aaa state,
+			then click on "Update".
+			In the Scenes palette, alternately click on the 3 states.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>TextBox should be hidden in Background and ddd state, and
+            		visible in the aaa state.</li>
+            	</ul>
+            </div>
+		</li>
+		<li>Go into "aaa" state. 
+			Make sure that the 5th icon is toggled such that new widgets go to Background state.
+			Drag/drop a CheckBox to the document. With CheckBox selected, bring up Manage States.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>Only Background should be checked when the dialog is opened.</li>
+            	</ul>
+            </div>
+            Click Cancel to close the Dialog.
+		</li>
+		<li>Undo above operation. Click on the 5th icon so that new new widgets go into current state.
+			Drag/drop a CheckBox to the document. With CheckBox selected, bring up Manage States.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>Only the "aaa" should be checked when the dialog is opened.</li>
+            	</ul>
+            </div>
+            Click Cancel to close the Dialog.
+		</li>
+		<li>Click Undo to remove the CheckBox.</li>
+		<li>Click on the 6th icon to highlight all widgets that come from the Background state.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>All visible widgets except the TextBox should be highlighted in red.</li>
+            	</ul>
+            </div>
+		</li>
+	</ol>
+
 	<h2 class="test_section">Changing properties in different states</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
@@ -154,7 +205,7 @@
 				(the eyeball should open and the Calendar should become visible on the canvas),
 				then click on the open eyeball icon for the TextBox to make it invisible
 				(the eyeball should close and the TextBox should become invisible on the canvas).</li>
-		<li>On the States palette, go into the Normal state. 
+		<li>On the States palette, go into the Background state. 
 				Select the first button widget. On the Styling palette, set the font size to 20.
 				Select the calendar widget. On the Properties palette, set the width to 200px.</li>
 		<li>On the States palette, go into the "aaa" state. </li>
@@ -196,7 +247,7 @@
 				The Label should disappear when you click on the second button and 
 				the TextBox should disappear when you click on the third button.</li>
 		<li>In all 3 states, the first button should have a font size of 20</li>
-		<li>In the normal state, the Calendar whould be 200px wide.</li>
+		<li>In the Background state, the Calendar whould be 200px wide.</li>
 		<li>In the "aaa" state, the second button should have  a font size of 30 and the Calendar whould be 300px wide.</li>
 		<li>In the "ddd" state, the third button should have  a font size of 40 and the Calendar whould be 400px wide.</li>
 	</ol>
@@ -210,7 +261,7 @@
 			This is temporary UI just so users have some way to apply move and resize operations to a particular state.</li>
 		<li>Click on the flow/absolute mode icon on the toolbar and switch to absolute positioning.</li>
 		<li>Drag SampleBanner.jpg onto canvas.</li>
-		<li>In Normal state, drag to move it to a new location, and drag lower-right corner to make it smaller.</li>
+		<li>In Background state, drag to move it to a new location, and drag lower-right corner to make it smaller.</li>
 		<li>Click undo twice and redo twice. 
 			<span class='inlineExpected'>After two undo operations, the image should return to its original location and size.
 			After two redo operations, the image should return to its modified location and size.</span>
@@ -222,15 +273,15 @@
 			<span class='inlineExpected'>After two undo operations, the image should return to its previous location and size.
 			After two redo operations, the image should return to its modified location and size.</span>
 		</li>
-		<li>Change to Normal state and click Undo twice. Change to "aaa" state.
+		<li>Change to Background state and click Undo twice. Change to "aaa" state.
 			<span class='inlineExpected'>After two undo operations, the image should return to its previous location and size,
 			ie the last position and size before the two operations that were done with "s" key held down.</span>
 		</li>
-		<li>Change to Normal state and click Redo once. Change to "aaa" state.
+		<li>Change to Background state and click Redo once. Change to "aaa" state.
 			<span class='inlineExpected'>After this first redo operation, the image should now be at the location
 			it was after completing the move operation with "s" key down.</span>
 		</li>
-		<li>Change to Normal state and click Redo once. Change to "aaa" state.
+		<li>Change to Background state and click Redo once. Change to "aaa" state.
 			<span class='inlineExpected'>After this second redo operation, the image should now be at the location
 			and size it was after completing the resize operation with "s" key down.</span>
 		</li>

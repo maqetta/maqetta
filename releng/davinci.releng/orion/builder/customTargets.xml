@@ -95,6 +95,7 @@ lastMapTag=${mapsTagTag}
 	</target>
 	
 	<target name="postFetch">
+		
 		<replace dir="${buildDirectory}" includes="pluginVersions.properties,featureVersions.properties"  >
 			<replacefilter token="HEAD" value="${buildLabel}" />
 			<replacefilter token="origin/mls -alaster" value="${buildLabel}" />
@@ -107,25 +108,11 @@ lastMapTag=${mapsTagTag}
 		<available property="requirejsHome" value="${base}/requirejs" file="${base}/requirejs" />
 		<property name="closureJar" value="/shared/common/closure/compiler.jar" />
 
-		<antcall target="updateMaqettaSubmodules"/>
-
 		<antcall target="jsdocs" />
         <record name="optimizer-log.txt" loglevel="debug" action="start"/>
 		<antcall target="requirejs" />
         <record name="optimizer-log.txt" action="stop"/>
 	</target>
-
-    <!-- git submodules update for the maqetta repo -->
-    <target name="updateMaqettaSubmodules">
-    	<property name='gitRepoFolder' value="${base}/gitClones/git___github_com_maqetta_maqetta_git"/>
-        <echo message="Updating git submodules in ${gitRepoFolder}"/>
-        <exec executable = "git" dir = "${gitRepoFolder}">
-            <arg value = "submodule" />
-            <arg value = "update" />
-            <arg value = "--init" />
-            <arg value = "--recursive" />
-        </exec>
-    </target>
 
 	<target name="jsdocs" if="jsdocHome" >
 		<java jar="${jsdocHome}/jsrun.jar" fork="true">

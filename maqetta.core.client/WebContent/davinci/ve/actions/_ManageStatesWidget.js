@@ -52,6 +52,7 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 	_states:[],				// array of all states in doc
 	_stateContainers:[],	// array of all corresponding stateContainer nodes
 	_checkBoxes:[],	// TriStateCheckBoxes for each of the states
+	_notes:[],	// TriStateCheckBoxes for each of the states
 	_handlers:[],
 
 	veNls: veNls,
@@ -74,10 +75,6 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 			this._states = obj.states;
 			this._stateContainers = obj.stateContainers;
 			
-			manageStatesStatesListDiv.style.width = '100%';
-			manageStatesStatesListDiv.style.height = '100px';
-			manageStatesStatesListDiv.style.border = '1px solid black';
-			manageStatesStatesListDiv.style.overflowY = 'scroll';
 			var manageStatesCheckAcceleratorsTable = this.domNode.querySelector('.manageStatesCheckAcceleratorsTable');
 			if(manageStatesCheckAcceleratorsTable){
 				manageStatesCheckAcceleratorsTable.style.width = '100%';
@@ -106,22 +103,28 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 				tr = domConstruct.create('tr', {}, table);
 				td = domConstruct.create('td', {'class':'manageStatesCheckboxCell'}, tr);
 				this._checkBoxes[i] = domConstruct.create('div', {id:'manageStatesCheckBox_'+i, 'class':'manageStatesCheckbox'}, td);
-				On(this._checkBoxes[i], 'click', function(checkbox, event){
-					this.anyCheckBoxChanges = true;
-					domClass.remove(checkbox, 'manageStatesCheckboxNoneVisible');
-					domClass.remove(checkbox, 'manageStatesCheckboxAllVisible');
-					domClass.remove(checkbox, 'manageStatesCheckboxSomeVisible');
-					if(checkbox._checkValue == ALL_VISIBLE){
-						checkbox._checkValue = NONE_VISIBLE;
-						domClass.add(checkbox, 'manageStatesCheckboxNoneVisible');
-					}else{
-						checkbox._checkValue = ALL_VISIBLE;
-						domClass.add(checkbox, 'manageStatesCheckboxAllVisible');
-					}
-				}.bind(this, this._checkBoxes[i]));
+				this._handlers.push(
+					On(this._checkBoxes[i], 'click', function(checkbox, event){
+						this.anyCheckBoxChanges = true;
+						domClass.remove(checkbox, 'manageStatesCheckboxNoneVisible');
+						domClass.remove(checkbox, 'manageStatesCheckboxAllVisible');
+						domClass.remove(checkbox, 'manageStatesCheckboxAllVisibleBackgroundAll');
+						domClass.remove(checkbox, 'manageStatesCheckboxAllVisibleBackgroundSome');
+						domClass.remove(checkbox, 'manageStatesCheckboxSomeVisible');
+						if(checkbox._checkValue == ALL_VISIBLE){
+							checkbox._checkValue = NONE_VISIBLE;
+							domClass.add(checkbox, 'manageStatesCheckboxNoneVisible');
+						}else{
+							checkbox._checkValue = ALL_VISIBLE;
+							domClass.add(checkbox, 'manageStatesCheckboxAllVisible');
+						}
+					}.bind(this, this._checkBoxes[i]))
+				);
 				var state = this._states[i];
 				var stateDisplayName = state == 'Normal' ? 'Background' : state;
 				domConstruct.create('td', {'class':'manageStatesStateNameCell', innerHTML:stateDisplayName}, tr);
+				td = domConstruct.create('td', {'class':'manageStatesNotesCell'}, tr);
+				this._notes[i] = domConstruct.create('span', {'class':'manageStatesNotesSpan'}, td);
 			}
 		}
 		var manageStatesCheckCurrentStateOnly = this.domNode.querySelector('.manageStatesCheckCurrentStateOnly');
@@ -152,6 +155,12 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 			);
 		}
 		this.anyCheckBoxChanges = false;
+		// By default, browsers put focus on first hyperlink ("Check: Current state") which looks ugly
+		// so move focus to the "Do it" button
+		// Doesn't work without a setTimeout
+		setTimeout(function(){
+			this.okButton.focus();
+		}.bind(this), 500);
 	},
 	
 	/**
@@ -176,6 +185,8 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 			var checkbox = this._checkBoxes[i];
 			domClass.remove(checkbox, 'manageStatesCheckboxNoneVisible');
 			domClass.remove(checkbox, 'manageStatesCheckboxAllVisible');
+			domClass.remove(checkbox, 'manageStatesCheckboxAllVisibleBackgroundAll');
+			domClass.remove(checkbox, 'manageStatesCheckboxAllVisibleBackgroundSome');
 			domClass.remove(checkbox, 'manageStatesCheckboxSomeVisible');
 			if(type == 'current'){
 				if(state == currentState && statesFocus.stateContainerNode == this._stateContainers[i]){
@@ -285,31 +296,46 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 			if(state == States.NORMAL || state == 'undefined'){
 				state = undefined;
 			}
-			var count = 0;
+			var countVisible = 0;
+			var countVisibleThisState = 0;
 			for(var j=0; j<widgets.length; j++){
 				var widget = widgets[j];
 				var obj = context.getEffectiveDisplayValue(widget, state);
 				if(obj.effectiveDisplayValue.indexOf('none') != 0){
+					countVisible++;
 					if(!state && obj.effectiveState == 'undefined'){
-						count++;
+						countVisibleThisState++;
 					}else if(state && obj.effectiveState == state){
-						count++;
+						countVisibleThisState++;
 					}
 				}
 			}
-			domClass.remove(this._checkBoxes[i], 'manageStatesCheckboxNoneVisible');
-			domClass.remove(this._checkBoxes[i], 'manageStatesCheckboxAllVisible');
-			domClass.remove(this._checkBoxes[i], 'manageStatesCheckboxSomeVisible');
 			var checkbox = this._checkBoxes[i];
-			if(count == 0){
+			var notes = this._notes[i];
+			domClass.remove(checkbox, 'manageStatesCheckboxNoneVisible');
+			domClass.remove(checkbox, 'manageStatesCheckboxAllVisible');
+			domClass.remove(checkbox, 'manageStatesCheckboxAllVisibleBackgroundAll');
+			domClass.remove(checkbox, 'manageStatesCheckboxAllVisibleBackgroundSome');
+			domClass.remove(checkbox, 'manageStatesCheckboxSomeVisible');
+			notes.innerHTML = '';
+			if(countVisible == 0){
 				checkbox._checkValue = NONE_VISIBLE;
 				domClass.add(checkbox, 'manageStatesCheckboxNoneVisible');
-			}else if(count == widgets.length){
+			}else if(countVisible == widgets.length){
 				checkbox._checkValue = ALL_VISIBLE;
-				domClass.add(checkbox, 'manageStatesCheckboxAllVisible');
+				if(countVisibleThisState == widgets.length){
+					domClass.add(checkbox, 'manageStatesCheckboxAllVisible');
+				}else if(countVisibleThisState > 0){
+					domClass.add(checkbox, 'manageStatesCheckboxAllVisibleBackgroundSome');
+					notes.innerHTML = veNls.manageStatesSomeVisibleFromBackground;
+				}else{
+					domClass.add(checkbox, 'manageStatesCheckboxAllVisibleBackgroundAll');
+					notes.innerHTML = veNls.manageStatesAllVisibleFromBackground;
+				}
 			}else{
 				checkbox._checkValue = SOME_VISIBLE;
 				domClass.add(checkbox	, 'manageStatesCheckboxSomeVisible');
+				notes.innerHTML = veNls.manageStatesSomeVisibleSomeHidden;
 			}
 		}
 	},

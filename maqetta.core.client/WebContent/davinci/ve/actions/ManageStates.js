@@ -38,7 +38,7 @@ return declare("davinci.ve.actions.ManageStates", [ContextAction], {
 		w._calledBy = 'ManageStates';
 		w.okButton.set("label", veNls.updateLabel);
 		w.updateDialog();
-		var dialog = Workbench.showModal(w, veNls.manageStates, null, null, true);
+		var dialog = Workbench.showModal(w, veNls.manageStates, {width: 400}, null, true);
 	},
 
 	isEnabled: function(context){

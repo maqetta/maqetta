@@ -1,4 +1,4 @@
-package maqetta.core.server.command;
+package maqetta.server.orion.command;
 
 import java.io.IOException;
 
@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.davinci.server.user.IUser;
+import org.eclipse.orion.server.core.PreferenceHelper;
 import org.maqetta.server.Command;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ServerManager;
@@ -16,11 +17,12 @@ public class Login extends Command {
 
     @Override
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
+    	System.out.println("Orion");
         String name = req.getParameter("userName");
         String password = req.getParameter("password");
         String authType = req.getParameter("authType");
         if (authType != null) {
-        	 this.responseString = "mixloginstatic";
+        	 this.responseString = PreferenceHelper.getString("orion.auth.name", "mixloginstatic");;
         } else {
 	        user = ServerManager.getServerManger().getUserManager().login(name, password);
 	        if (user != null) {

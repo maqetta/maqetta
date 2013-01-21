@@ -3394,55 +3394,74 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * @param widget {davinci.ve._Widget} A dvWidget
 	 * @param state [{String}] Optional parameter. If not provided or null or undefined or empty string,
 	 * 		then query for 'display' property on base state. Else, query for 'display' on given state.
+	 * @param overrides [{object}] Optional parameter. If provided, has the following fields
+	 * 			overrides['undefined'] [{string}] - Use this 'display' value for the Background/Normal/undefined state
+	 * 			overrides[state] [{string}] - Use this 'display' value for the state "state"
 	 * @return {Object} with two properties
 	 * 		effectiveDisplayValue {string} none|block|inline-block|etc
 	 * 		effectiveState {string} where "undefined" represents the base/NORMAL state
 	 */
-	getEffectiveDisplayValue: function(widget, state){
+	getEffectiveDisplayValue: function(widget, state, overrides){
 		var domNode = widget ? widget.domNode : null;
 		var effectiveDisplayValue = 'none';
 		// Quirk in code: Normal state is represented as "undefined" in data structures
 		var effectiveState = state ? state : 'undefined';
-		if(domNode){
-			var stateOverride = false;
-			if(domNode._maqDeltas){
-				var style = (domNode._maqDeltas[state] && domNode._maqDeltas[state].style);
-				if(style){
-					for(var i=0; i<style.length; i++){
-						var styleArray = style[i];
-						for(var prop in styleArray){
-							if(prop == 'display'){
-								effectiveDisplayValue = styleArray[prop];
-								stateOverride = true;
+		
+		// If "state" represents a custom state and there is an override 'display' value for that state,
+		// then use that override value
+		if(overrides && typeof overrides[effectiveState] == 'string' && overrides[effectiveState] != '$MAQ_DELETE_PROPERTY$'){
+			effectiveDisplayValue = overrides[effectiveState];
+			stateOverride = true;
+			
+		}else{
+			if(domNode){
+				var stateOverride = false;
+				if(domNode._maqDeltas && !(overrides && overrides[effectiveState] == '$MAQ_DELETE_PROPERTY$')){
+					var style = (domNode._maqDeltas[state] && domNode._maqDeltas[state].style);
+					if(style){
+						for(var i=0; i<style.length; i++){
+							var styleArray = style[i];
+							for(var prop in styleArray){
+								if(prop == 'display'){
+									effectiveDisplayValue = styleArray[prop];
+									stateOverride = true;
+								}
 							}
 						}
 					}
 				}
-			}
-			if(!stateOverride){
-				effectiveDisplayValue = domStyle.get(domNode, 'display');
-				effectiveState = 'undefined';
-			}
-			// If offsetLeft/Right/Top/Bottom are all zero, then widget is not visible
-			if(domNode.offsetLeft==0 && domNode.offsetTop==0 && domNode.offsetWidth==0 && domNode.offsetHeight==0){
-				effectiveDisplayValue = 'none';
-			}else{
-				// If any ancestors have display:none, then this widget is invisible
-				while(domNode && domNode.tagName.toUpperCase() != 'BODY'){
-					// Sometimes browsers haven't set up defaultView yet,
-					// and domStyle.get will raise exception if defaultView isn't there yet
-					if(domNode && domNode.ownerDocument && domNode.ownerDocument.defaultView){
-						var computedStyleDisplay = domStyle.get(domNode, 'display');
-						if(computedStyleDisplay == 'none'){
-							effectiveDisplayValue = 'none';
-							break;
-						}
+				if(!stateOverride){
+					// If there is an override 'display' value for the Background/Normal/undefined state,
+					// then use that override value
+					if(overrides && typeof overrides['undefined'] == 'string'){
+						effectiveDisplayValue = overrides['undefined'];
+					}else{
+						// Else query the DOM for computed 'display' value
+						effectiveDisplayValue = domStyle.get(domNode, 'display');
 					}
-					domNode = domNode.parentNode;
+					effectiveState = 'undefined';
 				}
+				// If offsetLeft/Right/Top/Bottom are all zero, then widget is not visible
+				if(domNode.offsetLeft==0 && domNode.offsetTop==0 && domNode.offsetWidth==0 && domNode.offsetHeight==0){
+					effectiveDisplayValue = 'none';
+				}else{
+					// If any ancestors have display:none, then this widget is invisible
+					while(domNode && domNode.tagName.toUpperCase() != 'BODY'){
+						// Sometimes browsers haven't set up defaultView yet,
+						// and domStyle.get will raise exception if defaultView isn't there yet
+						if(domNode && domNode.ownerDocument && domNode.ownerDocument.defaultView){
+							var computedStyleDisplay = domStyle.get(domNode, 'display');
+							if(computedStyleDisplay == 'none'){
+								effectiveDisplayValue = 'none';
+								break;
+							}
+						}
+						domNode = domNode.parentNode;
+					}
+				}
+			}else{
+				effectiveDisplayValue = 'none';
 			}
-		}else{
-			effectiveDisplayValue = 'none';
 		}
 		return {effectiveDisplayValue:effectiveDisplayValue,effectiveState:effectiveState};
 	},

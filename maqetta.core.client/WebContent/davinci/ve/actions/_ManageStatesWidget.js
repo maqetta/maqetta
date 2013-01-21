@@ -51,7 +51,8 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 	anyCheckBoxChanges: false,
 	_states:[],				// array of all states in doc
 	_stateContainers:[],	// array of all corresponding stateContainer nodes
-	_checkBoxes:[],	// TriStateCheckBoxes for each of the states
+	_checkBoxes:[],	// Eyeball icon SPAN for each of the states
+	_overrideDisplayValue:[],	// Initialized to null for each state. If user sets explicit value, becomes a string (e.g., 'none')
 	_notes:[],	// TriStateCheckBoxes for each of the states
 	_handlers:[],
 
@@ -104,7 +105,8 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 				td = domConstruct.create('td', {'class':'manageStatesCheckboxCell'}, tr);
 				this._checkBoxes[i] = domConstruct.create('div', {id:'manageStatesCheckBox_'+i, 'class':'manageStatesCheckbox'}, td);
 				this._handlers.push(
-					On(this._checkBoxes[i], 'click', function(checkbox, event){
+					On(this._checkBoxes[i], 'click', function(i, event){
+						var checkbox = this._checkBoxes[i];
 						this.anyCheckBoxChanges = true;
 						domClass.remove(checkbox, 'manageStatesCheckboxNoneVisible');
 						domClass.remove(checkbox, 'manageStatesCheckboxAllVisible');
@@ -114,12 +116,16 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 						if(checkbox._checkValue == ALL_VISIBLE){
 							checkbox._checkValue = NONE_VISIBLE;
 							domClass.add(checkbox, 'manageStatesCheckboxNoneVisible');
+							this._overrideDisplayValue[i] = 'none';
 						}else{
 							checkbox._checkValue = ALL_VISIBLE;
 							domClass.add(checkbox, 'manageStatesCheckboxAllVisible');
+							this._overrideDisplayValue[i] = '';
 						}
-					}.bind(this, this._checkBoxes[i]))
+						this.updateDialog();
+					}.bind(this, i))
 				);
+				this._overrideDisplayValue[i] = null;
 				var state = this._states[i];
 				var stateDisplayName = state == 'Normal' ? 'Background' : state;
 				domConstruct.create('td', {'class':'manageStatesStateNameCell', innerHTML:stateDisplayName}, tr);
@@ -151,6 +157,15 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 				On(manageStatesUncheckAll, 'click', function(event){
 					Event.stop(event);
 					this._acceleratorClicked('none');
+				}.bind(this))
+			);
+		}
+		var manageStatesCheckBackgroundOnly = this.domNode.querySelector('.manageStatesCheckBackgroundOnly');
+		if(manageStatesCheckBackgroundOnly){
+			this._handlers.push(
+				On(manageStatesCheckBackgroundOnly, 'click', function(event){
+					Event.stop(event);
+					this._acceleratorClicked('background');
 				}.bind(this))
 			);
 		}
@@ -192,18 +207,32 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 				if(state == currentState && statesFocus.stateContainerNode == this._stateContainers[i]){
 					checkbox._checkValue = ALL_VISIBLE;
 					domClass.add(checkbox, 'manageStatesCheckboxAllVisible');
+					this._overrideDisplayValue[i] = '';
 				}else{
 					checkbox._checkValue = NONE_VISIBLE;
 					domClass.add(checkbox, 'manageStatesCheckboxNoneVisible');
+					this._overrideDisplayValue[i] = 'none';
 				}
 			}else if(type == 'all'){
 				checkbox._checkValue = ALL_VISIBLE;
 				domClass.add(checkbox, 'manageStatesCheckboxAllVisible');
+				this._overrideDisplayValue[i] = '';
 			}else if(type == 'none'){
 				checkbox._checkValue = NONE_VISIBLE;
 				domClass.add(checkbox, 'manageStatesCheckboxNoneVisible');
+				this._overrideDisplayValue[i] = 'none';
+			}else if(type == 'background'){
+				checkbox._checkValue = ALL_VISIBLE;
+				domClass.add(checkbox, 'manageStatesCheckboxAllVisible');
+				if(i == 0){
+					this._overrideDisplayValue[i] = '';
+				}else{
+					this._overrideDisplayValue[i] = '$MAQ_DELETE_PROPERTY$';
+				}
 			}
 		}
+		this.anyCheckBoxChanges = true;
+		this.updateDialog();
 		
 	},
 
@@ -291,6 +320,7 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 			return;
 		}
 		var widgets = this._getAllEffectedWidgets();
+		var overrideBackground = this._overrideDisplayValue[0];
 		for(var i=0; i<this._states.length; i++){
 			var state = this._states[i];
 			if(state == States.NORMAL || state == 'undefined'){
@@ -300,7 +330,11 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 			var countVisibleThisState = 0;
 			for(var j=0; j<widgets.length; j++){
 				var widget = widgets[j];
-				var obj = context.getEffectiveDisplayValue(widget, state);
+				var overrides = {};
+				overrides['undefined'] = overrideBackground;
+				var effectiveState = (state === undefined) ? 'undefined' : state;
+				overrides[effectiveState] = this._overrideDisplayValue[i];
+				var obj = context.getEffectiveDisplayValue(widget, state, overrides);
 				if(obj.effectiveDisplayValue.indexOf('none') != 0){
 					countVisible++;
 					if(!state && obj.effectiveState == 'undefined'){
@@ -334,7 +368,7 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 				}
 			}else{
 				checkbox._checkValue = SOME_VISIBLE;
-				domClass.add(checkbox	, 'manageStatesCheckboxSomeVisible');
+				domClass.add(checkbox, 'manageStatesCheckboxSomeVisible');
 				notes.innerHTML = veNls.manageStatesSomeVisibleSomeHidden;
 			}
 		}
@@ -362,7 +396,8 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 					if(!command){
 						command = new CompoundCommand();
 					}
-					var displayValue = value == ALL_VISIBLE ? '' : 'none';
+					var displayValue = this._overrideDisplayValue[i] ? this._overrideDisplayValue[i] :
+						(value == ALL_VISIBLE ? '' : 'none');
 					command.add(new StyleCommand(widget, [{'display':displayValue}], state));
 				}
 			}

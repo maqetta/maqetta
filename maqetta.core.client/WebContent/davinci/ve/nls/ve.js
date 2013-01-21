@@ -49,6 +49,7 @@ define({ root:
 		"manageStatesCheckCurrentStateOnly":"Current state",
 		"manageStatesCheckAll":"All",
 		"manageStatesUncheckAll":"None",
+		"manageStatesCheckBackgroundOnly":"Background only",
 		"manageStatesAllVisibleFromBackground":"(Visible from Background)",
 		"manageStatesSomeVisibleFromBackground":"(Some visible from Background)",
 		"manageStatesSomeVisibleSomeHidden":"(Some visible, some hidden)",

@@ -164,24 +164,27 @@
 		<tstamp/>
 		<property name="timestamp" value="${DSTAMP}${TSTAMP}" />
 		<property name="writableBuildRoot" value="${DSTAMP}${TSTAMP}-war" />
-		<property name="builder" value="${builderDir}" />
-		<property name="warProject" value="${builderDir}/../../../../maqetta.war"/>
+		<property name="builder" value="${builderDir}/../warFile" />
 		<echo message="Builder..${builder}"/>
 				<!-- Add build id to orion.product before invoking product build -->
-		<replace token="@qualifier@" file="${warProject}/MaqettaWar.product" value="${buildLabel}" />
+<!-- XXX JHP TODO
+		<replace token="@qualifier@" file="/maqetta.war/MaqettaWar.product" value="${buildLabel}" />
+-->
 		<echo message="base is ${base}"/>
 		<mkdir dir="${base}"/>
 
-		<property name="allElementsFile" value="${builder}/allElements.xml" />
+<!--		<property name="allElementsFile" value="${builder}/allElements.xml" /> -->
 		<ant antfile="productBuild.xml" dir="${eclipse.pdebuild.scripts}/productBuild">
 			<property name="topLevelElementId" value="org.eclipse.pde.build.container.feature" />
-			<property name="product" value="${warProject}/MaqettaWar.product"/>
+			<property name="product" value="/maqetta.war/MaqettaWar.product"/>
 			<property name="warProject" value="maqetta.war"/>
 			<property name="run.dojo.build" value="${run.dojo.build}"/>
 			<property name="dojo.cache.directory" value="${dojo.cache.directory}"/>
+<!--			
 			<property name="basedir" value="${buildDirectory}/repository/maqetta/releng/davinci.releng/orion/builder" />
 			<property name="scriptDir" value="${buildDirectory}/repository/maqetta/releng/davinci.releng/orion/builder" />
 			<property name="archiveNamePrefix" value="maqetta-orion-${buildLabel}"/>
+-->
 		</ant>
     </target>
 

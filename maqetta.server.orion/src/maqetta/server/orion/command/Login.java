@@ -17,7 +17,7 @@ public class Login extends Command {
 
     @Override
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
-    	System.out.println("Orion");
+
         String name = req.getParameter("userName");
         String password = req.getParameter("password");
         String authType = req.getParameter("authType");

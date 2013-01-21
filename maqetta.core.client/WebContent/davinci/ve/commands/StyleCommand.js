@@ -50,6 +50,24 @@ return declare("davinci.ve.commands.StyleCommand", null, {
 			styleValuesAllStates[this._applyToStateIndex] = this._newValues;
 		}
 		
+		// Remove any properties that are flagged for removal.
+		var styleArrayThisState = styleValuesAllStates[this._applyToStateIndex];
+		for(var i=styleArrayThisState.length-1; i>=0; i--){
+			var obj = styleArrayThisState[i];
+			var anyValuesLeft = false;
+			for(var prop in obj){
+				var value = obj[prop];
+				if(value == '$MAQ_DELETE_PROPERTY$'){
+					delete obj[prop];
+				}else{
+					anyValuesLeft = true;
+				}
+			}
+			if(!anyValuesLeft){
+				styleArrayThisState.splice(i, 1);
+			}
+		}
+		
 		widget.setStyleValuesAllStates(styleValuesAllStates);
 		var currentStatesList = veStates.getStatesListCurrent(widget.domNode);
 		var styleValuesCanvas = StyleArray.mergeStyleArrays([], styleValuesAllStates['undefined']);

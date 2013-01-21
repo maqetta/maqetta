@@ -105,7 +105,11 @@ lastMapTag=${mapsTagTag}
 		<antcall target="gitCloneRepo"/>
 	</target>
 
-	<target name="gitUpdateRepo" if="${gitRepoFolder}">
+	<target name="gitCheckSkipClone">
+		<available file="${gitRepoFolder}/.git" property="skipClone"/>
+	</target>
+
+	<target name="gitUpdateRepo" depends="gitCheckSkipClone" if="${skipClone}">
 		<echo message="Updating Git repo in ${gitRepoFolder}"/>
 		<exec executable="git" dir="${gitRepoFolder}" failOnError="true">
 			<arg value="fetch"/>
@@ -113,7 +117,7 @@ lastMapTag=${mapsTagTag}
 		<antcall target="gitSubmoduleUpdate"/>
 	</target>
 
-	<target name="gitCloneRepo" unless="${gitRepoFolder}">
+	<target name="gitCloneRepo" depends="gitCheckSkipClone" unless="${skipClone}">
 		<echo message="Cloning Git repo in ${gitRepoFolder}"/>
 		<mkdir dir="${gitRepoFolder}"/>
 		<exec executable="git" dir="${gitRepoFolder}" failOnError="true">

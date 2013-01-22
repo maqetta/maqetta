@@ -81,10 +81,11 @@ read_conf()
 				;;
 			"org.eclipse.equinox.http.jetty.http.port")
 				port=$val
+				# Add to the Java args
+				JAVA_ARGS="${JAVA_ARGS} -D${line}"
 				;;
 		esac
 
-		JAVA_ARGS="${JAVA_ARGS} -D${line}"
 
 	done < <(grep -v "^#" ${MAQ_CONFIG} | grep -v "^\s*$")
 

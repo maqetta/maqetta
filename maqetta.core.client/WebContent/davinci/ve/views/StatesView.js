@@ -593,7 +593,9 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 						var sceneContainerNode = sceneItem.sceneContainerNode[0];
 						var id = sceneItem.id[0];
 						var currentSpan = this._findTreeNodeSpanByClass(sceneItem, 'ScenesPaletteCurrent');
+						/*FIXME: PROBABLY DELETETHIS
 						var focusSpan = this._findTreeNodeSpanByClass(sceneItem, 'ScenesPaletteFocus');
+						*/
 						var initialSpan = this._findTreeNodeSpanByClass(sceneItem, 'ScenesPaletteInitial');
 						if(sceneItem.isCurrent && sceneItem.isCurrent[0]){
 							if(currentSpan){
@@ -604,9 +606,11 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 								domClass.add(currentSpan, 'ScenesPaletteCurrentHidden');
 							}
 						}
+						/*FIXME: PROBABLY DELETETHIS
 						if(focusSpan){
 							domClass.add(focusSpan, 'ScenesPaletteFocusHidden');
 						}
+						*/
 						if(sceneItem.isInitial && sceneItem.isInitial[0]){
 							if(initialSpan){
 								domClass.remove(initialSpan, 'ScenesPaletteInitialHidden');
@@ -646,28 +650,36 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				var sceneContainerNode = appStateItem.sceneContainerNode[0];
 				var id = appStateItem.id[0];
 				var currentSpan = this._findTreeNodeSpanByClass(appStateItem, 'ScenesPaletteCurrent');
+				/*FIXME: PROBABLY DELETETHIS
 				var focusSpan = this._findTreeNodeSpanByClass(appStateItem, 'ScenesPaletteFocus');
+				*/
 				var initialSpan = this._findTreeNodeSpanByClass(appStateItem, 'ScenesPaletteInitial');
 				if(appStateItem.isCurrent && appStateItem.isCurrent[0]){
 					if(appStateItem.isFocus && appStateItem.isFocus[0]){
+						/*FIXME: PROBABLY DELETETHIS
 						if(focusSpan){
 							domClass.remove(focusSpan, 'ScenesPaletteFocusHidden');
 						}
+						*/
 						if(currentSpan){
 							domClass.remove(currentSpan, 'ScenesPaletteCurrentHidden');
 						}
 					}else{
+						/*FIXME: PROBABLY DELETETHIS
 						if(focusSpan){
 							domClass.add(focusSpan, 'ScenesPaletteFocusHidden');
 						}
+						*/
 						if(currentSpan){
 							domClass.remove(currentSpan, 'ScenesPaletteCurrentHidden');
 						}
 					}
 				}else{
+					/*FIXME: PROBABLY DELETETHIS
 					if(focusSpan){
 						domClass.add(focusSpan, 'ScenesPaletteFocusHidden');
 					}
+					*/
 					if(currentSpan){
 						domClass.add(currentSpan, 'ScenesPaletteCurrentHidden');
 					}
@@ -998,7 +1010,9 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		var s = '';
 		s += '<span title="'+veNls.InitialScene+'" class="ScenesPaletteAppStateIcon ScenesPaletteInitial">&#x2713;</span>';
 		s += '<span title="'+veNls.ActiveScene+'" class="ScenesPaletteAppStateIcon ScenesPaletteCurrent">&#x263C;</span>';
+		/*FIXME: PROBABLY DELETETHIS
 		s += '<span title="'+veNls.AppStateFocus+'" class="ScenesPaletteAppStateIcon ScenesPaletteFocus">&#x25C9;</span>';
+		*/
 		s += '<span>'+labelSnippet+'</span>';
 		return s;
 	}, 

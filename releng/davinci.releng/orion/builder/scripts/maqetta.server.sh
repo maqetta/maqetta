@@ -23,7 +23,7 @@ while [ "${1+isset}" ]; do
 done
 
 #
-# Check minimum Java version. Must be >= 1.5
+# Check minimum Java version. Must be >= 1.6
 #
 check_java() {
 	javaversion=`java -version 2>&1 | grep "java version"`
@@ -33,8 +33,8 @@ check_java() {
 		majorversionnumber=`echo "$javaversion" | sed 's/^[^0-9]*\([0-9][0-9]*\)\..*$/\1/'`
 		minorversionnumber=`echo "$javaversion" | sed 's/^[^0-9]*[0-9][0-9]*\.\([0-9][0-9]*\).*$/\1/'`
 		echo Java version=$majorversionnumber.$minorversionnumber
-		if [[ $majorversionnumber -lt 1 || $minorversionnumber -lt 5 ]]; then
-			echo "Error: Maqetta requires Java 1.5"
+		if [[ $majorversionnumber -lt 1 || $minorversionnumber -lt 6 ]]; then
+			echo "Error: Maqetta requires Java 1.6"
 			exit 1
 		fi
 	fi

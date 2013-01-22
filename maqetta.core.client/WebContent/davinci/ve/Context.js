@@ -3436,8 +3436,24 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					if(overrides && typeof overrides['undefined'] == 'string'){
 						effectiveDisplayValue = overrides['undefined'];
 					}else{
-						// Else query the DOM for computed 'display' value
-						effectiveDisplayValue = domStyle.get(domNode, 'display');
+						// See if there is a "undefined"/Normal/Background value in _maqDeltas
+						var undefinedStyle = (domNode._maqDeltas && domNode._maqDeltas['undefined'] && domNode._maqDeltas['undefined'].style);
+						var undefinedValue = false;
+						if(undefinedStyle){
+							for(var i=0; i<undefinedStyle.length; i++){
+								var styleArray = undefinedStyle[i];
+								for(var prop in styleArray){
+									if(prop == 'display'){
+										effectiveDisplayValue = styleArray[prop];
+										undefinedValue = true;
+									}
+								}
+							}
+						}
+						if(!undefinedValue){
+							// Else query the DOM for computed 'display' value
+							effectiveDisplayValue = domStyle.get(domNode, 'display');
+						}
 					}
 					effectiveState = 'undefined';
 				}

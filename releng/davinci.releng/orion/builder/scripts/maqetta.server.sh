@@ -84,6 +84,30 @@ read_conf()
 				# Add to the Java args
 				JAVA_ARGS="${JAVA_ARGS} -D${line}"
 				;;
+			"jetty.https.enabled")
+				# Add to the Java args
+				JAVA_ARGS="${JAVA_ARGS} -D${line}"
+				;;
+			"jetty.https.port")
+				# Add to the Java args
+				JAVA_ARGS="${JAVA_ARGS} -D${line}"
+				;;
+			"jetty.ssl.keystore")
+				# Add to the Java args
+				JAVA_ARGS="${JAVA_ARGS} -D${line}"
+				;;
+			"jetty.ssl.keypassword")
+				# Add to the Java args
+				JAVA_ARGS="${JAVA_ARGS} -D${line}"
+				;;
+			"jetty.ssl.password")
+				# Add to the Java args
+				JAVA_ARGS="${JAVA_ARGS} -D${line}"
+				;;
+			"jetty.ssl.protocol")
+				# Add to the Java args
+				JAVA_ARGS="${JAVA_ARGS} -D${line}"
+				;;
 		esac
 
 

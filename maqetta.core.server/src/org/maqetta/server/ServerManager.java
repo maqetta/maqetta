@@ -1,8 +1,13 @@
 package org.maqetta.server;
 
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -40,6 +45,7 @@ public class ServerManager implements IServerManager {
     public ServletConfig  servletConfig;
     private static SmtpPop3Mailer mailer = null;
 	private IStorage userDir;
+	private  Hashtable options = new Hashtable();
 
     public static boolean DEBUG_IO_TO_CONSOLE;
     public static boolean LOCAL_INSTALL;
@@ -65,19 +71,56 @@ public class ServerManager implements IServerManager {
     		return this.mailer;
     	}
     ServerManager() {
+    	this.readConfigFile();
         String shouldDebug = this.getDavinciProperty(IDavinciServerConstants.SERVER_DEBUG);
         if (shouldDebug != null && "true".equals(shouldDebug)) {
             ServerManager.DEBUG_IO_TO_CONSOLE = Boolean.parseBoolean(shouldDebug);
         } else {
             ServerManager.DEBUG_IO_TO_CONSOLE = false;
         }
-
+  
         Activator.getActivator().addRegistryChangeListener(new IRegistryListener() {
             public void registryChanged() {
                 ServerManager.this.registry = Activator.getActivator().getRegistry();
             }
         });
        
+    }
+    
+    private void readConfigFile(){
+    	
+    try{
+    	String configFile = this.getDavinciProperty(IDavinciServerConstants.CONFIG_FILE);
+		  // Open the file that is the first 
+		  // command line parameter
+		  FileInputStream fstream = new FileInputStream(configFile);
+		  // Get the object of DataInputStream
+		  DataInputStream in = new DataInputStream(fstream);
+		  BufferedReader br = new BufferedReader(new InputStreamReader(in));
+		  String strLine;
+		  //Read File Line By Line
+		  
+		  while ((strLine = br.readLine()) != null)   {
+			  // Print the content on the console
+			  System.out.println (strLine);
+			  strLine = strLine.trim(); // remove leading trailing white space
+			  String delims = "[=]+";
+			  String[] tokens = strLine.split(delims);
+			  if ((tokens.length > 1) && (tokens[0].startsWith("#") == false)) {
+				  String opt = tokens[1];
+				  for (int i = 2; i < tokens.length; i++) {
+					  opt = opt + "=" + tokens[i] ;
+				  }
+				  this.options.put(tokens[0], opt);
+			  }
+		  }
+		  //Close the input stream
+		  in.close();
+		    }catch (Exception e){//Catch exception if any
+		  System.err.println("Error: " + e.getMessage());
+		  }
+	 
+		System.out.println("done: ");
     }
 
     public static ServerManager getServerManger() {
@@ -102,7 +145,7 @@ public class ServerManager implements IServerManager {
 				}
                 property = (String) env.lookup(propertyName);
 	    	} catch (NameNotFoundException e) {
-	    		// do nothing; fall through to `System.getProperty` block
+	    		// do nothing; fall through to config file then `System.getProperty` block
 			} catch (NamingException e) {
 				if (inWar == SetBoolean.TRUE) {
 					e.printStackTrace();
@@ -110,6 +153,10 @@ public class ServerManager implements IServerManager {
 				// call to InitialContext.lookup failed; assume we're running standalone
 				ServerManager.IN_WAR = SetBoolean.FALSE;
 			}
+    	}
+    	if (property == null) {
+    		// check the config file
+    		property = (String) this.options.get(propertyName);
     	}
         if (property == null) {
             property = System.getProperty(propertyName);

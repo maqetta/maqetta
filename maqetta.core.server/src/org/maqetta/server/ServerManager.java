@@ -1,8 +1,15 @@
 package org.maqetta.server;
 
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -40,6 +47,7 @@ public class ServerManager implements IServerManager {
     public ServletConfig  servletConfig;
     private static SmtpPop3Mailer mailer = null;
 	private IStorage userDir;
+	private  Hashtable options = new Hashtable();
 
     public static boolean DEBUG_IO_TO_CONSOLE;
     public static boolean LOCAL_INSTALL;
@@ -65,19 +73,82 @@ public class ServerManager implements IServerManager {
     		return this.mailer;
     	}
     ServerManager() {
+    	this.readConfigFile();
         String shouldDebug = this.getDavinciProperty(IDavinciServerConstants.SERVER_DEBUG);
         if (shouldDebug != null && "true".equals(shouldDebug)) {
             ServerManager.DEBUG_IO_TO_CONSOLE = Boolean.parseBoolean(shouldDebug);
         } else {
             ServerManager.DEBUG_IO_TO_CONSOLE = false;
         }
-
+  
         Activator.getActivator().addRegistryChangeListener(new IRegistryListener() {
             public void registryChanged() {
                 ServerManager.this.registry = Activator.getActivator().getRegistry();
             }
         });
        
+    }
+    
+    /*
+     * Reads the maqetta.cof file and creates a hashtable options that contains all the key value pairs from the config file
+     */
+    private void readConfigFile(){
+    	
+		FileInputStream fstream = null; 
+		DataInputStream in = null;
+		String configFile = this.getDavinciProperty(IDavinciServerConstants.CONFIG_FILE);
+	    try{
+	    	
+			  // Open the file that is the first 
+			  // command line parameter
+			  fstream = new FileInputStream(configFile);
+			  // Get the object of DataInputStream
+			  in = new DataInputStream(fstream);
+			  BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			  String strLine;
+			  //Read File Line By Line
+			  
+			  while ((strLine = br.readLine()) != null)   {
+				  // Print the content on the console
+				  if (ServerManager.DEBUG_IO_TO_CONSOLE) {
+					  System.out.println (strLine);
+			        }
+				  strLine = strLine.trim(); // remove leading trailing white space
+				  String delims = "[=]+";
+				  String[] tokens = strLine.split(delims, 2); // splits the strng at the first '='
+				  if ((tokens.length > 1) && (tokens[0].startsWith("#") == false)) {
+					  this.options.put(tokens[0], tokens[1]);
+				  }
+			  }
+			  //Close the input stream
+			  
+			} catch (FileNotFoundException e) {
+				 System.err.println("Error config file not found : " + configFile + " exception: " + e.getMessage());
+				 e.printStackTrace();
+			} catch (IOException e) {
+				System.err.println("IO Error reading config file: " + configFile + " exception: " + e.getMessage());
+				e.printStackTrace();
+			}
+	    	/*catch (Exception e){//Catch exception if any
+			  System.err.println("Error: " + e.getMessage());
+			}*/
+	    	finally {
+	    		if (fstream != null) {
+	    			try {
+						fstream.close();
+					} catch (IOException e) {
+						// just closing 
+					}
+	    		}
+	    		if (in != null) {
+	    			try {
+						in.close();
+					} catch (IOException e) {
+						// just closing 
+					}
+	    		}
+	    	}
+	 
     }
 
     public static ServerManager getServerManger() {
@@ -102,7 +173,7 @@ public class ServerManager implements IServerManager {
 				}
                 property = (String) env.lookup(propertyName);
 	    	} catch (NameNotFoundException e) {
-	    		// do nothing; fall through to `System.getProperty` block
+	    		// do nothing; fall through to config file then `System.getProperty` block
 			} catch (NamingException e) {
 				if (inWar == SetBoolean.TRUE) {
 					e.printStackTrace();
@@ -110,6 +181,10 @@ public class ServerManager implements IServerManager {
 				// call to InitialContext.lookup failed; assume we're running standalone
 				ServerManager.IN_WAR = SetBoolean.FALSE;
 			}
+    	}
+    	if (property == null) {
+    		// check the config file
+    		property = (String) this.options.get(propertyName);
     	}
         if (property == null) {
             property = System.getProperty(propertyName);

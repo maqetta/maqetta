@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -95,8 +96,9 @@ public class ServerManager implements IServerManager {
     	
 		FileInputStream fstream = null; 
 		DataInputStream in = null;
+		String configFile = this.getDavinciProperty(IDavinciServerConstants.CONFIG_FILE);
 	    try{
-	    	String configFile = this.getDavinciProperty(IDavinciServerConstants.CONFIG_FILE);
+	    	
 			  // Open the file that is the first 
 			  // command line parameter
 			  fstream = new FileInputStream(configFile);
@@ -120,9 +122,16 @@ public class ServerManager implements IServerManager {
 			  }
 			  //Close the input stream
 			  
-			}catch (Exception e){//Catch exception if any
-			  System.err.println("Error: " + e.getMessage());
+			} catch (FileNotFoundException e) {
+				 System.err.println("Error config file not found : " + configFile + " exception: " + e.getMessage());
+				 e.printStackTrace();
+			} catch (IOException e) {
+				System.err.println("IO Error reading config file: " + configFile + " exception: " + e.getMessage());
+				e.printStackTrace();
 			}
+	    	/*catch (Exception e){//Catch exception if any
+			  System.err.println("Error: " + e.getMessage());
+			}*/
 	    	finally {
 	    		if (fstream != null) {
 	    			try {

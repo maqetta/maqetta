@@ -1009,7 +1009,10 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	_treeNodeContent: function(labelSnippet){
 		var s = '';
 		s += '<span title="'+veNls.InitialScene+'" class="ScenesPaletteAppStateIcon ScenesPaletteInitial">&#x2713;</span>';
+		/*FIXME: PROBABLY DELETETHIS
 		s += '<span title="'+veNls.ActiveScene+'" class="ScenesPaletteAppStateIcon ScenesPaletteCurrent">&#x263C;</span>';
+		*/
+		s += '<span title="'+veNls.ActiveScene+'" class="ScenesPaletteAppStateIcon ScenesPaletteCurrent"></span>';
 		/*FIXME: PROBABLY DELETETHIS
 		s += '<span title="'+veNls.AppStateFocus+'" class="ScenesPaletteAppStateIcon ScenesPaletteFocus">&#x25C9;</span>';
 		*/

@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -87,40 +88,58 @@ public class ServerManager implements IServerManager {
        
     }
     
+    /*
+     * Reads the maqetta.cof file and creates a hashtable options that contains all the key value pairs from the config file
+     */
     private void readConfigFile(){
     	
-    try{
-    	String configFile = this.getDavinciProperty(IDavinciServerConstants.CONFIG_FILE);
-		  // Open the file that is the first 
-		  // command line parameter
-		  FileInputStream fstream = new FileInputStream(configFile);
-		  // Get the object of DataInputStream
-		  DataInputStream in = new DataInputStream(fstream);
-		  BufferedReader br = new BufferedReader(new InputStreamReader(in));
-		  String strLine;
-		  //Read File Line By Line
-		  
-		  while ((strLine = br.readLine()) != null)   {
-			  // Print the content on the console
-			  System.out.println (strLine);
-			  strLine = strLine.trim(); // remove leading trailing white space
-			  String delims = "[=]+";
-			  String[] tokens = strLine.split(delims);
-			  if ((tokens.length > 1) && (tokens[0].startsWith("#") == false)) {
-				  String opt = tokens[1];
-				  for (int i = 2; i < tokens.length; i++) {
-					  opt = opt + "=" + tokens[i] ;
+		FileInputStream fstream = null; 
+		DataInputStream in = null;
+	    try{
+	    	String configFile = this.getDavinciProperty(IDavinciServerConstants.CONFIG_FILE);
+			  // Open the file that is the first 
+			  // command line parameter
+			  fstream = new FileInputStream(configFile);
+			  // Get the object of DataInputStream
+			  in = new DataInputStream(fstream);
+			  BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			  String strLine;
+			  //Read File Line By Line
+			  
+			  while ((strLine = br.readLine()) != null)   {
+				  // Print the content on the console
+				  if (ServerManager.DEBUG_IO_TO_CONSOLE) {
+					  System.out.println (strLine);
+			        }
+				  strLine = strLine.trim(); // remove leading trailing white space
+				  String delims = "[=]+";
+				  String[] tokens = strLine.split(delims, 2); // splits the strng at the first '='
+				  if ((tokens.length > 1) && (tokens[0].startsWith("#") == false)) {
+					  this.options.put(tokens[0], tokens[1]);
 				  }
-				  this.options.put(tokens[0], opt);
 			  }
-		  }
-		  //Close the input stream
-		  in.close();
-		    }catch (Exception e){//Catch exception if any
-		  System.err.println("Error: " + e.getMessage());
-		  }
+			  //Close the input stream
+			  
+			}catch (Exception e){//Catch exception if any
+			  System.err.println("Error: " + e.getMessage());
+			}
+	    	finally {
+	    		if (fstream != null) {
+	    			try {
+						fstream.close();
+					} catch (IOException e) {
+						// just closing 
+					}
+	    		}
+	    		if (in != null) {
+	    			try {
+						in.close();
+					} catch (IOException e) {
+						// just closing 
+					}
+	    		}
+	    	}
 	 
-		System.out.println("done: ");
     }
 
     public static ServerManager getServerManger() {

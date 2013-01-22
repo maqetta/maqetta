@@ -72,42 +72,19 @@ read_conf()
 		case "$key" in
 			"maqetta.baseDirectory")
 				base_dir=$val
-				# also pass in as "-data" property
+				# pass in as "-data" property (used by Orion)
 				APP_ARGS="${APP_ARGS} -data ${val}"
 				;;
 			"maqetta.extra_java_args")
 				extra_java_args=$val
-				continue	# don't add to JAVA_ARGS
 				;;
 			"org.eclipse.equinox.http.jetty.http.port")
 				port=$val
 				# Add to the Java args
 				JAVA_ARGS="${JAVA_ARGS} -D${line}"
 				;;
-			"jetty.https.enabled")
-				# Add to the Java args
-				JAVA_ARGS="${JAVA_ARGS} -D${line}"
-				;;
-			"jetty.https.port")
-				# Add to the Java args
-				JAVA_ARGS="${JAVA_ARGS} -D${line}"
-				;;
-			"jetty.ssl.keystore")
-				# Add to the Java args
-				JAVA_ARGS="${JAVA_ARGS} -D${line}"
-				;;
-			"jetty.ssl.keypassword")
-				# Add to the Java args
-				JAVA_ARGS="${JAVA_ARGS} -D${line}"
-				;;
-			"jetty.ssl.password")
-				# Add to the Java args
-				JAVA_ARGS="${JAVA_ARGS} -D${line}"
-				;;
-			"jetty.ssl.protocol")
-				# Add to the Java args
-				JAVA_ARGS="${JAVA_ARGS} -D${line}"
-				;;
+
+			# all other config items are read directly from file by server code
 		esac
 
 

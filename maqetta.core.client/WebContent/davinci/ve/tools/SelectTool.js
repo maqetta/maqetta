@@ -1016,10 +1016,10 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 		if(!widget || !widget.domNode){
 			return;
 		}
-		var bounds = dojo.position(widget.domNode, true);
-		if(bounds.x >= l && bounds.y >= t && 
-				bounds.x + bounds.w <= l + w &&
-				bounds.y + bounds.h <= t + h){
+		var bounds = GeomUtils.getBorderBoxPageCoordsCached(widget.domNode);
+		if(bounds.l >= l && bounds.t >= t && 
+				bounds.l + bounds.w <= l + w &&
+				bounds.t + bounds.h <= t + h){
 			this._context.select(widget, true);
 		}else{
 			var children = widget.getChildren();

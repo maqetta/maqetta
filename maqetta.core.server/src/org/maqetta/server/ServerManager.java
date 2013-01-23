@@ -96,6 +96,10 @@ public class ServerManager implements IServerManager {
 		BufferedReader br = null;
 		try {
 			String configFile = this.getDavinciProperty(IDavinciServerConstants.CONFIG_FILE);
+			if (ServerManager.IN_WAR == SetBoolean.TRUE) {
+				// if loading from WAR, we don't use config file
+				return;
+			}
 			// Open the file that is the first command line parameter
 			FileInputStream fstream = new FileInputStream(configFile);
 			// Get the object of DataInputStream

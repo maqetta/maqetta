@@ -2353,6 +2353,10 @@ td.welcome_section_cell {
 	height:1.1em;
 }
 .ScenesPaletteAppStateIcon.ScenesPaletteCurrent {
+	background-image:url('img/sprite.png');
+	background-position: -84px -1523px;
+	width: 16px;
+	height: 16px;
 }
 .ScenesPaletteAppStateIcon.ScenesPaletteCurrent.ScenesPaletteCurrentHidden {
 	visibility:hidden;

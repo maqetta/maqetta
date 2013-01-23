@@ -26,4 +26,4 @@ echo Using directory : %usersdir%
 echo start your browser at http://localhost:%port%/maqetta
 FOR /R plugins %%R IN (org.eclipse.equinox.launcher*.jar) DO SET EQUINOX=%%R
 rem XXX Issue 2941 - Need to specify "-clean" flag due to possible Eclipse bug.
-java -Dorg.eclipse.equinox.http.jetty.http.port=%port%  -Dmaqetta.siteConfigDirectory="%scriptdir%\siteConfig" -Dmaqetta.baseDirectory="%usersdir%" -Dorion.core.configFile="%scriptdir%\maqetta.conf" -jar "%EQUINOX%" -console -noExit -clean
+java -Dorg.eclipse.equinox.http.jetty.http.port=%port% -Dmaqetta.siteConfigDirectory="%scriptdir%\siteConfig" -Dmaqetta.baseDirectory="%usersdir%" -Dorion.core.configFile="%scriptdir%\maqetta.conf" -jar "%EQUINOX%" -console -noExit -clean

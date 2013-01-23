@@ -1,15 +1,11 @@
 package maqetta.server.orion.command;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
-import java.util.Scanner;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,7 +19,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.maqetta.server.Command;
 import org.maqetta.server.IDavinciServerConstants;
-import org.maqetta.server.IStorage;
 import org.maqetta.server.ServerManager;
 
 public class GetInitializationInfo extends Command {
@@ -55,7 +50,8 @@ public class GetInitializationInfo extends Command {
     		return this.siteConigJson;
     	}
     	String ret = "";
-    	String siteConfigDir =  ServerManager.getServerManger().getDavinciProperty(IDavinciServerConstants.SITECONFIG_DIRECTORY_PROPERTY);
+    	String siteConfigDir = ServerManager.getServerManger()
+    			.getDavinciProperty(IDavinciServerConstants.SITECONFIG_DIRECTORY_PROPERTY);
     	try {
 	    	 File folder = new File(siteConfigDir);
 	    	 if (folder.exists()) {
@@ -72,7 +68,7 @@ public class GetInitializationInfo extends Command {
 		    	    	   try {
 		    	    		   String fileNameWithOutExt = file.replaceFirst("[.][^.]+$", "");
 		    	    		   String output = this.readFile(siteConfigDir+"/"+file);
-		    	    		   JSONObject j = new JSONObject(output);
+		    	    		   new JSONObject(output);
 		    	    		   ret = ret + ",\n\t'"+fileNameWithOutExt+"': "+output;
 		    	    		}
 		    	    		catch(JSONException ex) {

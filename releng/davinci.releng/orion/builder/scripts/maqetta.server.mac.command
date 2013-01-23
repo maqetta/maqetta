@@ -1,10 +1,11 @@
 #!/bin/bash
 
 print_help() {
-	echo "Usage: ./maqetta.server.mac.command"
+	echo "Usage: ./maqetta.server.sh [OPTIONS]"
 	echo ""
 	echo "Options:"
 	echo "  -h, --help                  show this message"
+	echo "  --daemon                    run server as background task"
 	echo ""
 	echo " => Further options are read from 'maqetta.conf' file."
 }
@@ -14,6 +15,10 @@ while [ "${1+isset}" ]; do
 		-h|--help)
 			print_help
 			exit
+			;;
+		--daemon)
+			DAEMON=1
+			shift 1
 			;;
 		*)
 			echo "Error: Unknown option: $1" >&2
@@ -87,7 +92,6 @@ read_conf()
 			# all other config items are read directly from file by server code
 		esac
 
-
 	done < <(grep -v "^#" ${MAQ_CONFIG} | grep -v "^\s*$")
 
 	# get jar path
@@ -126,7 +130,12 @@ do_start() {
 	echo "Type \"exit\" or Ctrl-C to stop the server."
 	echo
 
-	java $JAVA_ARGS ${extra_java_args} $JAR_FILE $APP_ARGS
+	if [ $DAEMON ]; then
+		nohup java $JAVA_ARGS ${extra_java_args} $JAR_FILE $APP_ARGS > nohup.out 2>&1 &
+		echo $! > "$MAQ_BASE"/maqetta.pid
+	else
+		java $JAVA_ARGS ${extra_java_args} $JAR_FILE $APP_ARGS
+	fi
 }
 
 

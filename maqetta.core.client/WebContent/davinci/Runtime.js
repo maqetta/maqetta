@@ -465,6 +465,5 @@ var Runtime = {
 	}
 };
 
-davinci.Runtime = Runtime; //FIXME: shouldn't need this
 return Runtime;
 });

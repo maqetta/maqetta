@@ -248,7 +248,7 @@ var initializeWorkbenchState = function(){
 	};
 
 	if (!Workbench._state){
-		Workbench._state = davinci.Runtime.getWorkbenchState();
+		Workbench._state = Runtime.getWorkbenchState();
 	}
 	init(Workbench._state);
 	Workbench.setupGlobalKeyboardHandler();
@@ -1168,8 +1168,8 @@ var Workbench = {
 	_runAction: function(item, context, arg) {
 		//FIXME: Not sure this code is correct, but sometimes this routine is passed
 		//a context object that is not associated with the current document
-		if(context && davinci.Runtime.currentEditor){
-			context = davinci.Runtime.currentEditor;
+		if(context && Runtime.currentEditor){
+			context = Runtime.currentEditor;
 		}
 		if (item.run) {
 			item.run();
@@ -2050,7 +2050,7 @@ var Workbench = {
 		 */
 		
 		if (!Workbench._state){
-			Workbench._state = davinci.Runtime.getWorkbenchState();
+			Workbench._state = Runtime.getWorkbenchState();
 		}
 		var urlProject = dojo.queryToObject(dojo.doc.location.search.substr((dojo.doc.location.search[0] === "?" ? 1 : 0))).project;
 		
@@ -2215,7 +2215,7 @@ var Workbench = {
 			dojo.removeClass(paletteContainerNode, 'maqPaletteExpanded');
 			paletteContainerNode._maqExpanded = false;
 			davinci.Workbench._repositionFocusContainer();
-			var currentEditor = davinci.Runtime.currentEditor;
+			var currentEditor = Runtime.currentEditor;
 			if(currentEditor){
 				if(paletteContainerNode.id == 'left_mainBody'){
 					currentEditor._leftPaletteExpanded = false;
@@ -2255,7 +2255,7 @@ var Workbench = {
 			dojo.addClass(paletteContainerNode, 'maqPaletteExpanded');
 			paletteContainerNode._maqExpanded = true;
 			davinci.Workbench._repositionFocusContainer();
-			var currentEditor = davinci.Runtime.currentEditor;
+			var currentEditor = Runtime.currentEditor;
 			if(currentEditor){
 				if(paletteContainerNode.id == 'left_mainBody'){
 					currentEditor._leftPaletteExpanded = true;
@@ -2273,7 +2273,7 @@ var Workbench = {
 		var editors_container = dojo.byId('editors_container');
 		var focusContainer = dojo.byId('focusContainer');
 		if(editors_container && focusContainer){
-			var currentEditor = davinci.Runtime.currentEditor;
+			var currentEditor = Runtime.currentEditor;
 			var box;
 			if(currentEditor && currentEditor.getFocusContainerBounds){
 				box = currentEditor.getFocusContainerBounds();

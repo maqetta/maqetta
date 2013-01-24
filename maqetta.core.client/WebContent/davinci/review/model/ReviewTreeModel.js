@@ -1,7 +1,9 @@
 define([
 	    "dojo/_base/declare",
+	    "davinci/Runtime",
+	    "davinci/model/Path",
 	    "davinci/review/model/Resource"
-], function(declare, Resource){
+], function(declare, Runtime, Path, Resource){
 	
 return declare("davinci.review.model.ReviewTreeModel", null, {
 
@@ -61,9 +63,9 @@ return declare("davinci.review.model.ReviewTreeModel", null, {
 			label += " (Draft)";
 		}
 		if (item.elementType == "ReviewFile") {
-			var path = new davinci.model.Path(label);
+			var path = new Path(label);
 			var segments = path.getSegments();
-			var editorExtension = davinci.Runtime.getExtension("davinci.editor", function (extension){
+			var editorExtension = Runtime.getExtension("davinci.editor", function (extension){
 				return extension.id === "davinci.review.CommentReviewEditor";
 			});
 			var extension = "."+editorExtension.extensions;

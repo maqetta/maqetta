@@ -88,7 +88,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 					dojo.publish("/davinci/review/commentAddedError", [this]);
 					var msg = response.responseText;
 					msg = msg.substring(msg.indexOf("<title>")+7, msg.indexOf("</title>"));
-					davinci.Runtime.handleError(dojo.string.substitute(widgetsNls.errorAddingCom, [response, msg]));
+					Runtime.handleError(dojo.string.substitute(widgetsNls.errorAddingCom, [response, msg]));
 				})
 			}).then(dojo.hitch(this, function(result) {
 				// We want to grab hold of the creation time from the server
@@ -140,7 +140,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 			dojo.style(this.editButton, "display", "none");
 			dojo.style(this.replyButton, "display", "none");
 		}
-		if (davinci.Runtime.userName != this.ownerId) {
+		if (Runtime.userName != this.ownerId) {
 			dojo.style(this.editButton,"display","none");
 		}
 	},
@@ -164,7 +164,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 			dojo.style(this.editButton, "display", "none");
 			dojo.style(this.replyButton, "display", "none");
 		}
-		if (davinci.Runtime.userName != this.ownerId) {
+		if (Runtime.userName != this.ownerId) {
 			dojo.style(this.editButton, "display", "none");
 		}
 	},
@@ -197,7 +197,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 			error: function(response) {
 				var msg = response.responseText;
 				msg = msg.substring(msg.indexOf("<title>")+7, msg.indexOf("</title>"));
-				davinci.Runtime.handleError(dojo.string.substitute(widgetsNls.errorUpdateCom, [response, msg]));
+				Runtime.handleError(dojo.string.substitute(widgetsNls.errorUpdateCom, [response, msg]));
 			}
 		});
 	},
@@ -239,7 +239,7 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 	isPageOwner: function() {
 		// summary:
 		//		Indicate if the reviewer is the page author
-		return this.designerId == davinci.Runtime.userName;
+		return this.designerId == Runtime.userName;
 	},
 
 	appendReply: function(/*davinci.review.widgets.Comment*/ reply) {

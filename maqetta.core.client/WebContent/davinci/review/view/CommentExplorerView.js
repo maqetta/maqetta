@@ -380,7 +380,7 @@ var CommentExplorerView = declare(ViewPart, {
 			template.reviewers = widgetsNls.reviewers;
 
 			
-			template.detail_role = (item.designerId == davinci.Runtime.userName) ? viewNls.designer : viewNls.reviewer;
+			template.detail_role = (item.designerId == Runtime.userName) ? viewNls.designer : viewNls.reviewer;
 			template.detail_dueDate = item.dueDate == "infinite" ? viewNls.infinite : locale.format(item.dueDate, {
 				selector:'date',
 				formatLength:'long'

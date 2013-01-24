@@ -17,7 +17,7 @@ define([
 
 var Runtime; // seems to be a circular reference.  Lazy load instead.
 
-return declare(ModelEditor, {
+return declare("davinci.ve.PageEditor", ModelEditor, {
 
 	_latestSourceMode: "source",
 	_latestLayoutMode: "flow",

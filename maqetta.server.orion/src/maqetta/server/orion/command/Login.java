@@ -2,13 +2,12 @@ package maqetta.server.orion.command;
 
 import java.io.IOException;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.davinci.server.user.IUser;
-import org.eclipse.orion.server.core.PreferenceHelper;
+import org.davinci.server.user.IUserManager;
 import org.maqetta.server.Command;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ServerManager;
@@ -21,10 +20,18 @@ public class Login extends Command {
         String name = req.getParameter("userName");
         String password = req.getParameter("password");
         String authType = req.getParameter("authType");
+
+        ServerManager serverManager = ServerManager.getServerManger();
+
         if (authType != null) {
-        	 this.responseString = PreferenceHelper.getString("orion.auth.name", "mixloginstatic");;
+        	String authName = serverManager.getDavinciProperty("orion.auth.name");
+        	if (authName == null) {
+        		authName = "mixloginstatic";
+        	}
+        	this.responseString = authName;
         } else {
-	        user = ServerManager.getServerManger().getUserManager().login(name, password);
+			IUserManager userManager = serverManager.getUserManager();
+			user = userManager.login(name, password);
 	        if (user != null) {
 	            String redirect = (String) req.getSession().getAttribute(IDavinciServerConstants.REDIRECT_TO);
 	            req.getSession().removeAttribute(IDavinciServerConstants.REDIRECT_TO); // burn after reading
@@ -34,7 +41,7 @@ public class Login extends Command {
 	            session.setMaxInactiveInterval(IDavinciServerConstants.SESSION_TIMEOUT);
 	           
 	        } else {
-	            user = ServerManager.getServerManger().getUserManager().getUser(name);
+	            user = userManager.getUser(name);
 	            if (user == null) {
 	                resp.sendError(HttpServletResponse.SC_FORBIDDEN, "User not known");
 	            } else {

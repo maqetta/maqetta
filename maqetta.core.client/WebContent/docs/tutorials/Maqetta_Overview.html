@@ -52,6 +52,9 @@ tr.mobile {
  #pagebody .indented_note {
  	padding-left:6em;
  }
+ #pagebody .open_source_img {
+ 	width:350px;
+ }
 </style>
 
 <div id="pagebody">
@@ -186,17 +189,82 @@ Along with source code editing tools:
 <a name="pageeditor"><h2>Open source and available for free at Maqetta.org</h2></a>
 
 <p>Maqetta is an open source project with the mission of providing strong visual authoring tools
-	for the HTML5 community. Here are some key links:</p>
-	
-<ul>
-	<li><a href='http://maqetta.org'>Maqetta.org</a> - </li>
-</ul>
+	for the HTML5 community.</p>
 
-<h3>LIST THE BENEFITS OF OPEN SOURCE</h3>
+<p>Below are some key links:</p>
+
+<table>
+<colgroup>
+	<col style='width:*'></col>
+	<col style='width:1px'></col>
+</colgroup>
+<tr>
+	<td>
+		<div><a href='http://maqetta.org'><strong>Maqetta.org</strong></a> - The main web site for the Maqetta project. This site contains:
+		<ul>
+			<li><strong>The Maqetta application</strong>, available for the community to run from the cloud
+				for free. To run the application, go to <a href='http://maqetta.org'>http://maqetta.org</a>
+				and click on the "Launch Maqetta" button.
+				<em>Note that Maqetta.org is an open source project, not a commercial service.
+				The Maqetta team tries to keep the web site and application running on a continuous basis,
+				but Maqetta.org is available on an as-is basis with no guarantees about data preservation,
+				up-time, security, or anything else.</em>
+			</li>
+			<li><strong>Maqetta application downloads</strong>. For people who want
+				to install the Maqetta application on their own computers, or on a company server,
+				you can download the <a href='http://maqetta.org/downloads/'>latest official release</a> 
+				(or even <a href='http://maqetta.org/nightly/'>last night's nightly build</a>).
+			</li>
+			<li><strong>Maqetta overview information</strong>. The Maqetta.org web site contains
+				various overview documents and a FAQ.
+			</li>
+			<li><strong>Tutorials and documentation</strong>.
+			</li>
+		</ul>
+	</td>
+	<td>
+		<img src='img/Maqetta.org.png' class='open_source_img'></img>
+	</td>
+</tr>
+<tr>
+	<td>
+		<div><a href='http://github.com/maqetta/maqetta'><strong>Maqetta open source at GitHub</strong></a> - 
+			The main web site for the Maqetta project. This site contains:
+		Maqetta's source code is 100% open source, with a <a href='http://dojotoolkit.org/license'>commercial-friendly license</a>.
+		At GitHub, you can:</div>
+		<ul>
+			<li><strong>Report bugs</strong></li>
+			<li><strong>Request features</strong></li>
+			<li><strong>Track development tasks</strong></li>
+			<li><strong>Download the source code for the application</strong></li>
+			<li><strong>Find code base documentation (e.g., how to add a new widget library to Maqetta)</strong></li>
+			<li><strong>Contribute changes back to the open source project</strong></li>
+		</ul>
+		</div>
+	</td>
+	<td>
+		<img src='img/GitHub.com.png' class='open_source_img'></img>
+	</td>
+</tr>
+<tr>
+	<td>
+		<div><strong>User and developer forums</strong> - </div>
+		<ul>
+			<li><strong><a href='https://groups.google.com/forum/?fromgroups#!forum/maqetta-users'>maqetta-users @ Google Groups</a></strong> -
+				This is where the Maqetta user community asks questions to each other and to the core Maqetta team</li>
+			<li><strong><a href='https://groups.google.com/forum/?fromgroups#!forum/maqetta-devs'>maqetta-devs @ Google Groups</a></strong> -
+				This is the online forum for developers who are modifying the Maqetta source code</li>
+		</ul>
+	</td>
+	<td>
+		<img src='img/maqetta-users.png' class='open_source_img'></img>
+	</td>
+</tr>
+</table>
 
 <a name="pageeditor"><h2>Supported browsers: author-time vs run-time</h2></a>
 
-<h3>Author-time: which browsers for the Maqetta authoring tool</h3>
+<h3><em>Author-time</em>: which browsers for the Maqetta authoring tool</h3>
 <p>Maqetta itself is authored in HTML5. The Maqetta authoring tool runs in the following modern HTML5 browsers:</p>
 <ul>
 	<li><strong>Google Chrome</strong> - latest release</li>
@@ -204,7 +272,7 @@ Along with source code editing tools:
 	<li><strong>Apple Safari</strong> - latest release</li>
 </ul>
 
-<h3>Run-time: which browsers can run the applications created by Maqetta</h3>
+<h3><em>Run-time</em>: which browsers can run the applications created by Maqetta</h3>
 
 <p>If you are using Maqetta with Dojo 1.8, then usually the HTML5 applications you create
 	in Maqetta will run on any 
@@ -229,340 +297,13 @@ Along with source code editing tools:
 </ul>
 
 <div class='note'>
-	Caveats: If you are using a different JavaScript library than Dojo 1.8, or extending Dojo 1.8, 
+	Note: If you are using a different JavaScript library than Dojo 1.8, or extending Dojo 1.8, 
 	then what platforms your Maqetta-created application will run 
-	will depend on on the capabilities of the JavaScript libraries and widgets you use.
-	Also, any handed-coded source changes you make to HTML, CSS or JavaScript files
-	might impact whether your application can run on all target platforms.
+	will depend on on the capabilities of the JavaScript libraries and widgets you use,
+	the nature of your extensions.
 </div>
 
 
-<ol>
-<li>A visual design tool for HTML5 that runs in the browser.</li>
-<li>You will see the following commands:
-<div class="image">
-<a href="img/NewHtmlDialog.png" target="_blank"><img alt="image" src="img/NewHtmlDialog.png" style="margin: 1em 1em 0pt 0pt; height:230px; border:1px solid gray;" /></a>
-<div>Click on the image to enlarge it.</div>
-</div>
-</li> 
-</ol>
-
-<div class="image">
-<a href="img/Maqetta_UI_Initial.png" target="_blank"><img alt="image" src="img/Maqetta_UI_Initial.png" style="margin: 1em 1em 0pt 0pt;" width="500" /></a>
-<div>Click on the image to enlarge it.</div>
-</div>
-
-<p>Upon opening a file (which we will be doing momentarily), the middle area becomes the page editor canvas. The following picture
-shows how the application looks after opening up one of the sample files:</p>
-
-<div class="image">
-<a href="img/Maqetta_UI_Overview.png" target="_blank"><img alt="image" src="img/Maqetta_UI_Overview.png" style="margin: 1em 1em 0pt 0pt;" width="500" /></a>
-<div>Click on the image to enlarge it.</div>
-</div>
-
-
-<a name="newfile"><h2>The Create menu</h2></a>
-
-<ol>
-<li>Press on the <b>Create</b> button found on the top/center menubar.</li>
-<li>You will see the following commands:
-<div class="image">
-<a href="img/NewHtmlDialog.png" target="_blank"><img alt="image" src="img/NewHtmlDialog.png" style="margin: 1em 1em 0pt 0pt; height:230px; border:1px solid gray;" /></a>
-<div>Click on the image to enlarge it.</div>
-</div>
-</li> 
-</ol>
-
-<a name="flow_vs_absolute"><h2>Composition types: mobile app vs desktop versus vs sketch (hi-fi and lo-fi)</h2></a>
-
-<p>The Create menu lets use choose between multiple <em>composition types</em>:</p>
-<table class='CompTypeTable'>
-<tr><th>Composition type</th><th>Target device</th><th>Fidelity</th><th>Initial layout: flow vs. absolute</th></tr>
-<tr class="desktop"><td class="CompTypeOption">Mobile Application</td><td>Mobile</td><td>High</td><td>Flow</td></tr>
-<tr class="desktop"><td class="CompTypeOption">Desktop Application</td><td>Desktop</td><td>High</td><td>Flow</td></tr>
-<tr class="desktop"><td class="CompTypeOption">Sketch (high-fidelity)</td><td>Desktop</td><td>High (uses final-form CSS theme)</td><td>Absolute</td></tr>
-<tr class="desktop"><td class="CompTypeOption">Sketch (low-fidelity)</td><td>Desktop</td><td>Low (uses pseudo hand-drawn CSS theme)</td><td>Absolute</td></tr>
-</table>
-<p>If you choose "Mobile Application":</p>
-<ul>
-	<li>the Create dialog will ask you to choose an initial mobile device</li>
-	<li>After clicking "Create", 
-	Maqetta will open the page editor within an actual size replica of the selected device. With the current release of Maqetta,
-	mobile composition types always use a high fidelity CSS theme and always initialize with flow layout.</li>
-</ul>
-
-<a name="flow_vs_absolute"><h2>Other features in the Create dialog</h2></a>
-
-<p>When you first run Maqetta, the Create dialog by default will place your HTML file in the <em>root</em> folder of your workspace.
-You can view the contents of your workspace by clicking on the right arrow icon to the right of the "Where" drop down menu. The dialog will
-grow to show the contents of your workspace:</p>
-
-<div class="image">
-<a href="img/NewHtmlFileShowWorkspace.png" target="_blank"><img alt="image" src="img/NewHtmlFileShowWorkspace.png" style="margin: 1em 1em 0pt 0pt; width:200px;" /></a>
-<div>Click on the image to enlarge it.</div>
-</div>
-
-<p>Note that a <strong>New Folder...</strong> button appears. This allows you to create folders from the Create dialog.</p>
-<p>Finally, notice the <strong>Theme...</strong> button at the lower-left. This button brings up the <strong>Select theme...</strong> dialog
-in case you would like the page editor to open using particular CSS theme(s). This is a more advanced feature that we won't 
-be covering in this tutorial.</p>
-
-<a name="newfile"><h2>Creating a new Desktop Application</h2></a>
-
-<ol>
-<li>Bring up the <b>Create Desktop Application...</b> dialog. The dialog will be show a default filename.
-</li> 
-<li>Click the <b>Create</b> button to create a new file with the default filename.</li>
-<li>A new blank HTML file is opened in the page editor, with the filename displayed at the top.
-Your workspace should now look something like this:</p>
-<div class="image">
-<a href="img/PageEditorNewFile.png" target="_blank"><img alt="image" src="img/PageEditorNewFile.png" style="margin: 1em 1em 0pt 0pt; width:500px;" /></a>
-<div>Click on the image to enlarge it.</div>
-</div>
-</li>
-<li>In the <b>Palette</b>, click on the <b>Controls</b> section to open that section, then
-click on the the subsection labelled <b>TextBox</b>.</li>
-<li>Find the <b>TextBox</b> widget (might be first one in the list). Drag a TextBox widget onto the canvas.</li>
-<li>Find the <b>Button</b> widget in the list of <b>Buttons</b> subsection of <b>Controls</b>. Drag/drop 2 Button widgets onto the canvas.
-<div class="image">
-<a href="img/NewHtmlHiFiPage.png" target="_blank"><img alt="image" src="img/NewHtmlHiFiPage.png" style="margin: 1em 1em 0pt 0pt; width:400px;" /></a>
-<div>Click on the image to enlarge it.</div>
-</div>
-<div class='note'>Note that the TextBox and Buttons have final-form visual styling (using the "claro" theme from Dojo)
-and are using <em>flow layout</em>.</div>
-</li>
-<li>In the <b>Palette</b>, click on the <b>Controls</b> section title to close the section.</li>
-<li>Click the "x" button on the editor tab just under the toolbar to close this page editor. Click OK for the prompt that asks "are you sure?"</li>
-</ol>
-
-<a name="newfile"><h2>Creating a new Sketch (high-fidelity) in the page editor</h2></a>
-
-<ol>
-<li>Using the Create menu, issue a <b>Create Sketch (high-fidelity)</b> command.
-</li> 
-<li>Click the <b>Create</b> button to create a new file with the default filename.</li>
-<li>In the <b>Palette</b>, click on the <b>Controls</b> section to open that section, then
-click on the the subsection labelled <b>TextBox</b>.</li>
-<li>Drag a TextBox widget onto the canvas.</li>
-<li>Find the <b>Button</b> widget in the list of <b>Buttons</b> subsection of <b>Controls</b>. Drag/drop 2 Button widgets onto the canvas.
-<div class="image">
-<a href="img/NewHtmlHiFiSketch.png" target="_blank"><img alt="image" src="img/NewHtmlHiFiSketch.png" style="margin: 1em 1em 0pt 0pt; width:400px;" /></a>
-<div>Click on the image to enlarge it.</div>
-</div>
-<div class='note'>Note that the TextBox and Buttons have final-form visual styling (using the "claro" theme from Dojo)
-but are positioned at absolute locations on the page. (Your screen probably looks much different than this snapshot
-because you probably dropped the widgets at different locations that what is shown here.)</div>
-</li>
-<div class='note'>As you dragged the Buttons onto the page, you might have noticed magenta-colored
-horizontal and vertical lines appear and disappear. These are "snap lines" that help you align
-widgets to one another. Snap lines only work for widgets that are positioned on the page absolutely.</div>
-</li>
-<li>In the <b>Palette</b>, click on the <b>Controls</b> section title to close the section.</li>
-<li>Click the "x" button on the editor tab just under the toolbar to close this page editor. Click OK for the prompt that asks "are you sure?"</li>
-</ol>
-
-
-<a name="newfile"><h2>Creating a sketch (low-fidelity) in the page editor</h2></a>
-
-<ol>
-<li>Using the Create menu, issue a <b>Create Sketch (low-fidelity)</b> command.
-</li> 
-<li>Click the <b>Create</b> button to create a new file with the default filename.</li>
-<li>In the <b>Palette</b>, click on the <b>Controls</b> section to open that section, then
-click on the the subsection labelled <b>TextBox</b>.</li>
-<li>Drag a TextBox widget onto the canvas.</li>
-<div class="image">
-<a href="img/NewHtmlLoFiSketch.png" target="_blank"><img alt="image" src="img/NewHtmlLoFiSketch.png" style="margin: 1em 1em 0pt 0pt; width:400px;" /></a>
-<div>Click on the image to enlarge it.</div>
-</div>
-<div class='note'>Note that the TextBox and Buttons have pseudo hand-drawn, black-and-white visual styling
-and are positioned at absolute locations on the page.</div>
-</li>
-<li>In the <b>Palette</b>, click on the <b>Controls</b> section title to close the section.</li>
-<li>Click the "x" button on the editor tab just under the toolbar to close this page editor. Click OK for the prompt that asks "are you sure?"</li>
-</ol>
-
-<a name="newfile"><h2>Using the page editor</h2></a>
-
-<ol>
-<li>Issue a <b>Create Desktop Application...</b> command.
-</li> 
-<li>Click the <b>Create</b> button to create a new file with the default filename.</li>
-<li>A new blank HTML file is opened in the page editor</li>
-<li>In the <b>Palette</b>, click on the <b>Controls</b> section to open that section, then
-click on the the subsection labelled <b>TextBox</b>.</li>
-<li>Drag a TextBox widget onto the canvas.</li>
-<li>Click on the Undo icon <img class="inline" src="img/undo.png" /> on the toolbar. This will undo the previous
-	operation, causing the TextBox widget to disappear. Now click on the Redo icon <img class="inline" src="img/redo.png" />.
-	The TextBox widget will re-appear.
-	<div class="note">Maqetta supports multiple undo. Operations can be undone
-	back to the last Open or Save operation.</div></li>
-<li>Drag a <b>Button</b> widget onto the HTML page canvas to add a button to the page. 
-Notice that Maqetta automatically pops up the widget's data entry popup so that you 
-can immediately define the text for the button's label.
-<p class="note">Maqetta automatically prompts the user for initial data for a number of widgets, 
-such as Button, ComboBox, DataGrid, Tree, &lt;label&gt;, &lt;a&gt; and &lt;h1&gt; - &lt;h3&gt;.</p>
-</li>
-<li>Enter some text (e.g., "Press me") and hit Return. You will see a button with the label you provided.</li>
-<li>Double-click on the Button widget. Notice that Maqetta re-opens the data entry popup.</li>
-<li>Change the text to say "Click-me" and hit Return.
-</li>
-<li>Drag a <b>Calendar</b>, <b>Color Palette</b> and <b>ComboBox</b> widget onto the canvas.
-	Note that ComboBox pop ups a widget entry popup just like Button did. Click OK to accept the default data for ComboBox.
-	<div class="note">
-		Note that some widgets are added to the right of the previous widget and other widgets are added under the previous widget.
-		This is because some widgets default as "block-level" widgets, which means they, in effect, also establish their own
-		separate block (or "paragraph"), whereas other widgets are designed as "inline" widgets, which means they are placed inline
-		within the current block (or "paragraph") and behave from a layout perspective similar to typed text or small inline images.
-		Maqetta simply honors the default layout behavior for each widget.
-		If you need to change between block and inline for a particular widget, you can go to the Properties palette,
-		Layout section, and change the value of the 'display' property. 
-		If you want an inline widget to be placed on a separate line below the previous widget,
-		you can also use the context menu and issue a "Surround with DIV" command, which places the inline widget
-		inside of the DIV element (and DIV elements defaults to block-level).
-	</div>
-</li>
-<li>In the <b>Palette</b>, click on the <b>Controls</b> section title to close the section.</li>
-</ol>
-
-
-<a name="html"><h2>Add HTML elements to the page</h2></a>
-
-<ol>
-<li>In the <b>Palette</b>, click on the <b>HTML</b> section to open that section, then
-click on the the subsection labelled <b>Common</b>.</li>
-<li>Drag a <b>&lt;div&gt;</b> widget onto the canvas.</li>
-<li>Drag a <b>&lt;label&gt;</b> widget onto the &lt;div&gt; on the canvas. This will put the &lt;label&gt; inside the &lt;div&gt;.</li>
-<li>Enter some text for the &lt;label&gt; and hit Return.</li>
-<li>Click on the <b>HTML</b> section title to close the section.</li>
-</ol>
-
-<a name="image"><h2>Add an image to the page</h2></a>
-
-<ol>
-<li>The <b>Files</b> palette is in the lower-left section of the Maqetta workspace.</li>
-<li>You can expand the palette by placing the mouse on the upper edge of the blue divider and dragging up with the mouse.</li> 
-<li>From the <b>Files</b> palette, drag and drop the &quot;SampleBanner.jpg&quot; file onto the page canvas.</li>
-</ol>
-<p class="note">To add your own images, right-click (ctrl-click on the Mac) on the 
-<b>Files</b> palette to bring up the context menu, and select <b>Upload File</b>. 
-Uploaded files are displayed in the Files palette where you can drag and drop them onto the canvas
-or reference them from 'background-image' properties.</p>
-
-
-<a name="workwidgets"><h2>Working with widgets</h2></a>
-
-<p>To work with a widget, you must first select it. You can then size it, move it, style it or set its properties.</p>
-
-<h3>Selecting a widget</h3>
-
-<p>You can select a widget in three ways:</p>
-
-<ul>
- <li>Click on a widget on the page canvas.</li>
- <li>Click on a widget&#39;s entry in the Outline palette.</li>
- <li>In split view (where both the design canvas and HTML source are visible at the same time),
- 	you can often select part or all of the source code corresponding to a particular widget,
- 	and often the given widget will show as selected on the page canvas.</li>
-</ul>
-
-<p>A blue border is displayed around a widget to show that it is selected.</p>
-
-<p>You can select multiple widgets by holding down the <b>Ctrl</b> key (Command key on Mac) as you select the widgets.</p>
-
-<h3>Resizing, moving and styling a widget</h3>
-
-<ul>
-<li>To change the size of a widget, select it and pull one of the resize handles 
-(circular blue nobs either along the corners or sides of the selection border).
-<p class="note">Some widgets such as Button do not have resize handles because their size depends on their interior content.</p>
-</li>
-</ul> 
-
-<ul>
-<li>In <em>flow layout</em>, you can move widgets in two ways:
-<ul>
-<li>On the canvas, select the widget, then place the mouse over the interior of the widget and then drag it to a different location
-	within the existing "flow" of widgets.</li>
-<li>On the Outline palette, drag the widget to a new location within the Outline palette. (The Outline palette allows widgets to be moved into any position in the widget hierarchy.)</li>
-</ul></li>
-<li>In <em>absolute layout</em>, you can also drag widgets to different location by click-selecting the widget and then dragging on
-the widget's interior. However, the effect of rearranging absolutely positioned widgets
-within the Outline palette is more complex:
-<ul>
-<li>Widgets may or not not move to different physical locations on the canvas if they are moved to a different location
-in the Outline palette.</li>
-<li>Moving widgets in the Outline palette will alter drawing order, and 
-therefore might cause one widget to draw behind or in front of other widgets.</li>
-</ul></li>
-</ul>
-
-<p class="note">Sometimes layout rules with Maqetta can be complex because fundamentally Maqetta
-is a WYSIWYG authoring tool for HTML5 and CSS3. 
-Maqetta creates HTML and CSS source files
-which are ultimately passed to the browser for layout and rendering. 
-Because the layout rules for HTML and CSS are sometimes complex,
-if you reorder widgets in the Outline palette, hand-edit source code and/or change property values on widgets
-in the Properties palette, then you are altering the HTML and CSS source files that are sent to the browser,
-which might trigger various complex CSS layout rules and thereby produce visual results different than 
-what you expected. Maqetta tutorials attempt to demonstrate authoring techniques that 
-minimize chances of confusing results.</p> 
-
-<h3>Nesting widgets</h3>
-<ul>
-<li>You can nest widgets by dragging and dropping a widget onto another widget (the target must be a container widget).</li>
-<li>Nested widgets can be moved into a different container widget, or outside of any widgets to become a top-level widget on the page.</li>
-</ul>
-
-<p class="note">In certain scenarios, nesting widgets might
-affect how some CSS properties are inherited, and therefore might affect the visual styling of a particular widget.</p>
-
-<h3>Styling widgets</h3>
-<ul>
-<li>To change the look of a widget, click on the widget to select it and then change its values using the Properties palette.</li>
-</ul>
-
-<a name="deletewidgets"><h2>Deleting widgets</h2></a>
-
-<ol>
-<li>Select one of the widgets in the Page Editor canvas.</li>
-<li>Delete the widget in one of the following ways:
-<ul>
-<li>Click on the <b>delete</b> <img class="inline" src="img/delete_icon.png" /> icon on the page editor toolbar.</li>
-<li>Hit the <b>Delete</b> key on your keyboard (for Windows only - currently not working on the Mac).
-<li>Bring up the widget's context menu (right-click on Windows / ctrl-click on Mac) and choose <b>delete</b>.</li>
-</ul></li>
-</ol>
-
-<ul>
-<li>You can also delete a widget from the Outline palette:
-<ol>
-<li>Select the widget in the Outline palette</li>
-<li>Bring up the widget's context menu (right-click on Windows / ctrl-click on Mac) and choose <b>delete</b>.</li>
-</ol></li>
-</ul>
-
-<a name="saveopen"><h2>Saving and opening files</h2></a>
-
-<p>Click on the <b>Save</b> button on the page editor toolbar to save the current HTML file.</p>
-
-<h3>Saving with <b>Save as</b></h3>
-<p>Use <b>Save as</b> to save the file under a different file name:</p>
-<ol>
-<li>Click on the arrow to the right of the <b>Save</b> button to show the Save menu, and then choose the <b>Save as</b> command.</li>
-<li>A dialog window will pop up with the directory list from your user workspace folder (which is also displayed in the Files palette).</li>
-<li><b>File name:</b> - enter a new file name or select an existing file from the list (using an existng filename will overwrite the existing file).</li>
-<li><b>Where:</b> - the current folder into which the file can be saved. To the right of the Where dropdown menu is a right-pointing arrow that, when clicked,
-	shows a list of files in your workspace where you can select any folder from the workspace or create a New Folder. 
-<i>Do not use the <b>themes</b> folder since this is reserved for Maqetta theme files.</i></li>
-<li>The file will be saved with the new file name, and will also remain open on the canvas with the new file name.</li>
-</ol>
-<h3>Opening Files</h3>
-<p>There are two ways to open an existing file:</p>
-<ol>
-<li>Find the file in the <b>Files</b> palette and double-click on it.</li>
-<li>Select <b>Open > Open File...</b> from the Maqetta menu bar. A dialog window will pop up allowing you to select the file to open.</li>
-</ol>
 <br />
 <p class="prevnext"><a href="tutorials/tutorials.html">Previous</a> / <a href="tutorials/Mobile_User_Interfaces.html">Next</a></p>
 

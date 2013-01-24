@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
 import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -32,7 +31,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.orion.internal.server.servlets.ProtocolConstants;
 import org.eclipse.orion.internal.server.servlets.workspace.authorization.AuthorizationService;
 import org.eclipse.orion.server.core.LogHelper;
-import org.eclipse.orion.server.core.PreferenceHelper;
 import org.eclipse.orion.server.core.ServerConstants;
 import org.eclipse.orion.server.core.authentication.IAuthenticationService;
 import org.eclipse.orion.server.user.profile.IOrionUserProfileConstants;
@@ -51,6 +49,7 @@ import org.osgi.service.http.NamespaceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SuppressWarnings("restriction")
 public class LdapAuthenticationService implements IAuthenticationService {
 
 	private static Logger logger = LoggerFactory.getLogger("org.eclipse.orion.server.login"); //$NON-NLS-1$
@@ -87,34 +86,81 @@ public class LdapAuthenticationService implements IAuthenticationService {
 	private static String CONFIG_TRUSTSTOREPASSWORD = "maqetta.auth.ldap.truststorepassword";
 	private static String CONFIG_TRUSTSTORETYPE = "maqetta.auth.ldap.truststoretype";
 	
-	private static String PROVIDER_URL = PreferenceHelper.getString(CONFIG_PROVIDER_URL, null); 
-	private static String LOOKUP_PROVIDER_URL = PreferenceHelper.getString(CONFIG_LOOKUP_PROVIDER_URL, PROVIDER_URL); 
-	private static String INITIAL_CONTEXT_FACTORY = PreferenceHelper.getString(CONFIG_INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-	private static String URL_PKG_PREFIXES = PreferenceHelper.getString(CONFIG_URL_PKG_PREFIXES, "com.sun.jndi.url");
-	private static String REFERRAL = PreferenceHelper.getString(CONFIG_REFERRAL, "ignore");
-	private static String SECURITY_AUTHENTICATION =  PreferenceHelper.getString(CONFIG_SECURITY_AUTHENTICATION, null);
-	private static String LOOKUP_SECURITY_AUTHENTICATION =  PreferenceHelper.getString(CONFIG_LOOKUP_SECURITY_AUTHENTICATION, SECURITY_AUTHENTICATION);
-	private static String SECURITY_PROTOCOL = PreferenceHelper.getString(CONFIG_SECURITY_PROTOCOL, null);
-	private static String LOOKUP_SECURITY_PROTOCOL = PreferenceHelper.getString(CONFIG_LOOKUP_SECURITY_PROTOCOL, null);
-	private static String BASE = PreferenceHelper.getString(CONFIG_BASE, null);
-	private static String USER_FILTER = PreferenceHelper.getString(CONFIG_USER_FILTER, "email"); 
-	private static String USER_DISPLAYNAME = PreferenceHelper.getString(CONFIG_USER_DISPLAYNAME, "displayname");
-	private static String USER_EMAIL = PreferenceHelper.getString(CONFIG_USER_EMAIL, "email");
-	private static String TRUSTSTORE = PreferenceHelper.getString(CONFIG_TRUSTSTORE, null);
-	private static String TRUSTSTOREPW = PreferenceHelper.getString(CONFIG_TRUSTSTOREPASSWORD, null);
-	private static String TRUSTSTORETYPE = PreferenceHelper.getString(CONFIG_TRUSTSTORETYPE, null);
-	private static String KEYSTORE = PreferenceHelper.getString(CONFIG_KEYSTORE, null);
-	private static String KEYSTOREPW = PreferenceHelper.getString(CONFIG_KEYSTOREPASSWORD, null);
-	private static String BIND_USER =  PreferenceHelper.getString(CONFIG_SECURITY_PRINCIPAL, null);
-	private static String BIND_PASSWORD = PreferenceHelper.getString(CONFIG_SECURITY_CREDENTIALS, null);
+	private static String PROVIDER_URL; 
+	private static String LOOKUP_PROVIDER_URL; 
+	private static String INITIAL_CONTEXT_FACTORY;
+	private static String URL_PKG_PREFIXES;
+	private static String REFERRAL;
+	private static String SECURITY_AUTHENTICATION;
+	private static String LOOKUP_SECURITY_AUTHENTICATION;
+	private static String SECURITY_PROTOCOL;
+	private static String LOOKUP_SECURITY_PROTOCOL;
+	private static String BASE;
+	private static String USER_FILTER; 
+	private static String USER_DISPLAYNAME;
+	private static String USER_EMAIL;
+	private static String TRUSTSTORE;
+	private static String TRUSTSTOREPW;
+	private static String TRUSTSTORETYPE;
+	private static String KEYSTORE;
+	private static String KEYSTOREPW;
+	private static String BIND_USER;
+	private static String BIND_PASSWORD;
 	
 		
 	static {
+		ServerManager serverMgr = ServerManager.getServerManger();
+		
+		PROVIDER_URL = serverMgr.getDavinciProperty(CONFIG_PROVIDER_URL); 
+		LOOKUP_PROVIDER_URL = serverMgr.getDavinciProperty(CONFIG_LOOKUP_PROVIDER_URL);
+		if (LOOKUP_PROVIDER_URL == null) {
+			LOOKUP_PROVIDER_URL = PROVIDER_URL;
+		}
+		INITIAL_CONTEXT_FACTORY = serverMgr.getDavinciProperty(CONFIG_INITIAL_CONTEXT_FACTORY);
+		if (INITIAL_CONTEXT_FACTORY == null) {
+			INITIAL_CONTEXT_FACTORY = "com.sun.jndi.ldap.LdapCtxFactory";
+		}
+		URL_PKG_PREFIXES = serverMgr.getDavinciProperty(CONFIG_URL_PKG_PREFIXES);
+		if (URL_PKG_PREFIXES == null) {
+			URL_PKG_PREFIXES = "com.sun.jndi.url";
+		}
+		REFERRAL = serverMgr.getDavinciProperty(CONFIG_REFERRAL);
+		if (REFERRAL == null) {
+			REFERRAL = "ignore";
+		}
+		SECURITY_AUTHENTICATION =  serverMgr.getDavinciProperty(CONFIG_SECURITY_AUTHENTICATION);
+		LOOKUP_SECURITY_AUTHENTICATION =  serverMgr.getDavinciProperty(CONFIG_LOOKUP_SECURITY_AUTHENTICATION);
+		if (LOOKUP_SECURITY_AUTHENTICATION == null) {
+			LOOKUP_SECURITY_AUTHENTICATION = SECURITY_AUTHENTICATION;
+		}
+		SECURITY_PROTOCOL = serverMgr.getDavinciProperty(CONFIG_SECURITY_PROTOCOL);
+		LOOKUP_SECURITY_PROTOCOL = serverMgr.getDavinciProperty(CONFIG_LOOKUP_SECURITY_PROTOCOL);
+		BASE = serverMgr.getDavinciProperty(CONFIG_BASE);
+		USER_FILTER = serverMgr.getDavinciProperty(CONFIG_USER_FILTER);
+		if (USER_FILTER == null) {
+			USER_FILTER = "email";
+		}
+		USER_DISPLAYNAME = serverMgr.getDavinciProperty(CONFIG_USER_DISPLAYNAME);
+		if (USER_DISPLAYNAME == null) {
+			USER_DISPLAYNAME = "displayname";
+		}
+		USER_EMAIL = serverMgr.getDavinciProperty(CONFIG_USER_EMAIL);
+		if (USER_EMAIL == null) {
+			USER_EMAIL = "email";
+		}
+		TRUSTSTORE = serverMgr.getDavinciProperty(CONFIG_TRUSTSTORE);
+		TRUSTSTOREPW = serverMgr.getDavinciProperty(CONFIG_TRUSTSTOREPASSWORD);
+		TRUSTSTORETYPE = serverMgr.getDavinciProperty(CONFIG_TRUSTSTORETYPE);
+		KEYSTORE = serverMgr.getDavinciProperty(CONFIG_KEYSTORE);
+		KEYSTOREPW = serverMgr.getDavinciProperty(CONFIG_KEYSTOREPASSWORD);
+		BIND_USER =  serverMgr.getDavinciProperty(CONFIG_SECURITY_PRINCIPAL);
+		BIND_PASSWORD = serverMgr.getDavinciProperty(CONFIG_SECURITY_CREDENTIALS);
+
 		//if there is no list of users authorised to create accounts, it means everyone can create accounts
-		allowAnonymousAccountCreation = PreferenceHelper.getString(ServerConstants.CONFIG_AUTH_USER_CREATION, null) == null; //$NON-NLS-1$
+		allowAnonymousAccountCreation = serverMgr.getDavinciProperty(ServerConstants.CONFIG_AUTH_USER_CREATION) == null; //$NON-NLS-1$
 
 		//if there is an alternate URI to handle registrations retrieve it.
-		registrationURI = PreferenceHelper.getString(ServerConstants.CONFIG_AUTH_REGISTRATION_URI, null);
+		registrationURI = serverMgr.getDavinciProperty(ServerConstants.CONFIG_AUTH_REGISTRATION_URI);
 	}
 
 	public LdapAuthenticationService(){

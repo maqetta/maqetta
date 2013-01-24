@@ -38,7 +38,15 @@ return declare([], {
 				context._markDirtyAtLoadTime = true;
 			}
 		}
-	}
+	},
+	
+	getChildrenData: function(widget, options) {
+		if(!widget || !widget.domNode){
+			return '';
+		}else{
+			return widget.domNode.innerHTML.trim();
+		}
+	},
 
 });
 

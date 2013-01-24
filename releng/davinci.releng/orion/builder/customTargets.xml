@@ -113,7 +113,7 @@ lastMapTag=${mapsTagTag}
 		<echo message="Updating Git repo in ${gitRepoFolder}"/>
 		<exec executable="git" dir="${gitRepoFolder}" failOnError="true">
 			<arg value="fetch"/>
-			<arg value="--tags"/>
+			<arg value="--all"/>
 		</exec>
 		<antcall target="gitSubmoduleUpdate"/>
 	</target>

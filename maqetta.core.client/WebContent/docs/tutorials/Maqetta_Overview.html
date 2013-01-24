@@ -49,6 +49,9 @@ tr.mobile {
 	width:450px;
 	margin:0;
  }
+ #pagebody .indented_note {
+ 	padding-left:6em;
+ }
 </style>
 
 <div id="pagebody">
@@ -78,15 +81,19 @@ tr.mobile {
 
 <p>Maqetta is a visual authoring tool for HTML5 user interfaces that runs in the browser.</p>
 
-<p>Maqetta targets both <em>non-programmers</em> and <em>lightweight web developers</em> who
-	typically are :</p>
+<p>Maqetta targets both <strong>non-programmers</strong> and <strong>lightweight web developers</strong> who
+	typically are creating one of the following things in the early stages of web application development
+	for <strong>application visualization</strong>:</p>
 <ul>
-	<li><strong>Non-programmers</strong> can create <strong>quick UI sketches</strong> or
-		<strong>simple interactive application prototypes</strong> without programming.</li>
-	<li><strong>Lightweight web developers</strong> can also create <strong>quick UI sketches</strong> or
-		<strong>interactive application prototypes</strong>. With only limited knowledge
-		of JavaScript and CSS, a developer create complex interactive prototypes.</li>
+	<li><strong>Quick UI sketches</strong>, using Maqetta like a simple drawing tool to sketch
+		out or wireframe how some application user interface should love and behave</li>
+	<li><strong>Interactive application prototypes</strong>, using Maqetta as a visual HTML5 application builder.
+		With only limited knowledge of HTML, JavaScript and CSS, a developer can use drag/drop assembly
+		to create 
+		simple or complex interactive prototypes that use production widgets and production CSS themes
+		and actually run as real applications.</li>
 </ul>
+
 
 <p>Maqetta supports quick UI sketching (both hi-fidelity and low-fidelity),
 	and it allows non-programmers and lightweight programmers to create
@@ -143,14 +150,38 @@ Along with source code editing tools:
 
 <p>One of Maqetta's key differentiators versus other tools that provide sketching and prototyping features
 	is that Maqetta directly creates HTML5, CSS and JavaScript applications that use
-	your company's production widgets and CSS themes. This technical approach yields these important benefits:</p>
-	
+	your company's production-level widgets and CSS themes. 
+	Because Maqetta uses your company's production-level widgets and themes
+	in your sketches and prototypes, Maqetta is <strong>true WYSIWYG</strong>. Maqetta provides pixel level control
+	over widget placement, and extensive CSS tools to control every visual details in your composition,
+	including size, position, margins, padding, backgrounds, and fonts. Maqetta's approach yields these benefits:</p>
 <ul>
-	<li><strong>True WYSIWYG</strong> - blah blah blah</li>
-	<li><strong>Fewer errors</strong> - blah blah blah</li>
-	<li><strong>More efficient hand-off from designers to developers</strong> - blah blah blah</li>
-	<li><strong>Accelerated time-to-market</strong> - blah blah blah</li>
+	<li><strong>More efficient hand-off from designers to developers</strong>
+		- Because the sketches and application prototypes are actually running HTML5 applications
+		that a designer can hand over to a developer, the developer has a headstart
+		on completing the production application.</li>
+	<li><strong>More reliable hand-off from designers to developers</strong>
+		- Maqetta's use of production widgets and themes, along with its deep support for CSS,
+		 helps minimize the risk that a beautiful visual design
+		or a well-engineered user experience are lost or degraded in the transfer from the design
+		team to the development team.</li>
+	<li><strong>Promotes tighter collaboration between design and development</strong>
+		- Teams that use Maqetta find that designers end up talking with developers earlier in the process,
+		thereby promoting teamwork and mutual education.</li>
+	<li><strong>Helps educate and promotes conformance with company UI standards</strong>
+		- Organizations that plug their company-standard widget libraries and themes into Maqetta
+		can use Maqetta as a vehicle for educating its development teams about the UI standards,
+		which tends to lead to greater conformance to those standards.</li>
 </ul>
+
+<div class='indented_note'>
+	<div class='overview_snapshots_outer'>
+		<span class='overview_snapshots_inner'>
+			<div class='overview_snapshots_caption'>Maqetta creates sketches and prototypes that use real widgets and themes</div>
+			<img src="cheatsheets/img/MobileApps.jpg"> 
+		</span>
+	</div>
+</div>
 
 <a name="pageeditor"><h2>Open source and available for free at Maqetta.org</h2></a>
 
@@ -165,22 +196,45 @@ Along with source code editing tools:
 
 <a name="pageeditor"><h2>Supported browsers: author-time vs run-time</h2></a>
 
+<h3>Author-time: which browsers for the Maqetta authoring tool</h3>
 <p>Maqetta itself is authored in HTML5. The Maqetta authoring tool runs in the following modern HTML5 browsers:</p>
 <ul>
 	<li><strong>Google Chrome</strong> - latest release</li>
 	<li><strong>Mozilla Firefox</strong> - latest release and Firefox ESR2 (= Firefox 17.0)</li>
 	<li><strong>Apple Safari</strong> - latest release</li>
 </ul>
-<p>The HTML5 applications that Maqetta creates, however, typically run on most popular browsers, 
-including older versions of IE.</p>
 
-<blockquote>
-	This depends mostly on the capabilities of the JavaScript libraries you use when authoring in Maqetta.
-	For example, if you are using Maqetta with Dojo 1.8, then usually the HTML5 applications you create
+<h3>Run-time: which browsers can run the applications created by Maqetta</h3>
+
+<p>If you are using Maqetta with Dojo 1.8, then usually the HTML5 applications you create
 	in Maqetta will run on any 
-	<a href='http://dojotoolkit.org/reference-guide/1.8/releasenotes/1.8.html'></a>browsers that Dojo 1.8 supports</a>, 
-	which includes IE 6-9.
-</blockquote>
+	<a href='http://dojotoolkit.org/reference-guide/1.8/releasenotes/1.8.html'></a>browsers that Dojo 1.8 supports</a>, including:</p>
+<ul>
+	<li><strong>Desktop</strong>
+		<ul>
+		    <li>IE 6-9</li>
+			<li>Firefox 3.6-12</li>
+		    <li>Safari 5-6</li>
+		    <li>Chrome 13-21</li>
+		</ul>
+	</li>
+	<li><strong>Mobile (dojox/mobile)</strong>
+		<ul>
+		    <li>iOS 4.x, 5.x (Mobile Safari)</li>
+			<li>Android 2.2-2.3, 3.1-3.2, 4.0-4.1</li>
+		    <li>Blackberry 6-7</li>
+		    <li>Mobile compatibility on desktop browsers: IE 8-9, Firefox 4-12, Safari 5-6, Chrome 13-19</li>
+		</ul>
+	</li>
+</ul>
+
+<div class='note'>
+	Caveats: If you are using a different JavaScript library than Dojo 1.8, or extending Dojo 1.8, 
+	then what platforms your Maqetta-created application will run 
+	will depend on on the capabilities of the JavaScript libraries and widgets you use.
+	Also, any handed-coded source changes you make to HTML, CSS or JavaScript files
+	might impact whether your application can run on all target platforms.
+</div>
 
 
 <ol>

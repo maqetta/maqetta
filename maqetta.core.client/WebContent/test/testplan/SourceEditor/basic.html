@@ -32,13 +32,22 @@
 &lt;html>
 &lt;head>
 &lt;meta charset="utf-8"/>
+&lt;meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 &lt;title>Untitled&lt;/title>
+&lt;script type="text/javascript" src="lib/dojo/dojo/dojo.js" data-dojo-config="'parseOnLoad':true,'async':true,'packages':[{'name':'gridx','location':'../gridx'},{'name':'clipart','location':'../../clipart'},{'name':'maqettaSamples','location':'../../../samples'},{'name':'maqetta','location':'../../maqetta'},{'name':'shapes','location':'../../shapes'},{'name':'zazl','location':'../../zazl'},{'name':'widgets','location':'../../custom'}],'themeMap':[['Android','',['themes/android/android.css']],['BlackBerry','',['themes/blackberry/blackberry.css']],['iPad','',['themes/ipad/ipad.css']],['iPhone','',['themes/iphone/iphone.css']],['.*','',['themes/iphone/iphone.css']]],'mblThemeFiles':[], 'mblLoadCompatPattern': /\/aaa\/themes\/.*\.css$/">&lt;/script>
+&lt;script type="text/javascript">
+require([
+  "dijit/dijit",
+  "dojo/parser",
+  "maqetta/space",
+  "maqetta/AppStates"
+]);
+&lt;/script>
 &lt;style>@import "themes/claro/claro.css";@import "app.css";
 &lt;/style>
-&lt;script type="text/javascript" src="maqetta/maqetta.js">&lt;/script>
-&lt;script type="text/javascript" src="maqetta/States.js">&lt;/script>
+&lt;script type="text/javascript" src="app.js">&lt;/script>
 &lt;/head>
-&lt;body class="claro" data-davinci-ws="collapse" id="myapp" dvFlowLayout="true">
+&lt;body class="claro" data-maq-flow-layout="true" data-maq-comptype="desktop" data-maq-ws="collapse" id="myapp" data-maq-appstates="{}">
 &lt;/body>
 &lt;/html>
 </pre></li>

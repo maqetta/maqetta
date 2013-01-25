@@ -33,7 +33,7 @@ _ShapeHelper.prototype = {
 		// Somehow need to compute this dynamically at run-time
 		var centeringShift = 6;
 		
-		this._widget = obj.widget;
+		var widget = obj.widget;
 		var dijitWidget = obj.widget.dijitWidget;
 		
 		var div = obj.customDiv;
@@ -43,26 +43,27 @@ _ShapeHelper.prototype = {
 		// so that it won't get clipped off the screen. Need to unadjust the adjustments.
 		div.innerHTML = '';
 
-		var draggables = this.getDraggables();
+		var draggables = this.getDraggables({widget:widget});
 		var points = draggables.points;
 		// onShowSelection can get called multiple times for the same selection action.
 		// Remove previous nobs and connections if still present
-		this._removeNobs();
+		this._removeNobs(widget);
 		if(points){
-			this._dragNobs = [];
+			widget._dragNobs = [];
 			var handle;
 			for (var i=0; i<points.length; i++){
 				l = points[i].x - centeringShift;
 				t = points[i].y - centeringShift;
-				this._dragNobs[i] =  handle = dojo.create('span',{
+				widget._dragNobs[i] = handle = dojo.create('span',{
 					className:'editFocusNob',
 					style:{ position:'absolute', display:'block', left:l+'px', top:t+'px' }	
 				},div);
 				handle._shapeDraggable = {point:i};
-				this._connects.push(connect.connect(handle, 'mousedown', dojo.hitch(this,this.onMouseDown)));
+				handle._widget = widget;
+				this._connects.push(connect.connect(handle, 'mousedown', dojo.hitch(this,this.onMouseDown, widget)));
 			}
 		}else{
-			this._dragNobs = null;
+			delete widget._dragNobs;
 		}
 		return false;
 	},
@@ -76,14 +77,16 @@ _ShapeHelper.prototype = {
 	 * FIXME: Better if helper had a class inheritance setup
 	 */
 	onHideSelection: function(obj){
-		this._removeNobs();
+		if(obj && obj.widget){
+			this._removeNobs(obj.widget);
+		}
 		this._removeDragConnects();
 	},
 
-	onMouseDown: function(e){
-		this._connectsDrag.push(connect.connect(document, 'mousemove', dojo.hitch(this,this.onMouseMoveOut)));
-		this._connectsDrag.push(connect.connect(document, 'mouseout', dojo.hitch(this,this.onMouseMoveOut)));
-		this._connectsDrag.push(connect.connect(document, 'mouseup', dojo.hitch(this,this.onMouseUp)));
+	onMouseDown: function(widget, e){
+		this._connectsDrag.push(connect.connect(document, 'mousemove', dojo.hitch(this,this.onMouseMoveOut,widget)));
+		this._connectsDrag.push(connect.connect(document, 'mouseout', dojo.hitch(this,this.onMouseMoveOut,widget)));
+		this._connectsDrag.push(connect.connect(document, 'mouseup', dojo.hitch(this,this.onMouseUp,widget)));
 
 		// Don't process this event if current tool is CreateTool because
 		// that means that mouse operations are adding points.
@@ -102,9 +105,9 @@ _ShapeHelper.prototype = {
 		}
 		
 		e.stopPropagation();
-		var domNode = this._widget.domNode;
+		var domNode = widget.domNode;
 		this._origSpanPos = dojo.position(domNode, true);
-		var handle = e.currentTarget;
+		var handle = e.target;
 		this._dragging = handle;
 		this._dragx = e.pageX;
 		this._dragy = e.pageY;
@@ -128,12 +131,12 @@ _ShapeHelper.prototype = {
 				style:'left:'+l+'px;top:'+t+'px;width:'+w+'px;height:'+h+'px;'},
 				document.body);
 		if(this.onMouseDown_Widget){
-			this.onMouseDown_Widget({handle:handle, e:e});
+			this.onMouseDown_Widget({handle:handle, e:e, widget:widget});
 		}
 
 	},
 	
-	onMouseMoveOut: function(e){
+	onMouseMoveOut: function(widget, e){
 		if(this._dragging){
 			e.stopPropagation();
 			var x = e.pageX,
@@ -151,13 +154,13 @@ _ShapeHelper.prototype = {
 				handle.style.left = (oldLeft + dx) + 'px';
 				handle.style.top = (oldTop + dy) + 'px';
 				if(this.onMouseMoveOut_Widget){
-					this.onMouseMoveOut_Widget({handle:handle, dx:dx, dy:dy, pageX:x, pageY:y, e:e});
+					this.onMouseMoveOut_Widget({handle:handle, dx:dx, dy:dy, pageX:x, pageY:y, e:e, widget:widget});
 				}
 			}
 		}
 	},
 	
-	onMouseUp: function(e){
+	onMouseUp: function(widget, e){
 		// Don't process this event if current tool is CreateTool because
 		// that means that mouse operations are adding points.
 		var currentEditor = Runtime.currentEditor;
@@ -194,7 +197,6 @@ _ShapeHelper.prototype = {
 			}
 			return numValue;
 		}
-		var widget = this._widget;
 		var dijitWidget = widget.dijitWidget;
 		var context = widget._edit_context;
 		var domNode = widget.domNode;
@@ -232,7 +234,7 @@ _ShapeHelper.prototype = {
 		command.add(new StyleCommand(widget, props));
 
 		if(this.onMouseUp_Widget){
-			this.onMouseUp_Widget(command);
+			this.onMouseUp_Widget(command, {widget:widget});
 		}
 		
 		var w_id = widget.id;
@@ -241,26 +243,18 @@ _ShapeHelper.prototype = {
 		context.select(newWidget);
 
 	},
-	
-	hideAllDraggablesExcept: function(index){
-		if(this._dragNobs){
-			for(var i=0; i<this._dragNobs.length; i++){
-				var dragNob = this._dragNobs[i];
-				dragNob.style.display = (i == index) ? 'block' : 'none';
-			}
-		}
-	},
 
 	/*
 	 * Returns list of draggable end points for this shape in "px" units
 	 * relative to top/left corner of enclosing SPAN.
 	 * Can be overridden for particular widgets.
 	 * 
+	 * @param params {object}  params.widget: current widget
 	 * @return {object} whose properties represent widget-specific types of draggable points
 	 *   For example, widgets that represent a series of points will include a 'points'
 	 *   property which is an array of object of the form {x:<number>,y:<number>}
 	 */
-	getDraggables: function() {
+	getDraggables: function(params) {
 		// default impl is to return no points
 		return {points:[]};
 	},
@@ -268,15 +262,15 @@ _ShapeHelper.prototype = {
 	/**
 	 * Remove any _dragNobs and _connects
 	 */
-	_removeNobs: function(){
-		if(this._dragNobs){
-			for(var i=0; i<this._dragNobs.length; i++){
-				var dragNob = this._dragNobs[i];
+	_removeNobs: function(widget){
+		if(widget._dragNobs){
+			for(var i=0; i<widget._dragNobs.length; i++){
+				var dragNob = widget._dragNobs[i];
 				if(dragNob.parentNode){
 					dragNob.parentNode.removeChild(dragNob);
 				}
 			}
-			this._dragNobs = null;
+			delete widget._dragNobs;
 		}
 		for(var i=0; i<this._connects.length; i++){
 			connect.disconnect(this._connects[i]);
@@ -285,7 +279,7 @@ _ShapeHelper.prototype = {
 	},
 	
 	/**
-	 * Remove any _dragNobs and _connects
+	 * Remove any _connectsDrag
 	 */
 	_removeDragConnects: function(){
 		for(var i=0; i<this._connectsDrag.length; i++){

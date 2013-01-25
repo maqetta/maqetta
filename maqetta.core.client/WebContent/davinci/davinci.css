@@ -1377,10 +1377,10 @@ background-position: -75px -745px;
 }
 .editPasteIcon {
 	background-image: url(img/sprite.png);
-	background-position: -12px -551px;
+	background-position: -6px -551px;
 }
 .dijitButtonDisabled .editPasteIcon {
-	background-position: -88px -551px;
+	background-position: -82px -551px;
 }
 .editPasteIconSmall {
 	background-image: url(img/sprite.png);

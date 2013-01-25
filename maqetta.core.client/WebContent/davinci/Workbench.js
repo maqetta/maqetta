@@ -136,11 +136,16 @@ var handleIoError = function (deferred, reason) {
 };
 
 var sessionTimedOut = function(){
-	var loginHref = '/maqetta/welcome';
+/*	var loginHref = '/maqetta/welcome';
 	if(Runtime.singleUserMode()) {
 		loginHref = '/maqetta/';
+	}*/
+	var newLocation = Workbench.location();
+	var lastChar = newLocation.length - 1;
+	if (newLocation.charAt(lastChar) == '/') {
+		newLocation = newLocation.substr(0,lastChar);
 	}
-	
+	var loginHref = newLocation + "/welcome";
 	var dialog = new Dialog({
         title: webContent.sessionTimedOut
       //,  style: "width: 300px"

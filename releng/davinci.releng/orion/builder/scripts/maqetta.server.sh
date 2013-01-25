@@ -1,10 +1,11 @@
 #!/bin/bash
 
 print_help() {
-	echo "Usage: ./maqetta.server.mac.command"
+	echo "Usage: ./maqetta.server.sh [OPTIONS]"
 	echo ""
 	echo "Options:"
 	echo "  -h, --help                  show this message"
+	echo "  --daemon                    run server as background task"
 	echo ""
 	echo " => Further options are read from 'maqetta.conf' file."
 }
@@ -15,6 +16,10 @@ while [ "${1+isset}" ]; do
 			print_help
 			exit
 			;;
+		--daemon)
+			DAEMON=1
+			shift 1
+			;;
 		*)
 			echo "Error: Unknown option: $1" >&2
 			exit 1
@@ -23,7 +28,7 @@ while [ "${1+isset}" ]; do
 done
 
 #
-# Check minimum Java version. Must be >= 1.5
+# Check minimum Java version. Must be >= 1.6
 #
 check_java() {
 	javaversion=`java -version 2>&1 | grep "java version"`
@@ -33,8 +38,8 @@ check_java() {
 		majorversionnumber=`echo "$javaversion" | sed 's/^[^0-9]*\([0-9][0-9]*\)\..*$/\1/'`
 		minorversionnumber=`echo "$javaversion" | sed 's/^[^0-9]*[0-9][0-9]*\.\([0-9][0-9]*\).*$/\1/'`
 		echo Java version=$majorversionnumber.$minorversionnumber
-		if [[ $majorversionnumber -lt 1 || $minorversionnumber -lt 5 ]]; then
-			echo "Error: Maqetta requires Java 1.5"
+		if [[ $majorversionnumber -lt 1 || $minorversionnumber -lt 6 ]]; then
+			echo "Error: Maqetta requires Java 1.6"
 			exit 1
 		fi
 	fi
@@ -87,7 +92,6 @@ read_conf()
 			# all other config items are read directly from file by server code
 		esac
 
-
 	done < <(grep -v "^#" ${MAQ_CONFIG} | grep -v "^\s*$")
 
 	# get jar path
@@ -126,7 +130,12 @@ do_start() {
 	echo "Type \"exit\" or Ctrl-C to stop the server."
 	echo
 
-	java $JAVA_ARGS ${extra_java_args} $JAR_FILE $APP_ARGS
+	if [ $DAEMON ]; then
+		nohup java $JAVA_ARGS ${extra_java_args} $JAR_FILE $APP_ARGS > nohup.out 2>&1 &
+		echo $! > "$MAQ_BASE"/maqetta.pid
+	else
+		java $JAVA_ARGS ${extra_java_args} $JAR_FILE $APP_ARGS
+	fi
 }
 
 

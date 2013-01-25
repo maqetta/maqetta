@@ -10,70 +10,20 @@
     </icon>
     -->
 
-    <!-- where to put maqetta user files -->
-    <env-entry>
-        <env-entry-name>maqetta.baseDirectory</env-entry-name>
-        <env-entry-type>java.lang.String</env-entry-type>
-        <env-entry-value>/davinciUsers</env-entry-value>
-    </env-entry>
-
-    <!-- smtp server for review and commenting -->
-    <env-entry>
-        <env-entry-name>smtp.mailServer</env-entry-name>
-        <env-entry-type>java.lang.String</env-entry-type>
-        <env-entry-value>relay.us.ibm.com</env-entry-value>
-    </env-entry>
-
-    <!-- smtp username for review and commenting -->
-    <env-entry>
-        <env-entry-name>smtp.loginUser</env-entry-name>
-        <env-entry-type>java.lang.String</env-entry-type>
-        <env-entry-value></env-entry-value>
-    </env-entry>
-
-    <!-- smtp password for review and commenting -->
-    <env-entry>
-        <env-entry-name>smtp.password</env-entry-name>
-        <env-entry-type>java.lang.String</env-entry-type>
-        <env-entry-value></env-entry-value>
-    </env-entry>
-
-    <!-- smtp fake reviewer review and commenting -->
-    <env-entry>
-        <env-entry-name>davinci.review.fakeReviewer</env-entry-name>
-        <env-entry-type>java.lang.String</env-entry-type>
-        <env-entry-value></env-entry-value>
-    </env-entry>
-
-    <!-- smtp notification ID for R&C -->
-    <env-entry>
-        <env-entry-name>smtp.notificationId</env-entry-name>
-        <env-entry-type>java.lang.String</env-entry-type>
-        <env-entry-value></env-entry-value>
-    </env-entry>
-
-    <!-- maximum number of maqetta users allowed -->
-    <env-entry>
-        <env-entry-name>maqetta.maxUsers</env-entry-name>
-        <env-entry-type>java.lang.String</env-entry-type>
-        <env-entry-value>2000</env-entry-value>
-    </env-entry>
-
-    <!-- send debug info to console -->
-    <env-entry>
-        <env-entry-name>maqetta.serverDebug</env-entry-name>
-        <env-entry-type>java.lang.String</env-entry-type>
-        <env-entry-value></env-entry-value>
-    </env-entry> 
-
     <servlet id="bridge">
         <servlet-name>equinoxbridgeservlet</servlet-name>
         <display-name>Equinox Bridge Servlet</display-name>
         <description>Equinox Bridge Servlet</description>
         <servlet-class>org.eclipse.equinox.servletbridge.BridgeServlet</servlet-class>
         <init-param>
+            <!-- Add "-console" to "commandline" param in order to show OSGi
+                 console.  Useful for debugging OSGi bundle loading issues. -->
             <param-name>commandline</param-name>
-            <param-value>-console</param-value>         
+            <!-- XXX Setting "-Dosgi.instance.are=XXX" doesn't seem to work as
+                     a replacement for "-data" here.  For consistency, though,
+                     still use osgi.instance.area, but set "-data" here with
+                     its value. -->
+            <param-value>-data ${osgi.instance.area}</param-value>
         </init-param>
         <!-- enableFrameworkControls: only enable for debugging purposes. -->
         <init-param>
@@ -114,6 +64,10 @@
             <param-name>overrideAndReplaceExtensionBundle</param-name>
             <param-value>false</param-value>
         </init-param>   
+        <init-param>
+            <param-name>other.info</param-name>
+            <param-value>org.eclipse.orion</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>

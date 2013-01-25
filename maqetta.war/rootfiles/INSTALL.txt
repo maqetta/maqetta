@@ -1,0 +1,64 @@
+							==================
+							  Maqetta Server
+							==================
+
+
+=====
+Setup
+=====
+
+- Deploy "maqetta.war" to Tomcat.
+	- NOTE: If you are updating from a previous release of the maqetta.war, please delete the [tomcat]/work/Catalina/localhost/maqetta/ directory -- Tomcat doesn't seem to always update this during a new deployment, and continues to server up old code.
+
+- Create a directory to hold the users' workspaces and files, preferably not within the Tomcat directory itself.  This directory must be owned by the same user under which the Maqetta servlet will run.
+	- Currently, the WAR defaults to looking for /tmp/maqetta/users.
+
+- Install the configuration files:
+	- Copy the "maqetta.conf" file (in the "setup" directory in the downloaded archive) to the Tomcat configuration directory ([tomcat]/conf/[enginename]/[hostname]/).  When running Tomcat locally, the file should reside at [tomcat]/conf/Catalina/localhost/maqetta.conf.
+	- Copy the "siteConfig" directory (also in "setup") somewhere safe.  Alongside "maqetta.conf" is a good location.
+
+- Edit the "maqetta.conf" file with the appropriate configuration (see "Configuration" section below).
+
+- Set Tomcat environment variables:  The properties "osgi.instance.area" and "orion.core.configFile" must be set in the environment when running Tomcat.  This can be done a couple of ways:
+	- Run 'export CATALINA_OPTS="-Dorion.core.configFile=/PATH/TO/TOMCAT/conf/Catalina/localhost/maqetta.conf -Dosgi.instance.area=/tmp/maqetta/users"' before running Tomcat from the command line.
+	- If starting Tomcat from a script (catalina.sh, daemon.sh, etc), set CATALINA_OPTS directly in those files.
+Obviously, please update the values above to match your setup.
+
+- Start Tomcat and load http://[hostname:port]/maqetta/maqetta/.
+
+
+=============
+Configuration
+=============
+
+The Maqetta servlet is configured using the "maqetta.conf" file.  Please read the comments in that file for information on each option.
+
+Here are some of the more common options:
+
+- maqetta.baseDirectory :
+	The directory where users' workspaces are stored.  Must be owned by same user that runs the Maqetta server instance.
+
+- maqetta.siteConfigDirectory :
+	The location of the "siteConfig" data directory, copied from the WAR.
+
+- orion.auth.name :
+	Sets the user authentication method that the server will use.  For LDAP support, set this to "ldaplogin".
+
+- maqetta.auth.ldap.* :
+	Many options for controlling LDAP login.  Follow the comments in "maqetta.conf" to set correctly.
+
+- smtp.mailServer :
+	The SMTP mail server used by Maqetta, mainly for sending review & commenting emails.  If there is a mail transfer agent (MTA) running on the same machine as the Maqetta server, set this to "localhost" -- if no port is specified, defaults to "25".
+
+
+=========
+Debugging
+=========
+
+If you run into any issues, here are several things you can do to get extra information which may help you debug the problem:
+
+- maqetta.serverDebug :
+	Set this param to 'true' in "maqetta.conf".  It will output extra information to standard output
+
+- OSGi console:
+	Add the value "-console" to the "commandline" param.  This will enable the OSGi console, which allows you to debug OSGi bundle loading issues.

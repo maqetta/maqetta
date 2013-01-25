@@ -384,16 +384,20 @@ var Workbench = {
 			}, dojo.body(), "first");
 
 		Workbench.unload();
-
+		var newLocation = Workbench.location();
+		console.log('Workbench.logoff: ' + newLocation); // temparry unntil I fix #3704
+		debugger; // temparry unntil I fix #3704
 		xhr.get({
 			url: "cmd/logoff",
 			handleAs: "text"
 		}).then(function(result) {
-			var newLocation = Workbench.location();
+			//var newLocation = Workbench.location();
 			var lastChar = newLocation.length - 1;
 			if (newLocation.charAt(lastChar) == '/') {
 				newLocation = newLocation.substr(0,lastChar);
 			}
+			console.log('Workbench.logoff.then: ' + newLocation); // temparry unntil I fix #3704
+			debugger; // temparry unntil I fix #3704
 			location.href = newLocation + "/welcome";
 		});
 	},

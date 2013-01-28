@@ -14,7 +14,7 @@ return declare("davinci.commands.CommandStack", null, {
 
 	execute: function(command){
 		// summary:
-		//		Runs the specified command, records the exeution state in the undo history, and clears the redo buffer.
+		//		Runs the specified command, records the execution state in the undo history, and clears the redo buffer.
 		if(!command){
 			return;
 		}

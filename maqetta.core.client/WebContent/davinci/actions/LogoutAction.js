@@ -12,7 +12,7 @@ return declare("davinci.actions.LogoutAction", Action, {
 
 		var logoutRequest = new XMLHttpRequest();
 		logoutRequest.onreadystatechange = function() {
-			location.href = location.href; // "/maqetta/"; wrong place in war war or if context changes #3704
+			location.href = 'welcome'; // relative path #3704
 		};
 		var parameters = "";
 		logoutRequest.open("POST", "../logout", false);

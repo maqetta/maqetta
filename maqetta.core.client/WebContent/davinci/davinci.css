@@ -1534,24 +1534,24 @@ background-position: -75px -745px;
 
 .addStateIcon, .addThemeSetIcon {
 	background-image: url(img/sprite.png);
-	background-position: -82px -466px;
+	background-position: 0px -2055px;
 }
 .addStateIcon.addStateIconDisabled {
-	background-position: -66px -466px;
+	background-position: 0px -2055px;
 }
 .removeStateIcon, .removeThemeSetIcon {
 	background-image: url(img/sprite.png);
-	background-position: 0 -1778px;
+	background-position: -20px -2055px;
 }
 .removeStateIcon.removeStateIconDisabled {
-	background-position: -17px -1778px;
+	background-position: -20px -2055px;
 }
 .modifyStateIcon {
 	background-image: url(img/sprite.png);
-	background-position: -82px -483px;
+	background-position: -40px -2056px;
 }
 .modifyStateIcon.modifyStateIconDisabled {
-	background-position: -66px -483px;
+	background-position: -40px -2056px;
 }
 .modify_state_container {
 	white-space:nowrap;
@@ -1559,40 +1559,40 @@ background-position: -75px -745px;
 }
 .manageStatesIcon {
 	background-image: url(img/sprite.png);
-	background-position: 0px -1548px;
+	background-position: -60px -2056px;
 }
 .manageStatesIcon.manageStatesIconDisabled {
-	background-position: -20px -1548px;
+	background-position: -60px -2096px;
 }
 .newWidgetsCurrentStateIcon {
 	background-image: url(img/sprite.png);
 }
 .newWidgetsCurrentStateIconOn {
-	background-position: -40px -1870px;
+	background-position: -80px -2076px;
 }
 .newWidgetsCurrentStateIconOn.newWidgetsCurrentStateIconDisabled {
-	background-position: -60px -1870px;
+	background-position: -80px -2116px;
 }
 .newWidgetsCurrentStateIconOff {
-	background-position: 0px -1870px;
+	background-position: -80px -2056px;
 }
 .newWidgetsCurrentStateIconOff.newWidgetsCurrentStateIconDisabled {
-	background-position: -20px -1870px;
+	background-position: -80px -2096px;
 }
 .highlightBaseWidgetsIcon {
 	background-image: url(img/sprite.png);
 }
 .highlightBaseWidgetsIconOn {
-	background-position: 0px -950px;
+	background-position: -100px -2076px;
 }
 .highlightBaseWidgetsIconOn.highlightBaseWidgetsIconDisabled {
-	background-position: 0px -968px;
+	background-position: -100px -2116px;
 }
 .highlightBaseWidgetsIconOff {
-	background-position: -20px -950px;
+	background-position: -100px -2056px;
 }
 .highlightBaseWidgetsIconOff.highlightBaseWidgetsIconDisabled {
-	background-position: -20px -968px;
+	background-position: -100px -2096px;
 }
 .states_rename_table td {
 	white-space:nowrap;

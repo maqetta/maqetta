@@ -9,10 +9,10 @@ return declare("davinci.actions.LogoutAction", Action, {
 	run: function() {
 		
 		/* call the logout URL then redirect to maqetta login page */
-	
+
 		var logoutRequest = new XMLHttpRequest();
 		logoutRequest.onreadystatechange = function() {
-			location.href = "/maqetta/";
+			location.href = 'welcome'; // relative path #3704
 		};
 		var parameters = "";
 		logoutRequest.open("POST", "../logout", false);

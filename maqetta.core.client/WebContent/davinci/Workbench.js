@@ -136,11 +136,16 @@ var handleIoError = function (deferred, reason) {
 };
 
 var sessionTimedOut = function(){
-	var loginHref = '/maqetta/welcome';
+/*	var loginHref = '/maqetta/welcome';
 	if(Runtime.singleUserMode()) {
 		loginHref = '/maqetta/';
+	}*/
+	var newLocation = Workbench.location();
+	var lastChar = newLocation.length - 1;
+	if (newLocation.charAt(lastChar) == '/') {
+		newLocation = newLocation.substr(0,lastChar);
 	}
-	
+	var loginHref = newLocation + "/welcome";
 	var dialog = new Dialog({
         title: webContent.sessionTimedOut
       //,  style: "width: 300px"
@@ -373,23 +378,17 @@ var Workbench = {
 	},
 
 	logoff: function(args) {
-		var loading = dojo.create("div", {
+		dojo.create("div", {
 				'class': 'loading',
 				innerHTML: '<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Logging off...</td></tr></table>' // FIXME: i18n
 			}, dojo.body(), "first");
 
 		Workbench.unload();
-
 		xhr.get({
 			url: "cmd/logoff",
 			handleAs: "text"
 		}).then(function(result) {
-			var newLocation = Workbench.location();
-			var lastChar = newLocation.length - 1;
-			if (newLocation.charAt(lastChar) == '/') {
-				newLocation = newLocation.substr(0,lastChar);
-			}
-			location.href = newLocation + "/welcome";
+			location.href = "welcome"; //ralitive path #3704
 		});
 	},
 
@@ -1060,9 +1059,8 @@ var Workbench = {
 	loadProject: function(projectName) {
 		
 		return Workbench.setActiveProject(projectName).then(function(){
-			//location.href=".";
-			/* make sure the server has maqetta setup for the project */
-			location.href="/maqetta/cmd/configProject?configOnly=true&project=" + projectName;
+			// make sure the server has maqetta setup for the project
+			location.href="cmd/configProject?configOnly=true&project=" + encodeURIComponent(projectName);
 		});
 		
 		// if the project was set via URL parameter, clear it off.  
@@ -1195,10 +1193,8 @@ var Workbench = {
 				perspectiveId = Workbench.activePerspective,
 				perspective = Runtime.getExtension("davinci.perspective", perspectiveId),
 				position = 'left',
-				cp1 = null,
-				created = false,
-				pxHeight = dijit.byId('mainBody')._borderBox.h - 5;
-			
+				cp1 = null;	
+
 			dojo.some(perspective.views, function(view){
 				if(view.viewID ==  viewId){
 					position = view.position;

@@ -54,7 +54,7 @@
 .projectToolbarRenameIcon {
 	/* same as redo icon for now */
 	background-image: url(img/sprite.png); /* FIXME: add logic for redo-disabled.gif? */
-	background-position: -82px -728px;
+	background-position: 0px -2114px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
@@ -63,7 +63,7 @@
 
 .projectToolbarDeleteIcon {
 	background-image: url(img/sprite.png); /* FIXME: add logic for remove-disabled.gif? */
-	background-position: 0 -648px;
+	background-position: -2px -648px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
@@ -246,7 +246,7 @@
 .renameIcon {
 	/* same as redo icon for now */
 	background-image: url(img/sprite.png); /* FIXME: add logic for redo-disabled.gif? */
-	background-position: 0px -745px;
+	background-position: 0px -2114px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
@@ -255,7 +255,7 @@
 
 .deleteIcon {
 	background-image: url(img/sprite.png); /* FIXME: add logic for remove-disabled.gif? */
-	background-position: -2px -648px;
+	background-position: -2px -647px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;

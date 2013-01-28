@@ -161,7 +161,7 @@ public class AddComment extends Command {
 		props.put("viewscenelist", comment.getViewSceneList());
 		props.put("time", comment.getCreated().toString());
 		
-		return Utils.substitude(Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT), props);
+		return Utils.substitute(Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT), props);
 	}
 
 	protected Comment extractComment(HttpServletRequest req) {

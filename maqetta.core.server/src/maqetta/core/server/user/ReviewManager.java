@@ -315,11 +315,10 @@ public class ReviewManager implements IReviewManager {
 	}
 	
 	public String getReviewUrl(String designerId, String version, String requestUrl) {
-		String protocol = requestUrl.substring(0, requestUrl.indexOf("://")+3);
-		String host = requestUrl.substring(0, requestUrl.indexOf('/', protocol.length()));
-		return host + "/maqetta?"
+		String prefix = requestUrl.substring(0, requestUrl.indexOf("/cmd/"));
+		return prefix + "?"
 				+ IDavinciServerConstants.REVIEW_DESIGNER_ATTR + "="
-				+ designerId+ "&"
+				+ designerId /* FIXME: encode? */ + "&"
 				+ IDavinciServerConstants.REVIEW_VERSION_ATTR + "=" + version;
 	}
 	

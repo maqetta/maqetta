@@ -16,14 +16,13 @@ var DeleteVersionAction = declare("davinci.review.actions.DeleteVersionAction", 
 		if(!okToClose)
 			return;
 		var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
-		var cmdURL = davinci.Workbench.location() + "cmd/managerVersion";
 		dojo.xhrGet({
-			url: cmdURL,
+			url: "cmd/managerVersion",
 			sync: false,
 			handleAs: "text",
 			content: {
-				'type' :'delete',
-				'vTime':item.timeStamp
+				type: 'delete',
+				vTime: item.timeStamp
 			}
 		}).then(function (result) {
 			if (result=="OK") {

@@ -1054,20 +1054,12 @@ var Workbench = {
 		
 	
 	},
-	
+
+	//FIXME: remove. Use Runtime.location() instead.
 	location: function() {
 		return Runtime.location();
 	},
-	
-	queryParams: function() {
-		// reloads the browser with the current project.
-		var fullPath = document.location.href;
-		var split = fullPath.split("?");
-		var searchString = split.length>1? split[1] : "";
-		// remove the ? from the front of the query string 
-		return dojo.queryToObject(searchString);
-	},
-	
+
 	_rebuildMenu: function (menuWidget, menus) {
 		dojo.forEach(menuWidget.getChildren(), function(child){
 			menuWidget.removeChild(child);

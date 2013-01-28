@@ -30,46 +30,6 @@ tr.desktop {
 tr.mobile {
 	background-color:#dfd;
 }
-#pagebody .overview_snapshots_outer {
-	margin-top:20px;
-	margin-bottom:20px;
-}
-#pagebody .overview_snapshots_inner {
-	display:inline-block; 
-	width:450px;
-	margin-bottom:20px;
-	margin-right:10px;
-}
-#pagebody .overview_snapshots_caption {
-	margin-top:5px;
-	margin-bottom:5px;
-}
-#pagebody .overview_snapshots_inner img {
-	display:inline-block; 
-	width:450px;
-	margin:0;
- }
- #pagebody .indented_note {
- 	padding-left:6em;
- }
- #pagebody .overview_snapshots_inner img.maqetta_org_img {
- 	width:400px;
- }
- #pagebody .overview_snapshots_inner img.login_register_img {
- 	width:250px;
- }
-#pagebody .overview_snapshots_inner img.main_button {
-	width:auto;
-}
-#pagebody img.main_button_20 {
-	width:20px;
-	vertical-align:middle;
-}
-#pagebody .overview_snapshots_inner img.main_menu {
-	width:auto;
-	border:1px solid gray;
-	padding:1px;	
-}
 </style>
 
 <div id="pagebody">
@@ -83,15 +43,17 @@ tr.mobile {
 
 <h1>Tutorial 3 - User Interface Overview</h1>
 
+<div class='note'>
+	When going through Maqetta's tutorials, it is suggested that you have two side-by-side
+	browser windows open, one showing the tutorial, and the other where you run the application
+	and perform the steps listed in the tutorial.<br/>
+	<img src='img/SideBySideTutorialsApp.png' class='side_by_side'/>
+</div>
+
 <p>This tutorial provides an overview of the Maqetta's overall user interface -
 in particular, those parts of the user interface that you see upon launching the application
 for the first time (i.e., immediately after completing the steps from the previous tutorial
 <a href='tutorials/Launching_Maqetta.html'>Launching Maqetta</a>).</p>
-
-<div class='note'>
-	Much of the material found in this tutorial is also available on the
-	<a href="cheatsheets/welcomepage">Welcome page cheatsheet</a>.
-</div>
 
 <a id='Welcome_Screen'></a>
 <h2>Welcome screen</h2>
@@ -115,7 +77,8 @@ for the first time (i.e., immediately after completing the steps from the previo
 <a id='Main_Menubar'></a>
 <h2>Main menubar</h2>
 
-<p>Click and hold on the Create menu at the top of the page. 
+<p><span class='tutorial_checkmark'>&#8658;</span>
+	Click and hold on the Create menu at the top of the page. 
 	(Don't actually choose one of the menu commands yet - we'll get to that soon.)
 	You should see a menu that looks like this, which shows all of the "Create" commands in Maqetta.</p>
 
@@ -140,7 +103,8 @@ for the first time (i.e., immediately after completing the steps from the previo
 		The new project will become your current project.</li>
 </ul>
 
-<p>Click and hold on the Open menu at the top of the page. 
+<p><span class='tutorial_checkmark'>&#8658;</span>
+	Click and hold on the Open menu at the top of the page. 
 	(Don't actually choose one of the menu commands yet.)
 	You should see a menu that looks like this, which shows all of the "Open" commands in Maqetta.</p>
 
@@ -168,7 +132,9 @@ for the first time (i.e., immediately after completing the steps from the previo
 <img src="img/Main_menu_three_icons.png" class='main_button' style='vertical-align:middle;'/>
 </p>
 
-<p>Press and hold each of these icons, and you should see drop-down menus with the following commands:</p>
+<p><span class='tutorial_checkmark'>&#8658;</span>
+	Press and hold each of these icons, and you should see drop-down menus with the following commands:</p>
+
 <ul>
 	<li><strong>User menu:</strong>
 		<ul>
@@ -198,171 +164,212 @@ for the first time (i.e., immediately after completing the steps from the previo
 	</li>
 </ul>
 
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Go back to the <strong>Create</strong> button.
+	Press on Create button and choose the first command - Create Mobile Application.
+	A dialog similar to the following should appear:</div>
 
-<p>For the moment, however, we will focus on the large center portion of the
-	user interface, the <strong>welcome screen</strong>, that has the
-	title text "Maqetta - Visual authoring of HTML5 user interfaces - in the browser!"
-	and shows two large rows of buttons.</p>
+<div>
+	<img src='cheatsheets/img/Create_MobileApp_Dialog.png'/>
+</div>
 
-<p>The first row of buttons contains some common actions:</p>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the dialog, accept the default settings and 
+	click on the Create button. You should see a page
+	that shows the life-size silhouette of a mobile device (probably an iPhone).
+	Up towards the top of the application, you should see a list of file tabs 
+	(probably with only one file tab showing now)
+	and the page editor's toolbar.</div>
 
-<ul>
-	<li><strong>Create a new mobile application</strong> - press this button if you want to create
-		an actual mobile application that will run on popular mobile devices such as smartphones and tablets.
-		Let's give it a try.
-	</li>
-</ul>
-
-<p>
-PRESS BUTTON
-UP COMES FILE DIALOG. 
-CLICK OK TO ACCEPT DEFAULTS. 
-DRAG/DROP A HEADING WIDGET. 
-CLICK ON X TO CLOSE WITHOUT SAVING
-</p>
-<ul>
-	<li><strong>Create a new desktop application</strong> - press this button if you want to create
-		an actual desktop application that will run on popular mobile devices such as smartphones and tablets.
-		Let's give it a try.
-	</li>
-</ul>
-
-<p>
-PRESS BUTTON
-UP COMES FILE DIALOG. 
-CLICK OK TO ACCEPT DEFAULTS. 
-DRAG/DROP A TABCONTAINER WIDGET. 
-CLICK ON X TO CLOSE WITHOUT SAVING
-</p>
-
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the file tab's close button -
+	<img src='img/close_sel.gif' class='exact_size_inline_icon'/>
+	- to close the page editor. 
+	(If any another files are open now,
+	close them, too.) The welcome screen (with all of the large-size buttons)
+	should re-appear in the middle of the screen.</div>
+	
 <a id='Palettes'></a>
-<h2>Palettes</h2>
+<h2>Left- and Right-Side Palettes</h2>
 
-<p>
-You can run the Maqetta application by simply
-going to <a href='http://maqetta.org' rel='external'>Maqetta.org</a> and then clicking
-on the "Launch Maqetta" button. </p>
-
-<div class='overview_snapshots_outer'>
-	<span class='overview_snapshots_inner'>
-		<img src='img/Maqetta.org.png' class='maqetta_org_img'></img> 
-	</span>
-</div>
-
-<p>This will take you to the login screen.</p>
-<div class='overview_snapshots_outer'>
-	<span class='overview_snapshots_inner'>
-		<img src='img/Maqetta.org.login.png' class='login_register_img'></img> 
-	</span>
-</div>
-
-<p>New users will need to click on the Register button, which will take you to the Register screen.
-	Enter your email address and click "Sign up".</p>
-<div class='overview_snapshots_outer'>
-	<span class='overview_snapshots_inner'>
-		<img src='img/Maqetta.org.register.png' class='login_register_img'></img> 
-	</span>
-</div>
-
-<p>An activation email will be sent to your email address. Clicking on the hyperlink in the email
-	will take you back to Maqetta.org, to the create account screen, where you can enter your Maqetta.org password:</p>
-<div class='overview_snapshots_outer'>
-	<span class='overview_snapshots_inner'>
-		<img src='img/Maqetta.org.create.account.png' class='login_register_img'></img> 
-	</span>
-</div>
-
-<p>After clicking on "Sign up", you will enter the Maqetta application.</p>
-
-<a id='getting_started_local_install'></a>
-<h2>Run the Maqetta application locally (i.e., local install)</h2>
-
-<p>With this option, you perform these steps:</p>
-<ol>
-	<li>Download a ZIP file that contains the Maqetta application (see notes below)</li>
-	<li>Unzip onto your local filesystem</li>
-	<li>Double-click on a launch script to start up the Maqetta application,
-		(running as a local web server, with default port of 50000)</li>
-	<li>Enter an appropriate URL 
-		(such as <a href='http://localhost:50000/maqetta' rel='external'></a>http://localhost:50000/maqetta</a>)
-		into the browser's address bar.</li>
-</ol>
-
-<p>If you want to download the public release of Maqetta from 
-	<a href='http://maqetta.org' rel='external'>Maqetta.org</a>, you have two options:</p>
+<p>On the left- and right-side of the application you will see large-size buttons with the following labels:</p>
 <ul>
-	<li>Download the 
-		<a href='http://maqetta.org/downloads/' rel='external'>latest stable release</a>
-		from Maqetta.org. (This is the option that most users will choose.)
+	<li><strong>Left/top</strong>
+		<ul>
+			<li><em>Palette</em> -  
+				When the visual page editor is open, shows the list of widgets you can add to pages.</li>
+			<li><em>Outline</em> - 
+				When the visual page editor is open,
+				this will show the hierarchical list of widgets that are included in the currently open file.</li>
+		</ul>
 	</li>
-	<li>Download the 
-		<a href='http://maqetta.org/nightly/' rel='external'>latest nightly build</a>
-		from Maqetta.org. (Note: nightly builds might be unstable.)
+	<li><strong>Left/bottom</strong>
+		<ul>
+			<li><em>Files</em> - 
+				Shows the files in your cloud workspace.</li>
+			<li><em>Reviews</em> - 
+				Shows the list of review/commenting sessions in which
+				you are participating.</li>
+		</ul>
+	</li>
+	<li><strong>Right/top</strong>
+		<ul>
+			<li><em>Widget</em> - 
+				Widget-specific properties.</li>
+			<li><em>Events</em> - 
+				Allows you to define actions to occur at run-time when certain events happen
+				(e.g., clicking on a widget).</li>
+			<li><em>Layout</em> - 
+				CSS properties having to do with layout, size and positioning.</li>
+			<li><em>Padding</em> - 
+				CSS padding properties</li>
+			<li><em>Margin</em> - 
+				CSS margin properties</li>
+			<li><em>Background</em> - 
+				CSS background properties</li>
+			<li><em>Border</em> - 
+				CSS border properties</li>
+			<li><em>Fonts/Text</em> - 
+				CSS font and text properties having to do with fonts</li>
+			<li><em>SVG</em> - 
+				(For Line, Arrow, and Polyline widgets only) SVG fill and stroke properties</li>
+		</ul>
+	</li>
+	<li><strong>Right/bottom</strong>
+		<ul>
+			<li><em>Scenes</em> - 
+				This palette allows you to define custom "application states"
+				a key feature in allowing non-programmers to create interactive
+				prototypes without programming. For mobile applications,
+				this palette also allows you to manage the various mobile
+				"views" (which can be thought of as different screens).</li>
+		</ul>
 	</li>
 </ul>
 
-<p>If your company has installed Maqetta on its own servers, they might also provide
-	a ZIP file that you can download, where that downloadable Maqetta might include
-	your company's widgets and themes.</p>
-
-<p>After expanding (unzipping) the ZIP file, there will be a <code>readme.html</code> file
-	that contains details descriptions of system pre-requisites and launch instructions.
-	Many users, however, can simply:
-	<ul>
-		<li>Double-click on the appropriate launch script
-			(<code>maqetta.server.win.bat</code> for Windows, <code>maqetta.server.mac.command</code> for Mac)</li>
-		<li>(After waiting for the launch script to complete) Type 
-			<a href='http://localhost:50000/maqetta' rel='external'></a>http://localhost:50000/maqetta</a>
-			into the browser's address bar.</li>
-	</ul>
-</p>
-
-<p>If you downloaded the ZIP from Maqetta.org, you will be presented with the following screen:</p>
-<div class='overview_snapshots_outer'>
-	<span class='overview_snapshots_inner'>
-		<img src='img/Maqetta.org.login.png' class='login_register_img'></img> 
-	</span>
-</div>
-
-<p><strong><em>The first time</em></strong> you run a local install download from Maqetta.org, 
-	<strong><em>you will need to click on the "Register" button</em></strong> 
-	(see the bottom of the above picture)
-	to create a user account and password. 
-	After you click "Register", you should see this screen:</p>
-<div class='overview_snapshots_outer'>
-	<span class='overview_snapshots_inner'>
-		<img src='img/local_install_create_account.png' class='login_register_img'></img> 
-	</span>
-</div>
-
-<p>In the above picture, you need to enter a valid email address and your password.</p>
-
-<p>Once you have created a user account, in the future you can just enter that user account and password
-	onto the login screen - you only need to "Register" once.</p>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <strong>Files</strong> button. The left-side palettes should expand
+	and become visible.</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <strong>Files</strong> button again. The left-side palettes should collapse
+	and become invisible.</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <strong>Reviews</strong> button. The left-side palettes should expand
+	and become visible, but instead of seeing the Files palette at the bottom/left of the
+	screen, you should see the Reviews palette (probably empty).</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <strong>Files</strong> button. The left-side palettes should stay
+	open and the Files palette should be visible instead of the Reviews palette.
+	(For each of the four palette areas - left/top, left/bottom, right/top/, right/bottom - 
+	only one of the palettes in that group can be visible at a time.)</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <strong>Files</strong> button again. The left-side palettes should expand
+	and become visible.</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Position the mouse over the dark-gray vertical splitter 
+	that separates the left-side palettes with the
+	central area of the application. 
+	When you see the cursor change to a move symbol, mouse down and drag
+	the splitter to the right. Notice that the palette region expands
+	and the central area gets smaller. Repeat this operation
+	(i.e., drag the splitter again)
+	to restore the left-size palette size to their approximate
+	original size.</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Position the mouse over the dark-gray horizontal splitter 
+	that separates the left/top palettes (Palette and Outline) 
+	from the left/bottom palettes (Files and Review).
+	When you see the cursor change to a move symbol, mouse down and drag
+	the splitter upwards. Notice that the Files palette region expands
+	and Palette region gets smaller. Repeat this operation
+	(i.e., drag the splitter again)
+	to restore the left-size palettes to their approximate
+	original sizes.</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	With the left-side palettes still open, 
+	click on the small collapse icon -
+	<img src='img/palette_collapse.gif' class='exact_size_inline_icon'/>
+	- at the top/right corner of the left-side palettes.
+	The left-side palettes should collapse. Note that you can collapse palettes
+	either by clicking on the collapse icon or clicking on the large palette button
+	for the currently open palette.</div>
 	
 <div class='note'>
-	Be sure to remember your login and password. There is no way to retrieve or reset
-	your logins or passwords for a local install.
+	The right-side palettes operate the same way as the left-side palettes,
+	except in mirror-image. (For example, the right-side palettes expand to the left.)
 </div>
 
+<div class='note'>
+	Note that sometimes Maqetta shows different palette arrangements that
+	what you are seeing now. For the theme editor and for the
+	review/commenting editor, some palettes go away and other palettes get added.
+	Occasionally, palettes shift to different locations. For example, with the review/commenting
+	editor, the Reviews palette moves from left/bottom to left/top.
+</div>
 
-<h2>Install on a server (e.g., intranet server)</h2>
+<a id='Welcome_Button_Rows'></a>
+<h2>Welcome Screen Buttons</h2>
 
-<p>The Maqetta team provides detailed instructions for setting up Maqetta to run
-	on a Unix server. Maqetta will probably run on other servers (e.g., Windows or Mac),
-	but you might have to figure some things out on your own.</p>
-	
-<p>This option follows many of the same steps as the <a href='#getting_started_local_install' rel='scroll_into_view'>local install option</a>.
-<ol>
-	<li>Download a ZIP file that contains the Maqetta application (see notes below)</li>
-	<li>Unzip onto your server's filesystem</li>
-	<li>Customize the configuration files to match your requirements</li>
-	<li>Set up your server to launch Maqetta (and relaunch at server start time)</li>
-</ol>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	If you have any open files, click on the file tab's close button -
+	<img src='img/close_sel.gif' class='exact_size_inline_icon'/> 
+	- for each file until no files are open. The welcome screen (with all of the large-size buttons)
+	should re-appear in the middle of the screen.</div>
 
-<p>After setting up the configuration settings and starting the Maqetta server,
-	users will be able to run Maqetta by entering <code>http://yourserver:port/path-to-maqetta</code>
-	into the browser address bar.</p>
+<p>The welcome screen shows two rows of buttons.</p>
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src="img/Welcome_Screen_Buttons.png" style='height:300px; width:auto;'/> 
+	</span>
+</div>
+
+<p>The first row contains common actions that users will want to do:</p>
+
+<ul>
+	<li><strong>Create a New Mobile Application</strong> - Press this button if you want to create
+		an actual mobile application that will run on popular mobile devices such as smartphones and tablets.
+		(Note: this button is equivalent to the <strong>Create -&gt; Mobile Application...</strong>
+		command found on the <strong>Create</strong> menu at the top of the application.)
+	</li>
+	<li><strong>Create a New Desktop Application</strong> - Press this button if you want to create
+		an actual desktop application that will run modern browsers (desktop or mobile).
+		(Note: this button is equivalent to the <strong>Create -&gt; Desktop Application...</strong>
+		command found on the <strong>Create</strong> menu at the top of the application.)
+	</li>
+	<li><strong>Create a New Sketch</strong> - Press this button if you want to use
+		Maqetta's quick UI sketching feature to create a high-fidelity sketch.
+		(Note: this button is equivalent to the <strong>Create -&gt; Sketch (high-fidelity)...</strong>
+		command found on the <strong>Create</strong> menu at the top of the application.)
+	</li>
+	<li><strong>Create a New CSS Theme</strong> - Press this button if you want to 
+		create a new CSS theme (by cloning one of the existing themes). After the clone-and-create
+		operation, Maqetta will open up the new theme in one of Maqetta's theme editors.
+		 You can clone/create both new desktop CSS themes or mobile CSS themes. 
+		(Note: this button is equivalent to the <strong>Create -&gt; Theme...</strong>
+		command found on the <strong>Create</strong> menu at the top of the application.)
+	</li>
+	<li><strong>Create a New Review</strong> - Press this button if you want to 
+		create a new review/commenting session where you want to share one of your compositions
+		with your colleagues for them to review and comment on your creation.
+		(Note: this button is equivalent to the <strong>Create -&gt; Review...</strong>
+		command found on the <strong>Create</strong> menu at the top of the application.)
+	</li>
+</ul>
+
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <strong>Create a New Desktop Application</strong> button. You should
+	see a dialog that allows you to choose a filename for your new composition.
+	Accept the default values and click on the Create button. You should see
+	a blank canvas (onto which you can start dragging and dropping widgets).</div>
+
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the file tab's close button -
+	<img src='img/close_sel.gif' class='exact_size_inline_icon'/>
+	- to close the page editor. </div>
+
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <strong>Cheat sheets</strong> button. A new browser window
+	should open that shows one of Maqetta's cheat sheets.</div>
 
 <br />
 <p class="prevnext"><a href="tutorials/tutorials.html">Previous</a> / <a href="tutorials/Mobile_User_Interfaces.html">Next</a></p>

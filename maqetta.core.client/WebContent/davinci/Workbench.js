@@ -33,7 +33,6 @@ define([
 	"dojo/_base/xhr",
 	"./review/model/resource/root",
 	"dojo/i18n!./ve/nls/common",
-	"dojo/dnd/Mover",
 	"./ve/utils/GeomUtils",
 	"dojo/i18n!./workbench/nls/workbench"
 ], function(
@@ -71,7 +70,6 @@ define([
 		xhr,
 		reviewResource,
 		veNLS,
-		Mover,
 		GeomUtils,
 		workbenchStrings
 ) {
@@ -136,16 +134,7 @@ var handleIoError = function (deferred, reason) {
 };
 
 var sessionTimedOut = function(){
-/*	var loginHref = '/maqetta/welcome';
-	if(Runtime.singleUserMode()) {
-		loginHref = '/maqetta/';
-	}*/
-	var newLocation = Workbench.location();
-	var lastChar = newLocation.length - 1;
-	if (newLocation.charAt(lastChar) == '/') {
-		newLocation = newLocation.substr(0,lastChar);
-	}
-	var loginHref = newLocation + "/welcome";
+	var loginHref = "welcome";
 	var dialog = new Dialog({
         title: webContent.sessionTimedOut
       //,  style: "width: 300px"
@@ -388,7 +377,7 @@ var Workbench = {
 			url: "cmd/logoff",
 			handleAs: "text"
 		}).then(function(result) {
-			location.href = "welcome"; //ralitive path #3704
+			location.href = "welcome";
 		});
 	},
 
@@ -429,11 +418,9 @@ var Workbench = {
 			} else {
 				firstgroup = false;
 			}
-			var children;
 			var actions = _toolbarcache[value];
 			for (var p = 0; p<actions.length; p++) {
 				var action = actions[p];
-				var id = action.id;
 				// dont add dupes
 		
 				Workbench._loadActionClass(action);
@@ -763,8 +750,8 @@ var Workbench = {
 		if (e.type == 'resize' || ((target.id && (target.id.indexOf('dijit_layout__Splitter_')>-1) || 
 			(target.nextSibling && target.nextSibling.id && target.nextSibling.id.indexOf('dijit_layout__Splitter_')>-1)))) {
 			var ed = davinci && Runtime.currentEditor;
-			if (davinci && Runtime.currentEditor && Runtime.currentEditor.onResize) {
-				Runtime.currentEditor.onResize();
+			if (ed && ed.onResize) {
+				ed.onResize();
 			}
 		}
 		if (Workbench._originalOnResize) {
@@ -1067,20 +1054,12 @@ var Workbench = {
 		
 	
 	},
-	
+
+	//FIXME: remove. Use Runtime.location() instead.
 	location: function() {
 		return Runtime.location();
 	},
-	
-	queryParams: function() {
-		// reloads the browser with the current project.
-		var fullPath = document.location.href;
-		var split = fullPath.split("?");
-		var searchString = split.length>1? split[1] : "";
-		// remove the ? from the front of the query string 
-		return dojo.queryToObject(searchString);
-	},
-	
+
 	_rebuildMenu: function (menuWidget, menus) {
 		dojo.forEach(menuWidget.getChildren(), function(child){
 			menuWidget.removeChild(child);
@@ -1185,7 +1164,7 @@ var Workbench = {
 
 	showView: function(viewId, shouldFocus, hidden){
 		var d = new Deferred();
-		
+
 		try {
 			var mainBodyContainer = dijit.byId('mainBody'),
 				view = Runtime.getExtension("davinci.view", viewId),
@@ -1193,7 +1172,7 @@ var Workbench = {
 				perspectiveId = Workbench.activePerspective,
 				perspective = Runtime.getExtension("davinci.perspective", perspectiveId),
 				position = 'left',
-				cp1 = null;	
+				cp1;
 
 			dojo.some(perspective.views, function(view){
 				if(view.viewID ==  viewId){
@@ -1218,7 +1197,7 @@ var Workbench = {
 				mainBody.tabs.perspective.right.startup();
 				// expandToSize is what expandPaletteContainer() uses as the
 				// width of the palette when it is in expanded state.
-				paletteCache["right_mainBody"] = {
+				paletteCache.right_mainBody = {
 					expandToSize:340,
 					initialExpandToSize:340
 				};
@@ -1376,12 +1355,10 @@ var Workbench = {
 	openEditor: function (keywordArgs, newHtmlParams) {
 		try{
 			var fileName=keywordArgs.fileName,
-				fileExtension,
-				file;
+				fileExtension;
 			if (typeof fileName=='string') {
-				 fileExtension=fileName.substr(fileName.lastIndexOf('.')+1);
+				fileExtension=fileName.substr(fileName.lastIndexOf('.')+1);
 			} else {
-				file=fileName;
 				fileExtension=fileName.getExtension();
 				fileName=fileName.getPath();
 			}
@@ -1498,7 +1475,7 @@ var Workbench = {
 						okToClose();
 					}
 				}
-			}
+			};
 		}
 		
 		if (!editorExtension) {

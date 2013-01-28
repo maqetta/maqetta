@@ -340,14 +340,6 @@ var CommentExplorerView = declare(ViewPart, {
 		}
 	},
 
-	_location: function() {
-		var fullPath = document.location.href;
-		var split = fullPath.split("?");
-		var location = split[0].match(/http:\/\/.+:\d+\//);
-
-		return location;
-	},
-
 	_click: function(node) {
 		this._publishSelectionChanges();
 	},

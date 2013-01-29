@@ -22,7 +22,7 @@ import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ServerManager;
 
 public class GetInitializationInfo extends Command {
-	private String siteConigJson = null;
+	private String siteConfigJson = null;
 
 	private class MaqettaConfigException extends Exception {
 		private static final long serialVersionUID = 1L;
@@ -66,8 +66,8 @@ public class GetInitializationInfo extends Command {
 
 	private String getSiteJson() throws MaqettaConfigException {
 
-		if (this.siteConigJson != null) {
-			return this.siteConigJson;
+		if (this.siteConfigJson != null) {
+			return this.siteConfigJson;
 		}
 		String ret = "";
 		String siteConfigDir = ServerManager.getServerManger()
@@ -97,16 +97,16 @@ public class GetInitializationInfo extends Command {
 							JSONObject j = new JSONObject(output);
 							ret = ret + ",\n\t'" + fileNameWithOutExt + "': "
 									+ output;
-						} catch (JSONException ex) {
+						} catch (JSONException e) {
 							throw new MaqettaConfigException(
 									"maqetta.server.orion.command.GetInitializationInfo "
 											+ siteConfigDir + "/" + file
-											+ " not valid json");
+											+ " not valid json: " + e.getMessage());
 						} catch (IOException e) {
 							throw new MaqettaConfigException(
 									"maqetta.server.orion.command.GetInitializationInfo "
 											+ siteConfigDir + "/" + file
-											+ " error reading file");
+											+ " error reading file: " + e.getMessage());
 						}
 					}
 				}
@@ -118,8 +118,8 @@ public class GetInitializationInfo extends Command {
 							+ IDavinciServerConstants.SITECONFIG_DIRECTORY_PROPERTY
 							+ " : " + siteConfigDir + " Does not exist");
 		}
-		this.siteConigJson = ret;
-		return this.siteConigJson;
+		this.siteConfigJson = ret;
+		return this.siteConfigJson;
 	}
 
 	private String readFile(String path) throws IOException {

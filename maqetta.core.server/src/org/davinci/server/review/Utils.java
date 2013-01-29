@@ -102,7 +102,7 @@ public class Utils {
 	private static final String START_FLAG = "${";
 	private static final String END_FLAG = "}";
 
-	public static String substitude(String s, Map<String, String> map) {
+	public static String substitute(String s, Map<String, String> map) {
 		StringBuilder ret = new StringBuilder(s.length());
 		int pos = 0;
 		for(int start, end; (start = s.indexOf(START_FLAG, pos)) != -1 && (end = s.indexOf(END_FLAG, start)) != -1;){

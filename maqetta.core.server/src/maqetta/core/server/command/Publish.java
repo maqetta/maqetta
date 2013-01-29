@@ -187,6 +187,6 @@ public class Publish extends Command {
 		props.put("displayName", user.getPerson().getEmail());
 		props.put("message", message);
 		props.put("url", url);
-		return Utils.substitude(Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION), props);
+		return Utils.substitute(Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION), props);
 	}
 }

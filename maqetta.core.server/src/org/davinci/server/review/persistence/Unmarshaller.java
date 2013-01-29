@@ -41,10 +41,10 @@ import org.xml.sax.SAXException;
  */
 public class Unmarshaller {
 	public CommentsDocument unmarshall(IDavinciProject project) {
-		IStorage file = project.getCommentsFileStorage();
 		CommentsDocument commentsDoc = new CommentsDocument(project);
-
 		try {
+			IStorage file = project.getCommentsFileStorage();
+
 			Document document = initCommentsFile(file);
 			Node node = document.getFirstChild();
 			NodeList children = node.getChildNodes();
@@ -61,7 +61,26 @@ public class Unmarshaller {
 					}
 				}
 			}
-		} catch (Exception e) {
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DOMException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerFactoryConfigurationError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return commentsDoc;
@@ -229,8 +248,9 @@ public class Unmarshaller {
 			xformer.transform(source, result);
 			return document;
 		} finally {
-			if (null != os)
+			if (null != os) {
 				os.close();
+			}
 		}
 	}
 }

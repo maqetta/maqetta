@@ -68,7 +68,7 @@
 									node.getChildren(function(children){
 										dojo.forEach(children, function(child, index){
 											if (index < cap) {
-												davinci.Workbench.openEditor({
+												Workbench.openEditor({
 													fileName: child,
 													content: node.getText()
 												});
@@ -79,8 +79,8 @@
 							});
 						}
 					}
-					
-					Workbench.run().then(loadReviews);
+					dojo.subscribe("/davinci/ui/initialPerspectiveReady", loadReviews)					
+					Workbench.run();
 				};
 
 				// Display a warning dialog for unsupported browsers

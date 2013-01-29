@@ -433,3 +433,9 @@ div.right-col {
 	margin-top:10px;
 	margin-bottom:10px;
 }
+#pagebody li.multipara_bullet {
+	padding-bottom:6px;
+}
+#pagebody li.multipara_bullet div {
+	margin-bottom:3px;
+}

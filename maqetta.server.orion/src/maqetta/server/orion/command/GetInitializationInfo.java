@@ -52,9 +52,11 @@ public class GetInitializationInfo extends Command {
 				"}";
 	        resp.setContentType("application/json;charset=UTF-8");
 		} catch (JSONException e) {
+			e.printStackTrace();
 			//TODO: throw a 500, for now.  Consider whether we should send this error back in JSON instead
 			throw new IOException(e.getMessage());
 		} catch (MaqettaConfigException e) {
+			System.err.println("Maqetta Configuration Exception: " + e.getMessage());
 			//TODO: throw a 500, for now.  Consider whether we should send this error back in JSON instead
 			throw new IOException(e.getMessage());
 		}

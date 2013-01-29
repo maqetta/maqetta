@@ -5,6 +5,7 @@ define({ root:
 		"designer":"Designer,",
 		"welcome":"Welcome",//also in review.html
 		"loadingMaqetta":"&nbsp;Loading Maqetta...",
+		startupError: "Error starting Maqetta: ${0}",
 		"logOff":"Log Out",//also in review.html
 		"unsupportedBrowser":"Unsupported Browser",
 		"unsupportedNote":"Maqetta supports Firefox 4, Chrome 5, and Safari 5.1 or greater. If you wish to continue with an unsupported browser, click \"Continue.\"",

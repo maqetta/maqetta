@@ -71,7 +71,7 @@ public class GetInitializationInfo extends Command {
 			throw new MaqettaConfigException("Missing mandatory site config directory property: " + IDavinciServerConstants.SITECONFIG_DIRECTORY_PROPERTY);
 		}
 		
-		String ret = "";
+        StringBuffer sb = new StringBuffer();
 		File folder = new File(siteConfigDir);
 		if (folder.exists()) {
 			File[] listOfFiles = folder.listFiles(); 
@@ -83,7 +83,7 @@ public class GetInitializationInfo extends Command {
 						String fileNameWithOutExt = file.replaceFirst("[.][^.]+$", "");
 						String output = this.readFile(siteConfigDir+"/"+file);
 						new JSONObject(output);
-						ret = ret + ",\n\t'"+fileNameWithOutExt+"': "+output;
+						sb.append(",\n\t'" + fileNameWithOutExt+"': " + output);
 					}
 				}
 			}
@@ -92,7 +92,7 @@ public class GetInitializationInfo extends Command {
 			throw new MaqettaConfigException("Site config directory does not exist: " + siteConfigDir);
 		}
 
-		this.siteConfigJson = ret;
+		this.siteConfigJson = sb.toString();
 		return this.siteConfigJson;
 	}
 

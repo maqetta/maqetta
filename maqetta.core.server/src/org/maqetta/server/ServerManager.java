@@ -13,10 +13,6 @@ import java.util.List;
 
 import javax.mail.MessagingException;
 import javax.mail.SendFailedException;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NameNotFoundException;
-import javax.naming.NamingException;
 import javax.servlet.ServletConfig;
 
 import org.davinci.ajaxLibrary.ILibraryManager;
@@ -51,13 +47,13 @@ public class ServerManager implements IServerManager {
 	public static boolean DEBUG_IO_TO_CONSOLE = false;
 	public static boolean LOCAL_INSTALL = false;
 
-	private enum SetBoolean {
-		FALSE, TRUE, UNDEFINED
-	};
-	private static SetBoolean IN_WAR;
+//	private enum SetBoolean {
+//		FALSE, TRUE, UNDEFINED
+//	};
+//	private static SetBoolean IN_WAR;
 
 	{
-		ServerManager.IN_WAR = SetBoolean.UNDEFINED;
+//		IN_WAR = SetBoolean.UNDEFINED;
 		String localInstall = this.getDavinciProperty(IDavinciServerConstants.LOCAL_INSTALL);
 		if (localInstall != null) {
 			ServerManager.LOCAL_INSTALL = Boolean.parseBoolean(localInstall);
@@ -65,10 +61,10 @@ public class ServerManager implements IServerManager {
 	}
 
 	public SmtpPop3Mailer getMailer(){
-		if(this.mailer==null) {
+		if(mailer==null) {
 			mailer = SmtpPop3Mailer.getDefault();
 		}
-		return this.mailer;
+		return mailer;
 	}
 
 	private ServerManager() {
@@ -135,30 +131,36 @@ public class ServerManager implements IServerManager {
 	 * @see org.davinci.server.IServerManager#getDavinciProperty(java.lang.String)
 	 */
 	public String getDavinciProperty(String propertyName) {
-		String property = null;
-		SetBoolean inWar = ServerManager.IN_WAR;
-		if (inWar != SetBoolean.FALSE) { // inWar == SetBoolean.TRUE || inWar == SetBoolean.UNDEFINED
-			try {
-				Context env = (Context) new InitialContext().lookup("java:comp/env");
-				if (inWar == SetBoolean.UNDEFINED) {
-					// call to InitialContext.lookup succeeded; assume we're in a WAR
-					ServerManager.IN_WAR = SetBoolean.TRUE;
-				}
-				property = (String) env.lookup(propertyName);
-			} catch (NameNotFoundException e) {
-				// do nothing; fall through to config file then `System.getProperty` block
-			} catch (NamingException e) {
-				if (inWar == SetBoolean.TRUE) {
-					e.printStackTrace();
-				}
-				// call to InitialContext.lookup failed; assume we're running standalone
-				ServerManager.IN_WAR = SetBoolean.FALSE;
-			}
-		}
-		if (property == null) {
-			// check the config file
-			property = (String) this.options.get(propertyName);
-		}
+// XXX Don't read in from servlet container environment, since we're reading options from
+//     maqetta.conf.  But for now, leave this code here (commented) in case we want to use it again.
+//
+//		String property = null;
+//		if (IN_WAR != SetBoolean.FALSE) { // IN_WAR == SetBoolean.TRUE || IN_WAR == SetBoolean.UNDEFINED
+//			try {
+//				Context env = (Context) new InitialContext().lookup("java:comp/env");
+//				if (IN_WAR == SetBoolean.UNDEFINED) {
+//					// call to InitialContext.lookup succeeded; assume we're in a WAR
+//					IN_WAR = SetBoolean.TRUE;
+//				}
+//				property = (String) env.lookup(propertyName);
+//			} catch (NameNotFoundException e) {
+//				// do nothing; fall through to config file then `System.getProperty` block
+//			} catch (NamingException e) {
+//				if (IN_WAR == SetBoolean.TRUE) {
+//					e.printStackTrace();
+//				}
+//				// call to InitialContext.lookup failed; assume we're running standalone
+//				IN_WAR = SetBoolean.FALSE;
+//			}
+//		}
+//		if (property == null) {
+//			// check the config file
+//			property = (String) this.options.get(propertyName);
+//		}
+
+		// check the config file
+		String property = (String) this.options.get(propertyName);
+
 		if (property == null) {
 			property = System.getProperty(propertyName);
 		}

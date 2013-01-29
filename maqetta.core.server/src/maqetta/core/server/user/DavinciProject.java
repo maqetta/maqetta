@@ -1,6 +1,6 @@
 package maqetta.core.server.user;
 
-import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 
 import org.davinci.server.review.CommentsDocument;
@@ -40,7 +40,7 @@ public class DavinciProject implements Serializable, IDavinciProject {
 		this.projectName = projectName;
 	}
 
-	public IStorage getCommentsFileStorage() {
+	public IStorage getCommentsFileStorage() throws IOException {
 		IDesignerUser ru = ReviewManager.getReviewManager().getDesignerUser(ownerId);
 		IStorage commentingDir = ru.getCommentingDirectory();
 		IStorage commentsFileStorage = commentingDir.newInstance(commentingDir, "snapshot/comments.xml");

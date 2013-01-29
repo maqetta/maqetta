@@ -52,38 +52,44 @@ public class GetInitializationInfo extends Command {
     	String ret = "";
     	String siteConfigDir = ServerManager.getServerManger()
     			.getDavinciProperty(IDavinciServerConstants.SITECONFIG_DIRECTORY_PROPERTY);
-    	 File folder = new File(siteConfigDir);
-    	 if (folder.exists()) {
-    		 File[] listOfFiles = folder.listFiles(); 
-	    	 
-	    	  for (int i = 0; i < listOfFiles.length; i++) 
-	    	  {
-	    	 
-	    	   if (listOfFiles[i].isFile()) 
-	    	   {
-	    		   String file = listOfFiles[i].getName();
-	    	       if (file.endsWith(".json") || file.endsWith(".JSON"))
-	    	       {
-	    	    	   try {
-	    	    		   String fileNameWithOutExt = file.replaceFirst("[.][^.]+$", "");
-	    	    		   String output = this.readFile(siteConfigDir+"/"+file);
-	    	    		   new JSONObject(output);
-	    	    		   ret = ret + ",\n\t'"+fileNameWithOutExt+"': "+output;
-	    	    		}
-	    	    		catch(JSONException ex) {
-	    	    			System.err.println("maqetta.server.orion.command.GetInitializationInfo "+siteConfigDir+"/"+file + " not valid json");
-	    	    		} 
-	    	    	   catch (IOException e) {
-	    	    		   System.err.println("maqetta.server.orion.command.GetInitializationInfo "+siteConfigDir+"/"+file + " error reading file");
-							e.printStackTrace();
-						}
-	    	        }
-	    	     }
-	    	  }
-
-    	 } else {
-    		 System.err.println(IDavinciServerConstants.SITECONFIG_DIRECTORY_PROPERTY + " : " + siteConfigDir + " Does not exist");
-    	 }
+    	try {
+	    	 File folder = new File(siteConfigDir);
+	    	 if (folder.exists()) {
+	    		 File[] listOfFiles = folder.listFiles(); 
+		    	 
+		    	  for (int i = 0; i < listOfFiles.length; i++) 
+		    	  {
+		    	 
+		    	   if (listOfFiles[i].isFile()) 
+		    	   {
+		    		   String file = listOfFiles[i].getName();
+		    	       if (file.endsWith(".json") || file.endsWith(".JSON"))
+		    	       {
+		    	    	   try {
+		    	    		   String fileNameWithOutExt = file.replaceFirst("[.][^.]+$", "");
+		    	    		   String output = this.readFile(siteConfigDir+"/"+file);
+		    	    		   new JSONObject(output);
+		    	    		   ret = ret + ",\n\t'"+fileNameWithOutExt+"': "+output;
+		    	    		}
+		    	    		catch(JSONException ex) {
+		    	    			System.err.println("maqetta.server.orion.command.GetInitializationInfo "+siteConfigDir+"/"+file + " not valid json");
+		    	    		} 
+		    	    	   catch (IOException e) {
+		    	    		   System.err.println("maqetta.server.orion.command.GetInitializationInfo "+siteConfigDir+"/"+file + " error reading file");
+								e.printStackTrace();
+							}
+		    	        }
+		    	     }
+		    	  }
+	
+	    	 } else {
+	    		 System.err.println("maqetta.server.orion.command.GetInitializationInfo " + IDavinciServerConstants.SITECONFIG_DIRECTORY_PROPERTY + " : " + siteConfigDir + " Does not exist");
+	    	 }
+    	}
+    	catch (Exception e) {
+    		System.err.println("maqetta.server.orion.command.GetInitializationInfo " + IDavinciServerConstants.SITECONFIG_DIRECTORY_PROPERTY + " : " + siteConfigDir + " Error accessing");
+    		e.printStackTrace();
+    	}
     	  this.siteConigJson = ret;
     	  return this.siteConigJson;
     }

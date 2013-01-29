@@ -407,6 +407,172 @@ and Maqetta's project features.</p>
 	to transfer files is to 
 </div>
 
+
+<a id='OrionNavigator'></a>
+<h2>Orion Navigator</h2>
+
+<p>Maqetta embeds a version of <a href='http://www.eclipse.org/orion/'>Eclipse Orion</a>,
+	which is an open source platform for cloud-based web development. With Orion,
+	you can edit source files stored in cloud workspaces directly in the browser.
+	Maqetta includes Orion inside so that Maqetta users can take advantage of Orion's
+	various features, including its source editor technology that runs in the browser.</p>
+
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In Maqetta, make sure all files are closed.
+	For each of the open files, click on the file tab's close button -
+	<img src='img/close_sel.gif' class='exact_size_inline_icon'/>
+	- to close all of the editors. </div>
+
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Go to the <strong>Open</strong> menu 
+	<img src="img/Open_button.png"  class='exact_size_inline_icon'/> 
+	at the top of the application.
+	Choose the command <strong>Open -&gt; Orion Navigator</strong>.
+	A new browser tab/window will open that is running Eclipse Orion,
+	with the Orion navigator user interface open showing the contents of
+	your personal cloud workspace.
+</div>
+
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src="img/Orion_Navigator.png" style='height:300px; width:auto;'/> 
+	</span>
+</div>
+
+<p>In the Orion navigator, at the top level, you will see all of your projects.
+	In the picture above, there is only one project ("project1").</p>
+	
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the small right-pointing arrow just to the left of "project1"
+	to open up that folder. You should see the same list of HTML, CSS, JavaScript files
+	and folders as the Maqetta <strong>Files</strong> palette.
+</div>
+	
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src="img/Orion_Navigator_Project_Open.png" style='height:170px; width:auto;'/> 
+	</span>
+</div>
+
+<div class='note'>
+	The Orion Navigator will not show all of the same files as you see in the Maqetta workspace.
+	This is because that Maqetta injects some files and folders into user workspaces 
+	that are read-only, 
+	such as the <code>samples</code> folders. Read-only files and folders do not appear
+	in the Orion Navigator.
+</div>
+	
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on <code>file1.html</code> 
+	(assuming it is in your workspace due to previous steps in this tutorial).
+	Orion will now switch to its source editor and show the HTML contents of file1.html.
+	Find the line of source code that has "Tab 1" on it.
+</div>
+
+<pre>
+<div data-dojo-type="dijit.layout.ContentPane" title="Tab 1" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" selected="true" closable="false" doLayout="false"></div>
+</pre>
+
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Orion source editor, change the string "Tab 1" to "Reports" (for the <code>title</code> attribute).
+	Then click on the <strong>Save</strong> button to save your changes.
+</div>
+
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Return to the Maqetta browser window. In the <strong>Files</strong> palette,
+	double-click on <code>file1.html</code>. On the visual editor canvas, you should
+	see that the first tab now says "Reports" instead of "Tab 1".
+</div>
+
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src="img/Tab_1_to_Reports.png" style='height:220px; width:auto;'/> 
+	</span>
+</div>
+
+<div class='note'>
+	NOTE: Be very careful with source code changes. If you modify HTML, CSS or JavaScript files
+	using source editors, and the revised code is not valid HTML, CSS or JavaScript,
+	Maqetta might not be able to open your files.
+</div>
+
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Return to the Orion window. At the top/left, click on the hyperlink for "project1"
+	to return to the file navigator. You should once again see the list of files
+	in "project1", such as app.css, app.js and file1.html.
+</div>
+
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Orion window, click on the "New folder" button. In the type-in box,
+	enter "img". After completing the operation, you should see a new "img" folder in your project.
+	Go back to the Maqetta window. Hit browser refresh, which will cause Maqetta to restart
+	and update the <strong>Files</strong> palette. You should see the "img" folder in the 
+	Maqetta <strong>Files</strong> palette.
+</div>
+
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Return to the Orion window. Click <strong>just to the right</strong> 
+	(<em>not directly on</em>) the string "img"
+	to select the "img" folder. You should see an orange highlight on the "img" line to 
+	show that it is selected.
+</div>
+
+<div class='note'>
+	In Orion, clicking on a file or folder name will cause Orion to open that file or folder.
+	Clicking to the right of a file or folder name will cause Orion to select that file or folder.
+</div>
+
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+In the Actions menu, choose "Import local file".
+	You should see this dialog:
+</div>
+
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src="img/Orion_upload_dialog.png" style='height:400px; width:auto;'/> 
+	</span>
+</div>
+
+<div class='note'>
+	This dialog provides an alternate way for you to upload files into your Maqetta workspace.
+	Orion's upload feature includes various features that Maqetta's upload feature does not, 
+	including the ability to upload a ZIP file.
+</div>
+
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the close box (the "x") at the top/right of the Import files dialog.
+	This will return you to the Orion navigator.
+</div>
+
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click <strong>just to the right</strong> 
+	(<em>not directly on</em>) the string "file1.html"
+	to select that file. Press and hold on the "Actions" menu. You should see the following:
+</div>
+
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src="img/Orion_file_actions.png" style='height:200px; width:auto;'/> 
+	</span>
+</div>
+
+<p>As you can see, the Orion navigator offers various useful file management features, such as
+	the ability to move files to different folders.</p>
+
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click <strong>just to the right</strong> 
+	(<em>not directly on</em>) the folder "img"
+	to select that folder. From the Actions menu, choose "Delete" to delete that file.
+	You'll see the "img" is no longer visible in the Orion navigator.
+	Go back to the Maqetta window. Hit browser refresh, which will cause Maqetta to restart
+	and update the <strong>Files</strong> palette. You should see that the "img" folder is no longer visible
+	in the Maqetta <strong>Files</strong> palette.
+</div>
+
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Close the browser tab containing the Orion navigator.
+</div>
+
 <br />
 <p class="prevnext"><a href="tutorials/tutorials.html">Previous</a> / <a href="tutorials/Mobile_User_Interfaces.html">Next</a></p>
 

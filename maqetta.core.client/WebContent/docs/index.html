@@ -5,218 +5,239 @@
     	<title>Maqetta Documentation</title>
         <script src="../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
         <script type="text/javascript">
-        	dojo.require("dijit.dijit");
-            dojo.require("dijit.layout.ContentPane");
-            dojo.require("dojox.layout.ContentPane");
-            dojo.require("dijit.layout.BorderContainer");
-            dojo.require("dojo.data.ItemFileReadStore");
-            dojo.require("dijit.Tree");
+dojo.require('dijit.Tree');
+dojo.require('dijit.layout.BorderContainer');
+dojo.require('dojox.layout.ContentPane');
+dojo.require('dojo.data.ItemFileReadStore');
+dojo.require('dijit.tree.ForestStoreModel');
 
-            // Global variables
-            docs_base_url = null;
-			currently_viewed_page = null;
-			docs_page_array = {};
-            
-			dojo.addOnLoad(function() {
-				// Set global variable docs_base_url
-				// to the base directory for the docset
-                var initial_loc = location.href;
-                var hash_index = initial_loc.indexOf('#');
-                var initial_loc_nohash = (hash_index>=0) ? initial_loc.substr(0,hash_index) : initial_loc;
-            	var base_index = initial_loc_nohash.lastIndexOf('/');
-            	// docs_base_url is a global
-            	docs_base_url = initial_loc_nohash.substr(0,base_index);
-            	var initial_goto_page = null;
-            	if(hash_index>=0){
-                	var hash = initial_loc.substr(hash_index+1);
-                	if(hash.length>0){
-                		initial_goto_page = initial_loc.substr(hash_index+1)+".html";
-                	}
-            	}
+// Global variables
+docs_base_url = null;
+currently_viewed_page = null;
+docs_page_array = {};
+last_good_filename = '';
 
-            	// Go get the JSON structure that is used to populate the Tree widget
-            	var maqettadocs_json_deferred = dojo.xhrGet({
-                    url: "maqettadocs.json",
-                    handleAs: "json",
-                    preventCache: true,
-                    load: function(data) {
-                    	
-                    	var getUrlsRecursive=function(item){
-                    		if(dojo.isString(item.url) && item.url.length>0){
-                    			// docs_page_array is a global variable
-                        		docs_page_array[item.url]=item.id;
-                    		}
-                    		if(dojo.isArray(item.children)){
-                        		for(var itemchild=0;itemchild<item.children.length;itemchild++){
-                        			getUrlsRecursive(item.children[itemchild]);
-                        		}
-                    		}
-                    	}
-                    	for(var item=0;item<data.items.length; item++){
-                        	getUrlsRecursive(data.items[item]);
-                    	}
-                    	var bc2 = dijit.byId('borderContainerTwo');
-                    	// Force resize action on outer BorderContainer so that
-                    	// left-side Tree widget will resize and properly indent the TreeItems.
-                    	// (Tree resize needs to be called after Tree is added to DOM)
-                    	//setTimeout(function(){
-                        	bc2.resize();
-                        	var tree = dijit.byId('TOCTree');
-                        	if(tree){
-                        		tree.set('paths',[['topicsRoot','4','4.1'],['topicsRoot','9','9.1']]);
-                        		tree.set('selectedItems',[]);
-                        	}
-                    	//}, 1);
-                    },
-                    error: function(error) {
-                        console.log("unable to load maqettadocs.json");
-                    }
-            	});
-            	
-				content.onDownloadEnd = function() {
-					dojo.query('A').forEach(function(link){
-						if (link.getAttribute("href")) {
-					   		if (link.getAttribute("rel") == "external") {
-								link.target = "_blank";
-							} else if (!("target" in link) || link.target != "_blank") {
-								link.onclick = function(e){
-									for (var node = e.target; node; node = node.parentNode) {
-										if ('href' in node) {
-											return goToPage(node.href);
-										}
-									}
-								}; 
-							}
-						}
-					});
-					if(initial_goto_page){
-						// Have to use temporary variable to prevent
-						// infinite loop when loading the first page
-						var goto_page = initial_goto_page;
-						initial_goto_page = null;
-						dojo.when(maqettadocs_json_deferred, function(){
-							goToPage(goto_page);
-						});
+require([
+	"dojo/ready", "dojo/request/xhr", "dojo/_base/json", "dojo/_base/event"
+], function(ready, xhr, dojoJson, Event){
+	ready(function(){
+		// Set global variable docs_base_url
+		// to the base directory for the docset
+		var initial_loc = location.href;
+		var hash_index = initial_loc.indexOf('#');
+		var initial_loc_nohash = (hash_index>=0) ? initial_loc.substr(0,hash_index) : initial_loc;
+		var base_index = initial_loc_nohash.lastIndexOf('/');
+		// docs_base_url is a global
+		docs_base_url = initial_loc_nohash.substr(0,base_index);
+		var initial_goto_page = null;
+		if(hash_index>=0){
+			var hash = initial_loc.substr(hash_index+1);
+			if(hash.length>0){
+				initial_goto_page = initial_loc.substr(hash_index+1)+".html";
+				}
+		}
+	
+		// Go get the JSON structure that is used to populate the Tree widget
+		var maqettadocs_json_deferred = xhr.get("maqettadocs.json", {
+			handleAs: "text",
+			preventCache: true
+		}).then(function(dataAsString) {
+			var data = dojo.fromJson(dataAsString);
+			var getUrlsRecursive=function(item){
+				if(dojo.isString(item.url) && item.url.length>0){
+					// docs_page_array is a global variable
+					docs_page_array[item.url]=item.id;
+				}
+				if(dojo.isArray(item.children)){
+					for(var itemchild=0;itemchild<item.children.length;itemchild++){
+						getUrlsRecursive(item.children[itemchild]);
 					}
-					if("onhashchange" in window){
-						dojo.connect(window, "onhashchange", function() {
-							var new_url = location.href;
-							var hash_index = new_url.indexOf('#');
-							if(hash_index>=0){
-							   	var hash = new_url.substr(hash_index+1);
-							   	if(hash.length>0){
-								   	if(hash !== currently_viewed_page){
-							   			var goto_page = new_url.substr(hash_index+1)+".html";
-							   			goToPage(goto_page);
-							   		}
-							   	}
+				}
+			}
+			for(var item=0;item<data.items.length; item++){
+		    	getUrlsRecursive(data.items[item]);
+			}
+			var bc2 = dijit.byId('borderContainerTwo');
+			// Force resize action on outer BorderContainer so that
+			// left-side Tree widget will resize and properly indent the TreeItems.
+			// (Tree resize needs to be called after Tree is added to DOM)
+			//setTimeout(function(){
+				bc2.resize();
+				var tree = dijit.byId('TOCTree');
+				if(tree){
+					tree.set('paths',[['topicsRoot','4','4.1'],['topicsRoot','9','9.1']]);
+					tree.set('selectedItems',[]);
+				}
+			//}, 1);
+		}, function(error) {
+			console.log("unable to load maqettadocs.json");
+		});
+
+		content.onDownloadEnd = function() {
+			dojo.query('A').forEach(function(link){
+				if (link.getAttribute("href")) {
+					if (link.getAttribute("rel") == "external") {
+						link.target = "_blank";
+					}else if (link.getAttribute("rel") == "scroll_into_view") {
+						var href = link.href;
+						if(href){
+							var hashIndex = href.indexOf('#');
+							var fragment = hashIndex >= 0 ? href.substr(hashIndex) : href;
+							link.onclick = function(e){
+								var id = fragment[0] == '#' ? fragment.substr(1) : fragment;
+								if(id){
+									var element = document.getElementById(id);
+									if(element && element.scrollIntoView){
+										element.scrollIntoView(true);
+									}
+								}
+								Event.stop(e);
+							}; 
+						}
+					} else if (!("target" in link) || link.target != "_blank") {
+						link.onclick = function(e){
+							for (var node = e.target; node; node = node.parentNode) {
+								if ('href' in node) {
+									return goToPage(node.href);
+								}
 							}
-							
-						});
+						}; 
 					}
 				}
 			});
+			if(initial_goto_page){
+				// Have to use temporary variable to prevent
+				// infinite loop when loading the first page
+				var goto_page = initial_goto_page;
+				initial_goto_page = null;
+				dojo.when(maqettadocs_json_deferred, function(){
+					goToPage(goto_page);
+				});
+			}
+			if("onhashchange" in window){
+				dojo.connect(window, "onhashchange", function() {
+					var new_url = location.href;
+					var hash_index = new_url.indexOf('#');
+					if(hash_index>=0){
+						var hash = new_url.substr(hash_index+1);
+						if(hash.length>0){
+							if(hash !== currently_viewed_page){
+								var goto_page = new_url.substr(hash_index+1)+".html";
+								goToPage(goto_page);
+							}
+						}
+					}
+					
+				});
+			}
+		}
+	});
+});
 			
-            function goToPage(href) {
-                var filename = href;
-                // sometimes this routine is called with a string
-                // and sometimes with an array of strings
-                if(dojo.isArray(filename)){
-                	filename=filename[0];
-                }
-                // sometimes this routine is called with an absolute url
-                // if so, convert to relative url
-                var base_len = docs_base_url.length;
-                if(filename.substr(0,base_len)===docs_base_url){
-                	filename = filename.substr(base_len+1);
-                }
-                var target_anchor = null;
+function goToPage(href) {
+	var filename = href;
+	// sometimes this routine is called with a string
+	// and sometimes with an array of strings
+	if(dojo.isArray(filename)){
+		filename=filename[0];
+	}
+	// sometimes this routine is called with an absolute url
+	// if so, convert to relative url
+	var base_len = docs_base_url.length;
+	if(filename.substr(0,base_len)===docs_base_url){
+		filename = filename.substr(base_len+1);
+	}
+	var target_anchor = null;
 /* Possible approach for supporting hyperlinks within a page
 	For now, they are disabled.
-                // hyperlinks within a content page include a # in the href
-                var hash_index = filename.indexOf('#');
-                if(hash_index >= 0){
-                    // By convention, hyperlinks within a page must be of form
-                    // <pagenam>@<otherstring>. For example, techdocs/themeEditor@definition
-                    filename = filename.substr(hash_index+1);
-                	var at_index = filename.indexOf('@');
-                 	if(at_index > 0){
-                     	target_anchor = filename;
-                    	filename = filename.substr(0,at_index);
-                	}
-                }
+    // hyperlinks within a content page include a # in the href
+    var hash_index = filename.indexOf('#');
+    if(hash_index >= 0){
+        // By convention, hyperlinks within a page must be of form
+        // <pagenam>@<otherstring>. For example, techdocs/themeEditor@definition
+        filename = filename.substr(hash_index+1);
+    	var at_index = filename.indexOf('@');
+     	if(at_index > 0){
+         	target_anchor = filename;
+        	filename = filename.substr(0,at_index);
+    	}
+    }
 */
-               	// make sure there is a .html at the end
-               	if(filename.indexOf('.html')<0){
-                   	filename += ".html";
-               	}
-                // only go to this page if it is in the list of known pages, else things will hang
-                if(docs_page_array[filename]){
-	                var dot_index = filename.lastIndexOf('.');
-	                var filename_no_ext = (dot_index>=0) ? filename.substr(0,dot_index) : filename;
-	                var hash_index = location.href.indexOf('#');
-	                var current_loc_nohash = (hash_index>=0)? location.href.substr(0,hash_index) : location.href;
-	                // currently_viewed_page is a global
-	    			currently_viewed_page = filename_no_ext;
-	            	content.setHref(filename);
-	            	if(!target_anchor){
-		            	target_anchor = filename_no_ext;
-	            	}
-	                location.href = current_loc_nohash + '#' + target_anchor;
-					print_content.setHref(href);
-					var TOCTree = dijit.byId('TOCTree');
-					if(TOCTree && topicsStore){
-						// set path to that item
-						var id = docs_page_array[filename];
-						topicsStore.fetch({query: {id:id}, queryOptions:{deep:true}, onComplete: dojo.hitch(this, function(items, request){
-							if(items && items.length >0){
-								var item = items[0];
-								var buildme = [];
-								var result = recursiveHunt(item.id, TOCTree.model, buildme, TOCTree.model.root);
-								if(result && result.length > 0){
-									TOCTree.set('path', result);
-								}
-							}
-						})});
+	// make sure there is a .html at the end
+	if(filename.indexOf('.html')<0){
+		filename += ".html";
+	}
+	// only go to this page if it is in the list of known pages, else things will hang
+	if(!docs_page_array[filename]){
+		filename = last_good_filename;
+	}
+	if(docs_page_array[filename]){
+		var dot_index = filename.lastIndexOf('.');
+		var filename_no_ext = (dot_index>=0) ? filename.substr(0,dot_index) : filename;
+		var hash_index = location.href.indexOf('#');
+		var current_loc_nohash = (hash_index>=0)? location.href.substr(0,hash_index) : location.href;
+		// currently_viewed_page is a global
+		currently_viewed_page = filename_no_ext;
+		content.setHref(filename);
+		if(!target_anchor){
+			target_anchor = filename_no_ext;
+		}
+		location.href = current_loc_nohash + '#' + target_anchor;
+		print_content.setHref(href);
+		var TOCTree = dijit.byId('TOCTree');
+		if(TOCTree && topicsStore){
+			// set path to that item
+			var id = docs_page_array[filename];
+			topicsStore.fetch({query: {id:id}, queryOptions:{deep:true}, onComplete: dojo.hitch(this, function(items, request){
+				if(items && items.length >0){
+					var item = items[0];
+					var buildme = [];
+					var result = recursiveHunt(item.id, TOCTree.model, buildme, TOCTree.model.root);
+					if(result && result.length > 0){
+						TOCTree.set('path', result);
 					}
-                }else{
-                    console.log("Bad hyperlink. currently_viewed_page="+currently_viewed_page+", target="+filename);
-                }
-            	return false;
-            }
+				}
+			})});
+		}
+		last_good_filename = filename;	// Global variable
+	}else{
+		debugger;
+		console.log("Bad hyperlink. currently_viewed_page="+currently_viewed_page+", target="+filename);
+	}
+	return false;
+}
 
-            function recursiveHunt(lookfor, model, buildme, item){
-                var id = model.getIdentity(item);
-                buildme.push(id);
-                if(id == lookfor){
-                    // Return the buildme array, indicating a match was found
-                    return buildme;
-                }
-                for(var idx in item.children){
-                    // start a new branch of buildme, starting with what we have so far
-                    var buildmebranch = buildme.slice(0);
-                    var r = recursiveHunt(lookfor, model, buildmebranch, item.children[idx]);
-                    // If a match was found in that recurse, return it.
-                    //  This unwinds the recursion on completion.
-                    if(r){ return r; }
-                }
-                // Return undefined, indicating no match was found
-                return undefined;
-            }
+function recursiveHunt(lookfor, model, buildme, item){
+	var id = model.getIdentity(item);
+	buildme.push(id);
+	if(id == lookfor){
+		// Return the buildme array, indicating a match was found
+		return buildme;
+	}
+	for(var idx in item.children){
+		// start a new branch of buildme, starting with what we have so far
+		var buildmebranch = buildme.slice(0);
+		var r = recursiveHunt(lookfor, model, buildmebranch, item.children[idx]);
+		// If a match was found in that recurse, return it.
+		//  This unwinds the recursion on completion.
+		if(r){ return r; }
+	}
+	// Return undefined, indicating no match was found
+	return undefined;
+}
 
-			/*
-			function PrintContent() {
-				var DocumentContainer = document.getElementById('content');
-				var WindowObject = window.open("", "PrintWindow",
-				"width=750,height=650,top=50,left=50,toolbars=no, menubar=no,scrollbars=yes,status=no,resizable=yes");
-				WindowObject.document.writeln(DocumentContainer.innerHTML);
-				WindowObject.document.close();
-				WindowObject.focus();
-				WindowObject.print();
-				WindowObject.close();
-			}
-			*/
-			
+/*
+function PrintContent() {
+	var DocumentContainer = document.getElementById('content');
+	var WindowObject = window.open("", "PrintWindow",
+	"width=750,height=650,top=50,left=50,toolbars=no, menubar=no,scrollbars=yes,status=no,resizable=yes");
+	WindowObject.document.writeln(DocumentContainer.innerHTML);
+	WindowObject.document.close();
+	WindowObject.focus();
+	WindowObject.print();
+	WindowObject.close();
+}
+*/
         </script>
         <link rel="stylesheet" type="text/css" href="../dijit/themes/claro/document.css"/>
         <link rel="stylesheet" type="text/css" href="../dijit/themes/claro/claro.css"/>

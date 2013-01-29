@@ -373,3 +373,69 @@ div.right-col {
 	padding-bottom:0;
 	padding-left:15px;
 }
+#pagebody img.exact_size_inline_icon {
+	margin:0;
+	vertical-align:middle;
+	line-height:1px;
+	width:auto;
+	height:auto;
+}
+#pagebody .overview_snapshots_outer {
+	margin-top:20px;
+	margin-bottom:20px;
+}
+#pagebody .overview_snapshots_inner {
+	display:inline-block; 
+	width:450px;
+	margin-bottom:20px;
+	margin-right:10px;
+}
+#pagebody .overview_snapshots_caption {
+	margin-top:5px;
+	margin-bottom:5px;
+}
+#pagebody .overview_snapshots_inner img {
+	display:inline-block; 
+	width:450px;
+	margin:0;
+ }
+ #pagebody .indented_note {
+ 	padding-left:6em;
+ }
+ #pagebody .overview_snapshots_inner img.maqetta_org_img {
+ 	width:400px;
+ }
+ #pagebody .overview_snapshots_inner img.login_register_img {
+ 	width:250px;
+ }
+#pagebody .overview_snapshots_inner img.main_button {
+	width:auto;
+}
+#pagebody img.main_button_20 {
+	width:20px;
+	vertical-align:middle;
+}
+#pagebody .overview_snapshots_inner img.main_menu {
+	width:auto;
+	border:1px solid gray;
+	padding:1px;	
+}
+#pagebody .side_by_side {
+	height:300px;
+	margin:0;
+}
+#pagebody .tutorial_checkmark {
+	font-size:150%;
+	color:darkorange;
+	line-height:1px;
+}
+#pagebody .tutorial_step_div {
+	margin-top:10px;
+	margin-bottom:10px;
+}
+#pagebody li.multipara_bullet {
+	padding-bottom:6px;
+}
+#pagebody li.multipara_bullet div {
+	margin-bottom:3px;
+}

@@ -22,72 +22,78 @@ import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ServerManager;
 
 public class GetInitializationInfo extends Command {
-	private String siteConigJson = null;
+	private String siteConfigJson = null;
+
+	private class MaqettaConfigException extends Exception {
+		private static final long serialVersionUID = 1L;
+
+		public MaqettaConfigException(String message) {
+			super(message);
+		}
+	};
 
 	@Override
 	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
 		IEclipsePreferences users = new OrionScope().getNode("Users"); //$NON-NLS-1$
 		IEclipsePreferences result = (IEclipsePreferences) users.node(user.getUserID());
 		String workbenchSettings = result.get(MaqettaOrionServerConstants.WORKBENCH_PREF, "{}");
-		String c = this.getSiteJson();
-		this.responseString=
+		try {
+			String c = this.getSiteJson();
+			this.responseString=
 				"{\n"+
-						"\t'workbenchState':"+workbenchSettings+",\n"+
-						"\t'userInfo':{'userId': '"+user.getUserID()+"',"+
-						"\t\t'isLocalInstall': '"+String.valueOf(ServerManager.LOCAL_INSTALL)+"',"+
-						"\t\t'userFirstName': '"+String.valueOf(user.getPerson().getFirstName())+"',"+
-						"\t\t'userLastName': '"+String.valueOf(user.getPerson().getLastName())+"',"+
-						"\t\t'email': '"+user.getPerson().getEmail()+"'\n"+
-						"\t}"+
-						"\t"+c+"\n"+
-						"}";
+					"\t'workbenchState':"+workbenchSettings+",\n"+
+					"\t'userInfo':{'userId': '"+user.getUserID()+"',"+
+					"\t\t'isLocalInstall': '"+String.valueOf(ServerManager.LOCAL_INSTALL)+"',"+
+					"\t\t'userFirstName': '"+String.valueOf(user.getPerson().getFirstName())+"',"+
+					"\t\t'userLastName': '"+String.valueOf(user.getPerson().getLastName())+"',"+
+					"\t\t'email': '"+user.getPerson().getEmail()+"'\n"+
+					"\t}"+
+					"\t"+c+"\n"+
+				"}";
+		} catch (JSONException e) {
+			//TODO: throw a 500, for now.  Consider whether we should send this error back in JSON instead
+			throw new IOException(e.getMessage());
+		} catch (MaqettaConfigException e) {
+			//TODO: throw a 500, for now.  Consider whether we should send this error back in JSON instead
+			throw new IOException(e.getMessage());
+		}
 	}
 
-	private String getSiteJson(){
+	private String getSiteJson() throws IOException, JSONException, MaqettaConfigException {
 
-		if (this.siteConigJson != null) {
-			return this.siteConigJson;
+		if (this.siteConfigJson != null) {
+			return this.siteConfigJson;
 		}
-		String ret = "";
+
 		String siteConfigDir = ServerManager.getServerManger()
 				.getDavinciProperty(IDavinciServerConstants.SITECONFIG_DIRECTORY_PROPERTY);
-		try {
-			File folder = new File(siteConfigDir);
-			if (folder.exists()) {
-				File[] listOfFiles = folder.listFiles(); 
+		if (siteConfigDir == null) {
+			throw new MaqettaConfigException("Missing mandatory site config directory property: " + IDavinciServerConstants.SITECONFIG_DIRECTORY_PROPERTY);
+		}
+		
+		String ret = "";
+		File folder = new File(siteConfigDir);
+		if (folder.exists()) {
+			File[] listOfFiles = folder.listFiles(); 
 
-				for (int i = 0; i < listOfFiles.length; i++) {
-
-					if (listOfFiles[i].isFile()) {
-						String file = listOfFiles[i].getName();
-						if (file.endsWith(".json") || file.endsWith(".JSON")) {
-							try {
-								String fileNameWithOutExt = file.replaceFirst("[.][^.]+$", "");
-								String output = this.readFile(siteConfigDir+"/"+file);
-								new JSONObject(output);
-								ret = ret + ",\n\t'"+fileNameWithOutExt+"': "+output;
-							}
-							catch(JSONException ex) {
-								System.err.println("maqetta.server.orion.command.GetInitializationInfo "+siteConfigDir+"/"+file + " not valid json");
-							} 
-							catch (IOException e) {
-								System.err.println("maqetta.server.orion.command.GetInitializationInfo "+siteConfigDir+"/"+file + " error reading file");
-								e.printStackTrace();
-							}
-						}
+			for (int i = 0; i < listOfFiles.length; i++) {
+				if (listOfFiles[i].isFile()) {
+					String file = listOfFiles[i].getName();
+					if (file.endsWith(".json") || file.endsWith(".JSON")) {
+						String fileNameWithOutExt = file.replaceFirst("[.][^.]+$", "");
+						String output = this.readFile(siteConfigDir+"/"+file);
+						new JSONObject(output);
+						ret = ret + ",\n\t'"+fileNameWithOutExt+"': "+output;
 					}
 				}
-
-			} else {
-				System.err.println("maqetta.server.orion.command.GetInitializationInfo " + IDavinciServerConstants.SITECONFIG_DIRECTORY_PROPERTY + " : " + siteConfigDir + " Does not exist");
 			}
+
+		} else {
+			throw new MaqettaConfigException("Site config directory does not exist: " + siteConfigDir);
 		}
-		catch (Exception e) {
-			System.err.println("maqetta.server.orion.command.GetInitializationInfo " + IDavinciServerConstants.SITECONFIG_DIRECTORY_PROPERTY + " : " + siteConfigDir + " Error accessing");
-			e.printStackTrace();
-		}
-		this.siteConigJson = ret;
-		return this.siteConigJson;
+
+		this.siteConfigJson = ret;
+		return this.siteConfigJson;
 	}
 
 	private String readFile(String path) throws IOException {

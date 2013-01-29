@@ -50,6 +50,7 @@ public class GetInitializationInfo extends Command {
 					"\t}"+
 					"\t"+c+"\n"+
 				"}";
+	        resp.setContentType("application/json;charset=UTF-8");
 		} catch (JSONException e) {
 			//TODO: throw a 500, for now.  Consider whether we should send this error back in JSON instead
 			throw new IOException(e.getMessage());

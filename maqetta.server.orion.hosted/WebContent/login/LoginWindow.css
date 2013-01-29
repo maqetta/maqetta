@@ -263,3 +263,9 @@
 #orionBody #newUserHeaderShown .orion-register-input-holder {
 	margin-bottom:10px;
 }
+.orion-create-account-enter-valid-email {
+	font-size:90%;
+	text-align:left;
+	clear:left;
+	padding-bottom:16px;
+}

@@ -339,7 +339,7 @@ var Workbench = {
 	    	url: "cmd/getInitializationInfo",
 	    	handleAs: "json"
 	    }).then(function(result){
-	    	Runtime._initializationInfo = result;
+			Runtime._initializationInfo = result;
 
 	    	var userInfo = result.userInfo;
 	    	Runtime.isLocalInstall = userInfo.userId == 'maqettaUser';
@@ -350,12 +350,13 @@ var Workbench = {
             return metadata.init();
 	    }).then(function(){
 			var perspective = Runtime.initialPerspective || "davinci.ui.main";
+			dojo.query('.loading').orphan();
 			Workbench.showPerspective(perspective);
 			Workbench._updateTitle();
 			initializeWorkbenchState();			
+		}).otherwise(function(result){
+			dojo.query('#load_screen').addContent(dojo.string.substitute(webContent.startupError, [result.message]), "only")/*.addClass("error")*/;
 		});
-
-		dojo.query('.loading').orphan();
 
 		Workbench._lastAutoSave = Date.now();
 		setInterval(dojo.hitch(this,"_autoSave"),30000);

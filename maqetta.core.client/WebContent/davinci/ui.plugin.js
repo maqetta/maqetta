@@ -291,7 +291,7 @@ return {
                {
                    id: "orionNavigator",
                    run: function() {
-                     window.open("/navigate/table.html#", '_blank');
+                     window.open("../navigate/table.html#", '_blank');
                      window.focus();
                    },
                    iconClass: "newOpenMenuItem orionIcon",

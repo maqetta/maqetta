@@ -5,12 +5,9 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import maqetta.server.orion.MaqettaOrionServerConstants;
 import maqetta.server.orion.user.OrionUser;
 
 import org.davinci.server.user.IUser;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.orion.server.core.users.OrionScope;
 import org.maqetta.server.Command;
 
 public class ConfigProject extends Command {
@@ -20,21 +17,21 @@ public class ConfigProject extends Command {
     	
         String projectName = req.getParameter("project");
         String orionProject = req.getParameter("orionProject");
-        if(orionProject!=null){
-        	OrionUser u = (OrionUser)user;
+        if (orionProject!=null) {
+        	OrionUser u = (OrionUser) user;
         	projectName = u.computeMaqettaPath(orionProject);
         }
-        	boolean configOnly = "true".equals(req.getParameter("configOnly"));
         
+        boolean configOnly = "true".equals(req.getParameter("configOnly"));
+        String context = req.getContextPath();
         
     	user.createProject(projectName);
 
     	this.responseString = "OK";
-    	if(configOnly){
-    		resp.sendRedirect("/maqetta/");
-        	
-    	}else{
-    		resp.sendRedirect("/maqetta/?project=" + projectName);
+    	if (configOnly) {
+    		resp.sendRedirect(context + "/maqetta/");
+    	} else {
+    		resp.sendRedirect(context + "/maqetta/?project=" + projectName);
     	}
     }
 

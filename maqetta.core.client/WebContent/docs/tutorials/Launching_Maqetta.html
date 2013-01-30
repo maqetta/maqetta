@@ -1,0 +1,260 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Tutorial 2 - Launching Maqetta</title>
+</head>
+<body class="maqettadocs">
+
+<style type="text/css">
+table.CompTypeTable {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+table.CompTypeTable td, table.CompTypeTable th {
+	padding:3px;
+	border:1px solid black;
+}
+table.CompTypeTable th {
+	font-style:italic;
+	font-weight:bold;
+	background:#888;
+}
+table td.CompTypeOption {
+	font-weight:bold;
+}
+tr.desktop {
+	background-color:#ddf;
+}
+tr.mobile {
+	background-color:#dfd;
+}
+#pagebody .overview_snapshots_outer {
+	margin-top:20px;
+	margin-bottom:20px;
+}
+#pagebody .overview_snapshots_inner {
+	display:inline-block; 
+	width:450px;
+	margin-bottom:20px;
+	margin-right:10px;
+}
+#pagebody .overview_snapshots_caption {
+	margin-top:5px;
+	margin-bottom:5px;
+}
+#pagebody .overview_snapshots_inner img {
+	display:inline-block; 
+	width:450px;
+	margin:0;
+ }
+ #pagebody .indented_note {
+ 	padding-left:6em;
+ }
+ #pagebody .overview_snapshots_inner img.maqetta_org_img {
+ 	width:400px;
+ }
+ #pagebody .overview_snapshots_inner img.login_register_img {
+ 	width:250px;
+ }
+</style>
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td> &nbsp; </td>
+    <td class="prevnext">
+	<a href="tutorials/Maqetta_Overview.html">Previous</a> / <a href="tutorials/User_Interface_Overview.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Tutorial 2 - Launching Maqetta</h1>
+
+<div class='note'>
+	When going through Maqetta's tutorials, it is suggested that you have two side-by-side
+	browser windows open, one showing the tutorial, and the other where you run the application
+	and perform the steps listed in the tutorial.<br/>
+	<img src='img/SideBySideTutorialsApp.png' class='side_by_side'/>
+</div>
+
+<p>This tutorial provides an overview of the Maqetta's overall user interface -
+in particular, those parts of the user interface that you see upon launching the application
+for the first time (i.e., immediately after completing the steps from the previous tutorial
+<a href='tutorials/Launching_Maqetta.html'>Launching Maqetta</a>). Topics covered:</p>
+<ul>
+	<li>Different ways to launch the Maqetta application</li>
+	<li>Run the Maqetta application at Maqetta.org</li>
+	<li>Run the Maqetta application locally (i.e., local install)</li>
+	<li>Install on a server (e.g., intranet server)</li>
+</ul>
+
+<a id='Ways_to_launch_Maqetta'></a>
+<h2>Different ways to launch the Maqetta application</h2>
+
+<p>You can launch the Maqetta application in the following ways:</p>
+<ul>
+	<li><strong>Maqetta.org</strong> - You can run Maqetta by simply
+		going to <a href='http://maqetta.org' rel='external'>Maqetta.org</a> and then clicking
+		on the "Launch Maqetta" button. The Maqetta team
+		attempts to keep the application running and tries to ensure
+		that the server has reasonable performance, but the application
+		at Maqetta.org is available on an as-is basis with no guarantees
+		about data preservation (e.g., you have to back up your own data)
+		or security.
+	</li>
+	<li><strong>Local install</strong> - 
+		You can download either the latest stable release or 
+		last night's nightly build, and then install on your own computer.
+		This option provides best performance, but you won't be
+		able to easily share your mockups with your colleagues.
+	</li>
+	<li><strong>Intranet server install</strong> - 
+		Your company can download the latest stable release, 
+		and then install on an intranet server behind your company's firewall,
+		and potentially integrate with a Java application server
+		and your company's LDAP for user authentication.
+		Also, it is possible for site administrators to customize 
+		your company's version of Maqetta
+		to support your company's widgets and themes.
+	</li>
+</ul>
+<p>The sections below walk you through the getting start process for each of the above options.</p>
+
+<a id='Run_at_maqetta_org'></a>
+<h2>Run the Maqetta application at Maqetta.org</h2>
+
+<p>
+You can run the Maqetta application by simply
+going to <a href='http://maqetta.org' rel='external'>Maqetta.org</a> and then clicking
+on the "Launch Maqetta" button. </p>
+
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src='img/Maqetta.org.png' class='maqetta_org_img'></img> 
+	</span>
+</div>
+
+<p>This will take you to the login screen.</p>
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src='img/Maqetta.org.login.png' class='login_register_img'></img> 
+	</span>
+</div>
+
+<p>New users will need to click on the Register button, which will take you to the Register screen.
+	Enter your email address and click "Sign up".</p>
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src='img/Maqetta.org.register.png' class='login_register_img'></img> 
+	</span>
+</div>
+
+<p>An activation email will be sent to your email address. Clicking on the hyperlink in the email
+	will take you back to Maqetta.org, to the create account screen, where you can enter your Maqetta.org password:</p>
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src='img/Maqetta.org.create.account.png' class='login_register_img'></img> 
+	</span>
+</div>
+
+<p>After clicking on "Sign up", you will enter the Maqetta application.</p>
+
+<a id='getting_started_local_install'></a>
+<h2>Run the Maqetta application locally (i.e., local install)</h2>
+
+<p>With this option, you perform these steps:</p>
+<ol>
+	<li>Download a ZIP file that contains the Maqetta application (see notes below)</li>
+	<li>Unzip onto your local filesystem</li>
+	<li>Double-click on a launch script to start up the Maqetta application,
+		(running as a local web server, with default port of 50000)</li>
+	<li>Enter an appropriate URL 
+		(such as <a href='http://localhost:50000/maqetta' rel='external'></a>http://localhost:50000/maqetta</a>)
+		into the browser's address bar.</li>
+</ol>
+
+<p>If you want to download the public release of Maqetta from 
+	<a href='http://maqetta.org' rel='external'>Maqetta.org</a>, you have two options:</p>
+<ul>
+	<li>Download the 
+		<a href='http://maqetta.org/downloads/' rel='external'>latest stable release</a>
+		from Maqetta.org. (This is the option that most users will choose.)
+	</li>
+	<li>Download the 
+		<a href='http://maqetta.org/nightly/' rel='external'>latest nightly build</a>
+		from Maqetta.org. (Note: nightly builds might be unstable.)
+	</li>
+</ul>
+
+<p>If your company has installed Maqetta on its own servers, they might also provide
+	a ZIP file that you can download, where that downloadable Maqetta might include
+	your company's widgets and themes.</p>
+
+<p>After expanding (unzipping) the ZIP file, there will be a <code>readme.html</code> file
+	that contains details descriptions of system pre-requisites and launch instructions.
+	Many users, however, can simply:
+	<ul>
+		<li>Double-click on the appropriate launch script
+			(<code>maqetta.server.win.bat</code> for Windows, <code>maqetta.server.mac.command</code> for Mac)</li>
+		<li>(After waiting for the launch script to complete) Type 
+			<a href='http://localhost:50000/maqetta' rel='external'></a>http://localhost:50000/maqetta</a>
+			into the browser's address bar.</li>
+	</ul>
+</p>
+
+<p>If you downloaded the ZIP from Maqetta.org, you will be presented with the following screen:</p>
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src='img/Maqetta.org.login.png' class='login_register_img'></img> 
+	</span>
+</div>
+
+<p><strong><em>The first time</em></strong> you run a local install download from Maqetta.org, 
+	<strong><em>you will need to click on the "Register" button</em></strong> 
+	(see the bottom of the above picture)
+	to create a user account and password. 
+	After you click "Register", you should see this screen:</p>
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src='img/local_install_create_account.png' class='login_register_img'></img> 
+	</span>
+</div>
+
+<p>In the above picture, you need to enter a valid email address and your password.</p>
+
+<p>Once you have created a user account, in the future you can just enter that user account and password
+	onto the login screen - you only need to "Register" once.</p>
+	
+<div class='note'>
+	Be sure to remember your login and password. There is no way to retrieve or reset
+	your logins or passwords for a local install.
+</div>
+
+
+<a id='getting_started_server_install'></a>
+<h2>Install on a server (e.g., intranet server)</h2>
+
+<p>The Maqetta team provides detailed instructions for setting up Maqetta to run
+	on a Unix server. Maqetta will probably run on other servers (e.g., Windows or Mac),
+	but you might have to figure some things out on your own.</p>
+	
+<p>This option follows many of the same steps as the <a href='#getting_started_local_install' rel='scroll_into_view'>local install option</a>.
+<ol>
+	<li>Download a ZIP file that contains the Maqetta application (see notes below)</li>
+	<li>Unzip onto your server's filesystem</li>
+	<li>Customize the configuration files to match your requirements</li>
+	<li>Set up your server to launch Maqetta (and relaunch at server start time)</li>
+</ol>
+
+<p>After setting up the configuration settings and starting the Maqetta server,
+	users will be able to run Maqetta by entering <code>http://yourserver:port/path-to-maqetta</code>
+	into the browser address bar.</p>
+
+<br />
+<p class="prevnext"><a href="tutorials/Maqetta_Overview.html">Previous</a> / <a href="tutorials/User_Interface_Overview.html">Next</a></p>
+
+</div> <!-- pagebody -->
+
+</body>
+</html>

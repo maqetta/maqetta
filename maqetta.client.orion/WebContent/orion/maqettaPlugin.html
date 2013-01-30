@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <!--  base of maqetta/orion plugin
 
 to install i did this:
@@ -5,60 +6,21 @@ to install i did this:
 http://localhost:8081/plugin/install.html#http://localhost:8081/maqetta/app/orionbase/plugin/maqettaPlugin.html.
 
  -->
-
-<!DOCTYPE html>
-
-
 <html>
 <head>
-<meta charset="UTF-8" />
-<title>Maqetta Plugin</title>
-<script type="text/javascript" src="../../../../orion/plugin.js"></script>
-<script>
-	window.onload = function() {
-		var provider = new eclipse.PluginProvider();
-		
-	   ///this.registerService = this.registerServiceProvider; // forward compadability
-		function qualifyURL(url) {
-			var a = document.createElement('a');
-			a.href = url; // set string url
-			return a.href;
-		}
-		
-		function fullPath(item){
-			
-			var path = "";
-			var parent = item[0];
-			var first = true;
-			
-			while(parent!=null && !parent.hasOwnProperty("Projects")){
-				path = parent.Name + (first?"":"/") + path;
-				first = false;
-				parent = parent.parent;
-			}
-			return path;
-		}
-		/* this needs to change to registerService with newer versions of orion */
-		provider.registerServiceProvider('orion.navigate.command', {
-			
-			}, {
-			uriTemplate: "/maqetta/cmd/configProject?orionProject={Location}",
-			id: 'orion.maqetta.launch',
-			name: 'Open in Maqetta',
-			tooltip: 'Open this folder in Maqetta',
-			 
-			validationProperties: [{source: "Directory", match: true}],
-			forceSingleItem: true
-		
-			
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<script src="../../../requirejs/require.js"></script>
+	<script>
+		/*global require eclipse*/
+		require({
+		  baseUrl: '../../..',
+		  paths: {
+			  domReady: 'requirejs/domReady'
+		  }
 		});
-				
-		
-		provider.connect();
-
-	};
-
-</script>
+		require(['maqettaPlugin.js']);
+	</script>
 </head>
-<body></body>
+<body>
+</body>
 </html>

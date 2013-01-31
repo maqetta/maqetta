@@ -1,0 +1,230 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Tutorial 7 - Page Editor Introduction - Basics (Part 2)</title>
+</head>
+<body class="maqettadocs">
+
+<style type="text/css">
+table.CompTypeTable {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+table.CompTypeTable td, table.CompTypeTable th {
+	padding:3px;
+	border:1px solid black;
+}
+table.CompTypeTable th {
+	font-style:italic;
+	font-weight:bold;
+	background:#888;
+}
+table td.CompTypeOption {
+	font-weight:bold;
+}
+tr.desktop {
+	background-color:#ddf;
+}
+tr.mobile {
+	background-color:#dfd;
+}
+</style>
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td> &nbsp; </td>
+    <td class="prevnext">
+	<a href="tutorials/Page_Editor_Basics_1.html">Previous</a> / <a href="tutorials/Mobile_User_Interfaces.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Tutorial 7 - Page Editor Introduction - Basics (Part 2)</h1>
+
+<div class='note'>
+	When going through Maqetta's tutorials, it is suggested that you have two side-by-side
+	browser windows open, one showing the tutorial, and the other where you run the application
+	and perform the steps listed in the tutorial.<br/>
+	<img src='img/SideBySideTutorialsApp.png' class='side_by_side'/>
+</div>
+
+<p>This tutorial covers the following topics:</p>
+<ul>
+	<li>Container widgets vs primitive widgets (i.e., "controls")</li>
+	<li>Choose parent preference</li>
+	<li>Inline vs block widgets</li>
+	<li>Flow vs absolute layout</li>
+</ul>
+
+<a name="container_vs_primitive"><h2>Container widgets vs primitive widgets (i.e., "controls")</h2></a>
+
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Issue a <b>Create Desktop Application...</b> command.
+</div> 
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Palette</b>, click on the <b>Containers</b> section to open that section, then
+	click on the the subsection labelled <b>Dojo</b>.</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Drag a <b>TabContainer</b> widget onto the canvas.
+	When the data entry popup appears, click OK or click away to accept the default values.</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Palette</b>, click on the <b>Controls</b> section to open that section, then
+	click on the the subsection labelled <b>TextBox</b>.</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Drag a <b>TextBox</b> widget onto the canvas, dropping the Button
+	inside of the TabContainer.</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Palette</b>, click on the <b>Controls</b> section to open that section (if not already open), then
+	click on the the subsection labelled <b>Buttons</b>.</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Drag a <b>Button</b> widget onto the canvas, dropping the Button
+	inside of the TabContainer.
+	When the data entry popup appears, click OK or click away to accept the default values.</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Go to the far-left of the Maqetta window and click on the large <strong>Outline</strong>
+	palette button to expose the Outline palette, which shows your document's widget hierarchy.</div>
+<div class='note'>Note that the Outline shows that the TextBox and Button widgets are nested inside the TabContainer.
+	In fact, the hierarchy is TabContainer, with two ContentPane children (one for each tab in the TabContainer),
+	and then the TextBox and Button widgets are children of the first ContentPane.
+	<br/><br/>
+	By default, Maqetta adds new widgets as children of the container widget
+	at the widget drop location.
+</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Go to the far-left of the Maqetta window and click on the large <strong>Palette</strong>
+	palette button to expose the Palette palette to show the widget palette once again.</div>
+
+<a name="container_vs_primitive"><h2>Choose parent preference</h2></a>
+
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the main menubar, at the top/right of the application, click on the application settings icon
+	<img src='img/Application_settings_icon.png' class='exact_size_inline_icon'/>
+	and then choose "Preferences" to bring up the Preferences dialog.</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Preferences dialog, first click "+" symbol to the left of the word "HTML"
+	to open the HTML topic, then click on the word "Visual Editor" to expose
+	the visual editor preferences.</div>
+<div class="image">
+<a href="img/Preferences_html_visual_editor.png" target="_blank"><img alt="image" src="img/Preferences_html_visual_editor.png" style="margin: 1em 1em 0pt 0pt; height:225px; width:auto;" /></a>
+</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Turn option "When dragging, show possible parents:" on by clicking on the checkmark for that item,
+	then click <b>Save</b> to update your preferences.</div>
+<div class='note'>Note that preference changes stay active forever, even across sessions,
+	until you change them again.</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Palette</b>, click on the <b>Controls</b> section to open that section (if not already open), then
+	click on the the subsection labelled <b>Buttons</b>.</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Observe the screen while you perform the following operation.
+	Drag a <b>ComboButton</b> widget onto the canvas and hover over the TabContainer, 
+	but don't let up on the mouse yet.
+	Instead, notice that Maqetta shows an annotation next to the mouse that shows
+	the list of possible parent widgets for the ComboButton. While still holding the mouse,
+	your screen should look something like this:</div>
+<div class="image">
+<a href="img/Choose_parent.png" target="_blank"><img alt="image" src="img/Choose_parent.png" style="margin: 1em 1em 0pt 0pt; height:250px; width:auto;" /></a>
+</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Let up on the mouse over the TabContainer so that the ComboBox is dropped into the TabContainer,
+	and will become a child of the ContentPane (just like what happened previously with the TextBox and Button).</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Drag a second <b>ComboButton</b> widget onto the canvas and hover over the white area
+	under the TabContainer. Notice that the only candidate parent will by the &lt;body&gt;.</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	While still dragging the ComboButton, move the mouse once again over the TabContainer.
+	The list of candidate parents will once again show two candidate parents: the ContentPane and the &lt;body&gt;.</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	While still dragging and hovering over the ContentPane, on your keyboard, press the number "2" key.
+	Notice that list of candidate parents now has the arrow pointing to the &lt;body&gt;.
+	At this point, let up on the mouse to complete the drop operation.
+	The new ComboBox should be added <em>under</em> the TabContainer because you told Maqetta
+	to choose &lt;body&gt; as the parent, instead of the ContentPane, and as a result,
+	the ComboBox has become a sibling to the TabContainer. (Note: you can look at the Outline palette
+	to verify that the ComboBox is indeed a sibling to the TabContainer.)</div>
+<div class='note'>The choose parent user interface shows both at widget creation time (when dragging/dropping
+	from the Palette onto the canvas), and when dragging existing widgets around on the canvas.</div>
+
+<a name="inline_vs_block"><h2>Inline vs block widgets</h2></a>
+
+<p>
+	Note that some widgets are added to the right of the previous widget and other widgets are added under the previous widget.
+	This is because some widgets default as "block-level" widgets, which means they, in effect, also establish their own
+	separate block (or "paragraph"), whereas other widgets are designed as "inline" widgets, which means they are placed inline
+	within the current block (or "paragraph") and behave from a layout perspective similar to typed text or small inline images.
+	Maqetta simply honors the default layout behavior for each widget.
+	<br/><br/>
+	If you need to change between block and inline for a particular widget, you can go to the Properties palette,
+	Layout section, and change the value of the 'display' property 
+	(typically switching between <code>block</code> and <code>inline-block</code>); however, note that
+	some widgets will not work properly if their 'display' property is changed.
+</p>
+
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the file tab's close button -
+	<img src='img/close_sel.gif' class='exact_size_inline_icon'/>
+	- to close the page editor. (Click OK on the "are you sure" dialog.)</div>
+
+<a name="container_vs_primitive"><h2>Flow vs absolute layout</h2></a>
+
+<p>HTML5 uses CSS for layout and styling. CSS offers two primary layout mechanisms:</p>
+<ul>
+	<li><b>Flow layout</b> - This is the layout you find in text document editors such as
+		MS Word or Google Docs, where page elements flow left-to-right and then
+		top-to-bottom.</li>
+	<li><b>Absolute layout</b> - This is the layout you find in drawing programs
+		where page elements are positioned at fixed (x,y) locations on the page.</li>
+</ul>
+
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Look at the page editor toolbar for a drop-down button that says either "Flow"
+	or "Absolute". (Note: it probably says "Flow".) This indicates that the page editor
+	will add new widgets using flow layout.</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Change the Flow/Absolute button to "Absolute".</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Drag/drop a Calendar widget onto the canvas.</div>
+<p>Notice that the Calendar widget is positioned absolutely at the position where
+	you dropped the Calendar.</p>
+<div class='note'>
+	The flow-vs-absolute setting is document-specific and persists throughout the
+	lifetime of the document, until you change the value.
+</div>
+<p>Click on the Undo icon to remove the Calendar you just added.</p>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Change the Flow/Absolute button back to "Flow".</div>
+	
+
+</ul></li>
+<li>In <em>absolute layout</em>, you can also drag widgets to different location by click-selecting the widget and then dragging on
+the widget's interior. However, the effect of rearranging absolutely positioned widgets
+within the Outline palette is more complex:
+<ul>
+<li>Widgets may or not not move to different physical locations on the canvas if they are moved to a different location
+in the Outline palette.</li>
+<li>Moving widgets in the Outline palette will alter drawing order, and 
+therefore might cause one widget to draw behind or in front of other widgets.</li>
+</ul></li>
+</ul>
+
+<p class="note">Sometimes layout rules with Maqetta can be complex because fundamentally Maqetta
+is a WYSIWYG authoring tool for HTML5 and CSS3. 
+Maqetta creates HTML and CSS source files
+which are ultimately passed to the browser for layout and rendering. 
+Because the layout rules for HTML and CSS are sometimes complex,
+if you reorder widgets in the Outline palette, hand-edit source code and/or change property values on widgets
+in the Properties palette, then you are altering the HTML and CSS source files that are sent to the browser,
+which might trigger various complex CSS layout rules and thereby produce visual results different than 
+what you expected. Maqetta tutorials attempt to demonstrate authoring techniques that 
+minimize chances of confusing results.</p> 
+
+
+<br />
+<p class="prevnext"><a href="tutorials/Page_Editor_Basics_1.html">Previous</a> / <a href="tutorials/Mobile_User_Interfaces.html">Next</a></p>
+
+</div> <!-- pagebody -->
+
+</body>
+</html>

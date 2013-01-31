@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -320,6 +319,15 @@ public class LdapAuthenticationService implements IAuthenticationService {
 		if (userAdmin == null) {
 			throw new UnsupportedUserStoreException();
 		}
+		
+		// check for "admin" user first
+		if (login.equals("admin")) { //$NON-NLS-1$
+			User user = userAdmin.getUser("login", login); //$NON-NLS-1$
+			if (user != null && user.hasCredential("password", password)) { //$NON-NLS-1$
+				return user;
+			}
+		}
+		
 		try {
 			JSONObject userJson = getUserObject(login);
 			if (userJson != null) {
@@ -362,10 +370,6 @@ public class LdapAuthenticationService implements IAuthenticationService {
 		} catch (CoreException e) {
 			LogHelper.log(e);
 		}
-
-		// migrate user (if necessary)
-		IUser user = ServerManager.getServerManger().getUserManager().getUser(newUser.getUid());
-
 		return newUser;
 	}
 

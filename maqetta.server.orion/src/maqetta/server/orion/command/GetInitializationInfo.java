@@ -24,13 +24,15 @@ import org.maqetta.server.ServerManager;
 public class GetInitializationInfo extends Command {
 	private String siteConfigJson = null;
 
+	@SuppressWarnings("serial")
 	private class MaqettaConfigException extends Exception {
-		private static final long serialVersionUID = 1L;
-
 		public MaqettaConfigException(String message) {
 			super(message);
 		}
 
+		public MaqettaConfigException(String message, Throwable cause) {
+			super(message, cause);
+		}
 	};
 
 	@Override
@@ -59,7 +61,7 @@ public class GetInitializationInfo extends Command {
 			e.printStackTrace();
 			// TODO: throw a 500, for now. Consider whether we should send this
 			// error back in JSON instead
-			throw new IOException(e.getMessage());
+			throw new IOException(e);
 		}
 
 	}
@@ -101,12 +103,12 @@ public class GetInitializationInfo extends Command {
 							throw new MaqettaConfigException(
 									"maqetta.server.orion.command.GetInitializationInfo "
 											+ siteConfigDir + "/" + file
-											+ " not valid json: " + e.getMessage());
+											+ " not valid json", e);
 						} catch (IOException e) {
 							throw new MaqettaConfigException(
 									"maqetta.server.orion.command.GetInitializationInfo "
 											+ siteConfigDir + "/" + file
-											+ " error reading file: " + e.getMessage());
+											+ " error reading file", e);
 						}
 					}
 				}

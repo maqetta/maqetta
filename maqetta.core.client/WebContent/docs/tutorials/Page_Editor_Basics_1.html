@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <link rel="stylesheet" type="text/css" href="maqettadocs.css" />
-<title>Tutorial 6 - Page Editor Introduction - Basics</title>
+<title>Tutorial 6 - Page Editor Introduction - Basics (Part 1)</title>
 </head>
 <body class="maqettadocs">
 
@@ -37,11 +37,11 @@ tr.mobile {
 <table class="breadcrumbs noprint"><tr>
 	<td> &nbsp; </td>
     <td class="prevnext">
-	<a href="tutorials/Page_Editor_Composition_Types.html">Previous</a> / <a href="tutorials/Mobile_User_Interfaces.html">Next</a>
+	<a href="tutorials/Page_Editor_Composition_Types.html">Previous</a> / <a href="tutorials/Page_Editor_Basics_2.html">Next</a>
     </td></tr>
 </table>
 
-<h1>Tutorial 6 - Page Editor Introduction - Basics</h1>
+<h1>Tutorial 6 - Page Editor Introduction - Basics (Part 1)</h1>
 
 <div class='note'>
 	When going through Maqetta's tutorials, it is suggested that you have two side-by-side
@@ -54,17 +54,13 @@ tr.mobile {
 <ul>
 	<li>Undo/Redo</li>
 	<li>Data entry popup (available for many widgets)</li>
-	<li>Adding HTML elements to the page</li>
+	<li>Cut/Copy/Paste/Delete</li>
 	<li>Using the widget filter</li>
-	<li>Inline vs block widgets</li>
-	<li>Container widgets vs primitive widgets (i.e., "controls")</li>
-	<li>Choose parent preference</li>
 	<li>Adding HTML elements to the page</li>
 	<li>Add an image to the page</li>
 	<li>Selecting widgets</li>
-	<li>Resizing, moving and styling a widget</li>
-	<li>Nesting widgets</li>
-	<li>Deleting widgets</li>
+	<li>Resizing widgets</li>
+	<li>Moving widgets</li>
 	<li>Save and Save As</li>
 </ul>
 
@@ -107,8 +103,50 @@ such as Button, ComboBox, DataGrid, Tree, &lt;label&gt;, &lt;a&gt; and &lt;h1&gt
 <div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	Change the text to say "Click-me" and hit Return.
 </div>
+<p class="note">For some widgets, you can close the data entry by simply clicking
+	away from the popup.</p>
 
-<a name="undo"><h2>Using the widget filter</h2></a>
+<a name="clipboard_operations"><h2>Cut/Copy/Paste/Delete</h2></a>
+
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Drag a TextBox and a Button widget onto the canvas. 
+	When the data popup appears for the Button widget,
+	enter "New", then click OK or click away from the data popup to close it.</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Drag a second Button widget onto the canvas. When the data popup appears,
+	enter "Edit", then click OK or click away from the data popup to close it.</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	With the second Button selected, find the copy icon on the page editor toolbar
+	<img src='img/copy.png' class='exact_size_inline_icon'/>.
+	Click on the copy icon to put the second Button onto the clipboard.</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Find the paste icon on the page editor toolbar
+	<img src='img/paste.png' class='exact_size_inline_icon'/>.
+	Click on the paste icon, then move the mouse over the canvas and position it
+	just to the right of the second Button. Then click on the canvas.
+	Note that the second Button has been duplicated.
+	</div>
+<div class='note'>
+	With Maqetta, when you perform a paste operation, you have to follow the paste command
+	with a mouse click on the canvas. This is because Maqetta needs to know where in your
+	document to perform the paste. Maqetta uses the (x,y) location of the mouse click
+	to decide where to insert the copied widget(s).
+</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Double-click on the third Button.
+	When the data popup appears for the Button widget,
+	enter "Delete", then click OK or click away from the data popup to close it.</div>
+<div class='note'>
+	Maqetta also offers a Cut icon, which removes the selected widget(s) from the document
+	and adds the widget(s) to the clipboard, and a Delete icon, which removes the selected widget(s)
+	without adding the widgets to the clipboard.
+</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	With the third Button still selected, bring up the context menu
+	(perhaps using right-mouse-click or Ctrl-click on a Mac).
+	You'll see a list of context menu commands, including Cut, Copy, Paste and Delete.</div>
+
+<a name="widget_filter"><h2>Using the widget filter</h2></a>
 
 <p>Sometimes its faster to search for a widget by typing text into the filter box at the top of the palette.</p>
 <div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
@@ -138,115 +176,6 @@ such as Button, ComboBox, DataGrid, Tree, &lt;label&gt;, &lt;a&gt; and &lt;h1&gt
 	when done so that the full list of widgets will reappear.
 </div>
 
-<a name="inline_vs_block"><h2>Inline vs block widgets</h2></a>
-
-<p>
-	Note that some widgets are added to the right of the previous widget and other widgets are added under the previous widget.
-	This is because some widgets default as "block-level" widgets, which means they, in effect, also establish their own
-	separate block (or "paragraph"), whereas other widgets are designed as "inline" widgets, which means they are placed inline
-	within the current block (or "paragraph") and behave from a layout perspective similar to typed text or small inline images.
-	Maqetta simply honors the default layout behavior for each widget.
-	<br/><br/>
-	If you need to change between block and inline for a particular widget, you can go to the Properties palette,
-	Layout section, and change the value of the 'display' property 
-	(typically switching between <code>block</code> and <code>inline-block</code>); however, note that
-	some widgets will not work properly if their 'display' property is changed.
-</p>
-
-<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Click on the file tab's close button -
-	<img src='img/close_sel.gif' class='exact_size_inline_icon'/>
-	- to close the page editor. (Click OK on the "are you sure" dialog.)</div>
-
-<a name="container_vs_primitive"><h2>Container widgets vs primitive widgets (i.e., "controls")</h2></a>
-
-<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Issue a <b>Create Desktop Application...</b> command.
-</div> 
-<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	In the <b>Palette</b>, click on the <b>Containers</b> section to open that section, then
-	click on the the subsection labelled <b>Dojo</b>.</div>
-<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Drag a <b>TabContainer</b> widget onto the canvas.
-	When the data entry popup appears, click OK or click away to accept the default values.</div>
-<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	In the <b>Palette</b>, click on the <b>Controls</b> section to open that section, then
-	click on the the subsection labelled <b>TextBox</b>.</div>
-<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Drag a <b>TextBox</b> widget onto the canvas, dropping the Button
-	inside of the TabContainer.</div>
-<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	In the <b>Palette</b>, click on the <b>Controls</b> section to open that section (if not already open), then
-	click on the the subsection labelled <b>Buttons</b>.</div>
-<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Drag a <b>Button</b> widget onto the canvas, dropping the Button
-	inside of the TabContainer.
-	When the data entry popup appears, click OK or click away to accept the default values.</div>
-<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Go to the far-left of the Maqetta window and click on the large <strong>Outline</strong>
-	palette button to expose the Outline palette, which shows your document's widget hierarchy.</div>
-<div class='note'>Note that the Outline shows that the TextBox and Button widgets are nested inside the TabContainer.
-	In fact, the hierarchy is TabContainer, with two ContentPane children (one for each tab in the TabContainer),
-	and then the TextBox and Button widgets are children of the first ContentPane.
-	<br/><br/>
-	By default, Maqetta adds new widgets as children of the container widget
-	at the widget drop location.
-</div>
-<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Go to the far-left of the Maqetta window and click on the large <strong>Palette</strong>
-	palette button to expose the Palette palette to show the widget palette once again.</div>
-
-<a name="container_vs_primitive"><h2>Choose parent preference</h2></a>
-
-<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	In the main menubar, at the top/right of the application, click on the application settings icon
-	<img src='img/Application_settings_icon.png' class='exact_size_inline_icon'/>
-	and then choose "Preferences" to bring up the Preferences dialog.</div>
-<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	In the Preferences dialog, first click "+" symbol to the left of the word "HTML"
-	to open the HTML topic, then click on the word "Visual Editor" to expose
-	the visual editor preferences.</div>
-<div class="image">
-<a href="img/Preferences_html_visual_editor.png" target="_blank"><img alt="image" src="img/Preferences_html_visual_editor.png" style="margin: 1em 1em 0pt 0pt; height:225px; width:auto;" /></a>
-</div>
-<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Turn option "When dragging, show possible parents:" on by clicking on the checkmark for that item,
-	then click <b>Save</b> to update your preferences.</div>
-<div class='note'>Note that preference changes stay active forever, even across sessions,
-	until you change them again.</div>
-<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	In the <b>Palette</b>, click on the <b>Controls</b> section to open that section (if not already open), then
-	click on the the subsection labelled <b>Buttons</b>.</div>
-<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Observe the screen while you perform the following operation.
-	Drag a <b>ComboButton</b> widget onto the canvas and hover over the TabContainer, 
-	but don't let up on the mouse yet.
-	Instead, notice that Maqetta shows an annotation next to the mouse that shows
-	the list of possible parent widgets for the ComboButton. While still holding the mouse,
-	your screen should look something like this:</div>
-<div class="image">
-<a href="img/Choose_parent.png" target="_blank"><img alt="image" src="img/Choose_parent.png" style="margin: 1em 1em 0pt 0pt; height:250px; width:auto;" /></a>
-</div>
-<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Let up on the mouse over the TabContainer so that the ComboBox is dropped into the TabContainer,
-	and will become a child of the ContentPane (just like what happened previously with the TextBox and Button).</div>
-<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Drag a second <b>ComboButton</b> widget onto the canvas and hover over the white area
-	under the TabContainer. Notice that the only candidate parent will by the &lt;body&gt;.</div>
-<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	While still dragging the ComboButton, move the mouse once again over the TabContainer.
-	The list of candidate parents will once again show two candidate parents: the ContentPane and the &lt;body&gt;.</div>
-<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	While still dragging and hovering over the ContentPane, on your keyboard, press the number "2" key.
-	Notice that list of candidate parents now has the arrow pointing to the &lt;body&gt;.
-	At this point, let up on the mouse to complete the drop operation.
-	The new ComboBox should be added <em>under</em> the TabContainer because you told Maqetta
-	to choose &lt;body&gt; as the parent, instead of the ContentPane, and as a result,
-	the ComboBox has become a sibling to the TabContainer. (Note: you can look at the Outline palette
-	to verify that the ComboBox is indeed a sibling to the TabContainer.)</div>
-<div class='note'>The choose parent user interface shows both at widget creation time (when dragging/dropping
-	from the Palette onto the canvas), and when dragging existing widgets around on the canvas.</div>
-	
 <a name="html"><h2>Adding HTML elements to the page</h2></a>
 
 <div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
@@ -281,9 +210,23 @@ such as Button, ComboBox, DataGrid, Tree, &lt;label&gt;, &lt;a&gt; and &lt;h1&gt
 	the <b>Upload files...</b> command found on the context menu  when the mouse
 	is over one of the files listed in the <b>Files</b> palette. </div>
 
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the file tab's close button -
+	<img src='img/close_sel.gif' class='exact_size_inline_icon'/>
+	- to close the page editor. (Click OK on the "are you sure" dialog.)</div>
+
 <a name="selecting_widgets"><h2>Selecting widgets</h2></a>
 
-<p>To work with a widget, you must first select it. You can then size it, move it, style it or set its properties.</p>
+<p>For this part of the tutorial, let's create a new desktop application
+	and add a few widgets to the page.</p>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Issue a <b>Create Desktop Application...</b> command.
+</div> 
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Drag/drop a TextBox, Button and Calendar widget to the page.
+	Then add an HTML &lt;div&gt; element to the page.
+	(You learned how to add these widgets earlier in the tutorial.)
+</div> 
 
 <p>You can select a widget in three ways, which you will try out in the following steps:</p>
 
@@ -307,21 +250,70 @@ such as Button, ComboBox, DataGrid, Tree, &lt;label&gt;, &lt;a&gt; and &lt;h1&gt
 <div class='note'>You can select multiple widgets by holding down the 
 	<b>Ctrl</b> key (Command key on Mac) as you select the widgets.</div>
 
-<a name="editing_widgets"><h2>Resizing, moving and styling a widget</h2></a>
+<a name="resizing_widgets"><h2>Resizing widgets</h2></a>
 
-<ul>
-<li>To change the size of a widget, select it and pull one of the resize handles 
-(circular blue nobs either along the corners or sides of the selection border).
-<p class="note">Some widgets such as Button do not have resize handles because their size depends on their interior content.</p>
-</li>
-</ul> 
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Alternatively, click-select each of the widgets. Notice the blue selection chrome
+	that appears around each widget, along with the resize handles (the blue circular nobs):
+	<ul>
+		<li>The TextBox shows two resize handles on the left- and right-side edges.
+			This is because the TextBox can only be resized horizontally.</li>
+		<li>The Button shows no resize handles. This is because a Button widget
+			is auto-sized based on the size of its label.</li>
+		<li>The Calendar shows four resize handles, one on each corner. This is because a Calendar widget
+			can be resized in both directions.</li>
+		<li>The &lt;div&gt; shows four resize handles, one on each corner. This is because a &lt;div&gt;
+			can be resized in both directions.</li>
+	</ul>
+</div> 
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Resize the TextBox, Calendar and &lt;div&gt; widgets by first click-selecting the given widget
+	and then dragging on the widget's selection nobs.
+	Notice that the widgets resize.
+</div> 
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Select the Calendar widget. Put the mouse over the right edge of the selection chrome.
+	Drag the right edge of the selection chrome to change the width of the Calendar.
+</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Select the Calendar widget (if not already selected).
+</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Look at the right/top of the application where you will see the various
+	property palettes (Widget, Events, Layout, etc.). Click on the large button
+	with the label <b>Layout</b> to show various CSS layout properties.
+	Click on the "+" icon for the 'width' property several times. Notice
+	that the Calendar's width grows by 1 pixel each time you click on "+".
+</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Type '400px' into the textbox for the 'width' property, then either
+	press the Return key or click away from the textbox for 'width'.
+	Notice that the Calendar's width is now '400px'.
+</div>
+<div class='note'>
+	As has been mentioned previously, Maqetta creates actual running HTML5 applications,
+	which are styled by CSS. The 'width' property is a CSS property, and CSS requires
+	a unit specification, in this case the <code>px</code> unit (px=pixels).
+	You can't just enter "400" because browsers will not accept that value, and instead
+	have to say "400px".
+</div>
 
-<ul>
-<li>In <em>flow layout</em>, you can move widgets in two ways:
-<ul>
-<li>On the canvas, select the widget, then place the mouse over the interior of the widget and then drag it to a different location
-	within the existing "flow" of widgets.</li>
-<li>On the Outline palette, drag the widget to a new location within the Outline palette. (The Outline palette allows widgets to be moved into any position in the widget hierarchy.)</li>
+<a name="moving_widgets"><h2>Moving widgets</h2></a>
+
+<p>In <em>flow layout</em>, you can move widgets in two ways, which we will try out in the following steps:</p>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	On the canvas, select the Button widget, then place the mouse over the interior of the widget and then drag it to a different location
+	within the existing "flow" of widgets.
+	You should see a drop-point vertical line appear to show you where the Button widget
+	will get dropped when you let up with the mouse.</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	On the <b>Outline</b> palette, find the <b>Button</b>
+	widget. Click-select it on the Outline palette.
+	Then Drag the item corresponding to the Button to a new location within the Outline palette.
+	(The Outline palette allows widgets to be moved into any position in the widget hierarchy.)</div>
+
+
+
 </ul></li>
 <li>In <em>absolute layout</em>, you can also drag widgets to different location by click-selecting the widget and then dragging on
 the widget's interior. However, the effect of rearranging absolutely positioned widgets
@@ -345,40 +337,6 @@ which might trigger various complex CSS layout rules and thereby produce visual 
 what you expected. Maqetta tutorials attempt to demonstrate authoring techniques that 
 minimize chances of confusing results.</p> 
 
-<a name="nesting_widgets"><h2>Nesting widgets</h2></a>
-<ul>
-<li>You can nest widgets by dragging and dropping a widget onto another widget (the target must be a container widget).</li>
-<li>Nested widgets can be moved into a different container widget, or outside of any widgets to become a top-level widget on the page.</li>
-</ul>
-
-<p class="note">In certain scenarios, nesting widgets might
-affect how some CSS properties are inherited, and therefore might affect the visual styling of a particular widget.</p>
-
-<h3>Styling widgets</h3>
-<ul>
-<li>To change the look of a widget, click on the widget to select it and then change its values using the Properties palette.</li>
-</ul>
-
-<a name="deleting_widgets"><h2>Deleting widgets</h2></a>
-
-<ol>
-<li>Select one of the widgets in the Page Editor canvas.</li>
-<li>Delete the widget in one of the following ways:
-<ul>
-<li>Click on the <b>delete</b> <img class="inline" src="img/delete_icon.png" /> icon on the page editor toolbar.</li>
-<li>Hit the <b>Delete</b> key on your keyboard (for Windows only - currently not working on the Mac).
-<li>Bring up the widget's context menu (right-click on Windows / ctrl-click on Mac) and choose <b>delete</b>.</li>
-</ul></li>
-</ol>
-
-<ul>
-<li>You can also delete a widget from the Outline palette:
-<ol>
-<li>Select the widget in the Outline palette</li>
-<li>Bring up the widget's context menu (right-click on Windows / ctrl-click on Mac) and choose <b>delete</b>.</li>
-</ol></li>
-</ul>
-
 <a name="saveopen"><h2>Save and Save As</h2></a>
 
 <p>Click on the <b>Save</b> button on the page editor toolbar to save the current HTML file.</p>
@@ -395,7 +353,7 @@ affect how some CSS properties are inherited, and therefore might affect the vis
 </ol>
 
 <br />
-<p class="prevnext"><a href="tutorials/Page_Editor_Composition_Types.html">Previous</a> / <a href="tutorials/Mobile_User_Interfaces.html">Next</a></p>
+<p class="prevnext"><a href="tutorials/Page_Editor_Composition_Types.html">Previous</a> / <a href="tutorials/Page_Editor_Basics_2.html">Next</a></p>
 
 </div> <!-- pagebody -->
 

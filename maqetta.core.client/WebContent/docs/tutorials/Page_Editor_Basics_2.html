@@ -149,18 +149,20 @@ tr.mobile {
 
 <a name="inline_vs_block"><h2>Inline vs block widgets</h2></a>
 
-<p>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Issue a <b>Create Desktop Application...</b> command. In the Create Desktop Application dialog,
+	click the <b>Create</b> button to create a new file with the default filename.</div>
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Drag the following widgets onto the canvas:
+	TextBox, Button, ComboButton, HTML &lt;label&gt;,
+	Calendar, HTML &lt;div&gt;.</div>
+<div class='note'>
 	Note that some widgets are added to the right of the previous widget and other widgets are added under the previous widget.
 	This is because some widgets default as "block-level" widgets, which means they, in effect, also establish their own
 	separate block (or "paragraph"), whereas other widgets are designed as "inline" widgets, which means they are placed inline
 	within the current block (or "paragraph") and behave from a layout perspective similar to typed text or small inline images.
 	Maqetta simply honors the default layout behavior for each widget.
-	<br/><br/>
-	If you need to change between block and inline for a particular widget, you can go to the Properties palette,
-	Layout section, and change the value of the 'display' property 
-	(typically switching between <code>block</code> and <code>inline-block</code>); however, note that
-	some widgets will not work properly if their 'display' property is changed.
-</p>
+</div>
 
 <div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	Click on the file tab's close button -
@@ -196,29 +198,10 @@ tr.mobile {
 <div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	Change the Flow/Absolute button back to "Flow".</div>
 	
-
-</ul></li>
-<li>In <em>absolute layout</em>, you can also drag widgets to different location by click-selecting the widget and then dragging on
-the widget's interior. However, the effect of rearranging absolutely positioned widgets
-within the Outline palette is more complex:
-<ul>
-<li>Widgets may or not not move to different physical locations on the canvas if they are moved to a different location
-in the Outline palette.</li>
-<li>Moving widgets in the Outline palette will alter drawing order, and 
-therefore might cause one widget to draw behind or in front of other widgets.</li>
-</ul></li>
-</ul>
-
-<p class="note">Sometimes layout rules with Maqetta can be complex because fundamentally Maqetta
-is a WYSIWYG authoring tool for HTML5 and CSS3. 
-Maqetta creates HTML and CSS source files
-which are ultimately passed to the browser for layout and rendering. 
-Because the layout rules for HTML and CSS are sometimes complex,
-if you reorder widgets in the Outline palette, hand-edit source code and/or change property values on widgets
-in the Properties palette, then you are altering the HTML and CSS source files that are sent to the browser,
-which might trigger various complex CSS layout rules and thereby produce visual results different than 
-what you expected. Maqetta tutorials attempt to demonstrate authoring techniques that 
-minimize chances of confusing results.</p> 
+<div class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the file tab's close button -
+	<img src='img/close_sel.gif' class='exact_size_inline_icon'/>
+	- to close the page editor. (Click OK on the "are you sure" dialog.)</div>
 
 
 <br />

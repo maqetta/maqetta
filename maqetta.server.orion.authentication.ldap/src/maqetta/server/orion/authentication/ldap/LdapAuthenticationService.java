@@ -1,6 +1,12 @@
 package maqetta.server.orion.authentication.ldap;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -24,6 +30,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.davinci.server.user.IPerson;
+import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -346,6 +354,11 @@ public class LdapAuthenticationService implements IAuthenticationService {
 				if (user == null) {
 					user = createOrionUser(email/*login*/);
 				}
+				IUser u = ServerManager.getServerManger().getUserManager().getUser(user.getUid());
+				IPerson p = u.getPerson();
+				p.setDisplayName(displayname);
+				user.addProperty("displayname", displayname);
+				//getOrionUser(u);
 				return user;
 			}
 		} 
@@ -609,5 +622,44 @@ public class LdapAuthenticationService implements IAuthenticationService {
 			}
 		}
     }
+	 
+	/* private static void getOrionUser(IUser user) { 
+		 try {
+			 
+				URL url = new URL("http://localhost:8081/users/A");
+				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+				conn.setRequestMethod("GET");
+				conn.setRequestProperty("Accept", "application/json");
+				conn.setRequestProperty("Orion-Version", "1");
+				conn.setRequestProperty("user", "A"); //$NON-NLS-1$
+		 
+				if (conn.getResponseCode() != 200) {
+					throw new RuntimeException("Failed : HTTP error code : "
+							+ conn.getResponseCode());
+				}
+		 
+				BufferedReader br = new BufferedReader(new InputStreamReader(
+					(conn.getInputStream())));
+		 
+				String output;
+				System.out.println("Output from Server .... \n");
+				while ((output = br.readLine()) != null) {
+					System.out.println(output);
+				}
+		 
+				conn.disconnect();
+		 
+			  } catch (MalformedURLException e) {
+		 
+				e.printStackTrace();
+		 
+			  } catch (IOException e) {
+		 
+				e.printStackTrace();
+		 
+			  }
+		 
+		}*/
+ 
 	
 }

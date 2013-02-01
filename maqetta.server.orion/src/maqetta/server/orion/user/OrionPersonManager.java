@@ -21,6 +21,7 @@ public class OrionPersonManager extends PersonManagerImpl {
 		String email;
 		String name;
 		String password;
+		String displayName;
 
 		public OrionPersonImpl(String userName, String password, String email) {
 			this.name = userName;
@@ -47,13 +48,24 @@ public class OrionPersonManager extends PersonManagerImpl {
 		}
 
 		public String getFirstName() {
-			// TODO Auto-generated method stub
-			return "";
+			if (this.displayName != null) {
+				return this.displayName;
+			} else {
+				return "";
+			}
 		}
 
 		public String getLastName() {
 			// TODO Auto-generated method stub
 			return "";
+		}
+		
+		public void setDisplayName(String name) {
+			this.displayName = name;
+		}
+		
+		public String getDisplayName(){
+			return this.displayName;
 		}
 	}
 

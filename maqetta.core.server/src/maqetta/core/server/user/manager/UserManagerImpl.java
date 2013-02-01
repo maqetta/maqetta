@@ -205,6 +205,12 @@ public class UserManagerImpl implements IUserManager {
 	            public String getUserID() {
 	                return IDavinciServerConstants.LOCAL_INSTALL_USER;
 	            }
+	            public void setDisplayName(String s) {
+	            	
+	            }
+	            public String getDisplayName() {
+	            	return "";
+	            }
 	        }
 
 	    	IStorage userDir = this.baseDirectory;

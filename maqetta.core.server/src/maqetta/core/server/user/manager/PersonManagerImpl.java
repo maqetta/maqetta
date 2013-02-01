@@ -54,6 +54,15 @@ public class PersonManagerImpl implements IPersonManager {
 			// TODO Auto-generated method stub
 			return "";
 		}
+		
+		public void setDisplayName(String s) {
+			// TODO Auto-generated method stub
+		}
+		
+		public String getDisplayName() {
+			// TODO Auto-generated method stub
+			return "";
+		}
 
     }
 

@@ -66,4 +66,12 @@ public class Reviewer implements IPerson{
 	public String getLastName() {
 		return "";
 	}
+	
+	public String getDisplayName() {
+		return "";
+	}
+
+	public void setDisplayName(String s) {
+
+	}
 }

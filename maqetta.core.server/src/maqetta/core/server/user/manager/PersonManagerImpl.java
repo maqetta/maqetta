@@ -45,20 +45,6 @@ public class PersonManagerImpl implements IPersonManager {
             return name;
         }
 
-		public String getFirstName() {
-			// TODO Auto-generated method stub
-			return "";
-		}
-
-		public String getLastName() {
-			// TODO Auto-generated method stub
-			return "";
-		}
-		
-		public void setDisplayName(String s) {
-			// TODO Auto-generated method stub
-		}
-		
 		public String getDisplayName() {
 			// TODO Auto-generated method stub
 			return "";

@@ -21,7 +21,6 @@ public class OrionPersonManager extends PersonManagerImpl {
 		String email;
 		String name;
 		String password;
-		String displayName;
 
 		public OrionPersonImpl(String userName, String password, String email) {
 			this.name = userName;
@@ -47,26 +46,18 @@ public class OrionPersonManager extends PersonManagerImpl {
 			return name;
 		}
 
-		public String getFirstName() {
-			if (this.displayName != null) {
-				return this.displayName;
+		public String getDisplayName() {
+			String displayName = this.email;
+			User user = getOrionUser(this.getUserID());
+			if (user != null) {
+				displayName = user.getName();
 			} else {
-				return "";
+				System.err.println("ERROR: OrionPersonImpl.getDisplayName: user '" + this.getUserID()
+						+ "' could not be found in IOrionCredentialsService.");
 			}
+			return displayName;
 		}
 
-		public String getLastName() {
-			// TODO Auto-generated method stub
-			return "";
-		}
-		
-		public void setDisplayName(String name) {
-			this.displayName = name;
-		}
-		
-		public String getDisplayName(){
-			return this.displayName;
-		}
 	}
 
 	public IPerson addPerson(String userName, String password, String email) throws UserException {

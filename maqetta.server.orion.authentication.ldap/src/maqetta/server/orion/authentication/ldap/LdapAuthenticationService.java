@@ -352,13 +352,8 @@ public class LdapAuthenticationService implements IAuthenticationService {
 				 */
 				User user = userAdmin.getUser("login", email/*login*/); //$NON-NLS-1$
 				if (user == null) {
-					user = createOrionUser(email/*login*/);
+					user = createOrionUser(email, displayname);
 				}
-				IUser u = ServerManager.getServerManger().getUserManager().getUser(user.getUid());
-				IPerson p = u.getPerson();
-				p.setDisplayName(displayname);
-				user.addProperty("displayname", displayname);
-				//getOrionUser(u);
 				return user;
 			}
 		} 
@@ -375,8 +370,11 @@ public class LdapAuthenticationService implements IAuthenticationService {
 		return null;
 	}
 
-	private static User createOrionUser(String login) {
-		User newUser = new User(login, login, "");  // don't save password
+	private static User createOrionUser(String login, String name) {
+		if (name == null) {
+			name = login;
+		}
+		User newUser = new User(login, name, "");  // don't save password
 		newUser = userAdmin.createUser(newUser);
 		try {
 			AuthorizationService.addUserRight(newUser.getUid(), newUser.getLocation());
@@ -623,43 +621,5 @@ public class LdapAuthenticationService implements IAuthenticationService {
 		}
     }
 	 
-	/* private static void getOrionUser(IUser user) { 
-		 try {
-			 
-				URL url = new URL("http://localhost:8081/users/A");
-				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-				conn.setRequestMethod("GET");
-				conn.setRequestProperty("Accept", "application/json");
-				conn.setRequestProperty("Orion-Version", "1");
-				conn.setRequestProperty("user", "A"); //$NON-NLS-1$
-		 
-				if (conn.getResponseCode() != 200) {
-					throw new RuntimeException("Failed : HTTP error code : "
-							+ conn.getResponseCode());
-				}
-		 
-				BufferedReader br = new BufferedReader(new InputStreamReader(
-					(conn.getInputStream())));
-		 
-				String output;
-				System.out.println("Output from Server .... \n");
-				while ((output = br.readLine()) != null) {
-					System.out.println(output);
-				}
-		 
-				conn.disconnect();
-		 
-			  } catch (MalformedURLException e) {
-		 
-				e.printStackTrace();
-		 
-			  } catch (IOException e) {
-		 
-				e.printStackTrace();
-		 
-			  }
-		 
-		}*/
- 
-	
+		
 }

@@ -380,9 +380,8 @@ var CommentExplorerView = declare(ViewPart, {
 			
 			var creatorString = Runtime.getUserDisplayNamePlusEmail({
 				email: item.designerEmail,
-				userFirstName: item.designerFirstName,
-				userId: item.designerId,
-				userLastName: item.designerLastName
+				userDisplayName: item.designerDisplayName,
+				userId: item.designerId
 			});
 			template.detail_creator = creatorString;
 			

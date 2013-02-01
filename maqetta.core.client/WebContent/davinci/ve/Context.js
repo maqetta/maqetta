@@ -1359,6 +1359,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 						var swdp = this.getGlobal()["require"]("dojox/mobile/SpinWheelDatePicker");
 						if (swdp && swdp.prototype && !swdp.prototype._hacked) {
 							swdp.prototype._hacked = true;
+							console.warn("Patch SpinWheelDatePicker");
 							var sup = swdp.prototype._getValuesAttr;
 							swdp.prototype._getValuesAttr = function() {
 								var v = sup.apply(this);

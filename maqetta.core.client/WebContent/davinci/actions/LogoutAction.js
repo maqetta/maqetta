@@ -9,20 +9,17 @@ return declare("davinci.actions.LogoutAction", Action, {
 	run: function() {
 		
 		/* call the logout URL then redirect to maqetta login page */
-
-		var logoutRequest = new XMLHttpRequest();
-		logoutRequest.onreadystatechange = function() {
-			location.href = 'welcome'; // relative path #3704
-		};
-		var parameters = "";
-		logoutRequest.open("POST", "../logout", false);
-		logoutRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		logoutRequest.setRequestHeader("Orion-Version", "1");
-		logoutRequest.send(parameters);
-		
-		
-		// not yet implemented
-		
+		  dojo.xhrPost({
+              url: "../logout",
+              handleAs: "text",
+              headers: { "Content-Type": "application/x-www-form-urlencoded", "Orion-Version": "1"},
+              postData: "",
+              load: function(response, ioArgs){
+            	  location.href = 'welcome'; // relative path #3704
+              }.bind(this),
+          });
+		  
+	
 	},
 	
 	isEnabled: function(selection){

@@ -1349,6 +1349,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}, this);
 		var promise = new Deferred();
 		all(prereqs).then(function() {
+			//FIXME: dojo/ready call may no longer be necessary, now that parser requires its own modules
 			this.getGlobal()["require"]("dojo/ready")(function(){
 				try {
 					// M8: Temporary hack for #3584.  Should be moved to a helper method if we continue to need this.
@@ -1356,7 +1357,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					// individual slots.
 					try {
 						var swdp = this.getGlobal()["require"]("dojox/mobile/SpinWheelDatePicker");
-						if (swdp && swdp.prototype) {
+						if (swdp && swdp.prototype && !swdp.prototype._hacked) {
+							swdp.prototype._hacked = true;
 							var sup = swdp.prototype._getValuesAttr;
 							swdp.prototype._getValuesAttr = function() {
 								var v = sup.apply(this);

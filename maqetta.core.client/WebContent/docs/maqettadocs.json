@@ -17,7 +17,7 @@
 			{ id: '4.09', name:'9 - Sketching and States', url: 'tutorials/SketchingAndStates.html' }, 
 			{ id: '4.10', name:'10 - Mobile Applications', url: 'tutorials/Mobile_User_Interfaces.html' },
 			{ id: '4.11', name:'11 - Desktop Apps and States (1)', url: 'tutorials/App_States_Part_1.html' }, 
-			{ id: '4.12', name:'12 -Desktop Apps and States (2)', url: 'tutorials/App_States_Part_2.html' },
+			{ id: '4.12', name:'12 - Desktop Apps and States (2)', url: 'tutorials/App_States_Part_2.html' },
 			{ id: '4.13', name:'13 - Mobile Sketching', url: 'tutorials/Mobile_Sketching.html' },
 			{ id: '4.14', name:'14 - Mobile Theme Editor', url: 'tutorials/Mobile_Theme_Editor.html' },
 			{ id: '4.15', name:'15 - Desktop Theme Editor', url: 'tutorials/Desktop_Theme_Editor.html' },

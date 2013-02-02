@@ -37,35 +37,44 @@
 <a name="choose_device_silhouette"><h2>Choosing a device</h2></a>
 
 <p>Set up your authoring canvas to author inside of an iPhone silhouette as follows:</p>
-<ul>
-<li><p>Go to the Create menu at the top of the application, and issue a "Create Mobile Application" command.
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Go to the Create menu at the top of the application, and issue a "Create Mobile Application" command.
 	In the Create dialog, set the device to "iphone" using the drop-down menu. 
 	You can either accept the default filename
 	(e.g., <code>file1.html</code>) or enter a custom filename. Click on the Create button.</li>
-<li>The page canvas should now show a life-size silhouette of an iPhone.
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	The page canvas should now show a life-size silhouette of an iPhone.
 	<p><a href="img/iphone_silhouette.png" target="_blank"><img alt="image" src="img/iphone_silhouette.png" style="margin: 1em 1em 0pt 0pt;" height="400" /></a></p>	
 	</li>
-<li>Look at the toolbar. The second icon from the right is the Document Settings icon. 
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Look at the toolbar. The second icon from the right is the Document Settings icon. 
 	Press that icon and select the "Choose device" command, which will bring up the "Choose a device silhouette" dialog.
 	The dialog looks as follows:
 	<p><a href="img/choose_device_dialog.png" target="_blank"><img alt="image" src="img/choose_device_dialog.png" style="margin: 1em 1em 0pt 0pt;" width="150" /></a></p>
 </li>
-<li>The current release provides authoring support for a handful of popular mobile devices, including
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	The current release provides authoring support for a handful of popular mobile devices, including
 	both phones and tablets, and supports authoring in both portrait and landscape.
 	Use the Choose Device command
 	to change to other silhouettes (e.g., Android phones, iPad, Blackberry).
 	</li>
-<li>Switch between portrait and landscape modes by issuing a "Rotate device" command, also found on the Document Settings icon at the right side of the toolbar.
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Switch between portrait and landscape modes by issuing a "Rotate device" command, also found on the Document Settings icon at the right side of the toolbar.
 	</li>
-<li>Using the same commands,
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Using the same commands,
 	go back to showing the iPhone silhouette in portrait mode.
 	</li>
-</ul>
+</ol>
 
 <a name="dojox_mobile_widget_library"><h2>Introducing the dojox.mobile widget library</h2></a>
 
-<p>In the widget palette, open up the "Dojox Mobile" section of the Widgets palette:
-</p>
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the widget palette, open up the "Dojox Mobile" section of the Widgets palette:
+</li>
+</ol>
 <p><a href="img/dojox_mobile_widgets.png" target="_blank"><img alt="image" src="img/dojox_mobile_widgets.png" style="margin: 1em 1em 0pt 0pt;" width="250px" /></a></p>	
 <p>As you can see, the dojox.mobile widget library offers a wide variety of commonly used mobile widgets:
 </p>
@@ -188,8 +197,9 @@
 	For this tutorial we will create 2 of the screens using the "View" widget.
 </p>
 
-<ul>
-<li>Drag/drop a View widget onto the page canvas.
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Drag/drop a View widget onto the page canvas.
 	Notice that the page canvas now has a gray background. 
 	This is because the first dojox.mobile widget added to the page
 	brings in the CSS theme stylesheets that provide a native look-and-feel
@@ -200,7 +210,8 @@
 	<div class="note">If you want the View to have dimensions, particularly height, less than 100%,
 		you can change dimensions in the Layout section of the Properties palette.</div>
 	</li>
-<li>In order to allow easy authoring of multiple screens, 
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In order to allow easy authoring of multiple screens, 
 	the Dojox Mobile widget uses the '<code>id</code>' attribute to put a referenceable name
 	on widgets. To put a name on this View widget, open up the "Widget" palette (found on the top-right side of the application).
 	and look at the top part of that palette.
@@ -211,17 +222,20 @@
 	<div class="note">Make sure that you entered the exact string "root_view".
 		The tutorial won't work if the ID is not entered correctly.</div>
 	</li>
-<li>Look at the Scenes palette. Right now the "root_view" View is selected (as you can tell by the visibility symbol):
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Look at the Scenes palette. Right now the "root_view" View is selected (as you can tell by the visibility symbol):
 	<p><a href="img/Mobile_root_view_visible.png" target="_blank"><img alt="image" src="img/Mobile_root_view_visible.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>		
 	</li>
-<li>Drag/drop a Heading widget into the middle of the View.
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Drag/drop a Heading widget into the middle of the View.
 	An edit box will appear that allows you to enter the text content for the Heading.
 	<p><a href="img/Mobile_Heading_My_Mobile_App.png" target="_blank"><img alt="image" src="img/Mobile_Heading_My_Mobile_App.png" style="margin: 1em 1em 0pt 0pt;" height="275" /></a></p>
 	Enter "My Mobile App" and click the OK button or hit Return to commit the Heading's text content.
 	The Heading should now have the label "My Mobile App".
 	</li>
 <br/>
-<li>Drag/drop a second View widget onto the page canvas.
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Drag/drop a second View widget onto the page canvas.
 	Look at the Scenes palette and take note of the following:
 	<br /><br />
 	<ul>
@@ -253,33 +267,38 @@
 			whenever one View becomes visible, all sibling View widgets become invisible.</li>
 	</ul>
 <br/>
-<li>In the Scenes palette, alternatively click on the 
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Scenes palette, alternatively click on the 
 			first and second View widget. You will see that when one View widget
 			is selected or made visible, the other View widget becomes invisible.
 			For the following steps, make sure the second View is visible.
 	</li>
-<li>With the second View widget selected, go to the top of the Properties palette 
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	With the second View widget selected, go to the top of the Properties palette 
 	and type "alerts_view" as the value for the 
 	'<code>id</code>' attribute and then hit Return to complete the operation.
 	The top of the Properties palette should now show <code>for: View #alerts_view</code>
 	<div class="note">Make sure that you entered the exact string "alerts_view".
 		The tutorial won't work if the ID is not entered correctly.</div>
 	</li>
-<li>Drag/drop a Heading widget into the middle of the View.
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Drag/drop a Heading widget into the middle of the View.
 	An edit box will appear that allows you to enter the text content for the Heading.
 	Enter "Alerts" and click the OK button or hit Return to commit the Heading's text content.
 	The Heading should now have the label "Alerts".
 	</li>
-</ul>
+</ol>
 
 <a name="setting_up_views"><h2>Completing the root view</h2></a>
 
 <p>Perform the following steps to add some content to the first View (i.e., the View with id="root_view"):
 </p>
 
-<ul>
-<li>Select the first View so that the "My Mobile App" heading is visible on the page canvas.</li>
-<li>Drag/drop a RoundRectList widget into the middle of the View.
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Select the first View so that the "My Mobile App" heading is visible on the page canvas.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Drag/drop a RoundRectList widget into the middle of the View.
 	A data entry popup widget should appear, showing two lines that say "Item 1" and "Item 2".
 	Replace the data with the following three lines:
 	<pre>Alerts
@@ -291,7 +310,8 @@ News</pre>
 		Note: You can edit the list of items either by double-clicking on the RoundRectList widget.
 	</div>
 	</li>
-<li>Select the first list item ("Alerts").
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Select the first list item ("Alerts").
 	Go to the Properties palette and navigate to the "Widget-Specific" pane.
 	(You might have to first click on the "All" link at the top of the palette
 	and then click on the "Widget-Specific" button.)
@@ -301,19 +321,21 @@ News</pre>
 	After hitting Return, an arrow icon should appear on the right side of the "Alerts" list item:
 	<p><a href="img/Mobile_MoveTo_Alerts_Arrow.png" target="_blank"><img alt="image" src="img/Mobile_MoveTo_Alerts_Arrow.png" style="margin: 1em 1em 0pt 0pt;" height="175" /></a></p>
 	</li>
-</ul>
+</ol>
 
 <a name="setting_up_views"><h2>Completing the alerts view</h2></a>
 
 <p>Perform the following steps to add some content to the second View (i.e., the View with id="alerts_view"):
 </p>
 
-<ul>
-<li>Use the Scenes palette to select the second View (the "Alerts" View).
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Use the Scenes palette to select the second View (the "Alerts" View).
 	<p><a href="img/Mobile_second_view_visible.png" target="_blank"><img alt="image" src="img/Mobile_second_view_visible.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>
 	You should see the heading with the word "Alerts" on the page canvas.
 	</li>
-<li>In the Widgets palette, go to the HTML section. Drag/drop a <code>&lt;div&gt;</code> widget 
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Widgets palette, go to the HTML section. Drag/drop a <code>&lt;div&gt;</code> widget 
 	into the middle of the View. You will see a blue selection outline surrounding the empty DIV.
 	Double-click on the empty DIV. 
 	An edit box will appear that allows you to enter the text content for the Heading.
@@ -325,7 +347,8 @@ News</pre>
 	<div class="note">For this step, be sure to enter a value for the shortcut property "margin"
 		and not the more specific "margin-top", "margin-right", "margin-bottom" or "margin_left".</div>
 	</li>
-<li>In the Widgets palette, go to the HTML section. Drag/drop another <code>&lt;div&gt;</code> widget 
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Widgets palette, go to the HTML section. Drag/drop another <code>&lt;div&gt;</code> widget 
 	into the middle of the View. You will see a blue selection outline surrounding the empty DIV.
 	Double-click on the empty DIV. 
 	An edit box will appear that allows you to enter the text content for the Heading.
@@ -336,7 +359,8 @@ News</pre>
 		the "margin-left" property.</div>
 	<p><a href="img/Mobile_second_view_content.png" target="_blank"><img alt="image" src="img/Mobile_second_view_content.png" style="margin: 1em 1em 0pt 0pt;" height="300" /></a></p>
 	</li>
-<li>Click on the Heading at the top to select it.
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the Heading at the top to select it.
 	Go to the Properties palette and navigate to the "Widget-Specific" pane.
 	(You might have to first click on the "All" link at the top of the palette
 	and then click on the "Widget-Specific" button.)
@@ -346,12 +370,14 @@ News</pre>
 	After completing these operations, a button labeled "Home" should appear on the left side of the Heading:
 	<p><a href="img/Mobile_MoveTo_Root_Arrow.png" target="_blank"><img alt="image" src="img/Mobile_MoveTo_Root_Arrow.png" style="margin: 1em 1em 0pt 0pt;" height="100" /></a></p>
 	</li>
-<li>Use the Scenes palette to make the first View visible. Click on the View with 'id' of <code>root_view</code> so that you will now
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Use the Scenes palette to make the first View visible. Click on the View with 'id' of <code>root_view</code> so that you will now
 	see the "My Mobile App" heading on the top of the page canvas.
 	</li>
-<li>Click the Save icon to save this page.
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click the Save icon to save this page.
 </li>
-</ul>
+</ol>
 
 <a name="setting_up_views"><h2>Verifying against different devices and orientations</h2></a>
 
@@ -359,20 +385,23 @@ News</pre>
 	restyle themselves based on the target device and orientation.
 </p>
 
-<ul>
-<li>Use the Choose Device command on the Document Setting menu (found on the right side of the toolbar)
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Use the Choose Device command on the Document Setting menu (found on the right side of the toolbar)
 	to change to other silhouettes (e.g., Android phones, iPad, Blackberry).
 	Notice that the page gets restyled to match the native look-and-feel for different devices.
 	Here is a snapshot of how the root View looks with an Android theme.
 	<p><a href="img/Mobile_root_view_android.png" target="_blank"><img alt="image" src="img/Mobile_root_view_android.png" style="margin: 1em 1em 0pt 0pt;" height="400" /></a></p>		
 	</li>
-<li>Switch between portrait and landscape modes by issuing Rotate Device commands
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Switch between portrait and landscape modes by issuing Rotate Device commands
 	(also found on the Document Settings menu on the right side of the toolbar).
 	Note that the user interface stretches to fit both landscape or portrait orientations.
 	</li>
-<li>Using the same two commands, go back to showing the iPhone silhouette in portrait mode.
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Using the same two commands, go back to showing the iPhone silhouette in portrait mode.
 	</li>
-</ul>
+</ol>
 
 <a name="setting_up_views"><h2>Preview and run your mobile application</h2></a>
 
@@ -380,25 +409,43 @@ News</pre>
 	including slide-in animations.
 </p>
 
-<ul>
-<li>In the toolbar, click the <b>Preview in Browser</b> icon <img class="inline" src="img/preview-browser.png" />. 
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the toolbar, click the <b>Preview in Browser</b> icon <img class="inline" src="img/preview-browser.png" />. 
 	This will launch a new browser window that contains the mobile application you just created
 	running inside of the same mobile device silhouette as you see in the page editor,
 	with controls at the top for switching devices, controlling zoom level and changing orientation
 	(portrait vs. landscape).
 	<p><a href="img/Mobile_preview_1.png" target="_blank"><img alt="image" src="img/Mobile_preview_1.png" style="margin: 1em 1em 0pt 0pt;" height="550" /></a></p>
 	</li>
-<li>Use the controls at the top of the device to preview for different devices,
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Use the controls at the top of the device to preview for different devices,
 	zoom in and out, and switch orientation.
 	</li>
-<li>Click on the "Alerts" list item.
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the "Alerts" list item.
 	This should cause a slide-in animation to transition from the root view to the alerts view.
 	<p><a href="img/Mobile_preview_2.png" target="_blank"><img alt="image" src="img/Mobile_preview_2.png" style="margin: 1em 1em 0pt 0pt;" height="550" /></a></p>		
 	</li>
-<li>Click on the "Home" button.
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the "Home" button.
 	This should cause a slide-in animation to transition back from the alerts view to the root view.
 	</li>
-</ul>
+</ol>
+
+<a name="saveas"><h2>Save as TutorialMobile.html</h2></a>
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	On the page editor toolbar, click on the arrow next to the <strong>Save</strong> button 
+	to bring up the Save menu, and click on "Save As".
+	Then save your composition as "TutorialMobile.html".
+	(We might use this file in subsequently in the Review/Commenting tutorial.)</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the file tab's close button -
+	<img src='img/close_sel.gif' class='exact_size_inline_icon'/>
+	- to close the page editor.
+</li>
+</ol>
 
 <p class="prevnext"><a href="tutorials/SketchingAndStates.html">Previous</a> / <a href="tutorials/App_States_Part_1.html">Next</a></p>
 

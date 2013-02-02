@@ -1,0 +1,298 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Tutorial 16 - Review and Commenting</title>
+</head>
+<body class="maqettadocs">
+
+<style type="text/css">
+table.CompTypeTable {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+table.CompTypeTable td, table.CompTypeTable th {
+	padding:3px;
+	border:1px solid black;
+}
+table.CompTypeTable th {
+	font-style:italic;
+	font-weight:bold;
+	background:#888;
+}
+table td.CompTypeOption {
+	font-weight:bold;
+}
+tr.desktop {
+	background-color:#ddf;
+}
+tr.mobile {
+	background-color:#dfd;
+}
+</style>
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td> &nbsp; </td>
+    <td class="prevnext">
+	<a href="tutorials/Page_Editor_Basics_2.html">Previous</a> / <a href="tutorials/SketchingAndStates.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Tutorial 16 - Review and Commenting</h1>
+
+<div class='note'>
+	When going through Maqetta's tutorials, it is suggested that you have two side-by-side
+	browser windows open, one showing the tutorial, and the other where you run the application
+	and perform the steps listed in the tutorial.<br/>
+	<img src='img/SideBySideTutorialsApp.png' class='side_by_side'/>
+</div>
+<!--
+<ul>
+<li><a href="#newfile">Creating a new HTML page</a></li>
+<li><a href="#dojo">Add Dojo controls to the page</a></li>
+<li><a href="#button">Button widget and on-screen text editing</a></li>
+<li><a href="#html">Add HTML elements to the page</a></li>
+<li><a href="#image">Add an image to the page</a></li>
+<li><a href="#workwidgets">Working with widgets</a></li>
+<li><a href="#deletewidgets">Deleting widgets</a></li>
+<li><a href="#saveopen">Saving and opening files</a></li>
+</ul>
+-->
+
+<p>This tutorial introduces Maqetta review and commenting feature,
+	where an author can share his sketch or prototype with colleagues,
+	who can then provide feedback via forum-style comments
+	and/or on-screen annotations.</p>
+
+<div class='note'>
+	This tutorial requires that you have completed some of the previous tutorials
+	and that you have saved one of the following files in your current project:
+	TutorialSketch.html, TutorialMobile.html and/or TutorialDesktop.html.
+</div>
+
+<a name="create_review"><h2>Create a Review</h2></a>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	On the main menubar, choose the <b>Create -> Review...</b> command.
+	The following dialog should appear:
+</li>
+<div class="image">
+<a href="img/NewReview1.png" target="_blank"><img alt="image" src="img/NewReview1.png" style="margin: 1em 1em 0pt 0pt; height:270px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+</li>
+<p>As you can see, the New Review dialog is a 3-pane wizard. In the first pane,
+	you enter general information about the review session.</p>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Enter "Tutorial review 1" as the title of your review,
+	and enter some text such as "Trying out Maqetta review/commenting tutorial" in the Description field.</li>
+<div class='note'>
+	We will accept default values for Window Size and Due Date for the time being.
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the "Next" button to go to the Select Review Files pane:</li>
+<div class="image">
+<a href="img/NewReview2.png" target="_blank"><img alt="image" src="img/NewReview2.png" style="margin: 1em 1em 0pt 0pt; height:270px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Notice the red-colored text in the lower-left corner of the dialog:
+	"No files selected yet"</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click-select one of the tutorial files you created in previous tutorial sessions
+	(either TutorialSketch.html, TutorialMobile.html or TutorialDesktop.html).
+	Then click on the right arrow icon so that the selected files shows up in the 
+	right-side list. Your screen should now look like this:
+</li>
+<div class="image">
+<a href="img/NewReview2a.png" target="_blank"><img alt="image" src="img/NewReview2a.png" style="margin: 1em 1em 0pt 0pt; height:270px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+<div class='note'>
+	Notice that the red-colored comment at the lower-left of the dialog has changed and now says
+	"No reviewers selected yet" because you have now selected at least one file.
+	<br/>
+	<br/>
+	Note that you can also add files to the right-side list by double-clicking on the filename from 
+	the left-side list.
+	<br/>
+	<br/>
+	The current release of Maqetta only supports review/commenting on HTML files
+	that were created in Maqetta. Future releases might allow review/commenting
+	of other file types, such as images, SVG files, source files or themes.
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the "Next" button to go to the Select Reviewers pane:</li>
+<div class="image">
+<a href="img/NewReview3.png" target="_blank"><img alt="image" src="img/NewReview3.png" style="margin: 1em 1em 0pt 0pt; height:270px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	This is the pane where you list the emails of your colleagues that you want
+	to review and provide feedback on your sketch or prototype.
+	For this tutorial, you will only invite yourself: enter your email address
+	into the type-in field and then click the "Add" button:</li>
+<div class="image">
+<a href="img/NewReview3a.png" target="_blank"><img alt="image" src="img/NewReview3a.png" style="margin: 1em 1em 0pt 0pt; height:270px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+<div class='note'>
+	Notice that the red-colored comment at the lower-left of the dialog has disappeared
+	because you have now selected at least one file and at least one reviewer.
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the "Publish" button to send review invitations to all of the reviewers
+	(which in this case is just yourself).</li>
+<p>What happens next depends on the installation of Maqetta that you are using.
+	If you are running Maqetta at Maqetta.org or off of another server which is email-enabled,
+	then a review invitation email will be sent to your email address.</p>
+<div class='note'>
+Subject: Maqetta Review Invitation: Tutorial review 1<br/>
+john@example.com has invited you to review the page.<br/>
+Description: Trying out Maqetta review/commenting tutorial<br/>
+Click on the Review Link below to enter Maqetta's review and commenting module. If you haven't registered yet with Maqetta and/or are not currently logged into Maqetta, you may need to go through a registration and/or sign-in process before you can start reviewing. If so, you may need to click on the Review Link below once to go to the login and/or registration pages, and then once logged in, you may need to click on the Review Link again.<br/><br/>
+Review Link: <a href=''>http://yourserver/maqetta?reviewDesigner=B&reviewVersion=2012-11-09T22:23:01Z</a>
+</div>
+<p>Reviewers will receive an email invitation, and then can simply click on the link in the email.
+	Maqetta will open up in a browser window, and (after potentially registering and/or logging into the server)
+	the reviewer can start adding review comments to the sketch or prototype.
+<p>Note, however, if you are running
+	a local install of Maqetta or running off a server that is not email-enabled,
+	then the review invitation email will not be sent and Maqetta will post
+	a warning dialog, which is OK for the purposes of this tutorial.</p>
+<div class="image">
+<a href="img/ReviewWarning.png" target="_blank"><img alt="image" src="img/ReviewWarning.png" style="margin: 1em 1em 0pt 0pt; height:270px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Note that, after you clicked "Publish", Maqetta has opened a "review editor" so that
+	you can will see the same thing that your reviewers will see when they click on the email link.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the review editor's close button -
+	<img src='img/close_sel.gif' class='exact_size_inline_icon'/>
+	- to close the review editor.</li>
+</ol>
+
+<a name="reviews_palette"><h2>Reviews palette and opening existing reviews</h2></a>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the large "Reviews" icon on the far left of the application
+	to expose the Reviews palette. This palette shows the list of review
+	sessions which either you initiated or to which you have been invited.
+	You should see the review session you just created.
+	Click on the "+" icon to the left of the review session to expand its content
+	so that the HTML file(s) from the review session are visible.</li>
+<div class="image">
+<a href="img/ReviewsPalette.png" target="_blank"><img alt="image" src="img/ReviewsPalette.png" style="margin: 1em 1em 0pt 0pt; height:150px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Double-click on the HTML file (e.g., TutorialSketch.html) to open the review editor for that file.
+	Your screen should look something like this:</li>
+<div class="image">
+<a href="img/ReviewEditor1.png" target="_blank"><img alt="image" src="img/ReviewEditor1.png" style="margin: 1em 1em 0pt 0pt; height:450px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+<p>Note the various parts of review editors:</p>
+<ul>
+	<li>The center of the screen contains the sketch or prototype on which the author is requesting feedback.</li>
+	<li>The yellow bar at the top reminds reviewers that the HTML page shown on the canvas
+		is a live application that actually runs, and that the review can interact with
+		the page either by using the mouse and keyboard on the canvas. They can also
+		switch between application states or mobile views using the Scenes palette.
+		(We'll try these features out subsequently in this tutorial.)</li>
+	<li>The <b>Comments</b> palette at the top is where reviewers can provide textual feedback
+		and/or graphical annotations on the canvas.</li>
+	<li>The <b>Scenes</b> palette allows reviewers to step through any of the HTML page's 
+		custom application states and/or mobile views.</li>
+</ul>
+</ol>
+
+<a name="reviews_palette"><h2>Interacting with the page</h2></a>
+
+<p>Reviewers can interact with the HTML page in two ways:</p>
+<ul>
+	<li>They can actually run the application directly on the canvas (e.g., click on buttons).</li>
+	<li>They can switch states and mobile views in the Scenes palette.</li>
+</ul>
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Try interacting with the application directly on the canvas.
+	If your review session is TutorialSketch.html, click on the "Show dialog" button,
+	the radio buttons and the Close box. Notice how the application is actually running.
+	But also notice that as you click on things on the canvas, the eyeball in the Scenes
+	palette changes.</li>
+<div class='note'>
+	Maqetta's review/commenting feature makes sure that the canvas and the Scenes
+	palette reflect the same value for current application state.
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Now click on different states (or mobile views) in the Scenes palette.
+	Notice that the canvas changes as you walk through the various states (or mobile views).</li>
+</ol>
+
+<a name="reviews_palette"><h2>Adding review comments and annotations</h2></a>
+
+<p>Now we will add some review comments and annotations.</p>
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Scenes palette, make sure that the initial state or mobile view is showing.
+	(For TutorialSketch.html, that would be the Background state).</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the "+" icon at the top of the Comments palette.
+	The Comments palette should look like this:</li>
+<div class="image">
+<a href="img/AddComment.png" target="_blank"><img alt="image" src="img/AddComment.png" style="margin: 1em 1em 0pt 0pt; height:190px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Enter "Nice UI!" as the Subject and "but a little sparse" in the Comment area.
+		Then click "Submit". Your screen should look like this:</li>
+<div class='note'>
+	A review comment is not added to the review until the user clicks "Submit".
+</div>
+<p>Your screen should now look like this:</p>
+<div class="image">
+<a href="img/CommentAdded.png" target="_blank"><img alt="image" src="img/CommentAdded.png" style="margin: 1em 1em 0pt 0pt; height:100px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+<p>Note the following things:</p>
+<ul>
+	<li>Each comment shows the reviewer who submitted the comment.</li>
+	<li>Comments (and annotations) are color-coded. Each reviewer gets his own color.</li>
+</ul>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the "+" icon again at the top of the Comments palette.
+	For Subject, enter "What do these two buttons do?".
+	(Don't click Submit yet.)</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the arrow icon on the toolbar just above the "Subject" line.
+	Go to the canvas and drag out an arrow that goes from the middle of the canvas
+	to the "Second button" button. Then click on the rectangle icon on the same toolbar
+	and drag out a rectangle that surrounds both the "Second button" button and 
+	the "Third button" button.
+	Finally, click on the text icon on the same toolbar.
+	<em><b>Drag out a rectangle about 70px by 70px at the bottom of the arrow.</b></em>
+	In the text box, enter "what are these for?" Your canvas should look something like this:</li>
+<div class="image">
+<a href="img/CommentAnnotationsAdded.png" target="_blank"><img alt="image" src="img/CommentAnnotationsAdded.png" style="margin: 1em 1em 0pt 0pt; height:280px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Now click on the Submit button.</li>
+</ol>
+
+<a name="state_specific_comments"><h2>State-specific comments and annotations</h2></a>
+
+<br />
+<p class="prevnext"><a href="tutorials/Page_Editor_Basics_2.html">Previous</a> / <a href="tutorials/SketchingAndStates.html">Next</a></p>
+
+</div> <!-- pagebody -->
+
+</body>
+</html>

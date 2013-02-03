@@ -56,7 +56,7 @@ In the next exercise we will add interactivity by defining the states, and then 
 	Issue a <b>Create > Desktop Application...</b> on the Maqetta menubar to bring up the Create dialog, 
 	then click on the Create button.</li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	In the <b>Palette</b>, open <b>Dojo Containers</b> and drag a <b>Tab Container</b> onto the canvas.</li>
+	In the <b>Palette</b>, open <b>Containers</b> and drag a <b>Tab Container</b> onto the canvas.</li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	The Tab Container's data entry popup will pop up with the default tab titles "Tab 1, Tab 2".</li>
 <div class="image">
@@ -74,12 +74,6 @@ In the next exercise we will add interactivity by defining the states, and then 
 
 then click on the OK button, hit <b>Enter</b> or click outside the edit box to close the popup.<br /><br /></li>
 
-<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Open the <b>Layout</b> palette, found on the right side of the application.
-    <ul>
-	<li>Set <b>width: 300px</b></li>
-	<li>Set <b>height: 250px</b></li>
-    </ul><br /></li>
 
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	You should now see a Tab Container with three tabs:</li>
@@ -90,17 +84,24 @@ then click on the OK button, hit <b>Enter</b> or click outside the edit box to c
 </div><br />
 
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Open the <b>Layout</b> palette, found on the right side of the application.
+    <ul>
+	<li>Set <b>width: 300px</b></li>
+	<li>Set <b>height: 250px</b></li>
+    </ul><br /></li>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	Click on the <b>Save</b> <img class="inline" src="img/save_icon.png" /> icon on the page editor toolbar to save your changes.</li>
 </ol>
 
 <h3>Create the New and Delete buttons</h3>
 <ol>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	In the Widgets palette, close <b>Dojo Containers</b> and open <b>HTML</b>.</li>
+	In the Widgets palette, close <b>Containers</b> and open <b>HTML</b> section and <b>Common</b> sub-section.</li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	Drag a <b>&lt;div&gt;</b> from the Widgets palette onto the Tab Container.</li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Close the <b>HTML</b> section and open <b>Dojo Controls</b>.</li>
+	Close the <b>HTML</b> section and open the <b>Controls</b> section and <b>Buttons</b> sub-section.</li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	Drag a <b>Button</b> from the Widgets palette onto the &lt;div&gt; you just created.</li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
@@ -116,7 +117,7 @@ then click on the OK button, hit <b>Enter</b> or click outside the edit box to c
 	Click on the white space to the side of the 2 Buttons. This will select the <b>&lt;div&gt;</b> that contains the Buttons.
 <br /><img src="img/buttons2.png" /></li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Open the <b>Fonts and Text</b> palette.
+	Open the <b>Fonts/Text</b> palette.
 </li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	Set <b>text-align: right</b>. This will shift the Buttons to the right side of the &lt;div&gt;.
@@ -138,11 +139,8 @@ then click on the OK button, hit <b>Enter</b> or click outside the edit box to c
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	With the <b>&lt;div&gt;</b> still selected:
 	<ol>
-	<li>In the <b>Properties</b> palette, click on the <b>Padding/Margins</b> button to open the <b>Padding/Margins</b> section.
-	(If you have previously opened a section of the <b>Properties</b> palette,
-	you will need to click on the "All" breadcrumb link at the top of the <b>Properties</b> palette
-	to return to the initial view, and then you can click on the "Padding/Margins" button.)
-	In the <b>Padding/Margins</b> section, click on the "show t/r/b/l:" check box under <b>(padding)</b>.</li>
+	<li>Open the <b>Padding</b> palette.
+	In the <b>Padding</b> palette, click on the "show t/r/b/l:" check box.</li>
 	<li>Set the padding to <b>padding-top: 10px</b> and <b>padding-bottom: 10px</b>. (<i>Hit <b>Enter</b> or click outside of each input field to apply the changes.</i>)
 	<div class="image">
 	<a href="img/padding.png" target="_blank"><img alt="image" src="img/padding.png" style="margin: 1em 1em 0pt 0pt;" width="225px" /></a>
@@ -155,7 +153,8 @@ then click on the OK button, hit <b>Enter</b> or click outside the edit box to c
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	Enter "<b>Sort-by:</b>" in the data entry popup.</li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Drag a <strong>Combo Box</strong> (in <b>Dojo Controls</b>) onto the &lt;div&gt;, to the right of <b>Sort-by:</b></li>
+	Drag a <strong>ComboBox</strong> (in <b>Controls</b> section and <b>TextBox</b> sub-section) 
+	onto the &lt;div&gt;, to the right of <b>Sort-by:</b></li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	In the data entry popup, enter values below (hit <b>Enter</b> to create a new line):
 
@@ -168,10 +167,10 @@ then click on the OK button or click outside the edit box to close the popup.<br
 <i>Note: The "<b>+</b>" indicates the default selection.</i><br /><br /></li>
 
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	With the <b>Combo Box</b> still selected:
+	With the <b>ComboBox</b> still selected:
 	<ol>
-	<li>Place your mouse over the <b>resize knob</b> on the right side of the Comb Box and drag the knob to the left, making the ComboBox smaller.</li>
-    <li>Open the <b>Padding/Margins</b> section in the Properties palette.
+	<li>Place your mouse over the <b>resize knob</b> on the right side of the ComboBox and drag the knob to the left, making the ComboBox smaller.</li>
+    <li>Open the <b>Margins</b> palette.
 	<li>Click on the "show t/r/b/l:" check box under <b>(margin)</b>.</li>
     <li>Set the margin to <b>margin-left: 5px</b>.</li>
 	</ol>
@@ -182,7 +181,8 @@ then click on the OK button or click outside the edit box to close the popup.<br
 <h3>Create the Task List</h3>
 <ol>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Drag a <b>Multi Select</b> onto the Tab Container and drop it in the empty space below the last &lt;div&gt;.
+	Drag a <b>Multi Select</b> (found in <b>Controls</b> section, <b>Select</b> sub-section)
+	onto the Tab Container and drop it in the empty space below the last &lt;div&gt;.
 <br /><img src="img/multiselect.png"/></li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	In the widget's data entry popup, change the values to:
@@ -204,11 +204,11 @@ then click on the OK button or click outside the edit box to close the popup.<br
 <h3>Create the New Task dialog's frame</h3>
 <ol>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Drag a <b>Content Pane</b> (in <b>Dojo Containers</b>) onto the canvas below the Tab Container.</li>
+	Drag a <b>Content Pane</b> (in <b>Containers</b>) onto the canvas below the Tab Container.</li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	<i><b>Keep the Content Pane selected for the remainder of this section.</b></i></li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Open the <b>Border</b> section in the Properties palette:
+	Open the <b>Border</b> palette:
       <div style="margin-bottom: 15px">
           <div>
 			  <ol>
@@ -232,7 +232,7 @@ then click on the OK button or click outside the edit box to close the popup.<br
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	On the canvas, resize the Content Pane to roughly 350px wide by 75px tall (<i>using the bottom-right-corner resize knob</i>).</li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	<i>Note how the width and height values change in the Layout section after you resize.</i>
+	<i>Note how the width and height values change in the <b>Layout</b> palette after you resize.</i>
 <p><img src="img/layout.png"  height="120px"/></p>
 </li>
 </ol>
@@ -247,7 +247,7 @@ then click on the OK button or click outside the edit box to close the popup.<br
 	In the data entry popup enter "<b>Add new task</b>".</li>
 
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Open the <b>Fonts and Text</b> section in the Properties palette:
+	Open the <b>Fonts/Text</b> palette:
       <div style="margin-bottom: 15px">
           <div class="left-side">
 			  <ol>
@@ -262,7 +262,7 @@ then click on the OK button or click outside the edit box to close the popup.<br
 </li>
 
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Open the <b>Padding/Margins</b> section in the Properties palette:
+	Open the <b>Padding</b> palette:
       <div style="margin-bottom: 15px">
           <div class="left-side">
 			  <ol>
@@ -293,7 +293,7 @@ then click on the OK button or click outside the edit box to close the popup.<br
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	Select the Content Pane either by clicking on its border or clicking on white space within the Content Pane that has no widgets covering that area.</li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Open the <b>Layout</b> section of the Properties palette and set <b>position: absolute</b>.</li>
+	Open the <b>Layout</b> palette and set <b>position: absolute</b>.</li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	Drag the Content Pane over the Tab Container, placing the top of the ContentPane just below the <b>New</b> button:
       <div style="margin-bottom: 15px">
@@ -307,7 +307,7 @@ then click on the OK button or click outside the edit box to close the popup.<br
 </li>
 
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Open the <b>Background</b> section in the Properties palette</li>
+	Open the <b>Background</b> palette</li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	Set the <b>background-color</b> to white choosing white from from the property's drop-down menu.
  </li>

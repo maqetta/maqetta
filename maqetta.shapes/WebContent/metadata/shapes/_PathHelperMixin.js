@@ -50,6 +50,9 @@ _PathHelperMixin.prototype = {
 		var widget = params.widget;
 		var dijitWidget = widget.dijitWidget;
 		var points = dojo.clone(dijitWidget._points);
+		if(!dijitWidget._bbox){
+			dijitWidget.resize();
+		}
 		var thisbbox = dijitWidget._bbox;
 		var minx = thisbbox.x;
 		var miny = thisbbox.y;

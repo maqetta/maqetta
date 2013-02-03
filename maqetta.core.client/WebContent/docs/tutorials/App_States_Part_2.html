@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <link rel="stylesheet" type="text/css" href="maqettadocs.css" />
-<title>Tutorial - Building a Task Manager Part 2:  Adding Interactivity via Application States</title>
+<title>Tutorial 12 - Desktop Apps and States (2)</title>
 </head>
 <body class="maqettadocs">
 
@@ -12,11 +12,11 @@
 <table class="breadcrumbs noprint"><tr>
 	<td> &nbsp; </td>
     <td class="prevnext">
-	<a href="tutorials/App_States_Part_1.html">Previous</a> / <a href="tutorials/Sketching.html">Next</a>
+	<a href="tutorials/App_States_Part_1.html">Previous</a> / <a href="tutorials/Mobile_Sketching.html">Next</a>
     </td></tr>
 </table>
 
-<h1>Building a Task Manager Part 2:  Adding Interactivity via Application States</h1>
+<h1>Tutorial 12 - Desktop Apps and States (2)</h1>
 
 <div class='note'>
 	When going through Maqetta's tutorials, it is suggested that you have two side-by-side
@@ -42,37 +42,49 @@ In this tutorial we will add interactivity by defining the states, and then wiri
 
 <p>The Outline palette is in the top left of the Maqetta Page Editor.</p>
 <ol>
-<li>Collapse the Outline palette entries so you see only the two top-level entries: <b>TabContainer</b> and <b>ContentPane</b>.</li>
-<li>Click on the <b>eye icon</b> to the left of the Content Pane.</li>
-<li><i>Observe that the </i><b>Add new task</b><i> ContentPane disappears from the editing canvas and the eye is now closed.</i></li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Collapse the Outline palette entries so you see only the two top-level entries: <b>TabContainer</b> and <b>ContentPane</b>.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <b>eye icon</b> to the left of the Content Pane.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	<i>Observe that the </i><b>Add new task</b><i> ContentPane disappears from the editing canvas and the eye is now closed.</i></li>
 <div class="image">
 <a href="img/outline1.png" target="_blank"><img alt="image" src="img/outline1.png" style="margin: 1em 1em 0pt 0pt;" width="200" /></a>
 <div>Click on the image to enlarge it.</div>
 </div><br />
 
-<li>Click on the <b>plus icon</b> to expand the Tab Container.</li> 
-<li>Collapse the entries so you see just the three Content Pane entries under Tab Container (one for each tab in the TabContainer).</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <b>plus icon</b> to expand the Tab Container.</li> 
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Collapse the entries so you see just the three Content Pane entries under Tab Container (one for each tab in the TabContainer).</li>
 <div class="image">
 <a href="img/outline2.png" target="_blank"><img alt="image" src="img/outline2.png" style="margin: 1em 1em 0pt 0pt;" width="200" /></a>
 <div>Click on the image to enlarge it.</div>
 </div><br />
 	
-<li>Expand the first ContentPane, then click on the first <b>&lt;div&gt;</b> to select it.</li>
-<li><i>Observe how the associated the &lt;div&gt; containing the </i><b>New</b><i> and </i><b>Del</b><i> buttons is selected on the editing canvas.</i></li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Expand the first ContentPane, then click on the first <b>&lt;div&gt;</b> to select it.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	<i>Observe how the associated the &lt;div&gt; containing the </i><b>New</b><i> and </i><b>Del</b><i> buttons is selected on the editing canvas.</i></li>
 <div class="image">
 <a href="img/outline4.png" target="_blank"><img alt="image" src="img/outline4.png" style="margin: 1em 1em 0pt 0pt;" width="450" /></a>
 <div>Click on the image to enlarge it.</div>
 </div><br />
 
-<li>Click the second <b>&lt;div&gt;</b> in the Outline palette to select it.</li>
-<li><i>Observe how the associated the &lt;div&gt; containing the </i><b>Sort-by:</b><i> label and </i><b>Name</b><i> ComboBox is selected on the editing canvas.</i></li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click the second <b>&lt;div&gt;</b> in the Outline palette to select it.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	<i>Observe how the associated the &lt;div&gt; containing the </i><b>Sort-by:</b><i> label and </i><b>Name</b><i> ComboBox is selected on the editing canvas.</i></li>
 <div class="image">
 <a href="img/outline5.png" target="_blank"><img alt="image" src="img/outline5.png" style="margin: 1em 1em 0pt 0pt;" width="450" /></a>
 <div>Click on the image to enlarge it.</div>
 </div><br />
-<li>Collapse the parent TabContainer entry.</li>
-<li>Un-hide the last ContentPane by clicking on the <b>closed eye icon</b>.</li>
-<li>Click on the ContentPane entry in the Outline palette to select that widget.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Collapse the parent TabContainer entry.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Un-hide the last ContentPane by clicking on the <b>closed eye icon</b>.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the ContentPane entry in the Outline palette to select that widget.</li>
 <div class="image">
 <a href="img/outline6.png" target="_blank"><img alt="image" src="img/outline6.png" style="margin: 1em 1em 0pt 0pt;" width="450" /></a>
 <div>Click on the image to enlarge it.</div>
@@ -82,25 +94,36 @@ In this tutorial we will add interactivity by defining the states, and then wiri
 
 <a name="define"><h2>Define The Application States</h2></a>
 <ol>
-<li>Click on the <b>Scenes palette</b> tab (located at the lower right of page editor).</li>
-<li>Click on the <b>plus icon</b> to bring up the <b>Create New State</b> dialog.</li>
-<li>Enter "<b>Add Task</b>" and click <b>Create</b>.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <b>Scenes palette</b> tab (located at the lower right of page editor).</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <b>plus icon</b> to bring up the <b>Create New State</b> dialog.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Enter "<b>Add Task</b>" and click <b>Create</b>.</li>
 	<div><img src="img/new_state.png" width="230" /></div>
-<li>Click on the <b>plus icon</b> again to bring up the <b>Create New State</b> dialog.</li>
-<li>Enter "<b>Task Added</b>" and click <b>Create</b>.
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <b>plus icon</b> again to bring up the <b>Create New State</b> dialog.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Enter "<b>Task Added</b>" and click <b>Create</b>.
 	<br /><br />You should now have three states:</li>
 	<div><img src="img/states_palette.png" /></div>
-<li>Click on the <strong>Save</strong> button on the toolbar to save your changes.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <strong>Save</strong> button on the toolbar to save your changes.</li>
 </ol>
 
 <a name="visible"><h2>Configure Widget Visibility For Each State</h2></a>
 <h3>Configure the Normal State</h3>
 <ol>
-<li>In the Scenes palette, click on <b>Normal</b> to put your application into the Normal state.</li>
-<li>In the Outline palette, close the <b>eye icon</b> for the ContentPane for the Add Task dialog.</li>
-<li><i>The </i><b>Add new task</b><i> dialog should now be invisible.</i></li>
-<li>In the Outline palette, close the <b>eye icon</b> for the MultiSelect widget.</li>
-<li><i>The MultiSelect widget should now be invisible.</i></li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Scenes palette, click on <b>Normal</b> to put your application into the Normal state.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Outline palette, close the <b>eye icon</b> for the ContentPane for the Add Task dialog.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	<i>The </i><b>Add new task</b><i> dialog should now be invisible.</i></li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Outline palette, close the <b>eye icon</b> for the MultiSelect widget.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	<i>The MultiSelect widget should now be invisible.</i></li>
 <div><img src="img/states_palette.png" width='200'/></div>
 <div class="image">
 <a href="img/normal_state.png" target="_blank"><img alt="image" src="img/normal_state.png" style="margin: 1em 1em 0pt 0pt;" width="200" /></a>
@@ -110,48 +133,83 @@ In this tutorial we will add interactivity by defining the states, and then wiri
 
 <h3>Configure the "Add Task" State</h3>
 <ol>
-<li>In the Scenes palette, click on <b>Add Task</b> to put your application into the "Add Task" state.</li>
-<li>In the Outline palette, open the <b>eye icon</b> for the ContentPane for the <b>Add new task</b> dialog.</li>
-<li><i>The </i><b>Add new task</b><i> dialog should now be visible.</i></li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Scenes palette, click on <b>Add Task</b> to put your application into the "Add Task" state.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Outline palette, open the <b>eye icon</b> for the ContentPane for the <b>Add new task</b> dialog.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	<i>The </i><b>Add new task</b><i> dialog should now be visible.</i></li>
 </ol>
 
 <h3>Configure the "Task Added" State</h3>
 <ol>
-<li>In the Scenes palette, click on "Task Added" to put your application into the "Task Added" state.</li>
-<li>In the Outline palette, under the TabContainer open the <b>eye icon</b> for the <b>MultiSelect</b> widget.</li>
-<li><i>The MultiSelect widget should now be visible.</i></li>
-<li>Click on the <b>Save</b> button on the toolbar to save your changes.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Scenes palette, click on "Task Added" to put your application into the "Task Added" state.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Outline palette, under the TabContainer open the <b>eye icon</b> for the <b>MultiSelect</b> widget.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	<i>The MultiSelect widget should now be visible.</i></li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <b>Save</b> button on the toolbar to save your changes.</li>
 </ol>
 
 <h3>Test the State Configurations</h3>
 <ol>
-<li>In the Scenes palette, alternatively click on <b>Normal</b>, <b>Add Task</b> and <b>Task Added</b>.
-<li><i>Observe how things appear and disappear as you changes states.</i></li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Scenes palette, alternatively click on <b>Normal</b>, <b>Add Task</b> and <b>Task Added</b>.
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	<i>Observe how things appear and disappear as you changes states.</i></li>
 </ol>
 
 <a name="wire"><h2>Wire up onclick event handlers to switch states</h2></a>
 <ol>
-<li>In the Scenes palette, click on <b>Normal</b> to put your application into the Normal state.</li>
-<li>In the TabContainer, click on the <b>New</b> button to select it.
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Scenes palette, click on <b>Normal</b> to put your application into the Normal state.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the TabContainer, click on the <b>New</b> button to select it.
 	<br /><img src="img/new_button_selected.png" height="70px" /></li>
-<li>In the Properties palette, open the <b>Events</b> section.</li>
-<li>In the drop-down for the <b>onclick</b> event select <b>Add Task:State</b>.<br />
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Properties palette, open the <b>Events</b> section.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the drop-down for the <b>onclick</b> event select <b>Add Task:State</b>.<br />
 (<i>Note that this is one of the events that we added in the Scenes palette.</i>)
 	<br /><img src="img/onclick.png" height="60px" /></li>
-<li>In the Scenes palette, click on <b>Add Task</b> to put your application into the Add Task state. This will make the "Add Task" dialog visible.</li>
-<li>In the <b>Add New Task</b> ContentPane, click on the <b>Add</b> button to select it.
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Scenes palette, click on <b>Add Task</b> to put your application into the Add Task state. This will make the "Add Task" dialog visible.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Add New Task</b> ContentPane, click on the <b>Add</b> button to select it.
 	<br /><img src="img/add_button_selected.png" height="65px" /></li>
-<li>In the Properties palette <b>Events</b> section, set <b>onclick</b> to <b>Task Added:State</b>.</li>
-<li>Click on the <strong>Save</strong> button on the toolbar to save your changes.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Properties palette <b>Events</b> section, set <b>onclick</b> to <b>Task Added:State</b>.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <strong>Save</strong> button on the toolbar to save your changes.</li>
 </ol>
 
 <a name="preview"><h2>Preview in Browser</h2></a>
 <ol>
-<li>In the toolbar, click the <b>Preview in Browser</b> icon <img class="inline" src="img/preview-browser.png" />. This will launch a new browser window that contains the HTML page you just created.</li>
-<li>Click on the <img class="inline" src="img/new_button.jpg" height="18px" /> button. The Add Task dialog should appear.</li>
-<li>Enter "<b>Task 1</b>" and click the <img class="inline" src="img/add_button.jpg" height="21px" /> button.</li>
-<li>The Multi Select widget should appear with "<b>Task 1</b>" in the list.
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the toolbar, click the <b>Preview in Browser</b> icon <img class="inline" src="img/preview-browser.png" />. This will launch a new browser window that contains the HTML page you just created.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <img class="inline" src="img/new_button.jpg" height="18px" /> button. The Add Task dialog should appear.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Enter "<b>Task 1</b>" and click the <img class="inline" src="img/add_button.jpg" height="21px" /> button.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	The Multi Select widget should appear with "<b>Task 1</b>" in the list.
 	<br /><br /><img src="img/browser1.png" height="220px"/><img src="img/browser2.png" height="220px" /><img src="img/browser3.png" height="220px" /></li>
+</ol>
+
+<a name="saveas"><h2>Save as TutorialDesktop.html</h2></a>
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	On the page editor toolbar, click on the arrow next to the <strong>Save</strong> button 
+	to bring up the Save menu, and click on "Save As".
+	Then save your composition as "TutorialDesktop.html".
+	(We might use this file in subsequently in the Review/Commenting tutorial.)</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the file tab's close button -
+	<img src='img/close_sel.gif' class='exact_size_inline_icon'/>
+	- to close the page editor.
+</li>
 </ol>
 <p></p>
 <p>This completes the tutorial.</p>
@@ -188,7 +246,7 @@ show the CSS Details for that widget.</li>
 </ul>
 <br /><br />
 
-<p class="prevnext"><a href="tutorials/App_States_Part_1.html">Previous</a> / <a href="tutorials/Sketching.html">Next</a></p>
+<p class="prevnext"><a href="tutorials/App_States_Part_1.html">Previous</a> / <a href="tutorials/Mobile_Sketching.html">Next</a></p>
 
 </div> <!-- pagebody -->
 

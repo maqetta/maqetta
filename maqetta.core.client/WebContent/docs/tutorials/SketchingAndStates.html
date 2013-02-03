@@ -1,0 +1,513 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Tutorial 9 - Sketching and States</title>
+</head>
+<body class="maqettadocs">
+
+<style type="text/css">
+table.CompTypeTable {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+table.CompTypeTable td, table.CompTypeTable th {
+	padding:3px;
+	border:1px solid black;
+}
+table.CompTypeTable th {
+	font-style:italic;
+	font-weight:bold;
+	background:#888;
+}
+table td.CompTypeOption {
+	font-weight:bold;
+}
+tr.desktop {
+	background-color:#ddf;
+}
+tr.mobile {
+	background-color:#dfd;
+}
+</style>
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td> &nbsp; </td>
+    <td class="prevnext">
+	<a href="tutorials/Sketching.html">Previous</a> / <a href="tutorials/Mobile_User_Interfaces.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Tutorial 9 - Sketching and States</h1>
+
+<div class='note'>
+	When going through Maqetta's tutorials, it is suggested that you have two side-by-side
+	browser windows open, one showing the tutorial, and the other where you run the application
+	and perform the steps listed in the tutorial.<br/>
+	<img src='img/SideBySideTutorialsApp.png' class='side_by_side'/>
+</div>
+
+<p>This tutorial introduces Maqetta's application states feature when used
+	in combination with Maqetta's quick UI sketching features. This tutorial covers these topics:</p>
+<ul>
+	<li>Tutorial preparation</li>
+	<li>Defining custom application states</li>
+	<li>Deleting and renaming states</li>
+	<li>Setting widget visibility for different states</li>
+	<li>Adding widgets into states</li>
+	<li>Managing visibility of selected widgets</li>
+	<li>Adding interactivity</li>
+</ul>
+
+<a name="tutorial_preparation"><h2>Tutorial preparation</h2></a>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Issue a <b>Create Sketch (high-fidelity)...</b> command. In the Create Sketch dialog,
+	click the <b>Create</b> button to create a new file with the default filename.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Palette</b>, click on the <b>Controls</b> section to open that section, then
+	click on the the subsection labelled <b>Buttons</b>.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Drag a Button widget and drop somewhere near the top/left corner of the canvas.
+	In the data entry popup, enter the text "Show dialog", then click OK.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Palette</b>, click on the <b>Drawing Tools</b> section to open that section.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the Rectangle widget in the <b>Palette</b>, then move the mouse
+	over the canvas. Then drag out a rectangle about 400px by 400px, with the top of 
+	the rectangle just under the Button.</li>
+<div class="image">
+<a href="img/sketching_states_button_rect.png" target="_blank"><img alt="image" src="img/sketching_states_button_rect.png" style="margin: 1em 1em 0pt 0pt; height:300px; width:auto;" /></a>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	From the Drawing Tools section of the <b>Palette</b>, drag a Line widget into the Rectangle.
+	Go into the Outline palette and verify that the Line widget is a child of the Rectangle
+	If it is not a child, then undo the operation to remove the Line, and perform the drag
+	operation again to make sure that the Line is dropped inside of the Rectangle 
+	so that it will be a child of the Rectangle.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Drag the left-side nob of the Line widget until it snaps to the left side of the Rectangle,
+	about 50px under the Rectangle's top border.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Now, while holding down the shift key (to constrain dragging to horizontal or vertical)
+	drag the right-side nob vertically so that has approximately the same y-axis value as the left-side of the Line,
+	and horizontally until it snaps to the right side of the Rectangle. If you perform a mouse-up
+	while the shift key is pressed, you will have a horizontal line. The snapping should ensure
+	that the left and right edges of the Line are coincident with the left and right edges of the Rectangle.</li>
+<div class="image">
+<a href="img/sketching_states_horiz_line.png" target="_blank"><img alt="image" src="img/sketching_states_horiz_line.png" style="margin: 1em 1em 0pt 0pt; height:300px; width:auto;" /></a>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	From the Drawing Tools section of the <b>Palette</b>, drag a Text widget into the top/left corner of the Rectangle.
+	When the data entry popup appears, enter the text "My dialog".
+	Go into the Outline palette and verify that the Text widget is a child of the Rectangle
+	If it is not a child, then undo the operation to remove the Text, and perform the drag
+	operation again to make sure that the Text is dropped inside of the Rectangle 
+	so that it will be a child of the Rectangle.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Drag the Text widget ("My dialog") a few pixels to left, top, right, bottom until it is in a proper location for a dialog title string.
+	Then use the arrow keys to do one-pixel position adjustments.</li>
+<div class="image">
+<a href="img/sketching_states_dialog_title.png" target="_blank"><img alt="image" src="img/sketching_states_dialog_title.png" style="margin: 1em 1em 0pt 0pt; height:300px; width:auto;" /></a>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	From the Controls / Checkboxes, RadioButtons, Switches section of <b>Palette</b>, 
+	drag two RadioButton widgets inside the Rectangle, under the title,
+	and close to the left-side, stacked vertically.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	From the HTML / Common section of the <b>Palette</b>,
+	drag two &lt;label&gt; widgets just to the right of each of the RadioButtons.
+	In the data entry popups for the two  &lt;label&gt; widgets, enter the values
+	"Show image" and "Show map". Drag the RadioButtons and &lt;label&gt; around
+	until the canvas looks something like this:</li>
+<div class="image">
+<a href="img/sketching_states_radios_labels.png" target="_blank"><img alt="image" src="img/sketching_states_radios_labels.png" style="margin: 1em 1em 0pt 0pt; height:300px; width:auto;" /></a>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	From the Clip Art / User Interface Icons section of <b>Palette</b>, 
+	drag a Close widget inside the title part of the Rectangle, close to the right edge of the title region.
+	Drag the Close widget, and/or use the arrow keys on the keyboard, to position the Cloes widget
+	at a suitable place in the right corner
+	until the canvas looks something like this:</li>
+<div class="image">
+<a href="img/sketching_states_close_button.png" target="_blank"><img alt="image" src="img/sketching_states_close_button.png" style="margin: 1em 1em 0pt 0pt; height:300px; width:auto;" /></a>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Go into the Outline palette and verify that all of the following widgets
+	are children of the Rectangle: Line, Text, RadioButtons, &lt;label&gt;'s and Close.</li>
+</ol>
+	
+<a name="defining_states"><h2>Defining custom application states</h2></a>
+
+<p>Now we have most of the graphics added for our sketch, but we would like to
+	make the sketch "live" by adding some interactivity:</p>
+<ul>
+	<li>We want to have the dialog hidden at startup. Only the button should be visible at first.</li>
+	<li>Clicking on the Button should expose the dialog.</li>
+	<li>Clicking on the two RadioButtons should show an image and a map, respectively.</li>
+	<li>Clicking on the close icon should hide the dialog.</li>
+</ul>
+<p>To accomplish this, we will define two custom application states: "Show image" and "Show map".</p>
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, click on the 
+	<img src='img/CreateNewState.gif' class='exact_size_inline_icon'/>
+	icon twice to create two custom application
+	states "Show image" and "Show map".</li>
+<div class="image">
+<a href="img/sketching_states_scenes_added.png" target="_blank"><img alt="image" src="img/sketching_states_scenes_added.png" style="margin: 1em 1em 0pt 0pt; height:130px; width:auto;" /></a>
+</div>
+</ol>
+<a name="defining_states"><h2>Deleting and renaming states</h2></a>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, click on the 
+		<img src='img/CreateNewState.gif' class='exact_size_inline_icon'/>
+	icon two more times to create two custom application
+	states "State 1" and "State 2".</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on "State 1" to make it active.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, click on the 
+	<img src='img/Delete.gif' class='exact_size_inline_icon'/>
+	to remove "State 1".</li>
+<div class='note'>
+	Note that Maqetta does not post an "are you sure" dialog before a state is removed.
+	If you make a mistake and accidentally remove a state, click on the Undo icon.
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, click on "State 2" to make it active.
+	Click on the
+	<img src='img/ModifyState.gif' class='exact_size_inline_icon'/>
+	to bring up the Modify State dialog. Click on the Rename button to pop up
+	a small supplemental rename text entry area. Enter "abc" into the text field,
+	click on the "Rename" button, then in the Modify State dialog, click on the "Update" button.
+	In the <b>Scenes</b> palette, you should see that the state is now named "abc".</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, click on "abc" to make that state active,
+	then click on
+	<img src='img/Delete.gif' class='exact_size_inline_icon'/>
+	to remove "abc".</li>
+</ol>
+
+<a name="defining_states"><h2>Setting widget visibility for different states</h2></a>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, make sure that the Background state has an eyeball icon,
+	indicating that that state is now active. (See picture above, which shows the eyeball icon
+	on the Background state.)</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Go to the <b>Outline</b> palette and click on the eyeball icon next to the Rectangle widget.
+	The eyeball icon for the Rectangle should now have a white interior,
+	and the Rectangle should now be invisible on the canvas.</li>
+<div class="image">
+<a href="img/sketching_state_rect_invisible.png" target="_blank"><img alt="image" src="img/sketching_state_rect_invisible.png" style="margin: 1em 1em 0pt 0pt; height:300px; width:auto;" /></a>
+</div>
+<div class='note'>
+	You have just made the Rectangle invisible in the Background state.
+	<br/><br/>
+	Note that by making the container widget (the Rectangle) invisible,
+	all of its embedded children are invisible also, even though the children's eyeball icons
+	are still showing as visible. For a widget to be visible, the widget itself must
+	have its eyeball turned on, and so must all of its container widgets.
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, click on the "Show image" state to make it active.
+	(The eyeball icon should move to that state.)</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Go to the <b>Outline</b> palette and notice that the Rectangle widget's icon is still indicating
+	that the Rectangle is invisible. Click on the eyeball icon next to the Rectangle widget
+	to make it visible in the current state (i.e., the "Show image" state).</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, alternately click on "Background" and "Show image".
+	You should see that the Rectangle (and its children) are hidden in the Background state
+	and visible in the "Show image" state.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, click on the "Show map" state to make it active.
+	(The eyeball icon should move to that state.)</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Go to the <b>Outline</b> palette and notice that the Rectangle widget's icon is still indicating
+	that the Rectangle is invisible. Click on the eyeball icon next to the Rectangle widget
+	to make it visible in the current state (i.e., the "Show map" state).</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, alternately click on "Background", "Show image" and "Show map".
+	You should see that the Rectangle (and its children) are hidden in the Background state
+	and are visible in the "Show image" and "Show map" state.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Save and verify your work.
+	On the page editor's toolbar, click on the Save button to permanently save your composition.
+	Click on the file tab's close button -
+	<img src='img/close_sel.gif' class='exact_size_inline_icon'/>
+	- to close the page editor.
+	Double-click on the file you just created to re-open.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, alternately click on "Background", "Show image" and "Show map".
+	You should see that the Image is visible in both the Show image state and the Show mapRectangle (and its children) are hidden in the Background state
+	and are visible in the "Show image" and "Show map" state.
+</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	It's sometimes a good idea to save intermediate versions of your compositions
+	in case you make a mistake (or run into a software or network glitch).
+	On the page editor's toolbar, click the right arrow next to the Save button
+	to bring up the Save button's dropdown menu, and choose a "Save As" command.
+	Save your file under a different name (e.g., file1a.html).</li>
+</ol>
+
+<a name="adding_to_specific_state"><h2>Adding widgets into states</h2></a>
+
+<p>Let's make sure the fifth and sixth icons in the Scenes palette have proper values.</p>
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Look at the fifth icon in the Scenes palette and make sure it looks like this:
+	<img src='img/GoBackground.gif' class='exact_size_inline_icon'/>
+	(which indicates that new widgets get added to the Background)
+	and <em>not</em> like this:
+	<img src='img/GoCurrent.gif' class='exact_size_inline_icon'/>
+	(which indicates that new widgets get added to the current state).
+	This is a toggle icon - alternate clicks will switch between the two alternate settings.
+	If you hover over this icon, the tooltip will indicate its current value.
+	</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Look at the sixth icon in the Scenes palette and make sure it looks like this:
+	<img src='img/HighlightBackgroundDis.gif' class='exact_size_inline_icon'/>
+	(which indicates that backgrounds widgets are not highlighted)
+	and <em>not</em> like this:
+	<img src='img/HighlightBackground.gif' class='exact_size_inline_icon'/>
+	(which indicates that background widgets are highlighted when a custom state is active).
+	This is a toggle icon - alternate clicks will switch between the two alternate settings.
+	</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, click on "Show image" to make that the currently active state.
+	(The eyeball icon should move to that state.)</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	From the Controls / Buttons section of the <b>Palette</b>, 
+	drag a Button widget and drop just to the right of the "Show dialog" button.
+	In the data entry popup, enter the text "Second button", then click OK.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, alternately click on "Background", "Show image" and "Show map".
+	You should see that the second button is visible in all three states.</li>
+<div class='note'>
+	Even though the current state is "Show image", the new widget (the second button) is added
+	to the Background, and therefore shines through to the two custom states.
+	The widget was added to the Background because the fifth icon
+	<img src='img/GoBackground.gif' class='exact_size_inline_icon'/>
+	is set to "to background".	
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, click on "Show image" to make that the currently active state.
+	(The eyeball icon should move to that state.)</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the fifth icon and make sure it looks like this:
+	<img src='img/GoCurrent.gif' class='exact_size_inline_icon'/>
+	so that new widgets will get added to the current state.
+</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	From the Clip Art / Media section of <b>Palette</b>, 
+	click on the Image widget to select that widget. Then move the mouse
+	over the Rectangle. Drag out a box that is about 120px in each direction
+	so that the canvas looks like this:</li>
+<div class="image">
+<a href="img/sketching_state_image_added.png" target="_blank"><img alt="image" src="img/sketching_state_image_added.png" style="margin: 1em 1em 0pt 0pt; height:300px; width:auto;" /></a>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, alternately click on "Background", "Show image" and "Show map".
+	You should see that the Image is visible only in the "Show image" state.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, click on "Show map" to make that the currently active state.
+	(The eyeball icon should move to that state.)</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	From the Clip Art / Media section of <b>Palette</b>, 
+	click on the Map widget to select that widget. Then move the mouse
+	over the Rectangle. Drag out a box that is about 120px in each direction
+	so that the canvas looks like this:</li>
+<div class="image">
+<a href="img/sketching_state_map_added.png" target="_blank"><img alt="image" src="img/sketching_state_map_added.png" style="margin: 1em 1em 0pt 0pt; height:300px; width:auto;" /></a>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, alternately click on "Background", "Show image" and "Show map".
+	You should see that the Map is visible only in the "Show map" state.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click the "Save" button on the page editor's toolbar.
+	Click the right arrow next to the Save button
+	to bring up the Save button's dropdown menu, and choose a "Save As" command.
+	Save your file under a different name (e.g., file1b.html).</li>
+</ol>
+
+<a name="manage_states"><h2>Managing visibility of selected widgets</h2></a>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, click on "Show map" to make that the currently active state.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Look at the fifth icon in the Scenes palette and make sure it looks like this:
+	<img src='img/GoCurrent.gif' class='exact_size_inline_icon'/>
+	(which indicates that new widgets get added to the current state).
+	and <em>not</em> like this:
+	<img src='img/GoBackground.gif' class='exact_size_inline_icon'/>
+	(which indicates that new widgets get added to the Background).
+	</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	From the Controls / Buttons section of the <b>Palette</b>, 
+	drag a Button widget and drop just to the right of the "Second button" button.
+	In the data entry popup, enter the text "Third button", then click OK.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, alternately click on "Background", "Show image" and "Show map".
+	You should see that the third button is visible only in the Show map state.</li>
+<p>Let's suppose that we want the third button to be visible in all three states, 
+	just like the first two buttons. There are multiple ways to achieve this.
+	For example, we could click on Undo, then change the fifth icon to
+	<img src='img/GoBackground.gif' class='exact_size_inline_icon'/>,
+	and then drag a new Button onto the canvas, and that Button will go into the Background.
+	But in the steps that follow, we will explore two alternate approaches
+	using the fourth icon (Manage Widget Visibility for Different States).</p>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	On the canvas, select the third button.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, click on the fourth icon
+	<img src='img/ManageWidgetVisibility.gif' class='exact_size_inline_icon'/>
+	to bring up the Manage Widget Visibility for Different States dialog.
+	The dialog should look like this:</li>
+<div class="image">
+<a href="img/sketching_state_map_only.png" target="_blank"><img alt="image" src="img/sketching_state_map_only.png" style="margin: 1em 1em 0pt 0pt; height:200px; width:auto;" /></a>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the dialog, click at least twice on each of the eyeball icons until the eyeball
+	shows for all three states, with no supplemental messages on the right side of the dialog.
+	The dialog should look like this:
+</li>	
+<div class="image">
+<a href="img/sketching_state_all_three.png" target="_blank"><img alt="image" src="img/sketching_state_all_three.png" style="margin: 1em 1em 0pt 0pt; height:200px; width:auto;" /></a>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the "Update" icon in the dialog.
+</li>	
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, alternately click on "Background", "Show image" and "Show map".
+	You should see that the third button is now visible in all three states.
+	That's because we explicitly set the third button to be visible
+	in all three states.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the sixth icon in the Scenes palette and make sure it looks like this:
+	<img src='img/HighlightBackground.gif' class='exact_size_inline_icon'/>
+	(which indicates that background widgets are highlighted when a custom state is active)
+	and <em>not</em> like this:
+	<img src='img/HighlightBackgroundDis.gif' class='exact_size_inline_icon'/>
+	(which indicates that backgrounds widgets are not highlighted).
+	You should see red highlights on the screen for the first two Buttons,
+	but not the third button:
+</li>
+<div class="image">
+<a href="img/sketching_state_show_highlights.png" target="_blank"><img alt="image" src="img/sketching_state_show_highlights.png" style="margin: 1em 1em 0pt 0pt; height:300px; width:auto;" /></a>
+</div>
+<div class='note'>
+	This is because the first two widgets are "Background only" widgets - they are visible
+	on the Background, and then shine through to all of the custom states - whereas
+	the third button isn't shining through from the Background, and instead
+	has been flagged explicitly as visible in all three states.
+</div>
+<p>Let's move the third button to the Background.</p>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	On the canvas, select the third button.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, click on the fourth icon
+	<img src='img/ManageWidgetVisibility.gif' class='exact_size_inline_icon'/>
+	to bring up the Manage Widget Visibility for Different States dialog.
+	Click on the "Background only" hyperlink.
+	The dialog should now look like this:</li>
+<div class="image">
+<a href="img/sketching_state_background_only.png" target="_blank"><img alt="image" src="img/sketching_state_background_only.png" style="margin: 1em 1em 0pt 0pt; height:200px; width:auto;" /></a>
+</div>
+<p>Notice the supplemental text "Visible from Background" that shows for the two custom states.
+	That text indicates that the Button will be visible in the custom states because
+	it is shining through from the Background.</p>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the "Update" icon in the dialog. The canvas should now look like this:
+</li>	
+<div class="image">
+<a href="img/sketching_state_show_highlights_2.png" target="_blank"><img alt="image" src="img/sketching_state_show_highlights_2.png" style="margin: 1em 1em 0pt 0pt; height:300px; width:auto;" /></a>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the sixth icon in the Scenes palette again to turn off highlighting of Background widgets.
+</li>
+</ol>
+
+<a name="adding_interactivity"><h2>Adding Interactivity</h2></a>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Scenes</b> palette, make sure that either the
+	"Show image" or "Show map" state is selected (and therefore the dialog
+	is showing on the canvas).
+</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	On the canvas, click on the first RadioButton to select it.
+	Go to the "Widget" palette on the top/right. Click on the "Checked" property
+	to set its value to true. On the canvas, the RadioButton should now be checked.
+</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	On the canvas, click on the "Show dialog" button to select it.
+	Go to the "Events" palette on the top/right. Find the "onclick" property.
+	Use the drop-down menu for the "onclick" and choose "State:Show image".
+	As a result, at run-time, when the user clicks on the "Show dialog" button, the application
+	will switch to the "Show image" state.
+</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	On the canvas, click on the first RadioButton to select it.
+	Go to the "Events" palette on the top/right. Find the "onclick" property.
+	Use the drop-down menu for the "onclick" and choose "State:Show image".
+</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	On the canvas, click on the second RadioButton to select it.
+	Go to the "Events" palette on the top/right. Find the "onclick" property.
+	Use the drop-down menu for the "onclick" and choose "State:Show map".
+</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	On the canvas, click on the Close icon (at top/right of dialog) to select it.
+	Go to the "Events" palette on the top/right. Find the "onclick" property.
+	Use the drop-down menu for the "onclick" and choose "State:Background".
+</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	On the page editor's toolbar, click on the Preview-in-browser icon
+	<img src='img/preview-browser.png' class='exact_size_inline_icon'/>.
+	This will open a browser tab/window where your composition will
+	run in the browser directly.
+</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In this new browser window, click on the "Show dialog" button. The dialog should appear. 
+	Click on the "Show map" radio button. The map should show.
+	Click on the "Show image" radio button. The image should show.
+	Click on the Close icon. The dialog should disappear.
+</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Close the preview browser tab/window.
+</li>
+</ol>
+
+<a name="saveas"><h2>Save as TutorialSketch.html</h2></a>
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	On the page editor toolbar, click on the arrow next to the <strong>Save</strong> button 
+	to bring up the Save menu, and click on "Save As".
+	Then save your composition as "TutorialSketch.html".
+	(We might use this file in subsequently in the Review/Commenting tutorial.)</li>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the file tab's close button -
+	<img src='img/close_sel.gif' class='exact_size_inline_icon'/>
+	- to close the page editor.
+</li>
+</ol>
+
+<br />
+<p class="prevnext"><a href="tutorials/Sketching.html">Previous</a> / <a href="tutorials/Mobile_User_Interfaces.html">Next</a></p>
+
+</div> <!-- pagebody -->
+
+</body>
+</html>

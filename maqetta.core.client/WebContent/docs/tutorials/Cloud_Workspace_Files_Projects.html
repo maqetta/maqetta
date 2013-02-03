@@ -54,7 +54,7 @@ tr.mobile {
 with your cloud workspace. Topics covered:</p>
 <ul>
 	<li>The Files palette</li>
-	<li>Creating and Opening Files</li>
+	<li>Creating Files</li>
 	<li>Opening Files from the Files Palette</li>
 	<li>Files Palette Context Menu</li>
 	<li>Files Palette Toolbar</li>
@@ -103,13 +103,13 @@ with your cloud workspace. Topics covered:</p>
 		Contains various sample files, including various files that are
 		used as part of Maqetta's tutorials.</li>
 	<li><strong>themes</strong> - 
-		Contains various the CSS themes, both the ones that ship standard
+		Contains various CSS themes, both the ones that ship standard
 		with Maqetta, and user-created themes.</li>
 </ul>
 
 
-<a id='Creating_opening_files'></a>
-<h2>Creating and Opening Files</h2>
+<a id='Creating_files'></a>
+<h2>Creating Files</h2>
 
 <ol>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
@@ -215,7 +215,8 @@ with your cloud workspace. Topics covered:</p>
 	Maqetta opens in the visual page editor.
 </div>
 
-In the <strong>Files</strong> palette, double-click on the <strong>app.css</strong> file.
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <strong>Files</strong> palette, double-click on the <strong>app.css</strong> file.
 	Maqetta will open up a source editor where you can edit the source code of that CSS file.</li>
 
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
@@ -395,11 +396,6 @@ In the <strong>Files</strong> palette, double-click on the <strong>app.css</stro
 </div>
 
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	At the top of the <strong>Files</strong> palette, in the the drop-down menu next to the
-	current project name (i.e., "temp1"), choose project "project1".
-</li>
-
-<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	Let's now delete the "temp1" project. At the top of the <strong>Files</strong> palette,
 	click on the Delete Project icon
 	<img src="img/remove.gif"  class='exact_size_inline_icon'/>.
@@ -422,7 +418,11 @@ In the <strong>Files</strong> palette, double-click on the <strong>app.css</stro
 <div class='note'>
 	The current release of the Maqetta application does not provide a quick and easy way
 	to transfer or copy files from one project to another. One possible strategy
-	to transfer files is to 
+	to transfer files is to switch to the project that has your old files,
+	download selected files as a ZIP onto your local file system, expand the ZIP into a folder on your local file system,
+ 	switch to your new project in Maqetta, and then upload files into your new project.
+ 	Note that you have to be careful to upload files into the same locations in the new project
+ 	as they were in the old project for the relative URL references in your HTML files to work properly.
 </div>
 </ol>
 
@@ -448,7 +448,7 @@ In the <strong>Files</strong> palette, double-click on the <strong>app.css</stro
 	at the top of the application.
 	Choose the command <strong>Open -&gt; Orion Navigator</strong>.
 	A new browser tab/window will open that is running Eclipse Orion,
-	with the Orion navigator user interface open showing the contents of
+	with the Orion navigator user interface showing the contents of
 	your personal cloud workspace.
 </li>
 

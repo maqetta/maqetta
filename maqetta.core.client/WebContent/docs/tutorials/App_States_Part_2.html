@@ -112,10 +112,10 @@ In this tutorial we will add interactivity by defining the states, and then wiri
 </ol>
 
 <a name="visible"><h2>Configure Widget Visibility For Each State</h2></a>
-<h3>Configure the Normal State</h3>
+<h3>Configure the Background State</h3>
 <ol>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	In the Scenes palette, click on <b>Normal</b> to put your application into the Normal state.</li>
+	In the Scenes palette, click on <b>Background</b> to put your application into the Background state.</li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	In the Outline palette, close the <b>eye icon</b> for the ContentPane for the Add Task dialog.</li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
@@ -156,7 +156,7 @@ In this tutorial we will add interactivity by defining the states, and then wiri
 <h3>Test the State Configurations</h3>
 <ol>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	In the Scenes palette, alternatively click on <b>Normal</b>, <b>Add Task</b> and <b>Task Added</b>.
+	In the Scenes palette, alternatively click on <b>Background</b>, <b>Add Task</b> and <b>Task Added</b>.
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	<i>Observe how things appear and disappear as you changes states.</i></li>
 </ol>
@@ -164,14 +164,14 @@ In this tutorial we will add interactivity by defining the states, and then wiri
 <a name="wire"><h2>Wire up onclick event handlers to switch states</h2></a>
 <ol>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	In the Scenes palette, click on <b>Normal</b> to put your application into the Normal state.</li>
+	In the Scenes palette, click on <b>Background</b> to put your application into the Background state.</li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	In the TabContainer, click on the <b>New</b> button to select it.
 	<br /><img src="img/new_button_selected.png" height="70px" /></li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	In the Properties palette, open the <b>Events</b> section.</li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	In the drop-down for the <b>onclick</b> event select <b>Add Task:State</b>.<br />
+	In the drop-down for the <b>onclick</b> event select <b>State:Add Task</b>.<br />
 (<i>Note that this is one of the events that we added in the Scenes palette.</i>)
 	<br /><img src="img/onclick.png" height="60px" /></li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
@@ -180,7 +180,7 @@ In this tutorial we will add interactivity by defining the states, and then wiri
 	In the <b>Add New Task</b> ContentPane, click on the <b>Add</b> button to select it.
 	<br /><img src="img/add_button_selected.png" height="65px" /></li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	In the Properties palette <b>Events</b> section, set <b>onclick</b> to <b>Task Added:State</b>.</li>
+	In the Properties palette <b>Events</b> section, set <b>onclick</b> to <b>State:Task Added</b>.</li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	Click on the <strong>Save</strong> button on the toolbar to save your changes.</li>
 </ol>
@@ -226,7 +226,7 @@ but in another state that same widget might have a green background, yellow text
 
 <p>To change the values of CSS properties such as size, position or color for a particular state, follow these steps:</p>
 <ul>
-<li>Set widget properties for the "Normal" state.</li>
+<li>Set widget properties for the "Background" state.</li>
 <li>In the Scenes palette, create whatever states you need.</li>
 <li>For each widget that needs different CSS properties for states other than normal:
 <ul>
@@ -239,10 +239,10 @@ show the CSS Details for that widget.</li>
 </ul>
 </li>
 <li>You can also tell Maqetta that move and resize changes should only apply
-	to the current state (assuming the current state is different than Normal) by holding down the <code>s</code>
+	to the current state (assuming the current state is different than Background) by holding down the <code>s</code>
 	key while performing the operation. Note that the <code>s</code> key must be down at the
 	completion of the move or resize operation (i.e., when you lift up on the mouse); otherwise,
-	the move and resize command will apply to the Normal state.</li>
+	the move and resize command will apply to the Background state.</li>
 </ul>
 <br /><br />
 

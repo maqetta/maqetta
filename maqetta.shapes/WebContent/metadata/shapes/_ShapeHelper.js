@@ -15,7 +15,23 @@ _ShapeHelper.prototype = {
 	_connects: [],			// mousedown event is put on this array
 	_connectsDrag: [],		// dragging events like mousemove, mouseup events are put on this array
 	_dragDivOffset:100, 	// #pixels extra space on left/right/top/bottom for transparent drag div
-	
+
+	/**
+	 * Invoked when adding a new widget to the page; when changing properties on a widget (and
+	 * the widget is recreated); or for each widget when loading a page into the visual editor.
+	 */
+	create: function(widget, srcElement) {
+		if(!widget._stateChangeListener){
+			widget._stateChangeListener = connect.subscribe('/maqetta/appstates/state/changed',function(){
+				var context = widget.getContext();
+				var editor = context.editor;
+				if(editor && editor == Runtime.currentEditor){
+					widget.dijitWidget.resize();
+				}
+			});
+		}
+	},
+
 	/*
 	 * Called by Focus.js right after Maqetta shows selection chrome around a widget.
 	 * @param {object} obj  Data passed into this routine is found on this object
@@ -305,6 +321,20 @@ _ShapeHelper.prototype = {
 		fakeEvent.pageX -= parentIframeBounds.l;
 		fakeEvent.pageY -= parentIframeBounds.t;
 		return fakeEvent;
+	},
+
+	/**
+	 * Override the default action, which attempts to destroy the child widgets of 'widget'.
+	 * Invoked when a widget is removed from page editor.
+	 * 
+	 * @param  {davinci/ve/_Widget} widget
+	 */
+	destroy: function(widget) {
+		if(widget._stateChangeListener){
+			connect.unsubscribe(widget._stateChangeListener);
+			delete widget._stateChangeListener;
+		}
+		widget.dijitWidget.destroyRecursive();
 	}
 
 

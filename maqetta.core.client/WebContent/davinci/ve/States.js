@@ -351,6 +351,9 @@ var veStates = declare(maqettaStates, {
 	},
 	
 	updateStateIcons: function(context){
+		if(!context || !context.editor || context.editor != Runtime.currentEditor || context.editor.declaredClass != "davinci.ve.PageEditor"){
+			return;
+		}
 		// Sometimes this routine is called as part of commandStack processing,
 		// which does a dojo.withDoc(userdoc). This ensures we have the right document.
 		dojoWin.withDoc(appDocument, function(){
@@ -419,9 +422,6 @@ var veStates = declare(maqettaStates, {
 	 * but which are actually visible on the base state and "shining through" to custom state
 	 */
 	updateHighlightsBaseStateWidgets: function(context){
-		if(!context){
-			return;
-		}
 		// Have to use a setTimeout because widgets that have embedded SVG content
 		// (shapes and clipart) will not have proper size until the SVG content is
 		// loaded, and that content is loaded asynchronously by some browsers.
@@ -429,6 +429,9 @@ var veStates = declare(maqettaStates, {
 		// changes that happen are on the decorative chrome that overlays the widgets
 		// on the canvas.
 		setTimeout(function(){
+			if(!context || !context.editor || context.editor != Runtime.currentEditor || context.editor.declaredClass != "davinci.ve.PageEditor"){
+				return;
+			}
 			// Sometimes this routine is called as part of commandStack processing,
 			// which does a dojo.withDoc(userdoc). This ensures we have the right document.
 			dojoWin.withDoc(appDocument, function(){

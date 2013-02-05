@@ -403,7 +403,11 @@ var CommentExplorerView = declare(ViewPart, {
 				template.detail_reviewers = "";
 				dojo.forEach(item.reviewers, function(i) {
 					if (i.email != item.designerEmail) {
-						template.detail_reviewers += "<div>" + i.email + "</div>";
+						var reviewer = "<div>" + i.email + "</div>";
+						if ((i.displayName != "") && (i.email != i.displayName)) {
+							reviewer = "<div>" + i.displayName +" &lt;" + i.email + "&gt;</div>";
+						}
+						template.detail_reviewers += reviewer;
 					}
 				});
 				item.closed ? template.detail_dueDate_class = "closed" : template.detail_dueDate_class = "notClosed";

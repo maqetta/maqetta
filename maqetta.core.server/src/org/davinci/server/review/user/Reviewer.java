@@ -60,7 +60,16 @@ public class Reviewer implements IPerson{
 	}
 
 	public String getDisplayName() {
-		return "";
+		String displayName = "";
+		IPersonManager personManager = ServerManager.getServerManger().getPersonManager();
+		IPerson person = personManager.getPersonByEmail(this.email);
+		if (person != null) {
+			displayName = person.getDisplayName();
+		}
+		
+
+		return displayName;
 	}
+
 
 }

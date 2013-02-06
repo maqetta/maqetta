@@ -112,7 +112,7 @@ define(["dojo/_base/declare",
 			this._getResources().forEach(function(file) {
 				var resource = Resource.findResource(file);
 				if(resource.elementType=="Folder"){
-					allResources.concat(Resource.findResource("*.html", true, resource, true));
+					allResources = allResources.concat(Resource.findResource("*.html", true, resource, true));
 				}else if(resource.extension=="html"){
 					allResources.push(resource);
 				}

@@ -15,7 +15,7 @@ var UserActivityMonitor = {
 			this._MaxInactiveInterval = -1; // no timeout
 		} else {
 			this._firstPoll = true;
-			this._MaxInactiveInterval = 60 * 5; // defalt this will be changed when we get from server
+			this._MaxInactiveInterval = 60 * 5; // default this will be changed when we get from server
 			this.keepAlive(); // get the timeout value
 			this.addInActivityMonitor(doc);
 			Runtime.subscribe('/dojo/io/load', this.lastServerConnection);
@@ -24,11 +24,11 @@ var UserActivityMonitor = {
 	},
 	
 	/*
-	 *  Adds user activity monitoring for a document, that is most likly in an iframe (eg editors)
+	 *  Adds user activity monitoring for a document, that is most likely in an iframe (eg editors)
 	 */
 	addInActivityMonitor: function(doc) {
 		if (this._MaxInactiveInterval === -1) { // no session timeout
-			return []; // no montioring
+			return []; // no monitoring
 		} else {
 			var connections = [
 			//dojo.connect(doc.documentElement, "mousemove", this, "userActivity"),
@@ -39,8 +39,6 @@ var UserActivityMonitor = {
 			];
 			return connections;
 		}
-			
-		
 	},
 	
 	/*
@@ -59,12 +57,11 @@ var UserActivityMonitor = {
 			window.clearTimeout(this._idleTimer);
 		}
 		if (this._MaxInactiveInterval > 0) { // set the timer only if we have a timeout
-			var t = (this._MaxInactiveInterval * 1000); 
+			var t = this._MaxInactiveInterval * 1000; 
 			this._idleTimer = window.setTimeout(function(){
 				this.idle();
-			}.bind(this), t); // make sure this happends before the server timesout
+			}.bind(this), t); // make sure this happens before the server times out
 		}
-
 	},
 	
 	/* 
@@ -72,21 +69,17 @@ var UserActivityMonitor = {
 	 *  let the user we are still working here so don't time us out
 	 */
 	keepAlive: function(){
-		xhr.get({
+		return xhr.get({
 			url: "cmd/keepalive",
 			handleAs: "json"
 		}).then(function(result) {
 			if (result.MaxInactiveInterval) {
 				this._MaxInactiveInterval = result.MaxInactiveInterval;
-				if (this._firstPoll) {
-					delete this._firstPoll;
-					this.userActivity(null); // reset to server timeout from defaults
-				}
 			} else {
-			    console.warn("Unknown error: result="+result);
+			    console.warn("Keep Alive: no MaxInactiveInterval. result="+result);
 			}
 		}.bind(this), function(error) {
-			console.warn("MaxInactiveInterval error", error);
+			console.warn("keepalive error", error);
 	    });
 	},
 	
@@ -101,7 +94,7 @@ var UserActivityMonitor = {
 			window.clearTimeout(this._serverPollTimer);
 		}
 		if (this._MaxInactiveInterval > 0) { // set the timer only if we have a timeout
-			t =  ((this._MaxInactiveInterval  * 1000) * .8);  // take 80 %
+			var t = this._MaxInactiveInterval * 1000 * .8;  // take 80 %
 			this._serverPollTimer = window.setTimeout(function(){
 				this.keepAlive();
 			}.bind(this), t); // _MaxInactiveInterval is in seconds so poll 30 seconds early
@@ -110,17 +103,16 @@ var UserActivityMonitor = {
 	
 	/*
 	 * This method is invoked when the user idle timer pops. We will display a warning to the user 
-	 * that the session is bout to time out and give them a 30 second countdown. If the user clicks on 
-	 * the document idleRest is involed
+	 * that the session is about to time out and give them a 30 second countdown. If the user clicks on 
+	 * the document resetIdle is triggered which cancels the countdown.
 	 */
 	idle: function(){
 		var counter = 30;
-		var app = dojo.byId('davinci_app');
-		var warnDiv = dojo.doc.createElement('div');
-		warnDiv.id = 'org.maqetta.idleWarning';
-		app.appendChild(warnDiv);
-		warnDiv.setAttribute("class","idleWarning");
-		warnDiv.innerHTML = dojo.string.substitute(webContent.idleSessionMessage, {seconds: counter});
+		var warnDiv = this.warnDiv = dojo.create('div', {
+			'class': "idleWarning",
+			innerHTML: dojo.string.substitute(webContent.idleSessionMessage, {seconds: counter})
+		}, dojo.byId('davinci_app'), "first");
+
 		this.countdown = window.setInterval(function(){
 			if(--counter === 0){
 				window.clearInterval(this.countdown);
@@ -129,20 +121,19 @@ var UserActivityMonitor = {
 					//TODO: tear down warnDiv and post failure message
 				});
 			} else {
-				var span = dojo.byId('org.maqetta.idleWarning');
-				span.innerHTML = dojo.string.substitute(webContent.idleSessionMessage, {seconds: counter});
+				warnDiv.innerHTML = dojo.string.substitute(webContent.idleSessionMessage, {seconds: counter});
 			}
 		}.bind(this), 1000);
 	},
-	
+
 	/*
 	 * This method removes the session timeout message and calls userActivity 
 	 */
 	resetIdle: function(e){
 		window.clearInterval(this.countdown);
 		delete this.countdown;
-		var warning = dojo.byId('org.maqetta.idleWarning');
-		warning.parentNode.removeChild(warning);
+		this.warnDiv.parentNode.removeChild(this.warnDiv);
+		delete this.warnDiv;
 		this.userActivity();
 	}
 };

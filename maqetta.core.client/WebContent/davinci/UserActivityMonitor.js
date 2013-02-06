@@ -125,7 +125,9 @@ var UserActivityMonitor = {
 			if(--counter === 0){
 				window.clearInterval(this.countdown);
 				delete this.countdown;
-				require("davinci/Workbench").logoff();
+				require("davinci/Workbench").logoff().otherwise(function(result) {
+					//TODO: tear down warnDiv and post failure message
+				});
 			} else {
 				var span = dojo.byId('org.maqetta.idleWarning');
 				span.innerHTML = dojo.string.substitute(webContent.idleSessionMessage, {seconds: counter});

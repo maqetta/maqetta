@@ -374,7 +374,7 @@ var Workbench = {
 			}, dojo.body(), "first");
 
 		Workbench.unload();
-		xhr.get({
+		return xhr.get({
 			url: "cmd/logoff",
 			handleAs: "text"
 		}).then(function(result) {

@@ -28,20 +28,7 @@ define(["dojo/_base/declare",
 			dojo.mixin(this, commonNLS);
 			this.inherited(arguments);
 		},
-		/* templated attach points, custom input section */
-		
-		/* check box for rewrite dojo */
-		/*
-		__rewriteDojo : null,
-		__rewriteDojoURL : null,
-		__fileName : null,
-		__optimize: null, //TODO: make sticky
-		__fullSource:null,
-		_selectionDiv : null,
-		_okButton : null,
-		_tableDiv : null,
-		*/
-	
+
 		buildRendering: function(){
 			this.inherited(arguments);
 			this._buildUITable();
@@ -50,71 +37,63 @@ define(["dojo/_base/declare",
 		_buildUITable: function() {
 			this._handles = [];
 			this._userLibs = Library.getUserLibs(this.getRoot());
-			var uiArray = [];
-			
-			uiArray.push("<table cellspacing='0' cellpadding='0' width='100%' class='dwnloadLibTable'><tr><td class='header'>"+uiNLS.library+"</td><td class='header'>"+uiNLS.version+"</td><td class='header'>"+uiNLS.include+"<br>"+uiNLS.source+"</td><td class='header'>"+uiNLS.baseLocation+"</td></tr>");
-			uiArray.push("<tr><td colspan='4'><hr></hr></td></tr>");
+			var uiArray = [
+			    dojo.replace("<table cellspacing='0' cellpadding='0' width='100%' class='dwnloadLibTable'><tr><td class='header'>{library}</td><td class='header'>{version}</td><td class='header'>{include}<br>{source}</td><td class='header'>{baseLocation}</td></tr><tr><td colspan='4'><hr></hr></td></tr>", uiNLS)];
 			this.libraries = {};
 			/* build UI table */
-			for(var i =0;i<this._userLibs.length;i++){
-				this._userLibs[i].initRoot = this._getLibRoot(this._userLibs[i].id,this._userLibs[i].version);
-				var name = this._userLibs[i].id; // may want to use a better name here eventually
+			this._userLibs.forEach(function(userLib, i){
+				userLib.initRoot = this._getLibRoot(userLib.id, userLib.version);
+				var name = userLib.id; // may want to use a better name here eventually
 				
-				if(this._userLibs[i].initRoot==null) {
-					continue;
+				if(!userLib.initRoot) {
+					return;
 				}
 				
-				if(this._userLibs[i].required){
-					uiArray.push("<tr libPath='"+i+"' style='display:none'>");
-					
-				}else{
-					uiArray.push("<tr libPath='"+i+"'>");
+				uiArray.push("<tr libPath='" + i + "'");
+				if (userLib.required) {
+					uiArray.push(" style='display:none'");
 				}
-				
-				uiArray.push("<td class='columna'>" + name + "</td>");
-				uiArray.push("<td class='columnb'>" + this._userLibs[i].version + "</td>");
-				uiArray.push("<td class='columnc'><input type='checkbox' dojoType='dijit.form.CheckBox' checked></input></td>");
+				uiArray.push(">");
 
-				uiArray.push("<td class='columnd'><input type='text' dojoType='dijit.form.TextBox' value='" + this._userLibs[i].initRoot + "'></input></td>");
-				
-				uiArray.push("</tr>");
-				
-			}
+				uiArray = uiArray.concat([
+				    "<td class='columna'>" + name + "</td>",
+					"<td class='columnb'>" + userLib.version + "</td>",
+					"<td class='columnc'><input type='checkbox' dojoType='dijit.form.CheckBox' checked></input></td>",
+					"<td class='columnd'><input type='text' dojoType='dijit.form.TextBox' value='" + userLib.initRoot + "'></input></td>",
+					"</tr>"]);
+			}, this);
 			uiArray.push("</table>");
-			var html =  uiArray.join("");
-			dojo.place(html, this._tableDiv);
+			dojo.place(uiArray.join(""), this._tableDiv);
 
 			// parse dijits
 			dojo.parser.parse(this._tableDiv);
 		},
 	
 		_getLibRoot: function(id,version){
-			for(var i=0;i<this._userLibs.length;i++){
-				if(this._userLibs[i].id==id && this._userLibs[i].version==version)
-					return this._userLibs[i].root;
-			}
-			
+			var root = undefined;
+			this._userLibs.some(function(lib){
+				if (lib.id == id && lib.version == version) {
+					root = lib.root;
+					return true;
+				}
+			});
+			return root;
 		},
 		
 		_getLibs: function(){
-			var rows = dojo.query("tr[libPath]", this.domNode);
+			return dojo.query("tr[libPath]", this.domNode).map(function(row){
+				var textBox = dijit.byNode(dojo.query(".dijitTextBox", row)[0]),
+					checkBox = dijit.byNode(dojo.query(".dijitCheckBox", row)[0]),
+					element = parseInt(dojo.attr(row, "libPath")),
+					value = checkBox.get("checked"),
+					libLocation = textBox.get("value") || this._userLibs[element].root;
 
-			var userLibs = [];
-
-			for(var i =0;i<rows.length;i++){
-				var textBox = dijit.byNode(dojo.query(".dijitTextBox", rows[i])[0]);
-				var checkBox = dijit.byNode(dojo.query(".dijitCheckBox", rows[i])[0]);
-
-				var element = parseInt(dojo.attr(rows[i], "libPath"));
-				var value = checkBox.get("checked");
-				var libLocation = textBox.get("value") || this._userLibs[element].root;
-				userLibs.push({id: this._userLibs[element].id,
-							   version: this._userLibs[element].version,
-							   root: libLocation,
-							   includeSrc: value});
-			}
-			
-			return userLibs;
+				return {
+					id: this._userLibs[element].id,
+					version: this._userLibs[element].version,
+					root: libLocation,
+					includeSrc: value};
+			}, this);
 		},
 		
 		getRoot: function(){
@@ -124,41 +103,35 @@ define(["dojo/_base/declare",
 		},
 		
 		_getResources: function(){
-			return {userFiles: [Workbench.getProject()], userLibs: this._getLibs()};
+			return [Workbench.getProject()];
 		},
 		
 		_rewriteUrls: function(){
-			var resources = this._getResources(),
-				promises = [];
-
-			//this._pages = Resource.findResource("*.html", true, null, true);
-			
-			var pageBuilder = new RebaseDownload(resources.userLibs);
 			var allResources = [];
-			for(var i=0;i<resources.userFiles.length;i++){
-				
-				var resource = Resource.findResource(resources.userFiles[i]);
+
+			this._getResources().forEach(function(file) {
+				var resource = Resource.findResource(file);
 				if(resource.elementType=="Folder"){
-					allResources = Resource.findResource("*.html", true, resource, true);
+					allResources.concat(Resource.findResource("*.html", true, resource, true));
 				}else if(resource.extension=="html"){
-					allResources = [resource];
+					allResources.push(resource);
 				}
-				//FIXME: is it possible allResources will be repeated from the last time through the loop?
-				allResources.forEach(function(res){
-					if(!Theme.isThemeHTML(res)) {
-						promises.push(pageBuilder.rebuildSource(res.getContentSync(), res).then(function (newSource) {
-							res.setContents(newSource, true);						
-						}));
-					}
+			});
+
+			var pageBuilder = new RebaseDownload(this._getLibs());
+			var promises = allResources.filter(function(res){
+				return !Theme.isThemeHTML(res);
+			}).map(function(res){
+				return pageBuilder.rebuildSource(res.getContentSync(), res).then(function (newSource) {
+					res.setContents(newSource, true);						
 				});
-			}
+			});
+
 			return all(promises);
 		},
 
 		_select: function(value) {
-			var rows = dojo.query("tr[libPath]", this.domNode);
-
-			dojo.forEach(rows, function(row) {
+			dojo.query("tr[libPath]", this.domNode).forEach(function(row) {
 				var checkBox = dijit.byNode(dojo.query(".dijitCheckBox", row)[0]);
 				if (checkBox) {
 					checkBox.set("checked", value);
@@ -194,13 +167,14 @@ define(["dojo/_base/declare",
 				}
 				var fileName = dojo.attr( this.__fileName, "value");
 				if (fileName.slice(-4) != ".zip") {
-					fileName = fileName + ".zip";
+					fileName += ".zip";
 				}
 				this._rewriteUrls().then(function() {
-					var allFiles = this._getResources();
-					var pages = this._noRewrite ? [] : this._pages;
+					var userLibs = this._getLibs(),
+						userFiles = this._getResources();
+
 					/* have to close the dialog before the download call starts */
-					var actualLibs = allFiles.userLibs.filter(function(lib){
+					var actualLibs = userLibs.filter(function(lib){
 						return lib.includeSrc;
 					});
 		
@@ -212,7 +186,7 @@ define(["dojo/_base/declare",
 						options.fullsource = "1";
 					}
 					
-					setTimeout(makeTimeoutFunction(allFiles.userFiles, fileName, this.getRoot(), actualLibs, options), 300);					
+					setTimeout(makeTimeoutFunction(userFiles, fileName, this.getRoot(), actualLibs, options), 300);					
 				}.bind(this));
 			}
 		},

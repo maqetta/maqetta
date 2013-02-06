@@ -1,9 +1,10 @@
 define([
 	"dojo/_base/declare",
+	"davinci/Runtime",
 	"davinci/model/resource/File",
 	"davinci/model/Path",
 	"dojo/Deferred"
-], function(declare, File, Path, Deferred) {
+], function(declare, Runtime, File, Path, Deferred) {
 
 return declare("davinci.review.model.resource.File", File, {
 
@@ -17,12 +18,11 @@ return declare("davinci.review.model.resource.File", File, {
 	getLabel: function() {
 		var path = new Path(this.name);
 		var segments = path.getSegments();
-		var editorExtension = davinci.Runtime.getExtension("davinci.editor", function (extension){
+		var editorExtension = Runtime.getExtension("davinci.editor", function (extension){
 			return extension.id === "davinci.review.CommentReviewEditor";
 		});
 		var extension = "."+editorExtension.extensions;
 		return label = segments[segments.length-1] + extension;
-
 	},
 
 	getContentSync: function() {

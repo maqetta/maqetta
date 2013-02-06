@@ -46,7 +46,7 @@ var DeleteVersionAction = declare("davinci.review.actions.DeleteVersionAction", 
 		var selection = this._getSelection(context);
 		if (selection && selection.length > 0) {
 			var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
-			if (item.designerId == davinci.Runtime.userName) { 
+			if (item.designerId == Runtime.userName) { 
 				//Only enable if the current user is also the review's designer
 				return true;
 			}

@@ -4,11 +4,12 @@ define([
 	"dojo/query",
 	"dijit/_WidgetBase",
 	"dojo/dnd/Mover",
+	"../Runtime",
 	"./metadata",
-	"davinci/ve/States",
-	"davinci/ve/utils/GeomUtils"
+	"./States",
+	"./utils/GeomUtils"
 ],
-function(require, declare, Query, _WidgetBase, Mover, Metadata, States, GeomUtils) {
+function(require, declare, Query, _WidgetBase, Mover, Runtime, Metadata, States, GeomUtils) {
 	
 // Nobs and frame constants
 var LEFT = 0,	// nob and frame
@@ -20,7 +21,7 @@ var LEFT = 0,	// nob and frame
 	RIGHT_TOP = 6,
 	RIGHT_BOTTOM = 7;
 
-return declare("davinci.ve.Focus", _WidgetBase, {
+return declare(_WidgetBase, {
 
 	// Inside knowledge about CSS classes used to style editFocusNob and editFocusFrame DIVs
 	nobSize:11,
@@ -890,12 +891,12 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     
     
     _updateSubwidgetListForState: function() {
-    	if (this._context.editor != davinci.Runtime.currentEditor){
+    	if (this._context.editor != Runtime.currentEditor){
             // not for us
             return;
         }
         if (this._context._selectedWidget && this._displayedWidget === this._context._selectedWidget) {
-            var editor = davinci.Runtime.currentEditor,
+            var editor = Runtime.currentEditor,
                 themeMetadata = editor._theme;
             this._cm.getChildren().forEach(function(child) {
                 var subwidget = child.label;

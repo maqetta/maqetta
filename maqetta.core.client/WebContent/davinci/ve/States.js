@@ -149,7 +149,7 @@ var veStates = declare(maqettaStates, {
 	},
 	
 	getEditor: function() {
-		return top.davinci && top.davinci.Runtime && top.davinci.Runtime.currentEditor;
+		return Runtime.currentEditor;
 	},
 	
 	getContext: function() {

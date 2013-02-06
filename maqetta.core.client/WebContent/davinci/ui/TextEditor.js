@@ -1,4 +1,4 @@
-define(["dojo/_base/declare", "./Editor"], function(declare, Editor) {
+define(["dojo/_base/declare", "./Editor", "../Runtime"], function(declare, Editor, Runtime) {
 
 return declare(Editor, {
 	
@@ -8,7 +8,7 @@ return declare(Editor, {
 	},
 	
 	isActiveEditor: function() {
-		return davinci.Runtime.currentEditor == this;
+		return Runtime.currentEditor == this;
 	},
 
 	supports: function (something) {

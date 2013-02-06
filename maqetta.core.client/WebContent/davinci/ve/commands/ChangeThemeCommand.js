@@ -249,7 +249,8 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
 		 * So we need to use a string 
 		 */
         var themePath = Theme.getThemeLocation().toString().replace(/\//g,'\\/');
-		var re = '/\\/'+themePath+'\\/.*\\.css$/';
+		// *-compat.css files not used in maqrtta var re = '/\\/'+themePath+'\\/.*\\.css$/';
+		var re = '\'\'';
         context._updateDojoConfig({
             themeMap: Theme.getDojoxMobileThemeMap(context, theme),
             mblLoadCompatPattern: re,

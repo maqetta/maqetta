@@ -3058,7 +3058,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				// Add the theme path so dojo can locate the *-compat.css files, if any
 				//mblLoadCompatPattern=/\/themes\/.*\.css$/;
 				var themePath = Theme.getThemeLocation().toString().replace(/\//g,'\\/');
-				var re = new RegExp('\/'+themePath+'\/.*\.css$');
+				//var re = new RegExp('\/'+themePath+'\/.*\.css$');
+				var re = new RegExp(''); //*-compat files not used
 				mblLoadCompatPattern=re;
 			}
 			this._addCssForDevice(ua, themeMap, this);

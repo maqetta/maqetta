@@ -786,6 +786,16 @@ return declare("davinci.ve.Focus", _WidgetBase, {
                 checked: checked,
                 onClick: dojo.hitch(this, "_subwidgetSelected", this._context.theme.name + '_WidgetOuterContainer')
             });
+            /*
+             *  Issue #3733 To support war file deployments and deployments with differnt root contexts other than maqetta
+             *  the theme editor ex.dojo-theme-editor.html now loads dojo from a relative location instead of a static location
+             *  That change confusses dijit when we create a menu item, the relative path to dojo/resources/blank.gif is not correct
+             *  in the domNode. So the line of code below changes the src attribute of the node from the relative path to an absolute
+             *  path. Interestingly teh node.src property has the correct absolute path, so we just use that.
+             *  At some point in the future we want to move the subwidget context up from the theme editor document to the VE document
+             *  but for now this hack works.
+             */
+            item.domNode.children[0].children[0].setAttribute('src',item.domNode.children[0].children[0].src);
             pMenu.addChild(item);
             this._currentItem = item;
             for (var s in subwidgets){
@@ -796,6 +806,16 @@ return declare("davinci.ve.Focus", _WidgetBase, {
                     checked: checked,
                     onClick: dojo.hitch(this, "_subwidgetSelected", this._context.theme.name + '_' + s)
                 });
+                /*
+                 *  Issue #3733 To support war file deployments and deployments with differnt root contexts other than maqetta
+                 *  the theme editor ex.dojo-theme-editor.html now loads dojo from a relative location instead of a static location
+                 *  That change confusses dijit when we create a menu item, the relative path to dojo/resources/blank.gif is not correct
+                 *  in the domNode. So the line of code below changes the src attribute of the node from the relative path to an absolute
+                 *  path. Interestingly teh node.src property has the correct absolute path, so we just use that.
+                 *  At some point in the future we want to move the subwidget context up from the theme editor document to the VE document
+                 *  but for now this hack works.
+                 */
+                menuItem.domNode.children[0].children[0].setAttribute('src',menuItem.domNode.children[0].children[0].src);
                 pMenu.addChild(menuItem);
                 if (checked) {
                     this._currentItem = menuItem;

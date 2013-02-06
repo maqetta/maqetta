@@ -75,6 +75,10 @@ var UserActivityMonitor = {
 		}).then(function(result) {
 			if (result.MaxInactiveInterval) {
 				this._MaxInactiveInterval = result.MaxInactiveInterval;
+				if (this._firstPoll) {
+					delete this._firstPoll;
+					this.userActivity(null); // reset to server timeout from defaults
+				}
 			} else {
 			    console.warn("Keep Alive: no MaxInactiveInterval. result="+result);
 			}

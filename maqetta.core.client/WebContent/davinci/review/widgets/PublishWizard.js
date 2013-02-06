@@ -17,6 +17,7 @@ define([
 	"dojox/data/QueryReadStore",
 	"dojox/widget/Toaster",
 	"dojox/validate/regexp",
+	"dojo/_base/xhr",
 	"dojo/string",
 	"dojo/fx",
 	"dojo/date/stamp",
@@ -37,7 +38,7 @@ define([
 	"dojo/text!./templates/PublishWizard.html",
 	"dojo/text!./templates/MailFailureDialogContent.html"
 ], function(declare, _WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, StackContainer, ContentPane, SimpleTextarea, NumberTextBox, ValidationTextBox, DateTextBox, 
-		Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojoxRegexp, dojostring, dojofx, stamp, Tree, Deferred, all,
+		Button, ComboBox, ItemFileWriteStore, CheckBox, DataGrid, QueryReadStore, Toaster, dojoxRegexp, xhr, dojostring, dojofx, stamp, Tree, Deferred, all,
 		systemResource, Runtime, Workbench, Folder, File, Empty, ReviewRoot, TreeStoreModel, GeneralReviewReadStore, widgetsNls, dijitNls, 
 		templateString, warningString) {
 
@@ -482,21 +483,9 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 	},
 
 	containReviewFile: function(index) {
-		var reviewFiles = this.reviewFiles || [];
-		if (!isNaN(index)) {
-			for (var i=0; i<reviewFiles.length; i++) {
-				if (reviewFiles[i].index == index) {
-					return true;
-				}
-			}
-		} else {
-			for (var i=0; i<reviewFiles.length; i++) {
-				if (reviewFiles[i] == index) {
-					return true;
-				}
-			}
-		}
-		return false;
+		return (this.reviewFiles || []).some(function(file){
+			return isNaN(index) ? file == index : file.index == index;
+		});
 	},
 
 	getChildrenFiles: function(item) {
@@ -593,14 +582,17 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		this.node = node;
 		this.isRestart = isRestart;
 		if (!node) {
-			var latestVersionId = Runtime.serverJSONRequest({
-				url: "cmd/getLatestVersionId",
-				sync: true
-			});
-			this.versionTitle.set("value", dojo.string.substitute(widgetsNls.defaultReviewTitle, [latestVersionId]));
+			xhr.get({
+				url: "cmd/getLatestVersionId"
+			}).then(function(latestVersionId){
+				this.versionTitle.set("value", dojo.string.substitute(widgetsNls.defaultReviewTitle, [latestVersionId]));				
+			}.bind(this));
 		}
 		if (node) {
-			var vName = !isRestart ? node.name : node.name + " (R)";
+			var vName = node.name;
+			if (isRestart) {
+				vName += " (R)";
+			}
 			this.versionTitle.set('value', vName);
 			if (!this.isRestart) {
 				this.dueDate.set('value', node.dueDate == "infinite" ? new Date("") : node.dueDate);
@@ -617,9 +609,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 				dojo.forEach(children, function(item) {
 					var file = systemResource.findResource(item.name);
 					if (file != null) {
-						this.addFiles([
-							file
-						]);
+						this.addFiles([file]);
 					}
 				}.bind(this));
 				
@@ -647,10 +637,9 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 	},
 
 	publish: function(isDraft) {
-		var emails = "";
-		for (var i=0;i<this.userData.length;i++) {
-			emails = emails+ this.userData[i].email+",";
-		}
+		var emails = this.userData.map(function(data) {
+			return data.email;
+		}).join(",");
 		var messageTextarea = this.descriptions;
 		var message = messageTextarea.value;
 		var versionTitle = this.versionTitle.value;
@@ -686,15 +675,9 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 		var urlParmsQueryStr = dojo.objectToQuery(urlParms);
 
 		//Do the POST
-		dojo.xhrPost({
+		xhr.post({
 			url: "cmd/publish" + "?" + urlParmsQueryStr,
-			sync:false,
-			handleAs:"json",
-			error: function(response) {
-				var msg = response.responseText;
-				msg = msg.substring(msg.indexOf("<title>")+7, msg.indexOf("</title>"));
-				Runtime.handleError(dojostring.substitute(widgetsNls.errorPublish, [response, msg]));
-			}
+			handleAs:"json"
 		}).then(function(result) {
 			if (typeof hasToaster == "undefined") {
 				new Toaster({
@@ -736,7 +719,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 												return;
 											}
 											dojo.forEach(childs, function(child){
-												davinci.Workbench.openEditor({
+												Workbench.openEditor({
 													fileName: child,
 													content: node.getText()
 												});
@@ -749,7 +732,11 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 					}
 				}
 			}
-		}.bind(this));
+		}.bind(this)).otherwise(function(response) {
+			var msg = response.responseText;
+			msg = msg.substring(msg.indexOf("<title>")+7, msg.indexOf("</title>"));
+			Runtime.handleError(dojostring.substitute(widgetsNls.errorPublish, [response, msg]));
+		});
 		this.onClose();
 	},
 

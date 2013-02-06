@@ -55,26 +55,6 @@ lastMapTag=${mapsTagTag}
 			<iu id="org.eclipse.equinox.executable.feature.group" version=""/>
 		</p2.mirror>
 	</target>
-
-	
-	
-	<!-- git submodules update for the maqetta repo -->
-	<target name="cloneMaqetta">
-			<property name='gitRepoFolder' value="${base}/gitClones/git___github_com_maqetta_maqetta_git"/>
-			<echo message="Fetching and Updating git submodule in ${gitRepoFolder}"/>
-		<mkdir dir="${gitRepoFolder}"/>
-		 <exec executable = "git" dir = "${gitRepoFolder}">
-			<arg value = "clone" />
-			<arg value = "git://github.com/maqetta/maqetta.git" />
-		 	<arg value = "${gitRepoFolder}" />
-		 </exec>
-		 <exec executable = "git" dir = "${gitRepoFolder}">
-			     <arg value = "submodule" />
-				 <arg value = "update" />
-				 <arg value = "--init" />
-				 <arg value = "--recursive" />
-			  </exec>
-	</target>
 	
 	
 	
@@ -82,8 +62,6 @@ lastMapTag=${mapsTagTag}
 	<!-- Steps to do before setup -->
 	<!-- ===================================================================== -->
 	<target name="preSetup">
-		<antcall target="cloneMaqetta"/>
-		
 	    <!-- emf needs to be part of the "runnable" target, since Eclipse wants to "require" EMF, 
 	         not "include" it -->
 		
@@ -113,11 +91,54 @@ lastMapTag=${mapsTagTag}
 		<p2.repo2runnable destination="${transformedRepoLocation}">
 			<source location="file:${localRepoLocation}" />
 		</p2.repo2runnable>
-		
 	</target>
 	
+	<target name="preFetch">
+		<!-- The EGit-provided fetch functions don't support submodules.
+		     Instead, clone/update the Maqetta repo and update submodules
+		     ourselves, before the EGit fetch code is invoked. -->
+		<!-- XXX Still unresolved: when the EGit fetch code checks out a
+		     branch, it also does not update submodules.  -->
+		<property name="gitRepoURL" value="git://github.com/maqetta/maqetta.git"/>
+		<property name="gitRepoFolder" value="${base}/gitClones/git___github_com_maqetta_maqetta_git"/>
+		<antcall target="gitUpdateRepo"/>
+		<antcall target="gitCloneRepo"/>
+	</target>
+
+	<target name="gitCheckSkipClone">
+		<available file="${gitRepoFolder}/.git" property="skipClone"/>
+	</target>
+
+	<target name="gitUpdateRepo" depends="gitCheckSkipClone" if="${skipClone}">
+		<echo message="Updating Git repo in ${gitRepoFolder}"/>
+		<exec executable="git" dir="${gitRepoFolder}" failOnError="true">
+			<arg value="fetch"/>
+			<arg value="--tags"/>
+		</exec>
+		<antcall target="gitSubmoduleUpdate"/>
+	</target>
+
+	<target name="gitCloneRepo" depends="gitCheckSkipClone" unless="${skipClone}">
+		<echo message="Cloning Git repo in ${gitRepoFolder}"/>
+		<mkdir dir="${gitRepoFolder}"/>
+		<exec executable="git" dir="${gitRepoFolder}" failOnError="true">
+			<arg value = "clone" />
+			<arg value = "${gitRepoURL}" />
+			<arg value = "${gitRepoFolder}" />
+		</exec>
+		<antcall target="gitSubmoduleUpdate"/>
+	</target>
+
+	<target name="gitSubmoduleUpdate">
+		<exec executable="git" dir="${gitRepoFolder}" failOnError="true">
+			<arg value = "submodule" />
+			<arg value = "update" />
+			<arg value = "--init" />
+			<arg value = "--recursive" />
+		</exec>
+	</target>
+
 	<target name="postFetch">
-		
 		<replace dir="${buildDirectory}" includes="pluginVersions.properties,featureVersions.properties"  >
 			<replacefilter token="HEAD" value="${buildLabel}" />
 			<replacefilter token="origin/mls -alaster" value="${buildLabel}" />

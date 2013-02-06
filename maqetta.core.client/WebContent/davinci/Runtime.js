@@ -153,8 +153,8 @@ var Runtime = {
 
 	getUserWorkspaceUrl: function(){
 		var loc = this.location();
-		if (loc.charAt(loc.length-1)=='/'){
-			loc=loc.substring(0,loc.length-1);
+		if (loc.slice(-1) == '/') {
+			loc = loc.slice(0, -1);
 		}
 		return loc+'/user/'+Runtime.userName+'/ws/workspace/';
 	},
@@ -411,6 +411,5 @@ var Runtime = {
 	}
 };
 
-davinci.Runtime = Runtime; //FIXME: shouldn't need this
 return Runtime;
 });

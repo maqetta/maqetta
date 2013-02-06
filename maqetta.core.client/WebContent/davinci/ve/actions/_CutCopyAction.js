@@ -70,7 +70,7 @@ return declare("davinci.ve.actions.CutAction", [ContextAction], {
 		context = this.fixupContext(context);
 		var e = Workbench.getOpenEditor();
 		if (e && context) {
-			var anySelection = (context.getSelection().length > 0);
+			var anySelection = context.getSelection().length > 0;
 			if(e.declaredClass == 'davinci.ve.PageEditor'){
 				var displayMode = e.getDisplayMode();
 				return anySelection && displayMode != 'source';

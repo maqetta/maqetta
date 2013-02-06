@@ -8,20 +8,20 @@ define([
 	"dijit/MenuItem",
 	"dijit/form/Button",
 	"dijit/form/DropDownButton",
-	"dojo/i18n!./nls/widgets"
+	"dojo/i18n!./nls/widgets",
+	"davinci/Runtime",
+	"dojo/text!./templates/CommentForm.html"
 ], function(declare, _Widget, _Templated, TextBox, SimpleTextarea, Menu, MenuItem, 
-		Button, DropDownButton, widgetsNls) {
-	
+		Button, DropDownButton, widgetsNls, Runtime, templateString) {
+
 return declare("davinci.review.widgets.CommentForm", [_Widget, _Templated], {
 
-	templateString: dojo.cache("davinci", "review/widgets/templates/CommentForm.html"),
+	templateString: templateString,
 
-	postMixInProperties : function() {
+	postMixInProperties: function() {
 		this.inherited(arguments);
-		/*
-		 * HACK: dijit pulls template substitutions from 'this'. copy values out of NLS
-		 * lang object into properties on this object. hope they don't collide.
-		 */
+
+		// add to 'this' for template substitutions
 		this.comment = widgetsNls.comment;
 		this.buttonCancel = widgetsNls.buttonCancel;
 	},
@@ -36,7 +36,7 @@ return declare("davinci.review.widgets.CommentForm", [_Widget, _Templated], {
 			style: "width: 100%; margin: 2px 0px 2px 0px;font-family:Verdana, Arial, Helvetica, sans-serif;font-size:100%;"
 		}, dojo.create("div"));
 		this.contentNode.appendChild(this.content.domNode);
-		var submitButton = new Button({
+		new Button({
 			label: widgetsNls.submit, 
 			onClick: dojo.hitch(this, "_submit")
 		}, this.submitNode);
@@ -77,8 +77,8 @@ return declare("davinci.review.widgets.CommentForm", [_Widget, _Templated], {
 	},
 
 	_getActions: function() {
-		var editorActions=[];
-		var extensions = davinci.Runtime.getExtensions('davinci.annotationActions', function(ext) {
+		var editorActions = [];
+		Runtime.getExtensions("davinci.annotationActions", function(ext) {
 			editorActions.push(ext.editorContribution);
 			return true;
 		});

@@ -4,11 +4,12 @@ define([
 	"dojo/query",
 	"dijit/_WidgetBase",
 	"dojo/dnd/Mover",
+	"../Runtime",
 	"./metadata",
-	"davinci/ve/States",
-	"davinci/ve/utils/GeomUtils"
+	"./States",
+	"./utils/GeomUtils"
 ],
-function(require, declare, Query, _WidgetBase, Mover, Metadata, States, GeomUtils) {
+function(require, declare, Query, _WidgetBase, Mover, Runtime, Metadata, States, GeomUtils) {
 	
 // Nobs and frame constants
 var LEFT = 0,	// nob and frame
@@ -20,7 +21,7 @@ var LEFT = 0,	// nob and frame
 	RIGHT_TOP = 6,
 	RIGHT_BOTTOM = 7;
 
-return declare("davinci.ve.Focus", _WidgetBase, {
+return declare(_WidgetBase, {
 
 	// Inside knowledge about CSS classes used to style editFocusNob and editFocusFrame DIVs
 	nobSize:11,
@@ -786,6 +787,16 @@ return declare("davinci.ve.Focus", _WidgetBase, {
                 checked: checked,
                 onClick: dojo.hitch(this, "_subwidgetSelected", this._context.theme.name + '_WidgetOuterContainer')
             });
+            /*
+             *  Issue #3733 To support war file deployments and deployments with differnt root contexts other than maqetta
+             *  the theme editor ex.dojo-theme-editor.html now loads dojo from a relative location instead of a static location
+             *  That change confusses dijit when we create a menu item, the relative path to dojo/resources/blank.gif is not correct
+             *  in the domNode. So the line of code below changes the src attribute of the node from the relative path to an absolute
+             *  path. Interestingly teh node.src property has the correct absolute path, so we just use that.
+             *  At some point in the future we want to move the subwidget context up from the theme editor document to the VE document
+             *  but for now this hack works.
+             */
+            item.domNode.children[0].children[0].setAttribute('src',item.domNode.children[0].children[0].src);
             pMenu.addChild(item);
             this._currentItem = item;
             for (var s in subwidgets){
@@ -796,6 +807,16 @@ return declare("davinci.ve.Focus", _WidgetBase, {
                     checked: checked,
                     onClick: dojo.hitch(this, "_subwidgetSelected", this._context.theme.name + '_' + s)
                 });
+                /*
+                 *  Issue #3733 To support war file deployments and deployments with differnt root contexts other than maqetta
+                 *  the theme editor ex.dojo-theme-editor.html now loads dojo from a relative location instead of a static location
+                 *  That change confusses dijit when we create a menu item, the relative path to dojo/resources/blank.gif is not correct
+                 *  in the domNode. So the line of code below changes the src attribute of the node from the relative path to an absolute
+                 *  path. Interestingly teh node.src property has the correct absolute path, so we just use that.
+                 *  At some point in the future we want to move the subwidget context up from the theme editor document to the VE document
+                 *  but for now this hack works.
+                 */
+                menuItem.domNode.children[0].children[0].setAttribute('src',menuItem.domNode.children[0].children[0].src);
                 pMenu.addChild(menuItem);
                 if (checked) {
                     this._currentItem = menuItem;
@@ -870,12 +891,12 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     
     
     _updateSubwidgetListForState: function() {
-    	if (this._context.editor != davinci.Runtime.currentEditor){
+    	if (this._context.editor != Runtime.currentEditor){
             // not for us
             return;
         }
         if (this._context._selectedWidget && this._displayedWidget === this._context._selectedWidget) {
-            var editor = davinci.Runtime.currentEditor,
+            var editor = Runtime.currentEditor,
                 themeMetadata = editor._theme;
             this._cm.getChildren().forEach(function(child) {
                 var subwidget = child.label;

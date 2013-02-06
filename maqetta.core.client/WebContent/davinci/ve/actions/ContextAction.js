@@ -1,7 +1,8 @@
 define([
     	"dojo/_base/declare",
-    	"davinci/actions/Action"
-], function(declare, Action){
+    	"davinci/actions/Action",
+    	"davinci/Runtime"
+], function(declare, Action, Runtime){
 
 
 return declare("davinci.ve.actions.ContextAction", [Action], {
@@ -29,17 +30,15 @@ return declare("davinci.ve.actions.ContextAction", [Action], {
 		});
 		return roots;
 	},
-	
-	_getEditor: function() {
-		return top.davinci && top.davinci.Runtime && top.davinci.Runtime.currentEditor;
-	},
-		
+
 	_getContext: function(context) {
-		if (context) return context;
-		var editor = this._getEditor();
+		if (context) {
+			return context;
+		}
+		var editor = Runtime.currentEditor;
 		return editor && (editor.getContext && editor.getContext() || editor.context);
 	},
-	
+
 	// FIXME: We've got a problem. The Workbench menubar mechanism passes
 	// the Context object as the "context" because createPopup() has the Context
 	// object available to it, but the toolbar mechanism passes the HTMLVisualEditor

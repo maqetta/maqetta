@@ -1,10 +1,10 @@
 define([
     	"dojo/_base/declare",
-    	"davinci/Workbench",
-    	"davinci/ve/actions/ContextAction",
-    	"davinci/ve/tools/PasteTool"
-], function(declare, Workbench, ContextAction, PasteTool){
-
+    	"../../Workbench",
+    	"./ContextAction",
+    	"../tools/PasteTool",
+    	"../../Runtime"
+], function(declare, Workbench, ContextAction, PasteTool, Runtime){
 
 return declare("davinci.ve.actions.PasteAction", [ContextAction], {
 
@@ -18,7 +18,7 @@ return declare("davinci.ve.actions.PasteAction", [ContextAction], {
 				context.htmlEditor.pasteAction.run();
 				return;
 			}
-			var data = davinci.Runtime.clipboard;
+			var data = Runtime.clipboard;
 			if(data){
 				context.setActiveTool(new PasteTool(data));
 			}
@@ -31,9 +31,9 @@ return declare("davinci.ve.actions.PasteAction", [ContextAction], {
 		if (e && context) {
 			if(e.declaredClass == 'davinci.ve.PageEditor'){
 				var displayMode = e.getDisplayMode();
-				return davinci.Runtime.clipboard && displayMode != 'source';
+				return Runtime.clipboard && displayMode != 'source';
 			}else{
-				return davinci.Runtime.clipboard;
+				return Runtime.clipboard;
 			}
 		}else{
 			return false;

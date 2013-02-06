@@ -4,7 +4,7 @@ define([
 	"dijit/layout/BorderContainer",
 	"dijit/layout/ContentPane",
 	"dojo/dnd/Moveable",
-//	"../Runtime",
+	"../Runtime",
 	"../commands/CommandStack",
 	"../html/ui/HTMLEditor",
 	"../model/Path",
@@ -13,9 +13,7 @@ define([
 	"./widget",
 	"./utils/GeomUtils",
 	"dojo/i18n!./nls/ve"
-], function(declare, ModelEditor, BorderContainer, ContentPane, /*Runtime,*/ Moveable, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, GeomUtils, veNls){
-
-var Runtime; // seems to be a circular reference.  Lazy load instead.
+], function(declare, ModelEditor, BorderContainer, ContentPane, Runtime, Moveable, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, GeomUtils, veNls){
 
 return declare("davinci.ve.PageEditor", ModelEditor, {
 
@@ -23,7 +21,6 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	_latestLayoutMode: "flow",
 
     constructor: function (element, fileName) {
-    	Runtime = require("davinci/Runtime");
         this._bc = new BorderContainer({}, element);
 
         this.domNode = this._bc.domNode;

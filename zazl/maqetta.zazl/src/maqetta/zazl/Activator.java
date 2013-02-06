@@ -1,6 +1,8 @@
 package maqetta.zazl;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.List;
 
 import javax.servlet.Filter;
@@ -91,7 +93,9 @@ public class Activator implements BundleActivator {
 				System.out.println("Registering Zazl JavaScript servlet");
 				httpService.registerServlet("/_javascript", jsServlet, null, null);
 				System.out.println("Registering Maqetta HTML Filter for Zazl");
-				httpService.registerFilter("/maqetta/user/*.html", maqettaHTMLFilter, null, null);
+				Dictionary<String, String> initParams = new Hashtable<String, String>();
+				initParams.put("filter-priority", "1");
+				httpService.registerFilter("/maqetta/user/*.html", maqettaHTMLFilter, initParams, null);
 				registered = true;
 			} catch (Exception e) {
 				e.printStackTrace();

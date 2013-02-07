@@ -118,7 +118,8 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 		dojo.style(this.subjectNode, "color", color);
 		var ownerDisplayName = Runtime.getUserDisplayName({
 			email: this.email, 
-			userId: this.ownerId
+			userId: this.ownerId,
+			userDisplayName: this.displayName
 		});
 		this.ownerName.innerHTML = ownerDisplayName;
 		dojo.style(this.ownerName, "color", color);

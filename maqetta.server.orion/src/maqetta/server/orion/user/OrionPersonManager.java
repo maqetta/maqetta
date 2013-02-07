@@ -47,13 +47,16 @@ public class OrionPersonManager extends PersonManagerImpl {
 		}
 
 		public String getDisplayName() {
-			String displayName = this.email;
+			String displayName = "";
 			User user = getOrionUser(this.getUserID());
 			if (user != null) {
 				displayName = user.getName();
 			} else {
 				System.err.println("ERROR: OrionPersonImpl.getDisplayName: user '" + this.getUserID()
 						+ "' could not be found in IOrionCredentialsService.");
+			}
+			if (displayName.length() < 1){
+				displayName = this.email;
 			}
 			return displayName;
 		}

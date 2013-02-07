@@ -184,7 +184,7 @@ public class Publish extends Command {
 
 	private String getHtmlContent(IUser user, String message, String url) {
 		Map<String, String> props = new HashMap<String, String>();
-		props.put("displayName", user.getPerson().getEmail());
+		props.put("displayName", user.getPerson().getDisplayName());
 		props.put("message", message);
 		props.put("url", url);
 		return Utils.substitute(Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION), props);

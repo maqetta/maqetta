@@ -80,15 +80,14 @@ public class OrionUser extends User {
 		String workspaceId = webWorkspace.getId();
 		this.userDirectory = new VOrionWorkspaceStorage(webWorkspace, this.getUserID());
 		
-
 		rebuildWorkspace();
-		
 	}
+
 	public IVResource newWorkspaceRoot(){
 		return  new VOrionWorkspace((VOrionWorkspaceStorage)this.userDirectory);
 	}
 	
-	public IVResource createOrionProject(String name){
+	public IVResource createOrionProject(String name) throws IOException {
 		//make sure required fields are set
 		
 		IVResource res =  this.workspace.create(name);
@@ -96,13 +95,12 @@ public class OrionUser extends User {
 			try {
 				addOrionUserRight(((VOrionResource)res).getOrionLocation());
 			} catch (ServletException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new IOException(e);
 			}
 		}
 		return res;
-			
 	}
+
 	private void addOrionUserRight(String location) throws ServletException {
 		if (location == null)
 			return;
@@ -117,7 +115,7 @@ public class OrionUser extends User {
 				locationPath += "/*"; //$NON-NLS-1$
 			AuthorizationService.addUserRight(this.getUserID(), locationPath);
 		} catch (CoreException e) {
-			e.printStackTrace();
+			throw new ServletException(e);
 		}
 	}
 	
@@ -128,8 +126,7 @@ public class OrionUser extends User {
 	public boolean isProject(String projectName){
 		Collection baseFile = userDirectory.findFiles(userDirectory, projectName + "/" + IDavinciServerConstants.SETTINGS_DIRECTORY_NAME+ "/" + IDavinciServerConstants.LIBS_FILE, false);
 		
-		return (baseFile.size() > 0 );
-
+		return baseFile.size() > 0;
 	}
 	
 	public String computeMaqettaPath(String orionPath){
@@ -151,7 +148,7 @@ public class OrionUser extends User {
 		return path;
 	}
 	
-	public IVResource createProject(String projectName, String basePath, boolean initFiles){
+	public IVResource createProject(String projectName, String basePath, boolean initFiles) throws IOException {
 		
 		if(isProject(projectName))  return getResource(projectName);
 		
@@ -189,7 +186,7 @@ public class OrionUser extends User {
 	public boolean isValid(String path){
 	     return true;
 	}
-	public IVResource createResource(String path, boolean isFolder) {
+	public IVResource createResource(String path, boolean isFolder) throws IOException {
 		/* serve working copy files if they exist */
 
 		String path1 = path;
@@ -216,12 +213,7 @@ public class OrionUser extends User {
 		if(isFolder){
 			userFile.mkdir();
 		}else{
-				try {
-				userFile.createNewInstance();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			userFile.createNewInstance();
 		}
 		return userFile;
 	}

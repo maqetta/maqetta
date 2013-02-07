@@ -16,7 +16,7 @@ import org.osgi.framework.Bundle;
 
 public class VResourceUtils {
 	public static void copyDirectory(IVResource source, IVResource destination,
-			boolean recurse) {
+			boolean recurse) throws IOException {
 		IVResource[] list = source.listFiles();
 
 		for (int i = 0; i < list.length; i++) {
@@ -74,7 +74,7 @@ public class VResourceUtils {
 	    }
 	    return (IVResource[])all.toArray(new IVResource[all.size()]);
 	}
-	public static void copyDirectory(IStorage userDir, String bundleDirName, Bundle bundle) {
+	public static void copyDirectory(IStorage userDir, String bundleDirName, Bundle bundle) throws IOException {
 
         Enumeration files = bundle.findEntries(bundleDirName, "*", true);
         Vector elements = new Vector();
@@ -116,12 +116,13 @@ public class VResourceUtils {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                // throw new
-                // UserException(UserException.ERROR_COPYING_USER_BASE_DIRECTORY);
+                //TODO: log or wrap exception so we know which file failed
+                throw e;
             }
         }
     }
-    public static void deleteDir(IStorage directory) {
+
+	public static void deleteDir(IStorage directory) {
         deleteContents(directory);
         directory.delete();
     }
@@ -136,20 +137,19 @@ public class VResourceUtils {
         }
     }
 	
-    public static void setText(IVResource resource, String text){
-    	// sets text content to an IVREsource
+    public static void setText(IVResource resource, String text) throws IOException {
+    	// sets text content to an IVResource
     	OutputStream out = null;
     	try{
 			out = resource.getOutputStreem();
-			
 			out.write(text.getBytes());
-			out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} finally {
+			if (out != null) {
+				out.close();
+			}
 		}
     	
 		resource.flushWorkingCopy();
-
     }
     
 	public static void copyFile(IVResource src, IVResource dest)

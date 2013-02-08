@@ -31,7 +31,7 @@ public interface IVResource {
 
     public boolean delete();
 
-    public IVResource create(String path);
+    public IVResource create(String path) throws IOException;
 
     public OutputStream getOutputStreem() throws FileNotFoundException, IOException;
 
@@ -48,7 +48,7 @@ public interface IVResource {
 
     public void removeWorkingCopy();
 
-    public void flushWorkingCopy();
+    public void flushWorkingCopy() throws IOException;
 
     public URI getURI() throws URISyntaxException;
 

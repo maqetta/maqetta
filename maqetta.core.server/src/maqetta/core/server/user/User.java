@@ -1,6 +1,7 @@
 package maqetta.core.server.user;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +16,6 @@ import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.ajaxLibrary.ILibraryFinder;
 import org.davinci.ajaxLibrary.Library;
 import org.davinci.server.internal.Activator;
-import org.davinci.server.review.Constants;
 import org.davinci.server.user.IPerson;
 import org.davinci.server.user.IUser;
 import org.davinci.server.user.LibrarySettings;
@@ -106,7 +106,7 @@ public class User implements IUser {
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#createEclipseProject(java.lang.String)
 	 */
-	public IVResource createEclipseProject(String projectName){
+	public IVResource createEclipseProject(String projectName) throws IOException {
 		IVResource project = createProject(projectName, "WebContent", true);
 		/*
 		 * Load the initial user files extension point and copy the files to the projects root
@@ -150,14 +150,14 @@ public class User implements IUser {
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#createProject(java.lang.String)
 	 */
-	public IVResource createProject(String projectName){
+	public IVResource createProject(String projectName) throws IOException {
 		return this.createProject(projectName, "", true);
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#createProject(java.lang.String, java.lang.String, boolean)
 	 */
-	public IVResource createProject(String projectName, String basePath, boolean initFiles){
+	public IVResource createProject(String projectName, String basePath, boolean initFiles) throws IOException {
 		IVResource project = createResource(projectName + "/", true);
 		/*
 		 * Load the initial user files extension point and copy the files to the projects root
@@ -440,7 +440,7 @@ public class User implements IUser {
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#createResource(java.lang.String)
 	 */
-	public IVResource createResource(String path, boolean isFolder) {
+	public IVResource createResource(String path, boolean isFolder) throws IOException {
 		/* serve working copy files if they exist */
 
 		String path1 = path;

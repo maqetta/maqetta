@@ -1,9 +1,8 @@
 package maqetta.core.server.user.manager;
 
 
-import java.util.HashMap;
+import java.io.IOException;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import maqetta.core.server.user.User;
@@ -120,7 +119,12 @@ public class UserManagerImpl implements IUserManager {
             //userDir.mkdir();
             //File settingsDir = user.getSettingsDirectory();
            // settingsDir.mkdir();
-            IVResource project = user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
+            try {
+				user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null; //TODO: should throw?
+			}
             
             this.usersCount++;
             return user;
@@ -192,27 +196,31 @@ public class UserManagerImpl implements IUserManager {
 
     public IUser getSingleUser() {
     	if (localUser == null) {
-	    	class LocalPerson implements IPerson {
-	            public String getEmail() {
-	                return "";
-	            }
-	            public String getUserID() {
-	                return IDavinciServerConstants.LOCAL_INSTALL_USER;
-	            }
-	            public String getDisplayName() {
-	            	return "";
-	            }
-	        }
+    		try {
+		    	class LocalPerson implements IPerson {
+		            public String getEmail() {
+		                return "";
+		            }
+		            public String getUserID() {
+		                return IDavinciServerConstants.LOCAL_INSTALL_USER;
+		            }
+		            public String getDisplayName() {
+	            		return "";
+	            	}
+		        }
 
-	    	IStorage userDir = this.baseDirectory;
-	        userDir.mkdir();
+	    		IStorage userDir = this.baseDirectory;
+	        	userDir.mkdir();
 
-	        localUser = new User(new LocalPerson(), userDir);
-	        IStorage settingsDir = this.baseDirectory.newInstance(userDir, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
-	        if (!settingsDir.exists()) {
-	            settingsDir.mkdir();
-	            IVResource project = localUser.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
-	        }
+	        	localUser = new User(new LocalPerson(), userDir);
+	       		IStorage settingsDir = this.baseDirectory.newInstance(userDir, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
+	        	if (!settingsDir.exists()) {
+	           		settingsDir.mkdir();
+	            	IVResource project = localUser.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
+	        	}
+    		} catch (IOException e) {
+    			return null;
+    		}
     	}
     	return localUser;
     }

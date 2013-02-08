@@ -86,7 +86,12 @@ public class OrionUserManager extends UserManagerImpl {
     public IUser newUser(IPerson person, IStorage baseDirectory) {
      	IUser user =  new OrionUser(person);
      	if(init(person.getUserID())){
-     		user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
+     		try {
+				user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null; // TODO: should throw?
+			}
      	}
      	return user;
     }
@@ -109,7 +114,12 @@ public class OrionUserManager extends UserManagerImpl {
             //userDir.mkdir();
             //File settingsDir = user.getSettingsDirectory();
            // settingsDir.mkdir();
-            user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
+            try {
+				user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null; //TODO: should throw?
+			}
             
             this.usersCount++;
             return user;

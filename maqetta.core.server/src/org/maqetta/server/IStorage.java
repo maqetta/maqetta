@@ -32,8 +32,8 @@ public interface IStorage {
 	public void createNewFile() throws IOException;
 	public String getPath();
 	public String getName();
-	public void mkdir();
-	public void renameTo(IStorage file);
+	public void mkdir() throws IOException;
+	public void renameTo(IStorage file) throws IOException;
 	
 	/* newInstance(..) are factory style methods for creating a new resource
 	 * NOT based on the parent resource.

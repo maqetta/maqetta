@@ -1,7 +1,6 @@
 package maqetta.core.server.user;
 
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -24,7 +23,6 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.server.review.Constants;
 import org.davinci.server.review.ReviewerVersion;
 import org.davinci.server.review.Version;
@@ -32,7 +30,6 @@ import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.review.user.IDesignerUser;
 import org.davinci.server.review.user.IReviewManager;
 import org.davinci.server.review.user.Reviewer;
-import org.davinci.server.user.IDavinciProject;
 import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -47,7 +44,7 @@ import org.xml.sax.SAXException;
 public class ReviewManager implements IReviewManager {
 //	private static final String LS = System.getProperty("line.separator");
 	private static ReviewManager theReviewManager;
-	private HashMap<IDavinciProject, HashMap<String, ILibInfo[]>> snapshotLibs;
+//	private HashMap<IDavinciProject, HashMap<String, ILibInfo[]>> snapshotLibs;
 	public IStorage baseDirectory;
 	
 	public static ReviewManager getReviewManager()
@@ -112,7 +109,7 @@ public class ReviewManager implements IReviewManager {
 		file.save(versionFile, reviewer);
 	}
 	
-	private IStorage getReviewerVersionFile(Reviewer reviewer) {
+	private IStorage getReviewerVersionFile(Reviewer reviewer) throws IOException {
 		IStorage versionFile = baseDirectory.newInstance(getReviewerVersionDirectory(), this.buildBaseFileForFromReviewer(reviewer)); 
 		return versionFile;
 	}
@@ -122,7 +119,7 @@ public class ReviewManager implements IReviewManager {
 		return fileName;
 	}
 	
-	private IStorage getReviewerVersionDirectory() {
+	private IStorage getReviewerVersionDirectory() throws IOException {
 		//Init the directory to hold version info for all of the reviewers and return it
 		IStorage reviewerVersionsDirectory = baseDirectory.newInstance(baseDirectory, Constants.REVIEW_DIRECTORY_NAME);
 		if (!reviewerVersionsDirectory.exists()) {
@@ -173,12 +170,12 @@ public class ReviewManager implements IReviewManager {
 		IStorage[] file = sourceDir.listFiles();
 		for (int i = 0; i < file.length; i++) {
 			if (file[i].isFile()) {
-
 				IStorage sourceFile = file[i];
 
 				IStorage targetFile = destinationDir.newInstance(destinationDir, file[i].getName());
 				copyFile(sourceFile, targetFile);
 			}
+
 			if (file[i].isDirectory()) {
 				IStorage destination = destinationDir.newInstance(destinationDir, file[i].getName());
 				copyDirectory(file[i], destination);
@@ -473,9 +470,6 @@ public class ReviewManager implements IReviewManager {
 						objects.add(version);
 
 					}
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				} catch (ParserConfigurationException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

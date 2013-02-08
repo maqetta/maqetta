@@ -47,7 +47,7 @@ public class PersonManagerImpl implements IPersonManager {
 
 		public String getDisplayName() {
 			// TODO Auto-generated method stub
-			return "";
+			 return email;
 		}
 
     }

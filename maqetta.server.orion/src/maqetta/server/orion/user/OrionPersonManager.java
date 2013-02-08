@@ -56,7 +56,7 @@ public class OrionPersonManager extends PersonManagerImpl {
 						+ "' could not be found in IOrionCredentialsService.");
 			}
 			if (displayName.length() < 1){
-				displayName = this.email;
+				displayName = this.getEmail();
 			}
 			return displayName;
 		}

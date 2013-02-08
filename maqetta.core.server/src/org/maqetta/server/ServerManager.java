@@ -5,11 +5,14 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.mail.MessagingException;
 import javax.mail.SendFailedException;
@@ -32,6 +35,7 @@ import org.maqetta.server.mail.SmtpPop3Mailer;
 public class ServerManager implements IServerManager {
 
 	static private ServerManager  theServerManager;
+	static private Logger theLogger = Logger.getLogger(ServerManager.class.getName());
 
 	private IUserManager           userManager;
 
@@ -47,13 +51,7 @@ public class ServerManager implements IServerManager {
 	public static boolean DEBUG_IO_TO_CONSOLE = false;
 	public static boolean LOCAL_INSTALL = false;
 
-//	private enum SetBoolean {
-//		FALSE, TRUE, UNDEFINED
-//	};
-//	private static SetBoolean IN_WAR;
-
 	{
-//		IN_WAR = SetBoolean.UNDEFINED;
 		String localInstall = this.getDavinciProperty(IDavinciServerConstants.LOCAL_INSTALL);
 		if (localInstall != null) {
 			ServerManager.LOCAL_INSTALL = Boolean.parseBoolean(localInstall);
@@ -61,7 +59,7 @@ public class ServerManager implements IServerManager {
 	}
 
 	public SmtpPop3Mailer getMailer(){
-		if(mailer==null) {
+		if(mailer == null) {
 			mailer = SmtpPop3Mailer.getDefault();
 		}
 		return mailer;
@@ -71,7 +69,9 @@ public class ServerManager implements IServerManager {
 		try {
 			this.readConfigFile();
 		} catch (IOException e) {
-			e.printStackTrace(); // TODO: better way to surface this?
+			String desc = "Unable to read config file";
+			theLogger.log(Level.SEVERE, desc, e);
+			throw new Error(desc, e);
 		}
 		String shouldDebug = this.getDavinciProperty(IDavinciServerConstants.SERVER_DEBUG);
 		if (shouldDebug != null && "true".equals(shouldDebug)) { //FIXME: true check seems redundant
@@ -89,9 +89,13 @@ public class ServerManager implements IServerManager {
 	 * Reads the maqetta.conf file and creates a hashtable options that contains all the key value pairs from the config file
 	 */
 	private void readConfigFile() throws IOException {
+		String configFile = this.getDavinciProperty(IDavinciServerConstants.CONFIG_FILE);
+		if (configFile == null) {
+			throw new FileNotFoundException("Missing Config File: " + IDavinciServerConstants.CONFIG_FILE);
+		}
+
 		BufferedReader br = null;
 		try {
-			String configFile = this.getDavinciProperty(IDavinciServerConstants.CONFIG_FILE);
 			// Open the file that is the first command line parameter
 			FileInputStream fstream = new FileInputStream(configFile);
 			// Get the object of DataInputStream
@@ -107,7 +111,7 @@ public class ServerManager implements IServerManager {
 				}
 				strLine = strLine.trim(); // remove leading trailing white space
 				String delims = "[=]+";
-				String[] tokens = strLine.split(delims, 2); // splits the strng at the first '='
+				String[] tokens = strLine.split(delims, 2); // splits the string at the first '='
 				if ((tokens.length > 1) && (tokens[0].startsWith("#") == false)) {
 					this.options.put(tokens[0], tokens[1]);
 				}
@@ -165,7 +169,7 @@ public class ServerManager implements IServerManager {
 			property = System.getProperty(propertyName);
 		}
 		if (ServerManager.DEBUG_IO_TO_CONSOLE) {
-			System.out.println("servlet parm '" + propertyName + "' is : " + property);
+			theLogger.log(Level.CONFIG, "servlet parm '" + propertyName + "' is : " + property);
 		}
 		return property;
 	}
@@ -180,7 +184,8 @@ public class ServerManager implements IServerManager {
 				try {
 					this.userManager = (IUserManager) libraryElement.createExecutableExtension(IDavinciServerConstants.EP_ATTR_CLASS);
 				} catch (CoreException e) {
-					e.printStackTrace();
+					theLogger.logp(Level.SEVERE, ServerManager.class.getName(), "getUserManager", "unexpected failure", e);
+					throw new Error(e);
 				}
 			}
 		}
@@ -191,8 +196,8 @@ public class ServerManager implements IServerManager {
 	/* (non-Javadoc)
 	 * @see org.davinci.server.IServerManager#getExtensions(java.lang.String, java.lang.String)
 	 */
-	public List getExtensions(String extensionPoint, String elementTag) {
-		ArrayList list = new ArrayList();
+	public List<IConfigurationElement> getExtensions(String extensionPoint, String elementTag) {
+		ArrayList<IConfigurationElement> list = new ArrayList<IConfigurationElement>();
 		IExtension[] extensions = this.getExtensions(extensionPoint);
 		for (int i = 0; i < extensions.length; i++) {
 			IConfigurationElement[] elements = extensions[i].getConfigurationElements();
@@ -284,7 +289,8 @@ public class ServerManager implements IServerManager {
 				try {
 					this.personManager = (IPersonManager) libraryElement.createExecutableExtension(IDavinciServerConstants.EP_ATTR_CLASS);
 				} catch (CoreException e) {
-					e.printStackTrace();
+					theLogger.logp(Level.SEVERE, ServerManager.class.getName(), "getPersonManager", "unexpected failure", e);
+					throw new Error(e);
 				}
 			}
 
@@ -297,7 +303,7 @@ public class ServerManager implements IServerManager {
 	}
 
 	public IStorage getBaseDirectory(){
-		if(this.userDir ==null){
+		if(this.userDir == null){
 
 			String basePath = getDavinciProperty(IDavinciServerConstants.BASE_DIRECTORY_PROPERTY);
 
@@ -306,8 +312,9 @@ public class ServerManager implements IServerManager {
 				if (dir.exists()) {
 					userDir = dir;
 				} else {
-					System.err.println("FATAL!!!!! User directory does not exist.");
-					throw new RuntimeException("User directory does not exist.");
+					String desc = "User directory does not exist.";
+					theLogger.log(Level.SEVERE, desc);
+					throw new Error("User directory does not exist.");
 				}
 			}
 			if (userDir == null) {
@@ -315,7 +322,7 @@ public class ServerManager implements IServerManager {
 				userDir = new StorageFileSystem(tempDir);
 			}
 			if (userDir == null) {
-				userDir =new StorageFileSystem(".");
+				userDir = new StorageFileSystem(".");
 			}
 		}
 		return this.userDir;
@@ -323,32 +330,27 @@ public class ServerManager implements IServerManager {
 
 	public boolean sendEmail( String from, String to, String subject, String content) {
 		SimpleMessage email = new SimpleMessage(from, to, null, null,subject, content);
-
+		Exception e = null;
 
 		try {
 			SmtpPop3Mailer mailer = this.getMailer();
 
 			if(mailer==null) {
+				theLogger.log(Level.SEVERE, "Unable to get mailer");
 				return false;
 			}
 
 			mailer.sendMessage(email);
-		} catch (SendFailedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-
-			//Failure, so should return false
-			return false;
-		} catch (MessagingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-
-			//Failure, so should return false
-			return false;
+		} catch (SendFailedException sfe) {
+			e = sfe;
+		} catch (MessagingException me) {
+			e = me;
 		}
-		return true;
 
+		if (e != null) {
+			theLogger.log(Level.SEVERE, "Failed to send mail from: "+from+" to: "+to+ "subject: "+subject, e);
+		}
+
+		return e == null;
 	}
-
-
 }

@@ -49,8 +49,8 @@ public class GetInitializationInfo extends Command {
 				"\t'workbenchState':"+buffer+",\n"+
 				"\t'userInfo':{'userId': '"+user.getUserID()+"',"+
 				"\t\t'isLocalInstall': '"+String.valueOf(ServerManager.LOCAL_INSTALL)+"',"+
-				"\t\t'userFirstName': '"+String.valueOf(user.getPerson().getFirstName())+"',"+
-				"\t\t'userLastName': '"+String.valueOf(user.getPerson().getLastName())+"',"+
+				"\t\t'userDisplayName': '"+String.valueOf(user.getPerson().getDisplayName())+"',"+
+				/*"\t\t'userLastName': '"+String.valueOf(user.getPerson().getLastName())+"',"+*/
 				"\t\t'email': '"+user.getPerson().getEmail()+"'\n"+
 				"\t}"+
 				"}";

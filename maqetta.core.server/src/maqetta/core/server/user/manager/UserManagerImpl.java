@@ -201,26 +201,23 @@ public class UserManagerImpl implements IUserManager {
 		            public String getEmail() {
 		                return "";
 		            }
-		            public String getFirstName() {
-		                return "";
-		            }
-		            public String getLastName() {
-		                return "";
-		            }
 		            public String getUserID() {
 		                return IDavinciServerConstants.LOCAL_INSTALL_USER;
 		            }
+		            public String getDisplayName() {
+	            		return "";
+	            	}
 		        }
-	
-		    	IStorage userDir = this.baseDirectory;
-		        userDir.mkdir();
-	
-		        localUser = new User(new LocalPerson(), userDir);
-		        IStorage settingsDir = this.baseDirectory.newInstance(userDir, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
-		        if (!settingsDir.exists()) {
-		            settingsDir.mkdir();
-		            localUser.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
-		        }
+
+	    		IStorage userDir = this.baseDirectory;
+	        	userDir.mkdir();
+
+	        	localUser = new User(new LocalPerson(), userDir);
+	       		IStorage settingsDir = this.baseDirectory.newInstance(userDir, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
+	        	if (!settingsDir.exists()) {
+	           		settingsDir.mkdir();
+	            	IVResource project = localUser.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
+	        	}
     		} catch (IOException e) {
     			return null;
     		}

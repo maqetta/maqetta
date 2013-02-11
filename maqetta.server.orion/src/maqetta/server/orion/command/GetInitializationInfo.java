@@ -49,10 +49,8 @@ public class GetInitializationInfo extends Command {
 					+ workbenchSettings + ",\n" + "\t'userInfo':{'userId': '"
 					+ user.getUserID() + "'," + "\t\t'isLocalInstall': '"
 					+ String.valueOf(ServerManager.LOCAL_INSTALL) + "',"
-					+ "\t\t'userFirstName': '"
-					+ String.valueOf(user.getPerson().getFirstName()) + "',"
-					+ "\t\t'userLastName': '"
-					+ String.valueOf(user.getPerson().getLastName()) + "',"
+					+ "\t\t'userDisplayName': '"
+					+ String.valueOf(user.getPerson().getDisplayName()) + "',"
 					+ "\t\t'email': '" + user.getPerson().getEmail() + "'\n"
 					+ "\t}" + "\t" + c + "\n" + "}";
 		} catch (MaqettaConfigException e) {

@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.SimpleTimeZone;
 
+import maqetta.core.server.user.ReviewManager;
+
+import org.davinci.server.review.user.Reviewer;
 import org.davinci.server.user.IDavinciProject;
 
 import org.davinci.server.util.JSONWriter;
@@ -315,10 +318,17 @@ public class Comment implements Serializable {
 						sdf.setCalendar(Calendar.getInstance(new SimpleTimeZone(0, "GMT")));
 						returnValue = sdf.format((Date) returnValue);
 					}
+					if ("email".equals(fieldName)) {
+						ReviewManager commentingManager = ReviewManager.getReviewManager();
+						Reviewer reviewerUser = commentingManager.getReviewer(returnValue.toString());
+						String displayName = reviewerUser.getDisplayName();
+						writer.addField("displayName", null != displayName ? displayName: returnValue.toString());
+					}
 				} catch (Exception e) {
 					returnValue = new Object();
 					e.printStackTrace();
 				}
+				
 				writer.addField(fieldName, null == returnValue ? "" : returnValue.toString());
 			}
 		}

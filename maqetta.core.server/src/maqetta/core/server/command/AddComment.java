@@ -150,7 +150,7 @@ public class AddComment extends Command {
 		}
 
 		Map<String, String> props = new HashMap<String, String>();
-		props.put("displayName", reviewer.getPerson().getEmail());
+		props.put("displayName", reviewer.getPerson().getDisplayName());
 		props.put("pagename", pageName);
 		props.put("url", ReviewManager.getReviewManager().getReviewUrl(comment.getDesignerId(), comment.getPageVersion(),  requestUrl)); 
 		props.put("title", commentTitle);

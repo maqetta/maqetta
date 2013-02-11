@@ -1,6 +1,12 @@
 package maqetta.server.orion.authentication.ldap;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -24,6 +30,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.davinci.server.user.IPerson;
+import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -344,7 +352,7 @@ public class LdapAuthenticationService implements IAuthenticationService {
 				 */
 				User user = userAdmin.getUser("login", email/*login*/); //$NON-NLS-1$
 				if (user == null) {
-					user = createOrionUser(email/*login*/);
+					user = createOrionUser(email, displayname);
 				}
 				return user;
 			}
@@ -362,8 +370,11 @@ public class LdapAuthenticationService implements IAuthenticationService {
 		return null;
 	}
 
-	private static User createOrionUser(String login) {
-		User newUser = new User(login, login, "");  // don't save password
+	private static User createOrionUser(String login, String name) {
+		if (name == null) {
+			name = login;
+		}
+		User newUser = new User(login, name, "");  // don't save password
 		newUser = userAdmin.createUser(newUser);
 		try {
 			AuthorizationService.addUserRight(newUser.getUid(), newUser.getLocation());
@@ -609,5 +620,6 @@ public class LdapAuthenticationService implements IAuthenticationService {
 			}
 		}
     }
-	
+	 
+		
 }

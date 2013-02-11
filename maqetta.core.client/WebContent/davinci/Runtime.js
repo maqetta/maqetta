@@ -67,9 +67,8 @@ var Runtime = {
 	 * 		{
 	 * 			email: "person@place.com",
 	 *			isLocalInstall: "false",
-	 * 			userFirstName: "",
-	 *			userId: "A",
-	 *			userLastName: "";
+	 * 			userDisplayName: "",
+	 *			userId: "A";
 	 * 		}
 	 * 
 	 * Because of the current user sign-up we have with Orion, we're not making 
@@ -87,8 +86,8 @@ var Runtime = {
 
 		// Can't reliably use userId anymore (because of Orion), so first try first name and then
 		// drop back to e-mail
-		var displayName = userInfo.userFirstName;
-		if (!userInfo.userFirstName) {
+		var displayName = userInfo.userDisplayName;
+		if (!userInfo.userDisplayName) {
 			displayName = userInfo.email;
 		}
 		return displayName;		

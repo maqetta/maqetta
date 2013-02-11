@@ -59,11 +59,17 @@ public class Reviewer implements IPerson{
 		return versions.values().iterator();
 	}
 
-	public String getFirstName() {
-		return "";
+	public String getDisplayName() {
+		String displayName = this.getEmail();
+		IPersonManager personManager = ServerManager.getServerManger().getPersonManager();
+		IPerson person = personManager.getPersonByEmail(this.getEmail());
+		if (person != null) {
+			displayName = person.getDisplayName();
+		}
+		
+
+		return displayName;
 	}
 
-	public String getLastName() {
-		return "";
-	}
+
 }

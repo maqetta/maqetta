@@ -46,15 +46,21 @@ public class OrionPersonManager extends PersonManagerImpl {
 			return name;
 		}
 
-		public String getFirstName() {
-			// TODO Auto-generated method stub
-			return "";
+		public String getDisplayName() {
+			String displayName = "";
+			User user = getOrionUser(this.getUserID());
+			if (user != null) {
+				displayName = user.getName();
+			} else {
+				System.err.println("ERROR: OrionPersonImpl.getDisplayName: user '" + this.getUserID()
+						+ "' could not be found in IOrionCredentialsService.");
+			}
+			if (displayName.length() < 1){
+				displayName = this.getEmail();
+			}
+			return displayName;
 		}
 
-		public String getLastName() {
-			// TODO Auto-generated method stub
-			return "";
-		}
 	}
 
 	public IPerson addPerson(String userName, String password, String email) throws UserException {

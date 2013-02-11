@@ -130,7 +130,6 @@ define(function() {
 							sceneSelected = sceneId;
 						}
 					}
-					this.context.select(widget);
 				}
 			}else if(this.context.declaredClass == 'davinci.review.editor.Context'){
 				if(domNode){

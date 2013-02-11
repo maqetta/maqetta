@@ -63,8 +63,15 @@ define([
 					if (doLater(Date.now() - that.lastChangeStamp > 1000, that)) { return; }
 					delete that.waiter;
 					that.isTyping = true; // defer saving the buffer
+					var textView = that.editor.getTextView();
+					var sel = textView.getSelection();
+					var leftPixel = textView.getHorizontalPixel();
+					var topPixel = textView.getTopPixel();
 					that.handleChange(that._textModel.getText());
 					delete that.isTyping;
+					textView.setSelection(sel.start, sel.end, false); // show=false because we are handling scrolling ourselves
+					textView.setHorizontalPixel(leftPixel);
+					textView.setTopPixel(topPixel);
 				})(this);
 			} catch (e){console.error(e);}
 		}

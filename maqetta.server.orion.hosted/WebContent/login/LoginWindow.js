@@ -288,6 +288,10 @@ define(['domReady'], function(domReady) {
 		if (!validateEmail(login)){
 			return;
 		}
+		var name = document.getElementById("create_name").value;
+		if (!name) {
+			name = login;
+		}
 		if (!validatePassword()) {
 			document.getElementById("create_password").setAttribute("aria-invalid", "true");
 			document.getElementById("create_passwordRetype").setAttribute("aria-invalid", "true");
@@ -313,7 +317,7 @@ define(['domReady'], function(domReady) {
 				}
 			}
 		};
-		var parameters = "login=" + encodeURIComponent(login) + "&password=" + encodeURIComponent(password) + "&loginTolken=" + loginTolken;
+		var parameters = "login=" + encodeURIComponent(login) + "&password=" + encodeURIComponent(password) + "&loginTolken=" + loginTolken + "&Name=" + encodeURIComponent(name);
 		mypostrequest.open("POST", "../users", true);
 		mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		mypostrequest.setRequestHeader("Orion-Version", "1");
@@ -354,6 +358,8 @@ define(['domReady'], function(domReady) {
 		document.getElementById('orionLogin').style.visibility = 'hidden';
 		document.getElementById('orionRegister').style.visibility = 'hidden';
 		document.getElementById('newUserSignup').style.visibility = '';
+		document.getElementById('landingArea').classList.add('register');
+
 	}
 
 	
@@ -361,6 +367,7 @@ define(['domReady'], function(domReady) {
 		document.getElementById('orionLogin').style.visibility = 'hidden';
 		document.getElementById('orionRegister').style.visibility = 'hidden';
 		document.getElementById('newUserHeaderShown').style.visibility = '';
+		document.getElementById('landingArea').classList.add('register');
 	}
 	
 	function revealResetForm() {
@@ -373,6 +380,8 @@ define(['domReady'], function(domReady) {
 		document.getElementById('orionLogin').style.visibility = '';
 		document.getElementById('orionRegister').style.visibility = '';
 		document.getElementById('newUserSignup').style.visibility = 'hidden';
+		document.getElementById('landingArea').classList.remove('register');
+
 	}
 
 	function formatForNoUserCreation() {

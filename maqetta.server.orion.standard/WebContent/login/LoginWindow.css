@@ -76,6 +76,10 @@
 	top: auto;
 	margin: 55px 0 0;
 }
+#landingArea.register {
+	margin: 45px 0 0;
+}
+
 #orionBody .orion-login-header, #orionBody.orion-reset-header {
 	border-bottom:none;
 }
@@ -204,6 +208,7 @@
 }
 #newUserHeaderShown {
 	left:0px;
+	height:221px;
 }
 #orionReset {
 	left:0px;
@@ -221,6 +226,9 @@
 #errorWin {
 	width:300px;
 	top:260px;
+}
+.register #errorWin {
+	top:287px;
 }
 #loginLogo, #signupLogo, #signupAfterEmailLogo, #resetLogo {
 	width:120px;

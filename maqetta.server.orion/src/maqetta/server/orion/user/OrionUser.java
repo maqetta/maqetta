@@ -38,12 +38,13 @@ import org.maqetta.server.ServerManager;
 import org.osgi.framework.Bundle;
 
 
+@SuppressWarnings("restriction")
 public class OrionUser extends User {
 
 	private WebUser webuser;
 	private WebWorkspace webWorkspace;
-	protected static final IScopeContext scope = new OrionScope();
-	protected IEclipsePreferences store;
+	protected static final IScopeContext scope = new OrionScope();	// XXX used?
+	protected IEclipsePreferences store;							// XXX used?
 	private static String DEFAULT_WORKSPACE = "MyWorkspace";
 	private static final String WORKSPACE_NODE_NAME = "Workspaces";//$NON-NLS-1$
 	
@@ -132,21 +133,23 @@ public class OrionUser extends User {
 
 	}
 	
-	public String computeMaqettaPath(String orionPath){
+	public String computeMaqettaPath(String orionPathStr, String contextStr) throws CoreException {
+		IPath orionPath = new Path(orionPathStr);
+		IPath contextPath = new Path(contextStr);
+		
+		assert contextPath.isPrefixOf(orionPath) : "`orionPath` doesn't include expected servlet context";
 
-		String split[] = orionPath.split("/");
-		String projectId = split[2];
+		// remove servlet context, if any
+		orionPath = orionPath.removeFirstSegments(orionPath.matchingFirstSegments(contextPath));
+
+		String projectId = orionPath.segment(1);  // [0]: "file", [1]: project id, [2] sub-folder, ...
 		WebProject proj = WebProject.fromId(projectId);
 		String path = proj.getName();
+		
 		IFileStore child = null;
-		for(int i=3;i<split.length;i++){
-			try {
-				child = proj.getProjectStore().getChild(split[i]);
-				path+= "/" + child.getName();
-			} catch (CoreException e) {
-				
-				System.err.println("Error reconstituting orion path: " + orionPath);
-			}
+		for (int i = 2; i < orionPath.segmentCount(); i++) {
+			child = proj.getProjectStore().getChild(orionPath.segment(i));
+			path += "/" + child.getName();
 		}
 		return path;
 	}

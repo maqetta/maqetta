@@ -10,6 +10,7 @@ define([
 	"dojo/dom",
 	"dojo/dom-class",
 	"dijit/registry",
+	"davinci/Runtime",
 	"davinci/ve/input/SmartInput",
 	"davinci/ve/widget",
 	"davinci/ve/commands/ModifyCommand",
@@ -38,6 +39,7 @@ define([
 	dom,
 	domClass,
 	registry,
+	Runtime,
 	SmartInput,
 	Widget,
 	ModifyCommand,
@@ -212,7 +214,7 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 	},
 	
 	_getEditor: function() {
-		return top.davinci && top.davinci.Runtime && top.davinci.Runtime.currentEditor;
+		return Runtime.currentEditor;
 	},
 	
 	_getContext: function() {
@@ -558,8 +560,8 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 				newStoreId = Widget.getUniqueObjectId("dojox.data.CsvStore", context.getDocument());
 			}
 			newDataStoreData = {
-				"type": "dojox.data.CsvStore",
-				"properties": {
+				type: "dojox.data.CsvStore",
+				properties: {
 					id: newStoreId,
 					jsId: newStoreId,
 					url: this._url,
@@ -573,8 +575,8 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 				newStoreId = Widget.getUniqueObjectId("dojo.data.ItemFileReadStore", context.getDocument());
 			}
 			newDataStoreData = {
-				"type": "dojo.data.ItemFileReadStore",
-				"properties": {
+				type: "dojo.data.ItemFileReadStore",
+				properties: {
 					id: newStoreId,
 					jsId: newStoreId,
 					url: this._url,

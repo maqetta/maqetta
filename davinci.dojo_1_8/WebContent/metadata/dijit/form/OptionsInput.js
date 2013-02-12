@@ -1,11 +1,13 @@
 define([
 	"dojo/_base/declare",
+	"davinci/Runtime",
 	"davinci/ve/input/SmartInput",
 	"davinci/ve/commands/ModifyCommand",
 	"davinci/ve/commands/RemoveCommand",
 	"davinci/ve/widget"
 ], function(
 	declare,
+	Runtime,
 	SmartInput,
 	ModifyCommand,
 	RemoveCommand,
@@ -199,7 +201,7 @@ return declare(SmartInput, {
 	},
 	
 	_getEditor: function() {
-		return top.davinci && top.davinci.Runtime && top.davinci.Runtime.currentEditor;
+		return Runtime.currentEditor;
 	},
 	
 	_getContext: function() {

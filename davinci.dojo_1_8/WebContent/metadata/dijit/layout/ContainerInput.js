@@ -1,6 +1,7 @@
 define([
     "dojo/_base/declare",
     "dojox/html/entities",
+    "davinci/Runtime",
     "davinci/ve/input/SmartInput",
     "davinci/ve/metadata",
     "davinci/ve/widget",
@@ -11,6 +12,7 @@ define([
 ], function(
 	declare,
 	Entities,
+	Runtime,
 	SmartInput,
 	Metadata,
 	Widget,
@@ -139,7 +141,7 @@ return declare(SmartInput, {
 	},
 	
 	_getEditor: function() {
-		return top.davinci && top.davinci.Runtime && top.davinci.Runtime.currentEditor;
+		return Runtime.currentEditor;
 	},
 	
 	_getContext: function() {

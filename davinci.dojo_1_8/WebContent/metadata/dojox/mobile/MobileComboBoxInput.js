@@ -3,7 +3,7 @@ define([
 	"dojo/_base/lang",
 	"dijit/registry",
 	"dojox/html/entities",
-	"davini/Runtime",
+	"davinci/Runtime",
 	"davinci/ve/input/SmartInput",
 	"davinci/ve/widget",
 	"davinci/commands/OrderedCompoundCommand",

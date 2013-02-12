@@ -133,19 +133,22 @@ public class OrionUser extends User {
 
 	}
 	
-	public String computeMaqettaPath(String orionPath, String context) throws CoreException {
-		assert orionPath.startsWith(context) : "`orionPath` doesn't include expected servlet context";
+	public String computeMaqettaPath(String orionPathStr, String contextStr) throws CoreException {
+		IPath orionPath = new Path(orionPathStr);
+		IPath contextPath = new Path(contextStr);
 		
-		orionPath = orionPath.substring(context.length()); // remove servlet context, if any
-		String split[] = orionPath.split("/");
+		assert contextPath.isPrefixOf(orionPath) : "`orionPath` doesn't include expected servlet context";
 
-		String projectId = split[2];  // [0]: empty string, [1]: "file", [2]: project id, ...
+		// remove servlet context, if any
+		orionPath = orionPath.removeFirstSegments(orionPath.matchingFirstSegments(contextPath));
+
+		String projectId = orionPath.segment(1);  // [0]: "file", [1]: project id, [2] sub-folder, ...
 		WebProject proj = WebProject.fromId(projectId);
 		String path = proj.getName();
 		
 		IFileStore child = null;
-		for (int i = 3; i < split.length; i++) {
-			child = proj.getProjectStore().getChild(split[i]);
+		for (int i = 2; i < orionPath.segmentCount(); i++) {
+			child = proj.getProjectStore().getChild(orionPath.segment(i));
 			path += "/" + child.getName();
 		}
 		return path;

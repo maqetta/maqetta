@@ -22,12 +22,12 @@ public class ConfigProject extends Command {
         String context = req.getContextPath();
 
         if (orionProject != null) {
-        	OrionUser u = (OrionUser) user;
-        	try {
-				projectName = u.computeMaqettaPath(orionProject, context);
-			} catch (CoreException e) {
-				throw new IOException(e);
-			}
+            OrionUser u = (OrionUser) user;
+            try {
+                projectName = u.computeMaqettaPath(orionProject, context);
+            } catch (CoreException e) {
+                throw new IOException(e);
+            }
         }
         
     	user.createProject(projectName);

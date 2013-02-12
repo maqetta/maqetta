@@ -1,4 +1,5 @@
-define(function() {
+define(["dijit/popup", "dijit/registry"], 
+function(popup, registry) {
 	/**
 	 * Collapses all text nodes that only contain white space characters into empty string.
 	 * Skips certain nodes where whitespace does not impact layout and would cause unnecessary processing.
@@ -32,4 +33,33 @@ define(function() {
 	} else if (window.attachEvent) {
 		window.attachEvent("onload", handler);
 	}
+	
+	// The following code defines davinci.popup which provides
+	// runtime support for showing and hiding overlay widgets
+	// such as Dialog, TooltipDialog, Tooltip and Menu.
+	var maqettaPopup = function(){};
+	maqettaPopup.prototype = {
+		// Displays the given widget (specified by ID) as a popup
+		show: function(widgetId){
+			var dijitWidget = registry.byId(widgetId);
+			if(dijitWidget){
+				popup.open({
+					popup:dijitWidget
+				});
+			}
+		},
+		// Closes the popup for the given widget
+		hide: function(widgetId){
+			var dijitWidget = registry.byId(widgetId);
+			if(dijitWidget){
+				popup.close(dijitWidget);
+			}
+		}
+	};
+
+	
+	//FIXME: remove all references to davinci global and davinci.states
+	if (typeof davinci === "undefined") { davinci = {}; }
+	davinci.popup = new maqettaPopup();
+
 });

@@ -6,7 +6,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,7 +43,7 @@ public class DavinciCommandServlet extends HttpServlet {
 		}
 	}
 
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     	try {
     		resp.setCharacterEncoding("utf-8");
 	        if (!initialized) {
@@ -77,6 +76,12 @@ public class DavinciCommandServlet extends HttpServlet {
     	} catch (RuntimeException re) {
     		log(req);
     		throw re;
+    	} catch (IOException ioe) {
+    		log(req);
+    		throw ioe;
+    	} catch (Error e) {
+    		log(req);
+    		throw e;
     	}
     }
 
@@ -93,7 +98,7 @@ public class DavinciCommandServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     	try {
 	        if (!initialized) {
 	            initialize();
@@ -119,8 +124,13 @@ public class DavinciCommandServlet extends HttpServlet {
     	} catch (RuntimeException re) {
     		log(req);
     		throw re;
+    	} catch (IOException ioe) {
+    		log(req);
+    		throw ioe;
+    	} catch (Error e) {
+    		log(req);
+    		throw e;
     	}
-
     }
 
     @Override
@@ -129,7 +139,7 @@ public class DavinciCommandServlet extends HttpServlet {
         super.service(req, resp);
     }
 
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     	try {
 	        if (!initialized) {
 	            initialize();
@@ -165,10 +175,16 @@ public class DavinciCommandServlet extends HttpServlet {
     	} catch(RuntimeException re) {
     		log(req);
     		throw re;
+    	} catch (IOException ioe) {
+    		log(req);
+    		throw ioe;
+    	} catch (Error e) {
+    		log(req);
+    		throw e;
     	}
     }
 
-    void loadCommands() {
+    private void loadCommands() {
         IExtensionRegistry registry = Activator.getActivator().getRegistry();
         if (registry != null) {
             IExtensionPoint point = registry.getExtensionPoint(IDavinciServerConstants.BUNDLE_ID, IDavinciServerConstants.EXTENSION_POINT_COMMAND);

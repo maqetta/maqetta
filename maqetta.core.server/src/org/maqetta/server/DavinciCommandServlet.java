@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,24 +23,27 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 @SuppressWarnings("serial")
 public class DavinciCommandServlet extends HttpServlet {
 
-    private HashMap<String, CommandDescriptor> commands = new HashMap<String, CommandDescriptor>();
+	static private Logger theLogger = Logger.getLogger(ServerManager.class.getName());
+
+	private HashMap<String, CommandDescriptor> commands = new HashMap<String, CommandDescriptor>();
     private boolean initialized = false;
 
     public DavinciCommandServlet() {
     }
 
-	private void log(HttpServletRequest req) {
-		System.err.println("RequestURL: " + req.getRequestURL().toString());
+	private void log(HttpServletRequest req, String method, Throwable t) {
+		theLogger.logp(Level.SEVERE, DavinciCommandServlet.class.getName(), method, "Unhandled Exception", t);
+		theLogger.log(Level.INFO, "RequestURL: " + req.getRequestURL().toString());
 		String query = req.getQueryString();
 		if (query != null) {
-			System.err.println("Query: " + query);
+			theLogger.log(Level.INFO, "Query: " + query);
 		}
 		Enumeration<String> names = req.getHeaderNames();
 		while (names.hasMoreElements()) {
 			String name = names.nextElement();
 			String header = req.getHeader(name);
 			if (header != null) {
-				System.err.println(name + ": " + header);
+				theLogger.log(Level.INFO, name + ": " + header);
 			}
 		}
 	}
@@ -74,13 +79,13 @@ public class DavinciCommandServlet extends HttpServlet {
 	            stream.write(command.getResponse().getBytes("utf-8"));
 	        }
     	} catch (RuntimeException re) {
-    		log(req);
+    		log(req, "doGet", re);
     		throw re;
     	} catch (IOException ioe) {
-    		log(req);
+    		log(req, "doGet", ioe);
     		throw ioe;
     	} catch (Error e) {
-    		log(req);
+    		log(req, "doGet", e);
     		throw e;
     	}
     }
@@ -122,21 +127,15 @@ public class DavinciCommandServlet extends HttpServlet {
 	
 	        command.handleCommand(req, resp, user);
     	} catch (RuntimeException re) {
-    		log(req);
+    		log(req, "doPut", re);
     		throw re;
     	} catch (IOException ioe) {
-    		log(req);
+    		log(req, "doPut", ioe);
     		throw ioe;
     	} catch (Error e) {
-    		log(req);
+    		log(req, "doPut", e);
     		throw e;
     	}
-    }
-
-    @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // TODO Auto-generated method stub
-        super.service(req, resp);
     }
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -173,13 +172,13 @@ public class DavinciCommandServlet extends HttpServlet {
 	            stream.write(command.getResponse().getBytes("utf-8"));
 	        }
     	} catch(RuntimeException re) {
-    		log(req);
+    		log(req, "doPost", re);
     		throw re;
     	} catch (IOException ioe) {
-    		log(req);
+    		log(req, "doPost", ioe);
     		throw ioe;
     	} catch (Error e) {
-    		log(req);
+    		log(req, "doPost", e);
     		throw e;
     	}
     }

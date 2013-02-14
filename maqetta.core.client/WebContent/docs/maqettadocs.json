@@ -81,6 +81,7 @@
 			{ 'id': '10.3', 'name': 'Exporting to Developer Tools', 'url': 'Export_to_Developer_Tools.html' }
 		] },
 		{ 'id': '2', 'name': 'Release Notes', 'url': 'releasenotes/releasenotes.html', 'children': [
+			{ 'id': '2.10', 'name': 'Release 10', 'url': 'releasenotes/release10.html' },
 			{ 'id': '2.9', 'name': 'Release 9', 'url': 'releasenotes/release9.html' },
 			{ 'id': '2.8', 'name': 'Release 8', 'url': 'releasenotes/release8.html' },
 			{ 'id': '2.7', 'name': 'Release 7', 'url': 'releasenotes/release7.html' },

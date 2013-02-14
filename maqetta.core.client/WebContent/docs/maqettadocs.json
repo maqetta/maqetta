@@ -1,100 +1,100 @@
-({
-	identifier: 'id',
-	label: 'name',
-	url: 'url',
-	items: [
-		{ id: '1', name:'About Maqetta', url: 'overview.html' },
-		{ id: '3', name:'Getting Started', url: 'install.html' },
-		{ id: '4', name:'Tutorials', url: 'tutorials/tutorials.html', children:[
-			{ id: '4.01', name:'1 - Maqetta Overview', url: 'tutorials/Maqetta_Overview.html' }, 
-			{ id: '4.02', name:'2 - Launching Maqetta', url: 'tutorials/Launching_Maqetta.html' }, 
-			{ id: '4.03', name:'3 - User Interface Overview', url: 'tutorials/User_Interface_Overview.html' }, 
-			{ id: '4.04', name:'4 - Cloud Workspace, Files, Projects and Orion Navigator', url: 'tutorials/Cloud_Workspace_Files_Projects.html' }, 
-			{ id: '4.05', name:'5 - Page Editor - Composition Types', url: 'tutorials/Page_Editor_Composition_Types.html' }, 
-			{ id: '4.06', name:'6 - Page Editor Basics (1)', url: 'tutorials/Page_Editor_Basics_1.html' }, 
-			{ id: '4.07', name:'7 - Page Editor Basics (2)', url: 'tutorials/Page_Editor_Basics_2.html' }, 
-			{ id: '4.08', name:'8 - Quick UI Sketching', url: 'tutorials/Sketching.html' }, 
-			{ id: '4.09', name:'9 - Sketching and States', url: 'tutorials/SketchingAndStates.html' }, 
-			{ id: '4.10', name:'10 - Mobile Applications', url: 'tutorials/Mobile_User_Interfaces.html' },
-			{ id: '4.11', name:'11 - Desktop Apps and States (1)', url: 'tutorials/App_States_Part_1.html' }, 
-			{ id: '4.12', name:'12 - Desktop Apps and States (2)', url: 'tutorials/App_States_Part_2.html' },
-			{ id: '4.13', name:'13 - Mobile Sketching', url: 'tutorials/Mobile_Sketching.html' },
-			{ id: '4.14', name:'14 - Mobile Theme Editor', url: 'tutorials/Mobile_Theme_Editor.html' },
-			{ id: '4.15', name:'15 - Desktop Theme Editor', url: 'tutorials/Desktop_Theme_Editor.html' },
-			{ id: '4.16', name:'16 - Review/Commenting', url: 'tutorials/Review_Commenting.html' },
-/*			{ id: '4.17', name:'17 - Exporting to Developer Tools Tutorial', url: 'tutorials/Export_to_Developer_Tools.html' },
-			{ id: '4.88', name:'BorderContainer Tutorials', url: 'tutorials/BCtutorials.html', children:[
-				{ id: '4.88.1', name:'BorderContainer Example', url: 'tutorials/BCExample.html' },
-				{ id: '4.88.2', name:'BorderContainer Basics', url: 'tutorials/BCBasics.html' },
-				{ id: '4.88.3', name:'About Gutters', url: 'tutorials/BCGutters.html' },
-				{ id: '4.88.4', name:'About Splitters', url: 'tutorials/BCSplitters.html' },
-				{ id: '4.88.5', name:'BorderContainer Panes', url: 'tutorials/BCPanes.html' },
-				{ id: '4.88.6', name:'Background Color or Image', url: 'tutorials/BCBackground.html' },
-				{ id: '4.88.7', name:'Nested BorderContainers', url: 'tutorials/BCNestedBC.html' },
-				{ id: '4.88.8', name:'Single Borders on BorderContainer', url: 'tutorials/BCSingleBorders.html' }
+{
+	'identifier': 'id',
+	'label': 'name',
+	'url': 'url',
+	'items': [
+		{ 'id': '1', 'name': 'About Maqetta', 'url': 'overview.html' },
+		{ 'id': '3', 'name': 'Getting Started', 'url': 'install.html' },
+		{ 'id': '4', 'name': 'Tutorials', 'url': 'tutorials/tutorials.html', 'children': [
+			{ 'id': '4.01', 'name': '1 - Maqetta Overview', 'url': 'tutorials/Maqetta_Overview.html' }, 
+			{ 'id': '4.02', 'name': '2 - Launching Maqetta', 'url': 'tutorials/Launching_Maqetta.html' }, 
+			{ 'id': '4.03', 'name': '3 - User Interface Overview', 'url': 'tutorials/User_Interface_Overview.html' }, 
+			{ 'id': '4.04', 'name': '4 - Cloud Workspace, Files, Projects and Orion Navigator', 'url': 'tutorials/Cloud_Workspace_Files_Projects.html' }, 
+			{ 'id': '4.05', 'name': '5 - Page Editor - Composition Types', 'url': 'tutorials/Page_Editor_Composition_Types.html' }, 
+			{ 'id': '4.06', 'name': '6 - Page Editor Basics (1)', 'url': 'tutorials/Page_Editor_Basics_1.html' }, 
+			{ 'id': '4.07', 'name': '7 - Page Editor Basics (2)', 'url': 'tutorials/Page_Editor_Basics_2.html' }, 
+			{ 'id': '4.08', 'name': '8 - Quick UI Sketching', 'url': 'tutorials/Sketching.html' }, 
+			{ 'id': '4.09', 'name': '9 - Sketching and States', 'url': 'tutorials/SketchingAndStates.html' }, 
+			{ 'id': '4.10', 'name': '10 - Mobile Applications', 'url': 'tutorials/Mobile_User_Interfaces.html' },
+			{ 'id': '4.11', 'name': '11 - Desktop Apps and States (1)', 'url': 'tutorials/App_States_Part_1.html' }, 
+			{ 'id': '4.12', 'name': '12 - Desktop Apps and States (2)', 'url': 'tutorials/App_States_Part_2.html' },
+			{ 'id': '4.13', 'name': '13 - Mobile Sketching', 'url': 'tutorials/Mobile_Sketching.html' },
+			{ 'id': '4.14', 'name': '14 - Mobile Theme Editor', 'url': 'tutorials/Mobile_Theme_Editor.html' },
+			{ 'id': '4.15', 'name': '15 - Desktop Theme Editor', 'url': 'tutorials/Desktop_Theme_Editor.html' },
+			{ 'id': '4.16', 'name': '16 - Review/Commenting', 'url': 'tutorials/Review_Commenting.html' },
+/*			{ 'id': '4.17', 'name': '17 - Exporting to Developer Tools Tutorial', 'url': 'tutorials/Export_to_Developer_Tools.html' },
+			{ 'id': '4.88', 'name': 'BorderContainer Tutorials', 'url': 'tutorials/BCtutorials.html', 'children': [
+				{ 'id': '4.88.1', 'name': 'BorderContainer Example', 'url': 'tutorials/BCExample.html' },
+				{ 'id': '4.88.2', 'name': 'BorderContainer Basics', 'url': 'tutorials/BCBasics.html' },
+				{ 'id': '4.88.3', 'name': 'About Gutters', 'url': 'tutorials/BCGutters.html' },
+				{ 'id': '4.88.4', 'name': 'About Splitters', 'url': 'tutorials/BCSplitters.html' },
+				{ 'id': '4.88.5', 'name': 'BorderContainer Panes', 'url': 'tutorials/BCPanes.html' },
+				{ 'id': '4.88.6', 'name': 'Background Color or Image', 'url': 'tutorials/BCBackground.html' },
+				{ 'id': '4.88.7', 'name': 'Nested BorderContainers', 'url': 'tutorials/BCNestedBC.html' },
+				{ 'id': '4.88.8', 'name': 'Single Borders on BorderContainer', 'url': 'tutorials/BCSingleBorders.html' }
 			] },*/
 		] },
-/*	    { id: '5', name:'Using Maqetta', url: 'userguide.html', children:[
-			{ id: '5.1', name:'Maqetta Workspace', url: 'workspace.html', children:[
-				{ id: '5.1.1', name:'Signing in', url: 'wsLogin.html' }, 
-				{ id: '5.1.2', name:'Maqetta Menu Bar', url: 'wsMenubar.html' }, 
-				{ id: '5.1.3', name:'Page Editor Canvas', url: 'wsPageEditorCanvas.html' },
-				{ id: '5.1.4', name:'The Palettes', url: 'wsPalettes.html' }
+/*	    { 'id': '5', 'name': 'Using Maqetta', 'url': 'userguide.html', 'children': [
+			{ 'id': '5.1', 'name': 'Maqetta Workspace', 'url': 'workspace.html', 'children': [
+				{ 'id': '5.1.1', 'name': 'Signing in', 'url': 'wsLogin.html' }, 
+				{ 'id': '5.1.2', 'name': 'Maqetta Menu Bar', 'url': 'wsMenubar.html' }, 
+				{ 'id': '5.1.3', 'name': 'Page Editor Canvas', 'url': 'wsPageEditorCanvas.html' },
+				{ 'id': '5.1.4', 'name': 'The Palettes', 'url': 'wsPalettes.html' }
 			] },
-			{ id: '5.2', name:'Page Editor', url: 'pageEditor.html', children:[
-				{ id: '5.2.1', name:'Page Editor Toolbar', url: 'peToolbar.html' }, 
-				{ id: '5.2.2', name:'Managing Your Files', url: 'peManageFiles.html' }, 
-				{ id: '5.2.3', name:'Creating Content', url: 'peCreateContent.html' }, 
-				{ id: '5.2.4', name:'Widget Data Entry Popup', url: 'peInlineEditing.html' }, 
-				{ id: '5.2.6', name:'Properties Palette', url: 'pePropertiesPalette.html' }, 
-				{ id: '5.2.5', name:'Creating Style Rules with app.css', url: 'CreatingStyleRulesWithAppCss.html' }, 
-				{ id: '5.2.7', name:'Outline Palette', url: 'peOutlinePalette.html' }, 
-				{ id: '5.2.8', name:'Scenes Palette', url: 'peScenesPalette.html' }, 
-				{ id: '5.2.9', name:'Switching Themes', url: 'peSwitchThemes.html' }, 
-				{ id: '5.2.10', name:'Source Editing', url: 'peSourceEditing.html' },
-				{ id: '5.2.11', name:'About the User HTML File', url: 'peUserHTML.html' },
-				{ id: '5.2.12', name:'Keyboard Shortcuts', url: 'peKeyboardShortcuts.html' }
+			{ 'id': '5.2', 'name': 'Page Editor', 'url': 'pageEditor.html', 'children': [
+				{ 'id': '5.2.1', 'name': 'Page Editor Toolbar', 'url': 'peToolbar.html' }, 
+				{ 'id': '5.2.2', 'name': 'Managing Your Files', 'url': 'peManageFiles.html' }, 
+				{ 'id': '5.2.3', 'name': 'Creating Content', 'url': 'peCreateContent.html' }, 
+				{ 'id': '5.2.4', 'name': 'Widget Data Entry Popup', 'url': 'peInlineEditing.html' }, 
+				{ 'id': '5.2.6', 'name': 'Properties Palette', 'url': 'pePropertiesPalette.html' }, 
+				{ 'id': '5.2.5', 'name': 'Creating Style Rules with app.css', 'url': 'CreatingStyleRulesWithAppCss.html' }, 
+				{ 'id': '5.2.7', 'name': 'Outline Palette', 'url': 'peOutlinePalette.html' }, 
+				{ 'id': '5.2.8', 'name': 'Scenes Palette', 'url': 'peScenesPalette.html' }, 
+				{ 'id': '5.2.9', 'name': 'Switching Themes', 'url': 'peSwitchThemes.html' }, 
+				{ 'id': '5.2.10', 'name': 'Source Editing', 'url': 'peSourceEditing.html' },
+				{ 'id': '5.2.11', 'name': 'About the User HTML File', 'url': 'peUserHTML.html' },
+				{ 'id': '5.2.12', 'name': 'Keyboard Shortcuts', 'url': 'peKeyboardShortcuts.html' }
 			] },
-			{ id: '5.3', name:'Application States', url: 'applicationStates.html', children:[
-				{ id: '5.3.1', name:'About Application States', url: 'applicationStatesAbout.html' }
+			{ 'id': '5.3', 'name': 'Application States', 'url': 'applicationStates.html', 'children': [
+				{ 'id': '5.3.1', 'name': 'About Application States', 'url': 'applicationStatesAbout.html' }
 			] },
-			{ id: '5.4', name:'Review and Commenting', url: 'reviewCommenting.html', children:[
-				{ id: '5.4.1', name:'About Review and Commenting', url: 'reviewCommentingAbout.html' }
+			{ 'id': '5.4', 'name': 'Review and Commenting', 'url': 'reviewCommenting.html', 'children': [
+				{ 'id': '5.4.1', 'name': 'About Review and Commenting', 'url': 'reviewCommentingAbout.html' }
 			] }
 		] },*/
-		{ id: '9', name:'Cheat sheets', url: 'cheatsheets/cheatsheets.html', children:[
-			{ id: '9.1', name:'Welcome Page', url: 'cheatsheets/welcomepage.html' },
-			{ id: '9.2', name:'Page Editor', url: 'cheatsheets/pageeditor.html' },
-			{ id: '9.3', name:'Mobile Applications', url: 'cheatsheets/mobileapps.html' },
-			{ id: '9.4', name:'Desktop Applications', url: 'cheatsheets/desktopapps.html' },
-			{ id: '9.5', name:'Sketching', url: 'cheatsheets/sketching.html' },
-			{ id: '9.6', name:'Source Editing', url: 'cheatsheets/sourceediting.html' },
-			{ id: '9.7', name:'Mobile Theme Editor', url: 'cheatsheets/mobilethemeeditor.html' },
-			{ id: '9.8', name:'Desktop Theme Editor', url: 'cheatsheets/desktopthemeeditor.html' },
-			{ id: '9.9', name:'Review/Commenting', url: 'cheatsheets/reviewcommenting.html' }/*,
-			{ id: '9.10', name:'Application States', url: 'cheatsheets/appstates.html' },
-			{ id: '9.11', name:'Download and Deploy', url: 'cheatsheets/downloaddeploy.html' }*/
+		{ 'id': '9', 'name': 'Cheat sheets', 'url': 'cheatsheets/cheatsheets.html', 'children': [
+			{ 'id': '9.1', 'name': 'Welcome Page', 'url': 'cheatsheets/welcomepage.html' },
+			{ 'id': '9.2', 'name': 'Page Editor', 'url': 'cheatsheets/pageeditor.html' },
+			{ 'id': '9.3', 'name': 'Mobile Applications', 'url': 'cheatsheets/mobileapps.html' },
+			{ 'id': '9.4', 'name': 'Desktop Applications', 'url': 'cheatsheets/desktopapps.html' },
+			{ 'id': '9.5', 'name': 'Sketching', 'url': 'cheatsheets/sketching.html' },
+			{ 'id': '9.6', 'name': 'Source Editing', 'url': 'cheatsheets/sourceediting.html' },
+			{ 'id': '9.7', 'name': 'Mobile Theme Editor', 'url': 'cheatsheets/mobilethemeeditor.html' },
+			{ 'id': '9.8', 'name': 'Desktop Theme Editor', 'url': 'cheatsheets/desktopthemeeditor.html' },
+			{ 'id': '9.9', 'name': 'Review/Commenting', 'url': 'cheatsheets/reviewcommenting.html' }/*,
+			{ 'id': '9.10', 'name': 'Application States', 'url': 'cheatsheets/appstates.html' },
+			{ 'id': '9.11', 'name': 'Download and Deploy', 'url': 'cheatsheets/downloaddeploy.html' }*/
 		] },
-	    { id: '10', name:'Advanced topics', url: 'advancedtopics.html', children:[
-			{ id: '10.1', name:'Keyboard Shortcuts', url: 'peKeyboardShortcuts.html' },
-			{ id: '10.2', name:'Creating Style Rules with app.css', url: 'CreatingStyleRulesWithAppCss.html' }, 
-			{ id: '10.3', name:'Exporting to Developer Tools', url: 'Export_to_Developer_Tools.html' }
+	    { 'id': '10', 'name': 'Advanced topics', 'url': 'advancedtopics.html', 'children': [
+			{ 'id': '10.1', 'name': 'Keyboard Shortcuts', 'url': 'peKeyboardShortcuts.html' },
+			{ 'id': '10.2', 'name': 'Creating Style Rules with app.css', 'url': 'CreatingStyleRulesWithAppCss.html' }, 
+			{ 'id': '10.3', 'name': 'Exporting to Developer Tools', 'url': 'Export_to_Developer_Tools.html' }
 		] },
-		{ id: '2', name:'Release Notes', url: 'releasenotes/releasenotes.html', children:[
-			{ id: '2.9', name:'Release 9', url: 'releasenotes/release9.html' },
-			{ id: '2.8', name:'Release 8', url: 'releasenotes/release8.html' },
-			{ id: '2.7', name:'Release 7', url: 'releasenotes/release7.html' },
-			{ id: '2.6', name:'Preview 6', url: 'releasenotes/preview6.html' },
-			{ id: '2.5', name:'Preview 5', url: 'releasenotes/preview5.html' },
-			{ id: '2.4', name:'Preview 4', url: 'releasenotes/preview4.html' },
-			{ id: '2.3', name:'Preview 3', url: 'releasenotes/preview3.html' },
-			{ id: '2.2', name:'Preview 2', url: 'releasenotes/preview2.html' },
-			{ id: '2.1', name:'Preview 1', url: 'releasenotes/preview1.html' }
+		{ 'id': '2', 'name': 'Release Notes', 'url': 'releasenotes/releasenotes.html', 'children': [
+			{ 'id': '2.9', 'name': 'Release 9', 'url': 'releasenotes/release9.html' },
+			{ 'id': '2.8', 'name': 'Release 8', 'url': 'releasenotes/release8.html' },
+			{ 'id': '2.7', 'name': 'Release 7', 'url': 'releasenotes/release7.html' },
+			{ 'id': '2.6', 'name': 'Preview 6', 'url': 'releasenotes/preview6.html' },
+			{ 'id': '2.5', 'name': 'Preview 5', 'url': 'releasenotes/preview5.html' },
+			{ 'id': '2.4', 'name': 'Preview 4', 'url': 'releasenotes/preview4.html' },
+			{ 'id': '2.3', 'name': 'Preview 3', 'url': 'releasenotes/preview3.html' },
+			{ 'id': '2.2', 'name': 'Preview 2', 'url': 'releasenotes/preview2.html' },
+			{ 'id': '2.1', 'name': 'Preview 1', 'url': 'releasenotes/preview1.html' }
 		] },
-	    { id: '7', name:'Programming Maqetta', url: 'techdocs/techguide.html', children:[
-			{ id: '7.1', name:'States API', url: 'techdocs/states.html' },		
-			{ id: '7.2', name:'Theme Editor', url: 'techdocs/themeEditor.html' }	
+	    { 'id': '7', 'name': 'Programming Maqetta', 'url': 'techdocs/techguide.html', 'children': [
+			{ 'id': '7.1', 'name': 'States API', 'url': 'techdocs/states.html' },		
+			{ 'id': '7.2', 'name': 'Theme Editor', 'url': 'techdocs/themeEditor.html' }	
 		] }
 		
 	]
-})
+}

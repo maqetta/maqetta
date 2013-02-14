@@ -4,17 +4,19 @@
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="../maqettadocs.css" />
 	<link rel="stylesheet" href="../../dijit/themes/claro/claro.css">
-    <script src="../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
-	<script>require([
-		"dojo/parser",
-		"dijit/TooltipDialog",
-		"dijit/form/DropDownButton"
-	 ]);</script>
-	 <style type='text/css'>
+    <script src="../../dojo/dojo.js" data-dojo-config="async:true"></script>
+	<script>
+	require(["dojo/parser", "dojo/ready"], function(parser, ready){
+	  ready(function(){
+	    parser.parse();
+	  });
+	});
+	</script>
+	<style type='text/css'>
 	 	:focus {
 	 		outline:none;
 	 	}
-	 </style>
+	</style>
 </head>
 <body class="claro maqettadocs cheatsheet_iframe_body">
 	<div id='cheatsheetcontent'>

@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.mail.Address;
 import javax.mail.Flags;
@@ -34,6 +36,8 @@ import org.maqetta.server.ServerManager;
  * 
  */
 public class SmtpPop3Mailer {
+
+	static final private Logger theLogger = Logger.getLogger(SmtpPop3Mailer.class.getName());
 
 	public static final String LS = System.getProperty("line.separator");
 
@@ -178,7 +182,7 @@ public class SmtpPop3Mailer {
 	 */
 	public void sendMessage(Message msg) throws SendFailedException, MessagingException {
 		Transport trans = smtpAccountUrl == null ? mailSession.getTransport("stmp") : mailSession
-				.getTransport(smtpAccountUrl);
+				.getTransport(smtpAccountUrl);//FIXME: stmp or smtp?
 		trans.connect();
 		try {
 			trans.sendMessage(msg, msg.getAllRecipients());
@@ -194,14 +198,16 @@ public class SmtpPop3Mailer {
 			} catch (IOException ioe) {
 				content = "<exception>";
 			}
-			System.err.println("Exception when calling SMTPTransport.sendMessage()" +
+			StringBuffer sb = new StringBuffer();
+			sb.append("NullPointerException when calling SMTPTransport.sendMessage()" +
 							   "\n\t(Message) msg => ");
-			System.err.println("\n\t\t from = " + (fromSize > 0 ? from[0] : "null") + " (size: " + fromSize + ")");
-			System.err.println("\n\t\t to = " + (recSize > 0 ? rec[0] : "null") + " (size: " + recSize + ")");
-			System.err.println("\n\t\t sentDate = " + msg.getSentDate());
-			System.err.println("\n\t\t subject = " + msg.getSubject());
-			System.err.println("\n\t\t content = " + content);
-			System.err.println("\n\t(Address[]) recipients = " + (recSize > 0 ? rec[0] : "null") + " (size: " + recSize + ")");
+			sb.append("\n\t\t from = " + (fromSize > 0 ? from[0] : "null") + " (size: " + fromSize + ")");
+			sb.append("\n\t\t to = " + (recSize > 0 ? rec[0] : "null") + " (size: " + recSize + ")");
+			sb.append("\n\t\t sentDate = " + msg.getSentDate());
+			sb.append("\n\t\t subject = " + msg.getSubject());
+			sb.append("\n\t\t content = " + content);
+			sb.append("\n\t(Address[]) recipients = " + (recSize > 0 ? rec[0] : "null") + " (size: " + recSize + ")");
+			theLogger.logp(Level.WARNING,  SmtpPop3Mailer.class.getName(), "sendMessage", sb.toString(), e);
 			throw e;
 		// end LOGGING
 		} finally {

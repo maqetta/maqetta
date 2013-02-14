@@ -89,13 +89,7 @@ public class MaqettaProjectDecorator implements IWebResourceDecorator {
 
 	}
 	private boolean checkMaqettaProject(JSONObject projectObject) throws JSONException, CoreException{
-		WebProject project = null;
-		try{
-		project = WebProject.fromId(projectObject.getString("Id"));
-		}catch(Exception ex){
-			System.out.println("I am error:" + ex);
-			
-		}
+		WebProject project = WebProject.fromId(projectObject.getString("Id"));
 		IFileStore settings;
 		settings = project.getProjectStore().getChild(IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
 		if (settings == null)

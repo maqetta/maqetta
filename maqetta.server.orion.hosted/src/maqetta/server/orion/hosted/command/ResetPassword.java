@@ -34,7 +34,6 @@ public class ResetPassword extends Command {
 			}
 		    public void run() {
 		    	ServerManager.getServerManger().sendEmail(this.from, emailAdd, "Maqetta.org user activation", message);
-		    	System.out.println("---------------\nSending email:\n"+message );
 		    }
 		}
 		

@@ -2,6 +2,8 @@ package maqetta.server.orion.user;
 
 import java.util.HashMap;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import maqetta.core.server.user.manager.PersonManagerImpl;
 
@@ -14,13 +16,15 @@ import org.eclipse.orion.server.useradmin.UserServiceHelper;
 @SuppressWarnings("restriction")
 public class OrionPersonManager extends PersonManagerImpl {
 
+	static final private Logger theLogger = Logger.getLogger(OrionPersonManager.class.getName());
+
 	public OrionPersonManager() {
 	}
 
 	static class OrionPersonImpl implements IPerson {
-		String email;
-		String name;
-		String password;
+		private String email;
+		private String name;
+		private String password;
 
 		public OrionPersonImpl(String userName, String password, String email) {
 			this.name = userName;
@@ -36,8 +40,12 @@ public class OrionPersonManager extends PersonManagerImpl {
 			if (user != null) {
 				this.email = user.getLogin();
 			} else {
-				System.err.println("ERROR: OrionPersonImpl.getEmail: user '" + this.getUserID()
-						+ "' could not be found in IOrionCredentialsService.");
+				theLogger.logp(
+					Level.SEVERE,
+					OrionPersonManager.class.getName(),
+					"getEmail",
+					"User '" + this.getUserID()
+					+ "' could not be found in IOrionCredentialsService.");
 			}
 			return this.email;
 		}
@@ -52,7 +60,11 @@ public class OrionPersonManager extends PersonManagerImpl {
 			if (user != null) {
 				displayName = user.getName();
 			} else {
-				System.err.println("ERROR: OrionPersonImpl.getDisplayName: user '" + this.getUserID()
+				theLogger.logp(
+					Level.SEVERE,
+					OrionPersonManager.class.getName(),
+					"getDisplayName",
+					"User '" + this.getUserID()
 						+ "' could not be found in IOrionCredentialsService.");
 			}
 			if (displayName.length() < 1){
@@ -75,7 +87,11 @@ public class OrionPersonManager extends PersonManagerImpl {
 		persons.put(userName, person);
 
 		// Trace out the addition
-		System.out.println("INFO: OrionPersonManager.addPerson: user added with following info: userName = "
+		theLogger.logp(
+				Level.INFO,
+				OrionPersonManager.class.getName(),
+				"addPerson",
+				"User added with following info: userName = "
 						+ userName + ", email = " + email);
 
 		return person;

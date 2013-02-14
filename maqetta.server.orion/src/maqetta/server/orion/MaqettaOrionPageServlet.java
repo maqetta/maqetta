@@ -1,6 +1,7 @@
 package maqetta.server.orion;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +13,10 @@ import org.davinci.server.user.IUser;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ServerManager;
 
+@SuppressWarnings("serial")
 public class MaqettaOrionPageServlet extends DavinciPageServlet {
+
+	static final private Logger theLogger = Logger.getLogger(MaqettaOrionPageServlet.class.getName());
 
 	public String getPathInfo(HttpServletRequest req){
 		String pathInfo = req.getPathInfo();
@@ -42,10 +46,8 @@ public class MaqettaOrionPageServlet extends DavinciPageServlet {
         	resp.getOutputStream().close();
         	return;
         }
-        
-        if (ServerManager.DEBUG_IO_TO_CONSOLE) {
-            System.out.println("request: " + pathInfo + ", logged in=" + (user != null));
-        }
+
+        theLogger.info("request: " + pathInfo + ", logged in=" + (user != null));
 
         if (pathInfo!=null && pathInfo.endsWith("/welcome")) {
             /* write the welcome page (may come from extension point) */

@@ -4,16 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import maqetta.core.server.util.Resource;
-
 import org.davinci.server.user.IUser;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.maqetta.server.Command;
@@ -21,7 +18,9 @@ import org.maqetta.server.IVResource;
 
 public class GetThemes extends Command {
 
-    @Override
+	static final private Logger theLogger = Logger.getLogger(GetThemes.class.getName());
+
+	@Override
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
     	// SECURITY, VALIDATION
     	//   'path': XXX not validated
@@ -54,17 +53,10 @@ public class GetThemes extends Command {
         		delem = ", ";
     		}
     		catch(JSONException ex) {
-    			System.err.println("maqetta.core.server.command.GetThemes "+f.getPath() + " not valid json");
-    		}
-        	catch (IOException e) {
-        		System.err.println("maqetta.core.server.command.GetThemes "+f.getPath() + " Error reading file");
+				theLogger.logp(Level.SEVERE, GetThemes.class.getName(), "handleCommand", f.getPath() + " not valid json", ex);
     		} finally {
-    			try {
-    				if (in != null)
-    					in.close();
-    			} catch (IOException ex) {
-    				System.err.println("maqetta.core.server.command.GetThemes "+f.getPath() + " Error closing");
-    			}
+				if (in != null)
+					in.close();
     		}
         }
         ret = ret + "]";

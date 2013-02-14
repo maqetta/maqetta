@@ -27,8 +27,6 @@ import org.davinci.server.user.IUserManager;
 import org.maqetta.server.Command;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ServerManager;
-import org.maqetta.server.mail.SimpleMessage;
-import org.maqetta.server.mail.SmtpPop3Mailer;
 
 public class AddComment extends Command {
 
@@ -87,22 +85,11 @@ public class AddComment extends Command {
 		if (to != null && !to.trim().equals("")) {
 			String htmlContent = getHtmlContent(reviewer, comment, req.getRequestURL().toString());
 			String notifId = Utils.getCommonNotificationId(req);
-			SimpleMessage email = new SimpleMessage(notifId,
-					designer.getPerson().getEmail(), null, null, Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT_NOTIFICATION_SUBJECT),
+			ServerManager.getServerManger().sendEmail(
+					notifId,
+					designer.getPerson().getEmail(),
+					Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT_NOTIFICATION_SUBJECT),
 					htmlContent);
-//			SmtpPop3Mailer.send(email);
-			try {
-				SmtpPop3Mailer mailer = SmtpPop3Mailer.getDefault();
-				if(mailer != null){
-					mailer.sendMessage(email);
-				}else{
-					this.responseString = "Failed to send mail to users. "+"Mail server is not configured. Mail notification is cancelled.";
-					System.out.println("Mail server is not configured. Mail notification is cancelled.");
-				}
-			} catch (Exception e) {
-				this.responseString = "Failed to send mail to users. "+e.getMessage();
-				e.printStackTrace();
-			}
 		}
 	}
 

@@ -35,7 +35,7 @@ import org.maqetta.server.mail.SmtpPop3Mailer;
 public class ServerManager implements IServerManager {
 
 	static private ServerManager  theServerManager;
-	static private Logger theLogger = Logger.getLogger(ServerManager.class.getName());
+	static final private Logger theLogger = Logger.getLogger(ServerManager.class.getName());
 
 	private IUserManager           userManager;
 
@@ -104,11 +104,10 @@ public class ServerManager implements IServerManager {
 
 			//Read File Line By Line
 			String strLine;
+			theLogger.log(Level.CONFIG, "Reading Config File: " + configFile);
 			while ((strLine = br.readLine()) != null) {
-				// Print the content on the console
-				if (ServerManager.DEBUG_IO_TO_CONSOLE) {
-					System.out.println (strLine);
-				}
+				theLogger.log(Level.CONFIG, strLine);
+
 				strLine = strLine.trim(); // remove leading trailing white space
 				String delims = "[=]+";
 				String[] tokens = strLine.split(delims, 2); // splits the string at the first '='
@@ -168,9 +167,7 @@ public class ServerManager implements IServerManager {
 		if (property == null) {
 			property = System.getProperty(propertyName);
 		}
-		if (ServerManager.DEBUG_IO_TO_CONSOLE) {
-			theLogger.log(Level.CONFIG, "servlet parm '" + propertyName + "' is : " + property);
-		}
+		theLogger.log(Level.CONFIG, "servlet parm '" + propertyName + "' is : " + property);
 		return property;
 	}
 
@@ -341,6 +338,8 @@ public class ServerManager implements IServerManager {
 			}
 
 			mailer.sendMessage(email);
+			theLogger.log(Level.INFO, "Sent mail from: "+from+" to: "+to+ "subject: "+subject);
+			theLogger.log(Level.FINEST, "E-mail contents sent: " + content);
 		} catch (SendFailedException sfe) {
 			e = sfe;
 		} catch (MessagingException me) {

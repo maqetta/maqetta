@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -37,6 +38,7 @@ import org.maqetta.server.VLibraryResource;
 
 public class Download extends Command {
 
+	static final private Logger theLogger = Logger.getLogger(Download.class.getName());
 	
 	private Vector<String> zippedEntries;
 	private URL buildURL = null;
@@ -133,7 +135,7 @@ public class Download extends Command {
                         baos.write(buffer, 0, size);
                     }        				
         			String content = baos.toString();
-        			System.out.println("build status: " + content);
+        			theLogger.finest("build status: " + content);
         			Map json = (Map)JSONReader.read(content);
         			result = (String)json.get("result");
     			} finally {
@@ -142,7 +144,7 @@ public class Download extends Command {
     			Thread.sleep(1000);
     		}
 
-    		System.out.println("build result: " + result);
+    		theLogger.finest("build result: " + result);
     		buildURL = new URL(result);
         } catch (InterruptedException ie) {
         	throw new IOException("Thread interrupted.  Did not obtain build result.");
@@ -157,16 +159,16 @@ public class Download extends Command {
         Map<String,Object> result = null;
         String userID = user.getUserID();
 
-        System.out.println("analyzeWorkspace: number of files: " + files.length);
+        theLogger.finest("analyzeWorkspace: number of files: " + files.length);
 		for (int i = 0; i < files.length; i++) {
         	if (files[i].isVirtual()) {
-        		System.out.println("isVirtual name="+files[i].getPath());
+        		theLogger.finest("isVirtual name="+files[i].getPath());
         		continue;
         	}
 			method = new PostMethod(buildBase + "/api/dependencies");
     		try {
 	            String url = new URL(new URL(requestURL), "/maqetta/user/" + userID + "/ws/workspace/" + files[i].getPath()).toExternalForm();
-	            System.out.println("build.dojotoolkit.org: Analyse url="+url);
+	            theLogger.finest("build.dojotoolkit.org: Analyse url="+url);
 	            Part[] parts = {
 	            	new StringPart("value", url, "utf-8"),
 	            	new StringPart("type", "URL")
@@ -185,7 +187,7 @@ public class Download extends Command {
 	            }
 
 	            String content = body.substring(start + 10, end);
-	            System.out.println("build.dojotoolkit.org: Analyse result="+ content);
+	            theLogger.finest("build.dojotoolkit.org: Analyse result="+ content);
 	            Map<String,Object> dependencies = (Map)JSONReader.read(content);
 	            if (result == null) {
 		            result = dependencies;           	
@@ -197,7 +199,7 @@ public class Download extends Command {
 	                	String additionalModule = additionalModules.get(j);
 	                	if (!requiredDojoModules.contains(additionalModule)) {
 	                		requiredDojoModules.add(additionalModule);
-	                		System.out.println("add "+additionalModule);
+	                		theLogger.finest("add "+additionalModule);
 	                	}
 	                }
 	            }
@@ -241,12 +243,12 @@ public class Download extends Command {
 
         HttpClient client = new HttpClient();
         PostMethod method = new PostMethod(buildBase + "/api/build");
-        System.out.println("/api/build: " + content);
+        theLogger.finest("/api/build: " + content);
         try {
         	method.setRequestEntity(new StringRequestEntity(content, "application/json", "utf-8"));
             int statusCode = client.executeMethod(method);
             String json = method.getResponseBodyAsString();
-            System.out.println("/api/build response: " + json);
+            theLogger.finest("/api/build response: " + json);
         	if (statusCode != HttpStatus.SC_ACCEPTED && statusCode != HttpStatus.SC_OK) {
         		throw new IOException(buildBase + "/api/build failed with status: " + statusCode + "\n" + json);
         	}

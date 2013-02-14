@@ -11,6 +11,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -34,6 +36,8 @@ import org.maqetta.server.Validator;
 import org.osgi.framework.Bundle;
 
 public class DavinciPageServlet extends HttpServlet {
+
+	static final private Logger theLogger = Logger.getLogger(DavinciPageServlet.class.getName());
 
 	private static final long serialVersionUID = 1L;
 	private static final String LAST_MODIFIED = "Last-Modified"; //$NON-NLS-1$
@@ -60,17 +64,17 @@ public class DavinciPageServlet extends HttpServlet {
 	}
 
 	private void log(HttpServletRequest req) {
-		System.err.println("RequestURL: " + req.getRequestURL().toString());
+		theLogger.info("RequestURL: " + req.getRequestURL().toString());
 		String query = req.getQueryString();
 		if (query != null) {
-			System.err.println("Query: " + query);
+			theLogger.info("Query: " + query);
 		}
 		Enumeration<String> names = req.getHeaderNames();
 		while (names.hasMoreElements()) {
 			String name = names.nextElement();
 			String header = req.getHeader(name);
 			if (header != null) {
-				System.err.println(name + ": " + header);
+				theLogger.info(name + ": " + header);
 			}
 		}
 	}
@@ -92,7 +96,7 @@ public class DavinciPageServlet extends HttpServlet {
 			}
 			String path = getPathInfo(req);
 			if (path == null) {
-				System.err.println("DavinciPageServlet:doPut getPathInfo returned Null for user: " + user.getUserID());
+				theLogger.warning("DavinciPageServlet:doPut getPathInfo returned Null for user: " + user.getUserID());
 				resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 				return;
 			}
@@ -102,7 +106,7 @@ public class DavinciPageServlet extends HttpServlet {
 			}
 			IVResource file = user.getResource(path);
 			if (file == null) {
-				System.err.println("DavinciPageServlet:doPut user.getResource("+path+") returned Null for user: " + user.getUserID());
+				theLogger.warning("DavinciPageServlet:doPut user.getResource("+path+") returned Null for user: " + user.getUserID());
 				resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 				return;
 			}
@@ -147,10 +151,8 @@ public class DavinciPageServlet extends HttpServlet {
 	
 			IUser user = ServerManager.getServerManger().getUserManager().getUser(req);
 			String pathInfo = getPathInfo(req);
-			if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
-				System.out.println("Page Servlet request: " + pathInfo + ", logged in=" + (user != null));
-			}
-			
+			theLogger.info("Page Servlet request: " + pathInfo + ", logged in=" + (user != null));
+
 			if ( pathInfo == null ) {
 				handleReview(req, resp);
 				resp.sendRedirect("maqetta/");
@@ -218,14 +220,10 @@ public class DavinciPageServlet extends HttpServlet {
 			if (validDesigner) {
 				returnVal = Validator.isValidISOTimeStamp(reviewVersion);
 				if (!returnVal) {
-					if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
-						System.err.println("validateReviewParms: Poorly formatted reviewVersion = " + reviewVersion);
-					}
+					theLogger.warning("validateReviewParms: Poorly formatted reviewVersion = " + reviewVersion);
 				}
 			} else {
-				if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
-					System.err.println("validateReviewParms: Invalid review designer name = " + designerName);
-				}
+				theLogger.warning("validateReviewParms: Invalid review designer name = " + designerName);
 				returnVal = false;
 			}
 		}
@@ -299,9 +297,7 @@ public class DavinciPageServlet extends HttpServlet {
 		path = path.removeFirstSegments(1);
 		String userName = path.segment(0);
 		if ( path.segmentCount() < 4 || !path.segment(1).equals("ws") || !path.segment(2).equals("workspace") ) {
-			if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
-				System.out.println("incorrectly formed workspace url");
-			}
+			theLogger.warning("incorrectly formed workspace path: " + path);
 			resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
 			return;
 		}
@@ -324,9 +320,7 @@ public class DavinciPageServlet extends HttpServlet {
 		if ( user == null ) {
 			user = ServerManager.getServerManger().getUserManager().getUser(userName);
 			if ( user == null ) {
-				if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
-					System.out.println("user not found: " + userName);
-				}
+				theLogger.warning("user not found: " + userName);
 				resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 				return;
 			}
@@ -339,9 +333,7 @@ public class DavinciPageServlet extends HttpServlet {
 				userFile = user.getResource(path.addFileExtension("html").toString());
 			}
 			if ( !userFile.exists() ) {
-				if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
-					System.out.println("user file not found: " + path);
-				}
+				theLogger.warning("user file not found: " + path);
 				resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 				return;
 			}
@@ -349,7 +341,6 @@ public class DavinciPageServlet extends HttpServlet {
 			resp.resetBuffer();
 			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 		}
-
 	}
 
 	protected boolean handleLibraryRequest(HttpServletRequest req, HttpServletResponse resp, IPath path, IUser user)
@@ -367,9 +358,7 @@ public class DavinciPageServlet extends HttpServlet {
 			CacheHeaders doCache) throws ServletException, IOException {
 
 		if ( resourceURL == null ) {
-			if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
-				System.out.println("resource URL not found");
-			}
+			theLogger.warning("resource URL not found: "+resourceURL);
 			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
@@ -454,15 +443,14 @@ public class DavinciPageServlet extends HttpServlet {
 			// FileNotFoundException may indicate the following scenarios
 			// 		- url is a directory
 			// 		- url is not accessible
-			if ( ServerManager.DEBUG_IO_TO_CONSOLE ) {
-				System.out.println("file not found exception: " + e.toString());
-			}
+			theLogger.log(Level.WARNING, "writePage file not found: " + resourceURL, e);
 			resp.reset();
 			resp.sendError(HttpServletResponse.SC_FORBIDDEN);
 
 		} catch ( SecurityException e ) {
 			// SecurityException may indicate the following scenarios
 			// 		- url is not accessible
+			theLogger.log(Level.WARNING, "writePage security exception: " + resourceURL, e);
 			resp.reset();
 			resp.sendError(HttpServletResponse.SC_FORBIDDEN);
 		} finally {

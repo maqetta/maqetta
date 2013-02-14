@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 @SuppressWarnings("serial")
 public class DavinciCommandServlet extends HttpServlet {
 
-	static private Logger theLogger = Logger.getLogger(ServerManager.class.getName());
+	static private Logger theLogger = Logger.getLogger(DavinciCommandServlet.class.getName());
 
 	private HashMap<String, CommandDescriptor> commands = new HashMap<String, CommandDescriptor>();
     private boolean initialized = false;

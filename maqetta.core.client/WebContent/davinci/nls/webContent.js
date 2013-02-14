@@ -5,6 +5,7 @@ define({ root:
 		"designer":"Designer,",
 		"welcome":"Welcome",//also in review.html
 		"loadingMaqetta":"&nbsp;Loading Maqetta...",
+		startupError: "Error starting Maqetta: ${0}",
 		"logOff":"Log Out",//also in review.html
 		"unsupportedBrowser":"Unsupported Browser",
 		"unsupportedNote":"Maqetta supports Firefox 4, Chrome 5, and Safari 5.1 or greater. If you wish to continue with an unsupported browser, click \"Continue.\"",
@@ -31,7 +32,7 @@ define({ root:
 		"errorLoadingPlugin":"error loading plugin ${0}, response=${1}",
 		"errorLoadingPlugins":"error loading plugins",
 		"multipleFilesUnsaved":"${0} (NOTE: This is one of ${1} files with unsaved changes.)",
-		"idleSessionMessage": "Your season will timeout in ${seconds} seconds, click anywhere in Maqetta to continue using Maqetta.",
+		"idleSessionMessage": "Your session will timeout in ${seconds} seconds, click anywhere in the page to continue using Maqetta.",
 		
 		//davinci/Workbench.js
 		"perspectiveNotFound":"perspective not found: ${0}",

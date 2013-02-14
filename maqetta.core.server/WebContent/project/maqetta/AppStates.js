@@ -1160,12 +1160,16 @@ States.prototype = {
 		return document;
 	},
 	
-	_shouldInitialize: function() {
-		var windowFrameElement = window.frameElement;
-		var isDavinciEditor = top.davinci && top.davinci.Runtime && (!windowFrameElement || windowFrameElement.dvContext);
-		return !isDavinciEditor;
+	/**
+	 * Returns true if AppStates.js should run its initialization logic.
+	 * If an editor that embeds this routine (e.g., the Maqetta page editor)
+	 * provides its own alternate initialization logic, then the editor
+	 * needs to set davinci.AppStatesDontInitialize to true before
+	 * AppStates.js is loaded and initialized.
+	 */
+	shouldInitialize: function() {
+		return !davinci.AppStatesDontInitialize;
 	},
-
 
 	/**
 	 * Returns all child elements for given Element
@@ -1215,7 +1219,7 @@ var singleton = davinci.states = new States();
 
 	singleton.initialize();
 	
-	if (singleton._shouldInitialize()) {
+	if (singleton.shouldInitialize()) {
 	
 		// Patch the dojo parse method to preserve states data
 		if (typeof require != "undefined") {

@@ -1,32 +1,42 @@
 define([
 	"dojo/_base/declare",
-], function(declare){
+	"dojo/dom-style"
+], function(declare, domStyle){
 	
 	return declare("shapes._CircleMixin", [], {
-
-		buildRendering: function() {
-			this.inherited(arguments);
-			// -0 to force conversion to number
-			this._rx = (this.rx ? this.rx : this.defaultRx) - 0;
-			this._ry = (this.ry ? this.ry : this.defaultRy) - 0;
+		
+		postCreate: function(){
+			this._updateBorderRadius();
 		},
 		
 		resize: function(){
-			this._resize();
+			this._updateBorderRadius();
 		},
 		
-		createGraphics: function(){
-			var rx = (typeof this._rx != "undefined") ? this._rx : this._r;
-			var ry = (typeof this._ry != "undefined") ? this._ry : this._r;
-			var s_shape = '<ellipse'+
-				' rx="'+rx+'"'+
-				' ry="'+ry+'"/>';
-		    this.domNode.innerHTML = this._header + s_shape + this._footer;
-			this._shape = dojo.query('ellipse',this.domNode)[0];		
-			this._g = dojo.query('g.shapeg',this.domNode)[0];
-			this._svgroot = dojo.query('svg',this.domNode)[0];
-			this._svgroot.style.verticalAlign = "top";
-			this._svgroot.style.overflow = "visible";
+		_updateBorderRadius: function(){
+			var domNode = this.domNode;
+			var bw, rx, ry;
+			var bwString = domStyle.get(domNode, 'borderWidth');
+			if(bwString){
+				bw = parseFloat(bwString);
+			}
+			var w = domNode.offsetWidth;
+			var h = domNode.offsetHeight;
+			if(isNaN(bw) || bw < 0 || w <= 0 || h <= 0){
+				domNode.style.borderTopLeftRadius = '';
+				domNode.style.borderTopRightRadius = '';
+				domNode.style.borderBottomLeftRadius = '';
+				domNode.style.borderBottomRightRadius = '';
+			}else{
+				var rx = (w/2 + bw) + 'px';
+				var ry = (h/2 + bw) + 'px';
+				var val = rx + ' ' + ry;
+				domNode.style.borderTopLeftRadius = val;
+				domNode.style.borderTopRightRadius = val;
+				domNode.style.borderBottomLeftRadius = val;
+				domNode.style.borderBottomRightRadius = val;
+			}
 		}
+		
 	});
 });

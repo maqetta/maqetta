@@ -1,8 +1,9 @@
 define([
     "dojo/_base/declare",
-	"davinci/workbench/_ToolbaredContainer",
-	"davinci/ve/States"
-], function(declare, ToolbaredContainer, States) {
+	"./_ToolbaredContainer",
+	"../ve/States",
+	"../Runtime"
+], function(declare, ToolbaredContainer, States, Runtime) {
 
 return declare("davinci.workbench.ViewPart", ToolbaredContainer, {
 		
@@ -42,9 +43,9 @@ return declare("davinci.workbench.ViewPart", ToolbaredContainer, {
 	
 	_getViewActions: function() {
 		var viewID=this.toolbarID || this.viewExt.id;
-		var viewActions=[];
-		var extensions = davinci.Runtime.getExtensions('davinci.viewActions', function(ext){
-			if (viewID==ext.viewContribution.targetID) {
+		var viewActions = [];
+		Runtime.getExtensions('davinci.viewActions', function(ext){
+			if (viewID == ext.viewContribution.targetID) {
 				viewActions.push(ext.viewContribution);
 				return true;
 			}

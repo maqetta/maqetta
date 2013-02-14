@@ -21,7 +21,7 @@ var RestartVersionAction = declare("davinci.review.actions.RestartVersionAction"
 			return false;
 		}
 		var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
-		if (item.designerId == davinci.Runtime.userName) { 
+		if (item.designerId == Runtime.userName) { 
 			//Only enable if the current user is also the review's designer
 			if (item.closed) {
 				return true;

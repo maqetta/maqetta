@@ -22,15 +22,15 @@ define(["dojo/_base/declare",
 				return file.getPath() + "<br>";
 			}));
 			uiArray.push("</div><br><br>");
-			var html = uiArray.join("");
-			dojo.place(html, this._selectionDiv);
+			dojo.place(uiArray.join(""), this._selectionDiv);
 		},
 
 		_getResources: function(){
-			return {
-				userFiles: this._files.map(function(item){ return item.getPath();}),
-				userLibs: []
-			};
+			return this._files.map(function(item){ return item.getPath();});
+		},
+
+		_getLibs: function(){
+			return [];
 		}
 	});
 });

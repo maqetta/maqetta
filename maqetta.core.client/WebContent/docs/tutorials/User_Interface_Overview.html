@@ -1,0 +1,405 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Tutorial 3 - User Interface Overview</title>
+</head>
+<body class="maqettadocs">
+
+<style type="text/css">
+table.CompTypeTable {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+table.CompTypeTable td, table.CompTypeTable th {
+	padding:3px;
+	border:1px solid black;
+}
+table.CompTypeTable th {
+	font-style:italic;
+	font-weight:bold;
+	background:#888;
+}
+table td.CompTypeOption {
+	font-weight:bold;
+}
+tr.desktop {
+	background-color:#ddf;
+}
+tr.mobile {
+	background-color:#dfd;
+}
+</style>
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td> &nbsp; </td>
+    <td class="prevnext">
+	<a href="tutorials/Launching_Maqetta.html">Previous</a> / <a href="tutorials/Cloud_Workspace_Files_Projects.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Tutorial 3 - User Interface Overview</h1>
+
+<div class='note'>
+	When going through Maqetta's tutorials, it is suggested that you have two side-by-side
+	browser windows open, one showing the tutorial, and the other where you run the application
+	and perform the steps listed in the tutorial.<br/>
+	<img src='img/SideBySideTutorialsApp.png' class='side_by_side'/>
+</div>
+
+<p>This tutorial provides an overview of the Maqetta's overall user interface -
+in particular, those parts of the user interface that you see upon launching the application
+for the first time (i.e., immediately after completing the steps from the previous tutorial
+<a href='tutorials/Launching_Maqetta.html'>Launching Maqetta</a>). Topics covered:</p>
+<ul>
+	<li>Welcome screen</li>
+	<li>Main menubar</li>
+	<li>Left- and Right-Side Palettes</li>
+	<li>Welcome Screen Buttons</li>
+</ul>
+
+<a id='Welcome_Screen'></a>
+<h2>Welcome screen</h2>
+
+<p>When you launch the Maqetta application for the first time 
+	(or any time when you have no files opened), the Maqetta
+	application will appear as follows:</p>
+	
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src="cheatsheets/img/WelcomePage.jpg" style='width:600px;'/> 
+	</span>
+</div>
+
+<p>The welcome screen has a <strong>Main menubar</strong> 
+	that appears at the top of the application (with Create and Open menus at the top/center)
+	and the various large-size buttons
+	on the left- and right-side of the application that open up Maqetta's various
+	<strong>Palettes</strong> (e.g., the "Files" palette will show the files in your cloud workspace).</p>
+
+<a id='Main_Menubar'></a>
+<h2>Main menubar</h2>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click and hold on the Create menu at the top of the page. 
+	(Don't actually choose one of the menu commands yet - we'll get to that soon.)
+	You should see a menu that looks like this, which shows all of the "Create" commands in Maqetta.</li>
+
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src="img/Create_button.png" class='main_button'/> <br/>
+		<img src="cheatsheets/img/Create_menu.png" class='main_menu'/> 
+	</span>
+</div>
+
+<ul>
+	<li>The first four Create commands (<strong>Mobile Application...</strong>, 
+		<strong>Desktop Application...</strong>, 
+		<strong>Sketch (high-fidelity)</strong> and 
+		<strong>Sketch (low-fidelity)</strong> will open up the Maqetta visual page editor
+		for the given type of composition.</li>
+	<li><strong>Create Folder...</strong> will add a new folder to the current project</li>
+	<li><strong>Create CSS...</strong> and <strong>Create JavaScript...</strong> will create a new source file and open the Maqetta source editor</li>
+	<li><strong>Create Theme...</strong> will create a new CSS theme and open one of Maqetta theme editors</li>
+	<li><strong>Create Review...</strong> will create a new review session and open the Maqetta review/commenting editor</li>
+	<li><strong>Create Project...</strong> will create and initialize a new project in your workspace. 
+		The new project will become your current project.</li>
+</ul>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click and hold on the Open menu at the top of the page. 
+	(Don't actually choose one of the menu commands yet.)
+	You should see a menu that looks like this, which shows all of the "Open" commands in Maqetta.</li>
+
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src="img/Open_button.png" class='main_button'/> <br/>
+		<img src="cheatsheets/img/Open_menu.png" class='main_menu'/> 
+	</span>
+</div>
+
+<ul>
+	<li><strong>Open File...</strong> allows you to open one of your workspace files</li>
+	<li><strong>Open Theme Editor...</strong> opens one of your CSS themes within one of Maqetta's theme editors</li>
+	<li><strong>Open Review...</strong> shows the list of review/commenting sessions 
+		in which you are participating, and allows you to open a review file in the
+		review/commenting editor</li>
+	<li><strong>Open Orion Navigator...</strong> will open a separate browser window
+		where you can use the source editing and file management tools from the
+		<a href='http://www.eclipse.org/orion/' target='_blank' rel='external'>Eclipse Orion project</a>
+		(which is built into Maqetta)
+		to manage the files in your workspace.</li>
+</ul>
+
+<p>At the top-right of the main menubar you'll see three icons:
+<img src="img/Main_menu_three_icons.png" class='main_button' style='vertical-align:middle;'/>
+</p>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Press and hold each of these icons, and you should see drop-down menus with the following commands:</li>
+
+<ul>
+	<li><strong>User menu:</strong>
+		<ul>
+			<li><strong>User login</strong> - Shows the login being used for this session</li>
+			<li><strong>Log out</strong> - Terminates this session, returns to login page</li>
+		</ul>
+	</li>
+</ul>
+<ul>
+	<li><strong>Application settings menu:</strong>
+		<ul>
+			<li><strong>Preferences</strong> - Shows a dialog that provide options for customizing Maqetta</li>
+			<li><strong>Theme sets</strong> - Maqetta include advanced features for managing which CSS themes should be used for different target devices</li>
+		</ul>
+	</li>
+</ul>
+<ul>
+	<li><strong>Help menu:</strong>
+		<ul>
+			<li><strong>Documentation</strong> - Opens new browser tab/page showing Maqetta's doc set</li>
+			<li><strong>Tutorials</strong> - New browser tab/page showing tutorials within doc set</li>
+			<li><strong>Videos</strong> - New browser tab/page showing Maqetta YouTube channel</li>
+			<li><strong>Cheat sheets</strong> - New browser tab/page showing cheat sheets within doc set</li>
+			<li><strong>How-to</strong> - New browser tab/page showing how-to articles</li>
+			<li><strong>About</strong> - Popup window showing current product version</li>
+		</ul>
+	</li>
+</ul>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Go back to the <strong>Create</strong> button.
+	Press on Create button and choose the first command - Create Mobile Application.
+	A dialog similar to the following should appear:</li>
+
+<div>
+	<img src='cheatsheets/img/Create_MobileApp_Dialog.png'/>
+</div>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the dialog, accept the default settings and 
+	click on the Create button. You should see a page
+	that shows the life-size silhouette of a mobile device (probably an iPhone).
+	Up towards the top of the application, you should see a list of file tabs 
+	(probably with only one file tab showing now)
+	and the page editor's toolbar.</li>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the file tab's close button -
+	<img src='img/close_sel.gif' class='exact_size_inline_icon'/>
+	- to close the page editor. 
+	Click OK at the "are you sure" prompt.
+	(If any another files are open now,
+	close them, too.) The welcome screen (with all of the large-size buttons)
+	should re-appear in the middle of the screen.</li>
+</ol>
+	
+<a id='Palettes'></a>
+<h2>Left- and Right-Side Palettes</h2>
+
+<p>On the left- and right-side of the application you will see large-size buttons with the following labels:</p>
+<ul>
+	<li><strong>Left/top</strong>
+		<ul>
+			<li><em>Palette</em> -  
+				When the visual page editor is open, shows the list of widgets you can add to pages.</li>
+			<li><em>Outline</em> - 
+				When the visual page editor is open,
+				this will show the hierarchical list of widgets that are included in the currently open file.</li>
+		</ul>
+	</li>
+	<li><strong>Left/bottom</strong>
+		<ul>
+			<li><em>Files</em> - 
+				Shows the files in your cloud workspace.</li>
+			<li><em>Reviews</em> - 
+				Shows the list of review/commenting sessions in which
+				you are participating.</li>
+		</ul>
+	</li>
+	<li><strong>Right/top</strong>
+		<ul>
+			<li><em>Widget</em> - 
+				Widget-specific properties.</li>
+			<li><em>Events</em> - 
+				Allows you to define actions to occur at run-time when certain events happen
+				(e.g., clicking on a widget).</li>
+			<li><em>Layout</em> - 
+				CSS properties having to do with layout, size and positioning.</li>
+			<li><em>Padding</em> - 
+				CSS padding properties</li>
+			<li><em>Margin</em> - 
+				CSS margin properties</li>
+			<li><em>Background</em> - 
+				CSS background properties</li>
+			<li><em>Border</em> - 
+				CSS border properties</li>
+			<li><em>Fonts/Text</em> - 
+				CSS font and text properties having to do with fonts</li>
+			<li><em>SVG</em> - 
+				(For Line, Arrow, and Polyline widgets only) SVG fill and stroke properties</li>
+		</ul>
+	</li>
+	<li><strong>Right/bottom</strong>
+		<ul>
+			<li><em>Scenes</em> - 
+				This palette allows you to define custom "application states" -
+				a key feature in allowing non-programmers to create interactive
+				prototypes without programming. For mobile applications,
+				this palette also allows you to manage the various mobile
+				"views" (which can be thought of as different screens).</li>
+		</ul>
+	</li>
+</ul>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <strong>Files</strong> button. The left-side palettes should expand
+	and become visible.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <strong>Files</strong> button again. The left-side palettes should collapse
+	and become invisible.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <strong>Reviews</strong> button. The left-side palettes should expand
+	and become visible, but instead of seeing the Files palette at the bottom/left of the
+	screen, you should see the Reviews palette (probably empty).</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <strong>Files</strong> button. The left-side palettes should stay
+	open and the Files palette should be visible instead of the Reviews palette.
+	(For each of the four palette areas - left/top, left/bottom, right/top/, right/bottom - 
+	only one of the palettes in that group can be visible at a time.)</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Position the mouse over the dark-gray vertical splitter 
+	that separates the left-side palettes with the
+	central area of the application. 
+	When you see the cursor change to a move symbol, mouse down and drag
+	the splitter to the right. Notice that the palette region expands
+	and the central area gets smaller. Repeat this operation
+	(i.e., drag the splitter again)
+	to restore the left-size palette size to their approximate
+	original size.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Position the mouse over the dark-gray horizontal splitter 
+	that separates the left/top palettes (Palette and Outline) 
+	from the left/bottom palettes (Files and Review).
+	When you see the cursor change to a move symbol, mouse down and drag
+	the splitter upwards. Notice that the Files palette region expands
+	and Palette region gets smaller. Repeat this operation
+	(i.e., drag the splitter again)
+	to restore the left-size palettes to their approximate
+	original sizes.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	With the left-side palettes still open, 
+	click on the small collapse icon -
+	<img src='img/palette_collapse.gif' class='exact_size_inline_icon'/>
+	- at the top/right corner of the left-side palettes.
+	The left-side palettes should collapse. Note that you can collapse palettes
+	either by clicking on the collapse icon or clicking on the large palette button
+	for the currently open palette.</li>
+	
+<div class='note'>
+	The right-side palettes operate the same way as the left-side palettes,
+	except in mirror-image. (For example, the right-side palettes expand to the left.)
+</div>
+
+<div class='note'>
+	Note that sometimes Maqetta shows different palette arrangements that
+	what you are seeing now. For the theme editor and for the
+	review/commenting editor, some palettes go away and other palettes get added.
+	Occasionally, palettes shift to different locations. For example, with the review/commenting
+	editor, the Reviews palette moves from left/bottom to left/top.
+</div>
+</ol>
+
+<a id='Welcome_Button_Rows'></a>
+<h2>Welcome Screen Buttons</h2>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	If you have any open files, click on the file tab's close button -
+	<img src='img/close_sel.gif' class='exact_size_inline_icon'/> 
+	- for each file until no files are open. The welcome screen (with all of the large-size buttons)
+	should re-appear in the middle of the screen.</li>
+
+<p>The welcome screen shows two rows of buttons.</p>
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src="img/Welcome_Screen_Buttons.png" style='height:300px; width:auto;'/> 
+	</span>
+</div>
+
+<p>The first row contains common actions that users will want to do:</p>
+
+<ul>
+	<li><strong>Create a New Mobile Application</strong> - Press this button if you want to create
+		an actual mobile application that will run on popular mobile devices such as smartphones and tablets.
+		(Note: this button is equivalent to the <strong>Create -&gt; Mobile Application...</strong>
+		command found on the <strong>Create</strong> menu at the top of the application.)
+	</li>
+	<li><strong>Create a New Desktop Application</strong> - Press this button if you want to create
+		an actual desktop application that will run modern browsers (desktop or mobile).
+		(Note: this button is equivalent to the <strong>Create -&gt; Desktop Application...</strong>
+		command found on the <strong>Create</strong> menu at the top of the application.)
+	</li>
+	<li><strong>Create a New Sketch</strong> - Press this button if you want to use
+		Maqetta's quick UI sketching feature to create a high-fidelity sketch.
+		(Note: this button is equivalent to the <strong>Create -&gt; Sketch (high-fidelity)...</strong>
+		command found on the <strong>Create</strong> menu at the top of the application.)
+	</li>
+	<li><strong>Create a New CSS Theme</strong> - Press this button if you want to 
+		create a new CSS theme (by cloning one of the existing themes). After the clone-and-create
+		operation, Maqetta will open up the new theme in one of Maqetta's theme editors.
+		 You can clone/create both new desktop CSS themes or mobile CSS themes. 
+		(Note: this button is equivalent to the <strong>Create -&gt; Theme...</strong>
+		command found on the <strong>Create</strong> menu at the top of the application.)
+	</li>
+	<li><strong>Create a New Review</strong> - Press this button if you want to 
+		create a new review/commenting session where you want to share one of your compositions
+		with your colleagues for them to review and comment on your creation.
+		(Note: this button is equivalent to the <strong>Create -&gt; Review...</strong>
+		command found on the <strong>Create</strong> menu at the top of the application.)
+	</li>
+</ul>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <strong>Create a New Desktop Application</strong> button. You should
+	see a dialog that allows you to choose a filename for your new composition.
+	Accept the default values and click on the Create button. You should see
+	a blank canvas (onto which you can start dragging and dropping widgets).</li>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the file tab's close button -
+	<img src='img/close_sel.gif' class='exact_size_inline_icon'/>
+	- to close the page editor. 
+	Click OK at the "are you sure" prompt.</li>
+
+
+<p>The second row of buttons contains links to learning resources:</p>
+
+<ul>
+	<li><strong>Tutorials</strong> - Opens a new browser tab/page showing tutorials within doc set
+		(equivalent to Help button -&gt; Tutorials on the top menubar)</li>
+	<li><strong>Videos</strong> - Opens a new browser tab/page showing Maqetta YouTube channel
+		(equivalent to Help button -&gt; Videos on the top menubar)</li>
+	<li><strong>Cheat sheets</strong> - Opens a new browser tab/page showing cheat sheets within doc set
+		(equivalent to Help button -&gt; Cheat sheets on the top menubar)</li>
+	<li><strong>How-to</strong> - Opens a new browser tab/page showing how-to articles
+		(equivalent to Help button -&gt; How-to articles on the top menubar)</li>
+</ul>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <strong>Cheat sheets</strong> button. A new browser window
+	should open that shows the list of Maqetta's cheat sheets.</li>
+</ol>
+
+<br />
+<p class="prevnext"><a href="tutorials/Launching_Maqetta.html">Previous</a> / <a href="tutorials/Cloud_Workspace_Files_Projects.html">Next</a></p>
+
+</div> <!-- pagebody -->
+
+</body>
+</html>

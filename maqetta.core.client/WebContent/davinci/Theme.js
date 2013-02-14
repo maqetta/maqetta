@@ -240,7 +240,7 @@ define([
 		var themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly);
     	var targetFile = systemResource.findResource(cssFile.url).getPath(); 
 	    for (var i = 0; i < themeData.length; i++){
-	    	var themeFile = themeData[i].file;
+	    	var themeFile = themeData[i].getFile();
 	    	var path = themeFile.getParentFolder().getPath();// theme path
 	    	for (var x = 0; x < themeData[i].files.length; x++){
 	    		var checkFile = path + "/" + themeData[i].files[x];

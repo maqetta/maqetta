@@ -116,48 +116,41 @@ public class VOrionStorage implements IStorage {
 		try {
 			return this.store.openOutputStream(EFS.NONE, null);
 		} catch (CoreException e) {
-			e.printStackTrace();
+			throw new IOException(e);
 		}
-		return null;
 	}
 
 	public InputStream getInputStream() throws IOException {
 		try {
 			return this.store.openInputStream(EFS.NONE, null);
 		} catch (CoreException e) {
-			e.printStackTrace();
+			throw new IOException(e);
 		}
-		return null;
 	}
 
 	public void createNewFile() throws IOException {
-		OutputStream stream;
 		try {
-			stream = this.store.openOutputStream(EFS.NONE, null);
+			OutputStream stream = this.store.openOutputStream(EFS.NONE, null);
 			stream.flush();
 			stream.close();
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new IOException(e);
 		}
-
 	}
 
-	public void mkdir() {
+	public void mkdir() throws IOException {
 		try {
 			this.store.mkdir(EFS.NONE, null);
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new IOException(e);
 		}
-
 	}
 
-	public void renameTo(IStorage file) {
+	public void renameTo(IStorage file) throws IOException {
 		try {
 			this.store.move(((VOrionStorage) file).store, EFS.NONE, null);
 		} catch (CoreException e) {
-			e.printStackTrace();
+			throw new IOException(e);
 		}
 	}
 

@@ -38,13 +38,21 @@ _PathHelperMixin.prototype = {
 	/*
 	 * Returns list of draggable end points for this shape in "px" units
 	 * relative to top/left corner of enclosing SPAN
+	 * @param params {object}  params.widget: current widget
 	 * @return {object} whose properties represent widget-specific types of draggable points
 	 *   For example, widgets that represent a series of points will include a 'points'
 	 *   property which is an array of object of the form {x:<number>,y:<number>}
 	 */
-	getDraggables: function(){
-		var dijitWidget = this._widget.dijitWidget;
+	getDraggables: function(params){
+		if(!params || !params.widget){
+			return;
+		}
+		var widget = params.widget;
+		var dijitWidget = widget.dijitWidget;
 		var points = dojo.clone(dijitWidget._points);
+		if(!dijitWidget._bbox){
+			dijitWidget.resize();
+		}
 		var thisbbox = dijitWidget._bbox;
 		var minx = thisbbox.x;
 		var miny = thisbbox.y;
@@ -64,10 +72,11 @@ _PathHelperMixin.prototype = {
 	 * @param {object} params  Params, including params.e (holds mousedown event)
 	 */
 	onMouseDown_Widget: function(params){
-		if(!params || !params.handle || !params.handle._shapeDraggable){
+		if(!params || !params.handle || !params.handle._shapeDraggable || !params.widget){
 			return;
 		}
-		var dijitWidget = this._widget.dijitWidget;
+		var widget = params.widget;
+		var dijitWidget = widget.dijitWidget;
 		var index = params.handle._shapeDraggable.point;
 		var p = dijitWidget._points[index];
 		// this.orig_* holds original x,y
@@ -86,13 +95,14 @@ _PathHelperMixin.prototype = {
 			dy = params.dy,
 			pageX = params.pageX,
 			pageY = params.pageY,
-			event = params.e;
-		var dijitWidget = this._widget.dijitWidget;
+			event = params.e,
+			widget = params.widget;
+		var dijitWidget = widget.dijitWidget;
 		if(index < 0 || index >= dijitWidget._points.length || dijitWidget._points.length < 2){
 			return;
 		}
 		
-        var context = this._widget ? this._widget.getContext() : undefined;
+        var context = widget ? widget.getContext() : undefined;
         if(context){
             var parentIframeBounds = GeomUtils.getBorderBoxPageCoords(context.getParentIframe());
             pageX -= parentIframeBounds.l;
@@ -140,22 +150,22 @@ _PathHelperMixin.prototype = {
 		dijitWidget._svgroot.style.marginLeft = (newBbox.x - dijitWidget._bboxStartup.x) + 'px';
 		dijitWidget._svgroot.style.marginTop = (newBbox.y - dijitWidget._bboxStartup.y) + 'px';
         var position_prop;
-        if(this._widget){
-            var position_prop = dojo.style(this._widget.domNode,"position");
+        if(widget){
+            var position_prop = dojo.style(widget.domNode,"position");
         }
         var absolute = (position_prop=="absolute");
 		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', 
 				Workbench.getProject());
 		var doSnapLinesX = editorPrefs.snap && absolute;
 		var doSnapLinesY = doSnapLinesX;
-        if((doSnapLinesX || doSnapLinesY) && event && this._widget && context){
-            var data = {type:this._widget.type};
+        if((doSnapLinesX || doSnapLinesY) && event && widget && context){
+            var data = {type:widget.type};
             var position = { x:pageX, y:pageY};
             var snapBox = {l:pageX,t:pageY,w:0,h:0};
             // Call the dispatcher routine that updates snap lines and
             // list of possible parents at current (x,y) location
             context.dragMoveUpdate({
-                    widgets:[this._widget],
+                    widgets:[widget],
                     data:data,
                     eventTarget:event.target,
                     position:position,
@@ -196,8 +206,11 @@ _PathHelperMixin.prototype = {
 	 * @param {object} command  For undo stack, compound command into which 
 	 *         any widget-specific command should be added
 	 */
-	onMouseUp_Widget: function(command){
-		var widget = this._widget;
+	onMouseUp_Widget: function(command, params){
+		if(!params || !params.widget){
+			return;
+		}
+		var widget = params.widget;
 		var dijitWidget = widget.dijitWidget;
 		var points = dijitWidget._points;
 		
@@ -222,7 +235,7 @@ _PathHelperMixin.prototype = {
 		var s_points = arr.join();
 		var valuesObject = {points:s_points};
 		command.add(new ModifyCommand(widget, valuesObject, null));
-        var context = this._widget ? this._widget.getContext() : undefined;
+        var context = widget ? widget.getContext() : undefined;
         context.dragMoveCleanup();
 	}
 

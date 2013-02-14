@@ -1117,13 +1117,13 @@ define(["dojo/_base/declare",
 			}else if(this._values[event.target].type=="proposal"){
 				var model = this.context.getModel();
 				var cssFile = model.find({elementType:'CSSFile', relativeURL: this._values[event.target].targetFile}, true);
-				var contextCssFile =  this.context._getCssFiles();
+				var contextCssFiles =  this.context._getCssFiles();
 				//#23
 				if (cssFile /*&& cssFile.length > 0*/) {
 					loc = systemResource.findResource(cssFile.url); //FIXME: can we skip findReource?
-				} else if (contextCssFile[0].url == this._values[event.target].targetFile){ // FIXME should run the array
+				} else if (contextCssFiles[0].url == this._values[event.target].targetFile){ // FIXME should run the array
 					// maybe it's a dynamic theme (mobile)
-					loc = contextCssFile.cssFiles[0];
+					loc = systemResource.findResource(contextCssFiles[0].url); //contextCssFiles[0].cssFiles[0];
 				}
 				//#23
 			}else{

@@ -196,7 +196,7 @@ define(['domReady'], function(domReady) {
 			login = document.getElementById('login').value;
 			password = document.getElementById('password').value;
 		}
-		if (!validateEmail(login)){
+		if (!validateUserId(login)){
 			return;
 		}
 		// shiftkey-click on Login causes Maqetta to open with no editors showing
@@ -238,7 +238,8 @@ define(['domReady'], function(domReady) {
 		mypostrequest.send(parameters);
 	}
 
-	function validateEmail(value) {
+	function validateUserId(value) {
+		return true; // no validation for now.
 		var regex = /[a-z0-9!#$%&'*+/=?^_`{|}~.-]+@[a-z0-9-]+(\.[a-z0-9-]+)*/;
 		if(!regex.test(value)){
 			document.getElementById("errorWin").style.visibility = '';
@@ -263,7 +264,7 @@ define(['domReady'], function(domReady) {
 
 	function confirmCreateUser() {
 		var login = document.getElementById("create_login").value;
-		if (!validateEmail(login)){
+		if (!validateUserId(login)){
 			return;
 		}
 		if (!validatePassword()) {
@@ -430,7 +431,7 @@ define(['domReady'], function(domReady) {
 			if (event.keyCode === 13) {
 				confirmLogin();
 			} else {
-				validateEmail(document.getElementById("login").value);
+				validateUserId(document.getElementById("login").value);
 			}
 		};
 

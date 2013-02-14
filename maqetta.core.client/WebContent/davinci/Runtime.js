@@ -1,8 +1,5 @@
 define([
 	"dojo/i18n!./nls/webContent",
-	"dijit/Dialog",
-	"dijit/form/Button",
-	"dijit/form/TextBox",
 	"./commands/CommandStack",
 	"./ui.plugin",
 	"./html/html.plugin",
@@ -13,9 +10,6 @@ define([
 	"./UserActivityMonitor"
 ], function(
 	webContent,
-	Dialog,
-	Button,
-	TextBox,
 	CommandStack,
 	ui_plugin,
 	html_plugin,
@@ -73,9 +67,8 @@ var Runtime = {
 	 * 		{
 	 * 			email: "person@place.com",
 	 *			isLocalInstall: "false",
-	 * 			userFirstName: "",
-	 *			userId: "A",
-	 *			userLastName: "";
+	 * 			userDisplayName: "",
+	 *			userId: "A";
 	 * 		}
 	 * 
 	 * Because of the current user sign-up we have with Orion, we're not making 
@@ -93,8 +86,8 @@ var Runtime = {
 
 		// Can't reliably use userId anymore (because of Orion), so first try first name and then
 		// drop back to e-mail
-		var displayName = userInfo.userFirstName;
-		if (!userInfo.userFirstName) {
+		var displayName = userInfo.userDisplayName;
+		if (!userInfo.userDisplayName) {
 			displayName = userInfo.email;
 		}
 		return displayName;		
@@ -160,8 +153,8 @@ var Runtime = {
 
 	getUserWorkspaceUrl: function(){
 		var loc = this.location();
-		if (loc.charAt(loc.length-1)=='/'){
-			loc=loc.substring(0,loc.length-1);
+		if (loc.slice(-1) == '/') {
+			loc = loc.slice(0, -1);
 		}
 		return loc+'/user/'+Runtime.userName+'/ws/workspace/';
 	},
@@ -313,53 +306,6 @@ var Runtime = {
 		return Runtime.currentSelection;
 	},
 
-	doLogin: function() {
-		var retry=true;
-		var formHtml = "<table>" +
-        "<tr><td><label for=\"username\">User: </label></td>" +
-        "<td><input dojoType=\dijit.form.TextBox\ type=\"text\" name=\"username\" id='username' ></input></td></tr>" +
-        "<tr><td><label for=\"password\">Password: </label></td> <td><input dojoType=\"dijit.form.TextBox\" type=\"password\" name=\"password\" id='password'></input></td></tr>" +
-        "<tr><td colspan=\"2\" align=\"center\"><button dojoType=\"dijit.form.Button\" type=\"submit\" >Login</button></td>" +
-        "</tr></table>"; // FIXME: i18n
-		do {
-			var isInput=false;
-			var dialog = new Dialog({
-				id: "connectDialog",
-				title: "Please login", 
-				onExecute: function(){
-					dojo.xhrGet({
-						url: "cmd/login",
-						sync: true,
-						handleAs: "text",
-						content:{
-						    userName: dojo.byId("username").value,
-						    password: dojo.byId("password").value,
-						    noRedirect: true
-						}
-					}).then(function(result) {
-						if (result=="OK") {
-						    // cheap fix.
-						    //window.location.reload();
-						    window.location.href= 'welcome';
-						    //retry=false;
-						} else {
-						    console.warn("Unknown error: result="+result);
-						}
-					    }, function(error) {
-					    	console.warn("Login error", error);
-					    });
-					isInput=true;
-				},
-				onCancel:function(){
-				    isInput=true;
-				    Runtime.destroyRecursive(false);
-				}
-			});	
-			dialog.setContent(formHtml);
-			dialog.show();			
-		} while (retry);
-	},
-	
 	// deprecated.  will fail for async.  use dojo/_base/xhr directly
 	serverJSONRequest: function (ioArgs) {
 		var resultObj;
@@ -465,6 +411,5 @@ var Runtime = {
 	}
 };
 
-davinci.Runtime = Runtime; //FIXME: shouldn't need this
 return Runtime;
 });

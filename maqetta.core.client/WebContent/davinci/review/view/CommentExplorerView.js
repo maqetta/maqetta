@@ -340,14 +340,6 @@ var CommentExplorerView = declare(ViewPart, {
 		}
 	},
 
-	_location: function() {
-		var fullPath = document.location.href;
-		var split = fullPath.split("?");
-		var location = split[0].match(/http:\/\/.+:\d+\//);
-
-		return location;
-	},
-
 	_click: function(node) {
 		this._publishSelectionChanges();
 	},
@@ -380,7 +372,7 @@ var CommentExplorerView = declare(ViewPart, {
 			template.reviewers = widgetsNls.reviewers;
 
 			
-			template.detail_role = (item.designerId == davinci.Runtime.userName) ? viewNls.designer : viewNls.reviewer;
+			template.detail_role = (item.designerId == Runtime.userName) ? viewNls.designer : viewNls.reviewer;
 			template.detail_dueDate = item.dueDate == "infinite" ? viewNls.infinite : locale.format(item.dueDate, {
 				selector:'date',
 				formatLength:'long'
@@ -388,9 +380,8 @@ var CommentExplorerView = declare(ViewPart, {
 			
 			var creatorString = Runtime.getUserDisplayNamePlusEmail({
 				email: item.designerEmail,
-				userFirstName: item.designerFirstName,
-				userId: item.designerId,
-				userLastName: item.designerLastName
+				userDisplayName: item.designerDisplayName,
+				userId: item.designerId
 			});
 			template.detail_creator = creatorString;
 			
@@ -412,7 +403,11 @@ var CommentExplorerView = declare(ViewPart, {
 				template.detail_reviewers = "";
 				dojo.forEach(item.reviewers, function(i) {
 					if (i.email != item.designerEmail) {
-						template.detail_reviewers += "<div>" + i.email + "</div>";
+						var reviewer = "<div>" + i.email + "</div>";
+						if ((i.displayName != "") && (i.email != i.displayName)) {
+							reviewer = "<div>" + i.displayName +" &lt;" + i.email + "&gt;</div>";
+						}
+						template.detail_reviewers += reviewer;
 					}
 				});
 				item.closed ? template.detail_dueDate_class = "closed" : template.detail_dueDate_class = "notClosed";

@@ -17,19 +17,8 @@
             "format": "amd",
             "src": "shapes/Text",
             "$library": "shapes"
-        },
-        {
-            "type": "css",
-            "src": "shapes.css",
-            "$library": "shapes"
         }
     ],
-    "property": {
-        "content": {
-            "datatype": "string",
-            "defaultValue": "Text"
-        }
-    },
     "content": "<span></span>",
     "title": {
         "type": "text/html",

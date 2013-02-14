@@ -4,7 +4,6 @@
 @import url("../dojox/layout/resources/ResizeHandle.css");
 @import url("../dojox/html/resources/ellipsis.css");
 @import url("../dojox/form/resources/UploaderFileList.css");
-@import url("TriStateCheckBox.css"); /* dojox/form/resources/TriStateCheckBox.css is broken as of dojo 1.8.3 #16580 */
 
 @import url("syntaxColors.css");
 @import url("propview.css");
@@ -1378,10 +1377,10 @@ background-position: -75px -745px;
 }
 .editPasteIcon {
 	background-image: url(img/sprite.png);
-	background-position: -12px -551px;
+	background-position: -6px -551px;
 }
 .dijitButtonDisabled .editPasteIcon {
-	background-position: -88px -551px;
+	background-position: -82px -551px;
 }
 .editPasteIconSmall {
 	background-image: url(img/sprite.png);
@@ -1535,24 +1534,24 @@ background-position: -75px -745px;
 
 .addStateIcon, .addThemeSetIcon {
 	background-image: url(img/sprite.png);
-	background-position: -82px -466px;
+	background-position: 0px -2055px;
 }
 .addStateIcon.addStateIconDisabled {
-	background-position: -66px -466px;
+	background-position: 0px -2055px;
 }
 .removeStateIcon, .removeThemeSetIcon {
 	background-image: url(img/sprite.png);
-	background-position: 0 -1778px;
+	background-position: -20px -2055px;
 }
 .removeStateIcon.removeStateIconDisabled {
-	background-position: -17px -1778px;
+	background-position: -20px -2055px;
 }
 .modifyStateIcon {
 	background-image: url(img/sprite.png);
-	background-position: -82px -483px;
+	background-position: -40px -2056px;
 }
 .modifyStateIcon.modifyStateIconDisabled {
-	background-position: -66px -483px;
+	background-position: -40px -2056px;
 }
 .modify_state_container {
 	white-space:nowrap;
@@ -1560,40 +1559,40 @@ background-position: -75px -745px;
 }
 .manageStatesIcon {
 	background-image: url(img/sprite.png);
-	background-position: 0px -1548px;
+	background-position: -60px -2056px;
 }
 .manageStatesIcon.manageStatesIconDisabled {
-	background-position: -20px -1548px;
+	background-position: -60px -2096px;
 }
 .newWidgetsCurrentStateIcon {
 	background-image: url(img/sprite.png);
 }
 .newWidgetsCurrentStateIconOn {
-	background-position: -40px -1870px;
+	background-position: -80px -2076px;
 }
 .newWidgetsCurrentStateIconOn.newWidgetsCurrentStateIconDisabled {
-	background-position: -60px -1870px;
+	background-position: -80px -2116px;
 }
 .newWidgetsCurrentStateIconOff {
-	background-position: 0px -1870px;
+	background-position: -80px -2056px;
 }
 .newWidgetsCurrentStateIconOff.newWidgetsCurrentStateIconDisabled {
-	background-position: -20px -1870px;
+	background-position: -80px -2096px;
 }
 .highlightBaseWidgetsIcon {
 	background-image: url(img/sprite.png);
 }
 .highlightBaseWidgetsIconOn {
-	background-position: 0px -950px;
+	background-position: -100px -2076px;
 }
 .highlightBaseWidgetsIconOn.highlightBaseWidgetsIconDisabled {
-	background-position: 0px -968px;
+	background-position: -100px -2116px;
 }
 .highlightBaseWidgetsIconOff {
-	background-position: -20px -950px;
+	background-position: -100px -2056px;
 }
 .highlightBaseWidgetsIconOff.highlightBaseWidgetsIconDisabled {
-	background-position: -20px -968px;
+	background-position: -100px -2096px;
 }
 .states_rename_table td {
 	white-space:nowrap;
@@ -1731,7 +1730,6 @@ background-position: -75px -745px;
 
 .claro .loading{
 	/*background-color: #eee;*/
-	background-color: white;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -2354,6 +2352,10 @@ td.welcome_section_cell {
 	height:1.1em;
 }
 .ScenesPaletteAppStateIcon.ScenesPaletteCurrent {
+	background-image:url('img/sprite.png');
+	background-position: -84px -1523px;
+	width: 16px;
+	height: 16px;
 }
 .ScenesPaletteAppStateIcon.ScenesPaletteCurrent.ScenesPaletteCurrentHidden {
 	visibility:hidden;
@@ -2623,11 +2625,12 @@ td.welcome_section_cell {
 .addStateDialogRemoveFromBaseDiv {
 	margin:8px 0;
 }
-.manageStatesWhichStates {
-	margin-bottom:4px;
-}
 .manageStatesStatesListDiv {
 	padding:3px;
+	width: 100%;
+	height: 100px;
+	border: 1px solid #888;
+	overflow-y: scroll;
 }
 .manageStatesCheckAcceleratorsDiv {
 	margin-top:4px;
@@ -2639,7 +2642,44 @@ td.welcome_section_cell {
 	text-align:center;
 	vertical-align:middle;
 }
+.manageStatesCheckbox {
+	width:16px;
+	height:16px;
+	background-image: url('img/sprite.png');
+}
+..manageStatesCheckbox:hover {
+	cursor:pointer;
+}
+.manageStatesCheckboxAllVisible {
+	background-position: -84px -1523px;
+}
+.manageStatesCheckboxAllVisibleBackgroundAll {
+	background-position: -84px -1523px;
+	/*background-position: -60px -1550px;*/
+}
+.manageStatesCheckboxAllVisibleBackgroundSome {
+	background-position: -84px -1523px;
+	/*background-position: -60px -1550px;*/
+}
+.manageStatesCheckboxNoneVisible {
+	background-position: -84px -266px;
+}
+.manageStatesCheckboxSomeVisible {
+	background-position: -40px -1547px;
+}
 .manageStatesStateNameCell {
 	height:20px;
 	vertical-align:center;
+	padding-left:4px;
+	white-space:nowrap;
+}
+.manageStatesNotesCell {
+	width:1px;
+	padding-left:4px;
+	padding-right:4px;
+}
+.manageStatesNotesSpan {
+	white-space:nowrap;
+	font-size:90%;
+	font-style:italic;
 }

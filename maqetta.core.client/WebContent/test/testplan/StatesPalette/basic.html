@@ -2,7 +2,7 @@
 	"http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-	<title>States palette basic tests</title>
+	<title>Scenes palette basic tests</title>
 
 	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
 	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
@@ -21,7 +21,7 @@
 		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
 	</div>
 	<hr />
-	<h1 class="test_title">States palette basic tests</h1>
+	<h1 class="test_title">Scenes palette basic tests</h1>
 
 	<h2 class="test_section">Creating states, making widgets invisible within a state</h2>
 	<h3 class="steps_subsection">Steps</h3>
@@ -33,20 +33,20 @@
 		<li>Drag an HTML label, Calendar, TextBox, a Map (from ClipArt), and a circle (from Shapes).
 			<em style="color:red">Note that the circle will be absolutely positioned - with M7 the drawing tools are always added with absolute positioning.</em></li>
 		<li>Add a DIV, and three buttons inside of DIV onto the canvas.</li>
-		<li>In the States palette, click on the + icon to define two states "aaa" and "bbb"</li>
-		<li>In the States palette, select the "bbb" state and click on the - icon to delete that state</li>
-		<li>In the States palette, click on the + icon to define two states "ccc" and "ddd"</li>
-		<li>In the States palette, select the "ccc" state and click on the - icon to delete that state.</li>
-		<li>In the States palette, select the "aaa" state. Go to Outline palette and 
+		<li>In the Scenes palette, click on the + icon to define two states "aaa" and "bbb"</li>
+		<li>In the Scenes palette, select the "bbb" state and click on the - icon to delete that state</li>
+		<li>In the Scenes palette, click on the + icon to define two states "ccc" and "ddd"</li>
+		<li>In the Scenes palette, select the "ccc" state and click on the - icon to delete that state.</li>
+		<li>In the Scenes palette, select the "aaa" state. Go to Outline palette and 
 				click on the eyeball icon for the Label and Map to make them invisible for the "aaa" state.
 				(These widgets should become invisible on the canvas).</li>
-		<li>In the States palette, select the "ddd" state. Go to Outline palette and 
+		<li>In the Scenes palette, select the "ddd" state. Go to Outline palette and 
 				click on the eyeball icon for the Calendar and circle to make them invisible for the "ddd" state.
 				(These widgets should become invisible on the canvas).</li>
 		<li>Click on the "Save" icon on the main toolbar to save the new file. <span style="color:red">The asterisks that indicates that the file is "dirty" should go away.</span></li>
 		<li>Click on the "X" close button for the editor tab for this file</li>
 		<li>In the Files palette, double-click on the file you just created to re-open the file.</li>
-		<li>In the States palette, alternatively click on "Normal", "aaa" and "ddd".</li> </li>
+		<li>In the Scenes palette, alternatively click on "Background", "aaa" and "ddd".</li> </li>
 	</ol>
 	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
@@ -55,12 +55,78 @@
 				The Calendar should disappear in the "ddd" state.</li>
 	</ol>
 
+	<h2 class="test_section">(continuation of previous) Verifying Undo</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>(continuing on the same file created in the previous test)</li>
+		<li>Create a new state named "eee"</li>
+		<li>Issue an undo command.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>The "eee" state should no longer appear in the Scenes palette.</li>
+            	</ul>
+            </div>
+		</li>
+		<li>Issue an redo command.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>The "eee" state should re-appear in the Scenes palette.</li>
+            	</ul>
+            </div>
+		</li>
+		<li>Select the "eee" state. Using the "Modify state" icon (3rd icon in the palette), bring up the Modify State dialog.
+			In the dialog, change the state name from "eee" to "fff", and click on the checkbox to set
+			state "fff" to be the initial state.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>The "eee" state be replaced by an "fff" state in the Scenes palette.</li>
+            		<li>The "fff" state should have a checkmark to show that it will be the initial runtime state.</li>
+            	</ul>
+            </div>
+		</li>
+		<li>Issue an undo command.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>The "fff" state should be renamed back to "eee" and the checkmark should return to the Background/Background state.</li>
+            	</ul>
+            </div>
+		</li>
+		<li>Issue a redo command.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>The "fff" state should reappear with a checkmark.</li>
+            	</ul>
+            </div>
+		</li>
+		<li>Select the "ffff" state. Click on the delete state icon to remove the "fff" state.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>The "fff" state disappear from the Scenes palette.</li>
+            	</ul>
+            </div>
+		</li>
+		<li>Issue an undo command.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>The "fff" state should reappear.</li>
+            	</ul>
+            </div>
+		</li>
+		<li>Issue a redo command.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>The "fff" state disappear again.</li>
+            	</ul>
+            </div>
+		</li>
+	</ol>
+
 	<h2 class="test_section">(continuation of previous) Adding interactivity</h2>
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
 		<li>(continuing on the same file created in the previous test)</li>
 		<li>Select the first button widget. On the Properties palette, go to the onclick property
-				and use the dropdown menu to choose the option to switch to the "Normal" state</li>
+				and use the dropdown menu to choose the option to switch to the "Background" state</li>
 		<li>Select the second button widget. On the Properties palette, go to the onclick property
 				and use the dropdown menu to choose the option to switch to the "aaa" state</li>
 		<li>Select the third button widget. On the Properties palette, go to the onclick property
@@ -83,15 +149,15 @@
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
 		<li>(continuing on the same file created in the previous test)</li>
-		<li>In the States palette, select the "ddd" state. Go to Outline palette and 
+		<li>In the Scenes palette, select the "ddd" state. Go to Outline palette and 
 				click on the closed eyeball icon for the Calendar to make it visible
 				(the eyeball should open and the Calendar should become visible on the canvas),
 				then click on the open eyeball icon for the TextBox to make it invisible
 				(the eyeball should close and the TextBox should become invisible on the canvas).</li>
-		<li>On the States palette, go into the Normal state. 
+		<li>On the Scenes palette, go into the Background state. 
 				Select the first button widget. On the Styling palette, set the font size to 20.
 				Select the calendar widget. On the Properties palette, set the width to 200px.</li>
-		<li>On the States palette, go into the "aaa" state. </li>
+		<li>On the Scenes palette, go into the "aaa" state. </li>
 		<li>Select the second button widget. </li>
 		<li>Open up the CSS Cascade view for the 'font-size' property
 				by clicking on "&gt;" symbol to right of 'font-size' property.
@@ -104,7 +170,7 @@
 				Make sure radio button to left of 'element.style' is selected.
 				Scroll to very bottom of CSS cascade and turn on check box that says
 				'Only apply to current style (aaa)'. Set the width to 300px.</li>
-		<li>On the States palette, go into the "ddd" state. </li>
+		<li>On the Scenes palette, go into the "ddd" state. </li>
 		<li>Select the third button widget.</li>
 		<li>Open up the CSS Cascade view for the 'font-size' property
 				by clicking on "&gt;" symbol to right of 'font-size' property.
@@ -130,7 +196,7 @@
 				The Label should disappear when you click on the second button and 
 				the TextBox should disappear when you click on the third button.</li>
 		<li>In all 3 states, the first button should have a font size of 20</li>
-		<li>In the normal state, the Calendar whould be 200px wide.</li>
+		<li>In the Background state, the Calendar whould be 200px wide.</li>
 		<li>In the "aaa" state, the second button should have  a font size of 30 and the Calendar whould be 300px wide.</li>
 		<li>In the "ddd" state, the third button should have  a font size of 40 and the Calendar whould be 400px wide.</li>
 	</ol>
@@ -144,27 +210,27 @@
 			This is temporary UI just so users have some way to apply move and resize operations to a particular state.</li>
 		<li>Click on the flow/absolute mode icon on the toolbar and switch to absolute positioning.</li>
 		<li>Drag SampleBanner.jpg onto canvas.</li>
-		<li>In Normal state, drag to move it to a new location, and drag lower-right corner to make it smaller.</li>
+		<li>In Background state, drag to move it to a new location, and drag lower-right corner to make it smaller.</li>
 		<li>Click undo twice and redo twice. 
 			<span class='inlineExpected'>After two undo operations, the image should return to its original location and size.
 			After two redo operations, the image should return to its modified location and size.</span>
 		</li>
-		<li>On the States palette, go into the "aaa" state. </li>
+		<li>On the Scenes palette, go into the "aaa" state. </li>
 		<li>Drag/move the image with "s" key held down ('s' must be down at mouseup time).</li>
 		<li>Drag/resize the image with "s" key held down ('s' must be down at mouseup time).</li>
 		<li>Click undo twice and redo twice.
 			<span class='inlineExpected'>After two undo operations, the image should return to its previous location and size.
 			After two redo operations, the image should return to its modified location and size.</span>
 		</li>
-		<li>Change to Normal state and click Undo twice. Change to "aaa" state.
+		<li>Change to Background state and click Undo twice. Change to "aaa" state.
 			<span class='inlineExpected'>After two undo operations, the image should return to its previous location and size,
 			ie the last position and size before the two operations that were done with "s" key held down.</span>
 		</li>
-		<li>Change to Normal state and click Redo once. Change to "aaa" state.
+		<li>Change to Background state and click Redo once. Change to "aaa" state.
 			<span class='inlineExpected'>After this first redo operation, the image should now be at the location
 			it was after completing the move operation with "s" key down.</span>
 		</li>
-		<li>Change to Normal state and click Redo once. Change to "aaa" state.
+		<li>Change to Background state and click Redo once. Change to "aaa" state.
 			<span class='inlineExpected'>After this second redo operation, the image should now be at the location
 			and size it was after completing the resize operation with "s" key down.</span>
 		</li>
@@ -172,6 +238,162 @@
 	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
 		<li>As described within the text above.</li>
+	</ol>
+
+	<h2 class="test_section">Testing icons 4-6</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>New hi-fi sketch</li>
+		<li>In Scenes palette, make sure that the 5th icon 
+			indicates that new widgets will go into the Background state.</li>
+		<li>From Drawing Tools, add a Circle</li>
+		<li>In Scenes palette, create new states "aaa" and "bbb"</li>
+		<li>In Scenes palette, click on Background State. Select the Circle widget.
+			Click on 4th icon in Scenes palette to bring up the Manage States dialog.
+			See which checkboxes are checked.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>All 3 states should show the Circle as visible.</li>
+            		<li>States "aaa" and "bbb" should have this parenthetical text: "<em>(Visible from Background)</em>".</li>
+            	</ul>
+            </div>
+			In the dialog, uncheck the Background state and check the aaa state,
+			then click on "Update".
+			In the Scenes palette, alternately click on the 3 states.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>The Circle should be hidden in Background and bbb state, and
+            		visible in the aaa state.</li>
+            	</ul>
+            </div>
+		</li>
+		<li>Go into the "aaa" state so that the circle is visible.
+			Select the Circle.
+			Click on 4th icon in Scenes palette to bring up the Manage States dialog.
+			See which checkboxes are checked.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>Only the "aaa" state should be marked as visible.</li>
+            	</ul>
+            </div>
+        </li>
+        <li>Click on Update. In Scenes palette, cycle through the states.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>The Circle should only appear in the "aaa" state.</li>
+            	</ul>
+            </div>
+        </li>
+        <li>In Scenes palette, select the "aaa" state and then select the Circle.
+        	Click on 4th icon in Scenes palette to bring up the Manage States dialog.</li>
+		<li>Click on the (empty) eyeball beside "Background".
+			See which checkboxes are checked.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>Only the "Background" and "aaa" states should be marked as visible.
+            			This is because the "Update" action from previously using
+            			the Manage States dialog added explicit 'display' properties
+            			for each state for this widget, so the "bbb" state has
+            			display:none.</li>
+            	</ul>
+            </div>
+        </li>
+		<li>Click on the "Current state" hyperlink.
+			See which checkboxes are checked.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>Only the "aaa" states should be marked as visible.</li>
+            	</ul>
+            </div>
+        </li>
+		<li>Click on the "All" hyperlink.
+			See which checkboxes are checked.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>All states should be marked as visible.</li>
+            	</ul>
+            </div>
+        </li>
+		<li>Click on the "none" hyperlink.
+			See which checkboxes are checked.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>No states should be marked as visible.</li>
+            	</ul>
+            </div>
+        </li>
+		<li>Click on the "Background only" hyperlink.
+			See which checkboxes are checked.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>All 3 states should show the Circle as visible.</li>
+            		<li>States "aaa" and "bbb" should have this parenthetical text: "<em>(Visible from Background)</em>".</li>
+            	</ul>
+            </div>
+        </li>
+        <li>Click on Update, then in Scenes palette cycle through the states.
+        	The Circle should be visible in all 3 states.</li>
+        <li>Add a 4th state "ccc" and switch to that state. The Circle should
+        	be visible because it is visible in the Background state and no
+        	explicit override value has been provided for state "ccc".</li>
+        <li>Click on the "Background" state. Drag/drop an Arrow widget onto canvas.
+        	Click-select the Arrow (if not already selected). 
+        	Click on 4th icon in Scenes palette to bring up the Manage States dialog.
+        	Make the Arrow visible in the "ccc" state but not in any other states.
+        	Click "Update" to commit this change.
+        </li>
+        <li>Go into the "ccc" state, then multi-select the Circle and the Arrow.
+        	Click on 4th icon in Scenes palette to bring up the Manage States dialog.
+			See which checkboxes are checked.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>The Background, "aaa" and "bbb" states should have a filled rectangle
+            			instead of an eyeball to indicate a "mixed" value, and
+            			the parenthetical expressions "<em>(Some visible, some hidden)</em>"
+            			should appear to the right of the state name.</li>
+            		<li>State "ccc" should be visible, with the parenthetical express: "<em>(Some visible from Background)</em>".</li>
+            	</ul>
+            </div>
+        </li>
+        <li>Click on the eyeball for the "bbb" state to make all widgets visible in the "bbb" state.
+        	Click on Update. In the Scenes palette, cycle through the states:
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>Due to previous actions, Circle is in the Background (with no state-specific overrides), 
+            			so it should be visible in all states.</li>
+            		<li>The Arrow should be visible in the "bbb" and "ddd" states.</li>
+            	</ul>
+            </div>
+        </li>
+		<li>Go into "aaa" state. 
+			Make sure that the 5th icon is toggled such that new widgets go to Background state.
+			Drag/drop a CheckBox to the document. With CheckBox selected, bring up Manage States.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>All 4 states should show the CheckBox as visible.</li>
+            		<li>States "aaa", "bbb" and "ccc" should have this parenthetical text: "<em>(Visible from Background)</em>".</li>
+            	</ul>
+            </div>
+            Click Cancel to close the Dialog.
+		</li>
+		<li>Undo above operation. Click on the 5th icon so that new new widgets go into current state.
+			Drag/drop a CheckBox to the document. With CheckBox selected, bring up Manage States.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>CheckBox should be visible only in the "aaa" state.</li>
+            	</ul>
+            </div>
+            Click Cancel to close the Dialog.
+		</li>
+		<li>Click Undo to remove the CheckBox.</li>
+		<li>While in the "aaa" state, click on the 6th icon to highlight all widgets that come from the Background state.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>The Circle should be highlighted in red to show that this widget comes from
+            			the Background state rather than the current state.</li>
+            	</ul>
+            </div>
+		</li>
 	</ol>
 
 </body>

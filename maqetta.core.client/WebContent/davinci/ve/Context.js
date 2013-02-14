@@ -39,6 +39,7 @@ define([
 	"./utils/GeomUtils",
 	"dojo/text!./newfile.template.html",
 	"./utils/URLRewrite",
+	"davinci/ve/themeEditor/metadata/CSSThemeProvider",
 	"dojox/html/_base"	// for dojox.html.evalInGlobal	
 ], function(
 	require,
@@ -80,7 +81,8 @@ define([
 	Silhouette,
 	GeomUtils,
 	newFileTemplate,
-	URLRewrite
+	URLRewrite,
+	CSSThemeProvider
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
@@ -1319,7 +1321,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		window.setTimeout(function(){
 			this.widgetAddedOrDeleted();
 			connect.publish('/davinci/ui/context/loaded', [this]);
-			this.editor.setDirty(this.hasDirtyResources());
+			if(this._markDirtyAtLoadTime){
+				// Hack to allow certain scenarios to force the document to appear
+				// as dirty at document load time
+				this.editor.setDirty(true);
+				delete this._markDirtyAtLoadTime;
+				this.editor.save(true);		// autosave
+			}else{
+				this.editor.setDirty(this.hasDirtyResources());
+			}
+			this.addPseudoClassSelectors();
 		}.bind(this), 500);
 	},
 
@@ -1341,21 +1352,37 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}, this);
 		var promise = new Deferred();
 		all(prereqs).then(function() {
+			//FIXME: dojo/ready call may no longer be necessary, now that parser requires its own modules
 			this.getGlobal()["require"]("dojo/ready")(function(){
 				try {
 					// M8: Temporary hack for #3584.  Should be moved to a helper method if we continue to need this.
 					// Because of a race condition, override _getValuesAttr with a fixed value rather than querying
 					// individual slots.
 					try {
-						var swdp = this.getGlobal()["require"]("dojox/mobile/SpinWheelDatePicker");
-						if (swdp && swdp.prototype) {
-							var sup = swdp.prototype._getValuesAttr;
-							swdp.prototype._getValuesAttr = function() {
-								var v = sup.apply(this);
-								if (v && !v[0]) {
-									v = ["2013", "Jan", "1"];
-								}
-								return v;
+						var sws = this.getGlobal()["require"]("dojox/mobile/SpinWheelSlot");
+						if (sws && sws.prototype && !sws.prototype._hacked) {
+							sws.prototype._hacked = true;
+							console.warn("Patch SpinWheelSlot");
+							var keySuper = sws.prototype._getKeyAttr;
+							sws.prototype._getKeyAttr = function() {
+		                        if(!this._started) { 
+		                        	if(this.items) {
+		                        		for(var i = 0; i < this.items.length; i++) {
+		                        			if(this.items[i][1] == this.value) {
+		                        				return this.items[i][0];
+		                        			}
+		                        		}
+		                        	}
+		                        	return null;
+		                        }
+		                        return keySuper.apply(this);
+							};
+							var valueSuper = sws.prototype._getValueAttr;
+							sws.prototype._getValueAttr = function() {
+		                        if(!this._started){ 
+		                        	return this.value;
+		                        }
+		                        return valueSuper.apply(this);
 							};
 						}
 					}catch(e){
@@ -2484,6 +2511,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var url = systemResource.findResource(rule.parent.url).getURL(); // FIXME: can we skip findResource?
 			var fileName = URLRewrite.encodeURI(url);
 			var selectorText = rule.getSelectorText();
+			if (selectorText.indexOf(":") > -1) {
+				selectorText = CSSThemeProvider_replacePseudoClass(selectorText);
+			}
 //			console.log("------------  Hot Modify looking  " + fileName + " ----------------:=\n" + selectorText + "\n");
 			selectorText = selectorText.replace(/^\s+|\s+$/g,""); // trim white space
 			//var rules = sheet.cssRules;
@@ -2492,7 +2522,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				var rules = foundSheet.cssRules;
 				var r = 0;
 				for (r = 0; r < rules.length; r++){
-					if (rules[r] instanceof CSSStyleRule){
+					if (rules[r].type && rules[r].type == CSSRule.STYLE_RULE){
 						if (rules[r].selectorText == selectorText) {
 							/* delete the rule if it exists */
 							foundSheet.deleteRule(r);
@@ -2505,6 +2535,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				}
 				if (rule.properties.length) { // only insert rule if it has properties
 					var text = rule.getText({noComments:true});
+					if (text.indexOf(":") > -1) {
+						text = CSSThemeProvider_replacePseudoClass(text);
+					}
 //					console.log("------------  Hot Modify Insert " + foundSheet.href +  "index " +r+" ----------------:=\n" + text + "\n");
 					foundSheet.insertRule(text, r);
 				}
@@ -2521,10 +2554,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var foundSheet;
 			var rules = sheet.cssRules;
 			for (var r = 0; r < rules.length; r++){
-			    // NOTE: For some reason the instanceof check does not work on Safari..
-			    // So we are testing the constructor instead, but we have to test it as a string...
 			    var x = '' + rules[r].constructor;
-				if (rules[r] instanceof CSSImportRule || x === '[object CSSImportRuleConstructor]'){
+				if (rules[r].type && rules[r].type === CSSRule.IMPORT_RULE){
 				    var n = rules[r].href;
 					if (rules[r].href == sheetName) {
 						foundSheet = rules[r].styleSheet;
@@ -2544,7 +2575,50 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			return updateSheet(sheet, r);
 		});
 	},
+	
+	addPseudoClassSelectors: function (selectors) {
+		
+		function updateSheet(sheet){
 
+			if (sheet){
+				var rules = sheet.cssRules;
+				var r = 0;
+				for (r = 0; r < rules.length; r++){
+					// NOTE: For some reason the instanceof check does not work on Safari..
+				    // So we are testing the constructor instead, but we have to test it as a string...
+				    var y = rules[r];
+					if (y.type && y.type === CSSRule.IMPORT_RULE){
+						updateSheet(rules[r].styleSheet);
+					} else if (rules[r].type == CSSRule.STYLE_RULE){
+						var selectorText = rules[r].selectorText;
+						if (selectorText.indexOf(":") > -1) {
+							selectorText = CSSThemeProvider_replacePseudoClass(selectorText);
+							/*
+							 * For now we will just replace the selector text,
+							 * if this does not work well we can just append
+							 */
+							y.selectorText = selectorText;
+							/* delete the rule if it exists */
+							sheet.deleteRule(r);
+							sheet.insertRule(y.cssText, r);
+							break;
+						}
+					}
+					
+				}
+				return true;
+			}
+			return false;
+		}
+
+		
+		var sheets = this.getDocument().styleSheets;
+		dojo.some(sheets, function(sheet) {
+			return updateSheet(sheet);
+		});
+
+	},
+	
 	//FIXME: refactor. Move to Cascade.js?  need to account for polymorphism in themeEditor/Context
 	getStyleAttributeValues: function(widget){
 		//FIXME: This totally seems to have missed the array logic
@@ -3047,7 +3121,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				// Add the theme path so dojo can locate the *-compat.css files, if any
 				//mblLoadCompatPattern=/\/themes\/.*\.css$/;
 				var themePath = Theme.getThemeLocation().toString().replace(/\//g,'\\/');
-				var re = new RegExp('\/'+themePath+'\/.*\.css$');
+				//var re = new RegExp('\/'+themePath+'\/.*\.css$');
+				var re = new RegExp(''); //*-compat files not used
 				mblLoadCompatPattern=re;
 			}
 			this._addCssForDevice(ua, themeMap, this);
@@ -3334,6 +3409,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	hasDirtyResources: function(){
+		if(this._htmlFileDirtyOnLoad){}
 		var dirty = false;
 		var baseRes = systemResource.findResource(this.getDocumentLocation()); // theme editors don't have a base resouce. 
 		if (baseRes){
@@ -3385,55 +3461,90 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * @param widget {davinci.ve._Widget} A dvWidget
 	 * @param state [{String}] Optional parameter. If not provided or null or undefined or empty string,
 	 * 		then query for 'display' property on base state. Else, query for 'display' on given state.
+	 * @param overrides [{object}] Optional parameter. If provided, has the following fields
+	 * 			overrides['undefined'] [{string}] - Use this 'display' value for the Background/Normal/undefined state
+	 * 			overrides[state] [{string}] - Use this 'display' value for the state "state"
 	 * @return {Object} with two properties
 	 * 		effectiveDisplayValue {string} none|block|inline-block|etc
 	 * 		effectiveState {string} where "undefined" represents the base/NORMAL state
 	 */
-	getEffectiveDisplayValue: function(widget, state){
+	getEffectiveDisplayValue: function(widget, state, overrides){
 		var domNode = widget ? widget.domNode : null;
 		var effectiveDisplayValue = 'none';
 		// Quirk in code: Normal state is represented as "undefined" in data structures
 		var effectiveState = state ? state : 'undefined';
-		if(domNode){
-			var stateOverride = false;
-			if(domNode._maqDeltas){
-				var style = (domNode._maqDeltas[state] && domNode._maqDeltas[state].style);
-				if(style){
-					for(var i=0; i<style.length; i++){
-						var styleArray = style[i];
-						for(var prop in styleArray){
-							if(prop == 'display'){
-								effectiveDisplayValue = styleArray[prop];
-								stateOverride = true;
+		
+		// If "state" represents a custom state and there is an override 'display' value for that state,
+		// then use that override value
+		if(overrides && typeof overrides[effectiveState] == 'string' && overrides[effectiveState] != '$MAQ_DELETE_PROPERTY$'){
+			effectiveDisplayValue = overrides[effectiveState];
+			stateOverride = true;
+			
+		}else{
+			if(domNode){
+				var stateOverride = false;
+				if(domNode._maqDeltas && !(overrides && overrides[effectiveState] == '$MAQ_DELETE_PROPERTY$')){
+					var style = (domNode._maqDeltas[state] && domNode._maqDeltas[state].style);
+					if(style){
+						for(var i=0; i<style.length; i++){
+							var styleArray = style[i];
+							for(var prop in styleArray){
+								if(prop == 'display'){
+									effectiveDisplayValue = styleArray[prop];
+									stateOverride = true;
+								}
 							}
 						}
 					}
 				}
-			}
-			if(!stateOverride){
-				effectiveDisplayValue = domStyle.get(domNode, 'display');
-				effectiveState = 'undefined';
-			}
-			// If offsetLeft/Right/Top/Bottom are all zero, then widget is not visible
-			if(domNode.offsetLeft==0 && domNode.offsetTop==0 && domNode.offsetWidth==0 && domNode.offsetHeight==0){
-				effectiveDisplayValue = 'none';
-			}else{
-				// If any ancestors have display:none, then this widget is invisible
-				while(domNode && domNode.tagName.toUpperCase() != 'BODY'){
-					// Sometimes browsers haven't set up defaultView yet,
-					// and domStyle.get will raise exception if defaultView isn't there yet
-					if(domNode && domNode.ownerDocument && domNode.ownerDocument.defaultView){
-						var computedStyleDisplay = domStyle.get(domNode, 'display');
-						if(computedStyleDisplay == 'none'){
-							effectiveDisplayValue = 'none';
-							break;
+				if(!stateOverride){
+					// If there is an override 'display' value for the Background/Normal/undefined state,
+					// then use that override value
+					if(overrides && typeof overrides['undefined'] == 'string'){
+						effectiveDisplayValue = overrides['undefined'];
+					}else{
+						// See if there is a "undefined"/Normal/Background value in _maqDeltas
+						var undefinedStyle = (domNode._maqDeltas && domNode._maqDeltas['undefined'] && domNode._maqDeltas['undefined'].style);
+						var undefinedValue = false;
+						if(undefinedStyle){
+							for(var i=0; i<undefinedStyle.length; i++){
+								var styleArray = undefinedStyle[i];
+								for(var prop in styleArray){
+									if(prop == 'display'){
+										effectiveDisplayValue = styleArray[prop];
+										undefinedValue = true;
+									}
+								}
+							}
+						}
+						if(!undefinedValue){
+							// Else query the DOM for computed 'display' value
+							effectiveDisplayValue = domStyle.get(domNode, 'display');
 						}
 					}
-					domNode = domNode.parentNode;
+					effectiveState = 'undefined';
 				}
+				// If offsetLeft/Right/Top/Bottom are all zero, then widget is not visible
+				if(domNode.offsetLeft==0 && domNode.offsetTop==0 && domNode.offsetWidth==0 && domNode.offsetHeight==0){
+					effectiveDisplayValue = 'none';
+				}else{
+					// If any ancestors have display:none, then this widget is invisible
+					while(domNode && domNode.tagName.toUpperCase() != 'BODY'){
+						// Sometimes browsers haven't set up defaultView yet,
+						// and domStyle.get will raise exception if defaultView isn't there yet
+						if(domNode && domNode.ownerDocument && domNode.ownerDocument.defaultView){
+							var computedStyleDisplay = domStyle.get(domNode, 'display');
+							if(computedStyleDisplay == 'none'){
+								effectiveDisplayValue = 'none';
+								break;
+							}
+						}
+						domNode = domNode.parentNode;
+					}
+				}
+			}else{
+				effectiveDisplayValue = 'none';
 			}
-		}else{
-			effectiveDisplayValue = 'none';
 		}
 		return {effectiveDisplayValue:effectiveDisplayValue,effectiveState:effectiveState};
 	},
@@ -3537,7 +3648,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				this.widgetHash[id] = widget;
 			}
 		}, this);
-	}
+	},
+
 });
 
 });

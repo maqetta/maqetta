@@ -1,7 +1,6 @@
 package maqetta.core.server.user;
 
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -24,15 +23,13 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.server.review.Constants;
 import org.davinci.server.review.ReviewerVersion;
 import org.davinci.server.review.Version;
+import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.review.user.IDesignerUser;
 import org.davinci.server.review.user.IReviewManager;
 import org.davinci.server.review.user.Reviewer;
-import org.davinci.server.review.cache.ReviewCacheManager;
-import org.davinci.server.user.IDavinciProject;
 import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -47,7 +44,7 @@ import org.xml.sax.SAXException;
 public class ReviewManager implements IReviewManager {
 //	private static final String LS = System.getProperty("line.separator");
 	private static ReviewManager theReviewManager;
-	private HashMap<IDavinciProject, HashMap<String, ILibInfo[]>> snapshotLibs;
+//	private HashMap<IDavinciProject, HashMap<String, ILibInfo[]>> snapshotLibs;
 	public IStorage baseDirectory;
 	
 	public static ReviewManager getReviewManager()
@@ -71,7 +68,7 @@ public class ReviewManager implements IReviewManager {
 		baseDirectory = ServerManager.getServerManger().getBaseDirectory();
 	}
 
-	public void saveDraft(IDesignerUser user, Version version) {
+	public void saveDraft(IDesignerUser user, Version version) throws IOException {
 		IStorage commentingDir = user.getCommentingDirectory();
 		if (!commentingDir.exists()) {
 			commentingDir.mkdir();
@@ -80,7 +77,7 @@ public class ReviewManager implements IReviewManager {
 		saveVersionFile(user);
 	}
 
-	public void publish(IDesignerUser user, Version version) {
+	public void publish(IDesignerUser user, Version version) throws IOException {
 		IStorage commentingDir = user.getCommentingDirectory();
 		if (!commentingDir.exists()) {
 			commentingDir.mkdir();
@@ -99,20 +96,20 @@ public class ReviewManager implements IReviewManager {
 	
 	/****************************************************/
 	
-	private void saveReviewerVersionFiles(Version version) {
+	private void saveReviewerVersionFiles(Version version) throws IOException {
 		List<Reviewer> reviewers = version.getReviewers();
 		for (Reviewer reviewer : reviewers) {
 			this.saveReviewerVersionFile(reviewer);
 		}
 	}
 	
-	private void saveReviewerVersionFile(Reviewer reviewer) {
+	private void saveReviewerVersionFile(Reviewer reviewer) throws IOException {
 		IStorage versionFile = getReviewerVersionFile(reviewer);
 		ReviewerVersionFile file = new ReviewerVersionFile();
 		file.save(versionFile, reviewer);
 	}
 	
-	private IStorage getReviewerVersionFile(Reviewer reviewer) {
+	private IStorage getReviewerVersionFile(Reviewer reviewer) throws IOException {
 		IStorage versionFile = baseDirectory.newInstance(getReviewerVersionDirectory(), this.buildBaseFileForFromReviewer(reviewer)); 
 		return versionFile;
 	}
@@ -122,7 +119,7 @@ public class ReviewManager implements IReviewManager {
 		return fileName;
 	}
 	
-	private IStorage getReviewerVersionDirectory() {
+	private IStorage getReviewerVersionDirectory() throws IOException {
 		//Init the directory to hold version info for all of the reviewers and return it
 		IStorage reviewerVersionsDirectory = baseDirectory.newInstance(baseDirectory, Constants.REVIEW_DIRECTORY_NAME);
 		if (!reviewerVersionsDirectory.exists()) {
@@ -133,14 +130,14 @@ public class ReviewManager implements IReviewManager {
 	/**************************************************/
 	
 
-	public void saveVersionFile(IDesignerUser user) {
+	public void saveVersionFile(IDesignerUser user) throws IOException {
 		IStorage commentingDir = user.getCommentingDirectory();
 		IStorage versionFile = commentingDir.newInstance(commentingDir, "snapshot/versions.xml");
 		VersionFile file = new VersionFile();
 		file.save(versionFile, user);
 	}
 
-	private void initVersionDir(IDesignerUser user, String timeStamp) {
+	private void initVersionDir(IDesignerUser user, String timeStamp) throws IOException {
 		IStorage commentingDir = user.getCommentingDirectory();
 		IStorage versionDir = commentingDir.newInstance(commentingDir, "snapshot/" + timeStamp);
 		if(versionDir.exists()) {
@@ -168,17 +165,17 @@ public class ReviewManager implements IReviewManager {
 		}
 	}
 
-	private void copyDirectory(IStorage sourceDir, IStorage destinationDir) {
+	private void copyDirectory(IStorage sourceDir, IStorage destinationDir) throws IOException {
 		destinationDir.mkdirs();
 		IStorage[] file = sourceDir.listFiles();
 		for (int i = 0; i < file.length; i++) {
 			if (file[i].isFile()) {
-
 				IStorage sourceFile = file[i];
 
 				IStorage targetFile = destinationDir.newInstance(destinationDir, file[i].getName());
 				copyFile(sourceFile, targetFile);
 			}
+
 			if (file[i].isDirectory()) {
 				IStorage destination = destinationDir.newInstance(destinationDir, file[i].getName());
 				copyDirectory(file[i], destination);
@@ -186,26 +183,29 @@ public class ReviewManager implements IReviewManager {
 		}
 	}
 
-	private void copyFile(IStorage source, IStorage destination) {
+	private void copyFile(IStorage source, IStorage destination) throws IOException {
+		InputStream in = null;
+		OutputStream out = null;
 		try {
 			destination.getParentFile().mkdirs();
-			InputStream in = source.getInputStream();
-			OutputStream out = destination.getOutputStream();
+			in = source.getInputStream();
+			out = destination.getOutputStream();
 			byte[] buf = new byte[1024];
 			int len;
 			while ((len = in.read(buf)) > 0) {
 				out.write(buf, 0, len);
 			}
-			in.close();
-			out.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-			// throw new UserException(UserException.ERROR_COPYING_USER_BASE_DIRECTORY);
+		} finally {
+			if (in != null) {
+				in.close();
+			}
+			if (out != null) {
+				out.close();
+			}
 		}
 	}
 
-	public IDesignerUser getDesignerUser(IUser user) {
+	public IDesignerUser getDesignerUser(IUser user) throws IOException {
 		String name = user.getUserID();
 		IDesignerUser designer = designerUsers.get(name);
 		if (null == designer) {
@@ -218,7 +218,7 @@ public class ReviewManager implements IReviewManager {
 		return designer;
 	}
 	
-	public IDesignerUser getDesignerUser(String name) {
+	public IDesignerUser getDesignerUser(String name) throws IOException {
 		IDesignerUser designer = designerUsers.get(name);
 		if (designer == null) {
 			IUser user = ServerManager.getServerManger().getUserManager().getUser(name);
@@ -229,11 +229,11 @@ public class ReviewManager implements IReviewManager {
 		return designer;
 	}
 	
-	public Reviewer getReviewer(String email) {
+	public Reviewer getReviewer(String email) throws IOException {
 		return getReviewer(null, email);
 	}
 	
-	public Reviewer getReviewer(String name, String email) {
+	public Reviewer getReviewer(String name, String email) throws IOException {
 		Reviewer reviewer = reviewers.get(email);
 		if (null == reviewer) {
 			reviewer = loadReviewer(name, email);
@@ -241,14 +241,22 @@ public class ReviewManager implements IReviewManager {
 		return reviewer;
 	}
 
-	public Reviewer isVaild(String name, String id, String versionTime) {
-		IDesignerUser user = getDesignerUser(name);
-		if (versionTime == null) {
-			if (user.getLatestVersion() != null)
-				versionTime = user.getLatestVersion().getTime();
-		}
-		if (versionTime == null)
+	public Reviewer isValid(String name, String id, String versionTime) {
+		IDesignerUser user;
+		try {
+			user = getDesignerUser(name);
+		} catch (IOException e) {
+			e.printStackTrace(); //TODO
 			return null;
+		}
+		if (versionTime == null) {
+			if (user.getLatestVersion() != null) {
+				versionTime = user.getLatestVersion().getTime();
+			}
+		}
+		if (versionTime == null) {
+			return null;
+		}
 		List<Version> versionList = user.getVersions();
 		for (Version version : versionList) {
 			if (version.getTime().equals(versionTime)) {
@@ -263,7 +271,7 @@ public class ReviewManager implements IReviewManager {
 		return null;
 	}
 
-	private IDesignerUser loadDesignerUser(IUser user) {
+	private IDesignerUser loadDesignerUser(IUser user) throws IOException {
 		//Create the designer user
 		String name = user.getUserID();
 		IDesignerUser designerUser = new DesignerUser(user);
@@ -286,7 +294,7 @@ public class ReviewManager implements IReviewManager {
 		return designerUser;
 	}
 	
-	private Reviewer loadReviewer(String name, String email) {
+	private Reviewer loadReviewer(String name, String email) throws IOException {
 		Reviewer reviewer = new Reviewer(name, email);
 		IStorage versionFile = getReviewerVersionFile(reviewer);
 		if (versionFile.exists()) {
@@ -313,36 +321,25 @@ public class ReviewManager implements IReviewManager {
 		}
 		return false;
 	}
-	
+
 	public String getReviewUrl(String designerId, String version, String requestUrl) {
-		String protocol = requestUrl.substring(0, requestUrl.indexOf("://")+3);
-		String host = requestUrl.substring(0, requestUrl.indexOf('/', protocol.length()));
-		return host + "/maqetta?"
+		String prefix = requestUrl.substring(0, requestUrl.indexOf("/cmd/"));
+		return prefix + "?"
 				+ IDavinciServerConstants.REVIEW_DESIGNER_ATTR + "="
-				+ designerId+ "&"
+				+ designerId /* FIXME: encode? */ + "&"
 				+ IDavinciServerConstants.REVIEW_VERSION_ATTR + "=" + version;
 	}
-	
-	class VersionFile {
+
+	private class VersionFile {
 		public String latestVersionID;
 
-		public void save(IStorage file, IDesignerUser user) {
+		public void save(IStorage file, IDesignerUser user) throws IOException {
 			OutputStream out = null;
 			try {
-				if (!file.exists())
-					try {
-						file.createNewFile();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
-				try {
-					out = file.getOutputStream();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if (!file.exists()) {
+					file.createNewFile();
 				}
+				out = file.getOutputStream();
 				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 				DocumentBuilder builder = factory.newDocumentBuilder();
 				Document document = builder.newDocument();
@@ -409,18 +406,13 @@ public class ReviewManager implements IReviewManager {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} finally {
-				try {
-					if (out != null) {
-						out.close();
-					}
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if (out != null) {
+					out.close();
 				}
 			}
 		}
 
-		public List<Version> load(IStorage file) {
+		public List<Version> load(IStorage file) throws IOException {
 			ArrayList<Version> objects = new ArrayList<Version>();
 			InputStream input = null;
 			if (file.exists()) {
@@ -478,25 +470,15 @@ public class ReviewManager implements IReviewManager {
 						objects.add(version);
 
 					}
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				} catch (ParserConfigurationException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (SAXException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				} finally {
-					try {
-						if (input != null)
-							input.close();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					if (input != null) {
+						input.close();
 					}
 				}
 			}
@@ -504,25 +486,17 @@ public class ReviewManager implements IReviewManager {
 		}
 	}
 	
-	class ReviewerVersionFile {
+	private class ReviewerVersionFile {
 		
-		public void save(IStorage file, org.davinci.server.review.user.Reviewer reviewer) {
+		public void save(IStorage file, org.davinci.server.review.user.Reviewer reviewer) throws IOException {
 			OutputStream out = null;
 			try {
-				if (!file.exists())
-					try {
-						file.createNewFile();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
-				try {
-					out = file.getOutputStream();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if (!file.exists()) {
+					file.createNewFile();
 				}
+
+				out = file.getOutputStream();
+
 				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 				DocumentBuilder builder = factory.newDocumentBuilder();
 				Document document = builder.newDocument();
@@ -561,18 +535,13 @@ public class ReviewManager implements IReviewManager {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} finally {
-				try {
-					if (out != null) {
-						out.close();
-					}
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if (out != null) {
+					out.close();
 				}
 			}
 		}
 
-		public List<ReviewerVersion> load(IStorage file) {
+		public List<ReviewerVersion> load(IStorage file) throws IOException {
 			ArrayList<ReviewerVersion> objects = new ArrayList<ReviewerVersion>();
 			InputStream input = null;
 			if (file.exists()) {
@@ -593,26 +562,15 @@ public class ReviewManager implements IReviewManager {
 						objects.add(version);
 
 					}
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				} catch (ParserConfigurationException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (SAXException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				} finally {
-					try {
-						if (input != null)
-							input.close();
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					if (input != null)
+						input.close();
 				}
 			}
 			return objects;

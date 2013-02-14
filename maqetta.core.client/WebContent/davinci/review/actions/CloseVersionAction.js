@@ -45,7 +45,7 @@ var CloseVersionAction = declare("davinci.review.actions.CloseVersionAction", [_
 			return false;
 		}
 		var item = selection[0].resource.elementType=="ReviewFile"?selection[0].resource.parent:selection[0].resource;
-		if (item.designerId == davinci.Runtime.userName) { 
+		if (item.designerId == Runtime.userName) { 
 			//Only enable if the current user is also the review's designer
 			if (!item.closed&&!item.isDraft) { 
 				return true; 

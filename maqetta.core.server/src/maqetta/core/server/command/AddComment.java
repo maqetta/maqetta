@@ -150,7 +150,7 @@ public class AddComment extends Command {
 		}
 
 		Map<String, String> props = new HashMap<String, String>();
-		props.put("displayName", reviewer.getPerson().getEmail());
+		props.put("displayName", reviewer.getPerson().getDisplayName());
 		props.put("pagename", pageName);
 		props.put("url", ReviewManager.getReviewManager().getReviewUrl(comment.getDesignerId(), comment.getPageVersion(),  requestUrl)); 
 		props.put("title", commentTitle);
@@ -161,7 +161,7 @@ public class AddComment extends Command {
 		props.put("viewscenelist", comment.getViewSceneList());
 		props.put("time", comment.getCreated().toString());
 		
-		return Utils.substitude(Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT), props);
+		return Utils.substitute(Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT), props);
 	}
 
 	protected Comment extractComment(HttpServletRequest req) {

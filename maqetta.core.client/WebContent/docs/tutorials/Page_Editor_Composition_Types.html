@@ -1,0 +1,270 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Tutorial 5 - Page Editor Introduction - Composition Types</title>
+</head>
+<body class="maqettadocs">
+
+<style type="text/css">
+table.CompTypeTable {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+table.CompTypeTable td, table.CompTypeTable th {
+	padding:3px;
+	border:1px solid black;
+}
+table.CompTypeTable th {
+	font-style:italic;
+	font-weight:bold;
+	background:#888;
+}
+table td.CompTypeOption {
+	font-weight:bold;
+}
+tr.desktop {
+	background-color:#ddf;
+}
+tr.mobile {
+	background-color:#dfd;
+}
+</style>
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td> &nbsp; </td>
+    <td class="prevnext">
+	<a href="tutorials/Cloud_Workspace_Files_Projects.html">Previous</a> / <a href="tutorials/Page_Editor_Basics_1.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Tutorial 5 - Page Editor Introduction - Composition Types</h1>
+
+<div class='note'>
+	When going through Maqetta's tutorials, it is suggested that you have two side-by-side
+	browser windows open, one showing the tutorial, and the other where you run the application
+	and perform the steps listed in the tutorial.<br/>
+	<img src='img/SideBySideTutorialsApp.png' class='side_by_side'/>
+</div>
+
+<p>This tutorial covers the following topics:</p>
+<ul>
+	<li>The Create menu</li>
+	<li>Creating a new Mobile Application</li>
+	<li>Composition types: mobile app vs desktop versus vs sketch (hi-fi and lo-fi)</li>
+	<li>Other features in the Create dialog</li>
+	<li>Creating a new Desktop Application</li>
+	<li>Creating a new Sketch (high-fidelity) in the page editor</li>
+	<li>Creating a new Sketch (low-fidelity) in the page editor</li>
+</ul>
+
+
+<a name="newfile"><h2>The Create menu</h2></a>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Press on the <b>Create</b> button found on the top/center menubar.</li>
+<p>You will see the following commands:</p>
+<div class="image">
+<a href="img/NewHtmlDialog.png" target="_blank"><img alt="image" src="img/NewHtmlDialog.png" style="margin: 1em 1em 0pt 0pt; height:230px; border:1px solid gray;" /></a>
+</div>
+
+<a name="newfile"><h2>Creating a new Mobile Application</h2></a>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	From the <strong>Create</strong> menu, choose the command <strong>Create -&gt; Mobile Application</strong>.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Create Mobile Application dialog, click on the "Create" button to accept the default options. 
+		Maqetta will open the page editor within an actual size replica of the selected device. With the current release of Maqetta,
+		mobile composition types always use a high fidelity CSS theme and always initialize with flow layout.</li>
+
+<div class="image">
+<a href="img/MobileAppInitial.png" target="_blank"><img alt="image" src="img/MobileAppInitial.png" style="margin: 1em 1em 0pt 0pt; width:500px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+
+<p>Notice the <strong>Palette</strong> on the left side of the application.
+	It shows a list of widgets that users often will want to use when creating
+	a mobile application.</p>
+<div class="image">
+<a href="img/Palette_mobile.png" target="_blank"><img alt="image" src="img/Palette_mobile.png" style="margin: 1em 1em 0pt 0pt; height:230px; border:1px solid gray;" /></a>
+</div>
+	
+<div class='note'>
+	Maqetta shows a different set of widgets, and a different order of widgets,
+	depending on the composition type (mobile app vs desktop app vs sketch).
+</div>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Palette</b>, click on the <b>Heading</b> section to open that section, then
+	drag a Heading widget onto the canvas.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Palette</b>, click on the <b>Controls</b> section to open that section, then
+	click on the <b>Buttons</b> sub-section to open that sub-section.
+	Drag/drop a Button widget onto the canvas.</li>
+
+<div class='note'>
+	Note that the mobile widgets snap to the top of the canvas and are styled 
+	appropriately for mobile devices.
+</div>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the file tab's close button -
+	<img src='img/close_sel.gif' class='exact_size_inline_icon'/>
+	- to close the page editor. (Click OK on the "are you sure" dialog.)</li>
+</ol>
+
+<a name="flow_vs_absolute"><h2>Composition types: mobile app vs desktop versus vs sketch (hi-fi and lo-fi)</h2></a>
+
+<p>The Create menu lets use choose between multiple <em>composition types</em>:</p>
+<table class='CompTypeTable'>
+<tr><th>Composition type</th><th>Target device</th><th>Fidelity</th><th>Palette: widget ordering</th><th>Initial layout: flow vs. absolute</th></tr>
+<tr class="desktop"><td class="CompTypeOption">Mobile Application</td><td>Mobile</td><td>High (uses final-form mobile CSS theme)</td><td>Common mobile widgets first</td><td>Flow</td></tr>
+<tr class="desktop"><td class="CompTypeOption">Desktop Application</td><td>Desktop</td><td>High (uses final-form desktop CSS theme)</td><td>Common desktop widgets first</td><td>Flow</td></tr>
+<tr class="desktop"><td class="CompTypeOption">Sketch (high-fidelity)</td><td>Desktop</td><td>High (uses final-form CSS theme)</td><td>Drawing tools and clip art first</td><td>Absolute</td></tr>
+<tr class="desktop"><td class="CompTypeOption">Sketch (low-fidelity)</td><td>Desktop</td><td>Low (uses pseudo hand-drawn CSS theme)</td><td>Drawing tools and clip art first</td><td>Absolute</td></tr>
+</table>
+
+<a name="flow_vs_absolute"><h2>Other features in the Create dialog</h2></a>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Once again, from the <strong>Create</strong> menu, 
+	choose the command <strong>Create -&gt; Mobile Application</strong>.</li>
+When you first run Maqetta, the Create dialog by default will place your HTML file in the <em>root</em> folder of your workspace.
+You can view the contents of your workspace by clicking on the right arrow icon to the right of the "Where" drop down menu. The dialog will
+grow to show the contents of your workspace:</p>
+
+<div class="image">
+<a href="img/NewHtmlFileShowWorkspace.png" target="_blank"><img alt="image" src="img/NewHtmlFileShowWorkspace.png" style="margin: 1em 1em 0pt 0pt; width:200px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+
+<p>Note that a <strong>New Folder...</strong> button appears. This allows you to create folders from the Create dialog.</p>
+<p>Finally, notice the <strong>Theme...</strong> button at the lower-left. This button brings up the <strong>Select theme...</strong> dialog
+in case you would like the page editor to open using particular CSS theme(s). This is a more advanced feature that we won't 
+be covering in this tutorial.</p>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click the <b>Cancel</b> button on the Create Mobile Application dialog.</li>
+</ol>
+
+<a name="newfile"><h2>Creating a new Desktop Application</h2></a>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Bring up the <b>Create Desktop Application...</b> dialog. The dialog will be show a default filename.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click the <b>Create</b> button to create a new file with the default filename.</li>
+<p>A new blank HTML file is opened in the page editor, with the filename displayed at the top.
+Your workspace should now look something like this:</p>
+<div class="image">
+<a href="img/PageEditorNewFile.png" target="_blank"><img alt="image" src="img/PageEditorNewFile.png" style="margin: 1em 1em 0pt 0pt; width:500px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+
+<p>Notice the <strong>Palette</strong> on the left side of the application.
+	It shows a list of widgets that users often will want to use when creating
+	a desktop application.</p>
+<div class="image">
+<a href="img/Palette_desktop.png" target="_blank"><img alt="image" src="img/Palette_desktop.png" style="margin: 1em 1em 0pt 0pt; height:230px; border:1px solid gray;" /></a>
+</div>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Palette</b>, click on the <b>Controls</b> section to open that section, then
+click on the the subsection labelled <b>TextBox</b>.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Find the <b>TextBox</b> widget (might be first one in the list). Drag a TextBox widget onto the canvas.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Find the <b>Button</b> widget in the list of <b>Buttons</b> subsection of <b>Controls</b>. Drag/drop 2 Button widgets onto the canvas.</li>
+<div class="image">
+<a href="img/NewHtmlHiFiPage.png" target="_blank"><img alt="image" src="img/NewHtmlHiFiPage.png" style="margin: 1em 1em 0pt 0pt; width:400px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+<div class='note'>Note that the TextBox and Buttons have final-form visual styling (using the "claro" theme from Dojo)
+and are using <em>flow layout</em>.</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Palette</b>, click on the <b>Controls</b> section title to close the section.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click the "x" button on the editor tab just under the toolbar to close this page editor. (Click OK for the prompt that asks "are you sure?")</li>
+</ol>
+
+<a name="newfile"><h2>Creating a new Sketch (high-fidelity) in the page editor</h2></a>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Using the Create menu, issue a <b>Create Sketch (high-fidelity)</b> command.
+</li> 
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click the <b>Create</b> button to create a new file with the default filename.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Palette</b>, click on the <b>Controls</b> section to open that section, then
+click on the the subsection labelled <b>TextBox</b>.</li>
+
+
+<p>Notice the <strong>Palette</strong> on the left side of the application.
+	It shows a list of widgets that users often will want to use when creating
+	a desktop application.</p>
+<div class="image">
+<a href="img/Palette_sketch.png" target="_blank"><img alt="image" src="img/Palette_sketch.png" style="margin: 1em 1em 0pt 0pt; height:230px; border:1px solid gray;" /></a>
+</div>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Drag a TextBox widget onto the canvas.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Find the <b>Button</b> widget in the list of <b>Buttons</b> subsection of <b>Controls</b>. Drag/drop 2 Button widgets onto the canvas.</li>
+<div class="image">
+<a href="img/NewHtmlHiFiSketch.png" target="_blank"><img alt="image" src="img/NewHtmlHiFiSketch.png" style="margin: 1em 1em 0pt 0pt; width:400px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+<div class='note'>Note that the TextBox and Buttons have final-form visual styling (using the "claro" theme from Dojo)
+but are positioned at absolute locations on the page. (Your screen probably looks much different than this snapshot
+because you probably dropped the widgets at different locations that what is shown here.)</div>
+
+<div class='note'>As you dragged the Buttons onto the page, you might have noticed magenta-colored
+horizontal and vertical lines appear and disappear. These are "snap lines" that help you align
+widgets to one another. Snap lines only work for widgets that are positioned on the page absolutely.</div>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Palette</b>, click on the <b>Controls</b> section title to close the section.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click the "x" button on the file tab to close this page editor. (Click OK for the prompt that asks "are you sure?")</li>
+</ol>
+
+<a name="newfile"><h2>Creating a sketch (low-fidelity) in the page editor</h2></a>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Using the Create menu, issue a <b>Create Sketch (low-fidelity)</b> command.
+</li> 
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click the <b>Create</b> button to create a new file with the default filename.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Palette</b>, click on the <b>Controls</b> section to open that section, then
+click on the the subsection labelled <b>TextBox</b>.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Drag a TextBox widget onto the canvas.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Find the <b>Button</b> widget in the list of <b>Buttons</b> subsection of <b>Controls</b>. Drag/drop 2 Button widgets onto the canvas.</li>
+<div class="image">
+<a href="img/NewHtmlLoFiSketch.png" target="_blank"><img alt="image" src="img/NewHtmlLoFiSketch.png" style="margin: 1em 1em 0pt 0pt; width:400px;" /></a>
+<div>Click on the image to enlarge it.</div>
+</div>
+<div class='note'>Note that the TextBox and Buttons have pseudo hand-drawn, black-and-white visual styling
+and are positioned at absolute locations on the page.</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Palette</b>, click on the <b>Controls</b> section title to close the section.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click the "x" button on the editor tab just under the toolbar to close this page editor. (Click OK for the prompt that asks "are you sure?")</li>
+</ol>
+
+<br />
+<p class="prevnext"><a href="tutorials/Cloud_Workspace_Files_Projects.html">Previous</a> / <a href="tutorials/Page_Editor_Basics_1.html">Next</a></p>
+
+</div> <!-- pagebody -->
+
+</body>
+</html>

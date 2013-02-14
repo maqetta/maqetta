@@ -47,6 +47,8 @@
                class="maqetta.server.orion.command.GetInitializationInfo" />
          <command path="setWorkbenchState"  isPut="true"
                class="maqetta.server.orion.command.SetWorkbenchState" />
+       <command path="login" noLogin="true" 
+               class="maqetta.server.orion.command.Login" />
          
          <command path="configProject"  
                class="maqetta.server.orion.command.ConfigProject" />

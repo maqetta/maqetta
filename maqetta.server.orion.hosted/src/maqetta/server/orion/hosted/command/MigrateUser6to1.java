@@ -44,7 +44,7 @@ public class MigrateUser6to1 extends Command {
 
   
     
-    private void migrateUser(IUser user){
+    private void migrateUser(IUser user) throws IOException {
     	File oldWorkspace = getOldWorkspace(user);
     	OrionUser orionUser = (OrionUser)user;
     	IStorage workspace = new StorageFileSystem(oldWorkspace);
@@ -74,7 +74,7 @@ public class MigrateUser6to1 extends Command {
     	return null;
     }
     
-    public static void copyDirectory(IStorage source, IStorage destination) {
+    public static void copyDirectory(IStorage source, IStorage destination) throws IOException {
 		IStorage[] list = source.listFiles();
 		
 		for (int i = 0; i < list.length; i++) {

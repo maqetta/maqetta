@@ -21,7 +21,6 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	_latestLayoutMode: "flow",
 
     constructor: function (element, fileName) {
-
         this._bc = new BorderContainer({}, element);
 
         this.domNode = this._bc.domNode;
@@ -29,9 +28,8 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
         this._commandStack = new CommandStack(this);
         this.savePoint=0;
 
-        this._designCP = new ContentPane({'class':'designCP',region:'center'});
+        this._designCP = new ContentPane({'class':'designCP', region:'center'});
         this._bc.addChild(this._designCP);
-
 
         this.visualEditor = new VisualEditor(this._designCP.domNode, this);
         this.currentEditor = this.visualEditor;
@@ -109,13 +107,13 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	},
 	
 	_contextLoaded: function(){
-		if(davinci.Runtime.currentEditor == this && this.editorContainer){
+		if(Runtime.currentEditor == this && this.editorContainer){
 			this.editorContainer.updateToolbars();
 		}
 	},
 	
 	_deviceChanged: function(){
-		if(davinci.Runtime.currentEditor == this && this.editorContainer){
+		if(Runtime.currentEditor == this && this.editorContainer){
 			var context = this.getContext();
 			if(context && context.updateFocusAll){
 				// setTimeout is fine to use for updateFocusAll
@@ -249,16 +247,16 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	     *     - we are in an editor mode which has a view editor (not source mode)
 	     *     - we are the current editor
 	     */
-		if( this._displayMode == "source" || davinci.Runtime.currentEditor !== this ) {
+		if(this._displayMode == "source" || Runtime.currentEditor !== this) {
 			return;
 		}
 		
 		this._selectionCssRules = null;
-		if ( selection.length ) {
+		if (selection.length) {
 			var htmlElement = selection[0].model;
-			if ( htmlElement && htmlElement.elementType == "HTMLElement" ) {
+			if (htmlElement && htmlElement.elementType == "HTMLElement") {
 				var id = htmlElement.getAttribute("id");
-				if ( id && this._displayMode!="source" ) {
+				if (id && this._displayMode!="source") {
 					var widget = widgetUtils.byId(id, this.visualEditor.context.getDocument());
 					this.visualEditor.context.select(widget);
 				}
@@ -313,6 +311,8 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		var context = this.visualEditor.context,
 			statesScenes = context ? context.getStatesScenes() : undefined;
 		this.visualEditor.setContent(this.fileName, this.htmlEditor.model);
+		context.getCommandStack().clear();
+		this.editorContainer.updateToolbars();
 		dojo.publish('/davinci/ui/context/pagerebuilt', [context]);
 		if(statesScenes){
 			context.setStatesScenes(statesScenes);

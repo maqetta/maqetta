@@ -109,7 +109,7 @@ ViewHelper.prototype = {
 				if(pnode && !node_added){
 					for(var i=0;i<pnode.children.length;i++){
 						var n = pnode.children[i];
-						if(domClass.contains(n,"mblView")){
+						if(n != node && domClass.contains(n,"mblView")){
 							if(n.style.display != "none" || 
 									(n && n._dvWidget && n._dvWidget.dijitWidget &&
 									n._dvWidget.dijitWidget.get('selected'))){

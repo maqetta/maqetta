@@ -1,0 +1,153 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Maqetta 9 Release Notes</title>
+<style type="text/css">
+.majortopic { font-size:105%; font-weight:bold; color:#a0a; }
+.minortopic { font-weight:bold; }
+</style>
+</head>
+
+<body class="maqettadocs">
+<!-- Header -->
+<!--
+<iframe src ="header.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+-->
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td> &nbsp; </td>
+    <td class="prevnext">
+    <a href="releasenotes/release8.html">Previous</a> / <a href="releasenotes/release10.html">Next</a>
+    </td></tr>
+</table>
+
+
+<h1>Maqetta 9 Release Notes</h1>
+
+<p>The Maqetta 9 release includes the following updates:</p>
+
+<ul style="margin-top: 0pt;" type="disc">
+	<li><p><span class='majortopic'>Several new tutorials</span> - 
+		Release 9 now several new tutorials. The learning materials
+		for Maqetta are now reasonably comprehensive.
+	</li>
+	<li><p><span class='majortopic'>LDAP integration option</span> - 
+		Release 9 provides hooks so that intranet installations of Maqetta can integrate
+		with a company's LDAP-based user authentication system. Site administrators
+		who wish to integrate their custom deployment of Maqetta with their LDAP
+		should customize the <code>maqetta.conf</code>
+		file within the Maqetta distribution and search for the "LDAP" options in that file.
+	</li>
+	<li><p><span class='majortopic'>WAR file so Maqetta can be deployed on Tomcat</span> - 
+		Release 9 now includes a WAR version of Maqetta so that Maqetta can be integrated
+		with application servers such as Tomcat.
+	</li>
+	<li><p><span class='majortopic'>Application States enhancements in Scenes Palette</span> - 
+		Release 9 adds three new icons to the Scenes palette which provide additional
+		productivity features when working with Maqetta's application states feature:</p>
+		<ul>
+			<li><span class='minortopic'>Manage widget visibility icon</span> 
+				<img src='img/ManageWidgetVisibility.gif' style='vertical-align:middle; margin:0px 3px;'/> - 
+				(Active only when there is at least one selected widget)
+				This icon brings up the Manage Widget Visibility dialog, which
+				allows you to see at a glance in which application states the current selected
+				widgets are visible, and allows you to change the visibility of the given widgets
+				in each of the application states. Additional notes:
+				<ul>
+					<li>The dialog will indicate (via a text note) whether
+						widgets that are visible within a particular custom state are the result of
+						being visible in the Background state and therefore "shining through" to the
+						given custom state. </li>
+					<li>The dialog includes a "Background only" button which will push all selected
+						widgets to the Background so that they will be visible in all states.</li>
+				</ul>
+			</li>
+			<li><span class='minortopic'>New widgets to current state toggle icon</span> 
+				<img src='img/GoBackground.gif' style='vertical-align:middle; margin:0px 3px;'/>
+				<img src='img/GoCurrent.gif' style='vertical-align:middle; margin:0px 3px;'/> - 
+				This toggle icon controls whether new widgets will be added to the Background state
+				(and therefore will "shine through" and be visible in all application states)
+				or will be added to the current application state (assuming Background is not
+				the current state). The first time you run Maqetta, the icon is initialized
+				to Background state. When you change this icon, that value will be in place
+				until you change it again (including across sessions).
+				<div class='note'>NOTE: Be careful monitoring the current value of this icon
+				so that new widgets get added to the state(s) in which you want those widgets
+				to be visible.)</div>
+			</li>
+			<li><span class='minortopic'>Highlight background wigets</span> 
+				<img src='img/HighlightBackgroundDis.gif' style='vertical-align:middle; margin:0px 3px;'/>
+				<img src='img/HighlightBackground.gif' style='vertical-align:middle; margin:0px 3px;'/> - 
+				(Effect of this toggle icon is visible only when a custom application state is active)
+				This toggle icon controls whether to highlight widgets that are visible in the Background state
+				and therefore "shine through" and are therefore also visible in the current application state.
+				Widgets that are shining through from the Background will be highlighted with
+				a light red border and light red interior.
+			</li>
+		</ul>
+	</li>
+	<li><p><span class='majortopic'>Rectangles and Circle widgets can now contain child content</span> - 
+		In previous releases, the Rectangle, RoundedRectangle and Circle widgets (found in the "Drawing Tools"
+		section of the widget palette) were primitive widgets, and therefore could not contain
+		child widgets. With Release 9, those three widgets now act as containers.
+		Now, if you add a Rectangle (or RoundedRect or Circle) to the canvas,
+		and then add other widgets such that the drop point for the new widgets are inside
+		the bounds of the Rectangle, then those widgets will be children of the Rectangle.
+		This makes sketching with Rectangles, RoundedRectangles and Circle 
+		behave the same as sketching with other similar widgets (e.g., HTML <code>&lt;div&gt;</code>)
+		and this nesting feature makes it more convenient to copy/paste and manage visibility
+		of the container (with all of its children) rather than having to perform operations
+		on many different primitive widgets.
+	</li>
+	<li><p><span class='majortopic'>Events palette now includes easy drop-down for switching to different HTML page</span> - 
+		In previous releases, the drop-down menu next to all of the events on the Events palette
+		(onclick, ondblclick, etc) only showed the list of application states in the document.
+		With Release 9, the menu has been enhanced to also show the list of HTML files in your current project.
+		If you use the menu to choose one of the HTML files as the event value, then 
+		at runtime the given action (e.g., onclick) will cause the browser to switch
+		to the given HTML page. (Accomplished under the hood via the following JavaScript logic:
+		<code>location.href='&lt;newhtmlefilename&gt;';</code>.
+	</li>
+	<li><p><span class='majortopic'>States operations are now undoable</span> - 
+		In previous releases, some application states operations (e.g., remove state) were
+		not undoable. With Release 9, all state operations are undoable.
+	</li>
+	<li><p><span class='majortopic'>Download commands now only download selected files</span> - 
+		In previous releases, the Download command on the Files palette context menu and
+		the "Download selected" icon on the Files palette toolbar would bring up the same
+		dialog as the "Download Entire Project" icon. With Release 9,
+		the context menu command and the "Download selected icon" only download the
+		files that are currently selected.
+	</li>
+	<li><p><span class='majortopic'>Fixes for the experimental ZAZL option</span> - 
+		Maqetta includes a feature where, using a preference, you can turn on the ZAZL
+		option to cause certain operations (e.g., preview-in-browser) to use ZAZL
+		technology to compile the runtime files before the preview operation happens.
+		One of the fixes was to allow ZAZL to work with review/commenting. Note that
+		ZAZL tends to make the first operation a little slower, but subsequent operations 
+		sometimes speed up substantially.
+	</li>
+</ul>
+	
+<p> </p>
+
+<p class="prevnext">
+    <a href="releasenotes/release8.html">Previous</a> / <a href="releasenotes/release10.html">Next</a>
+</p>
+
+</div>  <!-- pagebody -->
+
+<!-- Footer -->
+<!--
+<iframe src ="footer.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+-->
+
+</body>
+</html>

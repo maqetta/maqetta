@@ -1,17 +1,9 @@
 define([
     	"dojo/_base/declare",
-    	"shapes/_Shape",
-    	"shapes/_TextMixin"
-], function(declare, _Shape, _TextMixin){
+    	"dijit/_WidgetBase"
+], function(declare, _WidgetBase){
 	
-	return declare("shapes.Text", [_Shape, _TextMixin], {
-			
-		content:'Text',
-
-		buildRendering: function(){
-			this.inherited(arguments);	
-			this.createGraphics();
-		}
+	return declare("shapes.Text", [_WidgetBase], {
 
 	});
 });

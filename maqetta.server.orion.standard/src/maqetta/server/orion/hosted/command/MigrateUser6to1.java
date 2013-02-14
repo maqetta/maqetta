@@ -63,7 +63,7 @@ public class MigrateUser6to1 extends Command {
     }
     
     public String getOldWorkspaceLocation(){
-    	return  ServerManager.getServerManger().getDavinciProperty("migrateWorkspaceLoc");
+    	return  ServerManager.getServerManager().getDavinciProperty("migrateWorkspaceLoc");
     }
     
     private File getOldWorkspace(IUser user){

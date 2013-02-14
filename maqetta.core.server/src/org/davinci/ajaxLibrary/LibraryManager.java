@@ -185,7 +185,7 @@ public class LibraryManager implements ILibraryManager {
 
 		if (libFinders == null) {
 			Vector libs = new Vector();
-			List libraryElements = ServerManager.getServerManger().getExtensions(IDavinciServerConstants.EXTENSION_POINT_LIBRARYFINDER,	IDavinciServerConstants.EXTENSION_POINT_LIBRARYFINDER);
+			List libraryElements = ServerManager.getServerManager().getExtensions(IDavinciServerConstants.EXTENSION_POINT_LIBRARYFINDER,	IDavinciServerConstants.EXTENSION_POINT_LIBRARYFINDER);
 			if (libraryElements != null) {
 				for (int i = 0; i < libraryElements.size(); i++) {
 
@@ -208,7 +208,7 @@ public class LibraryManager implements ILibraryManager {
 	}
 
 	void initialize() {
-		List extensions = ServerManager.getServerManger().getExtensions(
+		List extensions = ServerManager.getServerManager().getExtensions(
 				IDavinciServerConstants.EXTENSION_POINT_AJAXLIBRARY,
 				IDavinciServerConstants.EP_TAG_AJAXLIBRARY);
 		this.installedLibraries = new Library[extensions.size()];

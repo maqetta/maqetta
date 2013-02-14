@@ -73,7 +73,7 @@ public class GetInitializationInfo extends Command {
 			return this.siteConfigJson;
 		}
 		String ret = "";
-		String siteConfigDir = ServerManager.getServerManger()
+		String siteConfigDir = ServerManager.getServerManager()
 				.getDavinciProperty(
 						IDavinciServerConstants.SITECONFIG_DIRECTORY_PROPERTY);
 		if (siteConfigDir == null) {

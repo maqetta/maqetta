@@ -42,7 +42,7 @@ public class VStorageDirectory extends VDirectory {
 	protected Library getLibrary(ILibInfo li) {
 		String id = li.getId();
 		String version = li.getVersion();
-		return ServerManager.getServerManger().getLibraryManager().getLibrary(id, version);
+		return ServerManager.getServerManager().getLibraryManager().getLibrary(id, version);
 
 	}
 	

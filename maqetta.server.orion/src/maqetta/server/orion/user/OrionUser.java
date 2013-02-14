@@ -166,7 +166,7 @@ public class OrionUser extends User {
 			
 		
 		if(initFiles){
-			List extensions = ServerManager.getServerManger().getExtensions(IDavinciServerConstants.EXTENSION_POINT_INITIAL_USER_FILES, IDavinciServerConstants.EP_TAG_INITIAL_USER_FILE);
+			List extensions = ServerManager.getServerManager().getExtensions(IDavinciServerConstants.EXTENSION_POINT_INITIAL_USER_FILES, IDavinciServerConstants.EP_TAG_INITIAL_USER_FILE);
 	        for (Iterator iterator = extensions.iterator(); iterator.hasNext();) {
 	            IConfigurationElement libraryElement = (IConfigurationElement) iterator.next();
 	            String path = libraryElement.getAttribute(IDavinciServerConstants.EP_ATTR_INITIAL_USER_FILE_PATH);

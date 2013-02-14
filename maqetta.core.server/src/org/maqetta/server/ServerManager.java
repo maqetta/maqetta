@@ -122,7 +122,7 @@ public class ServerManager implements IServerManager {
 		}
 	}
 
-	public static ServerManager getServerManger() {
+	public static ServerManager getServerManager() {
 		if(ServerManager.theServerManager==null) {
 			ServerManager.theServerManager = new ServerManager();
 		}
@@ -176,7 +176,7 @@ public class ServerManager implements IServerManager {
 	 */
 	public IUserManager getUserManager() {
 		if (userManager == null) {
-			IConfigurationElement libraryElement = ServerManager.getServerManger().getExtension(IDavinciServerConstants.EXTENSION_POINT_USER_MANAGER, IDavinciServerConstants.EP_TAG_USER_MANAGER);
+			IConfigurationElement libraryElement = ServerManager.getServerManager().getExtension(IDavinciServerConstants.EXTENSION_POINT_USER_MANAGER, IDavinciServerConstants.EP_TAG_USER_MANAGER);
 			if (libraryElement != null) {
 				try {
 					this.userManager = (IUserManager) libraryElement.createExecutableExtension(IDavinciServerConstants.EP_ATTR_CLASS);
@@ -262,7 +262,7 @@ public class ServerManager implements IServerManager {
 	public synchronized ILibraryManager getLibraryManager() {
 		if (libraryManager == null) {
 			/*
-    		 IConfigurationElement libraryElement = ServerManager.getServerManger().getExtension(IDavinciServerConstants.EXTENSION_POINT_LIBRARY_MANAGER, IDavinciServerConstants.EP_TAG_LIBRARY_MANAGER);
+    		 IConfigurationElement libraryElement = ServerManager.getServerManager().getExtension(IDavinciServerConstants.EXTENSION_POINT_LIBRARY_MANAGER, IDavinciServerConstants.EP_TAG_LIBRARY_MANAGER);
 		        if (libraryElement != null) {
 		        try {
 		           this.libraryManager = (ILibraryManager) libraryElement.createExecutableExtension(IDavinciServerConstants.EP_ATTR_CLASS);
@@ -280,7 +280,7 @@ public class ServerManager implements IServerManager {
 	public IPersonManager getPersonManager() {
 
 		if(this.personManager==null){
-			IConfigurationElement libraryElement = ServerManager.getServerManger().getExtension(IDavinciServerConstants.EXTENSION_POINT_PERSON_MANAGER,
+			IConfigurationElement libraryElement = ServerManager.getServerManager().getExtension(IDavinciServerConstants.EXTENSION_POINT_PERSON_MANAGER,
 					IDavinciServerConstants.EP_TAG_PERSON_MANAGER);
 			if (libraryElement != null) {
 				try {

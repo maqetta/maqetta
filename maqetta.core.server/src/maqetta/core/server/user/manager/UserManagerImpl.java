@@ -34,7 +34,7 @@ public class UserManagerImpl implements IUserManager {
 
 
     public UserManagerImpl() {
-    	ServerManager serverManger = ServerManager.getServerManger();
+    	ServerManager serverManger = ServerManager.getServerManager();
 
     	initWorkspace();
     	
@@ -43,12 +43,12 @@ public class UserManagerImpl implements IUserManager {
             this.maxUsers = Integer.valueOf(maxUsersStr).intValue();
         }
 
-        this.personManager = ServerManager.getServerManger().getPersonManager();
+        this.personManager = ServerManager.getServerManager().getPersonManager();
 
     }
 
     protected void initWorkspace(){
-    	this.baseDirectory= ServerManager.getServerManger().getBaseDirectory();
+    	this.baseDirectory= ServerManager.getServerManager().getBaseDirectory();
     	this.usersCount = this.baseDirectory.list().length;
 
     	theLogger.info("Setting [user space] to: " + baseDirectory.getAbsolutePath());

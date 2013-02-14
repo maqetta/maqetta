@@ -99,7 +99,7 @@ public class PersonManagerImpl implements IPersonManager {
 
     protected IStorage getBaseDirectory(){
     	if(this.baseDirectory==null){
-    		this.baseDirectory = ServerManager.getServerManger().getBaseDirectory();	
+    		this.baseDirectory = ServerManager.getServerManager().getBaseDirectory();	
     	}
     	return this.baseDirectory;
     }

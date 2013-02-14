@@ -36,7 +36,7 @@ public class AddComment extends Command {
 		try {
 			Comment comment = extractComment(req);
 			
-			IUserManager userManager = ServerManager.getServerManger().getUserManager();
+			IUserManager userManager = ServerManager.getServerManager().getUserManager();
 			String designerName = comment.getDesignerId();
 			IUser designer = null;
 			if(ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equalsIgnoreCase(designerName)) {
@@ -85,7 +85,7 @@ public class AddComment extends Command {
 		if (to != null && !to.trim().equals("")) {
 			String htmlContent = getHtmlContent(reviewer, comment, req.getRequestURL().toString());
 			String notifId = Utils.getCommonNotificationId(req);
-			ServerManager.getServerManger().sendEmail(
+			ServerManager.getServerManager().sendEmail(
 					notifId,
 					designer.getPerson().getEmail(),
 					Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT_NOTIFICATION_SUBJECT),

@@ -92,7 +92,7 @@ public class DavinciCommandServlet extends HttpServlet {
 
     private IUser checkLogin(HttpServletRequest req, HttpServletResponse resp, CommandDescriptor commandDescriptor) throws IOException {
 
-        IUser user = ServerManager.getServerManger().getUserManager().getUser(req);
+        IUser user = ServerManager.getServerManager().getUserManager().getUser(req);
         if (user == null) {
             if (!ServerManager.LOCAL_INSTALL &&!commandDescriptor.isNoLogin()) {
                     resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);

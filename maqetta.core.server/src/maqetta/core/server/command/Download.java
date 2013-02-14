@@ -48,7 +48,7 @@ public class Download extends Command {
 	public static String buildBase = "http://build.dojotoolkit.org";
 
 	{
-		String builderProp = ServerManager.getServerManger().getDavinciProperty(IDavinciServerConstants.DOJO_WEB_BUILDER);
+		String builderProp = ServerManager.getServerManager().getDavinciProperty(IDavinciServerConstants.DOJO_WEB_BUILDER);
 		if (builderProp != null) {
 			buildBase = builderProp;
 		}
@@ -308,7 +308,7 @@ public class Download extends Command {
             String id = (String) libEntry.get("id");
             String version = (String) libEntry.get("version");
             String path = (String) libEntry.get("root");
-            Library lib = ServerManager.getServerManger().getLibraryManager().getLibrary(id, version);
+            Library lib = ServerManager.getServerManager().getLibraryManager().getLibrary(id, version);
             
             boolean sourceLibrary = (lib.getSourcePath()!=null && useSource);
             

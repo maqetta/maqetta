@@ -49,9 +49,9 @@ public class SmtpPop3Mailer {
 		String password = null;
 		String port = null;
 		// Read it from the system properties
-		defaultMailServer = ServerManager.getServerManger().getDavinciProperty(Constants.EP_ATTR_MAIL_CONFIG_MAILSERVER);
-		adminName = ServerManager.getServerManger().getDavinciProperty(Constants.EP_ATTR_MAIL_CONFIG_LOGINUSER);
-		password = ServerManager.getServerManger().getDavinciProperty(Constants.EP_ATTR_MAIL_CONFIG_PASSWORD);
+		defaultMailServer = ServerManager.getServerManager().getDavinciProperty(Constants.EP_ATTR_MAIL_CONFIG_MAILSERVER);
+		adminName = ServerManager.getServerManager().getDavinciProperty(Constants.EP_ATTR_MAIL_CONFIG_LOGINUSER);
+		password = ServerManager.getServerManager().getDavinciProperty(Constants.EP_ATTR_MAIL_CONFIG_PASSWORD);
 		
 		if (defaultMailServer != null && !"".equals(defaultMailServer)) {
 			String[] mailSplit = defaultMailServer.split(":");
@@ -62,7 +62,7 @@ public class SmtpPop3Mailer {
 		}
 		if(defaultMailServer == null || "".equals(defaultMailServer)){
 			// Read it from the contributor bundle
-			IConfigurationElement mailConfig = ServerManager.getServerManger().getExtension(Constants.EXTENSION_POINT_MAIL_CONFIG, Constants.EP_TAG_MAIL_CONFIG);
+			IConfigurationElement mailConfig = ServerManager.getServerManager().getExtension(Constants.EXTENSION_POINT_MAIL_CONFIG, Constants.EP_TAG_MAIL_CONFIG);
 			if(mailConfig != null){
 				defaultMailServer = mailConfig.getAttribute(Constants.EP_ATTR_MAIL_CONFIG_MAILSERVER);
 				adminName = mailConfig.getAttribute(Constants.EP_ATTR_MAIL_CONFIG_LOGINUSER);

@@ -35,7 +35,7 @@ public class MaqettaOrionPageServlet extends DavinciPageServlet {
         if(serverManager==null)
             initialize();
         String previewParam = req.getParameter(IDavinciServerConstants.PREVIEW_PARAM);
-        IUser user = ServerManager.getServerManger().getUserManager().getUser(req);
+        IUser user = ServerManager.getServerManager().getUserManager().getUser(req);
         
         /* orion adds an index.html to the path.  remove that and redirect if we encounter */
         String pathInfo =getPathInfo(req);

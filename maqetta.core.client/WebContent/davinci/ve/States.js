@@ -1,3 +1,8 @@
+/// Set a global flag so that AppStates.js doesn't run its standard initialization logic
+// because the page editor has its own states initialization logic.
+if (typeof davinci === "undefined") { davinci = {}; }
+davinci.AppStatesDontInitialize = true;
+
 define([
         "dojo/_base/declare",
         "dojo/_base/connect",

@@ -1,12 +1,14 @@
 define([
     	"dojo/_base/declare",
+    	"davinci/ve/commands/_hierarchyCommand",
     	"davinci/ve/widget",
     	"davinci/ve/utils/ImageUtils",
-    	"davinci/ve/States"
-], function(declare, Widget,  ImageUtils, States){
+    	"davinci/ve/States",
+    	"davinci/ve/commands/ModifyCommand"
+], function(declare, _hierarchyCommand, Widget, ImageUtils, States, ModifyCommand){
 
 
-return declare("davinci.ve.commands.AddCommand", null, {
+return declare("davinci.ve.commands.AddCommand", [_hierarchyCommand], {
 
 	name: "add",
 
@@ -86,37 +88,13 @@ return declare("davinci.ve.commands.AddCommand", null, {
 		// need to allow user to undo it.
 		if(ancestor){
 			var command =
-				new davinci.ve.commands.ModifyCommand(ancestor,
+				new ModifyCommand(ancestor,
 						null, null, parent._edit_context);
 			command.execute();
 		}
 
 		// Recompute styling properties in case we aren't in Normal state
 		States.resetState(widget.domNode);
-	},
-	
-	/**
-	 * Check if an ancestor widget needs to be refreshed due to a change with
-	 * one of its children (in particular, this widget) based on "refreshOnDescendantChange"
-	 * property for an ancestor widget.
-	 * 
-	 * @param  {davinci.ve._Widget} widget
-	 * 				The widget instance that has been modified.
-	 * @return {null | davinci.ve._Widget} 
-	 * 				if ancestor widget has the 'refreshOnDescendantChange' attribute set
-	 * 				in its metadata, returns that ancestor widget
-	 */
-	_isRefreshOnDescendantChange: function(widget) {
-		var ancestor;
-		var w = widget;
-		while(w && w.domNode && w.domNode.tagName != "BODY"){
-			var parent = w.getParent();
-			if(parent && davinci.ve.metadata.queryDescriptor(parent.type, "refreshOnDescendantChange")){
-				ancestor = parent;
-			}
-			w = parent;
-		}
-		return ancestor;
 	},
 
 	undo: function(){
@@ -159,7 +137,7 @@ return declare("davinci.ve.commands.AddCommand", null, {
 		// need to allow user to undo it.
 		if(ancestor){
 			var command =
-				new davinci.ve.commands.ModifyCommand(ancestor,
+				new ModifyCommand(ancestor,
 						null, null, parent._edit_context);
 			command.execute();
 		}

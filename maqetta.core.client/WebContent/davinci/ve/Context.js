@@ -1356,17 +1356,30 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					// Because of a race condition, override _getValuesAttr with a fixed value rather than querying
 					// individual slots.
 					try {
-						var swdp = this.getGlobal()["require"]("dojox/mobile/SpinWheelDatePicker");
-						if (swdp && swdp.prototype && !swdp.prototype._hacked) {
-							swdp.prototype._hacked = true;
-							console.warn("Patch SpinWheelDatePicker");
-							var sup = swdp.prototype._getValuesAttr;
-							swdp.prototype._getValuesAttr = function() {
-								var v = sup.apply(this);
-								if (v && !v[0]) {
-									v = ["2013", "Jan", "1"];
-								}
-								return v;
+						var sws = this.getGlobal()["require"]("dojox/mobile/SpinWheelSlot");
+						if (sws && sws.prototype && !sws.prototype._hacked) {
+							sws.prototype._hacked = true;
+							console.warn("Patch SpinWheelSlot");
+							var keySuper = sws.prototype._getKeyAttr;
+							sws.prototype._getKeyAttr = function() {
+		                        if(!this._started) { 
+		                        	if(this.items) {
+		                        		for(var i = 0; i < this.items.length; i++) {
+		                        			if(this.items[i][1] == this.value) {
+		                        				return this.items[i][0];
+		                        			}
+		                        		}
+		                        	}
+		                        	return null;
+		                        }
+		                        return keySuper.apply(this);
+							};
+							var valueSuper = sws.prototype._getValueAttr;
+							sws.prototype._getValueAttr = function() {
+		                        if(!this._started){ 
+		                        	return this.value;
+		                        }
+		                        return valueSuper.apply(this);
 							};
 						}
 					}catch(e){

@@ -2,7 +2,7 @@
 <html>
 <head>
 	<link rel="stylesheet" href="../../dijit/themes/claro/claro.css">
-    <script src="../../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+    <script src="../../dojo/dojo.js" data-dojo-config="async:true"></script>
 	<script>
 	var cheatSheetScale = 1;
 	var cheatSheetPanX = 0;
@@ -79,8 +79,7 @@
 		"dojo/_base/connect",
 	    "dijit/form/VerticalSlider",
 	    "dojo/dom", 
-		"dojo/dnd/Mover",
-	    "dojo/parser" 
+		"dojo/dnd/Mover"
 	], function(ready, connect, VerticalSlider, dom, Mover){
 
 	    ready(function(){

@@ -1,26 +1,26 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html dir="ltr">
+<html>
     
     <head>
     	<title>Maqetta Documentation</title>
-        <script src="../dojo/dojo.js" djConfig="parseOnLoad: true"></script>
+        <script src="../dojo/dojo.js" data-dojo-config="async: true"></script>
         <script type="text/javascript">
-dojo.require('dijit.Tree');
-dojo.require('dijit.layout.BorderContainer');
-dojo.require('dojox.layout.ContentPane');
-dojo.require('dojo.data.ItemFileReadStore');
-dojo.require('dijit.tree.ForestStoreModel');
 
-// Global variables
-docs_base_url = null;
-currently_viewed_page = null;
-docs_page_array = {};
-last_good_filename = '';
+//Global
+var gotoPage;
 
 require([
-	"dojo/ready", "dojo/request/xhr", "dojo/_base/json", "dojo/_base/event"
-], function(ready, xhr, dojoJson, Event){
-	ready(function(){
+	"dojo/ready", "dojo/request/xhr", "dojo/_base/json", "dojo/_base/event", "dijit/registry", "dojo/parser"
+], function(ready, xhr, dojoJson, Event, registry, parser){
+
+var docs_base_url,
+	currently_viewed_page,
+	docs_page_array = {},
+	last_good_filename = '';
+
+ready(function(){
+	parser.parse().then(function() {
+			
 		// Set global variable docs_base_url
 		// to the base directory for the docset
 		var initial_loc = location.href;
@@ -34,7 +34,7 @@ require([
 			var hash = initial_loc.substr(hash_index+1);
 			if(hash.length>0){
 				initial_goto_page = initial_loc.substr(hash_index+1)+".html";
-				}
+			}
 		}
 	
 		// Go get the JSON structure that is used to populate the Tree widget
@@ -44,7 +44,7 @@ require([
 		}).then(function(dataAsString) {
 			var data = dojo.fromJson(dataAsString);
 			var getUrlsRecursive=function(item){
-				if(dojo.isString(item.url) && item.url.length>0){
+				if(dojo.isString(item.url) && item.url.length){
 					// docs_page_array is a global variable
 					docs_page_array[item.url]=item.id;
 				}
@@ -57,13 +57,13 @@ require([
 			for(var item=0;item<data.items.length; item++){
 		    	getUrlsRecursive(data.items[item]);
 			}
-			var bc2 = dijit.byId('borderContainerTwo');
+			var bc2 = registry.byId('borderContainerTwo');
 			// Force resize action on outer BorderContainer so that
 			// left-side Tree widget will resize and properly indent the TreeItems.
 			// (Tree resize needs to be called after Tree is added to DOM)
 			//setTimeout(function(){
 				bc2.resize();
-				var tree = dijit.byId('TOCTree');
+				var tree = registry.byId('TOCTree');
 				if(tree){
 					tree.set('paths',[['topicsRoot','4','4.1'],['topicsRoot','9','9.1']]);
 					tree.set('selectedItems',[]);
@@ -133,8 +133,9 @@ require([
 		}
 	});
 });
-			
-function goToPage(href) {
+
+//Global
+goToPage = function(href) {
 	var filename = href;
 	// sometimes this routine is called with a string
 	// and sometimes with an array of strings
@@ -184,7 +185,7 @@ function goToPage(href) {
 		}
 		location.href = current_loc_nohash + '#' + target_anchor;
 		print_content.setHref(href);
-		var TOCTree = dijit.byId('TOCTree');
+		var TOCTree = registry.byId('TOCTree');
 		if(TOCTree && topicsStore){
 			// set path to that item
 			var id = docs_page_array[filename];
@@ -201,13 +202,13 @@ function goToPage(href) {
 		}
 		last_good_filename = filename;	// Global variable
 	}else{
-		debugger;
+//		debugger;
 		console.log("Bad hyperlink. currently_viewed_page="+currently_viewed_page+", target="+filename);
 	}
 	return false;
 }
 
-function recursiveHunt(lookfor, model, buildme, item){
+var recursiveHunt = function(lookfor, model, buildme, item){
 	var id = model.getIdentity(item);
 	buildme.push(id);
 	if(id == lookfor){
@@ -238,6 +239,7 @@ function PrintContent() {
 	WindowObject.close();
 }
 */
+});
         </script>
         <link rel="stylesheet" type="text/css" href="../dijit/themes/claro/document.css"/>
         <link rel="stylesheet" type="text/css" href="../dijit/themes/claro/claro.css"/>
@@ -257,19 +259,19 @@ function PrintContent() {
     </head>
     
     <body class="maqettadocs claro">
-        <div dojoType="dijit.layout.BorderContainer" gutters="false" id="borderContainerTwo">
-            <div dojoType="dojox.layout.ContentPane" region="top" splitter="false" href="header.html" style="height:38px; padding:0px;" id="titlepane" renderStyles="true">
+        <div data-dojo-type="dijit/layout/BorderContainer" gutters="false" id="borderContainerTwo">
+            <div data-dojo-type="dojox/layout/ContentPane" region="top" splitter="false" href="header.html" style="height:38px; padding:0px;" id="titlepane" renderStyles="true">
             	<!-- Title Pane -->
             </div>
-            <div dojoType="dijit.layout.BorderContainer" liveSplitters="false" design="sidebar" region="center" id="mainSplit">
-                <div dojoType="dojox.layout.ContentPane" id="TOCContentPane" region="leading" splitter="true" renderStyles="true" style="width:260px;">
+            <div data-dojo-type="dijit/layout/BorderContainer" liveSplitters="false" design="sidebar" region="center" id="mainSplit">
+                <div data-dojo-type="dojox/layout/ContentPane" id="TOCContentPane" region="leading" splitter="true" renderStyles="true" style="width:260px;">
                     <!-- Left Navigation Pane -->
-                    <div dojoType="dojo.data.ItemFileReadStore" id="topicsStore" jsId="topicsStore" url="maqettadocs.json">
+                    <div data-dojo-type="dojo/data/ItemFileReadStore" id="topicsStore" jsId="topicsStore" url="maqettadocs.json">
 			        </div>
-			        <div dojoType="dijit.tree.ForestStoreModel" jsId="topicsForestStoreModel" store="topicsStore" rootId="topicsRoot" rootLabel="Maqetta Documentation"
+			        <div data-dojo-type="dijit/tree/ForestStoreModel" jsId="topicsForestStoreModel" store="topicsStore" rootId="topicsRoot" rootLabel="Maqetta Documentation"
 			        childrenAttrs="children">
 			        </div>
-			        <div dojoType="dijit.Tree" id="TOCTree" model="topicsForestStoreModel" showRoot="false" persist="false">
+			        <div data-dojo-type="dijit/Tree" id="TOCTree" model="topicsForestStoreModel" showRoot="false" persist="false">
 			            <script type="dojo/method" event="onClick" args="item">
 							if (item.url) {
 								goToPage(item.url);
@@ -277,14 +279,14 @@ function PrintContent() {
 			            </script>
 			        </div>
                 </div>
-                <div dojoType="dojox.layout.ContentPane"  region="center" href="home.html" jsid="content" id="content" renderStyles="true">
+                <div data-dojo-type="dojox/layout/ContentPane"  region="center" href="home.html" jsid="content" id="content" renderStyles="true">
                     <!-- The contents of this page are pulled from the page pointed to by href -->
                 </div>
             </div>
         </div>
-                <div dojoType="dojox.layout.ContentPane" href="home.html" jsid="print_content" id="print_content" renderStyles="true">
-                    <!-- The contents of this page are pulled from the page pointed to by href -->
-                </div>
+        <div data-dojo-type="dojox/layout/ContentPane" href="home.html" jsid="print_content" id="print_content" renderStyles="true">
+            <!-- The contents of this page are pulled from the page pointed to by href -->
+        </div>
     </body>
 
 </html>

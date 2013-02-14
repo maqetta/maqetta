@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.maqetta.server.IDavinciServerConstants;
 
+@SuppressWarnings("restriction")
 public class MaqettaProjectDecorator implements IWebResourceDecorator {
 
 	/*
@@ -26,7 +27,7 @@ public class MaqettaProjectDecorator implements IWebResourceDecorator {
 	 * 	
 	 */
 	public void addAtributesFor(HttpServletRequest request, URI resource,JSONObject representation) {
-		IPath resourcePath = new Path(resource.getPath());
+		IPath resourcePath = new Path(request.getServletPath() + (request.getPathInfo() == null ? "" : request.getPathInfo()));
 		
 		if ("/workspace".equals(request.getServletPath()) && resourcePath.segmentCount() == 2) {
 			try {

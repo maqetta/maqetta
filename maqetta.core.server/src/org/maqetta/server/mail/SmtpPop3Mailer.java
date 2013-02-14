@@ -181,7 +181,7 @@ public class SmtpPop3Mailer {
 	 *             If the connection is dead or not in the connected state.
 	 */
 	public void sendMessage(Message msg) throws SendFailedException, MessagingException {
-		Transport trans = smtpAccountUrl == null ? mailSession.getTransport("stmp") : mailSession
+		Transport trans = smtpAccountUrl == null ? mailSession.getTransport("smtp") : mailSession
 				.getTransport(smtpAccountUrl);//FIXME: stmp or smtp?
 		trans.connect();
 		try {

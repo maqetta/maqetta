@@ -39,6 +39,7 @@ define([
 	"./utils/GeomUtils",
 	"dojo/text!./newfile.template.html",
 	"./utils/URLRewrite",
+	"davinci/ve/themeEditor/metadata/CSSThemeProvider",
 	"dojox/html/_base"	// for dojox.html.evalInGlobal	
 ], function(
 	require,
@@ -80,7 +81,8 @@ define([
 	Silhouette,
 	GeomUtils,
 	newFileTemplate,
-	URLRewrite
+	URLRewrite,
+	CSSThemeProvider
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
@@ -1328,6 +1330,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}else{
 				this.editor.setDirty(this.hasDirtyResources());
 			}
+			this.addPseudoClassSelectors();
 		}.bind(this), 500);
 	},
 
@@ -2495,6 +2498,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var url = systemResource.findResource(rule.parent.url).getURL(); // FIXME: can we skip findResource?
 			var fileName = URLRewrite.encodeURI(url);
 			var selectorText = rule.getSelectorText();
+			if (selectorText.indexOf(":") > -1) {
+				selectorText = CSSThemeProvider_replacePseudoClass(selectorText);
+			}
 //			console.log("------------  Hot Modify looking  " + fileName + " ----------------:=\n" + selectorText + "\n");
 			selectorText = selectorText.replace(/^\s+|\s+$/g,""); // trim white space
 			//var rules = sheet.cssRules;
@@ -2503,7 +2509,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				var rules = foundSheet.cssRules;
 				var r = 0;
 				for (r = 0; r < rules.length; r++){
-					if (rules[r] instanceof CSSStyleRule){
+					if (rules[r].type && rules[r].type == CSSRule.STYLE_RULE){
 						if (rules[r].selectorText == selectorText) {
 							/* delete the rule if it exists */
 							foundSheet.deleteRule(r);
@@ -2516,6 +2522,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				}
 				if (rule.properties.length) { // only insert rule if it has properties
 					var text = rule.getText({noComments:true});
+					if (text.indexOf(":") > -1) {
+						text = CSSThemeProvider_replacePseudoClass(text);
+					}
 //					console.log("------------  Hot Modify Insert " + foundSheet.href +  "index " +r+" ----------------:=\n" + text + "\n");
 					foundSheet.insertRule(text, r);
 				}
@@ -2532,10 +2541,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var foundSheet;
 			var rules = sheet.cssRules;
 			for (var r = 0; r < rules.length; r++){
-			    // NOTE: For some reason the instanceof check does not work on Safari..
-			    // So we are testing the constructor instead, but we have to test it as a string...
 			    var x = '' + rules[r].constructor;
-				if (rules[r] instanceof CSSImportRule || x === '[object CSSImportRuleConstructor]'){
+				if (rules[r].type && rules[r].type === CSSRule.IMPORT_RULE){
 				    var n = rules[r].href;
 					if (rules[r].href == sheetName) {
 						foundSheet = rules[r].styleSheet;
@@ -2555,7 +2562,50 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			return updateSheet(sheet, r);
 		});
 	},
+	
+	addPseudoClassSelectors: function (selectors) {
+		
+		function updateSheet(sheet){
 
+			if (sheet){
+				var rules = sheet.cssRules;
+				var r = 0;
+				for (r = 0; r < rules.length; r++){
+					// NOTE: For some reason the instanceof check does not work on Safari..
+				    // So we are testing the constructor instead, but we have to test it as a string...
+				    var y = rules[r];
+					if (y.type && y.type === CSSRule.IMPORT_RULE){
+						updateSheet(rules[r].styleSheet);
+					} else if (rules[r].type == CSSRule.STYLE_RULE){
+						var selectorText = rules[r].selectorText;
+						if (selectorText.indexOf(":") > -1) {
+							selectorText = CSSThemeProvider_replacePseudoClass(selectorText);
+							/*
+							 * For now we will just replace the selector text,
+							 * if this does not work well we can just append
+							 */
+							y.selectorText = selectorText;
+							/* delete the rule if it exists */
+							sheet.deleteRule(r);
+							sheet.insertRule(y.cssText, r);
+							break;
+						}
+					}
+					
+				}
+				return true;
+			}
+			return false;
+		}
+
+		
+		var sheets = this.getDocument().styleSheets;
+		dojo.some(sheets, function(sheet) {
+			return updateSheet(sheet);
+		});
+
+	},
+	
 	//FIXME: refactor. Move to Cascade.js?  need to account for polymorphism in themeEditor/Context
 	getStyleAttributeValues: function(widget){
 		//FIXME: This totally seems to have missed the array logic
@@ -3585,7 +3635,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				this.widgetHash[id] = widget;
 			}
 		}, this);
-	}
+	},
+
 });
 
 });

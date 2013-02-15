@@ -28,15 +28,14 @@ public class Register  extends Command {
 			this.message = message;
 		}
 	    public void run() {
-	    	ServerManager.getServerManger().sendEmail("admin@maqetta.org", emailAdd, "Maqetta.org user activation", message);
-	    	System.out.println("---------------\nSending email:\n"+message );
+	    	ServerManager.getServerManager().sendEmail("admin@maqetta.org", emailAdd, "Maqetta.org user activation", message);
 	    }
 	}
 	
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
     	
     	String emailAdd = req.getParameter("login");
-    	if (ServerManager.getServerManger().getUserManager().isValidUserByEmail(emailAdd)) {
+    	if (ServerManager.getServerManager().getUserManager().isValidUserByEmail(emailAdd)) {
     		this.responseString = "USER_ALREADY_EXISTS";
     		return;
     	}

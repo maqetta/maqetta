@@ -80,7 +80,7 @@ public class User implements IUser {
 	}
 	
 	public ILibraryFinder[] getFinders(String base){
-		ILibraryFinder[] finders = ServerManager.getServerManger().getLibraryManager().getLibraryFinders();
+		ILibraryFinder[] finders = ServerManager.getServerManager().getLibraryManager().getLibraryFinders();
 		IStorage baseFile = this.userDirectory.newInstance(this.userDirectory, base);
 		Vector<ILibraryFinder> allLibs = new Vector();
 		for(int i=0;i<finders.length;i++){
@@ -92,7 +92,7 @@ public class User implements IUser {
 	
 	public ILibInfo[] getExtendedSettings(String base){
 		
-		ILibraryFinder[] finders = ServerManager.getServerManger().getLibraryManager().getLibraryFinders();
+		ILibraryFinder[] finders = ServerManager.getServerManager().getLibraryManager().getLibraryFinders();
 		IStorage baseFile = this.userDirectory.newInstance(this.userDirectory, base);
 		Vector<ILibInfo> allLibs = new Vector();
 		for(int i=0;i<finders.length;i++){
@@ -126,7 +126,7 @@ public class User implements IUser {
            	
           }
         /* modify the library settings with the WebContent folder */
-       Library[] allLibs = ServerManager.getServerManger().getLibraryManager().getAllLibraries();
+       Library[] allLibs = ServerManager.getServerManager().getLibraryManager().getAllLibraries();
         
         for(int i=0;i<allLibs.length;i++){
         	Library lib = allLibs[i];
@@ -174,7 +174,7 @@ public class User implements IUser {
 			
 		
 		if(initFiles){
-			List extensions = ServerManager.getServerManger().getExtensions(IDavinciServerConstants.EXTENSION_POINT_INITIAL_USER_FILES,
+			List extensions = ServerManager.getServerManager().getExtensions(IDavinciServerConstants.EXTENSION_POINT_INITIAL_USER_FILES,
 	                IDavinciServerConstants.EP_TAG_INITIAL_USER_FILE);
 	        for (Iterator iterator = extensions.iterator(); iterator.hasNext();) {
 	            IConfigurationElement libraryElement = (IConfigurationElement) iterator.next();
@@ -253,7 +253,7 @@ public class User implements IUser {
 			libs.removeLibrary(id, version, base);
 
 		} else {
-			String defaultRoot = ServerManager.getServerManger().getLibraryManager().getDefaultRoot(id, version);
+			String defaultRoot = ServerManager.getServerManager().getLibraryManager().getDefaultRoot(id, version);
 			libs.addLibrary(id, version, id, defaultRoot, required?"true":"false");
 		}
 		

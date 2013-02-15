@@ -22,7 +22,7 @@ public class Login extends Command {
         if (authType != null) {
         	 this.responseString = "mixloginstatic";
         } else {
-	        user = ServerManager.getServerManger().getUserManager().login(name, password);
+	        user = ServerManager.getServerManager().getUserManager().login(name, password);
 	        if (user != null) {
 	            String redirect = (String) req.getSession().getAttribute(IDavinciServerConstants.REDIRECT_TO);
 	            req.getSession().removeAttribute(IDavinciServerConstants.REDIRECT_TO); // burn after reading
@@ -32,7 +32,7 @@ public class Login extends Command {
 	            session.setMaxInactiveInterval(IDavinciServerConstants.SESSION_TIMEOUT);
 	           
 	        } else {
-	            user = ServerManager.getServerManger().getUserManager().getUser(name);
+	            user = ServerManager.getServerManager().getUserManager().getUser(name);
 	            if (user == null) {
 	                resp.sendError(HttpServletResponse.SC_FORBIDDEN, "User not known");
 	            } else {

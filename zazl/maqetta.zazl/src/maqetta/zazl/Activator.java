@@ -72,13 +72,13 @@ public class Activator implements BundleActivator {
 				"org.dojotoolkit.optimizer.servlet"
 			};
 			List<Library> srcLibraryList = new ArrayList<Library>();
-			Library[] libraries = ServerManager.getServerManger().getLibraryManager().getAllLibraries();
+			Library[] libraries = ServerManager.getServerManager().getLibraryManager().getAllLibraries();
 			for (Library library : libraries) {
 				if (library.getSourcePath() != null) {
 					srcLibraryList.add(library);
 				}
 			}
-			ResourceLoader resourceLoader = new MaqettaOSGiResourceLoader(bundleContext, bundleIds, ServerManager.getServerManger().getUserManager(), srcLibraryList);
+			ResourceLoader resourceLoader = new MaqettaOSGiResourceLoader(bundleContext, bundleIds, ServerManager.getServerManager().getUserManager(), srcLibraryList);
 			RhinoClassLoader rhinoClassLoader = new RhinoClassLoader(resourceLoader);
 			JSCompressorFactory jsCompressorFactory = null;
 			Boolean jscompress = Boolean.valueOf(System.getProperty("maqetta.zazl.jscompress", "false"));

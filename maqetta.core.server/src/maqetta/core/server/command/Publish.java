@@ -109,7 +109,7 @@ public class Publish extends Command {
 		reviewers.add(tmpReviewer);
 
 		//Handle fake reviewer (if necessary)
-		String fakeReviewer = ServerManager.getServerManger().getDavinciProperty(Constants.FAKE_REVIEWER);
+		String fakeReviewer = ServerManager.getServerManager().getDavinciProperty(Constants.FAKE_REVIEWER);
 		if (fakeReviewer != null) {
 			tmpReviewer = ReviewManager.getReviewManager().getReviewer("fakeReviewer", fakeReviewer);
 			tmpReviewer.addReviewerVersion(reviewerVersion);
@@ -175,7 +175,7 @@ public class Publish extends Command {
 	private String notifyRelatedPersons(String from, String to, String subject,
 			String htmlContent) {
 		
-		if( ServerManager.getServerManger().sendEmail(from, to, subject, htmlContent) ){
+		if( ServerManager.getServerManager().sendEmail(from, to, subject, htmlContent) ){
 			return "OK";
 		}else{
 			return htmlContent;

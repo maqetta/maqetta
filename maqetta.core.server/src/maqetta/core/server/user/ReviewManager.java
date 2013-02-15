@@ -65,7 +65,7 @@ public class ReviewManager implements IReviewManager {
 	Map<String, Reviewer> reviewers = Collections.synchronizedMap(new HashMap<String, Reviewer>());
 	
 	public ReviewManager() {
-		baseDirectory = ServerManager.getServerManger().getBaseDirectory();
+		baseDirectory = ServerManager.getServerManager().getBaseDirectory();
 	}
 
 	public void saveDraft(IDesignerUser user, Version version) throws IOException {
@@ -221,7 +221,7 @@ public class ReviewManager implements IReviewManager {
 	public IDesignerUser getDesignerUser(String name) throws IOException {
 		IDesignerUser designer = designerUsers.get(name);
 		if (designer == null) {
-			IUser user = ServerManager.getServerManger().getUserManager().getUser(name);
+			IUser user = ServerManager.getServerManager().getUserManager().getUser(name);
 			
 			if(user==null) return null;
 			designer = getDesignerUser(user);

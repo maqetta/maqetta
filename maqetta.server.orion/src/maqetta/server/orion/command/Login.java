@@ -21,7 +21,7 @@ public class Login extends Command {
         String password = req.getParameter("password");
         String authType = req.getParameter("authType");
 
-        ServerManager serverManager = ServerManager.getServerManger();
+        ServerManager serverManager = ServerManager.getServerManager();
 
         if (authType != null) {
         	String authName = serverManager.getDavinciProperty("orion.auth.name");

@@ -116,7 +116,7 @@ public class LdapAuthenticationService implements IAuthenticationService {
 	
 		
 	static {
-		ServerManager serverMgr = ServerManager.getServerManger();
+		ServerManager serverMgr = ServerManager.getServerManager();
 		
 		PROVIDER_URL = serverMgr.getDavinciProperty(CONFIG_PROVIDER_URL); 
 		LOOKUP_PROVIDER_URL = serverMgr.getDavinciProperty(CONFIG_LOOKUP_PROVIDER_URL);

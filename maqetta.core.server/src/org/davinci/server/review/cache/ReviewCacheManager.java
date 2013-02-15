@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 import java.util.Set;
 
 import org.davinci.server.user.IDavinciProject;
@@ -19,9 +20,11 @@ import org.davinci.server.review.Utils;
 import org.davinci.server.review.Version;
 import org.davinci.server.review.persistence.Marshaller;
 import org.davinci.server.review.persistence.Unmarshaller;
+import org.maqetta.server.ServerManager;
 
 public class ReviewCacheManager extends Thread {
 	static final public ReviewCacheManager $ = new ReviewCacheManager();
+	static final private Logger theLogger = Logger.getLogger(ReviewCacheManager.class.getName());
 
 	static final private String LAST_ACCESS_TIME = "lastAccessTime";
 
@@ -47,7 +50,7 @@ public class ReviewCacheManager extends Thread {
 				reviewHash = loadReviewFile(project);
 
 				if (null == reviewHash) {
-					System.out.println("Can't find project " + project.getProjectName()
+					theLogger.severe("Can't find project " + project.getProjectName()
 							+ " review file for comment " + comment.getId());
 					continue;
 				}
@@ -61,12 +64,14 @@ public class ReviewCacheManager extends Thread {
 		return true;
 	}
 
+/* TODO: unused?
 	private Comment getTopParent(Comment comment){
 		while(!Utils.isBlank(comment.getReplyTo())&&!"root".equals(comment.getReplyTo())){
 			comment = getComment(comment.getProject(), comment.getReplyTo());
 		}
 		return comment;
 	}
+*/
 
 	public List<Comment> getCommentsByPageName(IDavinciProject project, String pageName) {
 		// Load project's review information

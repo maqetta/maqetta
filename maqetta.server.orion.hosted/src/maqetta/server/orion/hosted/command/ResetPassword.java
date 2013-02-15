@@ -33,8 +33,7 @@ public class ResetPassword extends Command {
 				this.from = from;
 			}
 		    public void run() {
-		    	ServerManager.getServerManger().sendEmail(this.from, emailAdd, "Maqetta.org user activation", message);
-		    	System.out.println("---------------\nSending email:\n"+message );
+		    	ServerManager.getServerManager().sendEmail(this.from, emailAdd, "Maqetta.org user activation", message);
 		    }
 		}
 		
@@ -46,7 +45,7 @@ public class ResetPassword extends Command {
 	    	String randomToken = req.getParameter("resetTolken");
 	    	String newPassword = req.getParameter("password");
 	    	
-	    	if (!ServerManager.getServerManger().getUserManager().isValidUserByEmail(emailAdd)) {
+	    	if (!ServerManager.getServerManager().getUserManager().isValidUserByEmail(emailAdd)) {
 	    		this.responseString = "NO_USER";
 	    		return;
 	    	}

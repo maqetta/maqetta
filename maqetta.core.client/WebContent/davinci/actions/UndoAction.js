@@ -19,9 +19,6 @@ return declare("davinci.actions.UndoAction", Action, {
 		if (e && context) {
 			var canUndo = context.getCommandStack().canUndo();
 			if(e.declaredClass == 'davinci.ve.PageEditor'){
-				var displayMode = e.getDisplayMode();
-				return canUndo && displayMode != 'source';
-			}else{
 				return canUndo;
 			}
 		} else {

@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.mail.Address;
 import javax.mail.Flags;
@@ -35,6 +37,8 @@ import org.maqetta.server.ServerManager;
  */
 public class SmtpPop3Mailer {
 
+	static final private Logger theLogger = Logger.getLogger(SmtpPop3Mailer.class.getName());
+
 	public static final String LS = System.getProperty("line.separator");
 
 	private static SmtpPop3Mailer dft = null;
@@ -45,9 +49,9 @@ public class SmtpPop3Mailer {
 		String password = null;
 		String port = null;
 		// Read it from the system properties
-		defaultMailServer = ServerManager.getServerManger().getDavinciProperty(Constants.EP_ATTR_MAIL_CONFIG_MAILSERVER);
-		adminName = ServerManager.getServerManger().getDavinciProperty(Constants.EP_ATTR_MAIL_CONFIG_LOGINUSER);
-		password = ServerManager.getServerManger().getDavinciProperty(Constants.EP_ATTR_MAIL_CONFIG_PASSWORD);
+		defaultMailServer = ServerManager.getServerManager().getDavinciProperty(Constants.EP_ATTR_MAIL_CONFIG_MAILSERVER);
+		adminName = ServerManager.getServerManager().getDavinciProperty(Constants.EP_ATTR_MAIL_CONFIG_LOGINUSER);
+		password = ServerManager.getServerManager().getDavinciProperty(Constants.EP_ATTR_MAIL_CONFIG_PASSWORD);
 		
 		if (defaultMailServer != null && !"".equals(defaultMailServer)) {
 			String[] mailSplit = defaultMailServer.split(":");
@@ -58,7 +62,7 @@ public class SmtpPop3Mailer {
 		}
 		if(defaultMailServer == null || "".equals(defaultMailServer)){
 			// Read it from the contributor bundle
-			IConfigurationElement mailConfig = ServerManager.getServerManger().getExtension(Constants.EXTENSION_POINT_MAIL_CONFIG, Constants.EP_TAG_MAIL_CONFIG);
+			IConfigurationElement mailConfig = ServerManager.getServerManager().getExtension(Constants.EXTENSION_POINT_MAIL_CONFIG, Constants.EP_TAG_MAIL_CONFIG);
 			if(mailConfig != null){
 				defaultMailServer = mailConfig.getAttribute(Constants.EP_ATTR_MAIL_CONFIG_MAILSERVER);
 				adminName = mailConfig.getAttribute(Constants.EP_ATTR_MAIL_CONFIG_LOGINUSER);
@@ -177,7 +181,7 @@ public class SmtpPop3Mailer {
 	 *             If the connection is dead or not in the connected state.
 	 */
 	public void sendMessage(Message msg) throws SendFailedException, MessagingException {
-		Transport trans = smtpAccountUrl == null ? mailSession.getTransport("stmp") : mailSession
+		Transport trans = smtpAccountUrl == null ? mailSession.getTransport("smtp") : mailSession
 				.getTransport(smtpAccountUrl);
 		trans.connect();
 		try {
@@ -194,14 +198,16 @@ public class SmtpPop3Mailer {
 			} catch (IOException ioe) {
 				content = "<exception>";
 			}
-			System.err.println("Exception when calling SMTPTransport.sendMessage()" +
+			StringBuffer sb = new StringBuffer();
+			sb.append("NullPointerException when calling SMTPTransport.sendMessage()" +
 							   "\n\t(Message) msg => ");
-			System.err.println("\n\t\t from = " + (fromSize > 0 ? from[0] : "null") + " (size: " + fromSize + ")");
-			System.err.println("\n\t\t to = " + (recSize > 0 ? rec[0] : "null") + " (size: " + recSize + ")");
-			System.err.println("\n\t\t sentDate = " + msg.getSentDate());
-			System.err.println("\n\t\t subject = " + msg.getSubject());
-			System.err.println("\n\t\t content = " + content);
-			System.err.println("\n\t(Address[]) recipients = " + (recSize > 0 ? rec[0] : "null") + " (size: " + recSize + ")");
+			sb.append("\n\t\t from = " + (fromSize > 0 ? from[0] : "null") + " (size: " + fromSize + ")");
+			sb.append("\n\t\t to = " + (recSize > 0 ? rec[0] : "null") + " (size: " + recSize + ")");
+			sb.append("\n\t\t sentDate = " + msg.getSentDate());
+			sb.append("\n\t\t subject = " + msg.getSubject());
+			sb.append("\n\t\t content = " + content);
+			sb.append("\n\t(Address[]) recipients = " + (recSize > 0 ? rec[0] : "null") + " (size: " + recSize + ")");
+			theLogger.logp(Level.WARNING,  SmtpPop3Mailer.class.getName(), "sendMessage", sb.toString(), e);
 			throw e;
 		// end LOGGING
 		} finally {

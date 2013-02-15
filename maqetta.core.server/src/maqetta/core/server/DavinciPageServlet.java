@@ -151,7 +151,7 @@ public class DavinciPageServlet extends HttpServlet {
 	
 			IUser user = ServerManager.getServerManager().getUserManager().getUser(req);
 			String pathInfo = getPathInfo(req);
-			theLogger.info("Page Servlet request: " + pathInfo + ", logged in=" + (user != null));
+			theLogger.finest("Page Servlet request: " + pathInfo + ", logged in=" + (user != null));
 
 			if ( pathInfo == null ) {
 				handleReview(req, resp);

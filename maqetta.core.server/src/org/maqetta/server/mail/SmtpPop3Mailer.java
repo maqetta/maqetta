@@ -182,7 +182,7 @@ public class SmtpPop3Mailer {
 	 */
 	public void sendMessage(Message msg) throws SendFailedException, MessagingException {
 		Transport trans = smtpAccountUrl == null ? mailSession.getTransport("smtp") : mailSession
-				.getTransport(smtpAccountUrl);//FIXME: stmp or smtp?
+				.getTransport(smtpAccountUrl);
 		trans.connect();
 		try {
 			trans.sendMessage(msg, msg.getAllRecipients());

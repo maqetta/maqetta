@@ -269,6 +269,7 @@ _getWidgetClassText: function(id, className){
  */
 getLabelForNode: function(node) {
 	var type = node.getAttribute('data-dojo-type') || node.getAttribute('dojoType');
+	type = type.replace(/\./g, "/");
 	if(!type){
 		type = node.tagName.toLowerCase();
 	}

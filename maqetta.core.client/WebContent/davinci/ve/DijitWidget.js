@@ -30,6 +30,7 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 			// XXX we should just add dojo type in metadata and remove this code
 			// add dojo type to node
 			var type = domAttr.get(node, 'data-dojo-type') || domAttr.get(node, 'dojoType');
+			type = type.replace(/\./g, "/");
 			if (!type) {
 				domAttr.set(node, 'data-dojo-type', dijitWidget);
 			}

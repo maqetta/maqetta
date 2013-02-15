@@ -1319,7 +1319,14 @@ var Workbench = {
 				if(view.iconClass){
 					params.iconClass = view.iconClass;
 				}
-				d.resolve(new (viewCtor || ViewPart)(params));
+				if(!davinci.palettes){
+					davinci.palettes = {};
+				}
+				// Stash the instantiated object corresponding to each palette class in
+				// associative array davinci.palettes, indexed by view.viewClass.
+				// Then pass the instantiated object as the argument to d.resolve().
+				d.resolve((davinci.palettes[view.viewClass] = new (viewCtor || ViewPart)(params),
+						davinci.palettes[view.viewClass]));
 			});
 		}
 		return d;

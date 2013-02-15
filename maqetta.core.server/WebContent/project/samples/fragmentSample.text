@@ -4,5 +4,5 @@ require([
 ]);
 </script>
   <div>Fragment sample</div>  
-  <input type="button" data-dojo-type="dijit.form.Button" label="Button 1"></input>
-  <input type="button" data-dojo-type="dijit.form.Button" label="Button 2"></input>
+  <input type="button" data-dojo-type="dijit/form/Button" label="Button 1"></input>
+  <input type="button" data-dojo-type="dijit/form/Button" label="Button 2"></input>

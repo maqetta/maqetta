@@ -50,5 +50,9 @@
             "title": "Radius"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>The plot that represents a typical pie chart.</p>"
+    }
 }

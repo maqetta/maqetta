@@ -2,8 +2,10 @@ define([
 		"dojo/_base/declare",
 		"davinci/Runtime",
 		"davinci/ve/States",
-		"davinci/actions/Action"
-], function(declare, Runtime, States, Action){
+		"davinci/actions/Action",
+		"davinci/commands/CompoundCommand",
+		"davinci/ve/commands/AppStateCommand"
+], function(declare, Runtime, States, Action, CompoundCommand, AppStateCommand){
 
 
 return declare("davinci.ve.actions.RemoveState", [Action], {
@@ -21,7 +23,16 @@ return declare("davinci.ve.actions.RemoveState", [Action], {
 		}
 		var node = statesFocus.stateContainerNode;
 		var state = state = davinci.ve.states.getState(node);
-		States.remove(node, state);
+		if(state){
+			var command = new CompoundCommand();
+			command.add(new AppStateCommand({
+				action:'remove',
+				state:state,
+				stateContainerNode:node,
+				context:context
+			}));
+			context.getCommandStack().execute(command);
+		}
 	}
 });
 });

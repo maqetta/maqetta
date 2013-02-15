@@ -67,7 +67,12 @@ return declare(CreateTool, {
 	        // first add parent IconContainer...
 	        command.add(new AddCommand(iconContainer,
 	                args.parent, args.index));
-	        // ... followed by its children
+	        
+			// If preference says to add new widgets to the current custom state,
+			// then add appropriate StyleCommands
+			CreateTool.prototype.checkAddToCurrentState(command, iconContainer);	
+
+			// ... followed by its children
 	        children.forEach(function(child, idx) {
 	            command.add(new AddCommand(child, iconContainer,
 	                    idx));

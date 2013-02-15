@@ -1,7 +1,7 @@
 <div class='downloadDialog'>	 
 	<div class="dijitDialogPaneContentArea">
 		<div style="margin-bottom: 20px">
-		  ${fileName}: <input dojoType='dijit.form.ValidationTextBox' type="text" maxLength='${_fileNameMaxLength}' dojoAttachPoint="__fileName" value='workspace1.zip' data-dojo-props="regExp:'${_fileNameValidationRegExp}', required:true, invalidMessage:'${invalidDownloadFileName}'"></input>
+		  ${fileName}: <input dojoType='dijit.form.ValidationTextBox' type="text" maxLength='${_fileNameMaxLength}' dojoAttachPoint="__fileName" value='${_projectName}.zip' data-dojo-props="regExp:'${_fileNameValidationRegExp}', required:true, invalidMessage:'${invalidDownloadFileName}'"></input>
 		</div>
 		
 		<div dojoAttachPoint="_selectionDiv"></div>

@@ -69,5 +69,13 @@
             ]
         }
     },
-    "content": "<ul></ul>"
+    "content": "<ul></ul>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A bar widget that has buttons to control visibility of views.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>TabBar is a container widget that has typically multiple\nTabBarButtons which controls visibility of views. It can be used\nas a tab container.</p>"
+    }
 }

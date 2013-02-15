@@ -28,5 +28,9 @@
             "title": "Gap"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>The plot object representing a bar chart (horizontal bars).</p>"
+    }
 }

@@ -15,6 +15,7 @@ define([
 	"davinci/ve/utils/GeomUtils",
 	"system/resource",
 	"davinci/model/Path",
+	"davinci/Theme",
 	], function(
 			declare,
 			connect,
@@ -31,7 +32,8 @@ define([
 			ThemeColor,
 			GeomUtils,
 			systemResource,
-			Path
+			Path,
+			Theme
 	){
 
 return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifier*/], {
@@ -602,11 +604,9 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 
 		try{
 			this._themePath=new davinci.model.Path(filename);
-//			this._URLResolver = new davinci.ve.utils.URLResolver(filename);
 			
-			this.theme = dojo.isString(content)? dojo.fromJson(content) : content;
-			this.theme.file = system.resource.findResource(filename);
-			//dojo.connect(this.visualEditor, "onSelectionChange", this,"onSelectionChange");
+			var t = dojo.isString(content)? dojo.fromJson(content) : content;
+			this.theme = Theme.getTheme(t.name);
 			this.themeCssFiles = [];
 			for(var i = 0;i<this.theme.files.length;i++){
 				if(this.theme.files[i].indexOf(".css")>-1){

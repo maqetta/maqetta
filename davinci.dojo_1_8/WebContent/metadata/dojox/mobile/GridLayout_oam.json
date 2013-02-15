@@ -39,5 +39,9 @@
             "datatype": "number"
         }
     },
-    "content": "<div></div>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A container widget that places its children in a grid layout.</p>"
+    }
 }

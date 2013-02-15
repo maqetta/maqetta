@@ -40,5 +40,9 @@
             "defaultValue": "mblTooltip mblTooltipHidden"
         }
     },
-    "content": "<div></div>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A non-templated popup bubble widget</p>"
+    }
 }

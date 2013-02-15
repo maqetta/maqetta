@@ -134,5 +134,9 @@
             "hidden": true
         }
     },
-    "content": "<input type='text'></input>"
+    "content": "<input type='text'></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Base class for textbox widgets with the ability to validate content of various types and provide user feedback.</p>"
+    }
 }

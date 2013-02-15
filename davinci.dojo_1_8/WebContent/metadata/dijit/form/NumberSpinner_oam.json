@@ -140,5 +140,17 @@
             "hidden": true
         }
     },
-    "content": "<input type='text'></input>"
+    "content": "<input type='text'></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Extends NumberTextBox to add up/down arrows and pageup/pagedown for incremental change to the value\n</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>A <code>dijit/form/NumberTextBox</code> extension to provide keyboard accessible value selection\nas well as icons for spinning direction. When using the keyboard, the typematic rules\napply, meaning holding the key will gradually increase or decrease the value and\naccelerate.\n</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>new NumberSpinner({ constraints:{ max:300, min:100 }}, &quot;someInput&quot;);</code></pre>"
+    }
 }

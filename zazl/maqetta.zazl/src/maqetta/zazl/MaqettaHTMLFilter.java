@@ -41,7 +41,7 @@ public class MaqettaHTMLFilter implements Filter {
 		configScriptTag.append("var zazlConfig = {\n");
 		configScriptTag.append("	directInject: true,\n");
 		//configScriptTag.append("	debug: true,\n");
-		configScriptTag.append("	injectUrl: '/_javascript',\n");
+		configScriptTag.append("	injectUrl: '__CONTEXT_PATH__/_javascript',\n");
 		configScriptTag.append("	packages:[\n");
 		configScriptTag.append("		{'name':'dojo','location':'__URLPREFIX__/dojo'},\n");
 		configScriptTag.append("		{'name':'dijit','location':'__URLPREFIX__/dijit'},\n");
@@ -72,7 +72,7 @@ public class MaqettaHTMLFilter implements Filter {
 				CharArrayWriter caw = new CharArrayWriter();
 				// Maqetta's servlet overrides the encoding with UTF-8, as does the HTML META tag in
 				// typical Maqetta content.  Not clear if either of those get picked up.  Hard-code UTF-8, for now.
-				HTMLParser parser = new HTMLParser(caw, /*response.getCharacterEncoding()*/ "UTF-8", configScriptTag.toString(), pathInfo);
+				HTMLParser parser = new HTMLParser(caw, /*response.getCharacterEncoding()*/ "UTF-8", configScriptTag.toString().replace("__CONTEXT_PATH__", request.getServletContext().getContextPath()), pathInfo);
 				parser.parse(responseText);
 				result = caw.toString();
 				if (logger.isLoggable(Level.FINEST)) {

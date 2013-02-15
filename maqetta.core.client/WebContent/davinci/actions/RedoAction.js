@@ -21,9 +21,6 @@ return declare("davinci.actions.RedoAction", Action, {
 		if (e && context) {
 			var canRedo = context.getCommandStack().canRedo();
 			if(e.declaredClass == 'davinci.ve.PageEditor'){
-				var displayMode = e.getDisplayMode();
-				return canRedo && displayMode != 'source';
-			}else{
 				return canRedo;
 			}
 		} else {

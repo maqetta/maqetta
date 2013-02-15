@@ -38,12 +38,13 @@ import org.maqetta.server.ServerManager;
 import org.osgi.framework.Bundle;
 
 
+@SuppressWarnings("restriction")
 public class OrionUser extends User {
 
 	private WebUser webuser;
 	private WebWorkspace webWorkspace;
-	protected static final IScopeContext scope = new OrionScope();
-	protected IEclipsePreferences store;
+	protected static final IScopeContext scope = new OrionScope();	// XXX used?
+	protected IEclipsePreferences store;							// XXX used?
 	private static String DEFAULT_WORKSPACE = "MyWorkspace";
 	private static final String WORKSPACE_NODE_NAME = "Workspaces";//$NON-NLS-1$
 	
@@ -80,15 +81,14 @@ public class OrionUser extends User {
 		String workspaceId = webWorkspace.getId();
 		this.userDirectory = new VOrionWorkspaceStorage(webWorkspace, this.getUserID());
 		
-
 		rebuildWorkspace();
-		
 	}
+
 	public IVResource newWorkspaceRoot(){
 		return  new VOrionWorkspace((VOrionWorkspaceStorage)this.userDirectory);
 	}
 	
-	public IVResource createOrionProject(String name){
+	public IVResource createOrionProject(String name) throws IOException {
 		//make sure required fields are set
 		
 		IVResource res =  this.workspace.create(name);
@@ -96,13 +96,12 @@ public class OrionUser extends User {
 			try {
 				addOrionUserRight(((VOrionResource)res).getOrionLocation());
 			} catch (ServletException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new IOException(e);
 			}
 		}
 		return res;
-			
 	}
+
 	private void addOrionUserRight(String location) throws ServletException {
 		if (location == null)
 			return;
@@ -117,7 +116,7 @@ public class OrionUser extends User {
 				locationPath += "/*"; //$NON-NLS-1$
 			AuthorizationService.addUserRight(this.getUserID(), locationPath);
 		} catch (CoreException e) {
-			e.printStackTrace();
+			throw new ServletException(e);
 		}
 	}
 	
@@ -128,30 +127,31 @@ public class OrionUser extends User {
 	public boolean isProject(String projectName){
 		Collection baseFile = userDirectory.findFiles(userDirectory, projectName + "/" + IDavinciServerConstants.SETTINGS_DIRECTORY_NAME+ "/" + IDavinciServerConstants.LIBS_FILE, false);
 		
-		return (baseFile.size() > 0 );
-
+		return baseFile.size() > 0;
 	}
 	
-	public String computeMaqettaPath(String orionPath){
+	public String computeMaqettaPath(String orionPathStr, String contextStr) throws CoreException {
+		IPath orionPath = new Path(orionPathStr);
+		IPath contextPath = new Path(contextStr);
+		
+		assert contextPath.isPrefixOf(orionPath) : "`orionPath` doesn't include expected servlet context";
 
-		String split[] = orionPath.split("/");
-		String projectId = split[2];
+		// remove servlet context, if any
+		orionPath = orionPath.removeFirstSegments(orionPath.matchingFirstSegments(contextPath));
+
+		String projectId = orionPath.segment(1);  // [0]: "file", [1]: project id, [2] sub-folder, ...
 		WebProject proj = WebProject.fromId(projectId);
 		String path = proj.getName();
+		
 		IFileStore child = null;
-		for(int i=3;i<split.length;i++){
-			try {
-				child = proj.getProjectStore().getChild(split[i]);
-				path+= "/" + child.getName();
-			} catch (CoreException e) {
-				
-				System.err.println("Error reconstituting orion path: " + orionPath);
-			}
+		for (int i = 2; i < orionPath.segmentCount(); i++) {
+			child = proj.getProjectStore().getChild(orionPath.segment(i));
+			path += "/" + child.getName();
 		}
 		return path;
 	}
 	
-	public IVResource createProject(String projectName, String basePath, boolean initFiles){
+	public IVResource createProject(String projectName, String basePath, boolean initFiles) throws IOException {
 		
 		if(isProject(projectName))  return getResource(projectName);
 		
@@ -166,7 +166,7 @@ public class OrionUser extends User {
 			
 		
 		if(initFiles){
-			List extensions = ServerManager.getServerManger().getExtensions(IDavinciServerConstants.EXTENSION_POINT_INITIAL_USER_FILES, IDavinciServerConstants.EP_TAG_INITIAL_USER_FILE);
+			List extensions = ServerManager.getServerManager().getExtensions(IDavinciServerConstants.EXTENSION_POINT_INITIAL_USER_FILES, IDavinciServerConstants.EP_TAG_INITIAL_USER_FILE);
 	        for (Iterator iterator = extensions.iterator(); iterator.hasNext();) {
 	            IConfigurationElement libraryElement = (IConfigurationElement) iterator.next();
 	            String path = libraryElement.getAttribute(IDavinciServerConstants.EP_ATTR_INITIAL_USER_FILE_PATH);
@@ -189,7 +189,7 @@ public class OrionUser extends User {
 	public boolean isValid(String path){
 	     return true;
 	}
-	public IVResource createResource(String path, boolean isFolder) {
+	public IVResource createResource(String path, boolean isFolder) throws IOException {
 		/* serve working copy files if they exist */
 
 		String path1 = path;
@@ -216,12 +216,7 @@ public class OrionUser extends User {
 		if(isFolder){
 			userFile.mkdir();
 		}else{
-				try {
-				userFile.createNewInstance();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			userFile.createNewInstance();
 		}
 		return userFile;
 	}

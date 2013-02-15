@@ -24,5 +24,9 @@
             "datatype": "string"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A convenience object to set up a stacked area plot.</p>"
+    }
 }

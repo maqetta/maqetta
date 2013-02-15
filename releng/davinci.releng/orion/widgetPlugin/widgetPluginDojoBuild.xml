@@ -234,6 +234,7 @@
 		<delete dir="${target.folder}/WebContent/dojo/"/>
 		<delete dir="${target.folder}/WebContent/dojox/"/>
 		<mkdir dir="${target.folder}/WebContent/dojo/"/>
+
 		<delete quiet="true" includeemptydirs="true">
 			<fileset dir="${target.folder}/WebContent/release/dojo" includes="**/*.uncompressed.js" />
 		</delete>

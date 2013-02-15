@@ -28,7 +28,7 @@ public class Reviewer implements IPerson{
 		if (name.equals("")) {
 			//Try and look it up... this is necessary because reviewer doesn't necessarily have
 			//a user name at the time they are invited to a review
-			IPersonManager personManager = ServerManager.getServerManger().getPersonManager();
+			IPersonManager personManager = ServerManager.getServerManager().getPersonManager();
 			IPerson person = personManager.getPersonByEmail(email);
 			if (person != null) {
 				name = person.getUserID();
@@ -59,11 +59,17 @@ public class Reviewer implements IPerson{
 		return versions.values().iterator();
 	}
 
-	public String getFirstName() {
-		return "";
+	public String getDisplayName() {
+		String displayName = this.getEmail();
+		IPersonManager personManager = ServerManager.getServerManager().getPersonManager();
+		IPerson person = personManager.getPersonByEmail(this.getEmail());
+		if (person != null) {
+			displayName = person.getDisplayName();
+		}
+		
+
+		return displayName;
 	}
 
-	public String getLastName() {
-		return "";
-	}
+
 }

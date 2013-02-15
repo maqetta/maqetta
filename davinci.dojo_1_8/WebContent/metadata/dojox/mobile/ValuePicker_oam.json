@@ -35,5 +35,13 @@
         }
     },
     "property": {},
-    "content": "<div></div>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A value picker that has stepper.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>ValuePicker is a widget for selecting some values. The values\ncan be selected by the Plus button, the Minus button, or the\ninput field.</p>"
+    }
 }

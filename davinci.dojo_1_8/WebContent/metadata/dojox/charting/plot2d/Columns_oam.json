@@ -33,5 +33,9 @@
             "defaultValue": "[0,0,0]"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>The plot object representing a column chart (vertical bars).</p>"
+    }
 }

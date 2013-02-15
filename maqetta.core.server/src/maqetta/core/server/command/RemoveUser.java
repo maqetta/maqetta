@@ -21,7 +21,7 @@ public class RemoveUser extends Command {
         if(!Command.isLocalRequest(req)) return; // FIXME: this test is not working as intended.
 
         try {
-            ServerManager.getServerManger().getUserManager().removeUser(name);
+            ServerManager.getServerManager().getUserManager().removeUser(name);
             this.responseString = "OK";
             HttpSession session = req.getSession(false);
             if (session != null) {

@@ -31,5 +31,9 @@
             "title": "URL"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>TODOC</p>"
+    }
 }

@@ -24,5 +24,9 @@
             "$library": "clipart"
         }
     ],
-    "content": "<img></img>"
+    "content": "<img></img>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Clipart icon: Map</p>"
+    }
 }

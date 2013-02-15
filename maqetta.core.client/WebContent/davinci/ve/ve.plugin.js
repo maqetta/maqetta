@@ -184,7 +184,13 @@ return {
                     label: "Move to back",
                     action: "davinci/ve/actions/MoveToBackAction",
                     menubarPath: "davinci.edit/cut"
-                }/*,
+                },
+                {
+                iconClass: "editActionIcon",
+                label: "Manage States...",
+                action: "davinci/ve/actions/ManageStates",
+                menubarPath: "davinci.edit/cut"
+            	}/*,
                 {
                     iconClass: "editActionIcon",
                     label: "Application States...",
@@ -227,22 +233,46 @@ return {
 						id: "addState",
 						iconClass: 'viewActionIcon addStateIcon',
 						action: "davinci/ve/actions/AddState",
-						label: "Add State",
+						label: "Add state",
 						toolbarPath: "states1"
 					},
 					{
 						id: "removeState",
 						iconClass: 'viewActionIcon removeStateIcon',
 						action: "davinci/ve/actions/RemoveState",
-						label: "Remove State",
+						label: "Remove state",
 						toolbarPath: "states1"
 					},
 					{
 						id: "modifyState",
 						iconClass: 'viewActionIcon modifyStateIcon',
 						action: "davinci/ve/actions/ModifyState",
-						label: "Modify State",
+						label: "Modify state",
 						toolbarPath: "states1"
+					},
+					{
+						id: "manageStates",
+						className: "manageStatesButton",
+						iconClass: 'viewActionIcon manageStatesIcon',
+						action: "davinci/ve/actions/ManageStates",
+						label: "For currently selected widgets, manage widget visibility for different states",
+						toolbarPath: "states1"
+					},
+					{
+						id: "NewWidgetsCurrentState",
+						className: "newWidgetsCurrentStateButton",
+						iconClass: 'viewActionIcon newWidgetsCurrentStateIcon',
+						action: "davinci/ve/actions/NewWidgetsCurrentState",
+						label: "Toggle whether new widgets go to Background or current state",
+						toolbarPath: "states2"
+					},
+					{
+						id: "highlightBaseWidgets",
+						className: "highlightBaseWidgetsButton",
+						iconClass: 'viewActionIcon highlightBaseWidgetsIcon',
+						action: "davinci/ve/actions/HighlightBaseWidgets",
+						label: "When in custom state, highlight widgets from Background state",
+						toolbarPath: "states2"
 					}
 
                 ]
@@ -464,7 +494,13 @@ return {
                            label: "Surround with &lt;SPAN&gt;",
                            action: "davinci/ve/actions/SurroundAction",
                            surroundWithTagName:'span'
-                       }/*,
+                       },
+                       {
+                           iconClass: "editActionIcon",
+                           label: "Manage States...",
+                           action: "davinci/ve/actions/ManageStates",
+                           menubarPath: "davinci.edit/cut"
+                       	}/*,
                        {
                            iconClass: "editActionIcon",
                            label: "Application States...",
@@ -575,7 +611,8 @@ return {
                 "snap": true,
 				"showPossibleParents": false,
                 "cssOverrideWarn": true,
-                "absoluteWidgetsZindex": 900
+                "absoluteWidgetsZindex": 900,
+                "widgetPaletteLayout": "icons"
             }
         }
     ],

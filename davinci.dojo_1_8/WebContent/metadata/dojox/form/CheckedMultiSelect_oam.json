@@ -63,5 +63,9 @@
             "hidden": false
         }
     },
-    "content": "<select multiple='true'></select>"
+    "content": "<select multiple='true'></select>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Extends the core dijit MultiSelect to provide a &quot;checkbox&quot; selector</p>"
+    }
 }

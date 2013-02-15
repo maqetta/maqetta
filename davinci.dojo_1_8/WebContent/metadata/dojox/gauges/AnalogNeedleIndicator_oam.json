@@ -88,5 +88,9 @@
             "hidden": false
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>An indicator for the AnalogGauge that draws a needle. The needle is drawn on the angle that corresponds\nto the value of the indicator.</p>"
+    }
 }

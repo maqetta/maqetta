@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,29 +23,32 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 @SuppressWarnings("serial")
 public class DavinciCommandServlet extends HttpServlet {
 
-    private HashMap<String, CommandDescriptor> commands = new HashMap<String, CommandDescriptor>();
+	static private Logger theLogger = Logger.getLogger(DavinciCommandServlet.class.getName());
+
+	private HashMap<String, CommandDescriptor> commands = new HashMap<String, CommandDescriptor>();
     private boolean initialized = false;
 
     public DavinciCommandServlet() {
     }
 
-	private void log(HttpServletRequest req) {
-		System.err.println("RequestURL: " + req.getRequestURL().toString());
+	private void log(HttpServletRequest req, String method, Throwable t) {
+		theLogger.logp(Level.SEVERE, DavinciCommandServlet.class.getName(), method, "Unhandled Exception", t);
+		theLogger.log(Level.INFO, "RequestURL: " + req.getRequestURL().toString());
 		String query = req.getQueryString();
 		if (query != null) {
-			System.err.println("Query: " + query);
+			theLogger.log(Level.INFO, "Query: " + query);
 		}
 		Enumeration<String> names = req.getHeaderNames();
 		while (names.hasMoreElements()) {
 			String name = names.nextElement();
 			String header = req.getHeader(name);
 			if (header != null) {
-				System.err.println(name + ": " + header);
+				theLogger.log(Level.INFO, name + ": " + header);
 			}
 		}
 	}
 
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     	try {
     		resp.setCharacterEncoding("utf-8");
 	        if (!initialized) {
@@ -75,14 +79,20 @@ public class DavinciCommandServlet extends HttpServlet {
 	            stream.write(command.getResponse().getBytes("utf-8"));
 	        }
     	} catch (RuntimeException re) {
-    		log(req);
+    		log(req, "doGet", re);
     		throw re;
+    	} catch (IOException ioe) {
+    		log(req, "doGet", ioe);
+    		throw ioe;
+    	} catch (Error e) {
+    		log(req, "doGet", e);
+    		throw e;
     	}
     }
 
     private IUser checkLogin(HttpServletRequest req, HttpServletResponse resp, CommandDescriptor commandDescriptor) throws IOException {
 
-        IUser user = ServerManager.getServerManger().getUserManager().getUser(req);
+        IUser user = ServerManager.getServerManager().getUserManager().getUser(req);
         if (user == null) {
             if (!ServerManager.LOCAL_INSTALL &&!commandDescriptor.isNoLogin()) {
                     resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -93,7 +103,7 @@ public class DavinciCommandServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     	try {
 	        if (!initialized) {
 	            initialize();
@@ -117,19 +127,18 @@ public class DavinciCommandServlet extends HttpServlet {
 	
 	        command.handleCommand(req, resp, user);
     	} catch (RuntimeException re) {
-    		log(req);
+    		log(req, "doPut", re);
     		throw re;
+    	} catch (IOException ioe) {
+    		log(req, "doPut", ioe);
+    		throw ioe;
+    	} catch (Error e) {
+    		log(req, "doPut", e);
+    		throw e;
     	}
-
     }
 
-    @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // TODO Auto-generated method stub
-        super.service(req, resp);
-    }
-
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     	try {
 	        if (!initialized) {
 	            initialize();
@@ -163,12 +172,18 @@ public class DavinciCommandServlet extends HttpServlet {
 	            stream.write(command.getResponse().getBytes("utf-8"));
 	        }
     	} catch(RuntimeException re) {
-    		log(req);
+    		log(req, "doPost", re);
     		throw re;
+    	} catch (IOException ioe) {
+    		log(req, "doPost", ioe);
+    		throw ioe;
+    	} catch (Error e) {
+    		log(req, "doPost", e);
+    		throw e;
     	}
     }
 
-    void loadCommands() {
+    private void loadCommands() {
         IExtensionRegistry registry = Activator.getActivator().getRegistry();
         if (registry != null) {
             IExtensionPoint point = registry.getExtensionPoint(IDavinciServerConstants.BUNDLE_ID, IDavinciServerConstants.EXTENSION_POINT_COMMAND);

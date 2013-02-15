@@ -130,7 +130,6 @@ define(function() {
 							sceneSelected = sceneId;
 						}
 					}
-					this.context.select(widget);
 				}
 			}else if(this.context.declaredClass == 'davinci.review.editor.Context'){
 				if(domNode){
@@ -167,8 +166,12 @@ define(function() {
 									var showingView = newView.getShowingView();
 									var showingViewIndex, newViewIndex;
 									var nodes = showingView.domNode.parentNode.childNodes;
+									var allSwapViews = true;
 									for(var j = 0; j < nodes.length; j++){
 										n = nodes[j];
+										if(n.nodeType == 1 && n.getAttribute('data-dojo-type') != 'dojox.mobile.SwapView'){
+											allSwapViews = false;
+										}
 										if(n.id == showingView.id){
 											showingViewIndex = j;
 										}
@@ -176,25 +179,29 @@ define(function() {
 											newViewIndex = j;
 										}
 									}
-									if(this._swapViewChangeHandle){
-										// Extra careful to make sure there is only one listener
-										dj.unsubscribe(this._swapViewChangeHandle);
-										this._swapViewChangeHandle = null;
-									}
-									if(typeof showingViewIndex == 'number' && typeof newViewIndex == 'number' && showingViewIndex !== newViewIndex){
-										var dir = (newViewIndex > showingViewIndex) ? 1 : -1;
-										var cv = showingView;	// cv = current view
-										this._swapViewChangeHandle = dj.subscribe("/dojox/mobile/viewChanged",function(v){
-											if(v && v.id && v.id != newView.id && v.id != cv.id){
-												cv = v;
-												cv.goTo(dir);
-											}else{
-												dj.unsubscribe(this._swapViewChangeHandle);
-												this._swapViewChangeHandle = null;
-												dojo.publish("/davinci/scene/selectionChanged", [this, newView.id]);
-											}
-										}.bind(this));
-										cv.goTo(dir);
+									if(allSwapViews){
+										if(this._swapViewChangeHandle){
+											// Extra careful to make sure there is only one listener
+											dj.unsubscribe(this._swapViewChangeHandle);
+											this._swapViewChangeHandle = null;
+										}
+										if(typeof showingViewIndex == 'number' && typeof newViewIndex == 'number' && showingViewIndex !== newViewIndex){
+											var dir = (newViewIndex > showingViewIndex) ? 1 : -1;
+											var cv = showingView;	// cv = current view
+											this._swapViewChangeHandle = dj.subscribe("/dojox/mobile/viewChanged",function(v){
+												if(v && v.id && v.id != newView.id && v.id != cv.id){
+													cv = v;
+													cv.goTo(dir);
+												}else{
+													dj.unsubscribe(this._swapViewChangeHandle);
+													this._swapViewChangeHandle = null;
+													dojo.publish("/davinci/scene/selectionChanged", [this, newView.id]);
+												}
+											}.bind(this));
+											cv.goTo(dir);
+										}
+									}else{
+										newView.show();
 									}
 								}else if(newView.show){
 									// for View and ScrollableView, call show()

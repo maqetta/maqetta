@@ -31,14 +31,18 @@ public class Register  extends Command {
 			this.from = from;
 		}
 	    public void run() {
-	    	ServerManager.getServerManger().sendEmail(this.from, emailAdd, "Maqetta.org user activation", message);
-	    	System.out.println("---------------\nSending email:\n"+message );
+	    	ServerManager.getServerManager().sendEmail(this.from, emailAdd, "Maqetta.org user activation", message);
 	    }
 	}
 	
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
     	
     	String emailAdd = req.getParameter("login");
+    	if (ServerManager.getServerManager().getUserManager().isValidUserByEmail(emailAdd)) {
+    		this.responseString = "USER_ALREADY_EXISTS";
+    		return;
+    	}
+
     	String randomToken = System.currentTimeMillis() + "_" + generator.nextInt();
     	
     	String requestUrl = req.getRequestURL().toString();

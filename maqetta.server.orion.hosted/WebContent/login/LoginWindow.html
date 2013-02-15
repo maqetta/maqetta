@@ -55,6 +55,7 @@ require(["LoginWindow.js"]);
 		</div>
 		<div id="davinci_top_bar_divider"></div>
 		<div id="maqetta_slogan">Visual authoring of HTML5 user interfaces - in the browser!</div>
+		<div id="browser_not_supported" style="display:none;">Internet explorer is not supported - please use Chrome, Firefox or Safari instead.</div>
 	</div>
 	<div class="orion-login-container" id="login-window" style="display:none;min-height:400px;">
 		<div id="landingArea" class="orion-landing-area">
@@ -102,6 +103,9 @@ require(["LoginWindow.js"]);
 						<div class="orion-register-input-holder">
 							<input type="text" class="orion-text-input" placeholder="email" title="Email" autocomplete="on" autofocus="autofocus" readonly id="create_login" spellcheck="false">
 							<input type="hidden" id='loginTolken'/>
+						</div>
+						<div class="orion-register-input-holder">
+							<input type="text" class="orion-text-input" placeholder="full name" title="Full name" autocomplete="on" autofocus="autofocus" id="create_name" spellcheck="false">
 						</div>
 						<div class="orion-register-input-holder">
 							<input type="password" class="orion-text-input" placeholder="password" title="password" autocomplete="on" id="create_password" aria-required="true">
@@ -157,6 +161,11 @@ require(["LoginWindow.js"]);
 					<form>
 						<div class="orion-register-input-holder">
 							<input type="text" class="orion-text-input" placeholder="email" title="Email" autocomplete="on" autofocus="autofocus" id="signupEmail" spellcheck="false">
+						</div>
+						<!-- Remove element.style in future (after users' old CSS cache has been updated) -->
+						<div class="orion-create-account-enter-valid-email" style='font-size:90%; text-align:left; clear:left; padding-bottom:16px;'>
+							A <i>valid email</i> is required in order to create an account.
+							Please check that your email is spelled correctly before submitting.
 						</div>
 						<div class="orion-login-button-holder">
 							<input id="signupUserButton" type="button" class="orion-login-button" value="Sign up" tabindex="0">

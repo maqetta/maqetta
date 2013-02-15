@@ -8,7 +8,7 @@ define([
 	"./ColorPicker",
 	"./Background"
 ],function(Runtime, FontDataStore){
-	
+
 	var HTMLStringUtil = dojo.getObject("davinci.ve.widgets.HTMLStringUtil", true);
 
 	dojo.mixin(HTMLStringUtil, {
@@ -129,28 +129,7 @@ define([
 					return text;
 			}
 		},
-		
-		loadTemplate: function(templatePath, nameSpaceBase){
-			var url = templatePath;
-			if(nameSpaceBase){
-				url = (nameSpaceBase.split('.')).join("/") + "/" + templatePath;
-			}
-			var text = Runtime.serverJSONRequest({url:url, handleAs:"text", sync:true  });
-			return text;
-		},
-		generateMainSection: function(jsonTemplate){
-			jsonTemplate.id =  this.getId();
-			var title = jsonTemplate.title;
-			
-			var htmlText = "";
-			 htmlText+="<div class='property_toc_item hideInThemeEditor' id='" + jsonTemplate.id + "'>";
-			 htmlText+="<table cellspacing='0' cellpadding='0' border='0' class='property_toc_item_table'>";
-			 htmlText+="<colgroup><col style='width: auto;'/><col style='width: 1px;'/></colgroup>";
-			 htmlText+="<tr><td class='property_toc_item_label'>" + title  + "</td><td class='property_toc_item_arrow'></td></tr>";
-			 htmlText+="</table>";
-		     htmlText+="</div>";
-		     return htmlText;
-		},
+
 		generateTable: function(page,params){
 			var rowsOnly = params ? params.rowsOnly : false;
 			var zeroSpaceForIncrDecr = params ? params.zeroSpaceForIncrDecr : false;
@@ -372,10 +351,9 @@ define([
 			var propertyGroupDIV = Util._searchUpByTagClass(thisPropertyRowTR, "DIV", "propGroup");
 			var sectionKey = dojo.attr(propertyGroupDIV, "propGroup");
 			var propName = dojo.attr(thisPropertyRowTR, "propName");
-			//FIXME: There must be a better way to call a class function on a singleton class
-			var SwitchingStyleView = dojo.getObject("davinci.ve.views.SwitchingStyleView");
+			var SwitchingStyleView = require("davinci/ve/views/SwitchingStyleView");
 			var sectionTitle = SwitchingStyleView.prototype.sectionTitleFromKey(sectionKey);
-		
+
 			if(Runtime.supportsCSS3Transitions){
 				
 				// Compute top coordinate diff between firstPropertyRowTR and thisPropertyRowTR

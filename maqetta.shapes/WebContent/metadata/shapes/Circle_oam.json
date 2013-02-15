@@ -17,22 +17,11 @@
             "format": "amd",
             "src": "shapes/Circle",
             "$library": "shapes"
-        },
-        {
-            "type": "css",
-            "src": "shapes.css",
-            "$library": "shapes"
         }
     ],
-    "property": {
-    	"rx":{
-            "datatype": "number",
-            "defaultValue": "40"
-        },
-    	"ry":{
-            "datatype": "number",
-            "defaultValue": "40"
-        }
-    },
-    "content": "<span></span>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Drawing tool: Circle</p>"
+    }
 }

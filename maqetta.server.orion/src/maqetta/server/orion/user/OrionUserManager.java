@@ -15,12 +15,8 @@ import org.eclipse.orion.server.configurator.ConfiguratorActivator;
 import org.eclipse.orion.server.core.LogHelper;
 import org.eclipse.orion.server.core.authentication.IAuthenticationService;
 import org.eclipse.orion.server.core.users.OrionScope;
-import org.eclipse.orion.server.useradmin.IOrionCredentialsService;
-import org.eclipse.orion.server.useradmin.UserConstants;
-import org.eclipse.orion.server.useradmin.UserServiceHelper;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IStorage;
-import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
 import org.osgi.service.prefs.BackingStoreException;
 
@@ -30,8 +26,8 @@ public class OrionUserManager extends UserManagerImpl {
 	private Properties authProperties;
 
     public OrionUserManager() {
-    	ServerManager serverManger = ServerManager.getServerManger();
-    	this.personManager = ServerManager.getServerManger().getPersonManager();
+    	ServerManager serverManger = ServerManager.getServerManager();
+    	this.personManager = ServerManager.getServerManager().getPersonManager();
         
 
         String maxUsersStr = serverManger.getDavinciProperty(IDavinciServerConstants.MAX_USERS);
@@ -57,21 +53,12 @@ public class OrionUserManager extends UserManagerImpl {
 		// noop for orion
 	}
 
-	private boolean checkUserExists(String key, String val) {
-		IOrionCredentialsService userAdmin = UserServiceHelper.getDefault().getUserStore();
-		org.eclipse.orion.server.useradmin.User user = (org.eclipse.orion.server.useradmin.User) userAdmin
-				.getUser(key, val);
-		return (user != null);
-	}
-
 	protected boolean checkUserExists(String userName) {
-		assertValidUserId(userName);
-
-		return checkUserExists(UserConstants.KEY_UID, userName);
+		return OrionPersonManager.getOrionUser(userName) != null;
 	}
 
 	protected boolean checkUserExistsByEmail(String email) {
-		return checkUserExists(UserConstants.KEY_LOGIN, email);
+		return OrionPersonManager.getOrionUserByEmail(email) != null;
 	}
 
 	public IUser getUser(String userName) {
@@ -99,7 +86,12 @@ public class OrionUserManager extends UserManagerImpl {
     public IUser newUser(IPerson person, IStorage baseDirectory) {
      	IUser user =  new OrionUser(person);
      	if(init(person.getUserID())){
-     		user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
+     		try {
+				user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null; // TODO: should throw?
+			}
      	}
      	return user;
     }
@@ -122,7 +114,12 @@ public class OrionUserManager extends UserManagerImpl {
             //userDir.mkdir();
             //File settingsDir = user.getSettingsDirectory();
            // settingsDir.mkdir();
-            user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
+            try {
+				user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null; //TODO: should throw?
+			}
             
             this.usersCount++;
             return user;

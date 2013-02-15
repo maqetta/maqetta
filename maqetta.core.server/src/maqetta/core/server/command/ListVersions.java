@@ -46,6 +46,7 @@ public class ListVersions extends Command {
 						writer.startObject();
 						writer.addField("designerId", reviewDesignerID);
 						writer.addField("designerEmail", designerUser.getRawUser().getPerson().getEmail());
+						writer.addField("designerDisplayName", designerUser.getRawUser().getPerson().getDisplayName() );
 						writer.addField("versionTitle", version.getVersionTitle());
 						writer.addField("versionId", version.getVersionID());
 						writer.addField("dueDate", version.dueDateString());
@@ -68,6 +69,7 @@ public class ListVersions extends Command {
 						for(Reviewer reviewer:version.getReviewers()){
 							writer.startObject();
 							writer.addField("name", reviewer.getUserID());
+							writer.addField("displayName", reviewer.getDisplayName());
 							writer.addField("email", reviewer.getEmail());
 							writer.endObject();
 						}

@@ -1,9 +1,9 @@
 package maqetta.core.server.user.manager;
 
 
-import java.util.HashMap;
+import java.io.IOException;
+import java.util.logging.Logger;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import maqetta.core.server.user.User;
@@ -21,6 +21,8 @@ import org.maqetta.server.ServerManager;
 
 public class UserManagerImpl implements IUserManager {
 
+	static final private Logger theLogger = Logger.getLogger(UserManagerImpl.class.getName());
+
 	private static IUser localUser;
     protected static UserManagerImpl theUserManager;
   //  protected HashMap                users    = new HashMap();
@@ -32,7 +34,7 @@ public class UserManagerImpl implements IUserManager {
 
 
     public UserManagerImpl() {
-    	ServerManager serverManger = ServerManager.getServerManger();
+    	ServerManager serverManger = ServerManager.getServerManager();
 
     	initWorkspace();
     	
@@ -41,23 +43,17 @@ public class UserManagerImpl implements IUserManager {
             this.maxUsers = Integer.valueOf(maxUsersStr).intValue();
         }
 
-        this.personManager = ServerManager.getServerManger().getPersonManager();
+        this.personManager = ServerManager.getServerManager().getPersonManager();
 
     }
 
     protected void initWorkspace(){
-    	ServerManager serverManger = ServerManager.getServerManger();
-    	try{
-        	this.baseDirectory= ServerManager.getServerManger().getBaseDirectory();
-        	this.usersCount = this.baseDirectory.list().length;
-    	}catch(Exception ex){
-    		System.out.println("FATAL ERROR Starting maqetta: " + ex);
-    		
-    	}
-    	 if (ServerManager.DEBUG_IO_TO_CONSOLE) {
-             System.out.println("\nSetting [user space] to: " + baseDirectory.getAbsolutePath());
-         }
+    	this.baseDirectory= ServerManager.getServerManager().getBaseDirectory();
+    	this.usersCount = this.baseDirectory.list().length;
+
+    	theLogger.info("Setting [user space] to: " + baseDirectory.getAbsolutePath());
     }
+
     /*
      * (non-Javadoc)
      * 
@@ -69,7 +65,7 @@ public class UserManagerImpl implements IUserManager {
         /*
          * deny permision to direct access of a users workspace
          */
-        return (resource != "");
+        return resource != "";
     }
 
     /*
@@ -120,7 +116,12 @@ public class UserManagerImpl implements IUserManager {
             //userDir.mkdir();
             //File settingsDir = user.getSettingsDirectory();
            // settingsDir.mkdir();
-            IVResource project = user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
+            try {
+				user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null; //TODO: should throw?
+			}
             
             this.usersCount++;
             return user;
@@ -192,30 +193,31 @@ public class UserManagerImpl implements IUserManager {
 
     public IUser getSingleUser() {
     	if (localUser == null) {
-	    	class LocalPerson implements IPerson {
-	            public String getEmail() {
-	                return "";
-	            }
-	            public String getFirstName() {
-	                return "";
-	            }
-	            public String getLastName() {
-	                return "";
-	            }
-	            public String getUserID() {
-	                return IDavinciServerConstants.LOCAL_INSTALL_USER;
-	            }
-	        }
+    		try {
+		    	class LocalPerson implements IPerson {
+		            public String getEmail() {
+		                return "";
+		            }
+		            public String getUserID() {
+		                return IDavinciServerConstants.LOCAL_INSTALL_USER;
+		            }
+		            public String getDisplayName() {
+	            		return "";
+	            	}
+		        }
 
-	    	IStorage userDir = this.baseDirectory;
-	        userDir.mkdir();
+	    		IStorage userDir = this.baseDirectory;
+	        	userDir.mkdir();
 
-	        localUser = new User(new LocalPerson(), userDir);
-	        IStorage settingsDir = this.baseDirectory.newInstance(userDir, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
-	        if (!settingsDir.exists()) {
-	            settingsDir.mkdir();
-	            IVResource project = localUser.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
-	        }
+	        	localUser = new User(new LocalPerson(), userDir);
+	       		IStorage settingsDir = this.baseDirectory.newInstance(userDir, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
+	        	if (!settingsDir.exists()) {
+	           		settingsDir.mkdir();
+	            	IVResource project = localUser.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
+	        	}
+    		} catch (IOException e) {
+    			return null; //TODO
+    		}
     	}
     	return localUser;
     }

@@ -3,5 +3,9 @@
 	"name": "html.br",
 	"spec": "1.0",
 	"version": "1.0",
-	"content": "<br>"
+	"content": "<br>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>The HTML br element represents a line break.</p>"
+	}
 }

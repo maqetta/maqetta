@@ -216,5 +216,13 @@
             "title": "Label Type"
         }
     },
-    "content": "<select></select>"
+    "content": "<select></select>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Auto-completing text box\n</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>The drop down box&#39;s values are populated from an class called\na data provider, which returns a list of values based on the characters\nthat the user has typed into the input box.\nIf OPTION tags are used as the data provider via markup,\nthen the OPTION tag&#39;s child text node is used as the widget value\nwhen selected.  The OPTION tag&#39;s value attribute is ignored.\nTo set the default value when using OPTION tags, specify the selected\nattribute on 1 of the child OPTION tags.\n\n</p>\n<p>Some of the options to the ComboBox are actually arguments to the data\nprovider.</p>"
+    }
 }

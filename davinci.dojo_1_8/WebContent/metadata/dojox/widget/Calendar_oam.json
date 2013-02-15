@@ -52,5 +52,9 @@
             "hidden": false
         }
     },
-    "content": "<input></input>"
+    "content": "<input></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>The standard Calendar. It includes day and month/year views.\nNo visual effects are included.</p>"
+    }
 }

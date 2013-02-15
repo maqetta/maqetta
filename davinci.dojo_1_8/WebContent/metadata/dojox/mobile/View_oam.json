@@ -44,5 +44,13 @@
             "defaultValue": true
         }
     },
-    "content": "<div></div>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A widget that represents a view that occupies the full screen</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>View acts as a container for any HTML and/or widgets. An entire\nHTML page can have multiple View widgets and the user can\nnavigate through the views back and forth without page\ntransitions.</p>"
+    }
 }

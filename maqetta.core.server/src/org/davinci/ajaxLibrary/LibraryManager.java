@@ -1,18 +1,19 @@
 package org.davinci.ajaxLibrary;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Logger;
 
+import maqetta.core.server.user.manager.UserManagerImpl;
 
 import org.davinci.server.internal.Activator;
 import org.davinci.server.internal.IRegistryListener;
-import org.davinci.server.user.IUserManager;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
@@ -23,8 +24,10 @@ import org.osgi.framework.Bundle;
 
 public class LibraryManager implements ILibraryManager {
 
-	Library[] installedLibraries;
-	ILibraryFinder[] libFinders;
+	static final private Logger theLogger = Logger.getLogger(LibraryManager.class.getName());
+
+	private Library[] installedLibraries;
+	private ILibraryFinder[] libFinders;
 
 	/*
 	 * static class BundleInfo{ Bundle bundle; IPath path; BundleInfo ( Bundle
@@ -87,18 +90,13 @@ public class LibraryManager implements ILibraryManager {
 		private URL getUri(String base, String path) {
 			IPath basePath = new Path(base);
 			IPath fullPath = basePath.append(path);
-			try {
-				URL entry = this.bundleBase.getEntry(fullPath.toString());
-				if (entry != null) {
-					return entry;
-				}
-
-				System.out.println("Library file not found! :" + fullPath);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			URL entry = this.bundleBase.getEntry(fullPath.toString());
+			if (entry == null) {
+				// TODO: should we throw an Error?
+				theLogger.severe("Library file not found! :" + fullPath);
 			}
-			return null;
+
+			return entry;
 		}
 
 		private URL[] listUri(String base, String path) {
@@ -109,38 +107,30 @@ public class LibraryManager implements ILibraryManager {
 					"*", false));
 
 			while (e.hasMoreElements()) {
-
 				results.add(e.nextElement());
 			}
 
 			return (URL[]) results.toArray(new URL[results.size()]);
 		}
 
-		public String getMetadata() {
+		public String getMetadata() throws IOException {
 			if (this.metadataPath == null) {
 				return "";
 			}
 			URL metadata = this.bundleBase.getEntry(this.metadataPath
 					+ "/widgets.json");
 			InputStream stream = null;
-			try {
-				stream = metadata.openStream();
-			} catch (MalformedURLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			StringBuffer out = new StringBuffer();
-			byte[] b = new byte[4096];
 			try {
+				stream = new BufferedInputStream(metadata.openStream());
+				byte[] b = new byte[4096];
 				for (int n; (n = stream.read(b)) != -1;) {
 					out.append(new String(b, 0, n));
 				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} finally {
+				if (stream != null) {
+					stream.close();
+				}
 			}
 			return out.toString();
 		}
@@ -195,7 +185,7 @@ public class LibraryManager implements ILibraryManager {
 
 		if (libFinders == null) {
 			Vector libs = new Vector();
-			List libraryElements = ServerManager.getServerManger().getExtensions(IDavinciServerConstants.EXTENSION_POINT_LIBRARYFINDER,	IDavinciServerConstants.EXTENSION_POINT_LIBRARYFINDER);
+			List libraryElements = ServerManager.getServerManager().getExtensions(IDavinciServerConstants.EXTENSION_POINT_LIBRARYFINDER,	IDavinciServerConstants.EXTENSION_POINT_LIBRARYFINDER);
 			if (libraryElements != null) {
 				for (int i = 0; i < libraryElements.size(); i++) {
 
@@ -218,7 +208,7 @@ public class LibraryManager implements ILibraryManager {
 	}
 
 	void initialize() {
-		List extensions = ServerManager.getServerManger().getExtensions(
+		List extensions = ServerManager.getServerManager().getExtensions(
 				IDavinciServerConstants.EXTENSION_POINT_AJAXLIBRARY,
 				IDavinciServerConstants.EP_TAG_AJAXLIBRARY);
 		this.installedLibraries = new Library[extensions.size()];

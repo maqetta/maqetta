@@ -27,5 +27,9 @@
             "title": "Auto Position"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A widget that attaches to a node and keeps track of incoming / outgoing FloatingPanes\nand handles layout</p>"
+    }
 }

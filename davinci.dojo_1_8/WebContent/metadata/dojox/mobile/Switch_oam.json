@@ -42,5 +42,13 @@
             "defaultValue": "OFF"
         }
     },
-    "content": "<div></div>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A toggle switch with a sliding knob.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>Switch is a toggle switch with a sliding knob. You can either\ntap or slide the knob to toggle the switch. The onStateChanged\nhandler is called when the switch is manipulated.</p>"
+    }
 }

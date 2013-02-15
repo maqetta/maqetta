@@ -32,5 +32,9 @@
             "title": "Label"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Menu item inside of a FisheyeList.\nSee FisheyeList documentation for details on usage.</p>"
+    }
 }

@@ -67,5 +67,9 @@
             "hidden": false
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A widget for rating using stars.</p>"
+    }
 }

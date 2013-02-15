@@ -82,5 +82,17 @@
             "defaultValue": true
         }
     },
-    "content": "<input type='button'></input>"
+    "content": "<input type='button'></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Basically the same thing as a normal HTML button, but with special styling.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>Buttons can display a label, an icon, or both.\nA label should always be specified (through innerHTML) or the label\nattribute.  It can be hidden via showLabel=false.</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;button data-dojo-type=&quot;dijit/form/Button&quot; onClick=&quot;...&quot;&gt;Hello world&lt;/button&gt;</code></pre>\n<pre><code>var button1 = new Button({label: &quot;hello world&quot;, onClick: foo});\ndojo.body().appendChild(button1.domNode);</code></pre>"
+    }
 }

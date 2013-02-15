@@ -15,5 +15,13 @@
 			"datatype": "string"
 		}
 	},
-	"content": "<img></img>"
+	"content": "<img></img>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>HTML element that represents an image.</p>"
+	},
+	"description": {
+		"type": "text/html",
+		"value": "<p>The src attribute holds the URL for the image.</p>"
+	}
 }

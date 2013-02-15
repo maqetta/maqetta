@@ -39,20 +39,48 @@
             "datatype": "string",
             "defaultValue": "slide",
             "option": [
-                {"value": "slide"},
-                {"value": "fade"},
-                {"value": "flip"},
-                {"value": "cover"},
-                {"value": "coverv"},
-                {"value": "dissolve"},
-                {"value": "reveal"},
-                {"value": "revealv"},
-                {"value": "scaleIn"},
-                {"value": "scaleOut"},
-                {"value": "slidev"},
-                {"value": "swirl"},
-                {"value": "zoomIn"},
-                {"value": "zoomOut"}
+                {
+                    "value": "slide"
+                },
+                {
+                    "value": "fade"
+                },
+                {
+                    "value": "flip"
+                },
+                {
+                    "value": "cover"
+                },
+                {
+                    "value": "coverv"
+                },
+                {
+                    "value": "dissolve"
+                },
+                {
+                    "value": "reveal"
+                },
+                {
+                    "value": "revealv"
+                },
+                {
+                    "value": "scaleIn"
+                },
+                {
+                    "value": "scaleOut"
+                },
+                {
+                    "value": "slidev"
+                },
+                {
+                    "value": "swirl"
+                },
+                {
+                    "value": "zoomIn"
+                },
+                {
+                    "value": "zoomOut"
+                }
             ]
         },
         "iconBase": {
@@ -64,10 +92,15 @@
         "cols": {
             "datatype": "number",
             "defaultValue": 3
-        },
-        "iconPos": {
-            "datatype": "string"
         }
     },
-    "content": "<ul></ul>"
+    "content": "<ul></ul>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A pop-up menu.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>The dojox/mobile/IconMenu widget displays a pop-up menu just\nlike iPhone&#39;s call options menu that is shown while you are on a\ncall. Each menu item must be dojox/mobile/IconMenuItem.</p>"
+    }
 }

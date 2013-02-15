@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="maqetta.server.orion.authentication.ldap">
+   <implementation class="maqetta.server.orion.authentication.ldap.LdapAuthenticationService"/>
+   <service>
+      <provide interface="org.eclipse.orion.server.core.authentication.IAuthenticationService"/>
+   </service>
+   <property name="orion.auth.name" type="String" value="ldaplogin"/>
+   <reference bind="setHttpService" cardinality="1..1" interface="org.osgi.service.http.HttpService" name="HttpService" policy="static" unbind="unsetHttpService"/>
+   <reference bind="setUserAdmin" cardinality="1..1" interface="org.eclipse.orion.server.useradmin.IOrionCredentialsService" name="UserAdmin" policy="dynamic" unbind="unsetUserAdmin"/>
+   <reference bind="bindUserProfileService" cardinality="1..1" interface="org.eclipse.orion.server.user.profile.IOrionUserProfileService" name="IOrionUserProfileService" policy="dynamic" unbind="unbindUserProfileService"/>
+</scr:component>

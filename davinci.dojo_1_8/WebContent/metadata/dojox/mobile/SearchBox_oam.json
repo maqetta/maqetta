@@ -50,7 +50,7 @@
             "defaultValue": "mblSearchBox"
         },
         "pageSize": {
-            "datatype": "number",
+            "datatype": "number"
         },
         "store": {
             "datatype": "object",
@@ -86,5 +86,9 @@
             "defaultValue": true
         }
     },
-    "content": "<input type='text'>"
+    "content": "<input type='text'>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A non-templated base class for INPUT type=&quot;search&quot;.</p>"
+    }
 }

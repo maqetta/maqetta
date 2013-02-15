@@ -1,8 +1,5 @@
 define([
 	"dojo/i18n!./nls/webContent",
-	"dijit/Dialog",
-	"dijit/form/Button",
-	"dijit/form/TextBox",
 	"./commands/CommandStack",
 	"./ui.plugin",
 	"./html/html.plugin",
@@ -13,9 +10,6 @@ define([
 	"./UserActivityMonitor"
 ], function(
 	webContent,
-	Dialog,
-	Button,
-	TextBox,
 	CommandStack,
 	ui_plugin,
 	html_plugin,
@@ -42,58 +36,26 @@ var Runtime = {
 	subscriptions: [],
 	currentSelection: [],
 	commandStack: new CommandStack(),
-	
-	addPlugin: function(pluginName) {
-		url = pluginName + ".plugin";
-		dojo.xhrGet( {
-			// The following URL must match that used to test
-			// the server.
-			url:url,
-			handleAs:"json",
-			sync:true,
-			load: function(responseObject, ioArgs) {
-				Runtime._loadPlugin(responseObject,url);
-			}
-		});
-	},
-
-	getInitializationInfo: function() {
-		
-		if(this._initializationInfo) {
-			return this._initializationInfo;
-		}
-		this._initializationInfo = Runtime.serverJSONRequest({
-			url: "cmd/getInitializationInfo",
-			handleAs: "json",
-			content:{},
-			sync:true
-		});
-
-		return this._initializationInfo;
-	},
 
 	getUser: function() {
-
-		this.getInitializationInfo();
-		if(this._initializationInfo){
-			return this._initializationInfo.userInfo;
-		}
+		return this._initializationInfo.userInfo;
 	},
 
 	getWorkbenchState: function() {
-
-		this.getInitializationInfo();
-		if(this._initializationInfo){
-			return this._initializationInfo.workbenchState;
-		}
+		return this._initializationInfo.workbenchState;
 	},
-	
-	getDefaultThemeSet: function() {
 
-		this.getInitializationInfo();
-		if(this._initializationInfo && this._initializationInfo.defaultThemeSet){
-			return this._initializationInfo.defaultThemeSet;
-		} 
+	/**
+	 * Returns the site-specific data for "name"
+	 * @param name {string}  Site-specific data index (e.g., "defaultThemeSet")
+	 * @returns
+	 */
+	getSiteConfigData: function(name){
+		return this._initializationInfo[name];
+	},
+
+	getDefaultThemeSet: function() {
+		return this.getSiteConfigData("defaultThemeSet");
 	},
 	
 	/*
@@ -105,9 +67,8 @@ var Runtime = {
 	 * 		{
 	 * 			email: "person@place.com",
 	 *			isLocalInstall: "false",
-	 * 			userFirstName: "",
-	 *			userId: "A",
-	 *			userLastName: "";
+	 * 			userDisplayName: "",
+	 *			userId: "A";
 	 * 		}
 	 * 
 	 * Because of the current user sign-up we have with Orion, we're not making 
@@ -125,8 +86,8 @@ var Runtime = {
 
 		// Can't reliably use userId anymore (because of Orion), so first try first name and then
 		// drop back to e-mail
-		var displayName = userInfo.userFirstName;
-		if (!userInfo.userFirstName) {
+		var displayName = userInfo.userDisplayName;
+		if (!userInfo.userDisplayName) {
 			displayName = userInfo.email;
 		}
 		return displayName;		
@@ -192,12 +153,10 @@ var Runtime = {
 
 	getUserWorkspaceUrl: function(){
 		var loc = this.location();
-		//FIXME: replace this stuff with a regexp
-		if (loc.charAt(loc.length-1)=='/'){
-			loc=loc.substring(0,loc.length-1);
+		if (loc.slice(-1) == '/') {
+			loc = loc.slice(0, -1);
 		}
-		var workspaceUrl=loc+'/user/'+Runtime.userName+'/ws/workspace/';
-		return workspaceUrl;
+		return loc+'/user/'+Runtime.userName+'/ws/workspace/';
 	},
 
 	run: function() {
@@ -224,7 +183,7 @@ var Runtime = {
 				window.davinciBackspaceKeyTime = Date.now();
 			}
 		});	
-		UserActivityMonitor.setUpInActivityMonitor(dojo.doc);
+		UserActivityMonitor.setUpInActivityMonitor(dojo.doc, this);
 
 		// add key press listener
 		dojo.connect(dojo.doc.documentElement, "onkeydown", this, "_handleGlobalDocumentKeyEvent");
@@ -291,7 +250,6 @@ var Runtime = {
 	
 	destroy: function() {
 		dojo.forEach(Runtime.subscriptions, dojo.unsubscribe);
-		UserActivityMonitor.destroy();
 	},
 	
 	_addExtension: function(id, extension, pluginID) {
@@ -348,53 +306,6 @@ var Runtime = {
 		return Runtime.currentSelection;
 	},
 
-	doLogin: function() {
-		var retry=true;
-		var formHtml = "<table>" +
-        "<tr><td><label for=\"username\">User: </label></td>" +
-        "<td><input dojoType=\dijit.form.TextBox\ type=\"text\" name=\"username\" id='username' ></input></td></tr>" +
-        "<tr><td><label for=\"password\">Password: </label></td> <td><input dojoType=\"dijit.form.TextBox\" type=\"password\" name=\"password\" id='password'></input></td></tr>" +
-        "<tr><td colspan=\"2\" align=\"center\"><button dojoType=\"dijit.form.Button\" type=\"submit\" >Login</button></td>" +
-        "</tr></table>"; // FIXME: i18n
-		do {
-			var isInput=false;
-			var dialog = new Dialog({
-				id: "connectDialog",
-				title: "Please login", 
-				onExecute: function(){
-					dojo.xhrGet({
-						url: "cmd/login",
-						sync: true,
-						handleAs: "text",
-						content:{
-						    userName: dojo.byId("username").value,
-						    password: dojo.byId("password").value,
-						    noRedirect: true
-						}
-					}).then(function(result) {
-						if (result=="OK") {
-						    // cheap fix.
-						    //window.location.reload();
-						    window.location.href= 'welcome';
-						    //retry=false;
-						} else {
-						    console.warn("Unknown error: result="+result);
-						}
-					    }, function(error) {
-					    	console.warn("Login error", error);
-					    });
-					isInput=true;
-				},
-				onCancel:function(){
-				    isInput=true;
-				    Runtime.destroyRecursive(false);
-				}
-			});	
-			dialog.setContent(formHtml);
-			dialog.show();			
-		} while (retry);
-	},
-	
 	// deprecated.  will fail for async.  use dojo/_base/xhr directly
 	serverJSONRequest: function (ioArgs) {
 		var resultObj;
@@ -409,23 +320,6 @@ var Runtime = {
 
 		return resultObj;
 	},
-
-	logoff: function(args) {
-		var loading = dojo.create("div",null, dojo.body(), "first");
-		loading.innerHTML='<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Logging off...</td></tr></table>'; // FIXME: i18n
-		dojo.addClass(loading, 'loading');
-		require("davinci/Workbench").unload();
-		Runtime.serverJSONRequest({
-			url:"cmd/logoff", handleAs:"text", sync:true
-		});
-		var newLocation = Runtime.location(); //
-		var lastChar=newLocation.length-1;
-		if (newLocation.charAt(lastChar)=='/') {
-			newLocation=newLocation.substr(0,lastChar);
-		}
-		location.href = newLocation+"/welcome";
-	},
-
 
 	registerKeyBinding: function(keyBinding, pluginAction) {
 		if (!this._globalKeyBindings) {
@@ -517,6 +411,5 @@ var Runtime = {
 	}
 };
 
-davinci.Runtime = Runtime; //FIXME: shouldn't need this
 return Runtime;
 });

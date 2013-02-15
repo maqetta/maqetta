@@ -1,11 +1,8 @@
 define([
-    	"dojo/_base/declare",
-    	"davinci/Workbench",
-    	"./_CutCopyAction",
-    	"davinci/commands/CompoundCommand",
-    	"davinci/ve/commands/RemoveCommand"
-], function(declare, Workbench, _CutCopyAction, CompoundCommand, RemoveCommand){
-
+	"dojo/_base/declare",
+	"./_CutCopyAction",
+	"../../Runtime"
+], function(declare, _CutCopyAction, Runtime){
 
 return declare("davinci.ve.actions.CopyAction", [_CutCopyAction], {
 
@@ -14,8 +11,8 @@ return declare("davinci.ve.actions.CopyAction", [_CutCopyAction], {
 	},
 	
 	_executeAction: function(context, selection, data, removeCommand) {
-		var oldData = davinci.Runtime.clipboard;
-		davinci.Runtime.clipboard=data;
+		var oldData = Runtime.clipboard;
+		Runtime.clipboard = data;
 		if(!oldData){
 			context.onSelectionChange(selection); // force to enable Paste action
 		}

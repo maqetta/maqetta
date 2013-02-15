@@ -8,5 +8,9 @@
 			"datatype": "string"
 		}
 	},
-	"content": "<b></b>"
+	"content": "<b></b>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>HTML element for indicating text boldness.</p>"
+	}
 }

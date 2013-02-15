@@ -40,5 +40,9 @@
             "title": "Disabled"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Item in a MenuBar like &quot;File&quot; or &quot;Edit&quot;, that spawns a submenu when pressed (or hovered)</p>"
+    }
 }

@@ -18,13 +18,13 @@ public class GetUserLibs extends Command {
     @Override
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
         // Library[] libs =
-        // ServerManager.getServerManger().getLibraryManager().getAllLibraries();
+        // ServerManager.getServerManager().getLibraryManager().getAllLibraries();
         String base = req.getParameter("base");
         ILibInfo[] installedLibs = user.getLibs(base);
 
         JSONWriter jsonWriter = new JSONWriter(true);
         jsonWriter.startObject().addFieldName("userLibs").startArray();
-        ILibraryManager libMan = ServerManager.getServerManger().getLibraryManager();
+        ILibraryManager libMan = ServerManager.getServerManager().getLibraryManager();
         for (int i = 0; i < installedLibs.length; i++) {
             String id = installedLibs[i].getId();
             String version = installedLibs[i].getVersion();

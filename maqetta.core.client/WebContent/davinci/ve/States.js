@@ -1,12 +1,30 @@
+/// Set a global flag so that AppStates.js doesn't run its standard initialization logic
+// because the page editor has its own states initialization logic.
+if (typeof davinci === "undefined") { davinci = {}; }
+davinci.AppStatesDontInitialize = true;
+
 define([
         "dojo/_base/declare",
         "dojo/_base/connect",
-        "davinci/Runtime",
+    	"dojo/query",
+    	"dojo/dom-class",
+    	"dojo/_base/window",
+    	"dijit/registry",
+    	"davinci/Runtime",
+    	"davinci/Workbench",
         "davinci/maqetta/AppStates",
+    	"./utils/GeomUtils",
         "./commands/EventCommand",
         "./commands/StyleCommand",
-    	"davinci/ve/utils/StyleArray"
-], function(declare, connect, Runtime, maqettaStates, EventCommand, StyleCommand, StyleArray){
+    	"davinci/ve/utils/StyleArray",
+    	"davinci/workbench/Preferences",
+        "dojo/i18n!davinci/ve/nls/ve"
+], function(declare, connect, query, domClass, dojoWin, registry, Runtime, Workbench, 
+		maqettaStates, GeomUtils, EventCommand, StyleCommand, StyleArray, Preferences, veNls){
+
+// Some of the logic in this file is invoked via commandStack processing,
+// which does a dojo.withDoc() to set the document to the user's document
+var appDocument = document;
 
 var veStates = declare(maqettaStates, {
 	
@@ -136,7 +154,7 @@ var veStates = declare(maqettaStates, {
 	},
 	
 	getEditor: function() {
-		return top.davinci && top.davinci.Runtime && top.davinci.Runtime.currentEditor;
+		return Runtime.currentEditor;
 	},
 	
 	getContext: function() {
@@ -163,7 +181,7 @@ var veStates = declare(maqettaStates, {
 			var stateContainerNode = stateContainers[i];
 			var currentState = this.getState(stateContainerNode);
 			var focus = (focusState && stateContainerNode == focusState.stateContainerNode && currentState == focusState.state);
-			this.setState(currentState, stateContainerNode, { focus:focus, updateWhenCurrent:true, silent:true });	
+			this.setState(currentState, stateContainerNode, { focus:focus, updateWhenCurrent:true, silent:false });	
 		}
 	},
 	
@@ -327,6 +345,175 @@ var veStates = declare(maqettaStates, {
 		}
 		return whichState;
 	},
+	
+	_customStateActive: function(context){
+		if(!context){
+			return false;
+		}
+		// FIXME: assumes only state container is root node of doc
+		var state = this.getState(context.rootNode);
+		return state;	// undefined => default/base/Normal state
+	},
+	
+	updateStateIcons: function(context){
+		if(!context || !context.editor || context.editor != Runtime.currentEditor || context.editor.declaredClass != "davinci.ve.PageEditor"){
+			return;
+		}
+		// Sometimes this routine is called as part of commandStack processing,
+		// which does a dojo.withDoc(userdoc). This ensures we have the right document.
+		dojoWin.withDoc(appDocument, function(){
+			var manageStatesButton = query('.manageStatesButton')[0];
+			var manageStatesButtonWidget = registry.byNode(manageStatesButton);
+			var iconNode = query('.manageStatesIcon')[0];
+			if(manageStatesButtonWidget && iconNode){
+				if(this.manageStatesActive(context)){
+					domClass.remove(iconNode, 'manageStatesIconDisabled');
+					manageStatesButtonWidget.set('disabled', false);
+				}else{
+					domClass.add(iconNode, 'manageStatesIconDisabled');
+					manageStatesButtonWidget.set('disabled', true);
+				}
+			}
+			var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Workbench.getProject());
+			var newWidgetsCurrentState = editorPrefs.newWidgetsCurrentState;
+			var newWidgetsCurrentStateButton = query('.newWidgetsCurrentStateButton')[0];
+			var newWidgetsCurrentStateButtonWidget = registry.byNode(newWidgetsCurrentStateButton);
+			var iconNode = query('.newWidgetsCurrentStateIcon')[0];
+			if(newWidgetsCurrentStateButtonWidget && iconNode){
+				if(this.newWidgetsCurrentStateActive(context)){
+					domClass.remove(iconNode, 'newWidgetsCurrentStateIconDisabled');
+				}else{
+					domClass.add(iconNode, 'newWidgetsCurrentStateIconDisabled');
+				}
+				if(newWidgetsCurrentState){
+					domClass.remove(iconNode, 'newWidgetsCurrentStateIconOff');
+					domClass.add(iconNode, 'newWidgetsCurrentStateIconOn');
+					newWidgetsCurrentStateButtonWidget.set('title', veNls.NewWidgetsCurrentStateTitleCurrentState);
+				}else{
+					domClass.remove(iconNode, 'newWidgetsCurrentStateIconOn');
+					domClass.add(iconNode, 'newWidgetsCurrentStateIconOff');
+					newWidgetsCurrentStateButtonWidget.set('title', veNls.NewWidgetsCurrentStateTitleBackground);
+				}
+			}
+		}.bind(this));
+	},
+	
+	/**
+	 * Returns true if the manageStates feature can be active at this time.
+	 * Only true when user has selected a custom state.
+	 */
+	manageStatesActive: function(context){
+		return context && context.getSelection().length;
+	},
+	
+	/**
+	 * Returns true if the newWidgetsCurrentState feature can be active at this time.
+	 * Only true when user has selected a custom state.
+	 */
+	newWidgetsCurrentStateActive: function(context){
+		return this._customStateActive(context);
+	},
+	
+	/**
+	 * Returns true if the highlightBaseWidgets feature can be active at this time.
+	 * Only true when user has selected a custom state.
+	 */
+	highlightBaseWidgetsActive: function(context){
+		return this._customStateActive(context);
+	},
+	
+	/**
+	 * Update all of the highlights that show which widgets appear in a custom state
+	 * but which are actually visible on the base state and "shining through" to custom state
+	 */
+	updateHighlightsBaseStateWidgets: function(context){
+		// Have to use a setTimeout because widgets that have embedded SVG content
+		// (shapes and clipart) will not have proper size until the SVG content is
+		// loaded, and that content is loaded asynchronously by some browsers.
+		// This is a safe operation to put into a setTimeout because the only
+		// changes that happen are on the decorative chrome that overlays the widgets
+		// on the canvas.
+		setTimeout(function(){
+			if(!context || !context.editor || context.editor != Runtime.currentEditor || context.editor.declaredClass != "davinci.ve.PageEditor"){
+				return;
+			}
+			// Sometimes this routine is called as part of commandStack processing,
+			// which does a dojo.withDoc(userdoc). This ensures we have the right document.
+			dojoWin.withDoc(appDocument, function(){
+				var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', davinci.Workbench.getProject());
+				var highlightBaseWidgets = editorPrefs.highlightBaseWidgets;
+				var highlightBaseWidgetsActive = this.highlightBaseWidgetsActive(context);
+				var highlightBaseWidgetsButton = query('.highlightBaseWidgetsButton')[0];
+				var highlightBaseWidgetsButtonWidget = registry.byNode(highlightBaseWidgetsButton);
+				var iconNode = query('.highlightBaseWidgetsIcon')[0];
+				if(highlightBaseWidgetsButtonWidget && iconNode){
+					if(highlightBaseWidgetsActive){
+						domClass.remove(iconNode, 'highlightBaseWidgetsIconDisabled');
+					}else{
+						domClass.add(iconNode, 'highlightBaseWidgetsIconDisabled');
+					}
+					if(highlightBaseWidgets){
+						domClass.add(iconNode, 'highlightBaseWidgetsIconOn');
+						domClass.remove(iconNode, 'highlightBaseWidgetsIconOff');
+					}else{
+						domClass.add(iconNode, 'highlightBaseWidgetsIconOff');
+						domClass.remove(iconNode, 'highlightBaseWidgetsIconOn');
+					}
+				}
+				// FIXME: assumes only state container is root node of doc
+				var state = this.getState(context.rootNode);
+				var focusContainer = dojo.byId('focusContainer');
+				if(focusContainer){
+					var shiningThroughDivs = query('.maqBaseStateShiningThrough', focusContainer);
+					for(var i=0; i<shiningThroughDivs.length; i++){
+						var div = shiningThroughDivs[i];
+						div.parentNode.removeChild(div);
+					}
+					if(state && highlightBaseWidgets){
+							var allWidgets = context.getAllWidgets();
+							var widgetsNotInBaseState = [];
+							for(var i=0; i<allWidgets.length; i++){
+								var widget = allWidgets[i];
+								if(widget.domNode && widget.domNode.tagName && widget.domNode.tagName.toUpperCase() == 'BODY'){
+									continue;
+								}
+								var obj = context.getEffectiveDisplayValue(widget, state);
+								var effectiveDisplayValue = obj.effectiveDisplayValue;
+								var effectiveState = obj.effectiveState;
+								if(effectiveDisplayValue != 'none' && effectiveState == 'undefined'){
+									widgetsNotInBaseState.push(widget);
+								}
+							}
+							var doc = context.getDocument();
+							var focusContainerBounds = GeomUtils.getBorderBoxPageCoords(focusContainer);
+							var parentIframe = context.getParentIframe();
+							var parentIFrameBounds = GeomUtils.getBorderBoxPageCoords(parentIframe);
+							var iframeFocusContainerAdjustLeft = parentIFrameBounds.l - focusContainerBounds.l;
+							var iframeFocusContainerAdjustTop = parentIFrameBounds.t - focusContainerBounds.t;
+							var bodyElement = doc.body;
+							var scrollLeft = GeomUtils.getScrollLeft(bodyElement);
+							var scrollTop = GeomUtils.getScrollTop(bodyElement);
+							for(var j=0; j<widgetsNotInBaseState.length; j++){
+								var domNode = widgetsNotInBaseState[j].domNode;
+								if(domNode){
+									//FIXME: use dojo.position instead?
+									var rect = GeomUtils.getBorderBoxPageCoords(domNode);
+									rect.l += (iframeFocusContainerAdjustLeft - scrollLeft);
+									rect.t += (iframeFocusContainerAdjustTop - scrollTop);
+									var div = doc.createElement('div');
+									div.className = 'maqBaseStateShiningThrough';
+									div.style.left = rect.l + 'px';
+									div.style.top = rect.t + 'px';
+									div.style.width = rect.w + 'px';
+									div.style.height = rect.h + 'px';
+									focusContainer.appendChild(div);
+								}
+							}					
+					}
+				}
+			}.bind(this));
+		}.bind(this), 10);
+	},
 
 	initialize: function() {
 	
@@ -359,7 +546,10 @@ var veStates = declare(maqettaStates, {
 				var context = this.getContext();
 				if (context) {
 					context.clearCachedWidgetBounds();
+					// Note: updateHighlightsBaseStateWidgets() updates the state of 
+					// the highlightBaseWidgets icon (called by updateFocusAll())
 					context.updateFocusAll();
+					this.updateStateIcons(context);
 				}
 			}));
 			
@@ -411,6 +601,27 @@ var veStates = declare(maqettaStates, {
 					return;
 				}
 				this._removeStateFromNodeRecursive(params.node, params.state);
+			}));
+			
+			connect.subscribe('/davinci/ui/context/statesLoaded', dojo.hitch(this, function() {
+				var context = this.getContext();
+				// Note: updateHighlightsBaseStateWidgets() updates the state of 
+				// the highlightBaseWidgets icon (called by updateFocusAll())
+				context.updateFocusAll();
+				this.updateStateIcons(context);
+			}));
+			
+			connect.subscribe('/davinci/ui/context/statesLoaded', dojo.hitch(this, function() {
+				var context = this.getContext();
+				// Note: updateHighlightsBaseStateWidgets() updates the state of 
+				// the highlightBaseWidgets icon (called by updateFocusAll())
+				context.updateFocusAll();
+				this.updateStateIcons(context);
+			}));
+			
+			connect.subscribe("/davinci/ui/widgetSelected", dojo.hitch(this, function() {
+				var context = this.getContext();
+				this.updateStateIcons(context);
 			}));
 			
 			this.subscribed = true;

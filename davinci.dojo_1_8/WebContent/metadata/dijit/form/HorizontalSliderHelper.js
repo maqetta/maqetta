@@ -1,6 +1,6 @@
 define([
 "dojo/_base/declare",
-"dojo/dom-construct", // domConstruct.place
+"dojo/dom-construct" // domConstruct.place
 ], function(declare, domConstruct){
 
 var HorizontalSliderHelper = function() {};
@@ -72,15 +72,16 @@ HorizontalSliderHelper.prototype = {
 	 * 'topDecoration'). We try to handle adding a child widget as gracefully as
 	 * possible in light of that.
 	 * 
-	 * @param  {davinci.ve._Widget} widget
-	 * @param  {dijit._Widget} childWidget
+	 * @param  {davinci/ve/_Widget} parentWidget
+	 * @param  {davinci/ve/_Widget} childWidget
 	 * @param  {int?} insertIndex
 	 */
-	addChild: function(widget, childWidget, insertIndex){
-		
-		var refNode = widget.dijitWidget.containerNode;
-		var decorationNode = this._getSecondaryDecoration(widget.dijitWidget);
-		if (childWidget.container && childWidget.container === this._getSecondaryDecorationLabel()) { 
+	addChild: function(parentWidget, childWidget, insertIndex) {
+		var parentDijitWidget = parentWidget.dijitWidget;
+		var childDijitWidget = childWidget.dijitWidget;
+		var refNode = parentDijitWidget.containerNode;
+		var decorationNode = this._getSecondaryDecoration(parentDijitWidget);
+		if (childDijitWidget.container && childDijitWidget.container === this._getSecondaryDecorationLabel()) {
 			// We want to add the new child to the decoration container rather than the containerNode
 			refNode = decorationNode; 
 		} else {
@@ -88,7 +89,7 @@ HorizontalSliderHelper.prototype = {
 			// than number of children in the containerNode), so let's take a shot at adjusting the index
 			if (insertIndex && typeof insertIndex == "number") {
 				//Use Max.math to make sure this doesn't go negative 
-				insertIndex = Math.max(insertIndex - this._getSecondaryDecoration(widget.dijitWidget).childElementCount, 0);
+				insertIndex = Math.max(insertIndex - this._getSecondaryDecoration(parentDijitWidget).childElementCount, 0);
 			}
 		}
 		
@@ -106,14 +107,14 @@ HorizontalSliderHelper.prototype = {
 		}
 		
 		//Place the new child
-		domConstruct.place(childWidget.domNode, refNode, insertIndex);
+		domConstruct.place(childDijitWidget.domNode, refNode, insertIndex);
 
 		// If I've been started but the child widget hasn't been started,
 		// start it now.  Make sure to do this after widget has been
 		// inserted into the DOM tree, so it can see that it's being controlled by me,
 		// so it doesn't try to size itself.
-		if(this._started && !childWidget._started){
-			childWidget.startup();
+		if(this._started && !childDijitWidget._started){
+			childDijitWidget.startup();
 		}
 	},
 	

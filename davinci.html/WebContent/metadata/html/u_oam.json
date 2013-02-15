@@ -8,5 +8,9 @@
 			"datatype": "string"
 		}
 	},
-	"content": "<u></u>"
+	"content": "<u></u>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>HTML element for indicating underlined text.</p>"
+	}
 }

@@ -64,5 +64,9 @@
 			"hidden": true
 		}
 	},
-	"content": "<tbody></tbody>"
+	"content": "<tbody></tbody>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>HTML table body element, a child of the HTML table element.</p>"
+	}
 }

@@ -39,20 +39,20 @@ public class Publish extends Command {
 
 		Version version = null;
 		Boolean isUpdate = req.getParameter("isUpdate") != null ? 
-				(req.getParameter("isUpdate").equals("true") ? true : false) : false;
+				req.getParameter("isUpdate").equals("true") : false;
 		String vTime = req.getParameter("vTime");
 		Boolean isRestart = req.getParameter("isRestart") != null ? 
-				(req.getParameter("isRestart").equals("true") ? true : false) : false;
+				req.getParameter("isRestart").equals("true") : false;
 		String emailsStr = req.getParameter("emails");
 		String message = req.getParameter("message");
 		String versionTitle = req.getParameter("versionTitle");
 		String[] resources = req.getParameterValues("resources");
 		String desireWidth = req.getParameter("desireWidth");
 		String desireHeight = req.getParameter("desireHeight");
-		Boolean savingDraft = req.getParameter("savingDraft") == null ? false : true;
+		Boolean savingDraft = req.getParameter("savingDraft") != null;
 		String dueDate = req.getParameter("dueDate");
 		Boolean receiveEmail = req.getParameter("receiveEmail") != null ? 
-				(req.getParameter("receiveEmail").equals("true") ? true : false) : false;
+				req.getParameter("receiveEmail").equals("true") : false;
 
 		String[] emails = emailsStr.split(",");
 		List<Reviewer> reviewers = new ArrayList<Reviewer>();
@@ -61,7 +61,7 @@ public class Publish extends Command {
 
 		if (!isUpdate) {
 			Date currentTime = new Date();
-			SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATE_PATTERN);
+			SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATE_PATTERN_SHORT);
 			formatter.setCalendar(Calendar.getInstance(new SimpleTimeZone(0, "GMT")));
 			String timeVersion = formatter.format(currentTime);
 			
@@ -109,7 +109,7 @@ public class Publish extends Command {
 		reviewers.add(tmpReviewer);
 
 		//Handle fake reviewer (if necessary)
-		String fakeReviewer = ServerManager.getServerManger().getDavinciProperty(Constants.FAKE_REVIEWER);
+		String fakeReviewer = ServerManager.getServerManager().getDavinciProperty(Constants.FAKE_REVIEWER);
 		if (fakeReviewer != null) {
 			tmpReviewer = ReviewManager.getReviewManager().getReviewer("fakeReviewer", fakeReviewer);
 			tmpReviewer.addReviewerVersion(reviewerVersion);
@@ -175,7 +175,7 @@ public class Publish extends Command {
 	private String notifyRelatedPersons(String from, String to, String subject,
 			String htmlContent) {
 		
-		if( ServerManager.getServerManger().sendEmail(from, to, subject, htmlContent) ){
+		if( ServerManager.getServerManager().sendEmail(from, to, subject, htmlContent) ){
 			return "OK";
 		}else{
 			return htmlContent;
@@ -184,9 +184,9 @@ public class Publish extends Command {
 
 	private String getHtmlContent(IUser user, String message, String url) {
 		Map<String, String> props = new HashMap<String, String>();
-		props.put("displayName", user.getPerson().getEmail());
+		props.put("displayName", user.getPerson().getDisplayName());
 		props.put("message", message);
 		props.put("url", url);
-		return Utils.substitude(Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION), props);
+		return Utils.substitute(Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION), props);
 	}
 }

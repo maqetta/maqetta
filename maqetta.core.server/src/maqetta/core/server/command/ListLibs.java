@@ -15,7 +15,7 @@ public class ListLibs extends Command {
 
     @Override
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
-        Library[] libs = ServerManager.getServerManger().getLibraryManager().getAllLibraries();
+        Library[] libs = ServerManager.getServerManager().getLibraryManager().getAllLibraries();
 
         JSONWriter jsonWriter = new JSONWriter(true);
         jsonWriter.startObject().addFieldName("userLibs").startArray();

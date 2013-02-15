@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Maqetta 8 Release Notes</title>
+<style type="text/css">
+.majortopic { font-size:105%; font-weight:bold; color:#a0a; }
+.minortopic { font-weight:bold; }
+</style>
+</head>
+
+<body class="maqettadocs">
+<!-- Header -->
+<!--
+<iframe src ="header.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+-->
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td> &nbsp; </td>
+    <td class="prevnext">
+    <a href="releasenotes/release7.html">Previous</a> / <a href="releasenotes/release9.html">Next</a>
+    </td></tr>
+</table>
+
+
+<h1>Maqetta 8 Release Notes</h1>
+
+<p>The Maqetta 8 release includes the following updates:</p>
+
+<ul style="margin-top: 0pt;" type="disc">
+	<li><p><span class='majortopic'>Widget Palette Makeover</span> - 
+		The Widget Palette (the "Palette") at the top left of Maqetta's visual page designer has been redesigned with Release 8. Some highlights:</p>
+		<ul>
+			<li><span class='minortopic'>Folders and subfolders</span> - 
+				The Widget Palette now supports two levels of widget groupings - top level folders
+				(e.g., Containers, Controls, Clip Art), and some folders have subfolders.
+				For example, the Controls folder has various subfolders (e.g., Butttons, Sliders/Spinners, TextBoxes, etc).
+				This solves a problem with previous Maqetta releases where some of the 
+				sections of the Widget Palette had as many as 50 different widgets within the section,
+				which made it difficult to find the widget you needed for a particular task.
+			</li>
+			<li><span class='minortopic'>Large-size widget icons</span> - 
+				With Release 8, the Widget Palette includes newly designed, large-size widget icons (50x50),
+				arranged left-to-right, top-to-bottom within a particular section of the widget palette.
+				The larger size icons allow greater graphical hints about the given widget's capabilities.
+			</li>
+			<li><span class='minortopic'>Different list of "suggested widgets" for different composition types 
+				(mobile, desktop, sketch)</span> - 
+				With previous releases, the same set of widgets appeared for all composition types
+				(mobile, desktop, or sketch), with the desktop widgets listed at the top. 
+				This older one-size-fits-all widget list made it difficult for mobile developers
+				to find the mobile widgets they needed, and made it difficult for users who
+				wanted to do quick sketching to find the Drawing Tools and Clip Art widgets.
+				With Release 8, when you choose a particular
+				composition type from the Create menu (e.g., mobile application vs sketch hi-fidelity),
+				the Widget Palette will now show a list of categories and widgets that are appropriate
+				to the composition type you have chosen. For example, for mobile applications,
+				the topmost sections show the mobile widgets that users most commonly use when building
+				mobile applications. Similarly, for desktop applications, the topmost sections show the desktop
+				widgets that users typically use for desktop applications. For sketching, the topmost sections
+				are Drawing Tools and Clip Art.
+			</li>
+			<li><span class='minortopic'>Redundant/overlapping widgets collapsed into a single icon</span> - 
+				Previously, if different widget libraries (e.g., Dojo desktop, Dojo mobile, HTML) provided similar
+				widgets (e.g., each of these libraries provides a "Button" widget), the Maqetta widget palette
+				would show each variation of that widget as a separate choice in the palette. 
+				With Release 8, the variations are all collapsed
+				into a single widget icon (e.g., a "Button" widget). If a given widget icon represents
+				multiple alternate widgets, the widget icon will show a gray circle with a caret symbol at the
+				top-right. The user can click on the caret symbol to bring up a popup which allows him 
+				to switch to one of alternate widgets instead of the default choice for that particular widget category.
+				For example, for desktop applications, the default "Button" is the Dojo desktop button widget 
+				(from the Dijit library), and one of the alternates is the HTML button widget.
+			</li>
+			<li><span class='minortopic'>Help information and tooltip for each widget</span> - 
+				Each widget icon in the Widget Palette contains a small gray ? icon at its lower right.
+				Clicking on the ? icon will bring up a popup that displays explanatory information
+				about the widget, usually a summary and sometimes a longer description.
+				Each widget also has a hover tooltip that displays when you hover the mouse
+				over the widget icon. The hover tooltip displays the widget's name and 
+				the widget library which defines this particular widget. If the given widget icon
+				represents more than one underlying widget (for example, a Dojo button and an HTML button),
+				then the hover tooltip lists the alternate versions.
+			</li>
+			<li><span class='minortopic'>Suggested widgets versus All widgets</span> - 
+				The new Widget Palette has a dropdown menu at the top right (next to the filter field)
+				which has two options: "Suggested widgets" (the default) and "All widgets".
+				With Suggested widgets, Maqetta only shows widgets that apply to the current composition
+				type. For example, if the current file is a mobile application, the suggested widgets
+				will include all of the mobile widgets from Dojo and exclude the desktop widgets.
+				(Vice versa for desktop applications). If you are developing a mobile application and
+				want to use a desktop widget, then choose "All widgets" and the palette will reconstitute
+				itself to show both mobile and desktop widgets (along with HTML, Drawing Tools and Clip Art).
+			</li>
+		</ul>
+	</li>
+	<li><p><span class='majortopic'>Site-specific configuration options</span> - 
+		Release 8 includes customization hooks that enable specific installations to 
+		customize aspects of the Maqetta user interface. The customizations are defined
+		by JSON files that can be included in the siteConfig/ folder for a particular installation.
+		Configuration options allow command-line definition of the location of the siteConfig/ folder</p>
+		<p>This release includes support for the following two configuration options:</p>
+		<ul>
+			<li><span class='minortopic'>Default CSS themes (desktop and mobile)</span> - 
+				The defaultTheme.json file in the siteConfig/ folder specifies the default
+				themes for desktop applications and each of the different mobile platforms
+				supported by Dojo 1.8 (Android, Blackberry, iPad, iPhone and custom/other).
+			</li>
+			<li><span class='minortopic'>Widget Palette</span> - 
+				The widgetPalette.json file in the siteConfig/ folder specifies the various
+				sections and subsections in the Widget Palette, and which widgets should be
+				included in which section.
+			</li>
+		</ul>
+	</li>
+	<li><p><span class='majortopic'>Other</span> - </p>
+		<ul>
+			<li><span class='minortopic'>Update to Dojo 1.8.1</span> - 
+				Release 8 now ships with Dojo 1.8.1.
+			</li>
+			<li><span class='minortopic'>Mobile previews now show direct URL</span> - 
+				A new field has been added to the mobile previewer which shows the direct URL
+				for the mobile application that is showing in the previewer. 
+				You can then type this direct URL into your mobile device to run your
+				application on the given device.
+			</li>
+			<li><span class='minortopic'>Fixes for Surround with when in sketch mode</span> - 
+				In previous releases, if you were in sketch mode (i.e., absolute positioning),
+				and you selected one or more widgets, and then issued a "Surround with" command
+				(Surround with &lt;div&gt;, &lt;span&gt; or &lt;a&gt;), the new container element
+				ended up at the top/left of the canvas. With Release 8, the new container element
+				is correctly sized and positioned to exactly surround the widgets that had been selected.
+				Also, the selection changes at the end of the operation such that the new
+				container element is selected.
+			</li>
+			<li><span class='minortopic'>Bug fixes</span> - 
+				Release 8 includes 150+ bug fixes. Some of those fixes
+				can be seen by going to 
+				<a href="https://github.com/maqetta/maqetta/issues?labels=&milestone=17&page=1&state=closed" target="_blank">
+				this URL which lists bugs closed against Release 8</a>.
+			</li>
+		</ul>
+	</li>
+</ul>
+	
+<p> </p>
+
+<p class="prevnext">
+    <a href="releasenotes/release7.html">Previous</a> / <a href="releasenotes/release9.html">Next</a>
+</p>
+
+</div>  <!-- pagebody -->
+
+<!-- Footer -->
+<!--
+<iframe src ="footer.html" width="100%" height="60" frameborder="0" scrolling="no" >
+  <p>Your browser does not support iframes.</p>
+</iframe> 
+-->
+
+</body>
+</html>

@@ -34,5 +34,9 @@
             "title": "Fill"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>An object representing a series of data for plotting on a chart.</p>"
+    }
 }

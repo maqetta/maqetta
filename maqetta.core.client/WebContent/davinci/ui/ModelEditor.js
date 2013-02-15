@@ -1,4 +1,15 @@
-define(["dojo/_base/declare", "./TextEditor"], function(declare, TextEditor) {
+define([
+	"dojo/_base/declare",
+	"davinci/Runtime",
+	"./TextEditor", 
+	"davinci/commands/SourceChangeCommand"
+], 
+function(
+	declare,
+	Runtime,
+	TextEditor,
+	SourceChangeCommand
+) {
 
 return declare(TextEditor, {
 
@@ -26,13 +37,20 @@ return declare(TextEditor, {
 	
 	handleChange: function(text) {
         this.inherited(arguments);
-        
-        this.model.setText(text);
-        
-        var changeEvent = {
-                newModel: this.model
-        };
-        dojo.publish("/davinci/ui/modelChanged", [changeEvent]);
+        var oldText = this.model.getText();
+		var editor = Runtime.currentEditor;
+		if(editor && editor.getCommandStack){
+			var commandStack = editor.getCommandStack();
+			var command = new SourceChangeCommand({model:this.model, oldText:oldText, newText:text});
+			commandStack.execute(command);
+		}else{
+			this._model.setText(this._args.newText);
+			var changeEvent = {
+				newModel: this._model
+			};
+			dojo.publish("/davinci/ui/modelChanged", [changeEvent]);
+		}
+		
 	},
 	
 	selectModel: function (selection, editor) {

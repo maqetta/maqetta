@@ -88,5 +88,9 @@
             "hidden": false
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>An indicator for the AnalogGauge that draws a segment of arc.\nThe segment of arc starts at the start angle of the gauge and ends at the\nangle that corresponds to the value of the indicator.</p>"
+    }
 }

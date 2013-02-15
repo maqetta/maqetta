@@ -82,5 +82,13 @@
             "defaultValue": false
         }
     },
-    "content": "<div></div>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A layout widget that allows the user to freely navigate between panes.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>Accordion has no specific child widget. Any widgets can be its\nchild. Typically dojox/mobile/Pane, dojox/mobile/Container,\nor dojox/mobile/ContentPane are used as child widgets.</p>"
+    }
 }

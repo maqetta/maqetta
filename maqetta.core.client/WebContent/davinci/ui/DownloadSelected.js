@@ -1,12 +1,14 @@
 define(["dojo/_base/declare",
         "./Download",
         "./Resource",
-        "dojo/i18n!./nls/ui"
-],function(declare, Download, ResourceUI, uiNLS){
+        "dojo/i18n!./nls/ui",
+        "dojo/text!./templates/downloadSelected.html"
+],function(declare, Download, ResourceUI, uiNLS, templateString){
 
 	return declare([Download], {
-		buildRendering: function(){
-			this.inherited(arguments);
+		templateString: templateString,
+
+		_buildUITable: function(){
 			this._files = ResourceUI.getSelectedResources();
 			var uiArray = ["<div class='downloadSelectedHeader'>" + uiNLS.selectedFiles + "</div>",
 			               "<div class='downloadSelectedList'>"];
@@ -15,20 +17,20 @@ define(["dojo/_base/declare",
 				this._files = [];
 				dojo.attr(this._okButton, "disabled", "true");
 			}
-				
-			for(var i=0;i<this._files.length;i++){
-				uiArray.push(this._files[i].getPath() + "<br>");
-			}
+
+			uiArray = uiArray.concat(this._files.map(function(file) {
+				return file.getPath() + "<br>";
+			}));
 			uiArray.push("</div><br><br>");
-			var html = uiArray.join("");
-			dojo.place(html, this._selectionDiv);
+			dojo.place(uiArray.join(""), this._selectionDiv);
 		},
 
 		_getResources: function(){
-			return {
-				userFiles: this._files.map(function(item){ return item.getPath();}),
-				userLibs: this._getLibs()
-			};
+			return this._files.map(function(item){ return item.getPath();});
+		},
+
+		_getLibs: function(){
+			return [];
 		}
 	});
 });

@@ -56,5 +56,9 @@
             "defaultValue": false
         }
     },
-    "content": "<input type='checkbox'>"
+    "content": "<input type='checkbox'>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A non-templated checkbox widget that can be in two states \n(checked or not checked).</p>"
+    }
 }

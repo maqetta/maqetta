@@ -147,7 +147,7 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
             var resourcePath = this._context.getFullResourcePath();
           
            
-            var ssPath = new davinci.model.Path(newThemeInfo.file.parent.getPath()).append(newThemeInfo.files[0]);
+            var ssPath = new davinci.model.Path(newThemeInfo.getFile().parent.getPath()).append(newThemeInfo.files[0]);
             var newFileObj = ssPath.relativeTo(resourcePath, true);
             var newFileName = newFileObj.toString();
             header.styleSheets[header.styleSheets.length] = newFileName;
@@ -182,7 +182,7 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
     
     removeThemeSet: function(themeSet){
         
-        var themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly, true);
+        var themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly);
         // remove the desktop theme
         if (themeSet.desktopTheme){
             for (var i = 0; i < themeData.length; i++){
@@ -200,7 +200,7 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
     },
     
     addThemeSet: function(themeSet){
-        var themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly, true);
+        var themeData = Library.getThemes(Workbench.getProject(), this.workspaceOnly);
         // add the desktop theme
         if (themeSet.desktopTheme){
             for (var i = 0; i < themeData.length; i++){
@@ -227,11 +227,20 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
     },
    
     _dojoxMobileAddTheme: function(context, theme, newFile) {
-        if (Theme.themeSetEquals(theme, Theme.dojoMobileDefault)) {
+    	/*  FIXME: this is comment out for firefox support
+    	 * dojo mobile toolkit themes require the *-compat.css files to support not webkit
+    	 * We have copied all the -moz-*, -o-* that the mobile themes use to the  to the device.css
+    	 * (eg. iphone.css) that are in the maqetta/theme folder in the toolkit so that we have cross
+    	 * browser support in the VE. dojo 2.0 is plaining to do the same thing so at that point we should
+    	 * be able to remove theme from the device.css files in maqetta/themes and restore this code.
+    	 * As we would not need a special map for stock themes.     
+    	 *
+    	 if (Theme.themeSetEquals(theme, Theme.dojoMobileDefault)) {
             // if setting default theme, remove theme if one exists
             this._dojoxMobileRemoveTheme(context);
             return;
         }
+        */
 
         // set theme map in Dojo config attribute in model
         /*
@@ -240,7 +249,8 @@ return declare("davinci.ve.commands.ChangeThemeCommand", null, {
 		 * So we need to use a string 
 		 */
         var themePath = Theme.getThemeLocation().toString().replace(/\//g,'\\/');
-		var re = '/\\/'+themePath+'\\/.*\\.css$/';
+		// *-compat.css files not used in maqrtta var re = '/\\/'+themePath+'\\/.*\\.css$/';
+		var re = '\'\'';
         context._updateDojoConfig({
             themeMap: Theme.getDojoxMobileThemeMap(context, theme),
             mblLoadCompatPattern: re,

@@ -34,13 +34,13 @@
             "title": "Container",
             "description": "This is either \"leftDecoration\" or \"rightDecoration\",\nto indicate whether this rule goes to the left or to the right of the slider.\nNote that on RTL system, \"leftDecoration\" would actually go to the right, and vice-versa.",
             "option": [
-				{
-					"value": "leftDecoration"
-				},
-				{
-					"value": "rightDecoration"
-				}
-           ],
+                {
+                    "value": "leftDecoration"
+                },
+                {
+                    "value": "rightDecoration"
+                }
+            ],
             "hidden": false
         },
         "ruleStyle": {
@@ -49,5 +49,9 @@
             "description": "CSS style to apply to individual hash marks"
         }
     },
-    "content": "<div></div>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Hash marks for the <code>dijit/form/VerticalSlider</code></p>"
+    }
 }

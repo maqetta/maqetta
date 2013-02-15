@@ -21,7 +21,7 @@
             "format": "amd",
             "src": "dojox/mobile/compat",
             "$library": "dojo"
-        },	
+        },
         {
             "type": "javascript-module",
             "format": "amd",
@@ -44,5 +44,9 @@
             "defaultValue": 0
         }
     },
-    "content": "<div></div>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A pane that has the touch-scrolling capability.</p>"
+    }
 }

@@ -97,7 +97,11 @@ return declare(CreateTool, {
 			command.add(new AddCommand(store, args.parent, index));
 			index = (index !== undefined && index >= 0 ? index + 1 : undefined);
 			command.add(new AddCommand(dataGrid, args.parent, index));
-			
+	        
+			// If preference says to add new widgets to the current custom state,
+			// then add appropriate StyleCommands
+			CreateTool.prototype.checkAddToCurrentState(command, dataGrid);	
+						
 			if(args.position){
 				var absoluteWidgetsZindex = this._context.getPreference('absoluteWidgetsZindex');
 				command.add(new StyleCommand(dataGrid, [{position:'absolute'},{'z-index':absoluteWidgetsZindex}]));

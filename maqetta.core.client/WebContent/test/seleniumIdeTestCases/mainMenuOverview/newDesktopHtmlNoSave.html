@@ -54,13 +54,18 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Dojo Controls</td>
+	<td>//div[@selType='PaletteFolder__desktop__Controls']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@selType='PaletteFolder__desktop__Controls__Buttons']</td>
 	<td></td>
 </tr>
 <!--Drag and Drop button Start-->
 <tr>
 	<td>mouseDownAt</td>
-	<td>link=ButtonDojo Controls</td>
+	<td>//div[@selType=&quot;dijit.form.Button__desktop__Controls__Buttons&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -126,6 +131,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>waitForText</td>
+	<td>//div[@class='propertiesWidgetDescription']/span/span[@class=&quot;propertiesTitleWidgetName&quot;]</td>
+	<td>Button</td>
+</tr>
+<tr>
 	<td>type</td>
 	<td>//div[@class='propertiesTitleBarPropertiesContainer']/table/tbody/tr[2]/td[@class='propertyInputField']/div/div[2]/input</td>
 	<td>label_testcase1</td>
@@ -142,8 +152,13 @@
 </tr>
 <!--Drag and Drop calendar Start-->
 <tr>
+	<td>click</td>
+	<td>//div[@selType=&quot;PaletteFolder__desktop__Other&quot;]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>mouseDownAt</td>
-	<td>link=CalendarDojo Controls</td>
+	<td>//div[@selType=&quot;dijit.Calendar__desktop__Other&quot;]</td>
 	<td></td>
 </tr>
 <tr>
@@ -163,9 +178,9 @@
 </tr>
 <!--Drag and Drop Stop-->
 <tr>
-	<td>click</td>
-	<td>id=palette-tabcontainer-right-top_tablist_davinci.ve.style</td>
-	<td></td>
+	<td>waitForText</td>
+	<td>//div[@class='propertiesWidgetDescription']/span/span[@class=&quot;propertiesTitleWidgetName&quot;]</td>
+	<td>Calendar</td>
 </tr>
 <tr>
 	<td>type</td>
@@ -184,8 +199,18 @@
 </tr>
 <!--Drag and Drop textBox Start-->
 <tr>
+	<td>click</td>
+	<td>//div[@selType='PaletteFolder__desktop__Controls']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@selType='PaletteFolder__desktop__Controls__TextBox']</td>
+	<td></td>
+</tr>
+<tr>
 	<td>mouseDownAt</td>
-	<td>link=TextBoxDojo Controls</td>
+	<td>//div[@selType='dijit.form.TextBox__desktop__Controls__TextBox']</td>
 	<td></td>
 </tr>
 <tr>
@@ -205,9 +230,9 @@
 </tr>
 <!--Drag and Drop Stop-->
 <tr>
-	<td>click</td>
-	<td>id=palette-tabcontainer-right-top_tablist_davinci.ve.style</td>
-	<td></td>
+	<td>waitForText</td>
+	<td>//div[@class='propertiesWidgetDescription']/span/span[@class=&quot;propertiesTitleWidgetName&quot;]</td>
+	<td>TextBox</td>
 </tr>
 <tr>
 	<td>type</td>
@@ -260,7 +285,6 @@
 	<td>//div[@id='palette-tabcontainer-left-bottom_tablist']/div</td>
 	<td></td>
 </tr>
-
 </tbody></table>
 </body>
 </html>

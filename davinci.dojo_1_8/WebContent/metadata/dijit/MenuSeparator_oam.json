@@ -16,5 +16,9 @@
             "src": "../../dojo/dojo.js"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A line between two menu items</p>"
+    }
 }

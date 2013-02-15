@@ -35,13 +35,10 @@ import org.xml.sax.SAXException;
 public class EclipseProjectUtil {
 	/* utilities for creating the XML files needed in an eclipse project */
 	
-	public static String PROJECT_FILE = ".project";
-	
-	
-	
-	public static Hashtable getEclipseConfig(String projectName){
-		Hashtable config = new Hashtable();
-		try{
+	public final static String PROJECT_FILE = ".project";
+
+	public static Hashtable<String, String> getEclipseConfig(String projectName) throws IOException {
+		Hashtable<String, String> config = new Hashtable<String, String>();
 		config.put(EclipseProjectUtil.PROJECT_FILE, EclipseProjectUtil.getProjectFile(projectName));
 		config.put(".settings/.jsdtscope", EclipseProjectUtil.getJsdtScope());
 		config.put(".settings/org.eclipse.wst.common.component", EclipseProjectUtil.getCommonComponent(projectName));
@@ -50,57 +47,54 @@ public class EclipseProjectUtil {
 		config.put(".settings/org.eclipse.wst.jsdt.ui.superType.name", EclipseProjectUtil.getJsdtSuperTypeName());
 		config.put(".settings/com.ibm.etools.webtools.dojo.core.prefs", EclipseProjectUtil.readFile(".settings/com.ibm.etools.webtools.dojo.core.prefs"));
 		config.put(".settings/org.eclipse.wst.validation.prefs", EclipseProjectUtil.readFile(".settings/org.eclipse.wst.validation.prefs"));
-		
-		}catch(Exception ex){
-			System.out.println(ex);
-		}
+
 		return config;
 	}
 
-	
-	private static String getProjectFile(String name){
+	private static String getProjectFile(String name) throws IOException{
 		String text = EclipseProjectUtil.readFile(".project");
 		return setXML(text, "projectDescription/name",  name);
 	}
 	
-	private static String getJsdtScope(){
+	private static String getJsdtScope() throws IOException{
 		return EclipseProjectUtil.readFile(".settings/.jsdtscope");
 		
 	}
 	
-	private static String getCommonComponent(String name){
+	private static String getCommonComponent(String name) throws IOException{
 		String text = EclipseProjectUtil.readFile(".settings/org.eclipse.wst.common.component");
 		text = setXML(text, "/project-modules/wb-module", "deploy-name", name);
 		text = setXML(text, "/project-modules/wb-module/property[@name='context-root']", "value", name);
 		return text;
 	}
 	
-	private static String getCommonProjectFacetCore(){
+	private static String getCommonProjectFacetCore() throws IOException{
 		String text = EclipseProjectUtil.readFile(".settings/org.eclipse.wst.common.project.facet.core.xml");
 		return text;
 	}
 	
-	private static String getJsdtSuperTypeContainer(){
+	private static String getJsdtSuperTypeContainer() throws IOException{
 		String text = EclipseProjectUtil.readFile(".settings/org.eclipse.wst.jsdt.ui.superType.container");
 		return text;
 	}
 	
-	private static String getJsdtSuperTypeName(){
+	private static String getJsdtSuperTypeName() throws IOException{
 		String text = EclipseProjectUtil.readFile(".settings/org.eclipse.wst.jsdt.ui.superType.name");
 		return text;
 	}
 	
-	private static String getValidatorPrefs(){
+	private static String getValidatorPrefs() throws IOException{
 		String text = EclipseProjectUtil.readFile(".settings/org.eclipse.wst.validation.prefs");
 		return text;
 	}
 	
-	private static String readFile(String name){
+	private static String readFile(String name) throws IOException {
 		   Bundle bundle = Activator.getActivator().getBundle();
 		   URL file = bundle.getEntry("/WebContent/project/eclipse/" + name);
 		   String result = "";
+		   BufferedReader in = null;
 		   try {
-			    BufferedReader in = new BufferedReader(new InputStreamReader(file.openStream()));
+			    in = new BufferedReader(new InputStreamReader(file.openStream()));
 			    String str;
 			    while ((str = in.readLine()) != null) {
 			        // str is one line of text; readLine() strips the newline character(s)
@@ -108,7 +102,10 @@ public class EclipseProjectUtil {
 			    }
 			    in.close();
 			
-			} catch (IOException e) {
+			} finally {
+				if (in != null) {
+					in.close();
+				}
 			}
 		   
 		   return result;
@@ -141,9 +138,11 @@ public class EclipseProjectUtil {
 			
 			doc = parser.parse(new InputSource(reader));
 		} catch (SAXException e) {
-			System.out.println("error parsing xml: " + e);
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (ParserConfigurationException e) {
-			System.out.println("error parsing xml: " + e);
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

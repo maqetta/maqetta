@@ -67,5 +67,13 @@
             "hidden": true
         }
     },
-    "content": "<div></div>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A dojo/data-enabled Carousel.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>DataCarousel is an enhanced version of dojox/mobile/Carousel. It\ncan generate contents according to the given dojo/data store.</p>"
+    }
 }

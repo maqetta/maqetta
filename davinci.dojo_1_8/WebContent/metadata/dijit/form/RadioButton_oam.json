@@ -66,5 +66,9 @@
             "defaultValue": true
         }
     },
-    "content": "<input type='radio' showLabel='true'></input>"
+    "content": "<input type='radio' showLabel='true'></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Same as an HTML radio, but with fancy styling.</p>"
+    }
 }

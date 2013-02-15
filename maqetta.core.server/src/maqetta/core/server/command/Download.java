@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -37,6 +38,7 @@ import org.maqetta.server.VLibraryResource;
 
 public class Download extends Command {
 
+	static final private Logger theLogger = Logger.getLogger(Download.class.getName());
 	
 	private Vector<String> zippedEntries;
 	private URL buildURL = null;
@@ -46,7 +48,7 @@ public class Download extends Command {
 	public static String buildBase = "http://build.dojotoolkit.org";
 
 	{
-		String builderProp = ServerManager.getServerManger().getDavinciProperty(IDavinciServerConstants.DOJO_WEB_BUILDER);
+		String builderProp = ServerManager.getServerManager().getDavinciProperty(IDavinciServerConstants.DOJO_WEB_BUILDER);
 		if (builderProp != null) {
 			buildBase = builderProp;
 		}
@@ -120,7 +122,7 @@ public class Download extends Command {
     		String result = null;
     		while (result == null) {
                 // now poll for a response with a "result" property
-        		URL status = new URL(statusCookie);
+        		URL status = new URL(new URL(buildBase), statusCookie);
     			InputStream is = status.openStream();
     			try {
                     int size;
@@ -133,7 +135,7 @@ public class Download extends Command {
                         baos.write(buffer, 0, size);
                     }        				
         			String content = baos.toString();
-        			System.out.println("build status: " + content);
+        			theLogger.finest("build status: " + content);
         			Map json = (Map)JSONReader.read(content);
         			result = (String)json.get("result");
     			} finally {
@@ -142,7 +144,7 @@ public class Download extends Command {
     			Thread.sleep(1000);
     		}
 
-    		System.out.println("build result: " + result);
+    		theLogger.finest("build result: " + result);
     		buildURL = new URL(result);
         } catch (InterruptedException ie) {
         	throw new IOException("Thread interrupted.  Did not obtain build result.");
@@ -157,16 +159,16 @@ public class Download extends Command {
         Map<String,Object> result = null;
         String userID = user.getUserID();
 
-        System.out.println("analyzeWorkspace: number of files: " + files.length);
+        theLogger.finest("analyzeWorkspace: number of files: " + files.length);
 		for (int i = 0; i < files.length; i++) {
         	if (files[i].isVirtual()) {
-        		System.out.println("isVirtual name="+files[i].getPath());
+        		theLogger.finest("isVirtual name="+files[i].getPath());
         		continue;
         	}
 			method = new PostMethod(buildBase + "/api/dependencies");
     		try {
 	            String url = new URL(new URL(requestURL), "/maqetta/user/" + userID + "/ws/workspace/" + files[i].getPath()).toExternalForm();
-	            System.out.println("build.dojotoolkit.org: Analyse url="+url);
+	            theLogger.finest("build.dojotoolkit.org: Analyse url="+url);
 	            Part[] parts = {
 	            	new StringPart("value", url, "utf-8"),
 	            	new StringPart("type", "URL")
@@ -185,7 +187,7 @@ public class Download extends Command {
 	            }
 
 	            String content = body.substring(start + 10, end);
-	            System.out.println("build.dojotoolkit.org: Analyse result="+ content);
+	            theLogger.finest("build.dojotoolkit.org: Analyse result="+ content);
 	            Map<String,Object> dependencies = (Map)JSONReader.read(content);
 	            if (result == null) {
 		            result = dependencies;           	
@@ -197,7 +199,7 @@ public class Download extends Command {
 	                	String additionalModule = additionalModules.get(j);
 	                	if (!requiredDojoModules.contains(additionalModule)) {
 	                		requiredDojoModules.add(additionalModule);
-	                		System.out.println("add "+additionalModule);
+	                		theLogger.finest("add "+additionalModule);
 	                	}
 	                }
 	            }
@@ -241,12 +243,12 @@ public class Download extends Command {
 
         HttpClient client = new HttpClient();
         PostMethod method = new PostMethod(buildBase + "/api/build");
-        System.out.println("/api/build: " + content);
+        theLogger.finest("/api/build: " + content);
         try {
         	method.setRequestEntity(new StringRequestEntity(content, "application/json", "utf-8"));
             int statusCode = client.executeMethod(method);
             String json = method.getResponseBodyAsString();
-            System.out.println("/api/build response: " + json);
+            theLogger.finest("/api/build response: " + json);
         	if (statusCode != HttpStatus.SC_ACCEPTED && statusCode != HttpStatus.SC_OK) {
         		throw new IOException(buildBase + "/api/build failed with status: " + statusCode + "\n" + json);
         	}
@@ -261,15 +263,25 @@ public class Download extends Command {
 		}
     }
 
-    private InputStream getBuildStream(URL resultURL, String name) throws IOException {
+    private void transferBuildStream(URL resultURL, String dirString, ZipOutputStream zos) throws IOException {
 		ZipInputStream zis = new ZipInputStream(new BufferedInputStream(resultURL.openStream()));
 		ZipEntry entry;
-		while ((entry = zis.getNextEntry()) != null) {
-			if (entry.getName().equals(name)) {
-				return zis;
-   			}
-		}
-		return null;
+        byte[] readBuffer = new byte[2156];
+        int bytesIn;
+
+        try {
+	        while ((entry = zis.getNextEntry()) != null) {
+	        	String pathString = dirString.concat(entry.getName());
+				// place the zip entry in the ZipOutputStream object
+				zos.putNextEntry(new ZipEntry(pathString));
+	            // now write the content of the file to the ZipOutputStream
+				while ((bytesIn = zis.read(readBuffer)) != -1) {
+					zos.write(readBuffer, 0, bytesIn);
+				}
+			}
+        } finally {
+        	zis.close();
+        }
     }
 
     private String sanitizeFileName(String fileName) {
@@ -285,7 +297,6 @@ public class Download extends Command {
     	for(int i=0;i<this.zippedEntries.size();i++){
     		String entry = (String)zippedEntries.get(i);
     		if(entry.compareTo(path)==0) return false;
-    		
     	}
     	zippedEntries.add(path);
     	return true;
@@ -297,7 +308,7 @@ public class Download extends Command {
             String id = (String) libEntry.get("id");
             String version = (String) libEntry.get("version");
             String path = (String) libEntry.get("root");
-            Library lib = ServerManager.getServerManger().getLibraryManager().getLibrary(id, version);
+            Library lib = ServerManager.getServerManager().getLibraryManager().getLibrary(id, version);
             
             boolean sourceLibrary = (lib.getSourcePath()!=null && useSource);
             
@@ -316,9 +327,9 @@ public class Download extends Command {
         zipFiles(dirList, root, zos,includeLibs);
     }
 
-    private  void zipFiles(IVResource[] files, IPath root, ZipOutputStream zos, boolean includeLibs) throws IOException {
+    private void zipFiles(IVResource[] files, IPath root, ZipOutputStream zos, boolean includeLibs) throws IOException {
         byte[] readBuffer = new byte[2156];
-        int bytesIn = 0;
+        int bytesIn;
         // loop through dirList, and zip the files
         for (int i = 0; i < files.length; i++) {
             if (files[i].isDirectory()) {
@@ -327,39 +338,41 @@ public class Download extends Command {
             }
             if(!includeLibs && files[i] instanceof VLibraryResource)
             	continue;
-            
-            InputStream is = null;
-            try {
-            	if (this.buildURL != null && files[i].getPath().equals("lib/dojo/dojo/dojo.js")) {
-            		is = getBuildStream(this.buildURL, "dojo.js");
-            	} else {
-            		is = files[i].getInputStreem();            
-            	}
 
-            	IPath filePath = new Path(files[i].getPath());
-	            String pathString = filePath.removeFirstSegments(filePath.matchingFirstSegments(root)).toString();
-	            
-	            if(pathString==null) return;
-	            
-	            /* remove leading characters that confuse and anger windows built in archive util */
-	            if(pathString.length() > 1 && pathString.indexOf("./")==0)
-	        	   pathString = pathString.substring(2);
-	
-	            if(!addEntry(pathString)) continue;
-	            
-	            ZipEntry anEntry = new ZipEntry(pathString);
-	                // place the zip entry in the ZipOutputStream object
-	            zos.putNextEntry(anEntry);
-	                // now write the content of the file to the ZipOutputStream
-	            while ((bytesIn = is.read(readBuffer)) != -1) {
-	              zos.write(readBuffer, 0, bytesIn);
-	            }
-            } finally {
-                // close the Stream
-            	if (is != null) is.close();
-            	files[i].removeWorkingCopy();
-            }
+        	IPath filePath = new Path(files[i].getPath());
+            String pathString = filePath.removeFirstSegments(filePath.matchingFirstSegments(root)).toString();
+            
+            if(pathString==null) return;
+            
+            /* remove leading characters that confuse and anger windows built in archive util */
+            if(pathString.length() > 1 && pathString.indexOf("./")==0)
+        	   pathString = pathString.substring(2);
+
+            if(!addEntry(pathString)) continue;
+
+            String dirString = pathString.substring(0, pathString.lastIndexOf('/') + 1);
+ 
+            if (this.buildURL != null && files[i].getPath().equals("lib/dojo/dojo/dojo.js")) {
+        		// substitute built version of dojo.js provided by the webservice, along with associated generated layers like nls
+        		transferBuildStream(this.buildURL, dirString, zos);
+        	} else {
+        		// copy stream to zip directly
+                InputStream is = null;
+                try {
+            		is = files[i].getInputStreem();            
+
+		            // place the zip entry in the ZipOutputStream object
+		            zos.putNextEntry(new ZipEntry(pathString));
+		            // now write the content of the file to the ZipOutputStream
+		            while ((bytesIn = is.read(readBuffer)) != -1) {
+		              zos.write(readBuffer, 0, bytesIn);
+		            }
+                } finally {
+                    // close the Stream
+                	if (is != null) is.close();
+                	files[i].removeWorkingCopy();
+                }
+        	}
        }
     }
-
 }

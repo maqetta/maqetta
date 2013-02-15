@@ -92,5 +92,9 @@
             "hidden": true
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Message that slides in from the corner of the screen, used for notifications\nlike &quot;new email&quot;.</p>"
+    }
 }

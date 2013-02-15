@@ -120,5 +120,13 @@
             "hidden": true
         }
     },
-    "content": "<input type='text'></input>"
+    "content": "<input type='text'></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A validating, serializable, range-bound date text box with a drop down calendar</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>new DateTextBox({value: new Date(2009, 0, 20)})</code></pre>\n<pre><code>&lt;input data-dojo-type=&#39;dijit/form/DateTextBox&#39; value=&#39;2009-01-20&#39;&gt;</code></pre>"
+    }
 }

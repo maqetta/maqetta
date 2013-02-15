@@ -15,7 +15,7 @@ var Resource = {
 
 	resourceChanged: function(type,changedResource){
 		
-		if(changedResource == system.resource.getRoot()){
+		if (type !== 'deleted' && changedResource == system.resource.getRoot()) {
 			changedResource.reload();
 			system.resource.getRoot().getChildrenSync(dojo.hitch(system.resource,function(children){
 				system.resource.onChildrenChange(system.resource.getRoot(),children);
@@ -111,11 +111,11 @@ var Resource = {
 		parent.getChildren(onComplete, onError);
 	},
 	
-	createProject: function(projectName, initContent, eclipseSupport){
+	createProject: function(projectName, eclipseSupport) {
 		return xhr.get({
 			url: "cmd/createProject",
 			handleAs: "text",
-			content: {name: projectName, initContent: initContent, eclipseSupport: eclipseSupport}
+			content: {name: projectName, eclipseSupport: eclipseSupport}
 		});
 	},
 	

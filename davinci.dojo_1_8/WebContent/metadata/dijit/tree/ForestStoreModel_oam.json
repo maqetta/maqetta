@@ -50,5 +50,13 @@
             "hidden": false
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Interface between a dijit.Tree and a dojo.data store that doesn&#39;t have a root item,\na.k.a. a store that has multiple &quot;top level&quot; items.\n</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>Use this class to wrap a dojo.data store, making all the items matching the specified query\nappear as children of a fabricated &quot;root item&quot;.  If no query is specified then all the\nitems returned by fetch() on the underlying store become children of the root item.\nThis class allows dijit.Tree to assume a single root item, even if the store doesn&#39;t have one.\n\n</p>\n<p>When using this class the developer must override a number of methods according to their app and\ndata, including:\n\n</p>\n<ul>\n<li>onNewRootItem</li>\n<li>onAddToRoot</li>\n<li>onLeaveRoot</li>\n<li>onNewItem</li>\n<li>onSetItem</li>\n</ul>"
+    }
 }

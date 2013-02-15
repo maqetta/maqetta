@@ -13,6 +13,17 @@
 /*global define window*/
 
 define(['domReady'], function(domReady) {
+	var ua = window.navigator.userAgent;
+	var ieIndex = ua.indexOf('MSIE');
+	var isIE = (ieIndex>=0) ? parseInt(ua.substr(ieIndex+4)) : false;
+	if(isIE){
+		var browser_not_supported = document.getElementById("browser_not_supported");
+		browser_not_supported.style.display = "";
+		browser_not_supported.style.color = "red";
+		browser_not_supported.style.fontSize = "16px";
+		browser_not_supported.style.padding = "20px 15px";
+		return;
+	}
 	var userCreationEnabled;
 	var registrationURI;
 	var admin_userid = 'admin';
@@ -261,9 +272,14 @@ define(['domReady'], function(domReady) {
 	}
 
 	function confirmCreateUser() {
+
 		var login = document.getElementById("create_login").value;
 		if (!validateEmail(login)){
 			return;
+		}
+		var name = document.getElementById("create_name").value;
+		if (!name) {
+			name = login;
 		}
 		if (!validatePassword()) {
 			document.getElementById("create_password").setAttribute("aria-invalid", "true");
@@ -288,7 +304,7 @@ define(['domReady'], function(domReady) {
 				}
 			}
 		};
-		var parameters = "login=" + encodeURIComponent(login) + "&password=" + encodeURIComponent(password);
+		var parameters = "login=" + encodeURIComponent(login) + "&password=" + encodeURIComponent(password) + "&Name=" + encodeURIComponent(name);
 		mypostrequest.open("POST", "../users", true);
 		mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		mypostrequest.setRequestHeader("Orion-Version", "1");
@@ -304,12 +320,14 @@ define(['domReady'], function(domReady) {
 		document.getElementById('orionLogin').style.visibility = 'hidden';
 		document.getElementById('orionRegister').style.visibility = 'hidden';
 		document.getElementById('newUserHeaderShown').style.visibility = '';
+		document.getElementById('landingArea').classList.add('register');
 	}
 
 	function hideRegistration() {
 		document.getElementById('orionLogin').style.visibility = '';
 		document.getElementById('orionRegister').style.visibility = '';
 		document.getElementById('newUserHeaderShown').style.visibility = 'hidden';
+		document.getElementById('landingArea').classList.remove('register');
 	}
 
 	function formatForNoUserCreation() {

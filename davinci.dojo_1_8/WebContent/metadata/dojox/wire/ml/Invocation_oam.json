@@ -49,5 +49,13 @@
             "datatype": "object"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A widget to invoke a method or publish a topic</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>This widget represents a controller task to invoke a method or\npublish a topic when an event (a function) or a topic is issued.</p>"
+    }
 }

@@ -8,5 +8,13 @@
 			"datatype": "string"
 		}
 	},
-	"content": "<label></label>"
+	"content": "<label></label>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>HTML element typically used for a text label.</p>"
+	},
+	"description": {
+		"type": "text/html",
+		"value": "<p>The label can be associated with a specific form control using the for attribute.</p>"
+	}
 }

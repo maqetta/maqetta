@@ -64,6 +64,7 @@ return {
         {
             name: "Project",
             id: "project",
+            hide:true,	//FIXME: temporarily don't show project setting preferences. See #3657, #3658
             category: "",
             pageContent: "Project Settings here"
         },
@@ -71,7 +72,6 @@ return {
             name: "Project Settings",
             id: "ProjectPrefs",
             category: "davinci.ui.project",
-
             pane: "davinci/ui/ProjectPreferences",
             defaultValues: {
                 "webContentFolder": "",
@@ -275,6 +275,7 @@ return {
                    label: "Review...",
                    menubarPath: "davinci.open/openTheme"
                },
+/* Commenting out for M8 - UI is all messed up now
                {
                    id: "openProject",
                    run: function() {
@@ -286,10 +287,11 @@ return {
                    label: "Project...",
                    menubarPath: "davinci.open/openProject"
                },
+*/
                {
                    id: "orionNavigator",
                    run: function() {
-                     window.open("/navigate/table.html#", '_blank');
+                     window.open("../navigate/table.html#", '_blank');
                      window.focus();
                    },
                    iconClass: "newOpenMenuItem orionIcon",
@@ -556,7 +558,7 @@ return {
                                 }
                             );
                         },
-                        label: "Download Entire Workspace",
+                        label: "Download Entire Project",
                         toolbarPath: "download"
                     },
                     {

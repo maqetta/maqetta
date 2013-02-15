@@ -86,5 +86,13 @@
             "defaultValue": true
         }
     },
-    "content": "<textarea type='text'></textarea>"
+    "content": "<textarea type='text'></textarea>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A simple textarea that degrades, and responds to\nminimal LayoutContainer usage, and works with dijit/form/Form.\nDoesn&#39;t automatically size according to input, like Textarea.\n</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;textarea data-dojo-type=&quot;dijit/form/SimpleTextarea&quot; name=&quot;foo&quot; value=&quot;bar&quot; rows=30 cols=40&gt;&lt;/textarea&gt;</code></pre>\n<pre><code>new SimpleTextarea({ rows:20, cols:30 }, &quot;foo&quot;);</code></pre>"
+    }
 }

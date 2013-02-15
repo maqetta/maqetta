@@ -13,11 +13,6 @@
 			height: 100%;
 		}
 	</style>
-	<!--  orion specific css -->
-	<style type="text/css">
-		@import url("app/orionplugin/orionMaqetta.css?@revision@");
-		
-	</style>
 	<script type="text/javascript" src="app/dojo/dojo.js?@revision@" data-dojo-config="
 		async: true,
 		parseOnLoad: true,
@@ -51,20 +46,6 @@
 
 			require(["dojo/i18n!davinci/nls/webContent", "dojo/domReady!"], function (webContent) {
 				var run = function() {
-					var userInfo;
-					
-					var result = Runtime.getUser();
-					
-                    if (result) {
-                        Runtime.userName=result.userId;
-                        Runtime.userEmail=result.email;
-					} else {
-						//do nothing
-					}
-					if (!result || result.userId=='maqettaUser') {
-						Runtime.isLocalInstall=true;
-					}
-					
 					// set up for review and commenting...
 					var designerName  = dojo.cookie("davinci_designer");
 					var reviewVersion = dojo.cookie("davinci_version");
@@ -87,7 +68,7 @@
 									node.getChildren(function(children){
 										dojo.forEach(children, function(child, index){
 											if (index < cap) {
-												davinci.Workbench.openEditor({
+												Workbench.openEditor({
 													fileName: child,
 													content: node.getText()
 												});
@@ -98,8 +79,8 @@
 							});
 						}
 					}
-					
-					Workbench.run().then(loadReviews);
+					dojo.subscribe("/davinci/ui/initialPerspectiveReady", loadReviews)					
+					Workbench.run();
 				};
 
 				// Display a warning dialog for unsupported browsers

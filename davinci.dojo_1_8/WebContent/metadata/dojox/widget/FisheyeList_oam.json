@@ -124,5 +124,13 @@
             "hidden": true
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Menu similar to the fish eye menu on the Mac OS</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;div dojoType=&quot;dojo.widget.FisheyeList&quot;\n    itemWidth=&quot;40&quot; itemHeight=&quot;40&quot;\n    itemMaxWidth=&quot;150&quot; itemMaxHeight=&quot;150&quot;\n    orientation=&quot;horizontal&quot;\n    effectUnits=&quot;2&quot;\n    itemPadding=&quot;10&quot;\n    attachEdge=&quot;center&quot;\n    labelEdge=&quot;bottom&quot;&gt;\n\n    &lt;div dojoType=&quot;dojox.widget.FisheyeListItem&quot;\n        id=&quot;item1&quot;\n        onclick=&quot;alert(&#39;click on&#39; + this.label + &#39;(from widget id &#39; + this.widgetId + &#39;)!&#39;);&quot;\n        label=&quot;Item 1&quot;\n        iconSrc=&quot;images/fisheye_1.png&quot;&gt;\n    &lt;/div&gt;\n    ...\n&lt;/div&gt;</code></pre>"
+    }
 }

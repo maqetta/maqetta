@@ -32,5 +32,9 @@
             "description": "Just a flag indicating that this widget descends from dijit._Container"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A Toolbar widget, used to hold things like <code>dijit.Editor</code> buttons</p>"
+    }
 }

@@ -3,13 +3,11 @@ package maqetta.server.orion;
 import java.net.URISyntaxException;
 import java.util.Vector;
 
-import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.orion.internal.server.servlets.Activator;
-import org.eclipse.orion.internal.server.servlets.ProtocolConstants;
 import org.eclipse.orion.internal.server.servlets.workspace.WebProject;
 import org.eclipse.orion.internal.server.servlets.workspace.WebWorkspace;
 import org.eclipse.orion.internal.server.servlets.workspace.WorkspaceResourceHandler;
@@ -17,13 +15,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.maqetta.server.IStorage;
-import org.osgi.service.prefs.BackingStoreException;
 
+@SuppressWarnings("restriction")
 public class VOrionWorkspaceStorage extends VOrionProjectStorage{
 
 	WebWorkspace webWorkspace = null;
 	String PROJECT_NODE_NAME = "Project";
 	String userName = null;
+
 	public VOrionWorkspaceStorage(WebWorkspace webWorkspace, String userName) {
 		super(".", null, null);
 		this.webWorkspace = webWorkspace;

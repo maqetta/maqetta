@@ -67,5 +67,9 @@
             "title": "Closable"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>dojox.layout.RadioGroup - an experimental (probably poorly named) Layout widget extending StackContainer\nthat accepts ContentPanes as children, and applies aesthetically pleasing responsive transition animations\nattached to :hover of the Buttons created.</p>"
+    }
 }

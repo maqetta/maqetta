@@ -39,5 +39,9 @@
 			"hidden": "true"
 		}		
 	},
-	"content": "<audio></audio>"
+	"content": "<audio></audio>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>An HTML audio element represents a sound or audio stream.</p>"
+	}
 }

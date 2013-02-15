@@ -961,23 +961,281 @@ davinci_top_bar .dijitButtonNode {
     overflow-x: hidden;
     margin: 2px 3px 3px 4px;
 }
+.dojoyPaletteHeaderTable {
+	width:100%;
+  	border-collapse:collapse;
+}
+.dojoyPaletteHeaderTable td {
+	padding:0;
+}
+.dojoyPaletteHeaderTableCol2 {
+	width:16px;
+}
+.dojoyPaletteHeaderTableCol2 .dijitDropDownButton .dijitButtonNode {
+	border:none;
+	background:none;
+}
+.dojoyPaletteHeaderTableCol2 .dijitDropDownButton .dijitArrowButtonInner {
+	background-image:url(img/sprite.png);
+	background-position: -18px -39px;
+}
+.dojoyPaletteMenuItemCheckMark {
+	background-image:url('../dijit/themes/claro/images/checkmarkNoBorder.png');
+	width:16px;
+	height:16px;
+	display:inline-block;
+}
+.dojoyPaletteMenuItemCheckMarkOff {
+	visibility:hidden;
+}
 .dojoyPaletteCommon a {
 	text-decoration: none;
     color: black;
     white-space: nowrap;
-    display: block;
+    display: inline-block;
 }
+.dojoyPaletteCommon .paletteItemNormalContainer {
+	overflow:hidden;
+	display:inline-block;
+	width:66px;
+	height:81px; 
+	position:relative;
+	z-index:1;
+}
+.dojoyPaletteCommon .paletteItemSelectionContainer {
+	vertical-align: top;
+	position:relative;
+	z-index:1;
+}
+.dojoyPaletteCommon .paletteItemSelectionContent {
+	display:inline-block; 
+	z-index:1; 
+	position:absolute; 
+	top:-8px;
+	left:0px;
+	width:66px;
+	height:85px;
+	padding:0px;
+	border:2px solid #999;
+	border-radius:4px;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, .5);
+	pointer-events:none;
+}
+.paletteItemSelectedStrip {
+	position:absolute;
+	display:block;
+	background:white;
+}
+.paletteItemSelectedStripV {
+	position:absolute;
+	top:0px;
+	width:8px;
+	height:80px;
+}
+.paletteItemSelectedStripL {
+	left:0px;
+	border-top-left-radius:4px;
+	border-bottom-left-radius:4px;
+}
+.paletteItemSelectedStripR {
+	left:58px;
+	border-top-right-radius:4px;
+	border-bottom-right-radius:4px;
+}
+.paletteItemSelectedStripH {
+	position:absolute;
+	left:8px;
+	width:50px;
+	height:8px;
+}
+.paletteItemSelectedStripT {
+	top:0px;
+}
+.paletteItemSelectedStripB {
+	top:72px;
+}
+.paletteItemSelectedIcon {
+	position:absolute;
+	display:inline-block;
+	pointer-events:auto;
+	width:26px;
+	height:26px;
+}
+.paletteItemSelectedMoreIcon {
+	/*background-image:url(img/palette_more_active.png);*/
+	background-image:url(img/sprite.png);
+	background-position:-65px -41px;
+	background-repeat:no-repeat;
+	left: 54px;
+	top: -14px;
+}
+.paletteItemSelectedHelpIcon {
+	/*background-image:url(img/palette_help_active.png);*/
+	background-image:url(img/sprite.png);
+	background-position:-94px -40px;
+	background-repeat:no-repeat;
+	left: 54px;
+	top:67px;
+}
+#maqBody .paletteItemMorePopup .dijitTooltipContainer, #maqBody .paletteItemHelpPopup .dijitTooltipContainer {
+	background:white;
+	border-color:#b6b6b6;
+	border-width:3px;
+	border-radius:12px;
+	box-shadow: 0px 0px 4px rgba(0, 0, 0, .4);
+	padding: 2px 8px 5px;
+}
+.paletteItemMoreContent {
+}
+.paletteItemHelpContent {
+	padding-top:15px;
+	padding-right:12px;
+}
+.paletteItemMoreCloseBox, .paletteItemHelpCloseBox {
+	position: absolute;
+	right: 4px;
+	background-image: url("img/sprite.png");
+	background-repeat: no-repeat;
+	background-position: -43px -41px;
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+}
+.paletteItemMoreCloseBox:hover, .paletteItemHelpCloseBox:hover {
+	cursor:pointer;
+}
+.paletteItemMoreCloseBox {
+	top: 6px;
+}
+.paletteItemHelpCloseBox {
+	top: 18px;
+}
+.paletteItemAlternatesLabel {
+	font-size: 10px;
+	padding-left:4px;
+	padding-bottom: 3px;
+	margin-right: 10px;
+}
+.paletteItemAlternatesContainer {
+}
+.paletteItemAlternate {
+	margin: 2px 3px;
+	padding: 4px;
+	padding-bottom: 3px;
+	border-radius: 3px;
+	font-size: 12px;
+	border: 1px solid #333;
+	box-shadow: .5px 1px 1px rgba(0, 0, 0, .5);
+	border-color: #CCC;
+	background: #EEE;
+	font-family: Myriad, Helvetica, Tahoma, Arial, clean, sans-serif;
+	font-size: 12px;
+}
+.paletteItemMoreUnselected {
+	background-image: -webkit-linear-gradient(#F4F4F4, #DBDBDB);
+	background-image: -moz-linear-gradient(#F4F4F4, #DBDBDB);
+	background-image: -ms-linear-gradient(#F4F4F4, #DBDBDB);
+	background-image: -o-linear-gradient(#F4F4F4, #DBDBDB);
+	background-image: linear-gradient(#F4F4F4, #DBDBDB);
+}
+.paletteItemMoreSelected {
+	font-weight:bold;
+	background-image: -webkit-linear-gradient(#DBDBDB, #F4F4F4);
+	background-image: -moz-linear-gradient(#DBDBDB, #F4F4F4);
+	background-image: -ms-linear-gradient(#DBDBDB, #F4F4F4);
+	background-image: -o-linear-gradient(#DBDBDB, #F4F4F4);
+	background-image: linear-gradient(#DBDBDB, #F4F4F4);
+}
+.paletteItemHelpContent {
+	max-width:500px;
+}
+.paletteItemHelpDescription {
+}
+.helpInnerContent {
+}
+.helpInnerContentType {
+}
+.helpInnerContentSummary {
+}
+.helpInnerContentSummaryTitle {
+	margin:8px 0px 2px;
+	font-weight: bold;
+	font-size: 13px;
+}
+.helpInnerContentSummaryContent {
+	font-size:12px;
+}
+.helpInnerContentSummaryContent p {
+	margin-top: 4px;
+	margin-bottom: 4px;
+}
+.paletteTooltip {
+	font-size:12px;
+}
+.paletteTooltipCurrent {
+	font-size:13px;
+	}
+.paletteTooltipCurrentWidget {
+	font-weight:bold;
+}
+.paletteTooltipCurrentLibrary {
+}
+.paletteTooltipAlternates {
+	padding-top:5px;
+}
+.paletteTooltipAlternatesLabel {
+}
+.paletteTooltipAlternatesLibraries {
+}
+.paletteTooltipNote {
+	padding-top:5px;
+	}
 .dojoyPaletteCommon img {
 	vertical-align: top;
-    padding-right: 4px;
 }
+.dojoyPalette.paletteLayoutIcons .dojoyPaletteItem.dojoyPaletteCommon {
+	display:inline-block;
+	width:68px;
+	height:95px;
+	line-height:95px;
+	outline:none;
+}
+.dojoyPalette.paletteLayoutIcons .dojoyPaletteItem.dojoyPaletteCommon a {
+	vertical-align:bottom;
+	line-height:normal;
+}
+.dojoyPalette.paletteLayoutIcons .paletteItemImageContainer {
+	text-align:center;
+	display:block;
+}
+.dojoyPalette.paletteLayoutIcons .paletteItemImageContainer img {
+	width:50px;
+	height:50px;
+	box-shadow: 0px 0px 3px rgba(0, 0, 0, .24);
+}
+.dojoyPalette.paletteLayoutIcons .paletteItemLabelContainer {
+	padding-top:5px;
+	text-align:center;
+	display:block;
+	overflow:hidden;
+	white-space: normal;
+	text-overflow:ellipsis;
+	height:24px;
+	font-size:12px;
+	line-height:12px;
+}
+.dojoyPalette.paletteLayoutIcons .paletteItemLabel {
+}
+
 .dojoyPaletteCommon {
 	white-space: nowrap;
     border-width: 1px;
     border-style: solid;
     border-color: #D1D1D1 #989898 #989898 white;
     border-top-color: transparent;
-    font-family: tahoma, helvetica, arial, sans-serif;
+    font-family: arial, helvetica, sans-serif;
+    font-size:11px;
+    color:#222;
     cursor: pointer;
     padding: 1px;
 }
@@ -985,26 +1243,26 @@ davinci_top_bar .dijitButtonNode {
 }
 .dojoyPaletteItem {
     background-color: white;
-    margin: 0 1px 1px 0;
     border-color: white;
 }
 .dojoyPaletteItemFlat {
 	border-color: white;
 	background-color: white;
-	margin: 0 1px 1px 0;
 }
 .dojoyPaletteItemRaised {
 	border-color: white #ACA899 #ACA899 white;
 	background-color: #F0F4FC;
-	margin: 0 1px 1px 0;
 }
 .dojoyPaletteItemSunken {
-	border-color: #ACA899 white white #ACA899;
-	background-color: #D9E9F9;
-	margin: 1px 0 0 1px;
+}
+.dojoyPaletteItemSunken .paletteItemLabel {
+	font-weight:bold;
 }
 .dojoyPaletteFolder {
     border-color: #D1D1D1 #989898 #989898 white;
+    line-height: 18px;
+	height: 18px;
+	font-size:13px;
 }
 .claro .dojoyPaletteFolderLow,
 /*    background-image: url(images/palette-folder-bg.gif); */
@@ -1012,23 +1270,42 @@ davinci_top_bar .dijitButtonNode {
 /*    background-image: url(images/palette-folder-bg-hi.gif); */
     background: #EAEAEA url(../dijit/themes/claro/images/standardGradient.png) repeat-x scroll left top;
 }
+.dojoyPaletteFolder img {
+	margin-right:4px;
+}
+.PaletteFolderSubsection {
+	padding-left:16px;
+	font-size:12px;
+	font-style:italic;
+}
 .dojoyPaletteSearch {
 /*	font-size: 12px;*/
     background-repeat: no-repeat;
     padding-left: 1px;
 }
 
-.maqWidgetsCategory { /* use dijitHidden instead? */
-	display: none
+.maqWidgetsFiltered {
+	padding-top: 16px;
 }
-
-.maqWidgetsFiltered .maqWidgetsCategory {
-	display: inline;
+.maqWidgetsCategory {
     margin-left: 1em;
     color: grey;
     font: italic smaller sans-serif;
 }
-
+.maqWidgetsCategorySameLine {
+	display: inline;
+}
+.paletteLayoutIcons .maqWidgetsCategorySameLine {
+	display:none;
+}
+.maqWidgetsCategorySeparateLine {
+	display: none;
+}
+.paletteLayoutIcons .maqWidgetsCategorySeparateLine {
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
 /* FIXME: Temporary hack to make "Select Files..." command on Add Files dialog 
 	look like a button. Really need to do a UI makeover for Add Files dialog. */
 #btn0.browse {
@@ -1100,10 +1377,10 @@ background-position: -75px -745px;
 }
 .editPasteIcon {
 	background-image: url(img/sprite.png);
-	background-position: -12px -551px;
+	background-position: -6px -551px;
 }
 .dijitButtonDisabled .editPasteIcon {
-	background-position: -88px -551px;
+	background-position: -82px -551px;
 }
 .editPasteIconSmall {
 	background-image: url(img/sprite.png);
@@ -1257,28 +1534,65 @@ background-position: -75px -745px;
 
 .addStateIcon, .addThemeSetIcon {
 	background-image: url(img/sprite.png);
-	background-position: -82px -466px;
+	background-position: 0px -2055px;
 }
 .addStateIcon.addStateIconDisabled {
-	background-position: -66px -466px;
+	background-position: 0px -2055px;
 }
 .removeStateIcon, .removeThemeSetIcon {
 	background-image: url(img/sprite.png);
-	background-position: 0 -1778px;
+	background-position: -20px -2055px;
 }
 .removeStateIcon.removeStateIconDisabled {
-	background-position: -17px -1778px;
+	background-position: -20px -2055px;
 }
 .modifyStateIcon {
 	background-image: url(img/sprite.png);
-	background-position: -82px -483px;
+	background-position: -40px -2056px;
 }
 .modifyStateIcon.modifyStateIconDisabled {
-	background-position: -66px -483px;
+	background-position: -40px -2056px;
 }
 .modify_state_container {
 	white-space:nowrap;
 	line-height:30px;
+}
+.manageStatesIcon {
+	background-image: url(img/sprite.png);
+	background-position: -60px -2056px;
+}
+.manageStatesIcon.manageStatesIconDisabled {
+	background-position: -60px -2096px;
+}
+.newWidgetsCurrentStateIcon {
+	background-image: url(img/sprite.png);
+}
+.newWidgetsCurrentStateIconOn {
+	background-position: -80px -2076px;
+}
+.newWidgetsCurrentStateIconOn.newWidgetsCurrentStateIconDisabled {
+	background-position: -80px -2116px;
+}
+.newWidgetsCurrentStateIconOff {
+	background-position: -80px -2056px;
+}
+.newWidgetsCurrentStateIconOff.newWidgetsCurrentStateIconDisabled {
+	background-position: -80px -2096px;
+}
+.highlightBaseWidgetsIcon {
+	background-image: url(img/sprite.png);
+}
+.highlightBaseWidgetsIconOn {
+	background-position: -100px -2076px;
+}
+.highlightBaseWidgetsIconOn.highlightBaseWidgetsIconDisabled {
+	background-position: -100px -2116px;
+}
+.highlightBaseWidgetsIconOff {
+	background-position: -100px -2056px;
+}
+.highlightBaseWidgetsIconOff.highlightBaseWidgetsIconDisabled {
+	background-position: -100px -2096px;
 }
 .states_rename_table td {
 	white-space:nowrap;
@@ -1416,7 +1730,6 @@ background-position: -75px -745px;
 
 .claro .loading{
 	/*background-color: #eee;*/
-	background-color: white;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -1917,6 +2230,12 @@ td.welcome_section_cell {
 	line-height: 1.5em;
 }
 
+.paletteDragContainer {
+}
+.paletteDragContainer .paletteItemImage {
+	width:30px;
+	height:30px;
+}
 .maqParentListDiv {
 	position:absolute;
 	z-index:1000000;
@@ -2033,6 +2352,10 @@ td.welcome_section_cell {
 	height:1.1em;
 }
 .ScenesPaletteAppStateIcon.ScenesPaletteCurrent {
+	background-image:url('img/sprite.png');
+	background-position: -84px -1523px;
+	width: 16px;
+	height: 16px;
 }
 .ScenesPaletteAppStateIcon.ScenesPaletteCurrent.ScenesPaletteCurrentHidden {
 	visibility:hidden;
@@ -2268,4 +2591,95 @@ td.welcome_section_cell {
 .dijitDialogPaneContentArea .maqDialogMessage {
 	margin-bottom: 10px;
 	font-weight: bold;
+}
+.maqBaseStateShiningThrough {
+	border-radius: 6px;
+	margin-left: -5px;
+	position: absolute;
+	pointer-events: none;
+	border: 2px solid red;
+	padding: 2px;
+	margin-top: -4px;
+	margin-top: -4px;
+	opacity:.3;
+	z-index:6;
+	/* 3x3 red check image */
+	background-image:url('data:image/gif;base64,R0lGODlhAwADAJEAAAAAAP////8AAP///yH5BAEAAAMALAAAAAADAAMAAAIEnCc3BQA7');
+	background-repeat:repeat;
+}
+.addStateNameDiv label {
+	margin-right:8px;
+}
+.addStateNameDiv {
+	margin-bottom:8px;
+}
+.addStateNameDiv .dijitTextBox {
+	width:18em;
+}
+.addStateDialogOptions {
+	margin:4px 0;
+}
+.addStateDialogMoveWhichDiv label {
+	margin-right:8px;
+}
+.addStateDialogRemoveFromBaseDiv {
+	margin:8px 0;
+}
+.manageStatesStatesListDiv {
+	padding:3px;
+	width: 100%;
+	height: 100px;
+	border: 1px solid #888;
+	overflow-y: scroll;
+}
+.manageStatesCheckAcceleratorsDiv {
+	margin-top:4px;
+	margin-bottom: 8px;
+}
+.manageStatesCheckboxCell {
+	width:20px;
+	height:20px;
+	text-align:center;
+	vertical-align:middle;
+}
+.manageStatesCheckbox {
+	width:16px;
+	height:16px;
+	background-image: url('img/sprite.png');
+}
+..manageStatesCheckbox:hover {
+	cursor:pointer;
+}
+.manageStatesCheckboxAllVisible {
+	background-position: -84px -1523px;
+}
+.manageStatesCheckboxAllVisibleBackgroundAll {
+	background-position: -84px -1523px;
+	/*background-position: -60px -1550px;*/
+}
+.manageStatesCheckboxAllVisibleBackgroundSome {
+	background-position: -84px -1523px;
+	/*background-position: -60px -1550px;*/
+}
+.manageStatesCheckboxNoneVisible {
+	background-position: -84px -266px;
+}
+.manageStatesCheckboxSomeVisible {
+	background-position: -40px -1547px;
+}
+.manageStatesStateNameCell {
+	height:20px;
+	vertical-align:center;
+	padding-left:4px;
+	white-space:nowrap;
+}
+.manageStatesNotesCell {
+	width:1px;
+	padding-left:4px;
+	padding-right:4px;
+}
+.manageStatesNotesSpan {
+	white-space:nowrap;
+	font-size:90%;
+	font-style:italic;
 }

@@ -39,20 +39,48 @@
             "datatype": "string",
             "defaultValue": "slide",
             "option": [
-                {"value": "slide"},
-                {"value": "fade"},
-                {"value": "flip"},
-                {"value": "cover"},
-                {"value": "coverv"},
-                {"value": "dissolve"},
-                {"value": "reveal"},
-                {"value": "revealv"},
-                {"value": "scaleIn"},
-                {"value": "scaleOut"},
-                {"value": "slidev"},
-                {"value": "swirl"},
-                {"value": "zoomIn"},
-                {"value": "zoomOut"}
+                {
+                    "value": "slide"
+                },
+                {
+                    "value": "fade"
+                },
+                {
+                    "value": "flip"
+                },
+                {
+                    "value": "cover"
+                },
+                {
+                    "value": "coverv"
+                },
+                {
+                    "value": "dissolve"
+                },
+                {
+                    "value": "reveal"
+                },
+                {
+                    "value": "revealv"
+                },
+                {
+                    "value": "scaleIn"
+                },
+                {
+                    "value": "scaleOut"
+                },
+                {
+                    "value": "slidev"
+                },
+                {
+                    "value": "swirl"
+                },
+                {
+                    "value": "zoomIn"
+                },
+                {
+                    "value": "zoomOut"
+                }
             ]
         },
         "iconBase": {
@@ -65,9 +93,15 @@
             "datatype": "string",
             "defaultValue": "",
             "option": [
-                {"value": ""},
-                {"value": "single"},
-                {"value": "multiple"}
+                {
+                    "value": ""
+                },
+                {
+                    "value": "single"
+                },
+                {
+                    "value": "multiple"
+                }
             ]
         },
         "editable": {
@@ -87,5 +121,13 @@
             "hidden": true
         }
     },
-    "content": "<ul></ul>"
+    "content": "<ul></ul>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A dojo/data-enabled version of RoundRectList.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>RoundRectDataList is an enhanced version of RoundRectList. It\ncan generate ListItems according to the given dojo/data store.</p>"
+    }
 }

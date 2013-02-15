@@ -32,5 +32,13 @@
             "defaultValue": true
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Set of buttons to select a page in a <code>dijit/layout/StackContainer</code></p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>Monitors the specified StackContainer, and whenever a page is\nadded, deleted, or selected, updates itself accordingly.</p>"
+    }
 }

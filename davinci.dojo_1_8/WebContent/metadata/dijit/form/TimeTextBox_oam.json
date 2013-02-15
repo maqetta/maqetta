@@ -122,5 +122,9 @@
             "hidden": true
         }
     },
-    "content": "<input type='text'></input>"
+    "content": "<input type='text'></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A validating, serializable, range-bound time text box with a drop down time picker</p>"
+    }
 }

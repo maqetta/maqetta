@@ -120,5 +120,17 @@
             "hidden": false
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A grid containing any kind of objects and acting like web portals.\n</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>This component inherits of all features of gridContainerLite plus :\n\n</p>\n<ul>\n<li>Resize colums</li>\n<li>Add / remove columns</li>\n<li>Fix columns at left or at right.</li>\n</ul>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;div dojoType=&quot;dojox.layout.GridContainer&quot; nbZones=&quot;3&quot; isAutoOrganized=&quot;true&quot;&gt;\n    &lt;div dojoType=&quot;dijit.layout.ContentPane&quot;&gt;Content Pane 1 : Drag Me !&lt;/div&gt;\n    &lt;div dojoType=&quot;dijit.layout.ContentPane&quot;&gt;Content Pane 2 : Drag Me !&lt;/div&gt;\n    &lt;div dojoType=&quot;dijit.layout.ContentPane&quot;&gt;Content Pane 3 : Drag Me !&lt;/div&gt;\n&lt;/div&gt;</code></pre>\n<pre><code>dojo.ready(function(){\n    var cpane1 = new dijit.layout.ContentPane({ title:&quot;cpane1&quot;, content: &quot;Content Pane 1 : Drag Me !&quot; }),\n        cpane2 = new dijit.layout.ContentPane({ title:&quot;cpane2&quot;, content: &quot;Content Pane 2 : Drag Me !&quot; }),\n        cpane3 = new dijit.layout.ContentPane({ title:&quot;cpane3&quot;, content: &quot;Content Pane 3 : Drag Me !&quot; });\n\n    var widget = new dojox.layout.GridContainer({\n        nbZones: 3,\n        isAutoOrganized: true\n    }, dojo.byId(&quot;idNode&quot;));\n    widget.addChild(cpane1, 0, 0);\n    widget.addChild(cpane2, 1, 0);\n    widget.addChild(cpane3, 2, 1);\n    widget.startup();\n});</code></pre>"
+    }
 }

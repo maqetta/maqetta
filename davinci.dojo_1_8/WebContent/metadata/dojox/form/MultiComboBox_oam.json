@@ -201,5 +201,9 @@
             "hidden": true
         }
     },
-    "content": "<select></select>"
+    "content": "<select></select>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A ComboBox that accepts multiple inputs on a single line</p>"
+    }
 }

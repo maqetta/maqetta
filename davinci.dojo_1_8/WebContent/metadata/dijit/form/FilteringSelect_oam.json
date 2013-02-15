@@ -215,5 +215,13 @@
             "hidden": true
         }
     },
-    "content": "<select></select>"
+    "content": "<select></select>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>An enhanced version of the HTML SELECT tag, populated dynamically\n</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>An enhanced version of the HTML SELECT tag, populated dynamically. It works\nvery nicely with very large data sets because it can load and page data as needed.\nIt also resembles ComboBox, but does not allow values outside of the provided ones.\nIf OPTION tags are used as the data provider via markup, then the\nOPTION tag&#39;s child text node is used as the displayed value when selected\nwhile the OPTION tag&#39;s value attribute is used as the widget value on form submit.\nTo set the default value when using OPTION tags, specify the selected\nattribute on 1 of the child OPTION tags.\n\n</p>\n<p>Similar features:\n\n</p>\n<ul>\n<li>There is a drop down list of possible values.</li>\n<li>You can only enter a value from the drop down list.  (You can&#39;t\n  enter an arbitrary value.)</li>\n<li>The value submitted with the form is the hidden value (ex: CA),\n  not the displayed value a.k.a. label (ex: California)</li>\n</ul>\n<p>Enhancements over plain HTML version:\n\n</p>\n<ul>\n<li>If you type in some text then it will filter down the list of\n  possible values in the drop down list.</li>\n<li>List can be specified either as a static list or via a javascript\n  function (that can get the list from a server)</li>\n</ul>"
+    }
 }

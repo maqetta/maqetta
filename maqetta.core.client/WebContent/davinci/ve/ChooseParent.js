@@ -233,15 +233,18 @@ return declare("davinci.ve.ChooseParent", null, {
 			if(idx !== undefined){
 				if(!this._cursorSpan){
 					this._cursorSpan = dojo.create('span', {className:'editCursor'});
-					this._timer = context.getGlobal().setInterval(function(node, context){
-						var currentEditor = Runtime.currentEditor;
-						var currentContext = (currentEditor.getContext && currentEditor.getContext());
-						if(currentContext !== context){
-							this.cleanup();
-							return;
-						}
-						dojo.toggleClass(node, 'editCursorBlink');
-					}.bind(this), 400, this._cursorSpan, context);
+					var userWin = context.getGlobal();
+					if(userWin){
+						this._timer = userWin.setInterval(function(node, context){
+							var currentEditor = Runtime.currentEditor;
+							var currentContext = (currentEditor.getContext && currentEditor.getContext());
+							if(currentContext !== context){
+								this.cleanup();
+								return;
+							}
+							dojo.toggleClass(node, 'editCursorBlink');
+						}.bind(this), 400, this._cursorSpan, context);
+					}
 				}
 				var parentNode = this._XYParent[idx].domNode;
 				var refChild = this._XYRefChild[idx];
@@ -325,8 +328,11 @@ return declare("davinci.ve.ChooseParent", null, {
 			this._cursorSpan = null;
 		}
 		if(this._timer){
-			this._context.getGlobal().clearInterval(this._timer);
-			this._timer = null;
+			var userWin = this._context.getGlobal();
+			if(userWin){
+				userWin.clearInterval(this._timer);
+				this._timer = null;
+			}
 		}
 		var context = this._context;
 		this.highlightNewWidgetParent(null);

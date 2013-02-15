@@ -51,7 +51,7 @@
             "hidden": true
         },
         "openOnClick": {
-            "datatype": "boolean",
+            "datatype": "boolean"
         },
         "openOnDblClick": {
             "datatype": "boolean",
@@ -82,5 +82,9 @@
             "hidden": true
         }
     },
-    "content": "<div></div>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>This widget displays hierarchical data from a store.</p>"
+    }
 }

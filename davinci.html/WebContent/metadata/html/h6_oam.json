@@ -1,0 +1,15 @@
+{
+	"id": "http://www.w3.org/html/h6",
+	"name": "html.h6",
+	"spec": "1.0",
+	"version": "1.0",
+	"content": "<h6></h6>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>HTML level 6 section header element</p>"
+	},
+	"description": {
+		"type": "text/html",
+		"value": "<p>The h1 element has the highest rank (i.e., largest size), the h6 element has the lowest rank.</p>"
+	}
+}

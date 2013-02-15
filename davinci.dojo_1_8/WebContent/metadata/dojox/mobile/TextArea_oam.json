@@ -95,5 +95,17 @@
             "defaultValue": "mblTextArea"
         }
     },
-    "content": "<textarea></textarea>"
+    "content": "<textarea></textarea>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Non-templated TEXTAREA widget.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>A textarea widget that wraps an HTML TEXTAREA element.\nTakes all the parameters (name, value, etc.) that a vanilla textarea takes.</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;textarea dojoType=&quot;dojox.mobile.TextArea&quot;&gt;...&lt;/textarea&gt;</code></pre>"
+    }
 }

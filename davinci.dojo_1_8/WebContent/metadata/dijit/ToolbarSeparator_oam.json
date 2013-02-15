@@ -16,5 +16,9 @@
             "src": "../../dojo/dojo.js"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A spacer between two <code>dijit.Toolbar</code> items</p>"
+    }
 }

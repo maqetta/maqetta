@@ -1,16 +1,23 @@
 define([
 	"davinci/html/HTMLElement", //HTMLElement
-	"davinci/ve/metadata",
+	"../Runtime",
+	"./metadata",
 	"dojo/Deferred",
-	"davinci/ve/DijitWidget",
-	"davinci/ve/GenericWidget",
-	"davinci/ve/HTMLWidget",
-	"davinci/ve/ObjectWidget",
+	"./DijitWidget",
+	"./GenericWidget",
+	"./HTMLWidget",
+	"./ObjectWidget",
 	"dojo/window"
 ], function(
 	HTMLElement,
+	Runtime,
 	metadata,
-	Deferred
+	Deferred,
+	DijitWidget,
+	GenericWidget,
+	HTMLWidget,
+	ObjectWidget,
+	dojoWindow
 ) {
 
 var helperCache = {};
@@ -82,13 +89,13 @@ _dojo: function(node) {
 	var doc = node ? (node.ownerDocument || node) : dojo.doc;
 //TODO: for some reason node.ownerDocument is occasionally null
 	doc=doc||dojo.doc;
-	var win = dojo.window.get(doc);
+	var win = dojoWindow.get(doc);
 	return win.dojo || dojo;
 },
 
 _dijit: function(node) {
 	var doc = node ? (node.ownerDocument || node) : dojo.doc;
-	var win = dojo.window.get(doc);
+	var win = dojoWindow.get(doc);
 	return win.dijit || dijit;
 },
 
@@ -355,8 +362,8 @@ byId: function(id, doc) {
 			return widget;
 		}
 	}
-	if(davinci.Runtime.currentEditor && davinci.Runtime.currentEditor.currentEditor && davinci.Runtime.currentEditor.currentEditor.context){
-		var context = davinci.Runtime.currentEditor.currentEditor.context;
+	if(Runtime.currentEditor && Runtime.currentEditor.currentEditor && Runtime.currentEditor.currentEditor.context){
+		var context = Runtime.currentEditor.currentEditor.context;
 		return context.widgetHash[id];
 	}
 	return undefined;
@@ -437,7 +444,7 @@ createWidget: function(widgetData) {
 	// XXX eventually replace with dojo.place()?
 	// XXX Technically, there can be more than one 'content'
     var content = md.content.trim().replace(/\s+/g, ' ');
-	var node = dojo.window.get(dojo.doc).dojo._toDom(content);
+	var node = dojoWindow.get(dojo.doc).dojo._toDom(content);
 	// XXX Used to create node like this, which added attributes from metadata, is there still a way to do this?
 	//	var node = dojo.create(md.tagName || "div", md.attributes);
 
@@ -598,6 +605,9 @@ createWidget: function(widgetData) {
 	if(helper && helper.cleanSrcElement){
 		helper.cleanSrcElement(widget._srcElement);
 	}
+	if(helper && helper.postCreateWidget){
+		helper.postCreateWidget(widget);
+	}
 
 	return widget;
 },
@@ -645,22 +655,22 @@ getWidget: function(node){
 				node.hasAttribute("dojotype"))
 		{
 			var d = widgetObject._dijit(node);
-			var w= d.byNode(node);
+			var w = d.byNode(node);
 			if (w) {
-				widget=new davinci.ve.DijitWidget(data,node,w);
+				widget = new DijitWidget(data,node,w);
 			} else {
-				widget=new davinci.ve.ObjectWidget(data,node);
+				widget = new ObjectWidget(data,node);
 			}
 //		}else if (oaWidgetType){
-//			widget=new davinci.ve.OpenAjaxWidget(data,node,oaWidgetType);
+//			widget = new OpenAjaxWidget(data,node,oaWidgetType);
 		}else if (dvWidgetType){
-			widget=new davinci.ve.GenericWidget(data,node,dvWidgetType);
+			widget = new GenericWidget(data,node,dvWidgetType);
 		}else{
 			if(node.nodeName == "svg"){
 				//FIXME: inline SVG support not yet available
 				return undefined;
 			}
-			widget=new davinci.ve.HTMLWidget(data,node);
+			widget = new HTMLWidget(data,node);
 		}
 	}
 

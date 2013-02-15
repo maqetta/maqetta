@@ -38,5 +38,9 @@
             "title": "Disabled"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>An item in a Menu that spawn a drop down (usually a drop down menu)</p>"
+    }
 }

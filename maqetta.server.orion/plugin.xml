@@ -47,6 +47,8 @@
                class="maqetta.server.orion.command.GetInitializationInfo" />
          <command path="setWorkbenchState"  isPut="true"
                class="maqetta.server.orion.command.SetWorkbenchState" />
+       <command path="login" noLogin="true" 
+               class="maqetta.server.orion.command.Login" />
          
          <command path="configProject"  
                class="maqetta.server.orion.command.ConfigProject" />
@@ -61,6 +63,8 @@
                class="maqetta.core.server.command.Download" />
          <command path="findResource" 
                class="maqetta.core.server.command.FindResource" />
+        <command path="getThemes" 
+               class="maqetta.core.server.command.GetThemes" />
          <command path="getPlugins" 
                class="maqetta.core.server.command.GetPlugins" />
           <command path="getLibRoots" 

@@ -47,7 +47,7 @@
             "datatype": "string",
             "defaultValue": "d"
         },
-       "readOnly": {
+        "readOnly": {
             "datatype": "boolean",
             "defaultValue": false
         },
@@ -55,5 +55,13 @@
             "datatype": "string"
         }
     },
-    "content": "<div></div>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A ValuePicker-based date picker widget.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>ValuePickerDatePicker is a date picker widget. It is a subclass of\ndojox/mobile/ValuePicker. It has 3 slots: day, month and year.</p>"
+    }
 }

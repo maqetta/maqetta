@@ -64,6 +64,16 @@ dependencies = {
 			]
 		},
 		{
+			name: "../davinci/review/editor/ReviewEditor.js",
+			layerDependencies: [
+			    "../dijit/dijit.js",
+				"../davinci/davinci.js"
+			],
+			dependencies: [
+			    "davinci.review.editor.ReviewEditor"
+			]
+		},
+		{
 			name: "../davinci/review/view/CommentView.js",
 			layerDependencies: [
 			    "../dijit/dijit.js",

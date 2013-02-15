@@ -55,5 +55,9 @@
             "hidden": true
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A menu bar, listing menu choices horizontally, like the &quot;File&quot; menu in most desktop applications</p>"
+    }
 }

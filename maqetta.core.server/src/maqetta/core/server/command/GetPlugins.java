@@ -22,7 +22,7 @@ public class GetPlugins extends Command {
 
     @Override
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
-        List extensions = ServerManager.getServerManger().getExtensions(IDavinciServerConstants.EXTENSION_POINT_JSPLUGIN,
+        List extensions = ServerManager.getServerManager().getExtensions(IDavinciServerConstants.EXTENSION_POINT_JSPLUGIN,
                 IDavinciServerConstants.EP_TAG_JSPLUGIN);
         StringBuffer sb = new StringBuffer();
         sb.append("[");

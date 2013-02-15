@@ -1,6 +1,7 @@
 package maqetta.core.server.user;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +16,6 @@ import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.ajaxLibrary.ILibraryFinder;
 import org.davinci.ajaxLibrary.Library;
 import org.davinci.server.internal.Activator;
-import org.davinci.server.review.Constants;
 import org.davinci.server.user.IPerson;
 import org.davinci.server.user.IUser;
 import org.davinci.server.user.LibrarySettings;
@@ -80,7 +80,7 @@ public class User implements IUser {
 	}
 	
 	public ILibraryFinder[] getFinders(String base){
-		ILibraryFinder[] finders = ServerManager.getServerManger().getLibraryManager().getLibraryFinders();
+		ILibraryFinder[] finders = ServerManager.getServerManager().getLibraryManager().getLibraryFinders();
 		IStorage baseFile = this.userDirectory.newInstance(this.userDirectory, base);
 		Vector<ILibraryFinder> allLibs = new Vector();
 		for(int i=0;i<finders.length;i++){
@@ -92,7 +92,7 @@ public class User implements IUser {
 	
 	public ILibInfo[] getExtendedSettings(String base){
 		
-		ILibraryFinder[] finders = ServerManager.getServerManger().getLibraryManager().getLibraryFinders();
+		ILibraryFinder[] finders = ServerManager.getServerManager().getLibraryManager().getLibraryFinders();
 		IStorage baseFile = this.userDirectory.newInstance(this.userDirectory, base);
 		Vector<ILibInfo> allLibs = new Vector();
 		for(int i=0;i<finders.length;i++){
@@ -106,7 +106,7 @@ public class User implements IUser {
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#createEclipseProject(java.lang.String)
 	 */
-	public IVResource createEclipseProject(String projectName){
+	public IVResource createEclipseProject(String projectName) throws IOException {
 		IVResource project = createProject(projectName, "WebContent", true);
 		/*
 		 * Load the initial user files extension point and copy the files to the projects root
@@ -126,7 +126,7 @@ public class User implements IUser {
            	
           }
         /* modify the library settings with the WebContent folder */
-       Library[] allLibs = ServerManager.getServerManger().getLibraryManager().getAllLibraries();
+       Library[] allLibs = ServerManager.getServerManager().getLibraryManager().getAllLibraries();
         
         for(int i=0;i<allLibs.length;i++){
         	Library lib = allLibs[i];
@@ -150,14 +150,14 @@ public class User implements IUser {
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#createProject(java.lang.String)
 	 */
-	public IVResource createProject(String projectName){
+	public IVResource createProject(String projectName) throws IOException {
 		return this.createProject(projectName, "", true);
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#createProject(java.lang.String, java.lang.String, boolean)
 	 */
-	public IVResource createProject(String projectName, String basePath, boolean initFiles){
+	public IVResource createProject(String projectName, String basePath, boolean initFiles) throws IOException {
 		IVResource project = createResource(projectName + "/", true);
 		/*
 		 * Load the initial user files extension point and copy the files to the projects root
@@ -174,7 +174,7 @@ public class User implements IUser {
 			
 		
 		if(initFiles){
-			List extensions = ServerManager.getServerManger().getExtensions(IDavinciServerConstants.EXTENSION_POINT_INITIAL_USER_FILES,
+			List extensions = ServerManager.getServerManager().getExtensions(IDavinciServerConstants.EXTENSION_POINT_INITIAL_USER_FILES,
 	                IDavinciServerConstants.EP_TAG_INITIAL_USER_FILE);
 	        for (Iterator iterator = extensions.iterator(); iterator.hasNext();) {
 	            IConfigurationElement libraryElement = (IConfigurationElement) iterator.next();
@@ -253,7 +253,7 @@ public class User implements IUser {
 			libs.removeLibrary(id, version, base);
 
 		} else {
-			String defaultRoot = ServerManager.getServerManger().getLibraryManager().getDefaultRoot(id, version);
+			String defaultRoot = ServerManager.getServerManager().getLibraryManager().getDefaultRoot(id, version);
 			libs.addLibrary(id, version, id, defaultRoot, required?"true":"false");
 		}
 		
@@ -440,7 +440,7 @@ public class User implements IUser {
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#createResource(java.lang.String)
 	 */
-	public IVResource createResource(String path, boolean isFolder) {
+	public IVResource createResource(String path, boolean isFolder) throws IOException {
 		/* serve working copy files if they exist */
 
 		String path1 = path;

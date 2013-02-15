@@ -47,11 +47,6 @@
                 }
             ]
         },
-     /*   "treeModel": {
-            "datatype": "object",
-            "hidden": true,
-            "isData": true
-        },*/
         "query": {
             "datatype": "json",
             "hidden": true
@@ -143,20 +138,6 @@
             "description": "Set to true if you want to be able to select the text within the grid.",
             "hidden": false
         },
-/*FIXME: Temporarily comment out some properties that result in really ugly attributes in generated source code or are broken.
-        "loadingMessage": {
-            "datatype": "string",
-            "description": "Message that shows while the grid is loading",
-            "hidden": false,
-            "defaultValue": "<span class='dojoxGridLoading'>Loading...</span>"
-        },
-        "errorMessage": {
-            "datatype": "string",
-            "description": "Message that shows when the grid encounters an error loading",
-            "hidden": false,
-            "defaultValue": "<span class='dojoxGridError'>Sorry, an error occurred</span>"
-        },
-*/
         "noDataMessage": {
             "datatype": "string",
             "description": "Message that shows if the grid has no data - wrap it in a\nspan with class 'dojoxGridNoData' if you want it to be\nstyled similar to the loading and error messages",
@@ -200,5 +181,13 @@
             "defaultValue": true
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A grid that supports nesting rows - it provides an expando function\nsimilar to dijit.Tree.  It also provides mechanisms for aggregating\nthe values of subrows</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>TreeGrid currently only works on &quot;simple&quot; structures.  That is,\nsingle-view structures with a single row in them.\n\n</p>\n<p>The TreeGrid works using the concept of &quot;levels&quot; - level 0 are the\ntop-level items.</p>"
+    }
 }

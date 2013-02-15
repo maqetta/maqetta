@@ -36,5 +36,9 @@
             "title": "Mix-ins"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>The Declaration widget allows a developer to declare new widget\nclasses directly from a snippet of markup.</p>"
+    }
 }

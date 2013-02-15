@@ -1,4 +1,5 @@
     {	
+		"_COMMENT_":"Defines site-specific default theme sets",
         "name":"site_dojo_default",
         "desktopTheme":"claro", 
         "mobileTheme":[

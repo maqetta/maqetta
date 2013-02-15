@@ -4,7 +4,7 @@
 <head>
 <title>Theme Editor</title>
 
-<script type="text/javascript" src="/maqetta/app/static/lib/dojo/1.8/dojo/dojo.js" data-dojo-config="parseOnLoad: true, async: true"></script>
+<script type="text/javascript" src="../../../../../../../app/static/lib/dojo/1.8/dojo/dojo.js" data-dojo-config="parseOnLoad: true, async: true"></script>
 <script type="text/javascript">
     require([
         "dojo/parser",
@@ -84,7 +84,7 @@
 		</div>
   <div class="theming-group-widgets">
    <div class="widget-sample">
-    <label id="label_0" class="dvThemeWidget">
+   	 <label id="label_0" class="dvThemeWidget">
 					Generic text: Click on this text block to set defaults for various inheritable
 					properties, such as font properties.
 				</label>
@@ -109,11 +109,15 @@
     <tbody>
      <tr valign="top">
       <td style="width:150px">
+      <div class="widget-sample">
+      	<button id="maqetta_claro_theme_html_button" type="button" class="dvThemeWidget">HTML Button</button>
+      </div>
+      <div class="widget-sample">
        <div class="widget-sample">
-        <button type="button" dojoType="dijit.form.Button" id="1465" value="Button" class="dvThemeWidget">Button</button>
+        <button id="maqetta_claro_theme_button" type="button" dojoType="dijit.form.Button" id="1465" value="Button" class="dvThemeWidget">Button</button>
        </div>
        <div>
-        <input dojoType="dijit.form.CheckBox" type="checkbox" class="dvThemeWidget">CheckBox</input>
+        <input id="maqetta_claro_theme_checkbox" dojoType="dijit.form.CheckBox" type="checkbox" class="dvThemeWidget">CheckBox</input>
        </div>
        <div>Menu:</div>
        <div dojoType="dijit.Menu" id="windowContextMenu" contextMenuForWindow="false" class="dvThemeWidget">

@@ -38,5 +38,9 @@
             "title": "Disabled"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A checkbox-like menu item for toggling on and off</p>"
+    }
 }

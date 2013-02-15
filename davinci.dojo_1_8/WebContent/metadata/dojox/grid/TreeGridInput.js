@@ -1,5 +1,6 @@
 define([
 	"dojo/_base/declare",
+	"davinci/Runtime",
 	"davinci/ve/input/SmartInput",
 	"davinci/ve/widget",
 	"davinci/ve/commands/ModifyCommand",
@@ -194,7 +195,7 @@ return declare(SmartInput, {
 	},
 	
 	getEditor: function() {
-		return top.davinci && top.davinci.Runtime && top.davinci.Runtime.currentEditor;
+		return Runtime.currentEditor;
 	},
 	
 	_getContext: function() {
@@ -252,8 +253,7 @@ return declare(SmartInput, {
 				});
 			}
 		}*/
-		var structure = [{cells:[s[0].children]}];
-		return structure;
+		return [{cells:[s[0].children]}];
 	},
 	
 	_childStructure: function(items,level){
@@ -269,7 +269,6 @@ return declare(SmartInput, {
 				if (name !== 'children' && name !== 'id') {
 					this._structure[level][name] = name;
 				}
-				
 			}
 		}
 	}

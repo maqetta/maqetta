@@ -27,8 +27,6 @@ import org.davinci.server.user.IUserManager;
 import org.maqetta.server.Command;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ServerManager;
-import org.maqetta.server.mail.SimpleMessage;
-import org.maqetta.server.mail.SmtpPop3Mailer;
 
 public class AddComment extends Command {
 
@@ -38,7 +36,7 @@ public class AddComment extends Command {
 		try {
 			Comment comment = extractComment(req);
 			
-			IUserManager userManager = ServerManager.getServerManger().getUserManager();
+			IUserManager userManager = ServerManager.getServerManager().getUserManager();
 			String designerName = comment.getDesignerId();
 			IUser designer = null;
 			if(ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equalsIgnoreCase(designerName)) {
@@ -87,22 +85,11 @@ public class AddComment extends Command {
 		if (to != null && !to.trim().equals("")) {
 			String htmlContent = getHtmlContent(reviewer, comment, req.getRequestURL().toString());
 			String notifId = Utils.getCommonNotificationId(req);
-			SimpleMessage email = new SimpleMessage(notifId,
-					designer.getPerson().getEmail(), null, null, Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT_NOTIFICATION_SUBJECT),
+			ServerManager.getServerManager().sendEmail(
+					notifId,
+					designer.getPerson().getEmail(),
+					Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT_NOTIFICATION_SUBJECT),
 					htmlContent);
-//			SmtpPop3Mailer.send(email);
-			try {
-				SmtpPop3Mailer mailer = SmtpPop3Mailer.getDefault();
-				if(mailer != null){
-					mailer.sendMessage(email);
-				}else{
-					this.responseString = "Failed to send mail to users. "+"Mail server is not configured. Mail notification is cancelled.";
-					System.out.println("Mail server is not configured. Mail notification is cancelled.");
-				}
-			} catch (Exception e) {
-				this.responseString = "Failed to send mail to users. "+e.getMessage();
-				e.printStackTrace();
-			}
 		}
 	}
 
@@ -150,7 +137,7 @@ public class AddComment extends Command {
 		}
 
 		Map<String, String> props = new HashMap<String, String>();
-		props.put("displayName", reviewer.getPerson().getEmail());
+		props.put("displayName", reviewer.getPerson().getDisplayName());
 		props.put("pagename", pageName);
 		props.put("url", ReviewManager.getReviewManager().getReviewUrl(comment.getDesignerId(), comment.getPageVersion(),  requestUrl)); 
 		props.put("title", commentTitle);
@@ -161,7 +148,7 @@ public class AddComment extends Command {
 		props.put("viewscenelist", comment.getViewSceneList());
 		props.put("time", comment.getCreated().toString());
 		
-		return Utils.substitude(Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT), props);
+		return Utils.substitute(Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT), props);
 	}
 
 	protected Comment extractComment(HttpServletRequest req) {

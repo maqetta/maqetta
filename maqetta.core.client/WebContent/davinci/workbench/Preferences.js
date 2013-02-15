@@ -56,6 +56,20 @@ var Preferences = {
 	showPreferencePage: function(){
 		Preferences._loadExtensions();
 	    var prefJson = Preferences.getPrefJson();
+	    
+	    //FIXME: Temporary hack to hide project preferences
+	    //Can't just delete them because other parts of the code query for a particular preference
+	    //Instead, just make it so that project preferences don't appear in preferences dialog
+	    //Issue https://github.com/maqetta/maqetta/issues/3658 is reminder to restore project preferences
+	    if(prefJson.items){
+	    	for(var i=prefJson.items.length-1; i>=0; i--){
+	    		var item = prefJson.items[i];
+	    		if(item.hide){
+	    			prefJson.items.splice(i,1);
+	    		}
+	    	}
+	    }
+	    
  	    if(!prefJson || prefJson.length < 1) {
  	    	alert(workbenchStrings.noUserPref);
  	    	return;
@@ -111,6 +125,7 @@ var Preferences = {
 			return {
 				id: node.id,
 				name: node.name,
+				hide: node.hide,
 				index: node._index,
 				children: Preferences._getPrefJsonChildren(node.id, flatNodeTree)
 			};

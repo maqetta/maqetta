@@ -3,6 +3,7 @@ define([
 	"dojo/_base/lang",
 	"dijit/registry",
 	"dojox/html/entities",
+	"davinci/Runtime",
 	"davinci/ve/input/SmartInput",
 	"davinci/ve/widget",
 	"davinci/commands/OrderedCompoundCommand",
@@ -13,6 +14,7 @@ define([
 	Lang,
 	Registry,
 	Entities,
+	Runtime,
 	SmartInput,
 	Widget,
 	OrderedCompoundCommand,
@@ -137,7 +139,7 @@ return declare(SmartInput, {
 	},
 	
 	_getEditor: function() {
-		return top.davinci && top.davinci.Runtime && top.davinci.Runtime.currentEditor;
+		return Runtime.currentEditor;
 	},
 	
 	_getContext: function() {

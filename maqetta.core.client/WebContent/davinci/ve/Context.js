@@ -3,10 +3,14 @@ define([
     "dojo/_base/declare",
     "dojo/_base/lang",
     "dojo/_base/xhr",
+    "dojo/dom-class",
+    "dojo/dom-construct",
+    "dojo/dom-style",
 	"dojo/query",
 	"dojo/Deferred",
 	"dojo/promise/all",
 	"dojo/_base/connect",
+	"dojo/topic",
 	"dojo/window",
     'system/resource',
     "../UserActivityMonitor",
@@ -27,8 +31,6 @@ define([
 	"../XPathUtils",
 	"../html/HtmlFileXPathAdapter",
 	"./HTMLWidget",
-	"../html/CSSModel", // shorthands
-	"../html/CSSRule",
 	"../html/CSSImport",
 	"../html/HTMLElement",
 	"../html/HTMLText",
@@ -37,16 +39,21 @@ define([
 	"./utils/GeomUtils",
 	"dojo/text!./newfile.template.html",
 	"./utils/URLRewrite",
+	"davinci/ve/themeEditor/metadata/CSSThemeProvider",
 	"dojox/html/_base"	// for dojox.html.evalInGlobal	
 ], function(
 	require,
 	declare,
 	lang,
 	xhr,
+	domClass,
+	domConstruct,
+	domStyle,
 	query,
 	Deferred,
 	all,
 	connect,
+	Topic,
 	windowUtils,
 	systemResource,
 	UserActivityMonitor,
@@ -67,8 +74,6 @@ define([
 	XPathUtils,
 	HtmlFileXPathAdapter,
 	HTMLWidget,
-	CSSModel,
-	CSSRule,
 	CSSImport,
 	HTMLElement,
 	HTMLText,
@@ -76,7 +81,8 @@ define([
 	Silhouette,
 	GeomUtils,
 	newFileTemplate,
-	URLRewrite
+	URLRewrite,
+	CSSThemeProvider
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
@@ -85,7 +91,8 @@ var MOBILE_DEV_ATTR = 'data-maq-device',
 	MOBILE_ORIENT_ATTR = 'data-maq-orientation',
 	MOBILE_ORIENT_ATTR_P6 = 'data-maqetta-device-orientation',
 	PREF_LAYOUT_ATTR = 'data-maq-flow-layout',
-	PREF_LAYOUT_ATTR_P6 = 'data-maqetta-flow-layout';
+	PREF_LAYOUT_ATTR_P6 = 'data-maqetta-flow-layout',
+	COMPTYPE_ATTR = 'data-maq-comptype';
 
 var contextCount = 0;
 
@@ -171,12 +178,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		 * but using the model for now.
 		 * 
 		 */
-		var path = this.getModel().fileName;
-		return new Path(path);
+		return new Path(this.getModel().fileName);
 	},
 
-
-	
 	activate: function(){
 		if(this.isActive()){
 			return;
@@ -194,7 +198,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this._onLoadHelpers();
 
 		var containerNode = this.getContainerNode();
-		dojo.addClass(containerNode, "editContextContainer");
+		domClass.add(containerNode, "editContextContainer");
 		
 		this._connects = [
 			connect.connect(this._commandStack, "onExecute", this, "onCommandStackExecute"),
@@ -237,19 +241,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		//this._menu.unBindDomNode(containerNode);
 
 		this.select(null);
-		dojo.removeClass(containerNode, "editContextContainer");
-		dojo.forEach(this.getTopWidgets(), this.detach, this);
+		domClass.remove(containerNode, "editContextContainer");
+		this.getTopWidgets().forEach(this.detach, this);
 		this.unloadStyleSheet(this._contentStyleSheet);
 	},
 
 	attach: function(widget){
-		if(!widget){
+		if(!widget || widget._edit_focus){
 			return;
 		}
-		if(widget._edit_focus){
-			return;
-		}
-		var type = widget.declaredClass;
 
 		if(!widget._srcElement){
 			widget._srcElement=this._srcDocument.findElement(widget.id);
@@ -296,16 +296,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// Recurse down widget hierarchy
 		dojo.forEach(widget.getChildren(true), this.attach, this);
 	},
-	
-	getBodyId: function(){
-		/* return the ID of the body element */
-		
-		var bodyNode = this.model.find({elementType:'HTMLElement', tag:'body'}, true),
-			id = bodyNode.find({elementType:'HTMLAttribute', name:'id'}, true);
-		return id.value;
-	},
 
-	
 	detach: function(widget) {
 		// FIXME: detaching context prevent destroyWidget from working
 		//widget._edit_context = undefined;
@@ -353,7 +344,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 
-	getSource: function(options){
+	getSource: function(){
 		return this._srcDocument.getText();
 	},
 
@@ -361,14 +352,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return this._srcDocument.getDocumentElement();
 	},
 
-	getDocumentLocation: function(options){
+	getDocumentLocation: function(){
 		return this._srcDocument.fileName;
 	},
 
-	getBaseResource: function(options){
-		return systemResource.findResource(this.getDocumentLocation());
-	},
-
+	//FIXME: private/protected?
 	getLibraryBase: function(id, version){
 		return Library.getLibRoot(id,version, this.getBase()) || "";
 	},
@@ -387,7 +375,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var libraries = metadata.query(type, 'library'),
 			libs = {},
 			context = this;
-
 		function loadLibrary(libId, lib) {
 			if (libs.hasOwnProperty(libId)) {
 				return true;
@@ -408,7 +395,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 			// If 'library' element points to the main library JS (rather than
 			// just base directory), then load that file now.
-			if (lib.src.substr(-3) === '.js') {
+			if (lib && lib.src && lib.src.substr(-3) === '.js') {
 				// XXX For now, lop off relative bits and use remainder as main
 				// library file.  In the future, we should use info from
 				// package.json and library.js to find out what part of this
@@ -446,7 +433,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			// If this require belongs under a library, load library file first
 			// (if necessary).
 			if (r.$library) {
-				if (!loadLibrary(r.$library)) {
+				if (!loadLibrary(r.$library, libraries[r.$library])) {
 					return false; // break 'every' loop
 				}
 			}
@@ -500,28 +487,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return all(promises);
 	},
 
-	_getWidgetFolder: function(){
-		
-		var base = this.getBase();
-		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
-		if(!prefs.widgetFolder){
-			prefs.widgetFolder = "WebContent/lib/custom";
-			Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
-		}
-	
-		var folder = prefs.widgetFolder;
-		while(folder.length>1 && (folder.charAt(0)=="." || folder.charAt(0)=="/")) {
-			folder = folder.substring(1);
-		}
-		return folder;
-	},
-
 	/**
 	 * Retrieve mobile device from Model.
 	 * @returns {?string} mobile device name
 	 */
 	getMobileDevice: function() {
         var bodyElement = this.getDocumentElement().getChildElement("body");
+        if (!bodyElement) {
+        	return undefined;
+        }
         var attvalue = bodyElement.getAttribute(MOBILE_DEV_ATTR);
         var attvalueP6 = bodyElement.getAttribute(MOBILE_DEV_ATTR_P6);
 		if(!attvalue && attvalueP6){
@@ -568,8 +542,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
         // when the page is loaded the device matches what is in the doc
         // but we need to get dojo in sync.
         try {
-        	var ua = Silhouette.getMobileTheme(device + '.svg');
-      		ua = ua || "other";
+        	var ua = Silhouette.getMobileTheme(device + '.svg') || "other";
     		// dojox/mobile specific CSS file handling
       		this._configDojoxMobile();
     		//var deviceTheme = this.getGlobal()['require']('dojox/mobile/deviceTheme');
@@ -644,7 +617,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	
 	getTheme: function(){
         if (!this.theme) {
-            var theme = this.loadThemeMeta(this._srcDocument);
+            var theme = metadata.loadThemeMeta(this._srcDocument);
             if (theme) { // wdr #1024
                 this._themeUrl = theme.themeUrl;
                 this._themeMetaCache = theme.themeMetaCache;
@@ -655,7 +628,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
         	       		 if (result.helper) {
         	       			 this.theme.helper = result.helper;
         	       		 }
-        	    	 }.bind(this));
+                	}.bind(this));
         		}
             }
         }
@@ -668,15 +641,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		return this._themeMetaCache;
 	},
-	
-	loadThemeMeta: function(model){
-		// try to find the theme using path magic
 
-		var ro = metadata.loadThemeMeta(model);
-		//this.editor._visualChanged(); // do not know why we are calling this handler method inline
-		return ro;
-	},
-	
 	setSource: function(source, callback, scope, initParams){
 		dojo.withDoc(this.getDocument(), "_setSource", this, arguments);
 	},
@@ -703,10 +668,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}	
 		
 	},
-	
-	getResourcePath: function() {
-		return this.getFullResourcePath().removeLastSegments(1);
-	},
 
 	getBase: function(){
 		if(davinci.Workbench.singleProjectMode()) {
@@ -721,12 +682,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		return this._fullResourcePath;
 	},
-	
-	getCurrentHtmlFolderPath: function(){
-		var currentHtmlFilePath = this.getFullResourcePath();
-		var currentHtmlFolderPath = currentHtmlFilePath.getParentPath();
-		return currentHtmlFolderPath;
-	},
 
 	getCurrentBasePath: function(){
 		var base = new Path(Workbench.getProject());
@@ -738,15 +693,22 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		return basePath;
 	},
-	
+
+	//FIXME: private. inline?
+	getCurrentHtmlFolderPath: function(){
+		var currentHtmlFilePath = this.getFullResourcePath();
+		return currentHtmlFilePath.getParentPath();
+	},
+
+	//FIXME: private
 	getRelativeFileString: function(filename){
 		var currentHtmlFolderPath = this.getCurrentHtmlFolderPath();
 		var folderPath = this.getCurrentBasePath();
 		var filePath = folderPath.append(filename);
-		var relativeFile = filePath.relativeTo(currentHtmlFolderPath).toString();
-		return relativeFile;
+		return filePath.relativeTo(currentHtmlFolderPath).toString();
 	},
-	
+
+	//FIXME: consider inlining.  Is caching necessary?
 	getAppCssRelativeFile: function(){
 		if(!this._appCssRelativeFile){
 			this._appCssRelativeFile = this.getRelativeFileString('app.css');
@@ -754,6 +716,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return this._appCssRelativeFile;
 	},
 	
+	//FIXME: consider inlining.  Is caching necessary?
 	getAppJsRelativeFile: function(){
 		if(!this._appJsRelativeFile){
 			this._appJsRelativeFile = this.getRelativeFileString('app.js');
@@ -761,7 +724,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return this._appJsRelativeFile;
 	},
 	
-    /* ensures the file has a valid theme.  Adds the users default if its not there alread */
+    /* ensures the file has a valid theme.  Adds the users default if its not there already */
     loadTheme: function(newHtmlParms){
     	/* 
     	 * Ensure the model has a default theme.  Defaulting to Claro for now, should
@@ -820,7 +783,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var body = model.find({elementType:'HTMLElement', tag:'body'},true);
 		body.setAttribute("class", defaultTheme.className);
 		/* add the css */
-		var filePath = defaultTheme.file.getPath();
+		var filePath = defaultTheme.getFile().getPath();
 		defaultTheme.files.forEach(function(file) {
 			var url = new Path(filePath).removeLastSegments(1).append(file).relativeTo(this.getPath(), true);
 			this.addModeledStyleSheet(url.toString(), true);
@@ -869,6 +832,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var modelBodyElement = source.getDocumentElement().getChildElement("body");
 			modelBodyElement.setAttribute(MOBILE_DEV_ATTR, newHtmlParams.device);
 			modelBodyElement.setAttribute(PREF_LAYOUT_ATTR, newHtmlParams.flowlayout);
+			modelBodyElement.setAttribute(COMPTYPE_ATTR, newHtmlParams.comptype);
 			if (newHtmlParams.themeSet){
     			var cmd = new ChangeThemeCommand(newHtmlParams.themeSet, this);
     			cmd._dojoxMobileAddTheme(this, newHtmlParams.themeSet.mobileTheme, true); // new file
@@ -938,7 +902,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			
 			var containerNode = this.containerNode;
 			containerNode.style.overflow = "hidden";
-			var frame = dojo.create("iframe", this.iframeattrs, containerNode);
+			var frame = domConstruct.create("iframe", this.iframeattrs, containerNode);
 			frame.dvContext = this;
 			this.frameNode = frame;
 			/* this defaults to the base page */
@@ -966,20 +930,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				this._getDojoScriptValues(config, subs);
 
 				if (this._bootstrapModules) {
-					var mods = '';
-					this._bootstrapModules.split(',').forEach(function(mod) {
-						mods += ',\'' + mod + '\'';
-					});
-					subs.additionalModules = mods;
+					subs.additionalModules = ',' + this._bootstrapModules.split(',').map(function(mid) {
+						return '\'' + mid + '\'';
+					}).join(',');
 				}
 			}
 
 			if(source.themeCssFiles) { // css files need to be added to doc before body content
-				subs.themeCssFiles = '' +
-				source.themeCssFiles.map(function(file) {
+				subs.themeCssFiles = source.themeCssFiles.map(function(file) {
 					return '<link rel="stylesheet" type="text/css" href="' + file + '">';
-				}).join() +
-				'';
+				}).join('');
 			}
 
 			window["loading" + this._id] = function(parser, htmlUtil) {
@@ -1112,7 +1072,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	_getLoaderPackages: function() {
-		var libs = Library.getUserLibs(this.getBase()),
+		var base = this.getBase(),
+			libs = Library.getUserLibs(base),
 			dojoBase,
 			packages = [];
 		
@@ -1126,8 +1087,23 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		});
 
 		// Add namespace for custom widgets
-// FIXME: should add this only when compound widgets are part of the page
-		libs = libs.concat({ id: 'widgets', root: this._getWidgetFolder() });
+		// FIXME: should add this only when compound widgets are part of the page
+
+		var getWidgetFolder = function(){
+			var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base);
+			if(!prefs.widgetFolder) {
+				prefs.widgetFolder = "WebContent/lib/custom";
+				Preferences.savePreferences('davinci.ui.ProjectPrefs', base, prefs);
+			}
+		
+			var folder = prefs.widgetFolder;
+			while(folder.length>1 && (folder.charAt(0)=="." || folder.charAt(0)=="/")) {
+				folder = folder.substring(1);
+			}
+			return folder;
+		};
+
+		libs = libs.concat({ id: 'widgets', root: getWidgetFolder() });
 
 		libs.forEach(function(lib) {
 			var id = lib.id;
@@ -1220,7 +1196,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var active = this.isActive();
 		if(active){
 			this.select(null);
-			dojo.forEach(this.getTopWidgets(), this.detach, this);
+			this.getTopWidgets().forEach(this.detach, this);
 		}
 		var states = {},
 		    containerNode = this.getContainerNode();
@@ -1228,21 +1204,20 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if (data.maqAppStates) {
 			states.body = data.maqAppStates;
 		}
-		dojo.forEach(this.getTopWidgets(), function(w){
+		this.getTopWidgets().forEach(function(w){
 			if(w.getContext()){
 				w.destroyWidget();
 			}
 		});
 
 		// remove all registered widgets
-        this.getDijit().registry.forEach(function(w) {
+        this.getGlobal().dijit.registry.forEach(function(w) { //FIXME: use require?
               w.destroy();           
         });
         
         //FIXME: Temporary fix for #3030. Strip out any </br> elements
         //before stuffing the content into the document.
-        var brRE = /<\s*\/\s*br\s*>/gi;
-        var content = content.replace(brRE, "");
+        content = content.replace(/<\s*\/\s*br\s*>/gi, "");
 
         // Set content
 		//  Content may contain inline scripts. We use dojox.html.set() to pull
@@ -1279,17 +1254,18 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 		// Convert all text nodes that only contain white space to empty strings
 		containerNode.setAttribute('data-maq-ws','collapse');
-		var model_bodyElement = this._srcDocument.getDocumentElement().getChildElement("body");
-		model_bodyElement.addAttribute('data-maq-ws','collapse');
+		var modelBodyElement = this._srcDocument.getDocumentElement().getChildElement("body");
+		if (modelBodyElement) {
+			modelBodyElement.addAttribute('data-maq-ws', 'collapse');	
+		}
+
 		// Set the mobile agaent if there is a device on the body
 		// We need to ensure it is set before the require of deviceTheme is executed
-		var djConfig = this.getDojo().config;  // TODO: use require
+		var djConfig = this.getGlobal().dojo.config;  // TODO: use require
 		var bodyElement = this.getDocumentElement().getChildElement("body");
-		var device = bodyElement.getAttribute(MOBILE_DEV_ATTR);
+		var device = bodyElement && bodyElement.getAttribute(MOBILE_DEV_ATTR);
 		if (device && djConfig) {
-			var ua = Silhouette.getMobileTheme(device + '.svg');
-			ua = ua || "other";
-			djConfig.mblUserAgent = ua;
+			djConfig.mblUserAgent = Silhouette.getMobileTheme(device + '.svg') || "other";
 		} 
 				
 		// Collapses all text nodes that only contain white space characters into empty string.
@@ -1317,6 +1293,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * initial loading.
 	 */
 	onload: function() {
+		// Don't actually get the composition type. Calling this routine
+		// causes a maq-data-comptype attribute to be added to old documents
+		// if it doesn't exist already.
+		this.getCompType();
+		
 		// add the user activity monitoring to the document and add the connects to be 
 		// disconnected latter
 		this._connects = (this._connects || []).concat(UserActivityMonitor.addInActivityMonitor(this.getDocument()));
@@ -1335,16 +1316,22 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		this._configDojoxMobile(true); // loading
 		/*
-		 * Need to let the widgets get parsed, and things finsh loading async
+		 * Need to let the widgets get parsed, and things finish loading async
 		 */
 		window.setTimeout(function(){
 			this.widgetAddedOrDeleted();
 			connect.publish('/davinci/ui/context/loaded', [this]);
-			this.editor.setDirty(this.hasDirtyResources());
+			if(this._markDirtyAtLoadTime){
+				// Hack to allow certain scenarios to force the document to appear
+				// as dirty at document load time
+				this.editor.setDirty(true);
+				delete this._markDirtyAtLoadTime;
+				this.editor.save(true);		// autosave
+			}else{
+				this.editor.setDirty(this.hasDirtyResources());
+			}
+			this.addPseudoClassSelectors();
 		}.bind(this), 500);
-
-
-	   
 	},
 
 	/**
@@ -1365,8 +1352,43 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}, this);
 		var promise = new Deferred();
 		all(prereqs).then(function() {
+			//FIXME: dojo/ready call may no longer be necessary, now that parser requires its own modules
 			this.getGlobal()["require"]("dojo/ready")(function(){
 				try {
+					// M8: Temporary hack for #3584.  Should be moved to a helper method if we continue to need this.
+					// Because of a race condition, override _getValuesAttr with a fixed value rather than querying
+					// individual slots.
+					try {
+						var sws = this.getGlobal()["require"]("dojox/mobile/SpinWheelSlot");
+						if (sws && sws.prototype && !sws.prototype._hacked) {
+							sws.prototype._hacked = true;
+							console.warn("Patch SpinWheelSlot");
+							var keySuper = sws.prototype._getKeyAttr;
+							sws.prototype._getKeyAttr = function() {
+		                        if(!this._started) { 
+		                        	if(this.items) {
+		                        		for(var i = 0; i < this.items.length; i++) {
+		                        			if(this.items[i][1] == this.value) {
+		                        				return this.items[i][0];
+		                        			}
+		                        		}
+		                        	}
+		                        	return null;
+		                        }
+		                        return keySuper.apply(this);
+							};
+							var valueSuper = sws.prototype._getValueAttr;
+							sws.prototype._getValueAttr = function() {
+		                        if(!this._started){ 
+		                        	return this.value;
+		                        }
+		                        return valueSuper.apply(this);
+							};
+						}
+					}catch(e){
+						// ignore
+					}
+
 					this.getGlobal()["require"]("dojo/parser").parse(containerNode).then(function(){
 						promise.resolve();						
 
@@ -1399,7 +1421,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		/*
 		promise.otherwise(function(e){
 			// remove all registered widgets, some may be partly constructed.
-			this.getDijit().registry.forEach(function(w){
+			this.getGlobal().dijit.registry.forEach(function(w){
 				  w.destroy();			 
 			});
 
@@ -1501,10 +1523,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if(oldBodyClasses != newBodyClasses){
 			var containerNode = this.getContainerNode();
 			if(oldBodyClasses){
-				dojo.removeClass(containerNode, oldBodyClasses);
+				domClass.remove(containerNode, oldBodyClasses);
 			}
 			if(newBodyClasses){
-				dojo.addClass(containerNode, newBodyClasses);
+				domClass.add(containerNode, newBodyClasses);
 			}
 		}
 
@@ -1554,19 +1576,19 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * @param url {string}
 	 */
 	loadStyleSheet: function(url) {
-        // don't add if stylesheet is already loaded in the page
-		var doc = this.getDocument();
-		var dj = this.getDojo(); // TODO: use require
-		var links = dj.query('link');
-		var found = links.some(function(val) {
+		var doc = this.getDocument(),
+			query = this.getGlobal()["require"]("dojo/query"),
+			links = query('link');
+
+		if (links.some(function(val) {
 			return val.getAttribute('href') === url;
-		});
-		if (found) {
+		})) {
+	        // don't add if stylesheet is already loaded in the page
 			return;
 		}
 
 		dojo.withDoc(doc, function() {
-	        var link = dojo.create('link', {
+	        var newLink = domConstruct.create('link', {
 	            rel: 'stylesheet',
 	            type: 'text/css',
 	            href: url
@@ -1576,31 +1598,28 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	        var headElem = doc.getElementsByTagName('head')[0],
 				isAppCss = url.indexOf('app.css') > -1,
 				isContentCss = url.indexOf('content.css') > -1,
-				appCssLink, contentCssLink, appCssIndex, contentCssIndex;
-			for(var i=0; i<links.length; i++){
-				if(links[i].href.indexOf('app.css') > -1){
-					appCssLink = links[i];
-					appCssIndex = i;
-				}else if(links[i].href.indexOf('content.css') > -1){
-					contentCssLink = links[i];
-					contentCssIndex = i;
+				appCssLink, contentCssLink;
+
+			links.forEach(function(link) {
+				if(link.href.indexOf('app.css') > -1){
+					appCssLink = link;
+				}else if(link.href.indexOf('content.css') > -1){
+					contentCssLink = link;
 				}
-			}
-			var index,
-				beforeChild;
+			});
+
+			var beforeChild;
 			if(!isContentCss){
 				if(isAppCss && contentCssLink){
 					beforeChild = contentCssLink;
-					index = contentCssIndex;
 				}else{
 					beforeChild = appCssLink;
-					index = appCssIndex;
 				}
 			}
 			if(beforeChild){
-				headElem.insertBefore(link, beforeChild);
+				headElem.insertBefore(newLink, beforeChild);
 			}else{
-		        headElem.appendChild(link);
+		        headElem.appendChild(newLink);
 			}
 		});
 	},
@@ -1610,16 +1629,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * @param url {string}
 	 */
     unloadStyleSheet: function(url) {
-        var self = this;
-		var doc = this.getDocument();
-		var dj = this.getDojo(); // TODO: use require
-		var links = dj.query('link');
-        links.some(function(val, idx) {
-            if (val.getAttribute('href') === url) {
-                dojo.destroy(val);
-                return true; // break
-            }
-        });
+    	var userWin = this.getGlobal();
+    	if(userWin && userWin["require"]){
+    		var query = userWin["require"]("dojo/query");
+    		query('link').filter(function(node) {
+                return node.getAttribute('href') == url;
+    		}).forEach(domConstruct.destroy);
+    	}
     },
 
 	addModeledStyleSheet: function(url, skipDomUpdate) {
@@ -1629,9 +1645,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if (!this.model.hasStyleSheet(url)) {
 			// Make sure app.css is the last CSS file within the list of @import statements
 	        // FIXME: Shouldn't hardcode this sort of thing
-			var isAppCss = (url.indexOf('app.css') > -1);
+			var isAppCss = url.indexOf('app.css') > -1;
 			var appCssImport;
-			var styleElem = this.model.find({'elementType':"HTMLElement",'tag':'style'}, true);
+			var styleElem = this.model.find({elementType: "HTMLElement", tag: 'style'}, true);
 			if(styleElem){
 				var kids = styleElem.children;
 				for(var i=0; i<kids.length; i++){
@@ -1644,21 +1660,20 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this.model.addStyleSheet(url, undefined, undefined, beforeChild);
 			
 			for (var css in this.model._loadedCSS) {
-				this._loadedCSSConnects.push(connect.connect(this.model._loadedCSS[css], 'onChange', this,
-						'_themeChange'));
+				this._loadedCSSConnects.push(
+					connect.connect(this.model._loadedCSS[css], 'onChange', this, '_themeChange'));
 			}
 		}
 	},
 
+	//FIXME: refactor with hotModifyCSSRule to another module and use in both PageEditor and ThemeEditor
 	_themeChange: function(e){
 		if (e && e.elementType === 'CSSRule'){
 			this.editor.setDirty(true); // a rule change so the CSS files are dirty. we need to save on exit
 			this.hotModifyCssRule(e); 
 		}
-
 	},
 
-	
 	// Temporarily stuff a unique class onto element with each _preserveStates call.
 	// Dojo will sometimes replace the widget's root node with a different root node
 	// and transfer IDs and other properties to subnodes. However, Dojo doesn't mess
@@ -1672,7 +1687,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	_preserveStates: function(node, cache){
 		var statesAttributes = davinci.ve.states.retrieve(node);
 //FIXME: Need to generalize this to any states container
-		if (node.tagName != "BODY" && (statesAttributes.maqAppStates || statesAttributes.maqDeltas)) {
+		if (node.tagName.toUpperCase() != "BODY" && (statesAttributes.maqAppStates || statesAttributes.maqDeltas)) {
 			var tempClass = this.maqTempClassPrefix + this.maqTempClassCount;
 			node.className = node.className + ' ' + tempClass;
 			this.maqTempClassCount++;
@@ -1687,7 +1702,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				cache[tempClass].style = node.style.cssText;
 			}else{
 				// Shouldn't be here
-				debugger;
+				console.error('Context._preserveStates: fail'); // FIXME: throw on error?
 			}
 		}
 	},
@@ -1721,7 +1736,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 			var widget = Widget.getWidget(node);
 //FIXME: Need to generalize beyond just BODY
-			var isBody = (node.tagName == 'BODY');
+			var isBody = (node.tagName.toUpperCase() == 'BODY');
 //FIXME: Temporary - doesn't yet take into account nested state containers
 			var srcElement = widget._srcElement;
 			maqAppStatesString = maqDeltasString = maqAppStates = maqDeltas = null;
@@ -1786,7 +1801,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			
 //FIXME: Need to generalize beyond just BODY
 /*FIXME: OLD LOGIC
-			if(node.tagName != 'BODY'){
+			if(node.tagName.toUpperCase() != 'BODY'){
 */
 			if(maqDeltas){
 				davinci.states.transferElementStyle(node, cache[id].style);
@@ -1802,7 +1817,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// values for their current state (which was set to initial state earlier
 		// in this routine).
 		var allStateContainers = davinci.ve.states.getAllStateContainers(this.rootNode);
-		var statesInfo = [];
+		var statesInfo = []; //FIXME: unused?
 		for(var i=0; i<allStateContainers.length; i++){
 			var stateContainer = allStateContainers[i];
 			if(stateContainer._maqAppStates && typeof stateContainer._maqAppStates.current == 'string'){
@@ -1848,6 +1863,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return doc ? windowUtils.get(doc) : null;
 	},
 
+	//DEPRECATED
 	getDojo: function(){
 		var win = this.getGlobal();
 		//FIXME: Aren't we asking for downstream bugs if we return "dojo", which is Maqetta's dojo
@@ -1855,6 +1871,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return (win && win.dojo) || dojo;
 	},
 
+	//DEPRECATED
 	getDijit: function(){
 		var win = this.getGlobal();
 		return win && win.dijit || dijit;
@@ -1880,24 +1897,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	getTopWidgets: function(){
-		var topWidgets=[];
+		var topWidgets = [];
 		for(var node = this.rootNode.firstChild; node; node = node.nextSibling){
 			if(node.nodeType == 1 && node._dvWidget){
 				topWidgets.push(node._dvWidget);
 			}
 		}
 		return topWidgets;
-	},
-
-	//FIXME: remove?
-	getContentPosition: function(position){
-		if(!position){
-			return undefined;
-		}
-		if(position.target){ // event
-			position = {x: position.pageX, y: position.pageY};
-		}
-		return position;
 	},
 
 	getCommandStack: function(){
@@ -1927,7 +1933,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	
 			if (!metadata.queryDescriptor(widget.type, "isInvisible")) {
 				//Get the margin box (deferring to helper when available)
-				var box = null;
 				var helper = widget.getHelper();
 				if(helper && helper.getMarginBoxPageCoords){
 					box = helper.getMarginBoxPageCoords(widget);
@@ -1980,6 +1985,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				this.updateFocus(selection[i], i);			
 			}
 		}
+		//Update all of the highlights that show which widgets appear in a custom state
+		// but which are actually visible on the base state and "shining through" to custom state
+		States.updateHighlightsBaseStateWidgets(this);
 	},
 	
 	select: function(widget, add, inline){
@@ -2013,7 +2021,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 			var parent = widget.getParent();
 			if(parent){
-				parent.selectChild(widget);
+				var parentHelper = parent.getHelper();
+				if (parentHelper && parentHelper.selectChild){
+					parentHelper.selectChild(parent, widget);
+				} else {
+					parent.selectChild(widget);
+				}
 			}
 			
 			if(!this._selection || this._selection.length > 1 || selection.length > 1 || this.getSelection() != widget){
@@ -2088,12 +2101,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				if(domNode.offsetLeft==0 && domNode.offsetTop==0 && domNode.offsetWidth==0 && domNode.offsetHeight==0){
 					this.deselect(widget);
 				}else{
-					while(domNode && domNode.tagName != 'BODY'){
+					while(domNode && domNode.tagName.toUpperCase() != 'BODY'){
 						// Sometimes browsers haven't set up defaultView yet,
-						// and dojo.style will raise exception if defaultView isn't there yet
+						// and domStyle.get will raise exception if defaultView isn't there yet
 						if(domNode && domNode.ownerDocument && domNode.ownerDocument.defaultView){
-							var computed_style_display = dojo.style(domNode, 'display');
-							if(computed_style_display == 'none'){
+							var computedStyleDisplay = domStyle.get(domNode, 'display');
+							if(computedStyleDisplay == 'none'){
 								this.deselect(widget);
 								break;
 							}
@@ -2110,39 +2123,21 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var i = this.getSelection().indexOf(widget);
 		return i == -1 ? null : this._focuses[i];
 	},
-	
+
 	/**
-	 * Sees if (pageX,pageY) is within bounds of any of the selection rectangles
-	 * If so, return the corresponding selected widget
+	 * Returns true if the given node is part of the focus (ie selection) chrome
 	 */
-	checkFocusXY: function(pageX, pageY){
-		var selection = this.getSelection();
-		for(var i=0; i<selection.length; i++){
-			var box = this._focuses[i].getBounds();
-			if(pageX >= box.l && pageX <= box.l + box.w &&
-					pageY >= box.t && pageY <= box.t + box.h){
-				return selection[i];
+	isFocusNode: function(node){
+		if(this._selection && this._selection.length && this._focuses && this._focuses.length >= this._selection.length){
+			for(var i=0; i<this._selection.length; i++){
+				if(this._focuses[i].isFocusNode(node)){
+					return true;
+				}
 			}
 		}
-		return null;
+		return false;
 	},
-	
-	// Hide all focus objects associated with current selection
-	selectionHideFocus: function(){
-		var selection = this.getSelection();
-		for(var i=0; i<selection.length; i++){
-			this._focuses[i].hide();
-		}
-	},
-	
-	// Show all focus objects associated with current selection
-	selectionShowFocus: function(){
-		var selection = this.getSelection();
-		for(var i=0; i<selection.length; i++){
-			this._focuses[i].show(selection[i], {});
-		}
-	},
-	
+
 	focus: function(state, index, inline){
 		this._focuses = this._focuses || [];
 		var clear = false;
@@ -2212,8 +2207,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		}
 	},
-	
 
+	//FIXME: refactor.  Does not need to be in Context.js
 	getPreference: function(name){
 		if(!name){
 			return undefined;
@@ -2243,12 +2238,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		}
 	},
-	
+
+	//FIXME: getter seems to have side-effects.
 	getFlowLayout: function() {
-		var htmlElement = this.getDocumentElement(),
-			bodyElement = htmlElement.getChildElement("body"),
-			flowLayout = bodyElement.getAttribute(PREF_LAYOUT_ATTR),
-			flowLayoutP6 = bodyElement.getAttribute(PREF_LAYOUT_ATTR_P6);
+		var bodyElement = this.getDocumentElement().getChildElement("body"),
+			flowLayout = bodyElement && bodyElement.getAttribute(PREF_LAYOUT_ATTR),
+			flowLayoutP6 = bodyElement && bodyElement.getAttribute(PREF_LAYOUT_ATTR_P6);
 		if(!flowLayout && flowLayoutP6){
 			// Migrate from old attribute name (data-maqetta-flow-layout) to new attribute name (data-maq-flow-layout)
 			bodyElement.removeAttribute(PREF_LAYOUT_ATTR_P6);
@@ -2268,10 +2263,22 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	setFlowLayout: function(flowLayout){
-		var htmlElement=this.getDocumentElement();
-		var bodyElement=htmlElement.getChildElement("body");
-		bodyElement.addAttribute(PREF_LAYOUT_ATTR,''+flowLayout);
+		var bodyElement = this.getDocumentElement().getChildElement("body");
+		if (bodyElement) {
+			bodyElement.addAttribute(PREF_LAYOUT_ATTR, ''+flowLayout);
+		}
 		return flowLayout;
+	},
+	
+	getCompType: function(){
+		var bodyElement = this.getDocumentElement().getChildElement("body"),
+			comptype = bodyElement && bodyElement.getAttribute(COMPTYPE_ATTR);
+		if (bodyElement && !comptype){ 
+			var device = this.getMobileDevice();
+			comptype = device ? 'mobile' : 'desktop';
+			bodyElement.addAttribute(COMPTYPE_ATTR, comptype);
+		}
+		return comptype;
 	},
 
 	getActiveTool: function(){
@@ -2287,33 +2294,21 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this._activeTool = this._defaultTool;
 		}
 		this._activeTool.activate(this);
-		connect.publish("/davinci/ve/activeToolChanged",[this, tool]);
+		connect.publish("/davinci/ve/activeToolChanged", [this, tool]);
 	},
 	
 	// getter/setter for currently active drag/drop object
+	// FIXME: remove getter/setter
 	getActiveDragDiv: function(){
-		return(this._activeDragDiv);
+		return this._activeDragDiv;
 	},
+
 	setActiveDragDiv: function(activeDragDiv){
 		this._activeDragDiv = activeDragDiv;
 	},
 	
 	blockChange: function(shouldBlock){
-			this._blockChange = shouldBlock;
-	},
-	
-	/**
-	 * Returns true if the given node is part of the focus (ie selection) chrome
-	 */
-	isFocusNode: function(node){
-		if(this._selection && this._selection.length > 0 && this._focuses && this._focuses.length >= this._selection.length){
-			for(var i=0; i<this._selection.length; i++){
-				if(this._focuses[i].isFocusNode(node)){
-					return true;
-				}
-			}
-		}
-		return false;
+		this._blockChange = shouldBlock;
 	},
 
 	onMouseDown: function(event){
@@ -2324,15 +2319,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	onDblClick: function(event){
-
 	},
-	
 
 	onMouseMove: function(event){
 		if(this._activeTool && this._activeTool.onMouseMove && !this._blockChange){
 			this._activeTool.onMouseMove(event);
 		}
-		
 	},
 
 	onMouseUp: function(event){
@@ -2340,20 +2332,19 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			this._activeTool.onMouseUp(event);
 		}
 		this.blockChange(false);
+		Topic.publish("/davinci/ve/context/mouseup", event);
 	},
 
 	onMouseOver: function(event){
 		if(this._activeTool && this._activeTool.onMouseOver){
 			this._activeTool.onMouseOver(event);
 		}
-		
 	},
 
 	onMouseOut: function(event){
 		if(this._activeTool && this._activeTool.onMouseOut){
 			this._activeTool.onMouseOut(event);
 		}
-		
 	},
 	
 	onExtentChange: function(focus, oldBox, newBox, applyToWhichStates){
@@ -2483,7 +2474,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		}, this);
 
-		// ALP->WBR: do we still need this? move to ThemeEditor's context?
+		//FIXME: ALP->WBR: do we still need this? move to ThemeEditor's context?
 		if (this.editor.editorID == 'davinci.themeEdit.ThemeEditor'){
 			var helper = Theme.getHelper(this.visualEditor.theme);
 			if(helper && helper.onContentChange){
@@ -2513,12 +2504,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		connect.publish("/davinci/ui/widgetSelected",[selection]);
 	},
 
+	//FIXME: candidate to move to a separate module
 	hotModifyCssRule: function(r){
 		
 		function updateSheet(sheet, rule){
 			var url = systemResource.findResource(rule.parent.url).getURL(); // FIXME: can we skip findResource?
 			var fileName = URLRewrite.encodeURI(url);
 			var selectorText = rule.getSelectorText();
+			if (selectorText.indexOf(":") > -1) {
+				selectorText = CSSThemeProvider_replacePseudoClass(selectorText);
+			}
 //			console.log("------------  Hot Modify looking  " + fileName + " ----------------:=\n" + selectorText + "\n");
 			selectorText = selectorText.replace(/^\s+|\s+$/g,""); // trim white space
 			//var rules = sheet.cssRules;
@@ -2527,7 +2522,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				var rules = foundSheet.cssRules;
 				var r = 0;
 				for (r = 0; r < rules.length; r++){
-					if (rules[r] instanceof CSSStyleRule){
+					if (rules[r].type && rules[r].type == CSSRule.STYLE_RULE){
 						if (rules[r].selectorText == selectorText) {
 							/* delete the rule if it exists */
 							foundSheet.deleteRule(r);
@@ -2538,8 +2533,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					}
 					
 				}
-				if (rule.properties.length > 0) { // only inser rule if it has properties
+				if (rule.properties.length) { // only insert rule if it has properties
 					var text = rule.getText({noComments:true});
+					if (text.indexOf(":") > -1) {
+						text = CSSThemeProvider_replacePseudoClass(text);
+					}
 //					console.log("------------  Hot Modify Insert " + foundSheet.href +  "index " +r+" ----------------:=\n" + text + "\n");
 					foundSheet.insertRule(text, r);
 				}
@@ -2556,10 +2554,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var foundSheet;
 			var rules = sheet.cssRules;
 			for (var r = 0; r < rules.length; r++){
-			    // NOTE: For some reason the instanceof check does not work on Safari..
-			    // So we are testing the constructor instead, but we have to test it as a string...
 			    var x = '' + rules[r].constructor;
-				if (rules[r] instanceof CSSImportRule || x === '[object CSSImportRuleConstructor]'){
+				if (rules[r].type && rules[r].type === CSSRule.IMPORT_RULE){
 				    var n = rules[r].href;
 					if (rules[r].href == sheetName) {
 						foundSheet = rules[r].styleSheet;
@@ -2579,241 +2575,51 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			return updateSheet(sheet, r);
 		});
 	},
-
-	ruleSetAllProperties: function(rule, values){
-		rule.removeAllProperties();
-		for(i = 0;i<values.length;i++){
-			rule.addProperty(values[i].name, values[i].value); // #23 all we want to put back is the values
-		}
-	},
 	
-	modifyRule: function(rule, values){
-		var i,
-			p,
-			prop,
-			existingProps = [];
-		var removedProp = []; //#2166
-		// Remove any properties within rule that are listed in the "values" parameter 
-		for(i = 0;i<values.length;i++){
-			for(var name in values[i]){
-				var prop = rule.getProperty(name);
-				if (prop) {
-					removedProp.push(prop); //#2166
-				}
-				rule.removeProperty(name);
-			}
-		}
-		// Create a merged list of properties from existing rule and "values" parameter
-		for(p=0; p<rule.properties.length; p++){
-			prop = rule.properties[p];
-			var o = {};
-			o[prop.name] = prop.value;
-			existingProps.push(o);
-		}
-		var cleaned = existingProps.concat(dojo.clone(values));
-		// return a sorted array of sorted style values.
-		function indexOf(value){
-			for(var i=0;i<cleaned.length;i++){
-				if(cleaned[i].hasOwnProperty(value)){
-					return i;
-				}
-			}
-			return -1;
-		}
-		var shorthands = CSSModel.shorthand;
-		var lastSplice = 0;
-		/* re-order the elements putting short hands first */
-		for(i=0;i<shorthands.length;i++) {
-			var index = indexOf(shorthands[i][0]);
-			if(index>-1) {
-				var element = cleaned[index];
-				cleaned.splice(index,1);
-				cleaned.splice(lastSplice,0, element);
-				lastSplice++;
-			}
-		}
-		// Clear out all remaining prop declarations in the rule
-		for(p=rule.properties.length-1; p>=0; p--){
-			prop = rule.properties[p];
-			if(prop){
-				removedProp.push(rule.getProperty(prop.name)); //#2166
-				rule.removeProperty(prop.name);
-			}
-		}
-		// Add all prop declarations back in, in proper order
-		for(i = 0;i<cleaned.length;i++){
-			for(var name in cleaned[i]){
-				if (cleaned[i][name] && cleaned[i][name] !== '') { 
-					rule.addProperty(name, cleaned[i][name]);
-					//#2166 find the old prop to grab comments if any
-					for (var x = 0; x < removedProp.length; x++) {
-						if (removedProp[x].name === name) {
-							var newProp = rule.getProperty(name, cleaned[i][name]);
-							if (removedProp[x].comment) { 
-								// add back the comments before this prop from the old CSS file
-								newProp.comment = removedProp[x].comment; 
-							}
-							if (removedProp[x].postComment) { 
-								// add back the comments after this prop from the old CSS file
-								newProp.postComment = removedProp[x].postComment; 
-							}
-							removedProp.splice(x,1); // trim out the prop so we don't process this more than once
+	addPseudoClassSelectors: function (selectors) {
+		
+		function updateSheet(sheet){
+
+			if (sheet){
+				var rules = sheet.cssRules;
+				var r = 0;
+				for (r = 0; r < rules.length; r++){
+					// NOTE: For some reason the instanceof check does not work on Safari..
+				    // So we are testing the constructor instead, but we have to test it as a string...
+				    var y = rules[r];
+					if (y.type && y.type === CSSRule.IMPORT_RULE){
+						updateSheet(rules[r].styleSheet);
+					} else if (rules[r].type == CSSRule.STYLE_RULE){
+						var selectorText = rules[r].selectorText;
+						if (selectorText.indexOf(":") > -1) {
+							selectorText = CSSThemeProvider_replacePseudoClass(selectorText);
+							/*
+							 * For now we will just replace the selector text,
+							 * if this does not work well we can just append
+							 */
+							y.selectorText = selectorText;
+							/* delete the rule if it exists */
+							sheet.deleteRule(r);
+							sheet.insertRule(y.cssText, r);
 							break;
 						}
-						
 					}
-					//#2166 find the old prop to grab comments if any
+					
 				}
+				return true;
 			}
-		}
-		
-		//this.hotModifyCssRule(rule); // #23 this get called by _themeChange
-	},
-	
-	getRelativeMetaTargetSelector: function(target){
-		
-		var theme = this.getThemeMeta();
-		if(!theme) {
-			return [];
-		}
-/*FIXME: OLD LOGIC
-//FIXME: Ramifications if nested states?
-//FIXME: getState(node)?
-		var state = davinci.ve.states.getState();
-		
-		if(!state) {
-			state = "Normal";
-		}
-*/
-		var state = "Normal";
-		var widget = this.getSelection();
-		if(!widget.length){
-			return [];
-		}
-		widget = widget[0];
-		
-		var widgetType = theme.loader.getType(widget);
-	
-		return theme.metadata.getRelativeStyleSelectorsText(widgetType, state, null, target, this.getTheme().className);
-		
-	},
-		
-	getSelector: function(widget, target){
-		// return rules based on metadata IE theme
-		
-		var theme = this.getThemeMeta();
-		if(!theme){
-			return [];
-		}
-		// Note: Let's be careful to not get confused between the states in theme metadata
-		// and the user-defined interactive states that are part of a user-created HTML page
-		// For theme editor, we need to use whatever state is selected in States palette
-		// For page editor, always use "Normal"
-		var state = "Normal";
-/*FIXME: OLD LOGIC
-		if (this.editor.editorID == 'davinci.themeEdit.ThemeEditor'){
-//FIXME: Ramifications if nested states? (Maybe OK: theme editor specific)
-//getState(node)
-			state = davinci.ve.states.getState();
-		}
-*/
-		
-		var widgetType = theme.loader.getType(widget),
-			selectors = theme.metadata.getStyleSelectors(widgetType,state);
-
-		if(selectors){
-			for(var name in selectors){
-				for(var i = 0; i < selectors[name].length; i++){
-					for(var s = 0 ; s < target.length; s++) {
-						if(target[s] == selectors[name][i]){
-							return name;
-						}
-					}
-				}
-			}
-		}
-	},
-	
-	getMetaTargets: function(widget, target){
-		var name = this.getSelector(widget, target),
-			model = this.getModel();
-		var rules = model.getRule(name); 
-		/*
-		 * getRule returns all rules that match the selector, this can be to many in the case of combined rules
-		 * so weed them out so we have an exact match to the metaData
-		 */
-		var retRules = [];
-		rules.forEach(function(rule){
-			if (rule.getSelectorText() === name) {
-				retRules.push(rule);
-			}
-		}.bind(this));
-		
-		return retRules; // model.getRule(name);
-	},
-	
-	/* returns the top/target dom node for a widget for a specific property */
-	
-	getWidgetTopDom: function (widget,propertyTarget){
-	
-		var selector = this.getSelector(widget, propertyTarget);
-		// find the DOM node associated with this rule.
-		function findTarget(target, rule){
-			if(rule.matches(target)) {
-				return target;
-			}
-			for(var i = 0;i<target.children.length;i++){
-				return findTarget(target.children[i], rule); //FIXME: return stops for-loop at i=0
-			}
-		}
-		if(selector){
-			var rule = new CSSRule();
-			rule.setText(selector + "{}");
-			return findTarget(widget.domNode || widget, rule);
-		}
-		return null;
-	},
-	
-	getSelectionCssRules: function(targetDomNode){
-		this._cssCache = this._cssCache || {}; // prevent undefined exception in theme editor
-		var hashDomNode = function (node) {
-			return node.id + "_" + node.className;
-		};
-		var selection = this.getSelection();
-		if (!targetDomNode && !selection.length) {
-			return {rules:null, matchLevels:null};
-		}
-		
-		var targetDom = targetDomNode || selection[0].domNode || selection[0],
-			domHash = hashDomNode(targetDom);
-		
-		/*
-		if(this._cssCache[domHash])
-			return this._cssCache[domHash];
-		*/
-		
-		if(selection.length){
-			var match = this._cssCache[domHash] = this.model.getMatchingRules(targetDom, true);
-			if (this.cssFiles) {
-				this.cssFiles.forEach(function(file){
-					file.getMatchingRules(targetDom, match.rules, match.matchLevels); // adds the dynamic rules to the match
-				});
-				//this.cssFiles[0].getMatchingRules(targetDom, match.rules, match.matchLevels); // adds the dynamic rules to the match
-			}
-			match.rules.forEach(function(rule) {
-				/* remove stale elements from the cache if they change */
-				var handle = dojo.hitch(rule, "onChange", this, function(){
-					delete this._cssCache[domHash];
-					connect.unsubscribe(handle);
-				});
-			}, this);
-			
-			return match;
+			return false;
 		}
 
-		return {rules:null, matchLevels:null};
+		
+		var sheets = this.getDocument().styleSheets;
+		dojo.some(sheets, function(sheet) {
+			return updateSheet(sheet);
+		});
+
 	},
 	
+	//FIXME: refactor. Move to Cascade.js?  need to account for polymorphism in themeEditor/Context
 	getStyleAttributeValues: function(widget){
 		//FIXME: This totally seems to have missed the array logic
 		var vArray = widget ? widget.getStyleValues() : [];
@@ -2892,7 +2698,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		//	  See bug 7585.
 		if (!isDojoJS && !skipDomUpdate) {
 			var context = this,
-				absoluteUrl = new dojo._Url(this.getDocument().baseURI, url).toString();
+				absoluteUrl = new dojo._Url(this.getDocument().baseURI, url).toString(); //FIXME: use require.toUrl
 			// This xhrGet() used to include `handleAs: "javascript"`, surrounded
 			// by a `dojo.withGlobal`.  However, `dojo.eval` regressed in Dojo 1.7,
 			// such that it no longer evals using `dojo.global` -- instead evaling
@@ -3077,7 +2883,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		}
 
-		if (! scriptText) {
+		if (!scriptText) {
 			// create a new script element
 			var script = new HTMLElement('script');
 			script.addAttribute('type', 'text/javascript');
@@ -3114,7 +2920,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	/**
-	 * Add element to <head> of document.  Modeled on dojo.create().
+	 * Add element to <head> of document.  Modeled on domConstruct.create().
 	 */
 	_addHeadElement: function(tag, attrs/*, refNode, pos*/, allowDup) {
 		var head = this.getDocumentElement().getChildElement('head');
@@ -3143,7 +2949,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		
 		// add to DOM...
 		dojo.withGlobal(this.getGlobal(), function() {
-			dojo.create(tag, attrs, query('head')[0]);
+			domConstruct.create(tag, attrs, query('head')[0]);
 		});
 	},
 	
@@ -3177,11 +2983,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					queryStr += '[' + name + '="' + attrs[name] + '"]';
 				}
 			}
-			//dojo.destroy(query(queryStr)[0]);
-			var n = query(queryStr)[0];
-			if (n){ // throws exception if n is null
-			    dojo.destroy(n);
-			}
+			query(queryStr).orphan();
 		});
 	},
 
@@ -3220,7 +3022,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var dojoScript = this._getDojoJsElem(),
 			djConfig = dojoScript.getAttribute('data-dojo-config');
 		djConfig = djConfig ? require.eval("({ " + djConfig + " })", "data-dojo-config") : {};
-		var regEx ='';
+		var regEx = "";
 		/*
 		 * This is nasty, but djConfig.mblLoadCompatPattern is a regexp and if you attempt to 
 		 * JSON.stringfy a regexp you get "{}" not very useful
@@ -3256,9 +3058,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var str = JSON.stringify(djConfig).slice(1, -1).replace(/"/g, "'");
 		/*
 		 * This is where we add the regexp string to the stringified object.
-		 * Read the not above about why this is need.
+		 * Read the note above about why this is needed.
 		 */
-		str = str + regEx,
+		str += regEx,
 		dojoScript.setAttribute('data-dojo-config', str);
 	},
 
@@ -3292,9 +3094,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// monitoring of which stylesheets get loaded for a given theme
 
 		try {
-			var dm = this.getGlobal()['require']('dojox/mobile');
-			var deviceTheme = this.getGlobal()['require']('dojox/mobile/deviceTheme');
-			var djConfig = this.getDojo().config,  // TODO: use require
+			var innerRequire = this.getGlobal()['require'],
+				dm = innerRequire('dojox/mobile'),
+				deviceTheme = innerRequire('dojox/mobile/deviceTheme'),
+				djConfig = this.getGlobal().dojo.config,  // TODO: use require
 				djConfigModel = this._getDojoJsElem().getAttribute('data-dojo-config'),
 				ua = djConfig.mblUserAgent || 'none',
 				themeMap,
@@ -3318,12 +3121,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				// Add the theme path so dojo can locate the *-compat.css files, if any
 				//mblLoadCompatPattern=/\/themes\/.*\.css$/;
 				var themePath = Theme.getThemeLocation().toString().replace(/\//g,'\\/');
-				var re = new RegExp('\/'+themePath+'\/.*\.css$');
+				//var re = new RegExp('\/'+themePath+'\/.*\.css$');
+				var re = new RegExp(''); //*-compat files not used
 				mblLoadCompatPattern=re;
 			}
 			this._addCssForDevice(ua, themeMap, this);
-
-			deviceTheme.themeMap = themeMap;		// djConfig.themeMap = themeMap;
+			if (!Theme.themeMapsEqual(deviceTheme.themeMap, themeMap)) {
+				loading = false;
+				deviceTheme.themeMap = themeMap;		// djConfig.themeMap = themeMap;
+			}
+			
 			if (themeFiles) {
 				djConfig.mblThemeFiles = themeFiles;
 			} else {
@@ -3389,7 +3196,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			cp = this._chooseParent,
 			widgets = params.widgets,
 			data = params.data,
-			eventTarget = params.eventTarget,
+//			eventTarget = params.eventTarget,
 			position = params.position,
 			absolute = params.absolute,
 			currentParent = params.currentParent,
@@ -3404,19 +3211,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// inner function that gets called recurively for each widget in document
 		// The "this" object for this function is the Context object
 		var _updateThisWidget = function(widget){
-			if(params.widgets){
-				if(params.widgets.indexOf(widget) >= 0){
-					// Drag operations shouldn't apply to any of the widget being dragged
-						return;
-					}
-				}
+			if(widgets && widgets.indexOf(widget) >= 0){
+				// Drag operations shouldn't apply to any of the widget being dragged
+				return;
+			}
 			
-			var node = widget.domNode,
-				dj = this.getDojo(),  // TODO: use require
-				computed_style = dj.style(node);
+			var innerStyle = this.getGlobal()['require']('dojo/dom-style'),
+				computedStyle = innerStyle.get(widget.domNode);
 
 			if(doSnapLinesX || doSnapLinesY){
-				Snap.findSnapOpportunities(this, widget, computed_style, doSnapLinesX, doSnapLinesY);
+				Snap.findSnapOpportunities(this, widget, computedStyle, doSnapLinesX, doSnapLinesY);
 			}
 			cp.findParentsXY({data:data, widget:widget, absolute:absolute, position:position, doCursor:doCursor, beforeAfter:beforeAfter});
 			dojo.forEach(widget.getChildren(), function(w){
@@ -3453,34 +3257,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		Snap.clearSnapLines(this);
 		this._chooseParent.cleanup(this);
 	},
-	
-	getThemeMetaDataByWidget: function(widget){
-		
-		var theme = this.getThemeMeta();
-		if (!theme) {
-			return null;
-		}
-		
-		var widgetType = theme.loader.getType(widget);
-		var meta = theme.loader.getMetaData(widgetType);
-		if (!meta && this.cssFiles){
-			// chack the dynamiclly added files
-			for (var i = 0; i < this.cssFiles.length; i++){
-				var dTheme = Theme.getThemeByCssFile(this.cssFiles[i]);
-				if (dTheme) {
-					var themeMeta = Library.getThemeMetadata(dTheme);
-					// found a theme for this css file, check for widget meta data
-					meta = themeMeta.loader.getMetaData(widgetType);
-					if (meta){
-						break;
-					}
-				}
-			}
-			
-		}
-		return meta;
-	},
-	
+
 	registerSceneManager: function(sceneManager){
 		if(!sceneManager || !sceneManager.id){
 			return;
@@ -3523,7 +3300,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var sm = sceneManagers[smIndex];
 			scenesInfo[smIndex] = { sm:sm, sceneContainers:[] };
 			var allSceneContainers = sm.getAllSceneContainers();
-			for(var i=0; i<allSceneContainers.length; i++){
+			for(i=0; i<allSceneContainers.length; i++){
 				var o = {};
 				var sceneContainer = allSceneContainers[i];
 				var currentScene = sm.getCurrentScene(sceneContainer);
@@ -3547,27 +3324,31 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var statesInfo = statesScenes.statesInfo;
 		if(statesInfo){
 			for(var i=0; i<statesInfo.length; i++){
-				var xpath = statesInfo[i].currentStateXPath;
-				var id = this.model.evaluate(xpath).getAttribute('id'),
-					widget = Widget.byId(id, this.getDocument()),
-					node = widget.domNode;
-				States.setState(statesInfo[i].state, node, {focus:statesInfo[i].focus});
+				var info = statesInfo[i],
+					xpath = info.currentStateXPath,
+					element = this.model.evaluate(xpath);
+				if (!element) { continue; }
+				var widget = Widget.byId(element.getAttribute('id'), this.getDocument());
+				States.setState(info.state, widget.domNode, {focus: info.focus});
 			}
 		}
+
 		var scenesInfo = statesScenes.scenesInfo;
-		var sceneManagers = this.sceneManagers;
 		for(var smIndex in scenesInfo){
-			var sm = scenesInfo[smIndex].sm;
-			var allSceneContainers = scenesInfo[smIndex].sceneContainers;
-			for(var i=0; i<allSceneContainers.length; i++){
-				var sceneContainer = allSceneContainers[i];
-				var xpath = sceneContainer.sceneContainerXPath;
-				var id = this.model.evaluate(xpath).getAttribute('id'),
-					widget = Widget.byId(id, this.getDocument()),
+			var sm = scenesInfo[smIndex].sm,
+				allSceneContainers = scenesInfo[smIndex].sceneContainers;
+			for(i=0; i<allSceneContainers.length; i++){
+				var sceneContainer = allSceneContainers[i],
+					xpath = sceneContainer.sceneContainerXPath,
+					element = this.model.evaluate(xpath);
+				if (!element) { continue; }
+				var widget = Widget.byId(element.getAttribute('id'), this.getDocument()),
 					sceneContainerNode = widget.domNode;
+
 				xpath = sceneContainer.currentSceneXPath;
-				id = this.model.evaluate(xpath).getAttribute('id');
-				sm.selectScene({ sceneContainerNode:sceneContainerNode, sceneId:id });
+				element = this.model.evaluate(xpath);
+				if (!element) { continue; }
+				sm.selectScene({ sceneContainerNode: sceneContainerNode, sceneId: element.getAttribute('id') });
 			}
 		}
 	},
@@ -3577,6 +3358,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if(this.editor && this.editor.editorContainer && this.editor.editorContainer.updateToolbars){
 			this.editor.editorContainer.updateToolbars();
 		}
+		//Update all of the highlights that show which widgets appear in a custom state
+		// but which are actually visible on the base state and "shining through" to custom state
+		States.updateHighlightsBaseStateWidgets(this);
 	},
 
 	/**
@@ -3590,11 +3374,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	       	 helper.then(function(result){
 	       		 if (result.helper) {
 	       			 this.theme.helper = result.helper;
-	       			if (result.helper.widgetAddedOrDeleted){
-		    			 result.helper.widgetAddedOrDeleted(this,  resetEverything); 
-					 }
+	       			 if (result.helper.widgetAddedOrDeleted){
+	       				 result.helper.widgetAddedOrDeleted(this, resetEverything); 
+	       			 }
 	       		 }
-	    	 }.bind(this));
+	       	 }.bind(this));
 		}
 	},
 
@@ -3615,20 +3399,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			delete this.widgetHash[widget.id];
 		}
 	},
-	
-	// move to SelectTool.js?
-	getPageLeftTop: function(node){
-		var leftAdjust = node.offsetLeft;
-		var topAdjust = node.offsetTop;
-		var pn = node.offsetParent;
-		while(pn && pn.tagName != 'BODY'){
-			leftAdjust += pn.offsetLeft;
-			topAdjust += pn.offsetTop;
-			pn = pn.offsetParent;
-		}
-		return {l:leftAdjust, t:topAdjust};
-	},
-	
+
 	resizeAllWidgets: function () {
 		this.getTopWidgets().forEach(function (widget) {
 			if (widget.resize) {
@@ -3638,14 +3409,16 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	hasDirtyResources: function(){
+		if(this._htmlFileDirtyOnLoad){}
 		var dirty = false;
-		var baseRes = this.getBaseResource(); // theme editors don't have a base resouce. 
+		var baseRes = systemResource.findResource(this.getDocumentLocation()); // theme editors don't have a base resouce. 
 		if (baseRes){
 			dirty = baseRes.isDirty();
 		}
 		
-		if(dirty)
+		if(dirty) {
 			return dirty;
+		}
 		var visitor = {
 			visit: function(node){
 				if((node.elementType=="HTMLFile" || node.elementType=="CSSFile") && node.isDirty()){
@@ -3656,13 +3429,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		};
 		
 		this.getModel().visit(visitor);
-		if (dirty){
-			return dirty;
-		}
-		
-		dirty = this.dirtyDynamicCssFiles(this.cssFiles);
-		return dirty;
 
+		if (!dirty) {
+			dirty = this.dirtyDynamicCssFiles(this.cssFiles);
+		}
+
+		return dirty;
 	},
 	
 	/**
@@ -3670,9 +3442,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * In the returned result, parents are listed before their children.
 	 */
 	getAllWidgets: function(){
-		var result=[];
-		function find(widget)
-		{
+		var result = [];
+		function find(widget) {
 			result.push(widget);
 			widget.getChildren().forEach(function(child) {
 				find(child);
@@ -3685,37 +3456,132 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	/**
-	 * Returns {l:,t:,w:,h:} of the user document iframe relative to outer frame holding the Maqetta app
+	 * Returns the effective value for the 'display' property for the given widget in the given state.
+	 * Also returns the state which defined the 'display' property.
+	 * @param widget {davinci.ve._Widget} A dvWidget
+	 * @param state [{String}] Optional parameter. If not provided or null or undefined or empty string,
+	 * 		then query for 'display' property on base state. Else, query for 'display' on given state.
+	 * @param overrides [{object}] Optional parameter. If provided, has the following fields
+	 * 			overrides['undefined'] [{string}] - Use this 'display' value for the Background/Normal/undefined state
+	 * 			overrides[state] [{string}] - Use this 'display' value for the state "state"
+	 * @return {Object} with two properties
+	 * 		effectiveDisplayValue {string} none|block|inline-block|etc
+	 * 		effectiveState {string} where "undefined" represents the base/NORMAL state
 	 */
-	getParentIframeBounds: function(){
-		var parentIframe = this.getParentIframe();
-		if(parentIframe){
-			var box = GeomUtils.getBorderBoxPageCoords(parentIframe);
-			return box;
+	getEffectiveDisplayValue: function(widget, state, overrides){
+		var domNode = widget ? widget.domNode : null;
+		var effectiveDisplayValue = 'none';
+		// Quirk in code: Normal state is represented as "undefined" in data structures
+		var effectiveState = state ? state : 'undefined';
+		
+		// If "state" represents a custom state and there is an override 'display' value for that state,
+		// then use that override value
+		if(overrides && typeof overrides[effectiveState] == 'string' && overrides[effectiveState] != '$MAQ_DELETE_PROPERTY$'){
+			effectiveDisplayValue = overrides[effectiveState];
+			stateOverride = true;
+			
+		}else{
+			if(domNode){
+				var stateOverride = false;
+				if(domNode._maqDeltas && !(overrides && overrides[effectiveState] == '$MAQ_DELETE_PROPERTY$')){
+					var style = (domNode._maqDeltas[state] && domNode._maqDeltas[state].style);
+					if(style){
+						for(var i=0; i<style.length; i++){
+							var styleArray = style[i];
+							for(var prop in styleArray){
+								if(prop == 'display'){
+									effectiveDisplayValue = styleArray[prop];
+									stateOverride = true;
+								}
+							}
+						}
+					}
+				}
+				if(!stateOverride){
+					// If there is an override 'display' value for the Background/Normal/undefined state,
+					// then use that override value
+					if(overrides && typeof overrides['undefined'] == 'string'){
+						effectiveDisplayValue = overrides['undefined'];
+					}else{
+						// See if there is a "undefined"/Normal/Background value in _maqDeltas
+						var undefinedStyle = (domNode._maqDeltas && domNode._maqDeltas['undefined'] && domNode._maqDeltas['undefined'].style);
+						var undefinedValue = false;
+						if(undefinedStyle){
+							for(var i=0; i<undefinedStyle.length; i++){
+								var styleArray = undefinedStyle[i];
+								for(var prop in styleArray){
+									if(prop == 'display'){
+										effectiveDisplayValue = styleArray[prop];
+										undefinedValue = true;
+									}
+								}
+							}
+						}
+						if(!undefinedValue){
+							// Else query the DOM for computed 'display' value
+							effectiveDisplayValue = domStyle.get(domNode, 'display');
+						}
+					}
+					effectiveState = 'undefined';
+				}
+				// If offsetLeft/Right/Top/Bottom are all zero, then widget is not visible
+				if(domNode.offsetLeft==0 && domNode.offsetTop==0 && domNode.offsetWidth==0 && domNode.offsetHeight==0){
+					effectiveDisplayValue = 'none';
+				}else{
+					// If any ancestors have display:none, then this widget is invisible
+					while(domNode && domNode.tagName.toUpperCase() != 'BODY'){
+						// Sometimes browsers haven't set up defaultView yet,
+						// and domStyle.get will raise exception if defaultView isn't there yet
+						if(domNode && domNode.ownerDocument && domNode.ownerDocument.defaultView){
+							var computedStyleDisplay = domStyle.get(domNode, 'display');
+							if(computedStyleDisplay == 'none'){
+								effectiveDisplayValue = 'none';
+								break;
+							}
+						}
+						domNode = domNode.parentNode;
+					}
+				}
+			}else{
+				effectiveDisplayValue = 'none';
+			}
 		}
+		return {effectiveDisplayValue:effectiveDisplayValue,effectiveState:effectiveState};
 	},
 	
 	/**
-	 * Returns {l:,t:,w:,h:} of the ContentPane holding design view relative to outer frame holding the Maqetta app
+	 * Returns the list of all currently visible widgets in the current document, 
+	 * along with their effective display values.
+	 * Visible widgets are ones that do not have display:none and 
+	 * have non-zero values for offsetLeft/Right/Top/Bottom
+	 * and do not have ancestors with display:none or zero values for offsetLeft/Right/Top/Bottom
+	 * @param [{state}] state Optional - retrieve info for a particular state (if null, get base state)
+	 * @return {object} An object consisting of two arrays:
+	 * { allWidgets:{array of widgets}, effectiveDisplay:{array of 'display' values}
+	 * The two arrays align exactly - effectiveDisplay[i] is the 'display' value for allWidgets[i].
+	 * Does not include the BODY widget
+	 * In the returned result, parents are listed before their children.
 	 */
-	getDesignPaneBounds: function(){
-		var parentIframe = this.getParentIframe();
-		var node = parentIframe;
-		var designCP;
-		while(node && node.tagName != 'BODY'){
-			if(dojo.hasClass(node, 'designCP')){
-				designCP = node;
+	getAllWidgetsEffectiveDisplay: function(state){
+		var allWidgets = [];
+		var effectiveDisplay = [];
+		var find = function(widget) {
+			var obj = this.getEffectiveDisplayValue(widget, state);
+			var effectiveDisplayValue = obj.effectiveDisplayValue;
+			if(widget.domNode.tagName.toUpperCase() != 'BODY'){
+				allWidgets.push(widget);
+				effectiveDisplay.push(effectiveDisplayValue);
 			}
-			node = node.parentNode;
+			widget.getChildren().forEach(function(child) {
+				find(child);
+			});
+		}.bind(this);
+		if(this.rootWidget){
+			find(this.rootWidget);
 		}
-		if(designCP){
-			var box = GeomUtils.getBorderBoxPageCoords(designCP);
-			return box;
-		}else{
-			console.error('Context.js:getDesignPaneBounds. No designCP');
-		}
+		return {allWidgets:allWidgets, effectiveDisplay:effectiveDisplay};
 	},
-	
+
 	/**
 	 * Returns the container node for all of the focus chrome DIVs
 	 */
@@ -3727,23 +3593,19 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 * Clear any cached widget bounds
 	 */
 	clearCachedWidgetBounds: function(){
-		var allWidgets = this.getAllWidgets();
-		for(var i=0; i<allWidgets.length; i++){
-			var domNode = allWidgets[i].domNode;
-			if(domNode){
+		this.getAllWidgets().forEach(function(widget) {
+			var domNode = widget.domNode;
+			if (domNode) {
 				GeomUtils.clearGeomCache(domNode);
-			}
-		}
+			}			
+		});
 	},
 	
 	/**
 	 * Reorder a list of widgets to preserve sibling order for widgets in the list
 	 */
 	reorderPreserveSiblingOrder: function(origArray){
-		var newArray = [];
-		for(var i=0; i<origArray.length; i++){
-			newArray[i] = origArray[i];
-		}
+		var newArray = [].concat(origArray); // shallow copy
 		var j=0;
 		while(j < (newArray.length - 1)){
 			var refWidget = newArray[j];
@@ -3780,16 +3642,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	
 	_updateWidgetHash: function(){
 		this.widgetHash = {};
-		var allWidgets = this.getAllWidgets();
-		for(var i=0; i<allWidgets.length; i++){
-			var widget = allWidgets[i];
+		this.getAllWidgets().forEach(function(widget) {
 			var id = widget.id;
 			if(id){
 				this.widgetHash[id] = widget;
 			}
-		}
-
-	}
+		}, this);
+	},
 
 });
 

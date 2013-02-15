@@ -45,14 +45,9 @@ public class PersonManagerImpl implements IPersonManager {
             return name;
         }
 
-		public String getFirstName() {
+		public String getDisplayName() {
 			// TODO Auto-generated method stub
-			return "";
-		}
-
-		public String getLastName() {
-			// TODO Auto-generated method stub
-			return "";
+			 return email;
 		}
 
     }
@@ -104,7 +99,7 @@ public class PersonManagerImpl implements IPersonManager {
 
     protected IStorage getBaseDirectory(){
     	if(this.baseDirectory==null){
-    		this.baseDirectory = ServerManager.getServerManger().getBaseDirectory();	
+    		this.baseDirectory = ServerManager.getServerManager().getBaseDirectory();	
     	}
     	return this.baseDirectory;
     }

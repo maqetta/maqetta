@@ -37,5 +37,13 @@
             "title": "Indeterminate"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A progress indication widget, showing the amount completed\n(often the percentage completed) of a task.\n</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;div data-dojo-type=&quot;ProgressBar&quot;\n     places=&quot;0&quot;\n     value=&quot;...&quot; maximum=&quot;...&quot;&gt;\n&lt;/div&gt;</code></pre>"
+    }
 }

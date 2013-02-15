@@ -51,5 +51,17 @@
             "hidden": false
         }
     },
-    "content": "<div></div>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A keyboard accessible color-picking widget</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>Grid showing various colors, so the user can pick a certain color.\nCan be used standalone, or as a popup.\n</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;div data-dojo-type=&quot;dijit/ColorPalette&quot;&gt;&lt;/div&gt;</code></pre>\n<pre><code>var picker = new dijit.ColorPalette({ },srcNode);\npicker.startup();</code></pre>"
+    }
 }

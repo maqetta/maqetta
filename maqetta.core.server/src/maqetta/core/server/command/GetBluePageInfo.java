@@ -25,7 +25,7 @@ public class GetBluePageInfo extends Command {
 			String startString = req.getParameter("start");
 			String type = req.getParameter("type");
 
-			IPersonManager personManager = ServerManager.getServerManger().getPersonManager();
+			IPersonManager personManager = ServerManager.getServerManager().getPersonManager();
 
 			if("photo".equals(type)){
 				responseString = personManager.getPhotoRepositoryPath();

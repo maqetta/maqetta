@@ -85,5 +85,13 @@
             "datatype": "string"
         }
     },
-    "content": "<li label='IconItem'></li>"
+    "content": "<li label='IconItem'></li>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>An icon item widget.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>IconItem represents an item that has an application component\nand its icon image. You can tap the icon to open the\ncorresponding application component. You can also use the icon\nto move to a different view by specifying either of the moveTo,\nhref or url parameters.</p>"
+    }
 }

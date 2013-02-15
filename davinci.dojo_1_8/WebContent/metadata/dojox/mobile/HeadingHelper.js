@@ -1,11 +1,9 @@
 define([
 	"dojo/_base/declare",
-	"dojo/query",
 	"./_FixedElemMixin",
 	"./InitialSizeHelper"
 ], function(
 	declare,
-	query,
 	_FixedElemMixin,
 	InitialSizeHelper
 ) {
@@ -45,25 +43,11 @@ return declare([_FixedElemMixin, InitialSizeHelper], {
 			}
 		}
 	},
-	
-	/**
-	* Override the default action in 'DijitWidget.addChild()', which simply calls `addChild()`
-	* on the associated Dijit widget instance (i.e. `widget.dijitWidget`).
-	*
-	* NOTE: Only applies to widgets of class "dijit", which are instances of DijitWidget.
-	*
-	* XXX This should be refactored in such a way that it is available to all widget types,
-	* not just DijitWidget instances (or remove from DijitWidget).
-	*
-	* @param {davinci/ve/DijitWidget} widget the (Maqetta) widget instance
-	* @param {dijit/_Widget} dijitWidget the Dijit widget instance
-	* @param {Number|String} [index]
-	* The equivalent of the 'pos' parameter to 'dojo.place()', can be a number or
-	* a position name. Defaults to "last".
-	*/
-	addChild: function(widget, dijitWidget, index) {
-		var idx = (typeof index == 'number' && widget.dijitWidget.backButton) ? index+1 : index;
-		widget.dijitWidget.addChild(dijitWidget, idx);
+
+	addChild: function(parentWidget, childWidget, index) {
+		var parentDijitWidget = parentWidget.dijitWidget;
+		var idx = (typeof index == 'number' && parentDijitWidget.backButton) ? index+1 : index;
+		parentDijitWidget.addChild(childWidget.dijitWidget, idx);
 	},
 	
 	/**

@@ -74,5 +74,13 @@
 			"hidden": true
 		}
 	},
-	"content": "<col></col>"
+	"content": "<col></col>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>HTML col element (for setting properties on a table column).</p>"
+	},
+	"description": {
+		"type": "text/html",
+		"value": "<p>If a col element has a parent and that is a colgroup element that itself has a parent that is a table element, then the col element represents one or more columns in the column group represented by that colgroup.</p>"
+	}
 }

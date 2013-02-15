@@ -71,5 +71,9 @@
             "defaultValue": true
         }
     },
-    "content": "<input type='button'></input>"
+    "content": "<input type='button'></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A templated button widget that can be in two states (checked or not).\nCan be base class for things like tabs or checkbox or radio buttons.</p>"
+    }
 }

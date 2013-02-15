@@ -3,7 +3,6 @@
 # Take a platform-specific Maqetta-Orion build archive and
 # create a platform-independent archive, by removing the 
 # platform specific bits.
-# New archive is output as tar.bz2, in order to conserve space.
 
 print_help() {
 	echo "Usage: ./make-neutral-build.sh maqetta-orion-I20120101-1234-linux.gtk.zip [-o maqetta-orion-I20120101-1234]"
@@ -41,7 +40,7 @@ if [ -z $NEWNAME ]; then
 	NEWNAME=maqetta-orion-${timestamp}
 fi
 #tar cpjf ../$NEWNAME.tar.bz2 maqetta
-zip -qr  ../$NEWNAME.zip maqetta
+zip -r -q -9 ../$NEWNAME.zip maqetta
 
 # cleanup
 cd ..

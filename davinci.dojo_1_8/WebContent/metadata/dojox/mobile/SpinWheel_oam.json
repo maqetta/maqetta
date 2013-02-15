@@ -42,5 +42,13 @@
             "datatype": "[*]"
         }
     },
-    "content": "<div></div>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A value picker widget that has spin wheels.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>SpinWheel is a value picker component. It is a sectioned wheel\nthat can be used to pick up some values from the wheel slots by\nspinning them.</p>"
+    }
 }

@@ -15,5 +15,13 @@
 			"datatype": "string",
 		}
 	},
-	"content": "<iframe></iframe>"
+	"content": "<iframe></iframe>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>HTML element for embedding a complete web document (e.g., another HTML file) inside the current document.</p>"
+	},
+	"description": {
+		"type": "text/html",
+		"value": "<p>The iframe element represents a nested browsing context.</p><p>The src attribute gives the address of a page that the nested browsing context is to contain. The attribute, if present, must be a valid non-empty URL potentially surrounded by spaces.</p>"
+	}
 }

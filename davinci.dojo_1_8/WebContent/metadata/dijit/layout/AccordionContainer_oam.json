@@ -54,5 +54,13 @@
             "title": "Closable"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Holds a set of panes where every pane&#39;s title is visible, but only one pane&#39;s content is visible at a time,\nand switching between panes is visualized by sliding the other panes up/down.</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;div data-dojo-type=&quot;dijit/layout/AccordionContainer&quot;&gt;\n    &lt;div data-dojo-type=&quot;dijit/layout/ContentPane&quot; title=&quot;pane 1&quot;&gt;\n    &lt;/div&gt;\n    &lt;div data-dojo-type=&quot;dijit/layout/ContentPane&quot; title=&quot;pane 2&quot;&gt;\n        &lt;p&gt;This is some text&lt;/p&gt;\n    &lt;/div&gt;\n&lt;/div&gt;</code></pre>"
+    }
 }

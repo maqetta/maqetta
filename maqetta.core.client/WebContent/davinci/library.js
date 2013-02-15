@@ -40,6 +40,9 @@ dojo.subscribe("/davinci/resource/resourceChanged",this, function(type,changedRe
 	var Workbench = require("davinci/Workbench");
 	var base = Workbench.getProject();
 	if(type=='deleted' || type=='renamed'){
+		// This may seem excessive to delete the  cache on a delete or rename
+		// but the user could delete the parent folder which effectivly deletes the .theme file
+		// but we are only notified of the Folers deletion so safest to delete the cache.
 		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base);
 		var projectThemeBase = new Path(base).append(prefs.themeFolder);
 		var resourcePath = new Path(changedResource.getPath());
@@ -54,7 +57,11 @@ dojo.subscribe("/davinci/resource/resourceChanged",this, function(type,changedRe
 			var d = changedResource.getContent();
 			d.then(function(content) {
 				var t = JSON.parse(content);
-				t.file = changedResource;
+				t.path = [changedResource.getPath()];
+				t.getFile = function(){
+					var f = system.resource.findResource(this.path[0]);
+					return f;
+				}.bind(t);
 				for (var i=0; i < _themesCache[base].length; i++){
 					if ( _themesCache[base][i].name == t.name) {
 						// found theme so replace it
@@ -89,7 +96,7 @@ getThemes: function(base, workspaceOnly, flushCache){
 		var rlt = [];
 		if(_themesCache[base]){
 			rlt = workspaceOnly ?
-				_themesCache[base].filter(function(entry) { return !entry.file.isVirtual(); })
+				_themesCache[base].filter(function(entry) { return !entry.getFile().isVirtual(); })
 				: _themesCache[base];
 		}
 		return rlt;
@@ -101,31 +108,29 @@ getThemes: function(base, workspaceOnly, flushCache){
 
 	var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base),
 		projectThemeBase = new Path(base).append(prefs.themeFolder);
-	var allThemes = system.resource.findResource("*.theme", false, projectThemeBase.toString());
 	
-		_themesCache[base] = [];
-		for (var i = 0; i < allThemes.length; i++){
-			if (allThemes[i]){
-				var t = JSON.parse(allThemes[i].getContentSync());
-				t.file = allThemes[i];
-				_themesCache[base].push(t);
-			} else {
-				// FIXME: for some reason findResource can return an null in the themes.  
-				// but until the root cause of #2635 is found we will play it safe
-				console.error('library.getThemes: undefined theme returned by system.resource.findResource("*.theme", false, projectThemeBase.toString());');
-			}
-		}
+	var allThemes = Runtime.serverJSONRequest({
+			url: "cmd/getThemes",
+			handleAs: "json",
+			content:{},
+			content:{
+				path: "*.theme",
+				ignoreCase: true,
+				workspaceOnly: false,
+				inFolder: projectThemeBase.toString()
+			},
+			sync:true
+		});
 
-	/*_themesCache[base] = allThemes.map(function(theme) {
-		if (theme){
-			var t = JSON.parse(theme.getContentSync());
-			t.file = theme;
-			return t;
-		} else {
-			console.error('library.getThemes: undefined theme returned by system.resource.findResource("*.theme", false, projectThemeBase.toString());');
-		}
-	});
-*/
+	allThemes.forEach(function(theme){
+			theme.getFile = function(){
+					var f = system.resource.findResource(this.path[0]);
+					return f;
+				}.bind(theme);
+		}.bind(this));
+	
+		_themesCache[base] = allThemes; 
+
 	return result();
 },
 
@@ -136,7 +141,8 @@ getThemeMetadata: function(theme) {
 		return _themesMetaCache[theme.name];
 	}
 
-	var parent = new Path(theme.file.getPath()).removeLastSegments();
+	var parent = new Path(theme.getFile().getPath()).removeLastSegments();
+	
 	var themeCssFiles = theme.files.filter(function(file) {
 		return file.indexOf(".css")>-1;
 	}).map(parent.append, parent);

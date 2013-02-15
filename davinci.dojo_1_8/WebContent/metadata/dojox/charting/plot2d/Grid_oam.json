@@ -40,5 +40,9 @@
             "defaultValue": "false"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A &quot;faux&quot; plot that can be placed behind other plots to represent\na grid against which other plots can be easily measured.</p>"
+    }
 }

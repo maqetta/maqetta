@@ -66,9 +66,17 @@
             "defaultValue": false
         },
         "threshold": {
-        	"datatype": "number",
-        	"defaultValue": 4	
+            "datatype": "number",
+            "defaultValue": 4
         }
     },
-    "content": "<div></div>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A container that has a touch scrolling capability.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>ScrollableView is a subclass of View (dojox/mobile/View).\nUnlike the base View class, ScrollableView&#39;s domNode always stays\nat the top of the screen and its height is &quot;100%&quot; of the screen.\nInside this fixed domNode, the containerNode scrolls. The browser&#39;s\ndefault scrolling behavior is disabled, and the scrolling mechanism is\nreimplemented in JavaScript. Thus the user does not need to use the\ntwo-finger operation to scroll the inner DIV (containerNode).\nThe main purpose of this widget is to realize fixed-positioned header\nand/or footer bars.</p>"
+    }
 }

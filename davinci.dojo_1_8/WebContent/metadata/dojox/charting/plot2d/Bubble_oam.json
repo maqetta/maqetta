@@ -28,5 +28,9 @@
             "title": "Shadows"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A plot representing bubbles.  Note that data for Bubbles requires 3 parameters,\nin the form of:  { x, y, size }, where size determines the size of the bubble.</p>"
+    }
 }

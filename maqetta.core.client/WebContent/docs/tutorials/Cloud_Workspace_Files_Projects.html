@@ -1,0 +1,602 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Tutorial 4 - Cloud Workspace, Files, Projects and Orion Navigator</title>
+</head>
+<body class="maqettadocs">
+
+<style type="text/css">
+table.CompTypeTable {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+table.CompTypeTable td, table.CompTypeTable th {
+	padding:3px;
+	border:1px solid black;
+}
+table.CompTypeTable th {
+	font-style:italic;
+	font-weight:bold;
+	background:#888;
+}
+table td.CompTypeOption {
+	font-weight:bold;
+}
+tr.desktop {
+	background-color:#ddf;
+}
+tr.mobile {
+	background-color:#dfd;
+}
+</style>
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td> &nbsp; </td>
+    <td class="prevnext">
+	<a href="tutorials/User_Interface_Overview.html">Previous</a> / <a href="tutorials/Page_Editor_Composition_Types.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Tutorial 4 - Cloud Workspace, Files, Projects and Orion Navigator</h1>
+
+<div class='note'>
+	When going through Maqetta's tutorials, it is suggested that you have two side-by-side
+	browser windows open, one showing the tutorial, and the other where you run the application
+	and perform the steps listed in the tutorial.<br/>
+	<img src='img/SideBySideTutorialsApp.png' class='side_by_side'/>
+</div>
+
+<p>This tutorial provides an overview of the features in Maqetta having to do
+with your cloud workspace. Topics covered:</p>
+<ul>
+	<li>The Files palette</li>
+	<li>Creating Files</li>
+	<li>Opening Files from the Files Palette</li>
+	<li>Files Palette Context Menu</li>
+	<li>Files Palette Toolbar</li>
+	<li>Creating and Switching Projects</li>
+	<li>Orion Navigator</li>
+</ul>
+
+<a id='Files_palette'></a>
+<h2>Files Palette</h2>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Open up the <strong>Files</strong> palette (found in the left/bottom corner of the application).
+	If the palette isn't showing, click on the large-size <strong>Files</strong> palette icon to show
+	the <strong>Files</strong> palette.
+	The <strong>Files</strong> palette should look something like this:</p>
+	
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src="img/Files_palette_initial.png" style='width:300px;'/> 
+	</span>
+</div>
+</ol>
+
+<p>What you are seeing is your personal cloud workspace.
+	Maqetta creates a default project (<em>project1</em>) for each new user,
+	and puts a set of default files in the newly created project:</p>
+<ul>
+	<li class='multipara_bullet'><div><strong>app.css</strong> - 
+		This file is the default location for project-level CSS style rules.
+		Maqetta includes app.css in all of the HTML files it creates.</div>
+		<div>Some of the advanced features found in Maqetta's various properties palettes
+		(found at the right/top of the application, such as Layout, Margins, etc) 
+		will automatically add CSS style rules to this file. You can also double-click
+		on this file to bring up Maqetta's source editor so that you can add
+		CSS style rules manually.</div></li>
+	<li class='multipara_bullet'><div><strong>app.js</strong> - 
+		This file is the default location for project-level JavaScript logic.
+		Maqetta includes app.js in all of the HTML files it creates.</div>
+		<div>Beginning users typically do not touch this file, but advanced users
+		often find the need to put custom JavaScript logic in this file.</div></li>
+	<li><strong>lib</strong> - 
+		Holds the JavaScript libraries (e.g., Dojo) that will
+		be used by the HTML files you create.</li>
+	<li><strong>samples</strong> - 
+		Contains various sample files, including various files that are
+		used as part of Maqetta's tutorials.</li>
+	<li><strong>themes</strong> - 
+		Contains various CSS themes, both the ones that ship standard
+		with Maqetta, and user-created themes.</li>
+</ul>
+
+
+<a id='Creating_files'></a>
+<h2>Creating Files</h2>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Go to the <strong>Create</strong> menu 
+	<img src="img/Create_button.png"  class='exact_size_inline_icon'/> 
+	at the top of the application.
+	Choose the command <strong>Create -&gt; Desktop Application...</strong>.
+	In the dialog that appears, accept the defaults and click on the "Create" button.
+</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Go to the <strong>Palette</strong> and find the section labelled "Containers".
+	Click on the "Containers" section to show its contents, and then click on the
+	"Dojo" sub-section to show its contents.</li>
+
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src="img/widgets_containers_dojo.png" style='height:400px; width:auto;'/> 
+	</span>
+</div>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	You should see various widget icons. Find the TabContainer widget.
+	With the mouse, drag the icon for the TabContainer widget from the 
+	Palette onto the white canvas (in the middle of the application).
+	Drop the TabContainer somewhere inside of the white canvas.
+	A TabContainer widget should appear at the top/left of the canvas,
+	and a popup dialog should appear. Click OK in that popup dialog to accept its default values.
+	Your canvas should look something like this:</li>
+
+<div>&nbsp;</div>
+
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src="img/default_tab_container.png" style='height:auto; width:600px;'/> 
+	</span>
+</div>
+
+<p>Now let's look at the various parts of the Maqetta user interface. Observe the following:</p>
+<ul>
+	<li><strong>Files palette</strong> - Observe that the filename of the file you just
+	created (e.g., file1.html) is now listed in the <strong>Files</strong> palette.</li>
+	<li><strong>File tabs</strong> - Look at the file tab area at the top of the application
+		(just under the main menubar and just above the page editor's toolbar).
+		Find the file tab for the file you just created. Observe that it contains
+		an asterisk next to the filename 
+		to indicate that the file has unsaved changes.</li>
+</ul>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <strong>Save</strong> button 
+	<img src="img/save_icon.png"  class='exact_size_inline_icon'/> 
+	on the page editor toolbar to save your document.
+	Notice that the asterisk goes away after the save operation.
+</li>
+</ol>
+
+<a id='Previewing_files'></a>
+<h2>Previewing Files</h2>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the <strong>Preview</strong> icon 
+	<img src="img/preview-browser.png"  class='exact_size_inline_icon'/> 
+	on the page editor toolbar.
+	Notice that a new browser tab (or window) opens showing the TabContainer widget.
+	(In Maqetta, this is called "Preview in browser".)
+</li>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the browser tab that just opened, select the full URL from the browser's URL address bar,
+	and issue a system copy command (e.g., Ctrl-C on Windows or Cmd-C on Mac) to put the URL
+	onto the system clipboard.
+</diliv>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Open a different browser (if you have multiple browsers on your system), 
+	open up a new browser tab in that browser, and issue a paste command into that
+	browser's URL bar. You should see your file previewed in the other browser.
+</li>
+
+<div class='note'>
+	What this shows is that each of your files in your cloud workspace has its own URL
+	that you can share with others (assuming your colleagues also can
+	access the Maqetta server).
+</div>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the file tab's close button -
+	<img src='img/close_sel.gif' class='exact_size_inline_icon'/>
+	- to close the page editor. </li>
+</ol>
+
+<a id='Opening_files_from_Files_palette'></a>
+<h2>Opening Files from the Files Palette</h2>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Go to the <strong>Files</strong> palette and double-click on the file you just
+	created to reopen that file. </li>
+
+<div class='note'>
+	When you double-click on an HTML file in the <strong>Files</strong> palette,
+	Maqetta opens in the visual page editor.
+</div>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <strong>Files</strong> palette, double-click on the <strong>app.css</strong> file.
+	Maqetta will open up a source editor where you can edit the source code of that CSS file.</li>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Now, double-click on the <strong>app.js</strong> file.
+	Maqetta will open up a source editor where you can edit the source code of that JavaScript file.</li>
+
+<div class='note'>
+	When you double-click on CSS (*.css), JavaScript (*.js) or JSON file (*.json)
+	in the <strong>Files</strong> palette,
+	Maqetta opens up a source editor for the given file.
+</div>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	For each of the open files, click on the file tab's close button -
+	<img src='img/close_sel.gif' class='exact_size_inline_icon'/>
+	- to close all of the editors. </li>
+</ol>
+
+<a id='File_palette_context_menu'></a>
+<h2>Files Palette Context Menu</h2>
+
+<p>In the <strong>Files</strong> palette, you can create folders, delete files, rename files, 
+	upload files, and download files.</p>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Go to the <strong>Files</strong> palette, put the mouse over the
+	<strong>app.css</strong> file, and bring up the context menu
+	(e.g., using right-mouse-button or Ctrl-click on a Mac). You should see the following
+	commands in the popup menu.</li>
+
+<ul>
+	<li><strong>New folder...</strong> - Adds a new folder to your cloud workspace.</li>
+	<li><strong>Upload files...</strong> - Allows you to upload files from your computer
+		to your cloud workspace.</li>
+	<li><strong>Rename...</strong> - Allows you to rename files.</li>
+	<li><strong>Delete</strong> - Allows you to delete files.</li>
+	<li><strong>Download</strong> - Allows you to download selected files.</li>
+</ul>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Go to the <strong>Files</strong> palette, put the mouse over the
+	<strong>app.css</strong> file, bring up the context menu, and choose
+	"New Folder...".</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	The Create New Folder dialog will appear. Accept the default values and click on the "Create button".
+	A new folder with an automatically generated name (e.g., "folder1") will appear in the Files palette.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <strong>Files</strong> palette, put the mouse over the folder you just created
+	(e.g., "folder1"),
+	bring up the context menu, and choose the "Rename..." command. 
+	Enter "images" as the new name for the folder, and click on the Rename button.
+	Notice in the <strong>Files</strong> palette that the folder has been renamed
+	to "images".</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <strong>Files</strong> palette, put the mouse over the "images"
+	folder, bring up the context menu,
+	and once again choose the "New Folder..." command. In the Create New Folder
+	dialog, type "abc" into the folder name textbox, then click on the Create button.
+	Note that new folder "abc" is now a child of folder "images".</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <strong>Files</strong> palette, put the mouse over the "abc" folder,
+	bring up the context menu, and choose the "Delete..." command. An "Are you sure"
+	dialog will appear. Click OK. Notice that folder "abc" has been removed from the Files palette.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Outside of Maqetta, find one or more image files on your computer (preferably, not massive).
+	Back in Maqetta, put the mouse over the "images" folder, bring up the context menu,
+	and choose the "Upload..." command. The Upload Files dialog will apepar.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Outside of Maqetta, find one or more image files on your computer (preferably, not massive).
+	Back in Maqetta, put the mouse over the "images" folder, bring up the context menu,
+	and choose the "Upload..." command. The Upload Files dialog will appear.</li>
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src="img/Upload_files.png" style='height:130px; width:auto;'/> 
+	</span>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the dialog, click on the "Select Files" button to bring up a file selection dialog.
+	In the file selection dialog, choose one or more image files from your computer,
+	and click on the "OK or "Open" button. The files you selected will now appear in the
+	Upload Files dialog.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the Upload button to upload the files to your workspace.
+	Look in the Files palette and you will see the files you just uploaded.</li>
+<div class='note'>
+	You can click on the "Select Files" command again if you want to upload more files.
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the close box at the top/right of the dialog or click on "Cancel"
+	to close the Upload Files dialog.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <strong>Files</strong> palette, put the mouse over the "images" folder,
+	bring up the context menu, and choose the "Download" command.
+	The Download dialog will appear.</li>
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src="img/Download_dialog.png" style='height:160px; width:auto;'/> 
+	</span>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	The Download dialog will provide a default file name for a ZIP file
+	that will hold the currently selected files (e.g., project1.zip),
+	and it will show the list of files you have selected
+	(in this case, "images"). Click on the Download button.</li>
+<div class='note'>
+	File project1.zip will now be in your browser's Downloads folder.
+	The ZIP file will contain the full contents of your "images" folder.</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <strong>Files</strong> palette, put the mouse over the "images" folder,
+	bring up the context menu, and choose the "Delete..." command. An "Are you sure"
+	dialog will appear. Click OK. Notice that folder "images" has been removed from the Files palette.</li>
+</ol>
+
+<a id='File_palette_toolbar'></a>
+<h2>Files Palette Toolbar</h2>
+
+<p>The <strong>Files</strong> palette has a toolbar with 3 icons:
+	<img src='img/Files_palette_toolbar.png' class='exact_size_inline_icon'/>.
+	The three icons are:
+</p>
+<ul>
+	<li><strong>Download entire project</strong> -
+		This command will download the full contents of your current project within a ZIP file.
+		<div class='note'>
+		You can take the contents of the ZIP file for your project and unzip into the 
+		<em>htdocs</em>, <em>public_html</em> or <em>www</em> folder within a web server,
+		and you will have deployed your Maqetta-created sketch or prototype on that web server.
+		Assuming you accept the default download options,
+		the ZIP file will contain all of the files needed to successfully view your
+		creation, including necessary JavaScript libraries and CSS themes.</div></li>
+	<li><strong>Download selected files</strong> -
+		This icon will create a ZIP file that only contains the files that
+		are currently selected in the Files palette. 
+		This icon is equivalent to the Download command on the Files palette context menu.</li>
+	<li><strong>Modify libraries</strong> -
+		This icon allows you to move your JavaScript libraries to different locations within
+		your current project. By default, JavaScript libraries are located in your <code>libs</code>
+		folder. The typical reason for moving your JavaScript libraries is if your development team
+		requests that you send them prototypes where the JavaScript libaries are in a particular location.
+		Note that Maqetta will do its best to update all references to JavaScript libaries
+		in your HTML files so that the HTML files will continue to work properly after 
+		the JavaScript libraries have been moved.</li>
+</ul>
+
+
+<a id='Projects'></a>
+<h2>Creating and Switching Projects</h2>
+
+<p>When a user launches Maqetta for the first time, Maqetta creates a default project (named "project1").
+	Maqetta includes a <strong>Create -&gt; New Project</strong> command that allows users
+	to create whole new projects.</p>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Go to the <strong>Create</strong> menu 
+	<img src="img/Create_button.png"  class='exact_size_inline_icon'/> 
+	at the top of the application.
+	Choose the command <strong>Create -&gt; Project...</strong>.
+	In the dialog that appears, enter "temp1" as the name of the new project,
+	and click the "Create button".
+</li>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	The Maqetta browser window will now redraw.
+	Go to the <strong>Files</strong> palette, and you will see that
+	the project name (listed at the top of the <strong>Files</strong> palette) is now "temp1".
+	Also note that the <strong>Files</strong> palette contents shows the same
+	default contents (app.css, app.js, libs, samples, themes) as when you first launched
+	the Maqetta application.
+</li>
+
+<div class='note'>
+	The <strong>Create -&gt; Project...</strong> command is useful if you are using
+	Maqetta for different work projects, or if you find the need to restart work
+	from scratch.
+</div>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Let's now delete the "temp1" project. At the top of the <strong>Files</strong> palette,
+	click on the Delete Project icon
+	<img src="img/remove.gif"  class='exact_size_inline_icon'/>.
+	After deleting this project, Maqetta will switch back to one of your other existing
+	projects (e.g., "project1").
+	The Maqetta browser window will now redraw, and the <strong>Files</strong> palette
+	will show the contents of the "project1" project.
+</li>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Using the drop-down menu at the top of the <strong>Files</strong> palette,
+	switch back to the "temp1" project. 
+	Let's now delete the "temp1" project. At the top of the <strong>Files</strong> palette,
+	click on the Delete Project icon
+	<img src="img/remove.gif"  class='exact_size_inline_icon'/>.
+	After deleting this project, Maqetta will switch back to one of your other existing
+	projects (e.g., "project1").
+</li>
+
+<div class='note'>
+	The current release of the Maqetta application does not provide a quick and easy way
+	to transfer or copy files from one project to another. One possible strategy
+	to transfer files is to switch to the project that has your old files,
+	download selected files as a ZIP onto your local file system, expand the ZIP into a folder on your local file system,
+ 	switch to your new project in Maqetta, and then upload files into your new project.
+ 	Note that you have to be careful to upload files into the same locations in the new project
+ 	as they were in the old project for the relative URL references in your HTML files to work properly.
+</div>
+</ol>
+
+<a id='OrionNavigator'></a>
+<h2>Orion Navigator</h2>
+
+<p>Maqetta embeds a version of <a href='http://www.eclipse.org/orion/'>Eclipse Orion</a>,
+	which is an open source platform for cloud-based web development. With Orion,
+	you can edit source files stored in cloud workspaces directly in the browser.
+	Maqetta includes Orion inside so that Maqetta users can take advantage of Orion's
+	various features, including its source editor technology that runs in the browser.</p>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In Maqetta, make sure all files are closed.
+	For each of the open files, click on the file tab's close button -
+	<img src='img/close_sel.gif' class='exact_size_inline_icon'/>
+	- to close all of the editors. </li>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Go to the <strong>Open</strong> menu 
+	<img src="img/Open_button.png"  class='exact_size_inline_icon'/> 
+	at the top of the application.
+	Choose the command <strong>Open -&gt; Orion Navigator</strong>.
+	A new browser tab/window will open that is running Eclipse Orion,
+	with the Orion navigator user interface showing the contents of
+	your personal cloud workspace.
+</li>
+
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src="img/Orion_Navigator.png" style='height:300px; width:auto;'/> 
+	</span>
+</div>
+
+<p>In the Orion navigator, at the top level, you will see all of your projects.
+	In the picture above, there is only one project ("project1").</p>
+	
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the small right-pointing arrow just to the left of "project1"
+	to open up that folder. You should see nearly the same list of HTML, CSS, JavaScript files
+	and folders as the Maqetta <strong>Files</strong> palette.
+</li>
+	
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src="img/Orion_Navigator_Project_Open.png" style='height:170px; width:auto;'/> 
+	</span>
+</div>
+
+<div class='note'>
+	The Orion Navigator will not show all of the same files as you see in the Maqetta workspace.
+	This is because that Maqetta injects some files and folders into user workspaces 
+	that are read-only, 
+	such as the <code>samples</code> folders. Read-only files and folders do not appear
+	in the Orion Navigator.
+</div>
+	
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on <code>file1.html</code> 
+	(assuming it is in your workspace due to previous steps in this tutorial).
+	Orion will now switch to its source editor and show the HTML contents of file1.html.
+	Find the line of source code that has "Tab 1" on it.
+</li>
+
+<pre>
+&lt;div data-dojo-type="dijit.layout.ContentPane" title="Tab 1" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" selected="true" closable="false" doLayout="false">&lt;/div>
+</pre>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Orion source editor, change the string "Tab 1" to "Reports" (for the <code>title</code> attribute).
+	Then click on the <strong>Save</strong> button to save your changes.
+</li>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Return to the Maqetta browser window. In the <strong>Files</strong> palette,
+	double-click on <code>file1.html</code>. On the visual editor canvas, you should
+	see that the first tab now says "Reports" instead of "Tab 1".
+</li>
+
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src="img/Tab_1_to_Reports.png" style='height:220px; width:auto;'/> 
+	</span>
+</div>
+
+<div class='note'>
+	NOTE: Be very careful with source code changes. If you modify HTML, CSS or JavaScript files
+	using source editors, and the revised code is not valid HTML, CSS or JavaScript,
+	Maqetta might not be able to open your files.
+</div>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Return to the Orion window. At the top/left, click on the hyperlink for "project1"
+	to return to the file navigator. You should once again see the list of files
+	in "project1", such as app.css, app.js and file1.html.
+</li>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Orion window, click on the "New folder" button. In the type-in box,
+	enter "img". After completing the operation, you should see a new "img" folder in your project.
+	Go back to the Maqetta window. Hit browser refresh, which will cause Maqetta to restart
+	and update the <strong>Files</strong> palette. You should see the "img" folder in the 
+	Maqetta <strong>Files</strong> palette.
+</li>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Return to the Orion window. Click <strong>just to the right</strong> 
+	(<em>not directly on</em>) the string "img"
+	to select the "img" folder. You should see an orange highlight on the "img" line to 
+	show that it is selected.
+</li>
+
+<div class='note'>
+	In Orion, clicking on a file or folder name will cause Orion to open that file or folder.
+	Clicking to the right of a file or folder name will cause Orion to select that file or folder.
+</div>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the Actions menu, choose "Import local file".
+	You should see this dialog:
+</li>
+
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src="img/Orion_upload_dialog.png" style='height:400px; width:auto;'/> 
+	</span>
+</div>
+
+<div class='note'>
+	This dialog provides an alternate way for you to upload files into your Maqetta workspace.
+	Orion's upload feature includes various features that Maqetta's upload feature does not, 
+	including the ability to upload a ZIP file.
+</div>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the close box (the "x") at the top/right of the Import files dialog.
+	This will return you to the Orion navigator.
+</li>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click <strong>just to the right</strong> 
+	(<em>not directly on</em>) the string "file1.html"
+	to select that file. Press and hold on the "Actions" menu. You should see the following:
+</li>
+
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src="img/Orion_file_actions.png" style='height:200px; width:auto;'/> 
+	</span>
+</div>
+
+<p>As you can see, the Orion navigator offers various useful file management features, such as
+	the ability to move files to different folders.</p>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click <strong>just to the right</strong> 
+	(<em>not directly on</em>) the folder "img"
+	to select that folder. From the Actions menu, choose "Delete" to delete that file.
+	You'll see the "img" is no longer visible in the Orion navigator.
+	Go back to the Maqetta window. Hit browser refresh, which will cause Maqetta to restart
+	and update the <strong>Files</strong> palette. You should see that the "img" folder is no longer visible
+	in the Maqetta <strong>Files</strong> palette.
+</li>
+
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Close the browser tab containing the Orion navigator.
+</li>
+</ol>
+
+<br />
+<p class="prevnext"><a href="tutorials/User_Interface_Overview.html">Previous</a> / <a href="tutorials/Page_Editor_Composition_Types.html">Next</a></p>
+
+</div> <!-- pagebody -->
+
+</body>
+</html>

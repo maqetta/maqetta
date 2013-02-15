@@ -113,6 +113,10 @@ return declare(CreateTool, {
 		command.add(new AddCommand(model, args.parent, index));
 		index = (index !== undefined && index >= 0 ? index + 1 : undefined);
 		command.add(new AddCommand(tree, args.parent, index));
+        
+		// If preference says to add new widgets to the current custom state,
+		// then add appropriate StyleCommands
+		CreateTool.prototype.checkAddToCurrentState(command, tree);	
 		
 		if(args.position){
 			var absoluteWidgetsZindex = this._context.getPreference('absoluteWidgetsZindex');

@@ -32,9 +32,9 @@ public class Utils {
 	public static String getCommonNotificationId(HttpServletRequest req) {
 		String notificationId = null;
 
-		notificationId = ServerManager.getServerManger().getDavinciProperty(Constants.EP_ATTR_MAIL_CONFIG_NOTIFICATIONID);
+		notificationId = ServerManager.getServerManager().getDavinciProperty(Constants.EP_ATTR_MAIL_CONFIG_NOTIFICATIONID);
 		if(notificationId == null || "".equals(notificationId)){
-			IConfigurationElement mailConfig = ServerManager.getServerManger().getExtension(Constants.EXTENSION_POINT_MAIL_CONFIG, Constants.EP_TAG_MAIL_CONFIG);
+			IConfigurationElement mailConfig = ServerManager.getServerManager().getExtension(Constants.EXTENSION_POINT_MAIL_CONFIG, Constants.EP_TAG_MAIL_CONFIG);
 			if(mailConfig != null){
 				notificationId = mailConfig.getAttribute(Constants.EP_ATTR_MAIL_CONFIG_NOTIFICATIONID);
 			}
@@ -102,7 +102,7 @@ public class Utils {
 	private static final String START_FLAG = "${";
 	private static final String END_FLAG = "}";
 
-	public static String substitude(String s, Map<String, String> map) {
+	public static String substitute(String s, Map<String, String> map) {
 		StringBuilder ret = new StringBuilder(s.length());
 		int pos = 0;
 		for(int start, end; (start = s.indexOf(START_FLAG, pos)) != -1 && (end = s.indexOf(END_FLAG, start)) != -1;){

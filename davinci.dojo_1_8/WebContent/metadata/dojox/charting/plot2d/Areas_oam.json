@@ -24,5 +24,9 @@
             "datatype": "string"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Represents an area chart.  See dojox/charting/plot2d/Default for details.</p>"
+    }
 }

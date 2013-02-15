@@ -1,13 +1,10 @@
 package org.maqetta.server;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.util.Collection;
-
-import org.apache.commons.io.filefilter.IOFileFilter;
 
 /* 
  * This is an interface for actual server storage.  Instead of using
@@ -35,8 +32,8 @@ public interface IStorage {
 	public void createNewFile() throws IOException;
 	public String getPath();
 	public String getName();
-	public void mkdir();
-	public void renameTo(IStorage file);
+	public void mkdir() throws IOException;
+	public void renameTo(IStorage file) throws IOException;
 	
 	/* newInstance(..) are factory style methods for creating a new resource
 	 * NOT based on the parent resource.

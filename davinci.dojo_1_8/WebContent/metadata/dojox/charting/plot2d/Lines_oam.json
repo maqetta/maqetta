@@ -41,5 +41,9 @@
             "description": "Draws shadow. Provide dx, dy, dw separated by commas."
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A convenience constructor to create a typical line chart.</p>"
+    }
 }

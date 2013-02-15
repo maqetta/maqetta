@@ -4,7 +4,7 @@
     "spec": "1.0",
     "version": "1.8",
     "require": [
-     	{
+        {
             "type": "css",
             "src": "dojox/form/resources/TriStateCheckBox.css",
             "$library": "dojo"
@@ -16,7 +16,7 @@
             "$library": "dojo"
         }
     ],
-	"library": {
+    "library": {
         "dojo": {
             "src": "../../../dojo/dojo.js"
         }
@@ -53,26 +53,30 @@
             "title": "State"
         },
         "checked": {
-        	"datatype": "string",
-        	"option": [
-        		{
-        			"value": "true"
-        		},
-        		{
-        			"value": "mixed"
-        		},
-        		{
-        			"value": "false"
-        		}
-        	],
-        	"defaultValue": "false",
-        	"title": "Checked"
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "true"
+                },
+                {
+                    "value": "mixed"
+                },
+                {
+                    "value": "false"
+                }
+            ],
+            "defaultValue": "false",
+            "title": "Checked"
         },
- 		"states": {
-        	"datatype": "string",
-        	"defaultValue": "false, mixed, true",
-        	"title": "States"
+        "states": {
+            "datatype": "string",
+            "defaultValue": "false, mixed, true",
+            "title": "States"
         }
     },
-    "content": "<input></input>"
+    "content": "<input></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Checkbox with three states</p>"
+    }
 }

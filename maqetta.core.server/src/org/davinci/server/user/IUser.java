@@ -1,5 +1,7 @@
 package org.davinci.server.user;
 
+import java.io.IOException;
+
 import org.davinci.ajaxLibrary.ILibInfo;
 import org.maqetta.server.ILinks;
 import org.maqetta.server.IStorage;
@@ -9,14 +11,14 @@ public interface IUser {
 
 	public void rebuildWorkspace();
 
-	public IVResource createEclipseProject(String projectName);
+	public IVResource createEclipseProject(String projectName) throws IOException;
 
-	public IVResource createProject(String projectName);
+	public IVResource createProject(String projectName) throws IOException;
 	
 	public IVResource newWorkspaceRoot();
 	
 	public IVResource createProject(String projectName, String basePath,
-			boolean initFiles);
+			boolean initFiles) throws IOException;
 
 	/*
 	 * adds configuration settings for a new path
@@ -39,7 +41,7 @@ public interface IUser {
 
 	public IVResource getResource(String path);
 
-	public IVResource createResource(String path, boolean isFolder);
+	public IVResource createResource(String path, boolean isFolder) throws IOException;
 
 	public IStorage getWorkbenchSettings();
 

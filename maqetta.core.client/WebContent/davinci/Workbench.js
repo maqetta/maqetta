@@ -33,7 +33,6 @@ define([
 	"dojo/_base/xhr",
 	"./review/model/resource/root",
 	"dojo/i18n!./ve/nls/common",
-	"dojo/dnd/Mover",
 	"./ve/utils/GeomUtils",
 	"dojo/i18n!./workbench/nls/workbench"
 ], function(
@@ -71,7 +70,6 @@ define([
 		xhr,
 		reviewResource,
 		veNLS,
-		Mover,
 		GeomUtils,
 		workbenchStrings
 ) {
@@ -136,11 +134,7 @@ var handleIoError = function (deferred, reason) {
 };
 
 var sessionTimedOut = function(){
-	var loginHref = '/maqetta/welcome';
-	if(Runtime.singleUserMode()) {
-		loginHref = '/maqetta/';
-	}
-	
+	var loginHref = "welcome";
 	var dialog = new Dialog({
         title: webContent.sessionTimedOut
       //,  style: "width: 300px"
@@ -248,7 +242,7 @@ var initializeWorkbenchState = function(){
 	};
 
 	if (!Workbench._state){
-		Workbench._state = davinci.Runtime.getWorkbenchState();
+		Workbench._state = Runtime.getWorkbenchState();
 	}
 	init(Workbench._state);
 	Workbench.setupGlobalKeyboardHandler();
@@ -341,14 +335,28 @@ var Workbench = {
 			Workbench._repositionFocusContainer();
 		});
 
-		var d = metadata.init().then(function(){
+		var d = xhr.get({
+	    	url: "cmd/getInitializationInfo",
+	    	handleAs: "json"
+	    }).then(function(result){
+			Runtime._initializationInfo = result;
+
+	    	var userInfo = result.userInfo;
+	    	Runtime.isLocalInstall = userInfo.userId == 'maqettaUser';
+
+			// Needed by review code
+            Runtime.userName = userInfo.userId;
+            Runtime.userEmail = userInfo.email;
+            return metadata.init();
+	    }).then(function(){
 			var perspective = Runtime.initialPerspective || "davinci.ui.main";
+			dojo.query('.loading').orphan();
 			Workbench.showPerspective(perspective);
 			Workbench._updateTitle();
 			initializeWorkbenchState();			
+		}).otherwise(function(result){
+			dojo.query('#load_screen').addContent(dojo.string.substitute(webContent.startupError, [result.message]), "only")/*.addClass("error")*/;
 		});
-	
-		dojo.query('.loading').orphan();
 
 		Workbench._lastAutoSave = Date.now();
 		setInterval(dojo.hitch(this,"_autoSave"),30000);
@@ -357,6 +365,21 @@ var Workbench = {
 
 	unload: function () {
 		Workbench._autoSave();
+	},
+
+	logoff: function(args) {
+		dojo.create("div", {
+				'class': 'loading',
+				innerHTML: '<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;Logging off...</td></tr></table>' // FIXME: i18n
+			}, dojo.body(), "first");
+
+		Workbench.unload();
+		return xhr.get({
+			url: "cmd/logoff",
+			handleAs: "text"
+		}).then(function(result) {
+			location.href = "welcome";
+		});
 	},
 
 	/**
@@ -396,11 +419,9 @@ var Workbench = {
 			} else {
 				firstgroup = false;
 			}
-			var children;
 			var actions = _toolbarcache[value];
 			for (var p = 0; p<actions.length; p++) {
 				var action = actions[p];
-				var id = action.id;
 				// dont add dupes
 		
 				Workbench._loadActionClass(action);
@@ -730,8 +751,8 @@ var Workbench = {
 		if (e.type == 'resize' || ((target.id && (target.id.indexOf('dijit_layout__Splitter_')>-1) || 
 			(target.nextSibling && target.nextSibling.id && target.nextSibling.id.indexOf('dijit_layout__Splitter_')>-1)))) {
 			var ed = davinci && Runtime.currentEditor;
-			if (davinci && Runtime.currentEditor && Runtime.currentEditor.onResize) {
-				Runtime.currentEditor.onResize();
+			if (ed && ed.onResize) {
+				ed.onResize();
 			}
 		}
 		if (Workbench._originalOnResize) {
@@ -1026,29 +1047,20 @@ var Workbench = {
 	loadProject: function(projectName) {
 		
 		return Workbench.setActiveProject(projectName).then(function(){
-			//location.href=".";
-			/* make sure the server has maqetta setup for the project */
-			location.href="/maqetta/cmd/configProject?configOnly=true&project=" + projectName;
+			// make sure the server has maqetta setup for the project
+			location.href="cmd/configProject?configOnly=true&project=" + encodeURIComponent(projectName);
 		});
 		
 		// if the project was set via URL parameter, clear it off.  
 		
 	
 	},
-	
+
+	//FIXME: remove. Use Runtime.location() instead.
 	location: function() {
 		return Runtime.location();
 	},
-	
-	queryParams: function() {
-		// reloads the browser with the current project.
-		var fullPath = document.location.href;
-		var split = fullPath.split("?");
-		var searchString = split.length>1? split[1] : "";
-		// remove the ? from the front of the query string 
-		return dojo.queryToObject(searchString);
-	},
-	
+
 	_rebuildMenu: function (menuWidget, menus) {
 		dojo.forEach(menuWidget.getChildren(), function(child){
 			menuWidget.removeChild(child);
@@ -1134,8 +1146,8 @@ var Workbench = {
 	_runAction: function(item, context, arg) {
 		//FIXME: Not sure this code is correct, but sometimes this routine is passed
 		//a context object that is not associated with the current document
-		if(context && davinci.Runtime.currentEditor){
-			context = davinci.Runtime.currentEditor;
+		if(context && Runtime.currentEditor){
+			context = Runtime.currentEditor;
 		}
 		if (item.run) {
 			item.run();
@@ -1153,7 +1165,7 @@ var Workbench = {
 
 	showView: function(viewId, shouldFocus, hidden){
 		var d = new Deferred();
-		
+
 		try {
 			var mainBodyContainer = dijit.byId('mainBody'),
 				view = Runtime.getExtension("davinci.view", viewId),
@@ -1161,10 +1173,8 @@ var Workbench = {
 				perspectiveId = Workbench.activePerspective,
 				perspective = Runtime.getExtension("davinci.perspective", perspectiveId),
 				position = 'left',
-				cp1 = null,
-				created = false,
-				pxHeight = dijit.byId('mainBody')._borderBox.h - 5;
-			
+				cp1;
+
 			dojo.some(perspective.views, function(view){
 				if(view.viewID ==  viewId){
 					position = view.position;
@@ -1188,7 +1198,7 @@ var Workbench = {
 				mainBody.tabs.perspective.right.startup();
 				// expandToSize is what expandPaletteContainer() uses as the
 				// width of the palette when it is in expanded state.
-				paletteCache["right_mainBody"] = {
+				paletteCache.right_mainBody = {
 					expandToSize:340,
 					initialExpandToSize:340
 				};
@@ -1204,8 +1214,8 @@ var Workbench = {
 				// expandToSize is what expandPaletteContainer() uses as the
 				// width of the palette when it is in expanded state.
 				paletteCache["left_mainBody"] = {
-					expandToSize:300,
-					initialExpandToSize:300
+					expandToSize:318,
+					initialExpandToSize:318
 				};
 			}
 	
@@ -1309,7 +1319,14 @@ var Workbench = {
 				if(view.iconClass){
 					params.iconClass = view.iconClass;
 				}
-				d.resolve(new (viewCtor || ViewPart)(params));
+				if(!davinci.palettes){
+					davinci.palettes = {};
+				}
+				// Stash the instantiated object corresponding to each palette class in
+				// associative array davinci.palettes, indexed by view.viewClass.
+				// Then pass the instantiated object as the argument to d.resolve().
+				d.resolve((davinci.palettes[view.viewClass] = new (viewCtor || ViewPart)(params),
+						davinci.palettes[view.viewClass]));
 			});
 		}
 		return d;
@@ -1346,12 +1363,10 @@ var Workbench = {
 	openEditor: function (keywordArgs, newHtmlParams) {
 		try{
 			var fileName=keywordArgs.fileName,
-				fileExtension,
-				file;
+				fileExtension;
 			if (typeof fileName=='string') {
-				 fileExtension=fileName.substr(fileName.lastIndexOf('.')+1);
+				fileExtension=fileName.substr(fileName.lastIndexOf('.')+1);
 			} else {
-				file=fileName;
 				fileExtension=fileName.getExtension();
 				fileName=fileName.getPath();
 			}
@@ -1468,7 +1483,7 @@ var Workbench = {
 						okToClose();
 					}
 				}
-			}
+			};
 		}
 		
 		if (!editorExtension) {
@@ -2016,7 +2031,7 @@ var Workbench = {
 		 */
 		
 		if (!Workbench._state){
-			Workbench._state = davinci.Runtime.getWorkbenchState();
+			Workbench._state = Runtime.getWorkbenchState();
 		}
 		var urlProject = dojo.queryToObject(dojo.doc.location.search.substr((dojo.doc.location.search[0] === "?" ? 1 : 0))).project;
 		
@@ -2080,11 +2095,10 @@ var Workbench = {
 		}
 		
 		this._updateWorkbench.then(dojo.hitch(this,function(){
-			this._updateWorkbench = dojo.xhrPut({
+			this._updateWorkbench = xhr.put({
 				url: "cmd/setWorkbenchState",
 				putData: dojo.toJson(Workbench._state),
-				handleAs:"text",
-				sync:false
+				handleAs:"text"
 			});
 		}));
 		
@@ -2182,7 +2196,7 @@ var Workbench = {
 			dojo.removeClass(paletteContainerNode, 'maqPaletteExpanded');
 			paletteContainerNode._maqExpanded = false;
 			davinci.Workbench._repositionFocusContainer();
-			var currentEditor = davinci.Runtime.currentEditor;
+			var currentEditor = Runtime.currentEditor;
 			if(currentEditor){
 				if(paletteContainerNode.id == 'left_mainBody'){
 					currentEditor._leftPaletteExpanded = false;
@@ -2222,7 +2236,7 @@ var Workbench = {
 			dojo.addClass(paletteContainerNode, 'maqPaletteExpanded');
 			paletteContainerNode._maqExpanded = true;
 			davinci.Workbench._repositionFocusContainer();
-			var currentEditor = davinci.Runtime.currentEditor;
+			var currentEditor = Runtime.currentEditor;
 			if(currentEditor){
 				if(paletteContainerNode.id == 'left_mainBody'){
 					currentEditor._leftPaletteExpanded = true;
@@ -2240,7 +2254,7 @@ var Workbench = {
 		var editors_container = dojo.byId('editors_container');
 		var focusContainer = dojo.byId('focusContainer');
 		if(editors_container && focusContainer){
-			var currentEditor = davinci.Runtime.currentEditor;
+			var currentEditor = Runtime.currentEditor;
 			var box;
 			if(currentEditor && currentEditor.getFocusContainerBounds){
 				box = currentEditor.getFocusContainerBounds();

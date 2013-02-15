@@ -121,5 +121,9 @@
             "title": "Fill"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A chart widget.  This is leveraging dojox/charting/Chart as a Dijit widget.</p>"
+    }
 }

@@ -69,30 +69,11 @@
             "description": "Refresh (re-download) content when pane goes from hidden to shown",
             "hidden": false
         },
-/*FIXME: Temporarily comment out some properties that result in really ugly attributes in generated source code or are broken.
-        "loadingMessage": {
-            "datatype": "string",
-            "description": "Message that shows while downloading",
-            "hidden": false
-        },
-        "errorMessage": {
-            "datatype": "string",
-            "description": "Message that shows if an error occurs",
-            "hidden": false
-        },
-*/
         "doLayout": {
             "datatype": "boolean",
             "description": "- false - don't adjust size of children\n- true - if there is a single visible child widget, set it's size to\nhowever big the ContentPane is",
             "hidden": false
         },
-/*FIXME: Temporarily comment out some properties that result in really ugly attributes in generated source code or are broken.
-        "ioArgs": {
-            "datatype": "json",
-            "description": "Parameters to pass to xhrGet() request, for example:\n\t<div dojoType=\"dijit.layout.ContentPane\" href=\"./bar\" ioArgs=\"{timeout: 500}\">",
-            "hidden": true
-        },
-*/
         "isContainer": {
             "datatype": "boolean",
             "description": "Just a flag indicating that this widget will call resize() on\nits children.   _LayoutWidget based widgets check for\n\n\t\tif(!this.getParent || !this.getParent()){\n\nand if getParent() returns false because !parent.isContainer,\nthen they resize themselves on initialization.",
@@ -100,5 +81,17 @@
             "defaultValue": true
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A pane that &quot;scrolls&quot; its content based on the mouse poisition inside</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>A sizable container that takes it&#39;s content&#39;s natural size and creates\na scroll effect based on the relative mouse position. It is an interesting\nway to display lists of data, or blocks of content, within a confined\nspace.\n\n</p>\n<p>Horizontal scrolling is supported. Combination scrolling is not.</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;div dojoType=&quot;dojox.layout.ScrollPane&quot; style=&quot;width:150px height:300px;&quot;&gt;\n    &lt;!-- any height content --&gt;\n&lt;/div&gt;</code></pre>"
+    }
 }

@@ -55,6 +55,7 @@ require(["LoginWindow.js"]);
 		</div>
 		<div id="davinci_top_bar_divider"></div>
 		<div id="maqetta_slogan">Visual authoring of HTML5 user interfaces - in the browser!</div>
+		<div id="browser_not_supported" style="display:none;">Internet explorer is not supported - please use Chrome, Firefox or Safari instead.</div>
 	</div>
 	<div class="orion-login-container" id="login-window" style="display:none;min-height:400px;">
 		<div id="landingArea" class="orion-landing-area">
@@ -98,6 +99,9 @@ require(["LoginWindow.js"]);
 					<form>
 						<div class="orion-register-input-holder">
 							<input type="text" class="orion-text-input" placeholder="email" title="Email" autocomplete="on" autofocus="autofocus" id="create_login" spellcheck="false">
+						</div>
+						<div class="orion-register-input-holder">
+							<input type="text" class="orion-text-input" placeholder="full name" title="Full name" autocomplete="on" autofocus="autofocus" id="create_name" spellcheck="false">
 						</div>
 						<div class="orion-register-input-holder">
 							<input type="password" class="orion-text-input" placeholder="password" title="password" autocomplete="on" id="create_password" aria-required="true">

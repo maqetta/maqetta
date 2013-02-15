@@ -34,5 +34,9 @@
             "defaultValue": "RoundRectCategory"
         }
     },
-    "content": "<div label='RoundRectCategory'></div>"
+    "content": "<div label='RoundRectCategory'></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A category header for a rounded rectangle list.</p>"
+    }
 }

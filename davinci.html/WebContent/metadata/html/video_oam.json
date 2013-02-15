@@ -58,5 +58,9 @@
 			"hidden": true
 		}	 
 	},
-	"content": "<video></video>"
+	"content": "<video></video>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>An HTML video element represents a video stream.</p>"
+	}
 }

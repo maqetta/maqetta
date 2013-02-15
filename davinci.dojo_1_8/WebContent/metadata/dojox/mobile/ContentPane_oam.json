@@ -50,5 +50,13 @@
             "defaultValue": true
         }
     },
-    "content": "<div></div>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A very simple content pane to embed an HTML fragment.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>This widget embeds an HTML fragment and runs the parser. It has\nthe ability to load external content using dojo/_base/xhr. onLoad()\nis called when parsing is done and the content is\nready. Compared with dijit/layout/ContentPane, this widget\nprovides only basic fuctionality, but it is much lighter.</p>"
+    }
 }

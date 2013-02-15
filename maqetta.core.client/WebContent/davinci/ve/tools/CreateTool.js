@@ -1,4 +1,5 @@
 define(["dojo/_base/declare",
+        "dojo/dom-style",
 		"../tools/_Tool",
 		"davinci/Workbench",
 		"davinci/workbench/Preferences",
@@ -6,6 +7,7 @@ define(["dojo/_base/declare",
 		"../widget",
 		"dojo/Deferred",
 		"dojo/promise/all",
+		"davinci/ve/States",
 		"davinci/commands/CompoundCommand",
 		"../commands/AddCommand",
 		"../commands/MoveCommand",
@@ -13,6 +15,7 @@ define(["dojo/_base/declare",
 		"../commands/StyleCommand"
 ], function(
 		declare,
+		domStyle,
 		_Tool,
 		Workbench,
 		Preferences,
@@ -20,6 +23,7 @@ define(["dojo/_base/declare",
 		Widget,
 		Deferred,
 		all,
+		States,
 		CompoundCommand,
 		AddCommand,
 		MoveCommand,
@@ -70,12 +74,22 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		this._context.dragMoveCleanup();
 	},
 
+	_getContentPosition: function(position){
+		if(!position){
+			return undefined;
+		}
+		if(position.target){ // event
+			position = {x: position.pageX, y: position.pageY};
+		}
+		return position;
+	},
+
 	onMouseDown: function(event){
 		// This function gets called if user does a 2-click widget addition:
 		// 1) Click on widget in widget palette to select
 		// 2) Click on canvas to indicate drop location
 		this._target = Widget.getEnclosingWidget(event.target);
-		this._mdPosition = this._context.getContentPosition(event); // mouse down position
+		this._mdPosition = this._getContentPosition(event); // mouse down position
 		this._dragRect = null;
 	},
 
@@ -95,7 +109,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 			// Only perform drag operation if widget is resizable
 			if(this._resizable){
 				context.deselect();				
-				var p = context.getContentPosition(event);
+				var p = this._getContentPosition(event);
 				var l, t, w, h;
 				var pos_x = true;
 				var pos_y = true;
@@ -142,7 +156,14 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				style.top = t + "px";
 				style.width = w + "px";
 				style.height = h + "px";
-
+/*20121114 JF DELETE THIS. 
+	Only commenting out for now because there might be cases where
+	visual editor actually needs/uses the logic below, but it just 
+	doesn't make sense. We call context.deselect() above, which
+	deselects all and calls context.focus(null), thereby releasing
+	any outstanding focus objects. Focus only makes sense when there
+	is an active selection, but at this point we have removed
+	the selection.
 				if(w > 4 || h > 4){
 					var box = {l: l, t: t,
 						w: (w > 0 ? w : 1), h: (h > 0 ? h : 1)};
@@ -150,6 +171,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				}else{
 					context.focus(null);
 				}
+*/
 			}
 		}else{
 			var absolute = !this.createWithFlowLayout();
@@ -213,7 +235,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 		// If _mdPosition has a value, then user did a 2-click widget addition (see onMouseDown())
 		// If so, then use mousedown position, else get current position
 		var size, target, w, h;
-		var p = context.getContentPosition(event);
+		var p = this._getContentPosition(event);
 		if(this._mdPosition){
 			var pos_x = true;
 			var pos_y = true;
@@ -603,7 +625,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 				deferred.reject(new Error("Failed to create widget"));
 			}
 	
-			var command = new davinci.commands.CompoundCommand();
+			var command = new CompoundCommand();
 	
 			if(this.createNewWidget()){
 				args.size = this._getInitialSize(w, args);
@@ -628,6 +650,9 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 						helper.onCreateResize(command, w, width, height);
 					}
 				}
+				// If preference says to add new widgets to the current custom state,
+				// then add appropriate StyleCommands
+				this.checkAddToCurrentState(command, w);
 			}
 			var w_id = w.id;
 			// Custom CreateTools might define this function
@@ -890,6 +915,25 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 	// really has been completed.
 	// Currently used by LineCreateTool.js in the shapes library.
 	mouseUpProcessingCompleted: function(){
+	},
+	
+	// If preference says to add new widgets to the current custom state,
+	// then add appropriate StyleCommands
+	checkAddToCurrentState: function(command, widget){
+		var context = widget._edit_context;
+		// If preference says to add new widgets to the current custom state,
+		// then add appropriate StyleCommands
+		var statesFocus = States.getFocus(context.rootNode);
+		if(statesFocus && statesFocus.stateContainerNode){
+			var currentState = States.getState(statesFocus.stateContainerNode);
+			var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', 
+					Workbench.getProject());
+			if(currentState && editorPrefs.newWidgetsCurrentState){
+				var displayValue = domStyle.get(widget.domNode, 'display');
+				command.add(new StyleCommand(widget, [{display:'none'}]));
+				command.add(new StyleCommand(widget, [{display:displayValue}], currentState));
+			}
+		}
 	}
 
 });

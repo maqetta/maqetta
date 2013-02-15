@@ -59,5 +59,9 @@
             "defaultValue": false
         }
     },
-    "content": "<input type='radio'>"
+    "content": "<input type='radio'>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A non-templated radio button widget that can be in two states (checked or not checked).</p>"
+    }
 }

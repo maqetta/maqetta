@@ -40,5 +40,9 @@
             "defaultValue": true
         }
     },
-    "content": "<div></div>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Deprecated widget. Use dojox/mobile/Container instead.</p>"
+    }
 }

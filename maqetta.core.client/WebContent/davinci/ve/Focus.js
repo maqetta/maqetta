@@ -1,14 +1,15 @@
 define([
 	"require",
 	"dojo/_base/declare",
+	"dojo/query",
 	"dijit/_WidgetBase",
 	"dojo/dnd/Mover",
-	"dojo/dnd/Moveable",
+	"../Runtime",
 	"./metadata",
-	"davinci/ve/States",
-	"davinci/ve/utils/GeomUtils"
+	"./States",
+	"./utils/GeomUtils"
 ],
-function(require, declare, _WidgetBase, Mover, Moveable, Metadata, States, GeomUtils) {
+function(require, declare, Query, _WidgetBase, Mover, Runtime, Metadata, States, GeomUtils) {
 	
 // Nobs and frame constants
 var LEFT = 0,	// nob and frame
@@ -20,7 +21,7 @@ var LEFT = 0,	// nob and frame
 	RIGHT_TOP = 6,
 	RIGHT_BOTTOM = 7;
 
-return declare("davinci.ve.Focus", _WidgetBase, {
+return declare(_WidgetBase, {
 
 	// Inside knowledge about CSS classes used to style editFocusNob and editFocusFrame DIVs
 	nobSize:11,
@@ -110,6 +111,38 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 				return;
 			}
 			self._inline = inline;
+			
+			/* THE COMMENTED OUT CODE BELOW ACTUALLY WORKS BUT NO WIDGETS ARE USING IT TODAY
+			 * SO COMMENTING OUT OF PRODUCT.
+			// Check ancestors for 'inlineEditDescendantIntercept' property.
+			// If ancestor has such a property and if the current node matches
+			// one of the selectors specific in that property's array
+			var p = widget.getParent();
+			var ancestor;
+			while_loop:
+			while(p && p.domNode && p.domNode.tagName != 'BODY'){
+				var inlineEditDescendantIntercept = Metadata.queryDescriptor(p.type, 'inlineEditDescendantIntercept');
+				if(inlineEditDescendantIntercept && inlineEditDescendantIntercept.length){
+					for(var i=0; i<inlineEditDescendantIntercept.length; i++){
+						var selector = inlineEditDescendantIntercept[i];
+						var nodelist = Query(selector, p.domNode);
+						for(var j=0; j<nodelist.length; j++){
+							if(nodelist[j] == widget.domNode){
+								ancestor = p;
+								break while_loop;
+							}
+						}
+					}
+				}
+				p = p.getParent();
+			}
+			if(ancestor){
+				context.deselect(widget);
+				context.select(ancestor);
+				var parentFocusObject = context.getFocus(ancestor);
+				parentFocusObject.showInline(ancestor);
+			}else 
+			*/
 			if (inline.useParent) {
 				var parentWidget = widget.getParent();
 				if (parentWidget) {
@@ -127,10 +160,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 	inlineEditActive: function(){
 		if(this._inline && this._inline.inlineEditActive){
 			return this._inline.inlineEditActive();
-		}else{
-			return false;
 		}
-		
+
+		return false;
 	},
 
 	hide: function(inline){
@@ -183,46 +215,14 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		this._nobs[LEFT_BOTTOM].style.display = display.left_bottom;
 		this._nobs[RIGHT_TOP].style.display = display.right_top;
 		this._nobs[RIGHT_BOTTOM].style.display = display.right_bottom;
-		if(this._resizeLeft){
-			this._nobs[LEFT].style.cursor = this._frames[LEFT].style.cursor = "w-resize";
-		}else{
-			this._nobs[LEFT].style.cursor = this._frames[LEFT].style.cursor = "auto";
-		}
-		if(this._resizeRight){
-			this._nobs[RIGHT].style.cursor = this._frames[RIGHT].style.cursor = "e-resize";
-		}else{
-			this._nobs[RIGHT].style.cursor = this._frames[RIGHT].style.cursor = "auto";
-		}
-		if(this._resizeTop){
-			this._nobs[TOP].style.cursor = this._frames[TOP].style.cursor = "n-resize";
-		}else{
-			this._nobs[TOP].style.cursor = this._frames[TOP].style.cursor = "auto";
-		}
-		if(this._resizeBottom){
-			this._nobs[BOTTOM].style.cursor = this._frames[BOTTOM].style.cursor = "s-resize";
-		}else{
-			this._nobs[BOTTOM].style.cursor = this._frames[BOTTOM].style.cursor = "auto";
-		}
-		if(display.left_top != "none"){
-			this._nobs[LEFT_TOP].style.cursor = "nw-resize";
-		}else{
-			this._nobs[LEFT_TOP].style.cursor = "auto";
-		}
-		if(display.left_bottom != "none"){
-			this._nobs[LEFT_BOTTOM].style.cursor = "sw-resize";
-		}else{
-			this._nobs[LEFT_BOTTOM].style.cursor = "auto";
-		}
-		if(display.right_top != "none"){
-			this._nobs[RIGHT_TOP].style.cursor = "ne-resize";
-		}else{
-			this._nobs[RIGHT_TOP].style.cursor = "auto";
-		}
-		if(display.right_bottom != "none"){
-			this._nobs[RIGHT_BOTTOM].style.cursor = "se-resize";
-		}else{
-			this._nobs[RIGHT_BOTTOM].style.cursor = "auto";
-		}
+		this._nobs[LEFT].style.cursor = this._frames[LEFT].style.cursor = this._resizeLeft ? "w-resize" : "auto";
+		this._nobs[RIGHT].style.cursor = this._frames[RIGHT].style.cursor = this._resizeRight ? "e-resize" : "auto";
+		this._nobs[TOP].style.cursor = this._frames[TOP].style.cursor = this._resizeTop ? "n-resize" : "auto";
+		this._nobs[BOTTOM].style.cursor = this._frames[BOTTOM].style.cursor = this._resizeBottom ? "s-resize" : "auto";
+		this._nobs[LEFT_TOP].style.cursor = display.left_top != "none" ? "nw-resize" : "auto";
+		this._nobs[LEFT_BOTTOM].style.cursor = display.left_bottom != "none" ? "sw-resize" : "auto";
+		this._nobs[RIGHT_TOP].style.cursor = display.right_top != "none" ? "ne-resize" : "auto";
+		this._nobs[RIGHT_BOTTOM].style.cursor = display.right_bottom != "none" ? "se-resize" : "auto";
 	},
 
 	/**
@@ -242,13 +242,18 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		var frameSizeBorderAdjust = 4;
 
 		var focusContainer = dojo.byId('focusContainer');
+		if(!focusContainer){
+			// Occasionally, timing is such that first time this routine is called,
+			// focusContainer doesn't exist yet. No problem, this routine will get
+			// called later again after the focusContainer has been created.
+			return;
+		}
 		var focusContainerBounds = GeomUtils.getBorderBoxPageCoords(focusContainer);
 		var context = this._context;
-		var parentbounds = context.getParentIframeBounds();
+		var parentIframe = context.getParentIframe();
+		var parentbounds = GeomUtils.getBorderBoxPageCoords(parentIframe);
 		rect.l += parentbounds.l;
 		rect.t += parentbounds.t;
-		var parentIframe = context.getParentIframe();
-		var htmlElement = parentIframe.contentDocument.documentElement;
 		var bodyElement = parentIframe.contentDocument.body;
 		rect.l -= GeomUtils.getScrollLeft(bodyElement);
 		rect.t -= GeomUtils.getScrollTop(bodyElement);
@@ -276,7 +281,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		if(offScreenAdjust && body){
 			// Determine if parts of selection are off screen
 			// If so, shift selection DIVs to make it visible
-			var farthestLest, farthestTop, farthestRight, farthestBottom;
+			var farthestLeft, farthestTop, farthestRight, farthestBottom;
 			var canvasLeft = GeomUtils.getScrollLeft(body);
 			var canvasTop = GeomUtils.getScrollTop(body);;
 			var canvasRight = canvasLeft + body.clientWidth;
@@ -396,7 +401,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			var node = this._selectedWidget.domNode;
 			marginBoxPageCoords = GeomUtils.getMarginBoxPageCoords(node);
 		}
-		var parentIframeOffset = this._context.getParentIframeBounds();
+		var parentIframeOffset = GeomUtils.getBorderBoxPageCoords(this._context.getParentIframe());
 		this._moverStart = { moverLeft:l, moverTop:t,
 				l:marginBoxPageCoords.l+parentIframeOffset.l, t:marginBoxPageCoords.t+parentIframeOffset.t,
 				w:marginBoxPageCoords.w, h:marginBoxPageCoords.h };
@@ -410,7 +415,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		this._mover = new Mover(this._moverDragDiv, event, this);
 		dojo.stopEvent(event);
 
-		this._mouseDownInfo = { widget:this._selectedWidget, pageX:event.pageX+parentIframeOffset.l, pageY:event.pageY+parentIframeOffset.t, dateValue:(new Date()).valueOf() };
+		this._mouseDownInfo = { widget:this._selectedWidget, pageX:event.pageX+parentIframeOffset.l, pageY:event.pageY+parentIframeOffset.t, dateValue: Date.now() };
 		
 		// Temporarily stash the mousedown event so that the upcoming
 		// onMoveStop handler can process that event.
@@ -519,7 +524,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 		}
 
 		var rect = dojo.mixin({}, this._shiftKey ? this._moverCurrentConstrained : this._moverCurrent);
-		var parentIframeOffset = this._context.getParentIframeBounds();
+		var parentIframeOffset = GeomUtils.getBorderBoxPageCoords(this._context.getParentIframe());
 		rect.l -= parentIframeOffset.l;
 		rect.t -= parentIframeOffset.t;
 		this._updateFocusChrome(
@@ -597,7 +602,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 				}
 				var rect = dojo.mixin({}, newBox);
 				if(rect.hasOwnProperty('l')){
-					var parentIframeOffset = this._context.getParentIframeBounds();
+					var parentIframeOffset = GeomUtils.getBorderBoxPageCoords(this._context.getParentIframe());
 					rect.l -= parentIframeOffset.l;
 					rect.t -= parentIframeOffset.t;
 				}
@@ -616,7 +621,7 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 			var clickInteral = 750;	// .75seconds: allow for leisurely click action
 			var dblClickInteral = 750;	// .75seconds: big time slot for tablets
 			var clickDistance = 10;	// within 10px: inexact for tablets
-			var dateValue = (new Date()).valueOf();
+			var dateValue = Date.now();
 
 			this._mouseDownInfo = null;
 			
@@ -701,13 +706,9 @@ return declare("davinci.ve.Focus", _WidgetBase, {
 	 * Returns true if the given node is part of the focus (ie selection) chrome
 	 */
 	isFocusNode: function(node){
-		if(dojo.hasClass(node, 'focusDragDiv') || 
+		return dojo.hasClass(node, 'focusDragDiv') || 
 				dojo.hasClass(node, 'editFocusNob') || dojo.hasClass(node, 'editFocusFrame') ||
-				dojo.hasClass(node, 'maqFocus') || dojo.hasClass(node, 'editFocusStdChrome')){
-			return true;
-		}else{
-			return false;
-		}
+				dojo.hasClass(node, 'maqFocus') || dojo.hasClass(node, 'editFocusStdChrome');
 	},
 
     /**************************************
@@ -786,6 +787,16 @@ return declare("davinci.ve.Focus", _WidgetBase, {
                 checked: checked,
                 onClick: dojo.hitch(this, "_subwidgetSelected", this._context.theme.name + '_WidgetOuterContainer')
             });
+            /*
+             *  Issue #3733 To support war file deployments and deployments with differnt root contexts other than maqetta
+             *  the theme editor ex.dojo-theme-editor.html now loads dojo from a relative location instead of a static location
+             *  That change confusses dijit when we create a menu item, the relative path to dojo/resources/blank.gif is not correct
+             *  in the domNode. So the line of code below changes the src attribute of the node from the relative path to an absolute
+             *  path. Interestingly teh node.src property has the correct absolute path, so we just use that.
+             *  At some point in the future we want to move the subwidget context up from the theme editor document to the VE document
+             *  but for now this hack works.
+             */
+            item.domNode.children[0].children[0].setAttribute('src',item.domNode.children[0].children[0].src);
             pMenu.addChild(item);
             this._currentItem = item;
             for (var s in subwidgets){
@@ -796,6 +807,16 @@ return declare("davinci.ve.Focus", _WidgetBase, {
                     checked: checked,
                     onClick: dojo.hitch(this, "_subwidgetSelected", this._context.theme.name + '_' + s)
                 });
+                /*
+                 *  Issue #3733 To support war file deployments and deployments with differnt root contexts other than maqetta
+                 *  the theme editor ex.dojo-theme-editor.html now loads dojo from a relative location instead of a static location
+                 *  That change confusses dijit when we create a menu item, the relative path to dojo/resources/blank.gif is not correct
+                 *  in the domNode. So the line of code below changes the src attribute of the node from the relative path to an absolute
+                 *  path. Interestingly teh node.src property has the correct absolute path, so we just use that.
+                 *  At some point in the future we want to move the subwidget context up from the theme editor document to the VE document
+                 *  but for now this hack works.
+                 */
+                menuItem.domNode.children[0].children[0].setAttribute('src',menuItem.domNode.children[0].children[0].src);
                 pMenu.addChild(menuItem);
                 if (checked) {
                     this._currentItem = menuItem;
@@ -870,12 +891,12 @@ return declare("davinci.ve.Focus", _WidgetBase, {
     
     
     _updateSubwidgetListForState: function() {
-    	if (this._context.editor != davinci.Runtime.currentEditor){
+    	if (this._context.editor != Runtime.currentEditor){
             // not for us
             return;
         }
         if (this._context._selectedWidget && this._displayedWidget === this._context._selectedWidget) {
-            var editor = davinci.Runtime.currentEditor,
+            var editor = Runtime.currentEditor,
                 themeMetadata = editor._theme;
             this._cm.getChildren().forEach(function(child) {
                 var subwidget = child.label;

@@ -81,5 +81,9 @@
             "hidden": false
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>An indicator for the BarGauge that draws a bar corresponding to the indicator value.    </p>"
+    }
 }

@@ -17,26 +17,11 @@
             "format": "amd",
             "src": "shapes/Rectangle",
             "$library": "shapes"
-        },
-        {
-            "type": "css",
-            "src": "shapes.css",
-            "$library": "shapes"
         }
     ],
-    "property": {
-    	"width":{
-            "datatype": "number",
-            "defaultValue": "80"
-        },
-    	"height":{
-            "datatype": "number",
-            "defaultValue": "80"
-         },
-     	"cornerRadius":{
-             "datatype": "number",
-             "defaultValue": "0"
-        }
-    },
-    "content": "<span></span>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Drawing tool: rectangular shape (potentially rounded)</p>"
+    }
 }

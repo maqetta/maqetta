@@ -80,5 +80,13 @@
             "title": "Closable"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A Container with tabs to select each child (only one of which is displayed at a time).</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>A TabContainer is a container that has multiple panes, but shows only\none pane at a time.  There are a set of tabs corresponding to each pane,\nwhere each tab has the name (aka title) of the pane, and optionally a close button.\n\n</p>\n<p>See <code>StackContainer.ChildWidgetProperties</code> for details on the properties that can be set on\nchildren of a <code>TabContainer</code>.</p>"
+    }
 }

@@ -4,8 +4,9 @@ define([
 	"dijit/_TemplatedMixin",
 	"dijit/form/CheckBox",
 	"dijit/form/TextBox",
+	"dijit/form/Select",
 	"dojo/i18n!../nls/common"
-], function(declare, ContentPane, TemplatedMixin, CheckBox, TextBox, commonNls) {
+], function(declare, ContentPane, TemplatedMixin, CheckBox, TextBox, Select, commonNls) {
 
 return declare([ContentPane, TemplatedMixin], {
 
@@ -15,6 +16,9 @@ return declare([ContentPane, TemplatedMixin], {
 		"<tr><td>${_loc.showPossibleParents}:</td><td><div dojoAttachPoint='showPossibleParentsNode'></div></td></tr>" +
 		"<tr><td>${_loc.warnOnCSSOverride}:</td><td><div dojoAttachPoint='cssOverrideWarn'></div></td></tr>" +
 		"<tr><td>${_loc.absoluteWidgetsZindex}:</td><td><div dojoAttachPoint='absoluteWidgetsZindex'></div></td></tr>" +
+/*FIXME: Disabled for now. Ultimately, UI for this option should go to widget palette
+		"<tr><td>${_loc.widgetPaletteLayout}:</td><td><div dojoAttachPoint='widgetPaletteLayout'></div></td></tr>" +
+*/
 		"<tr><td>${_loc.zazl}:</td><td><div dojoAttachPoint='zazl'></div></td></tr>" +
 		"</tbody></table></div>",
 
@@ -28,6 +32,14 @@ return declare([ContentPane, TemplatedMixin], {
 		this._showPossibleParents = new CheckBox({}, this.showPossibleParentsNode);
 		this._cssOverrideWarn = new CheckBox({}, this.cssOverrideWarn);
 		this._absoluteWidgetsZindex = new TextBox({}, this.absoluteWidgetsZindex);
+/*FIXME: Disabled for now. Ultimately, UI for this option should go to widget palette
+		this._widgetPaletteLayout = new Select({
+			options:[
+				{ label:commonNls.widgetPaletteShow_Icons,  value:'icons' },
+				{ label:commonNls.widgetPaletteShow_List,  value:'list' }
+			]
+		}, this.widgetPaletteLayout);
+*/
 		this._zazl = new CheckBox({}, this.zazl);
 		if(!this.containerNode){
 			this.containerNode = this.domNode;
@@ -50,6 +62,9 @@ return declare([ContentPane, TemplatedMixin], {
 			showPossibleParents: this._showPossibleParents.checked,
 			cssOverrideWarn: this._cssOverrideWarn.checked,
 			absoluteWidgetsZindex: this._absoluteWidgetsZindex.value,
+/*FIXME: Disabled for now. Ultimately, UI for this option should go to widget palette
+			widgetPaletteLayout: this._widgetPaletteLayout.value,
+*/
 			zazl: this._zazl.checked
 		};
 	},
@@ -61,6 +76,9 @@ return declare([ContentPane, TemplatedMixin], {
 		this._check(this._showPossibleParents, !!preferences.showPossibleParents);
 		this._check(this._cssOverrideWarn, !!preferences.cssOverrideWarn);
 		this._absoluteWidgetsZindex.set("value", preferences.absoluteWidgetsZindex);
+/*FIXME: Disabled for now. Ultimately, UI for this option should go to widget palette
+		this._widgetPaletteLayout.set("value", preferences.widgetPaletteLayout);
+*/
 		this._check(this._zazl, !!preferences.zazl);
 	},
 

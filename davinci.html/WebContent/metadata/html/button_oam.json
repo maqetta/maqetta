@@ -101,5 +101,9 @@
 			"hidden": true
 		}
 	},
-	"content": "<button></button>"
+	"content": "<button></button>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>The HTML button element represents a button labeled by its contents.</p>"
+	}
 }

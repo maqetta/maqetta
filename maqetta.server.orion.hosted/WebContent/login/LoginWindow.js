@@ -13,6 +13,17 @@
 /*global define window*/
 
 define(['domReady'], function(domReady) {
+	var ua = window.navigator.userAgent;
+	var ieIndex = ua.indexOf('MSIE');
+	var isIE = (ieIndex>=0) ? parseInt(ua.substr(ieIndex+4)) : false;
+	if(isIE){
+		var browser_not_supported = document.getElementById("browser_not_supported");
+		browser_not_supported.style.display = "";
+		browser_not_supported.style.color = "red";
+		browser_not_supported.style.fontSize = "16px";
+		browser_not_supported.style.padding = "20px 15px";
+		return;
+	}
 	var userCreationEnabled;
 	var admin_userid = 'admin';
 
@@ -135,6 +146,10 @@ define(['domReady'], function(domReady) {
 	}
 
 	function confirmResetUser() {
+		var login = document.getElementById("resetEmail").value;
+		if (!validateEmail(login)){
+			return;
+		}
 		var mypostrequest = new XMLHttpRequest();
 		mypostrequest.onreadystatechange = function() {
 			
@@ -143,7 +158,6 @@ define(['domReady'], function(domReady) {
 					setResetMessage(false, "No user found.");
 				} else {
 					setResetMessage(false, "Password reset email sent");
-
 				}
 			}
 		};
@@ -274,6 +288,10 @@ define(['domReady'], function(domReady) {
 		if (!validateEmail(login)){
 			return;
 		}
+		var name = document.getElementById("create_name").value;
+		if (!name) {
+			name = login;
+		}
 		if (!validatePassword()) {
 			document.getElementById("create_password").setAttribute("aria-invalid", "true");
 			document.getElementById("create_passwordRetype").setAttribute("aria-invalid", "true");
@@ -299,7 +317,7 @@ define(['domReady'], function(domReady) {
 				}
 			}
 		};
-		var parameters = "login=" + encodeURIComponent(login) + "&password=" + encodeURIComponent(password) + "&loginTolken=" + loginTolken;
+		var parameters = "login=" + encodeURIComponent(login) + "&password=" + encodeURIComponent(password) + "&loginTolken=" + loginTolken + "&Name=" + encodeURIComponent(name);
 		mypostrequest.open("POST", "../users", true);
 		mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		mypostrequest.setRequestHeader("Orion-Version", "1");
@@ -312,6 +330,17 @@ define(['domReady'], function(domReady) {
 		if (!validateEmail(login)){
 			return;
 		}
+		mypostrequest.onreadystatechange = function() {
+			if (mypostrequest.readyState === 4) {
+				if (mypostrequest.responseText == "USER_ALREADY_EXISTS") {
+					document.getElementById("errorMessage").innerHTML = "Email is already registered.";
+					document.getElementById("errorWin").style.visibility = '';
+					document.getElementById('login').value = login;
+					document.getElementById('loginContainer').style.visibility = '';
+					document.getElementById('orionRegister').style.visibility = '';
+				}
+			}
+		};
 		var parameters = "login=" + encodeURIComponent(login) ;
 		mypostrequest.open("POST", "../maqetta/cmd/register", true);
 		mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -329,6 +358,8 @@ define(['domReady'], function(domReady) {
 		document.getElementById('orionLogin').style.visibility = 'hidden';
 		document.getElementById('orionRegister').style.visibility = 'hidden';
 		document.getElementById('newUserSignup').style.visibility = '';
+		document.getElementById('landingArea').classList.add('register');
+
 	}
 
 	
@@ -336,6 +367,7 @@ define(['domReady'], function(domReady) {
 		document.getElementById('orionLogin').style.visibility = 'hidden';
 		document.getElementById('orionRegister').style.visibility = 'hidden';
 		document.getElementById('newUserHeaderShown').style.visibility = '';
+		document.getElementById('landingArea').classList.add('register');
 	}
 	
 	function revealResetForm() {
@@ -348,6 +380,8 @@ define(['domReady'], function(domReady) {
 		document.getElementById('orionLogin').style.visibility = '';
 		document.getElementById('orionRegister').style.visibility = '';
 		document.getElementById('newUserSignup').style.visibility = 'hidden';
+		document.getElementById('landingArea').classList.remove('register');
+
 	}
 
 	function formatForNoUserCreation() {

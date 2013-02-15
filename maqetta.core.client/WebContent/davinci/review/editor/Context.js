@@ -24,29 +24,41 @@ return declare("davinci.review.editor.Context", [Context], {
 				
 		var containerNode = this.containerNode; 
 		var versionInfo = this.resourceFile.parent;
-		if (!versionInfo.width)
+		if (!versionInfo.width) {
 			containerNode.style.overflowX = "hidden";
-		if (!versionInfo.height)
+		}
+		if (!versionInfo.height) {
 			containerNode.style.overflowY = "hidden";
+		}
 		if (!this.frame) {
+			var baseURL = this.baseURL;
+			if (this.getPreference("zazl")) {
+				baseURL += '?zazl=true';
+			}
+
 			this.frame = dojo.create("iframe", dojo.mixin(this.iframeattrs, {
 				style: {
 					border: "0",
 					width: versionInfo.width && versionInfo.height ? versionInfo.width + "px" : "100%",
 					height: versionInfo.width && versionInfo.height ? versionInfo.height + "px" : "100%"
 				},
-				src: this.baseURL,
-				onload: dojo.hitch(this,function(event){
+				src: baseURL,
+				onload: function(event){
 					this._domIsReady = true;
 					var userDoc = event && event.target && event.target.contentDocument;
 					var userWindow = userDoc && userDoc.defaultView && userDoc.defaultView.window;
 					var deviceName = this.frame.contentDocument.body.getAttribute('data-maq-device');
-					var svgfilename = (!deviceName || deviceName == 'none' || deviceName == 'desktop') 
-							? null : "app/preview/images/" + deviceName + ".svg";
-					if (svgfilename) {
+					var deviceNameM6 = this.frame.contentDocument.body.getAttribute('data-maqetta-device');
+					if(!deviceName && deviceNameM6){
+						// Migrate old M6 attribute name to new M7-or-later attribute name
+						deviceName = deviceNameM6;
+					}
+					var svgFilename = (!deviceName || deviceName == 'none' || deviceName == 'desktop') ?
+							null : "app/preview/images/" + deviceName + ".svg";
+					if (svgFilename) {
 						userWindow.require('dojo/ready')(function(){
 				    		var deviceTheme = userWindow.require('dojox/mobile/deviceTheme');        	
-				        	deviceTheme.loadDeviceTheme(Silhouette.getMobileTheme(svgfilename));
+				        	deviceTheme.loadDeviceTheme(Silhouette.getMobileTheme(svgFilename));
 						});
 					}
 //					if (dj && dj.subscribe) {
@@ -60,25 +72,27 @@ return declare("davinci.review.editor.Context", [Context], {
 						});
 //					}
 
-					userWindow.require("dojo/_base/connect").subscribe("/maqetta/appstates/state/changed", function(args) {
-						if (!args || !Runtime.currentEditor || Runtime.currentEditor.declaredClass != "davinci.review.editor.ReviewEditor") { 
-							return; 
-						}
-						var state = args.newState || "Normal";
-						var dv = userWindow.davinci;
-						if(dv && dv.states && dv.states.setState){
+					userWindow.require(["dojo/_base/connect"], function(userWindowConnect) {
+						userWindowConnect.subscribe("/maqetta/appstates/state/changed", this, function(args) {
+							if (!args || !Runtime.currentEditor || Runtime.currentEditor.declaredClass != "davinci.review.editor.ReviewEditor") { 
+								return; 
+							}
+//							var state = args.newState || "Normal";
+							var dv = userWindow.davinci;
+							if(dv && dv.states && dv.states.setState){
 /*FIXME: Shouldn't be necessary - event was spawned because state just changed. No need to change it again.
 							dv.states.setState(state, args.stateContainerNode, { focus:true, silent:true, updateWhenCurrent:true });
 */
-							if (this._commentView) {
-								this._commentView.updateStatesScenes();
-							}							
-							// Re-publish at the application level
-							var newArgs = dojo.clone(args);
-							newArgs.editorClass = "davinci.review.editor.ReviewEditor";
-							connect.publish("/maqetta/appstates/state/changed", [newArgs]);
-						}
-					});
+								if (this._commentView) {
+									this._commentView.updateStatesScenes();
+								}
+								// Re-publish at the application level
+								var newArgs = dojo.clone(args); //FIXME: use shallow copy?
+								newArgs.editorClass = "davinci.review.editor.ReviewEditor";
+								connect.publish("/maqetta/appstates/state/changed", [newArgs]);
+							}
+						});
+					}.bind(this));
 
 					this.rootNode = this.rootWidget = this.frame.contentDocument.body;
 					
@@ -94,22 +108,21 @@ return declare("davinci.review.editor.Context", [Context], {
 					
 					this._initDrawing();
 					connect.publish("/davinci/review/context/loaded", [this, this.fileName]);
-					
-					var newCons = [];
+
 					// add the user activity monitoring to the document and add the connects to be 
 					// disconnected latter
-					newCons = newCons.concat(this._cxtConns, UserActivityMonitor.addInActivityMonitor(this.frame.contentDocument));
+					var newCons = [].concat(this._cxtConns, UserActivityMonitor.addInActivityMonitor(this.frame.contentDocument));
 					this._cxtConns = newCons;
-					this.containerEditor.silhouetteiframe.setSVGFilename(svgfilename);
+					this.containerEditor.silhouetteiframe.setSVGFilename(svgFilename);
 					this._statesLoaded = true;
 					connect.publish('/davinci/ui/context/statesLoaded', [this]);
 					if(this.surface){
 						this._refreshSurface(this.surface);
 					}
-				})
+				}.bind(this)
 			}), containerNode);
 /*FIXME: Pretty sure it's not needed, so commenting out for now, but leaving around in case problems crop up
-			connect.subscribe("/maqetta/appstates/state/changed", function(args) { 
+			connect.subscribe("/maqetta/appstates/state/changed", this, function(args) { 
 				if (!args || !Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor" ||
 						!this.containerEditor || this.containerEditor != Runtime.currentEditor) { 
 					return; 
@@ -119,7 +132,7 @@ return declare("davinci.review.editor.Context", [Context], {
 				if(userWin && userWin.davinci && userWin.davinci.states && userWin.davinci.states.setState){
 					userWin.davinci.states.setState(args.newState, args.stateContainerNode);
 				}
-			}.bind(this));
+			});
 */
 		}
 	},
@@ -178,9 +191,8 @@ return declare("davinci.review.editor.Context", [Context], {
 				 surface.filterSceneList = viewSceneList;
 				 surface.filterComments = [commentId];
 				 this._refreshSurface(surface);
-			 }.bind(this)),
-			 connect.subscribe(this.fileName+"/davinci/review/drawing/getShapesInEditing", 
-					 dojo.hitch(this,function(obj, args) {
+			 }),
+			 connect.subscribe(this.fileName+"/davinci/review/drawing/getShapesInEditing", this, function(obj, args) {
 				 if (obj._currentPage != this.fileName) {
 					 return;
 				 }
@@ -197,16 +209,16 @@ return declare("davinci.review.editor.Context", [Context], {
 				 obj.drawingJson = surface.exchangeTool.exportShapesByAttribute("commentId", [surface.commentId]);
 				 surface.deactivate();
 				 surface.commentId = "";
-			 })),
-			 connect.subscribe(this.fileName+"/davinci/review/drawing/cancelEditing", dojo.hitch(this, function() {
+			 }),
+			 connect.subscribe(this.fileName+"/davinci/review/drawing/cancelEditing", this, function() {
 				 // Restore the previous status
 				 var surface = this.surface;
 				 surface.exchangeTool.importShapes(surface.cached, true, dojo.hitch(Review, Review.getColor)); // FIXME: Unique surface is required
 				 surface.deactivate();
 				 this._refreshSurface(surface);
 				 surface.commentId = ""; // Clear the filter so that no shapes can be selected
-			 })),
-			 connect.subscribe(this.fileName+"/davinci/review/drawing/filter", dojo.hitch(this,function(/*Object*/ stateinfo, /*Array*/ commentIds) {
+			 }),
+			 connect.subscribe(this.fileName+"/davinci/review/drawing/filter", this, function(/*Object*/ stateinfo, /*Array*/ commentIds) {
 				 var surface = this.surface;
 /*FIXME: surface should update based on event listeners to setstate and setscene
 				 surface.filterState = stateinfo.pageState;
@@ -223,13 +235,13 @@ return declare("davinci.review.editor.Context", [Context], {
 				 surface.filterSceneList = this.getCurrentScenes();
 				 surface.filterComments = commentIds;
 				 this._refreshSurface(surface);
-			 })),
-			 connect.subscribe(this.fileName+"/davinci/review/drawing/setShownColorAliases", dojo.hitch(this,function(colorAliases) {
+			 }),
+			 connect.subscribe(this.fileName+"/davinci/review/drawing/setShownColorAliases", this,function(colorAliases) {
 				 var surface = this.surface;
 				 surface.filterColorAliases = colorAliases;
 				 this._refreshSurface(surface);
-			 })),
-			 connect.subscribe("/davinci/review/view/openComment", dojo.hitch(this, function() {
+			 }),
+			 connect.subscribe("/davinci/review/view/openComment", this, function() {
 	            if (Runtime.currentEditor === this.containerEditor) {
 	            	this.containerEditor.isDirty = true;
 	            	//Also, tell our container we're dirty
@@ -237,8 +249,8 @@ return declare("davinci.review.editor.Context", [Context], {
 	            		this.containerEditor.editorContainer.setDirty(true);
 	    			}
 	            }
-			 })),
-			 connect.subscribe("/davinci/review/view/closeComment", dojo.hitch(this, function() {
+			 }),
+			 connect.subscribe("/davinci/review/view/closeComment", this, function() {
 				 if (Runtime.currentEditor === this.containerEditor) {
 					 this.containerEditor.isDirty = false;
 					 //Also, tell our container we're no longer dirty
@@ -246,8 +258,8 @@ return declare("davinci.review.editor.Context", [Context], {
 		            		this.containerEditor.editorContainer.setDirty(false);
 		    			}
 				 }
-			 })),
-			 connect.subscribe("/davinci/ui/editorSelected", dojo.hitch(this, function(obj){
+			 }),
+			 connect.subscribe("/davinci/ui/editorSelected", this, function(obj){
 				 if (obj.oldEditor!=null && this === obj.oldEditor.getContext && this === obj.oldEditor.getContext()) { // not all editors have a context eg textView
 					 // Determine if the editor is closed, if the editor is closed then
 					 // getDocument() will throw an exception
@@ -258,7 +270,7 @@ return declare("davinci.review.editor.Context", [Context], {
 						 this._destroyDrawing();
 					 }
 				 }
-			 }))
+			 })
 		];
 	},
 

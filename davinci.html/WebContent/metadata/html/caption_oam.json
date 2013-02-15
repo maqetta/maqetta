@@ -3,5 +3,9 @@
 	"name": "html.caption",
 	"spec": "1.0",
 	"version": "1.0",
-	"content": "<caption></caption>"
+	"content": "<caption></caption>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>The HTML caption element represents the title of the table that is its parent</p>"
+	}
 }

@@ -9,21 +9,29 @@ define(function() {
 	Helper.prototype = {
 
 		/**
-		 * Override the default action in 'DijitWidget.addChild()', which simply calls `addChild()`
-		 * on the associated Dijit widget instance (i.e. `widget.dijitWidget`).
+		 * Override the default "add child" action when adding the child widget
+		 * to the Visual Editor DOM (the default implementation varies depending
+		 * on the widget type).
 		 * 
-		 * NOTE: Only applies to widgets of class "dijit", which are instances of DijitWidget.
-		 *
-		 * XXX This should be refactored in such a way that it is available to all widget types,
-		 *     not just DijitWidget instances (or remove from DijitWidget).
-		 * 
-		 * @param {davinci/ve/DijitWidget} widget  the (Maqetta) widget instance
-		 * @param {dijit/_Widget} dijitWidget  the Dijit widget instance
+		 * @param {davinci/ve/_Widget} parentWidget  a (Maqetta) widget instance
+		 * @param {davinci/ve/_Widget} childWidget
+		 *             the (Maqetta) widget instance to add to 'parentWidget'
 		 * @param {Number|String} [index]
 		 *             The equivalent of the 'pos' parameter to 'dojo.place()', can be a number or
 		 *             a position name.  Defaults to "last".
 		 */
-		addChild: function(widget, dijitWidget, index) {},
+		addChild: function(parentWidget, childWidget, index) {},
+		
+		/**
+		 * Override the default "remove child" action when removing the child widget
+		 * from the Visual Editor DOM (the default implementation varies depending
+		 * on the widget type).
+		 * 
+		 * @param {davinci/ve/_Widget} parentWidget  a (Maqetta) widget instance
+		 * @param {davinci/ve/_Widget} childWidget
+		 *             the (Maqetta) widget instance to remove from 'parentWidget'
+		 */
+		removeChild: function(parentWidget, childWidget) {},
 
 		/**
 		 * Check that there are no discrepencies with 'value'.
@@ -65,6 +73,19 @@ define(function() {
 		 * @param  {davinci/html/HTMLElement} srcElement
 		 */
 		cleanSrcElement: function(srcElement) {},
+		
+		/**
+		 * Invoked after new widget is created but before being adding a new widget to the page; 
+		 * when changing properties on a widget (and the widget is recreated); or for each widget
+		 *  when loading a page into the visual editor.
+		 *
+		 * XXX This is invoked from widget.createWidget().  
+		 * 
+		 * @param  {davinci/ve/_Widget} widget
+		 *             the widget instance that is being created
+		 * 
+		 */
+		postCreateWidget: function(widget){},
 
 		/**
 		 * Invoked when adding a new widget to the page; when changing properties on a widget (and
@@ -203,6 +224,23 @@ define(function() {
 //
 //			return children;
 		},
+		/**
+		 * Override the default action, in some cases the children of a widget have been hidden and
+		 * replaced with different widgets at runtime. In cases like this the widget from the html 
+		 * source  does not match the runtime widget and we need to find the corresponding runtime
+		 * widget to select.
+		 *
+		 * Implement this function for widgets whose children are not neatly encapsulated in the
+		 * container node.
+		 * 
+		 * @param  {davinci/ve/_Widget} ParentWidget  the parent widget instance
+		 * @param  {davinci/ve/_Widget} childWidget  the child widget instance.
+		 *             If true, function must "attach" child widget nodes by calling 
+		 *             'require("davinci/ve/widget").getWidget(node)'.
+		 * 
+		 * @return {null} 
+		 */
+		selectChild: function(parentWidget, childWidget){},
 		
 		/**
 		 * Override the default implementation of 'widget.getChildrenData()', which calls
@@ -549,6 +587,14 @@ define(function() {
 		 * @return {boolean}  whether standard toggle processing should proceed
 		 */
 		onToggleVisibility: function(widget, on) {},
+		/**
+		 * Invoked to determine widget visibility
+		 * (e.g.,  by Outline palette for eyeball icon).
+		 * Return true if widget is visible.
+		 * @param  {davinci.ve._Widget} widget  Widget whose visibility is being determined
+		 * @return {boolean}  true = visible, false = hidden 
+		 */
+		isToggleOn: function(widget){},
 
 		/**
 		 * Helper function called whenever a widget-specific property is changed

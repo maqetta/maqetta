@@ -8,5 +8,9 @@
 			"datatype": "string"
 		}
 	},
-	"content": "<i></i>"
+	"content": "<i></i>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>HTML element for indicating italic text.</p>"
+	}
 }

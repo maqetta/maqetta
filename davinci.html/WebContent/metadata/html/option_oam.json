@@ -22,5 +22,9 @@
 			"description": "Specifies that an option should be pre-selected when the page loads"
 		}
 	},
-	"content": "<option></option>"
+	"content": "<option></option>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>The HTML option element represents an option in a select element or as part of a list of suggestions in a datalist element.</p>"
+	}
 }

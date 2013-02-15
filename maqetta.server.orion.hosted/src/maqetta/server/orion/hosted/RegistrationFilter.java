@@ -25,17 +25,17 @@ public class RegistrationFilter implements Filter {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
 		String path = httpRequest.getPathInfo();
-		/* null path means add user request */
-		if ("POST".equals(httpRequest.getMethod()) && (path==null)) { //$NON-NLS-1$
-			String loginTolken = request.getParameter("loginTolken");
-			String login = request.getParameter("login");
-			
+		String loginTolken = request.getParameter("loginTolken"); //$NON-NLS-1$
+
+		if ("POST".equals(httpRequest.getMethod()) && path == null && loginTolken != null) { //$NON-NLS-1$
+			// adding a user...
 			IEclipsePreferences signupTokens = new OrionScope().getNode("signup"); //$NON-NLS-1$
 	    	
 	    	/* index by the token for easy retrival */
 			IEclipsePreferences result = (IEclipsePreferences) signupTokens.node(loginTolken);
 	    	/* store the email address with the token */
-			String storedEmail = result.get("SIGNUP_EMAIL", null);
+			String storedEmail = result.get("SIGNUP_EMAIL", null); //$NON-NLS-1$
+			String login = request.getParameter("login"); //$NON-NLS-1$
 			if(storedEmail!=null && storedEmail.equals(login)){
 				chain.doFilter(request, response);
 				return;

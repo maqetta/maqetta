@@ -31,5 +31,13 @@
             "title": "Label Attribute"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>The OpmlStore implements the dojo/data/api/Read API.</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>var opmlStore = new dojo.data.OpmlStore({url:&quot;geography.xml&quot;});\nvar opmlStore = new dojo.data.OpmlStore({url:&quot;http://example.com/geography.xml&quot;});</code></pre>"
+    }
 }

@@ -88,5 +88,13 @@
 			"hidden": true
 		}
 	},
-	"content": "<table></table>"
+	"content": "<table></table>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>The HTML table element is a container for row-column presentation of content.</p>"
+	},
+	"description": {
+		"type": "text/html",
+		"value": "<p>Tables have rows, columns, and cells. Optionally, column widths can be defined using HTML col elements within the table.</p>"
+	}
 }

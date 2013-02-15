@@ -91,5 +91,9 @@
             "defaultValue": false
         }
     },
-    "content": "<input type='range'>"
+    "content": "<input type='range'>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A non-templated Slider widget similar to the HTML5 INPUT type=range.</p>"
+    }
 }

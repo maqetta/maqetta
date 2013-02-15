@@ -18,5 +18,9 @@
 			"description": "Specifies the MIME type of the media resource"
 		}
 	},
-	"content": "<source></source>"
+	"content": "<source></source>",
+	"title": {
+		"type": "text/html",
+		"value": "<p>The HTML source element allows authors to specify multiple alternative media resources for media elements. It is a child element for the HTML audio and video elements.</p>"
+	}
 }

@@ -95,5 +95,9 @@
             "title": "Font Color"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>The default axis object used in dojox.charting.  See dojox.charting.Chart.addAxis for details.</p>"
+    }
 }

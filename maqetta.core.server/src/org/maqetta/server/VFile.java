@@ -2,13 +2,9 @@ package org.maqetta.server;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -272,7 +268,7 @@ public class VFile implements IVResource {
 
     }
 
-    public IVResource create(String path) {
+    public IVResource create(String path) throws IOException {
         if (!this.isDirectory()) {
             return null;
         }
@@ -301,7 +297,7 @@ public class VFile implements IVResource {
 		return false;
 	}
 
-    public void flushWorkingCopy() {
+    public void flushWorkingCopy() throws IOException {
         // String name = this.file.getName();
         if (this.workingCopy.exists()) {
             this.file.delete();

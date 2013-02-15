@@ -5,7 +5,8 @@ define([
 	"./commands/StyleCommand",
 	"./widget",
 	"./States",
-	"dijit/tree/dndSource"
+	"dijit/tree/dndSource",
+	"../Runtime"
 ], function(
 	declare,
 	connect,
@@ -13,7 +14,8 @@ define([
 	StyleCommand,
 	Widget,
 	States,
-	dndSource
+	dndSource,
+	Runtime
 ){
 
 var DesignOutlineTreeModel = declare(null, {
@@ -244,7 +246,7 @@ var DesignOutlineTreeModel = declare(null, {
 	
 	_toggle: function(widget, on, node) {
 		var visible = !on;
-		var value = visible ? "" : "none !important";
+		var value = visible ? "" : "none";
 		var state;
 		var statesFocus = States.getFocus(widget.domNode.ownerDocument.body);
 		if(statesFocus){
@@ -278,9 +280,16 @@ var DesignOutlineTreeModel = declare(null, {
 	},
 
 	isToggleOn: function(item) {
+		
 		var widget = this._getWidget(item);
-
-		return (widget.domNode.style.display === 'none');
+		var helper = widget.getHelper();
+		var continueProcessing = true;
+		if(helper && helper.isToggleOn){
+			return helper.isToggleOn(widget);
+		}else{
+			return (widget.domNode.style.display === 'none');
+		}
+		
 	},
 	// end toggle code
 
@@ -321,8 +330,8 @@ return declare("davinci.ve.VisualEditorOutline", null, {
 		connect.subscribe("/maqetta/appstates/state/changed/end", this,
 			function(e) {
 				var declaredClass = (typeof davinci !== "undefined") &&
-						davinci.Runtime.currentEditor &&
-						davinci.Runtime.currentEditor.declaredClass;
+						Runtime.currentEditor &&
+						Runtime.currentEditor.declaredClass;
 				if (declaredClass === "davinci.themeEditor.ThemeEditor") {
 					return; // ignore updates in theme editor
 				}

@@ -33,20 +33,48 @@
             "datatype": "string",
             "defaultValue": "slide",
             "option": [
-                {"value": "slide"},
-                {"value": "fade"},
-                {"value": "flip"},
-                {"value": "cover"},
-                {"value": "coverv"},
-                {"value": "dissolve"},
-                {"value": "reveal"},
-                {"value": "revealv"},
-                {"value": "scaleIn"},
-                {"value": "scaleOut"},
-                {"value": "slidev"},
-                {"value": "swirl"},
-                {"value": "zoomIn"},
-                {"value": "zoomOut"}
+                {
+                    "value": "slide"
+                },
+                {
+                    "value": "fade"
+                },
+                {
+                    "value": "flip"
+                },
+                {
+                    "value": "cover"
+                },
+                {
+                    "value": "coverv"
+                },
+                {
+                    "value": "dissolve"
+                },
+                {
+                    "value": "reveal"
+                },
+                {
+                    "value": "revealv"
+                },
+                {
+                    "value": "scaleIn"
+                },
+                {
+                    "value": "scaleOut"
+                },
+                {
+                    "value": "slidev"
+                },
+                {
+                    "value": "swirl"
+                },
+                {
+                    "value": "zoomIn"
+                },
+                {
+                    "value": "zoomOut"
+                }
             ]
         },
         "iconBase": {
@@ -59,9 +87,15 @@
             "datatype": "string",
             "defaultValue": "",
             "option": [
-                {"value": ""},
-                {"value": "single"},
-                {"value": "multiple"}
+                {
+                    "value": ""
+                },
+                {
+                    "value": "single"
+                },
+                {
+                    "value": "multiple"
+                }
             ]
         },
         "editable": {
@@ -69,5 +103,13 @@
             "defaultValue": false
         }
     },
-    "content": "<ul></ul>"
+    "content": "<ul></ul>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>An edge-to-edge layout list.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>EdgeToEdgeList is an edge-to-edge layout list, which displays\nall items in equally-sized rows. Each item must be a\ndojox/mobile/ListItem.</p>"
+    }
 }

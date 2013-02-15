@@ -56,5 +56,13 @@
             "defaultValue": true
         }
     },
-    "content": "<div></div>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A progress indication widget.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>ProgressIndicator is a round spinning graphical representation\nthat indicates the current task is ongoing.</p>"
+    }
 }

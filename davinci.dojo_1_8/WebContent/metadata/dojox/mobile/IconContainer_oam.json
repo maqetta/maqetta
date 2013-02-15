@@ -69,5 +69,13 @@
             "defaultValue": false
         }
     },
-    "content": "<ul></ul>"
+    "content": "<ul></ul>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A container widget which can hold multiple icons.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>IconContainer is a container widget which can hold multiple\nicons. Each icon represents an application component.</p>"
+    }
 }

@@ -132,5 +132,13 @@
             "hidden": false
         }
     },
-    "content": "<input></input>"
+    "content": "<input></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Time Spinner</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>This widget is the same as a normal NumberSpinner, but for the time component of a date object instead</p>"
+    }
 }

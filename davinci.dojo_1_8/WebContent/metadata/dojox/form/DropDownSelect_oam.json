@@ -100,5 +100,9 @@
             "hidden": true
         }
     },
-    "content": "<select></select>"
+    "content": "<select></select>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>This is a &quot;styleable&quot; select box - it is basically a DropDownButton which\ncan take a <code>&lt;select&gt;</code> as its input.</p>"
+    }
 }

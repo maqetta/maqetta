@@ -44,5 +44,9 @@
             "defaultValue": false
         }
     },
-    "content": "<input type='text'>"
+    "content": "<input type='text'>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A non-templated auto-completing text box widget.</p>"
+    }
 }

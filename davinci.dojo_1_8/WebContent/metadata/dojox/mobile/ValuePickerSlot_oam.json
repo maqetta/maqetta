@@ -35,35 +35,39 @@
         }
     },
     "property": {
-    	"items": {
-    		"datatype": "array",
-        "defaultValue": "[]",
-        "hidden": true
-      },
-    	"labels": {
-    		"datatype": "array",
-        "defaultValue": "[]"
-      },
-      "labelFrom": {
-      	"datatype": "number",
-      	"defaultValue": 0      	
-			},
-      "labelTo": {
-      	"datatype": "number",
-      	"defaultValue": 0      	
-			},
-      "step": {
-      	"datatype": "number",
-      	"defaultValue": 1      	
-			},
-      "zeroPad": {
-      	"datatype": "number",
-      	"defaultValue": 0      	
-			},
-      "value": {
-      	"datatype": "string",
-      	"defaultValue": ""      	
-			}
+        "items": {
+            "datatype": "array",
+            "defaultValue": "[]",
+            "hidden": true
+        },
+        "labels": {
+            "datatype": "array",
+            "defaultValue": "[]"
+        },
+        "labelFrom": {
+            "datatype": "number",
+            "defaultValue": 0
+        },
+        "labelTo": {
+            "datatype": "number",
+            "defaultValue": 0
+        },
+        "step": {
+            "datatype": "number",
+            "defaultValue": 1
+        },
+        "zeroPad": {
+            "datatype": "number",
+            "defaultValue": 0
+        },
+        "value": {
+            "datatype": "string",
+            "defaultValue": ""
+        }
     },
-    "content": "<div></div>"
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A widget representing one slot of a ValuePicker widget.</p>"
+    }
 }

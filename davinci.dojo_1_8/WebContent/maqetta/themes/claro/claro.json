@@ -17,6 +17,37 @@
                     "query": "" 
                 } 
             } 
+        },
+         "button": {
+            "displayName": "Button" ,
+            "states": {
+                "Normal": {
+                	"elements":{ 
+                     	"$root": [ 
+							"$std_10"
+                 		]
+                    },
+                    "selectors": {
+                        ".claro button": [
+                            "$std_10" 
+                        ] 
+                    },
+                    "query": "" 
+                },
+                "Hover": {
+                	"elements":{ 
+                     	"$root": [ 
+							"$std_10"
+                 		]
+                    },
+                    "selectors": {
+                        ".claro button:hover": [
+                            "$std_10" 
+                        ] 
+                    },
+                    "query": "button"
+                }  
+            } 
         } 
     },
     "dijit": {

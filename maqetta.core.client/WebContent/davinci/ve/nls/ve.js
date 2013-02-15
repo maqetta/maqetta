@@ -31,9 +31,11 @@ define({ root:
 		"selectAncestorTitle":"Select ancestor",
 		"selectAncestorLabel":"Select ancestor (closest ancestor listed first):",
 		
-		//actions/AddState.js, ModifyState.js, RenameState.js, StateContainer.js
+		//actions/AddState.js, ManageStates.js, ModifyState.js, RenameState.js, StateContainer.js
 		"createNewState":"Create New State",
+		"updateCurrentState":"Update Current State",
 		"createLabel":"Create",
+		"updateLabel":"Update",
 		"modifyState":"Modify State",
 		"modifyLabel":"Update",
 		"stateLabel":"Name",
@@ -42,6 +44,15 @@ define({ root:
 		"renameState":"Rename State",
 		"renameLabel":"Rename",
 		"newStateLabel":"New name:",
+		"manageStates":"Manage Widget Visibility for Different States",
+		"manageStatesCheckLabel":"Check:",
+		"manageStatesCheckCurrentStateOnly":"Current state",
+		"manageStatesCheckAll":"All",
+		"manageStatesUncheckAll":"None",
+		"manageStatesCheckBackgroundOnly":"Background only",
+		"manageStatesAllVisibleFromBackground":"(Visible from Background)",
+		"manageStatesSomeVisibleFromBackground":"(Some visible from Background)",
+		"manageStatesSomeVisibleSomeHidden":"(Some visible, some hidden)",
 		"initialStateCheckBoxLabel":"Initial state at document load time",
 		"EnableApplicationStates":"Enable/disable application states",
 		"EnableAsStateContainerDescription":"Setting the check box below and clicking OK will allow custom application states to be defined on the currently selected widget.",
@@ -51,6 +62,8 @@ define({ root:
 		"EnableApplicationStatesCurrentWidget":"Currently selected widget",
 		"EnableApplicationStatesCurrentStates":"Current application states",
 		"EnableApplicationStatesNone":"(none)",
+		"NewWidgetsCurrentStateTitleBackground":"Toggle whether new widgets go to Background or selected state (current value: Background)",
+		"NewWidgetsCurrentStateTitleCurrentState":"Toggle whether new widgets go to Background or selected state (current value: selected state)",
 		
 		//input/RichTextInput.js
 		"richTextInputHelp":"Provides Rich Text (word processor-like) editing of HTML.",

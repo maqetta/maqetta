@@ -31,17 +31,31 @@ define(["dojo/_base/declare",
 			/* build the dojo.requires(...) top bits */
 	        this.loadRequires("html.body", true, true,true);
 	      
+	        var libs = {};
 			for ( var i = 0; i < elements.length; i++ ) {
 	            var n = elements[i];
 	            var type = n.getAttribute("data-dojo-type") || n.getAttribute("dojoType") || n.getAttribute("dvwidget");
 	            if (type != null){
 	            	this.loadRequires(type, true, true, true);
 	            }
+	    		var libraries = mMetaData.query(type, 'library');
+	    		for(var lib in libraries){
+	    			libs[lib] = libraries[lib];
+	    		}
 	        }
 	       
 			
 			this.metadata.require.push({$library:"dojo",format:"amd", src:"widgets/" + dijitName.replace(/\./g,"/"), type:"javascript-module"});
-	        /* build the templated class */
+			for(var lib in libs){
+				if(lib != 'dojo'){
+/*FIXME: IS THIS NEEDED?
+					this.metadata.require.push({$library:lib,format:"amd", src:"widgets/" + dijitName.replace(/\./g,"/"), type:"javascript-module"});
+*/
+					this.metadata.library[lib] = {};
+				}
+			}
+
+			/* build the templated class */
 	    	
 	    	//var html =  this._srcDocument.find({'elementType' : "HTMLElement", 'tag':'body'}, true);
 	    	this.value.html = "";

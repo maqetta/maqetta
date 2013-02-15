@@ -1,0 +1,435 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Tutorial 1 - Using the Page Editor</title>
+</head>
+<body class="maqettadocs">
+
+<style type="text/css">
+table.CompTypeTable {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+table.CompTypeTable td, table.CompTypeTable th {
+	padding:3px;
+	border:1px solid black;
+}
+table.CompTypeTable th {
+	font-style:italic;
+	font-weight:bold;
+	background:#888;
+}
+table td.CompTypeOption {
+	font-weight:bold;
+}
+tr.desktop {
+	background-color:#ddf;
+}
+tr.mobile {
+	background-color:#dfd;
+}
+#pagebody .overview_snapshots_outer {
+	margin-top:20px;
+	margin-bottom:20px;
+}
+#pagebody .overview_snapshots_inner {
+	display:inline-block; 
+	width:450px;
+	margin-bottom:20px;
+	margin-right:10px;
+}
+#pagebody .overview_snapshots_caption {
+	margin-top:5px;
+	margin-bottom:5px;
+}
+#pagebody .overview_snapshots_inner img {
+	display:inline-block; 
+	width:450px;
+	margin:0;
+ }
+ #pagebody .indented_note {
+ 	padding-left:6em;
+ }
+ #pagebody .open_source_img {
+ 	width:350px;
+ }
+</style>
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td> &nbsp; </td>
+    <td class="prevnext">
+	<a href="tutorials/tutorials.html">Previous</a> / <a href="tutorials/Launching_Maqetta.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Tutorial 1 - Maqetta Overview</h1>
+
+<p>Topics covered in this tutorial:</p>
+<ul>
+	<li>Maqetta - Visual Authoring of HTML5 User Interfaces</li>
+	<li>Enterprise User Experience</li>
+	<li>Feature Overview</li>
+	<li>Sketch and Prototype with Real Widgets (vs pictures of widgets)</li>
+	<li>Open source and available for free at Maqetta.org</li>
+	<li>Deployment options</li>
+	<li>Learning Maqetta</li>
+	<li>Supported browsers: author-time vs run-time</li>
+</ul>
+
+<a name="pageeditor"><h2>Maqetta - Visual Authoring of HTML5 User Interfaces</h2></a>
+
+<p>Maqetta is a visual authoring tool for HTML5 user interfaces that runs in the browser.</p>
+
+<p>Maqetta targets both <strong>non-programmers</strong> and <strong>lightweight web developers</strong> who
+	typically are creating one of the following things in the early stages of web application development
+	for <strong>application visualization</strong>:</p>
+<ul>
+	<li><strong>Quick UI sketches</strong>, using Maqetta like a simple drawing tool to sketch
+		out or wireframe how some application user interface should look and behave</li>
+	<li><strong>Interactive application prototypes</strong>, using Maqetta as a visual HTML5 application builder.
+		With only limited knowledge of HTML, JavaScript and CSS, a developer can use drag/drop assembly
+		to create 
+		simple or complex interactive prototypes that use production widgets and production CSS themes
+		and actually run as real applications.</li>
+</ul>
+
+<a name="pageeditor"><h2>Enterprise User Experience</h2></a>
+
+<p>A key component of the Maqetta mission is to deliver good tools
+	for <em>user experience professionals</em>
+	within <em>Enterprise development teams</em>. 
+	The current release of Maqetta includes most of the foundation technologies
+	necessary to build out a complete suite of user experience tools.
+	For example:</p>
+<ul>
+	<li>Maqetta has been architected to provide design tools
+		that span both 
+		<strong>early-stage sketching and wireframing to late-stage detailed design</strong>.</li>
+	<li>Maqetta has been architected to 
+		<strong>improve the efficiency of the designer-developer hand-off</strong>.
+		Designs create sketches and prototypes using the same HTML, CSS and JavaScript,
+		and the same official widgets and themes
+		that the development team ultimately will use to implement the production application.
+		By sharing technologies, the sketches and prototypes that designers create
+		can be handed off to developers so that they can incrementally transform
+		the mockups into a production application.</li>
+	<li>Maqetta includes deep <strong>CSS tools</strong> that allow designers to
+		factor out the CSS styling definitions into reusable classes
+		so that their prototypes are easier for developers to consume.</li>
+	<li>Maqetta has been designed around the concept that
+		Enterprises will want to plug in their <strong>company's own standard libraries
+		of widgets and CSS themes</strong>.</li>
+	<li>To support Enterprise security requirements, Maqetta can be easily installed
+		on <strong>company intranet servers</strong>, including Java application servers
+		and can integrate with a company's LDAP system for user authentication.</li>
+	<li>Maqetta has been architected so that future versions of the application
+		can deliver <strong>UX analysis and reporting tools</strong>. One target feature for the future
+		are measurable tools that track user gestures and the time
+		for a user to complete a particular task.</li>
+</ul>
+<p>A large percentage of the future development within the Maqetta
+	open source project will be enhancing the application around the
+	needs of Enterprise user experience teams. </p>
+
+<a name="pageeditor"><h2>Feature Overview</h2></a>
+
+<p>Maqetta supports quick UI sketching (both hi-fidelity and low-fidelity),
+	and it allows non-programmers and lightweight programmers to create
+	actual running prototypes of HTML5 desktop and mobile applications. Below are
+	some snapshots:</p>
+
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<div class='overview_snapshots_caption'>Quick UI sketching</div>
+		<img src="cheatsheets/img/Sketching.jpg"/> 
+	</span>
+	<span class='overview_snapshots_inner'>
+		<div class='overview_snapshots_caption'>Desktop applications</div>
+		<img src="cheatsheets/img/DesktopApps.jpg"/> 
+	</span>
+	<span class='overview_snapshots_inner'>
+		<div class='overview_snapshots_caption'>Mobile applications</div>
+		<img src="cheatsheets/img/MobileApps.jpg"/> 
+	</span>
+</div>
+
+Maqetta includes theme editors for both desktop and mobile CSS themes:
+
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<div class='overview_snapshots_caption'>Desktop theme editor</div>
+		<img src="cheatsheets/img/DesktopThemeEditor.jpg"> 
+	</span>
+	<span class='overview_snapshots_inner'>
+		<div class='overview_snapshots_caption'>Mobile theme editor</div>
+		<img src="cheatsheets/img/MobileThemeEditor.jpg"> 
+	</span>
+</div>
+
+Maqetta includes a review/commenting system:
+
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<div class='overview_snapshots_caption'>Review/commenting</div>
+		<img src="cheatsheets/img/ReviewCommenting.jpg"> 
+	</span>
+</div>
+
+Along with source code editing tools:
+
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<div class='overview_snapshots_caption'>Source editing within the page editor (split-view)</div>
+		<img src="cheatsheets/img/SourceEditing.jpg"> 
+	</span>
+</div>
+
+<a name="pageeditor"><h2>Sketch and Prototype with Real Widgets (vs pictures of widgets)</h2></a>
+
+<p>One of Maqetta's key differentiators versus other tools that provide sketching and prototyping features
+	is that Maqetta directly creates HTML5, CSS and JavaScript applications that use
+	your company's production-level widgets and CSS themes. 
+	Because Maqetta uses your company's production-level widgets and themes
+	in your sketches and prototypes, Maqetta is <strong>true WYSIWYG</strong>. Maqetta provides pixel level control
+	over widget placement, and extensive CSS tools to control every visual details in your composition,
+	including size, position, margins, padding, backgrounds, and fonts. Maqetta's approach yields these benefits:</p>
+<ul>
+	<li><strong>More efficient hand-off from designers to developers</strong>
+		- Because the sketches and application prototypes are actually running HTML5 applications
+		that a designer can hand over to a developer, the developer has a headstart
+		on completing the production application.</li>
+	<li><strong>More reliable hand-off from designers to developers</strong>
+		- Maqetta's use of production widgets and themes, along with its deep support for CSS,
+		 helps minimize the risk that a beautiful visual design
+		or a well-engineered user experience are lost or degraded in the transfer from the design
+		team to the development team.</li>
+	<li><strong>Promotes tighter collaboration between design and development</strong>
+		- Teams that use Maqetta find that designers end up talking with developers earlier in the process,
+		thereby promoting teamwork and mutual education.</li>
+	<li><strong>Helps educate and promotes conformance with company UI standards</strong>
+		- Organizations that plug their company-standard widget libraries and themes into Maqetta
+		can use Maqetta as a vehicle for educating its development teams about the UI standards,
+		which tends to lead to greater conformance to those standards.</li>
+</ul>
+
+<div class='indented_note'>
+	<div class='overview_snapshots_outer'>
+		<span class='overview_snapshots_inner'>
+			<div class='overview_snapshots_caption'>Maqetta creates sketches and prototypes that use real widgets and themes</div>
+			<img src="cheatsheets/img/MobileApps.jpg"> 
+		</span>
+	</div>
+</div>
+
+<a name="pageeditor"><h2>Open source and available for free at Maqetta.org</h2></a>
+
+<p>Maqetta is an open source project with the mission of providing strong visual authoring tools
+	for the HTML5 community.</p>
+
+<p>Below are some key links:</p>
+
+<table>
+<colgroup>
+	<col style='width:*'></col>
+	<col style='width:1px'></col>
+</colgroup>
+<tr>
+	<td>
+		<div><a href='http://maqetta.org' rel='external'><strong>Maqetta.org</strong></a> - The main web site for the Maqetta project. This site contains:
+		<ul>
+			<li><strong>The Maqetta application</strong>, available for the community to run from the cloud
+				for free. To run the application, go to 
+				<a href='http://maqetta.org' rel='external'>http://maqetta.org</a>
+				and click on the "Launch Maqetta" button.
+				<em>Note that Maqetta.org is an open source project, not a commercial service.
+				The Maqetta team tries to keep the web site and application running on a continuous basis,
+				but Maqetta.org is available on an as-is basis with no guarantees about data preservation,
+				up-time, security, or anything else.</em>
+			</li>
+			<li><strong>Maqetta application downloads</strong>. For people who want
+				to install the Maqetta application on their own computers, or on a company server,
+				you can download the 
+				<a href='http://maqetta.org/downloads/' rel='external'>latest official release</a> 
+				(or even <a href='http://maqetta.org/nightly/' rel='external'>last night's nightly build</a>).
+			</li>
+			<li><strong>Maqetta overview information</strong>. The Maqetta.org web site contains
+				various overview documents and a FAQ.
+			</li>
+			<li><strong>Tutorials and documentation</strong>.
+			</li>
+		</ul>
+	</td>
+	<td>
+		<img src='img/Maqetta.org.png' class='open_source_img'></img>
+	</td>
+</tr>
+<tr>
+	<td>
+		<div><a href='http://github.com/maqetta/maqetta' rel='external'><strong>Maqetta open source at GitHub</strong></a> - 
+			The main web site for the Maqetta open source team. 
+		Maqetta's source code is 100% open source, with a 
+		<a href='http://dojotoolkit.org/license' rel='external'>commercial-friendly license</a>.
+		At GitHub, you can:</div>
+		<ul>
+			<li><strong>Report bugs</strong></li>
+			<li><strong>Request features</strong></li>
+			<li><strong>Track development tasks</strong></li>
+			<li><strong>Download the source code for the application</strong></li>
+			<li><strong>Find code base documentation (e.g., how to add a new widget library to Maqetta)</strong></li>
+			<li><strong>Contribute changes back to the open source project</strong></li>
+		</ul>
+		</div>
+	</td>
+	<td>
+		<img src='img/GitHub.com.png' class='open_source_img'></img>
+	</td>
+</tr>
+<tr>
+	<td>
+		<div><strong>User and developer forums</strong> - </div>
+		<ul>
+			<li><strong><a href='https://groups.google.com/forum/?fromgroups#!forum/maqetta-users' rel='external'>maqetta-users @ Google Groups</a></strong> -
+				This is where the Maqetta user community asks questions to each other and to the core Maqetta team</li>
+			<li><strong><a href='https://groups.google.com/forum/?fromgroups#!forum/maqetta-devs' rel='external'>maqetta-devs @ Google Groups</a></strong> -
+				This is the online forum for developers who are modifying the Maqetta source code</li>
+		</ul>
+	</td>
+	<td>
+		<img src='img/maqetta-users.png' class='open_source_img'></img>
+	</td>
+</tr>
+</table>
+
+<a name="pageeditor"><h2>Deployment options</h2></a>
+
+<p>You can run the Maqetta application in the following ways:</p>
+
+<ul>
+	<li><strong>Maqetta.org</strong> - You can run Maqetta by simply
+		going to <a href='http://maqetta.org' rel='external'>Maqetta.org</a> and then clicking
+		on the "Launch Maqetta" button. New users will be asked to register.
+		Each user gets his own private cloud workspace. The Maqetta team
+		attempts to keep the application running and tries to ensure
+		that the server has reasonable performance, but the application
+		at Maqetta.org is available on an as-is basis with no guarantees
+		about data preservation (e.g., you have to back up your own data)
+		or security.
+	</li>
+	<li><strong>Local install</strong> - <br/>
+		You can download either the latest stable release or 
+		last night's nightly build, and then install on your own computer.
+		This option provides best performance, but you won't be
+		able to easily share your mockups with your colleagues.
+	</li>
+	<li><strong>Intranet server install</strong> - <br/>
+		Your company can download the latest stable release, 
+		and then install on an intranet server behind your company's firewall,
+		and potentially integrate with a Java application server
+		and your company's LDAP for user authentication.
+		Also, it is possible for site administrators to customize 
+		your company's version of Maqetta
+		to support your company's widgets and themes.
+	</li>
+</ul>
+
+<a name="pageeditor"><h2>Learning Maqetta</h2></a>
+
+<p>The following resources introduce the Maqetta application
+	and provide detailed information about how to use the application successfully.</p>
+
+<ul>
+	<li><strong>Tutorials</strong> - (such as this one)<br/>
+		Learn the basics about Maqetta by running the hands-on tutorials.
+		Tutorials that match
+		the most recent public release of Maqetta can be found within the 
+		<a href='http://app.maqetta.org/maqetta/app/docs/index.html#tutorials/tutorials' rel='external'>
+		tutorial section of the Maqetta.org online documentation</a>.
+		</a>
+		Tutorials are also bundled inside all versions of the application
+		(including local installs or installs on a company's intranet server)
+		and can be accessed from within the application using
+		the Help icon 
+		<img src='img/HelpIcon.png' style='height:16px; vertical-align:middle; margin:0;'></img>
+		found on the main menubar.
+	</li>
+	<li><strong>Videos</strong> - <br/>
+		Learn the basics about Maqetta by viewing videos found on the 
+		<a href='http://www.youtube.com/user/Maqetta/' rel='external'>
+		Maqetta YouTube channel</a>.
+	</li>
+	<li><strong>Cheat sheets</strong> - <br/>
+		Maqetta provides several cheat sheets, 
+		quick reference guides to the Maqetta user interface.
+		Cheat sheets for
+		the most recent public release of Maqetta can be found within the 
+		<a href='http://localhost:8081/maqetta/app/docs/index.html#cheatsheets/cheatsheets' rel='external'>
+		cheat sheets section of the Maqetta.org online documentation</a>.
+		</a>
+		Cheat sheets are also bundled inside all versions of the application
+		(including local installs or installs on a company's intranet server)
+		and can be accessed from within the application using
+		the Help icon 
+		<img src='img/HelpIcon.png' style='height:16px; vertical-align:middle; margin:0;'></img>
+		found on the main menubar.
+	</li>
+	<li><strong>How-to articles</strong> - <br/>
+		Learn more advanced techniques from online how-to articles,
+		available at 
+		<a href='https://www.ibm.com/search/csass/search/?sn=dw&en=utf&hpp=20&dws=dw&q=maqetta&Search=Search' rel='external'>
+		IBM developerWorks</a>.
+	</li>
+</ul>
+
+<a name="pageeditor"><h2>Supported browsers: author-time vs run-time</h2></a>
+
+<h3><em>Author-time</em>: which browsers for the Maqetta authoring tool</h3>
+<p>Maqetta itself is authored in HTML5. The Maqetta authoring tool runs in the following modern HTML5 browsers:</p>
+<ul>
+	<li><strong>Google Chrome</strong> - latest release</li>
+	<li><strong>Mozilla Firefox</strong> - latest release and Firefox ESR2 (= Firefox 17.0)</li>
+	<li><strong>Apple Safari</strong> - latest release</li>
+</ul>
+
+<h3><em>Run-time</em>: which browsers can run the applications created by Maqetta</h3>
+
+<p>If you are using Maqetta with Dojo 1.8, then usually the HTML5 applications you create
+	in Maqetta will run on any 
+	<a href='http://dojotoolkit.org/reference-guide/1.8/releasenotes/1.8.html' rel='external'></a>browsers that Dojo 1.8 supports</a>, including:</p>
+<ul>
+	<li><strong>Desktop</strong>
+		<ul>
+		    <li>IE 6-9</li>
+			<li>Firefox 3.6-12</li>
+		    <li>Safari 5-6</li>
+		    <li>Chrome 13-21</li>
+		</ul>
+	</li>
+	<li><strong>Mobile (dojox/mobile)</strong>
+		<ul>
+		    <li>iOS 4.x, 5.x (Mobile Safari)</li>
+			<li>Android 2.2-2.3, 3.1-3.2, 4.0-4.1</li>
+		    <li>Blackberry 6-7</li>
+		    <li>Mobile compatibility on desktop browsers: IE 8-9, Firefox 4-12, Safari 5-6, Chrome 13-19</li>
+		</ul>
+	</li>
+</ul>
+
+<div class='note'>
+	Note: If you are using a different JavaScript library than Dojo 1.8, or extending Dojo 1.8, 
+	then what platforms your Maqetta-created application will run 
+	will depend on on the capabilities of the JavaScript libraries and widgets you use,
+	and the nature of your extensions.
+</div>
+
+
+<br />
+<p class="prevnext"><a href="tutorials/tutorials.html">Previous</a> / <a href="tutorials/Launching_Maqetta.html">Next</a></p>
+
+</div> <!-- pagebody -->
+
+</body>
+</html>

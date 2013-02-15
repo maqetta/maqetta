@@ -43,5 +43,9 @@
             "title": "Duration"
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>a configurable global xhr-listener to display\na loading message during running xhr&#39;s or to simply provide\nbase-level topic to subscribe to for custom loading messages</p>"
+    }
 }

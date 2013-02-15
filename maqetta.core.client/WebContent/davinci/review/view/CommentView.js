@@ -429,6 +429,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 			viewSceneList: this._cached[this._currentPage].viewSceneList || this._context.getCurrentScenes(),
 			ownerId: Runtime.userName,
 			email: Runtime.userEmail,
+			displayName: Runtime.getUserDisplayName(),
 			replyTo: form.replyTo,
 			drawingJson: this.drawingJson
 		});
@@ -464,6 +465,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				viewSceneList: comment.viewSceneList,
 				ownerId: comment.ownerId,
 				email: comment.email,
+				displayName: comment.displayName,
 				depth: comment.depth,
 				replyTo: comment.replyTo,
 				drawingJson: comment.drawingJson
@@ -570,6 +572,7 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				viewSceneList: _comment.viewSceneList,
 				ownerId: _comment.ownerId,
 				email: _comment.email,
+				displayName: _comment.displayName,
 //				depth: parseInt(_comment.depth),
 //				order: parseFloat(_comment.order),
 				created: _comment.created,  
@@ -808,7 +811,8 @@ return declare("davinci.review.view.CommentView", ViewPart, {
 				if (reviewer.email) { 
 					var reviewerDisplayName = Runtime.getUserDisplayName({
 						email: reviewer.email,
-						userId: reviewer.name
+						userId: reviewer.name,
+						userDisplayName: reviewer.displayName
 					});
 					var check = new CheckedMenuItem({
 						label: "<div class='davinciReviewToolbarReviewersColor' style='background-color:" + 

@@ -119,5 +119,13 @@
             "hidden": false
         }
     },
-    "content": "<span></span>"
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A combination button and drop-down button.\nUsers can click one side to &quot;press&quot; the button, or click an arrow\nicon to display the drop down.\n</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;button data-dojo-type=&quot;dijit/form/ComboButton&quot; onClick=&quot;...&quot;&gt;\n    &lt;span&gt;Hello world&lt;/span&gt;\n    &lt;div data-dojo-type=&quot;dijit/Menu&quot;&gt;...&lt;/div&gt;\n&lt;/button&gt;</code></pre>\n<pre><code>var button1 = new ComboButton({label: &quot;hello world&quot;, onClick: foo, dropDown: &quot;myMenu&quot;});\ndojo.body().appendChild(button1.domNode);</code></pre>"
+    }
 }

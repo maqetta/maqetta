@@ -14,7 +14,7 @@ public class Version{
 
 	private boolean hasClosedManually = false;
 
-	private static final SimpleDateFormat formatter;
+	private static final SimpleDateFormat formatter, shortFormatter;
 
 	private String versionID;
 
@@ -39,8 +39,11 @@ public class Version{
 	private boolean hasRestarted = false;
 
 	static {
-		formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-		formatter.setCalendar(Calendar.getInstance(new SimpleTimeZone(0, "GMT")));	
+		Calendar gmt = Calendar.getInstance(new SimpleTimeZone(0, "GMT"));
+		shortFormatter = new SimpleDateFormat(Constants.DATE_PATTERN_SHORT);
+		shortFormatter.setCalendar(gmt);	
+		formatter = new SimpleDateFormat(Constants.DATE_PATTERN);
+		formatter.setCalendar(gmt);	
 	}
 
 	public List<String> resources= Collections.synchronizedList(new ArrayList<String>());
@@ -255,10 +258,15 @@ public class Version{
 	public static boolean isValidISOTimeStamp(String timeStamp) {
 		boolean result = false;
 		try {
-			formatter.parse(timeStamp);
+			shortFormatter.parse(timeStamp);
 			result = true;
 		} catch (ParseException e) {
-			// We have a bad time stamp
+			try {
+				formatter.parse(timeStamp);
+				result = true;
+			} catch (ParseException e2) {
+				// We have a bad time stamp
+			}
 		}
 		return result;
 	}

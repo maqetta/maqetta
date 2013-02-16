@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-
-   <extension point="org.eclipse.equinox.http.registry.servlets">
-      <servlet
-            httpcontextId="maqetta.core.server.httpcontext"
-            alias="/maqetta"
-            class="maqetta.core.server.DavinciPageServlet"
-            load-on-startup="true">
-      </servlet>
-   </extension>
       <extension point="maqetta.core.server.personManager">
     	<personManager class="maqetta.server.orion.user.OrionPersonManager" priority="0"/>
    	  </extension>

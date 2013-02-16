@@ -15,20 +15,6 @@
    <extension-point id="libraryManager" name="User Manager" schema="schema/libraryManager.exsd"/>
    <extension-point id="libraryFinder" name="Library Finder" schema="schema/libraryFinder.exsd"/>
    
-   <extension point="org.eclipse.equinox.http.registry.httpcontexts">
-      <httpcontext id="maqetta.core.server.httpcontext"/>
-   </extension>
-   
-   
-   <extension point="org.eclipse.equinox.http.registry.servlets">
-      <servlet
-      		
-            alias="/maqetta/cmd"
-            class="org.maqetta.server.DavinciCommandServlet"
-            load-on-startup="true">
-      </servlet>
-   </extension>
-
    <extension  id="maqettaLib"  point="org.eclipse.equinox.http.registry.resources"  >
 	
 	        <!-- maqetta core libraries metadata (maqetta.js and states.js) -->

@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: maqetta.server.configurator;singleton:=true
+Bundle-Version: 10.0.0
+Bundle-Name: %Bundle-Name
+Bundle-Vendor: %Bundle-Vendor
+Bundle-Localization: bundle
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: maqetta.server.configurator
+Bundle-Activator: maqetta.server.configurator.ConfiguratorActivator
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: configurator.jar
+Eclipse-BundleShape: dir
+Import-Package: org.osgi.framework;version="1.7.0"
+Require-Bundle: maqetta.core.server;bundle-version="1.0.0"

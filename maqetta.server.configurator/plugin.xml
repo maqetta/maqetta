@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+<!-- XXX Should we specify our own for Maqetta server?
+   <extension
+         id="org.eclipse.orion.application"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="1"
+            thread="any"
+            visible="true">
+         <run
+               class="org.eclipse.orion.server.configurator.WebApplication">
+         </run>
+      </application>
+   </extension>
+-->
+<!-- XXX This impl is tied to application in statement above.  For now, use product def that follows.
+    <extension id="org.eclipse.orion.product" point="org.eclipse.core.runtime.products"> 
+      <product name="%productName" application="org.eclipse.orion.application" description="%productBlurb"> 
+          <property name="appName" value="Orion"/> 
+          <property name="preferenceCustomization" value="plugin_customization.ini"/>
+      </product> 
+    </extension> 
+-->
+   <extension
+         point="org.eclipse.equinox.http.registry.servlets">
+      <servlet
+            alias="/maqetta"
+            class="maqetta.core.server.DavinciPageServlet"
+            load-on-startup="true">
+            <!-- httpcontextId="maqetta.core.server.httpcontext" -->
+      </servlet>
+      <servlet
+            alias="/maqetta/cmd"
+            class="org.maqetta.server.DavinciCommandServlet"
+            load-on-startup="true">
+      </servlet>
+   </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.httpcontexts">
+      <httpcontext
+            id="maqetta.server.configurator.httpcontext.app">
+         <resource-mapping
+               bundle="maqetta.core.client"
+               path="/WebContent">
+         </resource-mapping>
+      </httpcontext>      
+      <httpcontext
+            id="maqetta.server.configurator.httpcontext.app.orionplugin">
+         <resource-mapping
+               bundle="maqetta.client.orion"
+               path="/WebContent/orion">
+         </resource-mapping>
+      </httpcontext>      
+      <httpcontext
+            id="maqetta.server.configurator.httpcontext.auth.ldap">
+         <resource-mapping
+               bundle="maqetta.server.orion.authentication.ldap"
+               path="/web">
+         </resource-mapping>
+      </httpcontext>
+   </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.resources">
+      <resource
+            alias="/maqetta/app"
+            httpcontextId="maqetta.server.configurator.httpcontext.app">
+      </resource>
+      <resource
+            alias="/maqetta/app/orionplugin"
+            httpcontextId="maqetta.server.configurator.httpcontext.app.orionplugin">
+      </resource>
+      <resource
+            alias="/ldaplogin"
+            httpcontextId="maqetta.server.configurator.httpcontext.auth.ldap">
+      </resource>
+
+   </extension>
+</plugin>

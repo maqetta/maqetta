@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-       <extension id="maqetta.core.client" point="org.eclipse.equinox.http.registry.resources">
-        <resource alias="/maqetta/app" 
-        		  base-name="/WebContent" 
-        		   />      
-       </extension>
        <extension
             point="maqetta.core.server.jsPlugin">
          <jsPlugin

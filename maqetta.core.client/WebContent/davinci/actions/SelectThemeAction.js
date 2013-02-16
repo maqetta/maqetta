@@ -18,7 +18,14 @@ return declare("davinci.actions.SelectThemeAction", Action, {
 				message = dojo.string.substitute(actionStrings.filesHasUnsavedChanges, [e.fileName]);
 			}
 			
-			Workbench.showDialog(actionStrings.switchingThemes, message, {width: 300}, dojo.hitch(this,this._okToSwitch), actionStrings.save, null);
+			Workbench.showDialog({
+				title: actionStrings.switchingThemes, 
+				content: message,
+				style: {width: 300},
+				okCallback: dojo.hitch(this,this._okToSwitch), 
+				okLabel: actionStrings.save, 
+				hideCancel: null
+			});
 				   
 		} else {
 			this._okToSwitch();

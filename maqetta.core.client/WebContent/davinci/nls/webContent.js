@@ -35,6 +35,9 @@ define({ root:
 		"idleSessionMessage": "Your session will timeout in ${seconds} seconds, click anywhere in the page to continue using Maqetta.",
 		
 		//davinci/Workbench.js
+		"fileHasUnsavedChanges":"Save changes to ${0}?",
+		"Yes":"Yes",
+		"No":"No",
 		"perspectiveNotFound":"perspective not found: ${0}",
 		"scopeNotDefined":"scope not defined for action: ${0}",
 		"funcNotDefined":"function not defined for action: ${0}",

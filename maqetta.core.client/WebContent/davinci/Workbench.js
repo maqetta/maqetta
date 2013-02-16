@@ -880,8 +880,8 @@ var Workbench = {
 	},
 
 	// OK/Cancel dialog with a settable okLabel
-	showDialog: function(title, content, style, callback, okLabel, hideCancel, submitOnEnter, focusSubmit) {
-		return Dialog.showDialog(title, content, style, callback, okLabel, hideCancel, submitOnEnter);
+	showDialog: function(params) {
+		return Dialog.showDialog(params);
 	},
 
 	_createMenuTree: function(actionSets, pathsOptional) {
@@ -1470,15 +1470,29 @@ var Workbench = {
 					tc.removeChild(tab);
 					tab.destroyRecursive();
 				}
+				function saveAndClose(){
+					editorContainer.editor.save();
+					okToClose();
+				}
 				if(editorsContainer && editorContainer){
 					if (editorContainer.editor.isDirty){
 						//Give editor a chance to give us a more specific message
 						var message = editorContainer.editor.getOnUnloadWarningMessage();
 						if (!message) {
 							//No editor-specific message, so use our canned one
-							message = dojo.string.substitute(workbenchStrings.fileHasUnsavedChanges, [editorContainer._getTitle()]);
+							message = dojo.string.substitute(webContent.fileHasUnsavedChanges, [editorContainer._getTitle()]);
 						}
-						Workbench.showDialog(editorContainer._getTitle(), message, {width: 300}, dojo.hitch(this,okToClose), null, null, true);
+						Workbench.showDialog({
+								title: editorContainer._getTitle(),
+								content: message, 
+								style: {width: 300}, 
+								okLabel: webContent.Yes,
+								okCallback: dojo.hitch(this,saveAndClose),
+								hideLabel: null,
+								submitOnEnter:true,
+								extendLabels: [webContent.No],
+								extendCallbacks: [dojo.hitch(this,okToClose)]
+							});
 					} else {
 						okToClose();
 					}

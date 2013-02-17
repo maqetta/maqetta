@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="maqetta.orion.feature"
+      id="maqetta.server.feature"
       label="Feature"
-      version="1.0.1">
+      version="10.0.0.qualifier">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -17,27 +17,7 @@
    </license>
 
    <plugin
-         id="maqetta.core.client"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="maqetta.core.server"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="davinci.dojo_1_8"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="davinci.html"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -51,43 +31,11 @@
          unpack="false"/>
 
    <plugin
-         id="maqetta.client.orion"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="maqetta.clipart"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="maqetta.shapes"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="davinci.gridx"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="maqetta.server.orion.standard"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-   <plugin
-         id="maqetta.client.plugins.defaults"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
    <plugin
          id="maqetta.server.orion.authentication.ldap"

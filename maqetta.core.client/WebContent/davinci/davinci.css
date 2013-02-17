@@ -964,9 +964,32 @@ davinci_top_bar .dijitButtonNode {
 .dojoyPaletteHeaderTable {
 	width:100%;
   	border-collapse:collapse;
+  	border-spacing:0;
+  	margin-bottom:1px;
 }
 .dojoyPaletteHeaderTable td {
 	padding:0;
+}
+.dojoyPaletteFilterContainer {
+	position:relative;
+	height:16px;
+}
+.dojoyPaletteFilterTextBox {
+	position:absolute;
+	top:0px;
+}
+.dojoyPaletteFilterClearIcon {
+	display:none;
+	position:absolute;
+	right:3px;
+	top:3px;
+	background-image:url(img/sprite.png);
+	background-position:-56px -323px;
+	width:12px;
+	height:12px;
+}
+.maqWidgetsToolbarFiltered .dojoyPaletteFilterClearIcon {
+	display:block;
 }
 .dojoyPaletteHeaderTableCol2 {
 	width:16px;

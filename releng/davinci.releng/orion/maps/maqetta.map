@@ -19,12 +19,14 @@ plugin@org.apache.commons.fileupload=GIT,repo=git://github.com/maqetta/maqetta.g
 plugin@maqetta.server.orion.hosted=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/maqetta.server.orion.hosted
 plugin@maqetta.server.orion.standard=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/maqetta.server.orion.standard
 plugin@maqetta.server.orion.authentication.ldap=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/maqetta.server.orion.authentication.ldap
+plugin@maqetta.server.configurator=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/maqetta.server.configurator
 
 #
 # maqetta features
 #
-feature@maqetta.orion.feature=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/maqetta.orion.feature
-feature@maqetta.orion.hosted.feature=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/maqetta.orion.hosted.feature
+feature@maqetta.server.feature=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/maqetta.server.feature
+feature@maqetta.client.feature=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/maqetta.client.feature
+feature@maqetta.libraries.feature=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/maqetta.libraries.feature
 
 #
 # zazl plugins

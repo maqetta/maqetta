@@ -197,11 +197,40 @@ DialogClass.showModal = function(content, title, style, callback, submitOnEnter)
 
 // simple dialog with an automatic OK button that closes it.
 DialogClass.showMessage = function(title, message, style, callback, submitOnEnter) {
-	return this.showDialog(title, message, style, callback, null, true);
+	return this.showDialog({
+		title: title, 
+		content: message, 
+		style: style, 
+		okCallback: callback, 
+		okLabel: null, 
+		hideCancel: true
+	})
 },
 
-// OK/Cancel dialog with a settable okLabel
-DialogClass.showDialog = function(title, content, style, callback, okLabel, hideCancel, submitOnEnter) {
+/**
+ * OK/Cancel dialog with a settable okLabel
+ * @param params {object}
+ * 		params.title {string} Dialog title string
+* 		params.content {string} HTML content for dialog
+* 		params.style {string}
+ * 		params.okLabel {string}
+ * 		params.okCallback {function}
+ * 		params.hideCancel {boolean}
+ * 		params.submitOnEnter {boolean}
+ * 		params.extendLabels [{string}] - Labels for additional buttons
+ * 		params.extendCallbacks [{function}] - Callback functions for additional buttons
+ */
+DialogClass.showDialog = function(params) {
+	var title = params.title;
+	var content = params.content;
+	var style = params.style;
+	var callback = params.okCallback;
+	var okLabel = params.okLabel;
+	var hideCancel = params.hideCancel;
+	var submitOnEnter = params.submitOnEnter;
+	var extendLabels = params.extendLabels;
+	var extendCallbacks = params.extendCallbacks;
+	
 	var myDialog;
 	var handles = [];
 
@@ -222,12 +251,24 @@ DialogClass.showDialog = function(title, content, style, callback, okLabel, hide
 	var _onCancel = dojo.hitch(this, function() {
 		this._timedDestroy(myDialog, handles);
 	});
+	
+	// Add additional buttons if any are specified
+	if(extendLabels && extendCallbacks && extendLabels.length > 0 && extendLabels.length === extendCallbacks.length){
+		for(var i=0; i<extendLabels.length; i++){
+			var customButtonOnClick = function(i){
+				if(extendCallbacks[i]){
+					extendCallbacks[i]();
+				}
+				myDialog.onCancel();
+			}.bind(this, i);
+			dialogActions.appendChild(new Button({label: extendLabels[i], onClick: customButtonOnClick, "class": "maqSecondaryButton"}).domNode);
+		}
+	}
 
 	if (!hideCancel) {
 		function _onCancelClick() {
 			myDialog.onCancel();
 		}
-
 		dialogActions.appendChild(new Button({label: veNLS.cancel, onClick: _onCancelClick, "class": "maqSecondaryButton"}).domNode);
 	}
 
@@ -256,7 +297,6 @@ DialogClass.showDialog = function(title, content, style, callback, okLabel, hide
 		if (callback) {
 			callback();
 		}
-
 		_onCancel();
 	})));
 

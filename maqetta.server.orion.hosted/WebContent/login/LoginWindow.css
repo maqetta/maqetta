@@ -1,5 +1,6 @@
 #orionBody {
 	background:white;
+	overflow:auto;
 }
 #davinci_top_bar {
 	padding:0;
@@ -113,12 +114,12 @@
 	color:#ccc;
 }
 #orionBody .orion-login-button-holder {
-	margin-top:10px;
-	margin-bottom:30px;
+	padding-top:10px;
+	padding-bottom:30px;
 }
 #orionBody .orion-reset-button-holder {
-	margin-top:5px;
-	margin-bottom:30px;
+	padding-top:5px;
+	padding-bottom:30px;
 }
 #orionBody .orion-reset-button-holder, #orionBody .orion-register-button-holder {
 	float:left;

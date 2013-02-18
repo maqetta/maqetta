@@ -50,7 +50,14 @@ return declare("davinci.ve.actions.ChooseDeviceAction", [Action], {
 				//No editor-specific message, so use our canned one
 				message = dojo.string.substitute(veNls.filesHasUnsavedChanges, [e.fileName]);
 			}
-			Workbench.showDialog(veNls.chooseDeviceSilhouette, message, {width: 300}, dojo.hitch(this,this._okToSwitch), 'Save',null);
+			Workbench.showDialog({
+				title: veNls.chooseDeviceSilhouette, 
+				content: message, 
+				style: {width: 300}, 
+				okCallback: dojo.hitch(this,this._okToSwitch), 
+				okLabel: 'Save',
+				hideLabel: null
+			});
 		} else {
 			this._okToSwitch();
 		}                                                     
@@ -85,7 +92,13 @@ return declare("davinci.ve.actions.ChooseDeviceAction", [Action], {
 			e._visualChanged();
 		}
 
-		Workbench.showDialog(veNls.chooseDeviceSilhouette, ui, {width: 300}, dojo.hitch(this, _callback), actionNLS.select);
+		Workbench.showDialog({
+			title: veNls.chooseDeviceSilhouette, 
+			content: ui, 
+			style: {width: 300}, 
+			okCallback: dojo.hitch(this, _callback), 
+			okLabel: actionNLS.select
+		});
 	}
 });
 

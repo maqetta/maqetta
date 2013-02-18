@@ -35,7 +35,14 @@ return declare(SmartInput, {
 			hideCancel = true;
 		}
 
-		this._inline = Dialog.showDialog(dojoxNLS.gridLayoutInputTitle, this._getTemplate(), null, dojo.hitch(this, "_onOk"), null, hideCancel);
+		this._inline = Dialog.showDialog({
+			title: dojoxNLS.gridLayoutInputTitle, 
+			content: this._getTemplate(), 
+			style: null, 
+			okCallback: dojo.hitch(this, "_onOk"), 
+			okLabel: null, 
+			hideCancel: hideCancel
+		});
 
 		var spinners = query(".dijitSpinner", this._inline.containerNode);
 

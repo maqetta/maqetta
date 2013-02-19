@@ -94,7 +94,7 @@ define([
 			if(!this._bboxStartup){
 				this._bboxStartup = this._bbox;
 			}
-			var strokewidth = dojo.style(this.domNode,'stroke-width');
+			var strokewidth = dojo.style(this.domNode,'strokeWidth');
 			if(strokewidth<1){
 				strokewidth = 1;
 			}

@@ -357,7 +357,7 @@ CSSParser.parse = function (text, parentElement) {
 
 					case "css-selector":
 						if (token.type == "css-identifier") {
-							if (selector.element || selector.cls) {
+							if (selector.element || selector.cls || wsAfterSel) { //#3745 #content a:hover
 								startNew();
 							}
 							selector.element = token.content;

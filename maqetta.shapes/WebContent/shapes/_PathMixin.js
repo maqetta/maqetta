@@ -133,6 +133,7 @@ define([
 			var pathdata = this._computePathData(this._points);
 			//FIXME: Do we really need class="arrow"? Don't think so.
 			var s_shape = '<path class="arrow" d="'+pathdata+'"/>';
+			var fill = dojo.style(this.domNode, 'fill');
 			var stroke = dojo.style(this.domNode, 'stroke');
 			var strokeWidth = dojo.style(this.domNode, 'strokeWidth');
 			var s_startarrow = this._checkForwardBackward(this.startarrow) ?
@@ -141,6 +142,7 @@ define([
 					this._computeArrowHead(this._points, {type:'end',arrowDir:this.endarrow,width:8,height:13,fill:stroke,stroke:stroke,strokeWidth:strokeWidth}) : '';
 		    this.domNode.innerHTML = this._header + s_shape + s_startarrow + s_endarrow + this._footer;
 			this._shape = dojo.query('path.arrow',this.domNode)[0];
+			this._shape.style.fill = fill;	// Firefox has SVG inheritance problems
 			this._shape.style.stroke = stroke;	// Firefox has SVG inheritance problems
 			this._shape.style.strokeWidth = strokeWidth;	// Firefox has SVG inheritance problems
 			this._g = dojo.query('g.shapeg',this.domNode)[0];

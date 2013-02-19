@@ -272,15 +272,11 @@ define(['domReady'], function(domReady) {
 	}
 
 	function confirmCreateUser() {
-
-		var login = document.getElementById("create_login").value;
-		if (!validateEmail(login)){
+		var email = document.getElementById("create_login").value;
+		if (!validateEmail(email)){
 			return;
 		}
 		var name = document.getElementById("create_name").value;
-		if (!name) {
-			name = login;
-		}
 		if (!validatePassword()) {
 			document.getElementById("create_password").setAttribute("aria-invalid", "true");
 			document.getElementById("create_passwordRetype").setAttribute("aria-invalid", "true");
@@ -300,11 +296,14 @@ define(['domReady'], function(domReady) {
 					document.getElementById("errorMessage").innerHTML = responseObject.Message;
 					document.getElementById("errorWin").style.visibility = '';
 				} else {
-					confirmLogin(login, password);
+					confirmLogin(email, password);
 				}
 			}
 		};
-		var parameters = "login=" + encodeURIComponent(login) + "&password=" + encodeURIComponent(password) + "&Name=" + encodeURIComponent(name);
+		var parameters = "email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password);
+		if (name) {
+			parameters += "&Name=" + encodeURIComponent(name);
+		}
 		mypostrequest.open("POST", "../users", true);
 		mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		mypostrequest.setRequestHeader("Orion-Version", "1");

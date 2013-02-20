@@ -109,18 +109,23 @@ public class LoginFixUpFilter implements Filter {
 		// reset `login` to be the same as the UID
 		User user = userAdmin.getUser(UserConstants.KEY_EMAIL, email);
 		if (user != null) {
+			boolean doUpdate = false;
 			String uid = user.getUid();
 			String value = user.getLogin();
 			if (value.startsWith(ID_TEMPLATE)) {
 				user.setLogin(uid);
+				doUpdate = true;
 			}
 			// if 'name' parameter isn't specified, gets set to 'login' by Orion
 			value = user.getName();
 			if (value.startsWith(ID_TEMPLATE)) {
 				user.setName(uid);
+				doUpdate = true;
 			}
 			// update
-			userAdmin.updateUser(user.getUid(), user);  // errors logged by Orion
+			if (doUpdate) {
+				userAdmin.updateUser(user.getUid(), user);  // errors logged by Orion
+			}
 		}
 
 		return true;

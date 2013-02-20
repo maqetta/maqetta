@@ -16,7 +16,7 @@ plugin@maqetta.client.plugins.defaults=GIT,repo=git://github.com/maqetta/maqetta
 #  plugin@maqetta.core.server.standalone=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/maqetta.core.server.standalone
 plugin@org.apache.commons.fileupload=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/org.apache.commons.fileupload
 #  plugin@davinci.product=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/releng/davinci.product
-plugin@maqetta.server.orion.hosted=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/maqetta.server.orion.hosted
+#  plugin@maqetta.server.orion.hosted=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/maqetta.server.orion.hosted
 plugin@maqetta.server.orion.standard=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/maqetta.server.orion.standard
 plugin@maqetta.server.orion.authentication.ldap=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/maqetta.server.orion.authentication.ldap
 plugin@maqetta.server.configurator=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/maqetta.server.configurator

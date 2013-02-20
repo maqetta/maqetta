@@ -11,6 +11,7 @@
 package maqetta.server.orion.user;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -57,6 +58,8 @@ public class LoginFixUpFilter implements Filter {
 	private static final String LOGIN_SERVLET_ALIAS = "/login";
 
 	private static final String ID_TEMPLATE = "00MaqTempId00";
+
+	static final private Logger theLogger = Logger.getLogger(LoginFixUpFilter.class.getName());
 
 	public void init(FilterConfig filterConfig) throws ServletException {
 	}
@@ -117,8 +120,7 @@ public class LoginFixUpFilter implements Filter {
 				user.setName(uid);
 			}
 			// update
-			IStatus status = userAdmin.updateUser(user.getUid(), user);
-/*XXX*/				System.err.println(status);
+			userAdmin.updateUser(user.getUid(), user);  // errors logged by Orion
 		}
 
 		return true;
@@ -140,11 +142,12 @@ public class LoginFixUpFilter implements Filter {
 			if (user != null) {
 				user = fixOldUser(userAdmin, user);
 			}
-		}
 
-		if (user == null) {
-/*XXX*/			System.err.println("ERROR (unexpected): User object is null.");
-			return false;
+			if (user == null) {  // also checks for failure from `fixOldUser()`
+				theLogger.finest("User object not found for " + email +
+						". Perhaps that user isn't registered yet.");
+				return false;
+			}
 		}
 
 		// modify request with generated `login` parameter
@@ -188,8 +191,10 @@ public class LoginFixUpFilter implements Filter {
 		}
 
 		// update
-		IStatus status = userAdmin.updateUser(uid, user);
-/*XXX*/				System.err.println(status);
+		IStatus status = userAdmin.updateUser(uid, user);  // errors logged by Orion
+		if (!status.isOK()) {
+			return null;
+		}
 
 		return user;
 	}

@@ -203,12 +203,12 @@ define(['domReady'], function(domReady) {
 		}
 	}
 
-	function confirmLogin(login, password, event) {
-		if (!login) {
-			login = document.getElementById('login').value;
+	function confirmLogin(email, password, event) {
+		if (!email) {
+			email = document.getElementById('login').value;
 			password = document.getElementById('password').value;
 		}
-		if (login != admin_userid && !validateEmail(login)){
+		if (email != admin_userid && !validateEmail(email)){
 			return;
 		}
 		// shiftkey-click on Login causes Maqetta to open with no editors showing
@@ -231,7 +231,7 @@ define(['domReady'], function(domReady) {
 								redirect += '?'+resetWorkBench;
 							}
 						}
-						setCookie("login", login);
+						setCookie("login", email);
 						window.location = decodeURIComponent(redirect);
 					} else {
 						window.close();
@@ -241,7 +241,7 @@ define(['domReady'], function(domReady) {
 			}
 		};
 
-		var parameters = "login=" + encodeURIComponent(login) + "&password=" + encodeURIComponent(password);
+		var parameters = "email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password);
 		mypostrequest.open("POST", "../login/form", true);
 		mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		mypostrequest.setRequestHeader("Orion-Version", "1");

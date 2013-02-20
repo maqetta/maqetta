@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.orion.internal.server.servlets.ProtocolConstants;
 import org.eclipse.orion.server.core.resources.Base64Counter;
 import org.eclipse.orion.server.useradmin.IOrionCredentialsService;
 import org.eclipse.orion.server.useradmin.User;
@@ -96,12 +97,20 @@ public class LoginFixUpFilter implements Filter {
 			return false;
 		}
 
-		String email = request.getParameter(UserConstants.KEY_EMAIL);
 		IOrionCredentialsService userAdmin = getUserAdmin();
 
 		// modify request with generated `login` parameter
 		RequestWrapper modifiedRequest = new RequestWrapper(request);
 		modifiedRequest.setParameter(UserConstants.KEY_LOGIN, nextUserId(userAdmin));
+
+		// check if 'name' parameter is set
+		String email = request.getParameter(UserConstants.KEY_EMAIL);
+		String name = request.getParameter(ProtocolConstants.KEY_NAME);
+		if (name == null || name.length() == 0) {
+			// If 'name' isn't set, default to 'email'. This differs from Orion, which defaults
+			// to using 'login'.
+			modifiedRequest.setParameter(ProtocolConstants.KEY_NAME, email);
+		}
 
 		// continue with filter chain
 		chain.doFilter(modifiedRequest, response);
@@ -109,21 +118,9 @@ public class LoginFixUpFilter implements Filter {
 		// reset `login` to be the same as the UID
 		User user = userAdmin.getUser(UserConstants.KEY_EMAIL, email);
 		if (user != null) {
-			boolean doUpdate = false;
-			String uid = user.getUid();
 			String value = user.getLogin();
 			if (value.startsWith(ID_TEMPLATE)) {
-				user.setLogin(uid);
-				doUpdate = true;
-			}
-			// if 'name' parameter isn't specified, gets set to 'login' by Orion
-			value = user.getName();
-			if (value.startsWith(ID_TEMPLATE)) {
-				user.setName(uid);
-				doUpdate = true;
-			}
-			// update
-			if (doUpdate) {
+				user.setLogin(user.getUid());
 				userAdmin.updateUser(user.getUid(), user);  // errors logged by Orion
 			}
 		}

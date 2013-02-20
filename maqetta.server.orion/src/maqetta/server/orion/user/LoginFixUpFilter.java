@@ -49,6 +49,10 @@ import org.eclipse.orion.server.useradmin.UserServiceHelper;
 //        name: (optional, registration only) display name
 //
 // Here, we intercept these requests and properly set `login` for use by the Orion code.
+//
+// Also, if the 'name' parameter is not specified, we default to using the value of 'email'.  This
+// differs from Orion, which sets the former to the value of 'login'.  In our case, that would
+// result in 'name' containing a seemingly random alphanumeric sequence, which isn't very useful.
 
 @SuppressWarnings("restriction")
 public class LoginFixUpFilter implements Filter {

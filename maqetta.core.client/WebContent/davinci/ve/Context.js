@@ -1258,7 +1258,21 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if (modelBodyElement) {
 			modelBodyElement.addAttribute('data-maq-ws', 'collapse');	
 		}
-
+		
+		// Strip out any at() functions with any data-dojo-props attributes before
+		// invoking the dojo parser. Still exists in model.
+		var regexAt = /at\s*\([^\)]*\)/g;
+		query("*",containerNode).forEach(function(node){
+			var datadojotype = node.getAttribute('data-dojo-type');
+			var datadojoprops = node.getAttribute('data-dojo-props');
+			if(datadojotype && datadojoprops){
+				var s = datadojoprops.replace(regexAt, function (matchedSubstring, offset, originalString){
+					return '\'\'';
+				});
+				node.setAttribute('data-dojo-props', s);
+			}
+		}.bind(this));
+		
 		// Set the mobile agaent if there is a device on the body
 		// We need to ensure it is set before the require of deviceTheme is executed
 		var djConfig = this.getGlobal().dojo.config;  // TODO: use require

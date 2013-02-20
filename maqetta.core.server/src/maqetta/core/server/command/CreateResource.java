@@ -1,7 +1,6 @@
 package maqetta.core.server.command;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,31 +20,21 @@ public class CreateResource extends Command {
         String path = req.getParameter("path");
         boolean isFolder = Boolean.parseBoolean(req.getParameter("isFolder"));
         IVResource newFile = user.createResource(path,isFolder);
-        if (isFolder) {
-            if (newFile.exists()) {
-                responseString = "EXISTS";
-            } else {
-                if (newFile.mkdir()) {
-                    responseString = "OK";
-                }
-            }
-
-        } else {
-            if (newFile.exists()) {
-                responseString = "EXISTS";
-            } else {
-                newFile.createNewInstance();
-                
-                /* HACK: this fixes a bug that if a user creates a new / empty resource, then closes it the files working copy isn't removed in windows with the file.delete() call. 
-                 * it seems if you open an IO stream to the resource (without writing anything) then close and flush the stream the problem goes away.
-                 * 
-                 * 
-                 */
+        if (newFile.exists()) {
+            responseString = "EXISTS";
+        } else if (isFolder) {
+            if (newFile.mkdir()) {
                 responseString = "OK";
-
+            } else {
+            	throw new IOException("Failed to create folder. path:" + path);
             }
+        } else {
+            newFile.createNewInstance();
+            
+            /* HACK: this fixes a bug that if a user creates a new / empty resource, then closes it the files working copy isn't removed in windows with the file.delete() call. 
+             * it seems if you open an IO stream to the resource (without writing anything) then close and flush the stream the problem goes away.
+             */
+            responseString = "OK";
         }
-
     }
-
 }

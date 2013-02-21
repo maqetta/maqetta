@@ -1022,7 +1022,7 @@ define([
          * Note: return values are cached.
          *
          * @param  {String} type
-         *             Widget type (i.e. "dijit/form/Button")
+         *             Widget type (i.e. "dijit.form.Button")
          * @param  {String} helperType
          *             One of the accepted 'helper' types (see description)
          * @return {Deferred}

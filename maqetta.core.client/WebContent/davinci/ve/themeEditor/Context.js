@@ -88,7 +88,6 @@ return declare([Context], {
 		containerNode.innerHTML = content;
 		dojo.forEach(dojo.query("*", containerNode), function(n){
 			var type =  n.getAttribute("data-dojo-type") || n.getAttribute("dojoType") || /*n.getAttribute("oawidget") ||*/ n.getAttribute("dvwidget");
-			type = type.replace(/\./g, "/");
 			this.loadRequires(type, false/*doUpdateModel*/, true/*doUpdateModelDojoRequires*/); //TODO: use Deferred?
 			//this.loadRequires(n.getAttribute("dojoType"));
 		}, this);

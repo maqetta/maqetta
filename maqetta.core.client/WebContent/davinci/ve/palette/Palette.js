@@ -370,7 +370,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 			if(component.items){
 				dojo.forEach(component.items, function(item){
 					var iconSrc = item.iconBase64 || this._getIconUri(item.icon, "ve/resources/images/file_obj.gif");
-					var selector = "img.davinci_"+item.type.replace(/[\.\/]/g, "_");
+					var selector = "img.davinci_"+item.type.replace(/\./g, "_");
 					var rule = "{background-image: url(" + iconSrc + ")}";
 					if(dojo.isIE){
 						sheet.addRule(selector, rule);

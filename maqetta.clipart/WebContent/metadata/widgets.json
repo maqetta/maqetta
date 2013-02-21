@@ -13,7 +13,7 @@
     "widgets": [
         {
             "name": "ArrowDown",
-            "type": "clipart/ArrowDown",
+            "type": "clipart.ArrowDown",
             "category": "clipart",
             "collection": "clipart",
             "tags": "ArrowDown",
@@ -24,7 +24,7 @@
         },
         {
             "name": "ArrowLeft",
-            "type": "clipart/ArrowLeft",
+            "type": "clipart.ArrowLeft",
             "category": "clipart",
             "collection": "clipart",
             "tags": "ArrowLeft",
@@ -35,7 +35,7 @@
         },
         {
             "name": "ArrowRight",
-            "type": "clipart/ArrowRight",
+            "type": "clipart.ArrowRight",
             "category": "clipart",
             "collection": "clipart",
             "tags": "ArrowRight",
@@ -46,7 +46,7 @@
         },
         {
             "name": "ArrowUp",
-            "type": "clipart/ArrowUp",
+            "type": "clipart.ArrowUp",
             "category": "clipart",
             "collection": "clipart",
             "tags": "ArrowUp",
@@ -57,7 +57,7 @@
         },
         {
             "name": "Browser",
-            "type": "clipart/Browser",
+            "type": "clipart.Browser",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Browser",
@@ -68,7 +68,7 @@
         },
         {
             "name": "Camera",
-            "type": "clipart/Camera",
+            "type": "clipart.Camera",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Camera",
@@ -79,7 +79,7 @@
         },
         {
             "name": "Chat",
-            "type": "clipart/Chat",
+            "type": "clipart.Chat",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Chat",
@@ -90,7 +90,7 @@
         },
         {
             "name": "Close",
-            "type": "clipart/Close",
+            "type": "clipart.Close",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Close",
@@ -101,7 +101,7 @@
         },
         {
             "name": "Facebook",
-            "type": "clipart/Facebook",
+            "type": "clipart.Facebook",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Facebook",
@@ -112,7 +112,7 @@
         },
         {
             "name": "FormattingToolbox",
-            "type": "clipart/FormattingToolbox",
+            "type": "clipart.FormattingToolbox",
             "category": "clipart",
             "collection": "clipart",
             "tags": "FormattingToolbox",
@@ -123,7 +123,7 @@
         },
         {
             "name": "Help",
-            "type": "clipart/Help",
+            "type": "clipart.Help",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Help",
@@ -134,7 +134,7 @@
         },
         {
             "name": "Home",
-            "type": "clipart/Home",
+            "type": "clipart.Home",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Home",
@@ -145,7 +145,7 @@
         },
         {
             "name": "HScrollBar",
-            "type": "clipart/HScrollBar",
+            "type": "clipart.HScrollBar",
             "category": "clipart",
             "collection": "clipart",
             "tags": "HScrollBar",
@@ -156,7 +156,7 @@
         },
         {
             "name": "HSplit",
-            "type": "clipart/HSplit",
+            "type": "clipart.HSplit",
             "category": "clipart",
             "collection": "clipart",
             "tags": "HSplit",
@@ -167,7 +167,7 @@
         },
         {
             "name": "Image",
-            "type": "clipart/Image",
+            "type": "clipart.Image",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Image",
@@ -178,7 +178,7 @@
         },
         {
             "name": "Lock",
-            "type": "clipart/Lock",
+            "type": "clipart.Lock",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Lock",
@@ -189,7 +189,7 @@
         },
         {
             "name": "Mail",
-            "type": "clipart/Mail",
+            "type": "clipart.Mail",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Mail",
@@ -200,7 +200,7 @@
         },
         {
             "name": "Map",
-            "type": "clipart/Map",
+            "type": "clipart.Map",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Map",
@@ -211,7 +211,7 @@
         },
         {
             "name": "Microphone",
-            "type": "clipart/Microphone",
+            "type": "clipart.Microphone",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Microphone",
@@ -222,7 +222,7 @@
         },
         {
             "name": "Minus",
-            "type": "clipart/Minus",
+            "type": "clipart.Minus",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Minus",
@@ -233,7 +233,7 @@
         },
         {
             "name": "Next",
-            "type": "clipart/Next",
+            "type": "clipart.Next",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Next",
@@ -244,7 +244,7 @@
         },
         {
             "name": "Person",
-            "type": "clipart/Person",
+            "type": "clipart.Person",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Person",
@@ -255,7 +255,7 @@
         },
         {
             "name": "PlayControl",
-            "type": "clipart/PlayControl",
+            "type": "clipart.PlayControl",
             "category": "clipart",
             "collection": "clipart",
             "tags": "PlayControl",
@@ -266,7 +266,7 @@
         },
         {
             "name": "Plus",
-            "type": "clipart/Plus",
+            "type": "clipart.Plus",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Plus",
@@ -277,7 +277,7 @@
         },
         {
             "name": "Previous",
-            "type": "clipart/Previous",
+            "type": "clipart.Previous",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Previous",
@@ -288,7 +288,7 @@
         },
         {
             "name": "Print",
-            "type": "clipart/Print",
+            "type": "clipart.Print",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Print",
@@ -299,7 +299,7 @@
         },
         {
             "name": "ProfilePicture",
-            "type": "clipart/ProfilePicture",
+            "type": "clipart.ProfilePicture",
             "category": "clipart",
             "collection": "clipart",
             "tags": "ProfilePicture",
@@ -310,7 +310,7 @@
         },
         {
             "name": "Rss",
-            "type": "clipart/Rss",
+            "type": "clipart.Rss",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Rss",
@@ -321,7 +321,7 @@
         },
         {
             "name": "Search",
-            "type": "clipart/Search",
+            "type": "clipart.Search",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Search",
@@ -332,7 +332,7 @@
         },
         {
             "name": "ShoppingCart",
-            "type": "clipart/ShoppingCart",
+            "type": "clipart.ShoppingCart",
             "category": "clipart",
             "collection": "clipart",
             "tags": "ShoppingCart",
@@ -343,7 +343,7 @@
         },
         {
             "name": "SpinInput",
-            "type": "clipart/SpinInput",
+            "type": "clipart.SpinInput",
             "category": "clipart",
             "collection": "clipart",
             "tags": "SpinInput",
@@ -354,7 +354,7 @@
         },
         {
             "name": "StreetMap",
-            "type": "clipart/StreetMap",
+            "type": "clipart.StreetMap",
             "category": "clipart",
             "collection": "clipart",
             "tags": "StreetMap",
@@ -365,7 +365,7 @@
         },
         {
             "name": "Trash",
-            "type": "clipart/Trash",
+            "type": "clipart.Trash",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Trash",
@@ -376,7 +376,7 @@
         },
         {
             "name": "Twitter",
-            "type": "clipart/Twitter",
+            "type": "clipart.Twitter",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Twitter",
@@ -387,7 +387,7 @@
         },
         {
             "name": "VideoCamera",
-            "type": "clipart/VideoCamera",
+            "type": "clipart.VideoCamera",
             "category": "clipart",
             "collection": "clipart",
             "tags": "VideoCamera",
@@ -398,7 +398,7 @@
         },
         {
             "name": "VideoPlayer",
-            "type": "clipart/VideoPlayer",
+            "type": "clipart.VideoPlayer",
             "category": "clipart",
             "collection": "clipart",
             "tags": "VideoPlayer",
@@ -409,7 +409,7 @@
         },
         {
             "name": "VScrollBar",
-            "type": "clipart/VScrollBar",
+            "type": "clipart.VScrollBar",
             "category": "clipart",
             "collection": "clipart",
             "tags": "VScrollBar",
@@ -420,7 +420,7 @@
         },
         {
             "name": "VSplit",
-            "type": "clipart/VSplit",
+            "type": "clipart.VSplit",
             "category": "clipart",
             "collection": "clipart",
             "tags": "VSplit",
@@ -431,7 +431,7 @@
         },
         {
             "name": "X",
-            "type": "clipart/X",
+            "type": "clipart.X",
             "category": "clipart",
             "collection": "clipart",
             "tags": "X",
@@ -442,7 +442,7 @@
         },
         {
             "name": "Android_340x480",
-            "type": "clipart/Android_340x480",
+            "type": "clipart.Android_340x480",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Android_340x480",
@@ -455,7 +455,7 @@
         },
         {
             "name": "Android_480x800",
-            "type": "clipart/Android_480x800",
+            "type": "clipart.Android_480x800",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Android_480x800",
@@ -468,7 +468,7 @@
         },
         {
             "name": "AndroidTablet",
-            "type": "clipart/AndroidTablet",
+            "type": "clipart.AndroidTablet",
             "category": "clipart",
             "collection": "clipart",
             "tags": "AndroidTablet",
@@ -481,7 +481,7 @@
         },
         {
             "name": "Blackberry",
-            "type": "clipart/Blackberry",
+            "type": "clipart.Blackberry",
             "category": "clipart",
             "collection": "clipart",
             "tags": "Blackberry",
@@ -494,7 +494,7 @@
         },
         {
             "name": "iPad",
-            "type": "clipart/iPad",
+            "type": "clipart.iPad",
             "category": "clipart",
             "collection": "clipart",
             "tags": "iPad",
@@ -507,7 +507,7 @@
         },
         {
             "name": "iPhone",
-            "type": "clipart/iPhone",
+            "type": "clipart.iPhone",
             "category": "clipart",
             "collection": "clipart",
             "tags": "iPhone",

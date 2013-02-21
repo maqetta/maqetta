@@ -1345,7 +1345,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			//to always check that scriptAdditions includes the dojo.require() for this widget.
 			//Cleans up after a bug we had (7714) where model wasn't getting updated, so
 			//we had old files that were missing some of their dojo.require() statements.
-			prereqs.push(this.loadRequires((type||"").replace(/\./g, "/"), false/*doUpdateModel*/, true/*doUpdateModelDojoRequires*/));
+			prereqs.push(this.loadRequires(type, false/*doUpdateModel*/, true/*doUpdateModelDojoRequires*/));
 			prereqs.push(this._preProcess(n));
 //			this.resolveUrl(n);
 			this._preserveStates(n, states);
@@ -1437,7 +1437,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		//need a helper to pre process widget
 		// also, prime the helper cache
         var type = node.getAttribute("data-dojo-type") || node.getAttribute("dojoType");
-        return Widget.requireWidgetHelper((type||"").replace(/\./g, "/")).then(function(helper) {        	
+        return Widget.requireWidgetHelper(type).then(function(helper) {        	
 	        if(helper && helper.preProcess){
 	            helper.preProcess(node, this);
 	        }

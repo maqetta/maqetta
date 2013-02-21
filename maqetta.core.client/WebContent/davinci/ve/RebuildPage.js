@@ -69,7 +69,7 @@ return declare("davinci.ve.RebuildPage", Context, {
             var n = elements[i];
             var type = n.getAttribute("data-dojo-type") || n.getAttribute("dojoType") || n.getAttribute("dvwidget");
             if (type != null){
-            	promises.push(this.loadRequires(type.replace(/\./g, "/"), true, true, true));
+            	promises.push(this.loadRequires(type, true, true, true));
             }
         }
         ;

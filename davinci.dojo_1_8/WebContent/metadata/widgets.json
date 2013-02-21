@@ -40,7 +40,7 @@
         {
             "name": "AccordionContainer",
             "description": "Accordion Container",
-            "type": "dijit/layout/AccordionContainer",
+            "type": "dijit.layout.AccordionContainer",
             "category": "containers",
             "collection": "dijit",
             "tags": "AccordionContainer",
@@ -52,21 +52,21 @@
             "initialSize": "auto",
             "children": [
                 {
-                    "type": "dijit/layout/ContentPane",
+                    "type": "dijit.layout.ContentPane",
                     "properties": {
                         "title": "Pane 1",
                         "doLayout": false
                     }
                 },
                 {
-                    "type": "dijit/layout/ContentPane",
+                    "type": "dijit.layout.ContentPane",
                     "properties": {
                         "title": "Pane 2",
                         "doLayout": false
                     }
                 }
             ],
-            "allowedChild": "dijit/layout/ContentPane",
+            "allowedChild": "dijit.layout.ContentPane",
             "inlineEdit": "./dijit/layout/AccordionContainerInput",
             "helper": "./dijit/layout/LayoutContainerHelper",
             "iconLarge": "resources/imagesLarge/AccordionContainer.png",
@@ -75,7 +75,7 @@
         {
             "name": "BorderContainer",
             "description": "Border Container",
-            "type": "dijit/layout/BorderContainer",
+            "type": "dijit.layout.BorderContainer",
             "category": "containers",
             "collection": "dijit",
             "tags": "BorderContainer",
@@ -88,7 +88,7 @@
             "initialSize": "auto",
             "children": [
                 {
-                    "type": "dijit/layout/ContentPane",
+                    "type": "dijit.layout.ContentPane",
                     "properties": {
                         "region": "top",
                         "splitter": true,
@@ -97,7 +97,7 @@
                     }
                 },
                 {
-                    "type": "dijit/layout/ContentPane",
+                    "type": "dijit.layout.ContentPane",
                     "properties": {
                         "region": "bottom",
                         "splitter": true,
@@ -106,7 +106,7 @@
                     }
                 },
                 {
-                    "type": "dijit/layout/ContentPane",
+                    "type": "dijit.layout.ContentPane",
                     "properties": {
                         "region": "leading",
                         "splitter": true,
@@ -115,7 +115,7 @@
                     }
                 },
                 {
-                    "type": "dijit/layout/ContentPane",
+                    "type": "dijit.layout.ContentPane",
                     "properties": {
                         "region": "trailing",
                         "splitter": true,
@@ -124,14 +124,14 @@
                     }
                 },
                 {
-                    "type": "dijit/layout/ContentPane",
+                    "type": "dijit.layout.ContentPane",
                     "properties": {
                         "region": "center",
                         "doLayout": false
                     }
                 }
             ],
-            "allowedChild": "dijit/layout/ContentPane",
+            "allowedChild": "dijit.layout.ContentPane",
             "inlineEdit": "./dijit/layout/BorderContainerInput",
             "helper": "./dijit/layout/BorderContainerHelper",
             "iconLarge": "resources/imagesLarge/BorderContainer.png",
@@ -140,7 +140,7 @@
         {
             "name": "ContentPane",
             "description": "Content Pane",
-            "type": "dijit/layout/ContentPane",
+            "type": "dijit.layout.ContentPane",
             "category": "containers",
             "collection": "dijit",
             "tags": "ContentPane",
@@ -159,7 +159,7 @@
         {
             "name": "Form",
             "description": "Form",
-            "type": "dijit/form/Form",
+            "type": "dijit.form.Form",
             "category": "containers",
             "collection": "dijit",
             "tags": "Form",
@@ -176,7 +176,7 @@
         {
             "name": "MenuBar",
             "description": "Menu Bar",
-            "type": "dijit/MenuBar",
+            "type": "dijit.MenuBar",
             "category": "containers",
             "collection": "dijit",
             "tags": "MenuBar",
@@ -184,22 +184,22 @@
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjc5MkUyMjZCNTk1NDExRTA4Nzg1OTZGMjZENkFBOUQxIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjc5MkUyMjZDNTk1NDExRTA4Nzg1OTZGMjZENkFBOUQxIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NzkyRTIyNjk1OTU0MTFFMDg3ODU5NkYyNkQ2QUE5RDEiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6NzkyRTIyNkE1OTU0MTFFMDg3ODU5NkYyNkQ2QUE5RDEiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz51mObVAAAAkUlEQVR42mL8//8/AyWAiYFCQLEBLDM33vx/4MIDsjQ7GCgwsOwAap5R4ECWARkTDjCwMHz4AeZ4eHTAJXbsqEARQ+fDxYB6WX78+MEAMiIjA+GKHzAboGLofJgYSC/YABDPw8OCAd0EuBg6HyoGNiAiwIIhImMGUIQDiy9hdmOXS0jwYGAc+glp1AAGBoAAAwAf+zynzvjO1gAAAABJRU5ErkJggg==",
             "children": [
                 {
-                    "type": "dijit/PopupMenuBarItem",
+                    "type": "dijit.PopupMenuBarItem",
                     "properties": {
                         "label": "Menu 1"
                     },
                     "children": [
                         {
-                            "type": "dijit/Menu",
+                            "type": "dijit.Menu",
                             "children": [
                                 {
-                                    "type": "dijit/MenuItem",
+                                    "type": "dijit.MenuItem",
                                     "properties": {
                                         "label": "Menu Item 1.1"
                                     }
                                 },
                                 {
-                                    "type": "dijit/MenuItem",
+                                    "type": "dijit.MenuItem",
                                     "properties": {
                                         "label": "Menu Item 1.2"
                                     }
@@ -209,22 +209,22 @@
                     ]
                 },
                 {
-                    "type": "dijit/PopupMenuBarItem",
+                    "type": "dijit.PopupMenuBarItem",
                     "properties": {
                         "label": "Menu 2"
                     },
                     "children": [
                         {
-                            "type": "dijit/Menu",
+                            "type": "dijit.Menu",
                             "children": [
                                 {
-                                    "type": "dijit/MenuItem",
+                                    "type": "dijit.MenuItem",
                                     "properties": {
                                         "label": "Menu Item 2.1"
                                     }
                                 },
                                 {
-                                    "type": "dijit/MenuItem",
+                                    "type": "dijit.MenuItem",
                                     "properties": {
                                         "label": "Menu Item 2.2"
                                     }
@@ -235,7 +235,7 @@
                 }
             ],
             "isLayered": true,
-            "allowedChild": "dijit/PopupMenuBarItem, dijit/MenuBarItem",
+            "allowedChild": "dijit.PopupMenuBarItem, dijit.MenuBarItem",
             "helper": "./dijit/MenuHelper",
             "inlineEdit": "./dijit/MenuBarInput",
             "iconLarge": "resources/imagesLarge/MenuBar.png",
@@ -244,7 +244,7 @@
         {
             "name": "StackContainer",
             "description": "Stack Container",
-            "type": "dijit/layout/StackContainer",
+            "type": "dijit.layout.StackContainer",
             "category": "containers",
             "collection": "dijit",
             "tags": "StackContainer",
@@ -252,20 +252,20 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAADteljtelfP2+zpfljpflTtfljtflT1jmUBnnUBonUJtokZyp0Zypkl4q0x+sUx9sFCCtbjQ6E+DtVSLvVKHuVKIuVWMvabG47DM5rHM5laOv6XH5KXG46XH43+z2n+z2YC02ou53Yu63ZjA4Hiw2H+02v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACYALAAAAAAQABAAAAaEQJNmSCxqTEikRcBsNidJJEVgrCYlgqXTCUU+BNOq0dQQYLVbJnQh+E4j8HhEUDEpBGUsJoPZ8wUQJgkCbF8cGxwdHRccAg4mBwJ3ZSOVliN4JgMEg2wiIiEhoCECDEmRdyAfHiAlICCSSZuDJLW2JAIIUZBpTQe7mwXCwgQGAQC7ybtBADs=",
             "data": [
                 {
-                    "type": "dijit/layout/StackController"
+                    "type": "dijit.layout.StackController"
                 },
                 {
-                    "type": "dijit/layout/StackContainer",
+                    "type": "dijit.layout.StackContainer",
                     "children": [
                         {
-                            "type": "dijit/layout/ContentPane",
+                            "type": "dijit.layout.ContentPane",
                             "properties": {
                                 "title": "Page 1",
                                 "doLayout": false
                             }
                         },
                         {
-                            "type": "dijit/layout/ContentPane",
+                            "type": "dijit.layout.ContentPane",
                             "properties": {
                                 "title": "Page 2",
                                 "doLayout": false
@@ -275,7 +275,7 @@
                 }
             ],
             "initialSize": "auto",
-            "allowedChild": "dijit/layout/ContentPane",
+            "allowedChild": "dijit.layout.ContentPane",
             "inlineEdit": "./dijit/layout/StackContainerInput",
             "helper": "./dijit/layout/StackContainerHelper",
             "tool": "./dijit/layout/StackContainerCreateTool",
@@ -284,7 +284,7 @@
         {
             "name": "StackController",
             "description": "StackController",
-            "type": "dijit/layout/StackController",
+            "type": "dijit.layout.StackController",
             "category": "containers",
             "collection": "dijit",
             "tags": "StackController",
@@ -296,7 +296,7 @@
         {
             "name": "TabContainer",
             "description": "Tab Container",
-            "type": "dijit/layout/TabContainer",
+            "type": "dijit.layout.TabContainer",
             "category": "containers",
             "collection": "dijit",
             "tags": "TabContainer",
@@ -304,18 +304,18 @@
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASlJREFUeNpi/P//PwMlgAVEBHbuxGnKgbf/GS1+f8SQP8HKzwg3gOEHA8P6enesBngWrvxflOyGId43d9d/kCEsEP0/GFYevInTmUDFWMUduBn/w13gbaaMVREucRAI7doK88IPMLXt8ksGRqjk//9AFuN/ND6YBeZ76YqD9UG8ADXg1x+ksAJqZkAOOiAfFGGMDAjhHx+gBoD9ACL//gPrg1n7H2oO3BnIYlB9YAO+/mQCc3/++QexjAHNcphGNHGQPrAB/37/hngB6IL/MGVAPzOCnI3BRwCQPrABP3/8RHEBNPwQzmaEBQkkIGFyIH0syNHy8+9/JCcjHAzjMzJAXYhkOtgAli+/wJxiJ0WS8gHTt68M8JRoGtRKVmZipDQ3MjFQCAACDAAZhYTuU0wrQQAAAABJRU5ErkJggg==",
             "properties": {
                 "style": "min-width:1em; min-height:1em;",
-                "controllerWidget": "dijit/layout/TabController"
+                "controllerWidget": "dijit.layout.TabController"
             },
             "children": [
                 {
-                    "type": "dijit/layout/ContentPane",
+                    "type": "dijit.layout.ContentPane",
                     "properties": {
                         "title": "Tab 1",
                         "doLayout": false
                     }
                 },
                 {
-                    "type": "dijit/layout/ContentPane",
+                    "type": "dijit.layout.ContentPane",
                     "properties": {
                         "title": "Tab 2",
                         "doLayout": false
@@ -323,7 +323,7 @@
                 }
             ],
             "initialSize": "auto",
-            "allowedChild": "dijit/layout/ContentPane",
+            "allowedChild": "dijit.layout.ContentPane",
             "inlineEdit": "./dijit/layout/StackContainerInput",
             "helper": "./dijit/layout/LayoutContainerHelper",
             "iconLarge": "resources/imagesLarge/TabContainer.png",
@@ -332,7 +332,7 @@
         {
             "name": "TitlePane",
             "description": "Title Pane",
-            "type": "dijit/TitlePane",
+            "type": "dijit.TitlePane",
             "category": "containers",
             "collection": "dijit",
             "tags": "TitlePane",
@@ -366,7 +366,7 @@
         {
             "name": "Toolbar",
             "description": "Toolbar",
-            "type": "dijit/Toolbar",
+            "type": "dijit.Toolbar",
             "category": "containers",
             "collection": "dijit",
             "tags": "Toolbar",
@@ -374,26 +374,26 @@
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAOtJREFUeNpi/P//PwMlgAVEhPcf+E+RAX9+/mKoTXMiWXPTzH0MTCDGzy9f4YIxmZOIokHg19dvDIygMHAtWPq/vjQYLPgfCHecf8ngaSTOsP0cHtpQgqGxey3ECyCT3n/9CdINNsJCTZDh/ZdfcNoSRH9G8C1UBYDqfyBcYJowg7JAlJCVYGgu9CFZc+2ErRAD/v39BxZQ4STNgL9//kBi4R+QQQ749+cvzIC/ZBoAdcFfSl3w69t3sgwA6QMb8PsfeVH4599/aCwA00Jy2QIG5n+YJv1lYgKLw+h/QBqUaCBizJCERAkACDAAug6MMt3XrLUAAAAASUVORK5CYII=",
             "children": [
                 {
-                    "type": "dijit/form/Button",
+                    "type": "dijit.form.Button",
                     "properties": {
                         "label": "Button 1"
                     }
                 },
                 {
-                    "type": "dijit/form/Button",
+                    "type": "dijit.form.Button",
                     "properties": {
                         "label": "Button 2"
                     }
                 },
                 {
-                    "type": "dijit/form/Button",
+                    "type": "dijit.form.Button",
                     "properties": {
                         "label": "Button 3"
                     }
                 }
             ],
             "resizable": "none",
-            "allowedChild": "dijit/form/Button, dijit/form/ComboButton, dijit/form/DropDownButton, dijit/form/ToggleButton, dijit/ToolbarSeparator",
+            "allowedChild": "dijit.form.Button, dijit.form.ComboButton, dijit.form.DropDownButton, dijit.form.ToggleButton, dijit.ToolbarSeparator",
             "inlineEdit": "./dijit/ToolbarInput",
             "iconLarge": "resources/imagesLarge/Toolbar.png",
             "iconLargeBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA+lJREFUeNrsmF9IU1Ecx73Xm3NTn8Q/aDDxYQgipKRmPjQwCCXNh1ZQgj0mpK1lkYaFhhq21kLUp/YgJqIo+FAUNKgX9aFtQtiL/90gXcx/OXfd7p9+9x69ne4kpKc9nN/uLuee+zvnfM739/vdXUa9+zQdF3vGwLeq4lxMMb13zkhYfv/PWFQrOTlZ1UtR1KlTCTRNd3d31tXV6fV6lj0QZZPvSj49PS9Uox4+fKDqkd3xaf+0x8fHYU6GYa5fv3Y8lng0msLGMQy9sLCwvr4OTHCp0WhYlhX/Xqel5ZEgCBzHwd35+fnl5eWcnJx/kyEbHR1dXV0tLS3xeGYHBvpv3244BgvGykCUTqeVJxIiEQ4aTqezoKAAGrDe0tJiRcXFYDCoWmloaMhoNL59O6yat7n5fnQEYFcul9vv9y8uLqampgYCm5mZmSsrKx8+fExLSysqKlRjwUpJSbq5uTnYdHl5OThBr8fjPn++fHBw0O12Iz6kFo4FIYZA4MrxPG+3v7ZaX1osFhyLpuMEQWTZUHX1ZTggQ7a3t/f29uJlCwQCcFcVREivJI/H43K5ysrKJiYmYLGOjo7p6ZlwOFJTU9PV1aXT6YLBfTEqJEgtpb2/v19ffwtd2mw2i+Xe39EUQ6EQEKCelJSU/v4BxQF3ZpTdT03NFBWdyc/PHx4eBqa1tbUrV2paWlq1WimywARiiCKFohytFmpzvPRpbLwDzn19/bgANE3JarGAjnrQzE+fPoFze3uHzfbKbDYfOqNl4KisvORwOGpra6Ew29ra8vLyCgsLYSQsAFLzPCcIvChKByebohAkh9J2vHH09vZarVbUw2EGS8D54OAgeGThcFilvd1uRzMfqvXrVzA3N7e19bHXu1ZcXKLVJmZlZXm9vsnJycrKKtgoz0tZG11TKrV4JBfPw2aOLUnAgjiinkgkotxVNPsTRKg7KJOtrR1A0etzIDeh8mBwU1PTyMjI2NjYzZs3Nje3sIgcNrq7n8PZZLqK59bu7i6cUb7juQjFAJc4liL5589fZmdnzea7yhClEkWeFyFYIEliYiLLhn0+n1+yHwyjOfI+XAMp0dDQEK0c6ISKEfngmsXHQ24JGxvr6enpqCcjIwM1jMYLcOCTM3gKH+kcMhgM8JgwmUylpWWdnc92dnbk/BPjlMdJlCHlogInYm1JLYMhz+v1op7s7NN44PAhFLxBnC3IVT334EECiZ+QkABOEJRIJIzXFGjxPz9zDM1xJxro+b4iqfX12xJ5sTnRiw0dF5NGsAgWwSJYBItgESyCRbAIFsEiWASLYBEsgkWwCNaJTPrb7b1zJtawfgswAFo+X7yYE0tiAAAAAElFTkSuQmCC"
@@ -401,7 +401,7 @@
         {
             "name": "Button",
             "description": "Button",
-            "type": "dijit/form/Button",
+            "type": "dijit.form.Button",
             "category": "controls",
             "collection": "dijit",
             "tags": "Button",
@@ -426,7 +426,7 @@
         {
             "name": "Calendar",
             "description": "Calendar",
-            "type": "dijit/Calendar",
+            "type": "dijit.Calendar",
             "category": "controls",
             "collection": "dijit",
             "tags": "Calendar",
@@ -438,7 +438,7 @@
         {
             "name": "CheckBox",
             "description": "Check Box",
-            "type": "dijit/form/CheckBox",
+            "type": "dijit.form.CheckBox",
             "category": "controls",
             "collection": "dijit",
             "tags": "CheckBox",
@@ -451,7 +451,7 @@
         {
             "name": "ColorPalette",
             "description": "Color Palette",
-            "type": "dijit/ColorPalette",
+            "type": "dijit.ColorPalette",
             "category": "controls",
             "collection": "dijit",
             "tags": "ColorPalette",
@@ -464,7 +464,7 @@
         {
             "name": "ComboBox",
             "description": "Combo Box",
-            "type": "dijit/form/ComboBox",
+            "type": "dijit.form.ComboBox",
             "category": "controls",
             "collection": "dijit",
             "tags": "ComboBox",
@@ -505,7 +505,7 @@
         {
             "name": "ComboButton",
             "description": "ComboButton",
-            "type": "dijit/form/ComboButton",
+            "type": "dijit.form.ComboButton",
             "category": "controls",
             "collection": "dijit",
             "tags": "ComboButton",
@@ -518,16 +518,16 @@
             },
             "children": [
                 {
-                    "type": "dijit/Menu",
+                    "type": "dijit.Menu",
                     "children": [
                         {
-                            "type": "dijit/MenuItem",
+                            "type": "dijit.MenuItem",
                             "properties": {
                                 "label": "Option 1"
                             }
                         },
                         {
-                            "type": "dijit/MenuItem",
+                            "type": "dijit.MenuItem",
                             "properties": {
                                 "label": "Option 2"
                             }
@@ -545,7 +545,7 @@
         {
             "name": "CurrencyTextBox",
             "description": "Currency Text Box",
-            "type": "dijit/form/CurrencyTextBox",
+            "type": "dijit.form.CurrencyTextBox",
             "category": "controls",
             "collection": "dijit",
             "tags": "CurrencyTextBox",
@@ -561,7 +561,7 @@
         {
             "name": "DataGrid",
             "description": "DataGrid",
-            "type": "dojox/grid/DataGrid",
+            "type": "dojox.grid.DataGrid",
             "category": "controls",
             "collection": "dijit",
             "tags": "DataGrid",
@@ -569,7 +569,7 @@
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjZBRkZCQTRGNTk1MTExRTBBNEUxRjRDMkRBREZBNzRCIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjZBRkZCQTUwNTk1MTExRTBBNEUxRjRDMkRBREZBNzRCIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NkFGRkJBNEQ1OTUxMTFFMEE0RTFGNEMyREFERkE3NEIiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6NkFGRkJBNEU1OTUxMTFFMEE0RTFGNEMyREFERkE3NEIiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz6FULAwAAABHklEQVR42mL8//8/AyWABUSE9x/4T5EBIDAvyxZMJ007zFAXbgZmMzOBMCMDMyMjmJ/dvZlhaqkvmC3OxwpWCzbg5+dvYMGrX5gZPr54DWZ/ZefCauMbJg4I/YWB4ceXrwyMoDDwqdnw/+/v3wwMII8wgiiIjSDyP5QH8yNYBpkDMsCjbNX/k2/+g7FH6ar/H778wYrXnfmAwnfJX/of7IU/P3+jOPMPI+5AQ5b7++sXJAz+ABn1navhEoeuf8FpALoc3AWNzaFgAZBBTho8WDXvu/EFRa7vJ9QFIKcgAzZG3MkCWe7Pr9+IdIDshR3Xv+I0AF0O4gJgFDaWI7zgocmNUzOyXPuvPwxMDBQCcELS9277T5EBlACKvQAQYABZaKNFxNmUSQAAAABJRU5ErkJggg==",
             "data": [
                 {
-                    "type": "dojo/data/ItemFileReadStore",
+                    "type": "dojo.data.ItemFileReadStore",
                     "properties": {
                         "data": {
                             "identifier": "id",
@@ -587,7 +587,7 @@
                     }
                 },
                 {
-                    "type": "dojox/grid/DataGrid",
+                    "type": "dojox.grid.DataGrid",
                     "properties": {
                         "structure": [
                             {
@@ -613,7 +613,7 @@
         {
             "name": "DateTextBox",
             "description": "Date Text Box",
-            "type": "dijit/form/DateTextBox",
+            "type": "dijit.form.DateTextBox",
             "category": "controls",
             "collection": "dijit",
             "tags": "DateTextBox",
@@ -626,7 +626,7 @@
         {
             "name": "Dialog",
             "description": "Dialog",
-            "type": "dijit/Dialog",
+            "type": "dijit.Dialog",
             "category": "untested",
             "collection": "dijit",
             "tags": "Dialog",
@@ -645,7 +645,7 @@
         {
             "name": "DropDownButton",
             "description": "Drop Down Button",
-            "type": "dijit/form/DropDownButton",
+            "type": "dijit.form.DropDownButton",
             "category": "controls",
             "collection": "dijit",
             "tags": "DropDownButton",
@@ -657,16 +657,16 @@
             },
             "children": [
                 {
-                    "type": "dijit/Menu",
+                    "type": "dijit.Menu",
                     "children": [
                         {
-                            "type": "dijit/MenuItem",
+                            "type": "dijit.MenuItem",
                             "properties": {
                                 "label": "Option 1"
                             }
                         },
                         {
-                            "type": "dijit/MenuItem",
+                            "type": "dijit.MenuItem",
                             "properties": {
                                 "label": "Option 2"
                             }
@@ -678,14 +678,14 @@
             "isControl": true,
             "helper": "./dijit/form/DropDownButtonHelper",
             "inlineEdit": "./dijit/form/DropDownButtonInput",
-            "allowedChild": "dijit/Menu, dijit/TooltipDialog",
+            "allowedChild": "dijit.Menu, dijit.TooltipDialog",
             "iconLarge": "resources/imagesLarge/DropDownButton.png",
             "iconLargeBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAs5JREFUeNpi3LrnOMPgAyxA7OVsMajctG3vCSaGQQlYkDm/fv3adfHZ3efvn775RDcXSIvwKUsKuulLsbGxYXEW0E2Tt1wyVJEItdWUEuSgm7Oevf9x4d7Lng3nSwIM4S5jgbtp3+WngnzcitLiP/8x3H/7m44xxqypIPXi/TegA5x0pSEugzrr69evp2+9tDPWevHx94AkJnkpicu37pkrCaA46927d5++ff/zl+HP3z/UtY+JmRm/gn9//4IoRuanbz8BnSEoKAh11v///3l4eBgZmbg4WAYgoFihlgIdAHQG0DFQZzEyMkITGhMjTR1QWl2LKdjd2ozMhTgGJXhYmWnrrAkdLQUVNQp6VhDug0vHgCLYox6lEGNipDWa0tUKdA3ETUA2shTO4pSFmR5paUZva0ZxNZAkXMp/+fKFDmkLDub0t2EVBzpDXFwcJScCncTBQn1nwfMTLgDJeqD0xMiAJSdys7P+/fuXg43+ZQTI9k9ff4gLcGHJibryAhfuPbfSkhuQUv7a49eKYtxYkvy2wxdl5eQ52VhUpYX//v5FLfuEBHgRBfq/f5gKPn//feX+y0t3nj9+9NBSxQndWRzcPI6aIk/ef1xz9/nrj9/pFk6i/JyyQlxAq1e9fYsltNg4udl4RYT/vedlZ2KU4iWYVAmCf8DEC0vOBKofdnYGLj6gA7A4i4mJmZ2LT4CF/S+k7qRny4aZmY2NHegA7MXpPyYWFg6WgaiuGf7haTT/+Tco2/KD1Fm/R0Nr1FnD3lmDtLM/6McgWJgY/vymaieRiYT6AljjsTBhOAtYMQMTVpA2y8AFEPPpU4imLBNay3VgAaIBPZrkR5016qxRZ406a9RZo87CbJ2WzTs4uJzFysoaZcT/6dOngWpKAJs0fHx8QGegOIubm1tWVvb3798DGEJANwGdgXDWtr0nYIE0sK0uRgbYaCBAgAEAi+/rylJzwSMAAAAASUVORK5CYII="
         },
         {
             "name": "DropDownSelect",
             "description": "Select (Drop Down)",
-            "type": "dijit/form/Select",
+            "type": "dijit.form.Select",
             "category": "controls",
             "collection": "dijit",
             "tags": "DropDownSelect",
@@ -724,7 +724,7 @@
         {
             "name": "FilteringSelect",
             "description": "Select (Filtering)",
-            "type": "dijit/form/FilteringSelect",
+            "type": "dijit.form.FilteringSelect",
             "category": "controls",
             "collection": "dijit",
             "tags": "FilteringSelect",
@@ -762,7 +762,7 @@
         {
             "name": "HorizontalSlider",
             "description": "Slider (Horizontal)",
-            "type": "dijit/form/HorizontalSlider",
+            "type": "dijit.form.HorizontalSlider",
             "category": "controls",
             "collection": "dijit",
             "tags": "HorizontalSlider",
@@ -774,14 +774,14 @@
             },
             "children": [
                 {
-                    "type": "dijit/form/HorizontalRule",
+                    "type": "dijit.form.HorizontalRule",
                     "properties": {
                         "style": "height:5px;",
                         "container": "bottomDecoration"
                     }
                 },
                 {
-                    "type": "dijit/form/HorizontalRuleLabels",
+                    "type": "dijit.form.HorizontalRuleLabels",
                     "properties": {
                         "container": "bottomDecoration",
                         "style": "height:20px;"
@@ -789,7 +789,7 @@
                 }
             ],
             "resizable": "width",
-            "allowedChild": "dijit/form/HorizontalRuleLabels, dijit/form/HorizontalRule",
+            "allowedChild": "dijit.form.HorizontalRuleLabels, dijit.form.HorizontalRule",
             "helper": "./dijit/form/HorizontalSliderHelper",
             "inlineEdit": "./dijit/form/HorizontalSliderInput",
             "isControl": true,
@@ -799,7 +799,7 @@
         {
             "name": "HorizontalRuleLabels",
             "description": "Labels for Horizontal Slider",
-            "type": "dijit/form/HorizontalRuleLabels",
+            "type": "dijit.form.HorizontalRuleLabels",
             "category": "controls",
             "collection": "dijit",
             "tags": "HorizontalRuleLabels",
@@ -809,14 +809,14 @@
                 "container": "bottomDecoration"
             },
             "helper": "./dijit/form/HorizontalRuleLabelsHelper",
-            "allowedParent": "dijit/form/HorizontalSlider",
+            "allowedParent": "dijit.form.HorizontalSlider",
             "hidden": true,
             "refreshParentOnPropChange": true
         },
         {
             "name": "HorizontalRule",
             "description": "Hash marks for Horizontal Slider",
-            "type": "dijit/form/HorizontalRule",
+            "type": "dijit.form.HorizontalRule",
             "category": "controls",
             "collection": "dijit",
             "tags": "HorizontalRule",
@@ -826,13 +826,13 @@
                 "style": "height:5px;",
                 "container": "bottomDecoration"
             },
-            "allowedParent": "dijit/form/HorizontalSlider",
+            "allowedParent": "dijit.form.HorizontalSlider",
             "hidden": true,
             "refreshParentOnPropChange": true
         },
         {
             "name": "Menu",
-            "type": "dijit/Menu",
+            "type": "dijit.Menu",
             "category": "untested",
             "collection": "dijit",
             "tags": "Menu",
@@ -844,19 +844,19 @@
             },
             "children": [
                 {
-                    "type": "dijit/MenuItem",
+                    "type": "dijit.MenuItem",
                     "properties": {
                         "label": "Menu item 1"
                     }
                 },
                 {
-                    "type": "dijit/MenuItem",
+                    "type": "dijit.MenuItem",
                     "properties": {
                         "label": "Menu item 2"
                     }
                 },
                 {
-                    "type": "dijit/MenuItem",
+                    "type": "dijit.MenuItem",
                     "properties": {
                         "label": "Menu item 3"
                     }
@@ -870,7 +870,7 @@
         {
             "name": "MultiSelect",
             "description": "Select (Multiple)",
-            "type": "dijit/form/MultiSelect",
+            "type": "dijit.form.MultiSelect",
             "category": "controls",
             "collection": "dijit",
             "tags": "MultiSelect",
@@ -912,7 +912,7 @@
         {
             "name": "NumberSpinner",
             "description": "Number Spinner",
-            "type": "dijit/form/NumberSpinner",
+            "type": "dijit.form.NumberSpinner",
             "category": "controls",
             "collection": "dijit",
             "tags": "NumberSpinner",
@@ -928,7 +928,7 @@
         {
             "name": "NumberTextBox",
             "description": "Number Text Box",
-            "type": "dijit/form/NumberTextBox",
+            "type": "dijit.form.NumberTextBox",
             "category": "controls",
             "collection": "dijit",
             "tags": "NumberTextBox",
@@ -941,7 +941,7 @@
         {
             "name": "RadioButton",
             "description": "Radio Button",
-            "type": "dijit/form/RadioButton",
+            "type": "dijit.form.RadioButton",
             "category": "controls",
             "collection": "dijit",
             "tags": "RadioButton",
@@ -954,7 +954,7 @@
         {
             "name": "SimpleTextarea",
             "description": "Text Area (Basic)",
-            "type": "dijit/form/SimpleTextarea",
+            "type": "dijit.form.SimpleTextarea",
             "category": "controls",
             "collection": "dijit",
             "tags": "SimpleTextarea",
@@ -981,7 +981,7 @@
         {
             "name": "Textarea",
             "description": "Text Area (Resizing)",
-            "type": "dijit/form/Textarea",
+            "type": "dijit.form.Textarea",
             "category": "controls",
             "collection": "dijit",
             "tags": "Textarea",
@@ -1004,7 +1004,7 @@
         {
             "name": "TextBox",
             "description": "Text Box",
-            "type": "dijit/form/TextBox",
+            "type": "dijit.form.TextBox",
             "category": "controls",
             "collection": "dijit",
             "tags": "TextBox",
@@ -1022,7 +1022,7 @@
         {
             "name": "TimeSpinner",
             "description": "Time Spinner",
-            "type": "dojox/form/TimeSpinner",
+            "type": "dojox.form.TimeSpinner",
             "category": "controls",
             "collection": "dijit",
             "tags": "TimeSpinner",
@@ -1035,7 +1035,7 @@
         {
             "name": "ToggleButton",
             "description": "ToggleButton",
-            "type": "dijit/form/ToggleButton",
+            "type": "dijit.form.ToggleButton",
             "category": "controls",
             "collection": "dijit",
             "tags": "ToggleButton",
@@ -1059,7 +1059,7 @@
         {
             "name": "TriStateCheckBox",
             "description": "TriStateCheckBox",
-            "type": "dojox/form/TriStateCheckBox",
+            "type": "dojox.form.TriStateCheckBox",
             "category": "controls",
             "collection": "dijit",
             "tags": "TriStateCheckBox",
@@ -1077,7 +1077,7 @@
         {
             "name": "Tooltip",
             "description": "Tooltip",
-            "type": "dijit/Tooltip",
+            "type": "dijit.Tooltip",
             "category": "untested",
             "collection": "dijit",
             "tags": "Tooltip",
@@ -1093,7 +1093,7 @@
         {
             "name": "TooltipDialog",
             "description": "Tooltip Dialog",
-            "type": "dijit/TooltipDialog",
+            "type": "dijit.TooltipDialog",
             "category": "untested",
             "collection": "dijit",
             "tags": "TooltipDialog",
@@ -1103,13 +1103,13 @@
             "tool": "./dijit/TooltipDialogCreateTool",
             "resizable": "none",
             "allowedChild": "ANY",
-            "allowedParent": "dijit/form/DropDownButton",
+            "allowedParent": "dijit.form.DropDownButton",
             "helper": "./dijit/TooltipDialogHelper"
         },
         {
             "name": "Tree",
             "description": "Tree",
-            "type": "dijit/Tree",
+            "type": "dijit.Tree",
             "category": "controls",
             "collection": "dijit",
             "tags": "Tree",
@@ -1117,7 +1117,7 @@
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAOJJREFUeNpi/P//PwMlgImBQsCCzAnvPwB3zspCB0aSDQCB7lgLhtLFJzAMxGUwigH//v5lKF5wjIEBGi5EuQIUiMg4qG3nf3QxfBjDC3/+/MawxL9py39GBpBj/jNsqPNhxBsGf3/+ZvCpWQ/xAyMjSA8YTCvwYMiasINwIP759YthR1cYii2eZav+p3dtYvhPTCz8/YXphe1oBpJsgFPWfHC8gEzZNy2RQBj8/s1glzob4tr/IE3A0AZqWdIexxBbsRjDcEZi8oJl0sz//xghqf7k3FRGkg2gaWai2ACAAAMAVbWDTF4DhaYAAAAASUVORK5CYII=",
             "data": [
                 {
-                    "type": "dojo/store/Memory",
+                    "type": "dojo.store.Memory",
                     "properties": {
                         "data": [
                             {
@@ -1168,7 +1168,7 @@
                     }
                 },
                 {
-                    "type": "dijit/tree/ObjectStoreModel",
+                    "type": "dijit.tree.ObjectStoreModel",
                     "properties": {
                         "labelAttr": "label",
                         "query": {
@@ -1177,7 +1177,7 @@
                     }
                 },
                 {
-                    "type": "dijit/Tree",
+                    "type": "dijit.Tree",
                     "properties": {
                         "style": "min-height:1em;",
                         "showRoot": false,
@@ -1195,7 +1195,7 @@
         {
             "name": "TreeGrid",
             "description": "TreeGrid",
-            "type": "dojox/grid/TreeGrid",
+            "type": "dojox.grid.TreeGrid",
             "category": "untested",
             "collection": "dijit",
             "tags": "TreeGrid",
@@ -1203,7 +1203,7 @@
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjZBRkZCQTRGNTk1MTExRTBBNEUxRjRDMkRBREZBNzRCIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjZBRkZCQTUwNTk1MTExRTBBNEUxRjRDMkRBREZBNzRCIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NkFGRkJBNEQ1OTUxMTFFMEE0RTFGNEMyREFERkE3NEIiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6NkFGRkJBNEU1OTUxMTFFMEE0RTFGNEMyREFERkE3NEIiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz6FULAwAAABHklEQVR42mL8//8/AyWABUSE9x/4T5EBIDAvyxZMJ007zFAXbgZmMzOBMCMDMyMjmJ/dvZlhaqkvmC3OxwpWCzbg5+dvYMGrX5gZPr54DWZ/ZefCauMbJg4I/YWB4ceXrwyMoDDwqdnw/+/v3wwMII8wgiiIjSDyP5QH8yNYBpkDMsCjbNX/k2/+g7FH6ar/H778wYrXnfmAwnfJX/of7IU/P3+jOPMPI+5AQ5b7++sXJAz+ABn1navhEoeuf8FpALoc3AWNzaFgAZBBTho8WDXvu/EFRa7vJ9QFIKcgAzZG3MkCWe7Pr9+IdIDshR3Xv+I0AF0O4gJgFDaWI7zgocmNUzOyXPuvPwxMDBQCcELS9277T5EBlACKvQAQYABZaKNFxNmUSQAAAABJRU5ErkJggg==",
             "data": [
                 {
-                    "type": "dojo/data/ItemFileReadStore",
+                    "type": "dojo.data.ItemFileReadStore",
                     "properties": {
                         "data": {
                             "identifier": "id",
@@ -1246,7 +1246,7 @@
                     }
                 },
                 {
-                    "type": "dojox/grid/TreeGrid",
+                    "type": "dojox.grid.TreeGrid",
                     "properties": {
                         "structure": [
                             {
@@ -1284,7 +1284,7 @@
         {
             "name": "ValidationTextBox",
             "description": "Validation Text Box",
-            "type": "dijit/form/ValidationTextBox",
+            "type": "dijit.form.ValidationTextBox",
             "category": "controls",
             "collection": "dijit",
             "tags": "ValidationTextBox",
@@ -1297,7 +1297,7 @@
         {
             "name": "TimeTextBox",
             "description": "Time Text Box",
-            "type": "dijit/form/TimeTextBox",
+            "type": "dijit.form.TimeTextBox",
             "category": "untested",
             "collection": "dijit",
             "tags": "TimeTextBox",
@@ -1310,7 +1310,7 @@
         {
             "name": "VerticalSlider",
             "description": "Slider (Vertical)",
-            "type": "dijit/form/VerticalSlider",
+            "type": "dijit.form.VerticalSlider",
             "category": "controls",
             "collection": "dijit",
             "tags": "VerticalSlider",
@@ -1322,14 +1322,14 @@
             },
             "children": [
                 {
-                    "type": "dijit/form/VerticalRule",
+                    "type": "dijit.form.VerticalRule",
                     "properties": {
                         "style": "width:5px;",
                         "container": "rightDecoration"
                     }
                 },
                 {
-                    "type": "dijit/form/VerticalRuleLabels",
+                    "type": "dijit.form.VerticalRuleLabels",
                     "properties": {
                         "style": "width:3em;",
                         "container": "rightDecoration"
@@ -1337,7 +1337,7 @@
                 }
             ],
             "resizable": "height",
-            "allowedChild": "dijit/form/VerticalRuleLabels, dijit/form/VerticalRule",
+            "allowedChild": "dijit.form.VerticalRuleLabels, dijit.form.VerticalRule",
             "helper": "./dijit/form/VerticalSliderHelper",
             "inlineEdit": "./dijit/form/VerticalSliderInput",
             "isControl": true,
@@ -1347,7 +1347,7 @@
         {
             "name": "VerticalRuleLabels",
             "description": "Labels for Vertical Slider",
-            "type": "dijit/form/VerticalRuleLabels",
+            "type": "dijit.form.VerticalRuleLabels",
             "category": "controls",
             "collection": "dijit",
             "tags": "VerticalRuleLabels",
@@ -1358,14 +1358,14 @@
                 "container": "rightDecoration"
             },
             "helper": "./dijit/form/HorizontalRuleLabelsHelper",
-            "allowedParent": "dijit/form/VerticalSlider",
+            "allowedParent": "dijit.form.VerticalSlider",
             "hidden": true,
             "refreshParentOnPropChange": true
         },
         {
             "name": "VerticalRule",
             "description": "Hash marks for Vertical Slider",
-            "type": "dijit/form/VerticalRule",
+            "type": "dijit.form.VerticalRule",
             "category": "controls",
             "collection": "dijit",
             "tags": "VerticalRule",
@@ -1375,14 +1375,14 @@
                 "style": "width:5px;",
                 "container": "rightDecoration"
             },
-            "allowedParent": "dijit/form/VerticalSlider",
+            "allowedParent": "dijit.form.VerticalSlider",
             "hidden": true,
             "refreshParentOnPropChange": true
         },
         {
             "name": "PopupMenuBarItem",
             "description": "Popup Menu Bar Item",
-            "type": "dijit/PopupMenuBarItem",
+            "type": "dijit.PopupMenuBarItem",
             "category": "untested",
             "collection": "dijit",
             "tags": "PopupMenuBarItem",
@@ -1394,16 +1394,16 @@
             },
             "children": [
                 {
-                    "type": "dijit/Menu",
+                    "type": "dijit.Menu",
                     "children": [
                         {
-                            "type": "dijit/MenuItem",
+                            "type": "dijit.MenuItem",
                             "properties": {
                                 "label": "Menu Item 1"
                             }
                         },
                         {
-                            "type": "dijit/MenuItem",
+                            "type": "dijit.MenuItem",
                             "properties": {
                                 "label": "Menu Item 2"
                             }
@@ -1412,12 +1412,12 @@
                 }
             ],
             "resizable": "none",
-            "allowedParent": "dijit/MenuBar"
+            "allowedParent": "dijit.MenuBar"
         },
         {
             "name": "MenuBarItem",
             "description": "Menu Bar Item",
-            "type": "dijit/MenuBarItem",
+            "type": "dijit.MenuBarItem",
             "category": "untested",
             "collection": "dijit",
             "tags": "MenuBarItem",
@@ -1428,12 +1428,12 @@
                 "label": "Menu Bar Item"
             },
             "resizable": "none",
-            "allowedParent": "dijit/MenuBar"
+            "allowedParent": "dijit.MenuBar"
         },
         {
             "name": "MenuItem",
             "description": "Menu Item",
-            "type": "dijit/MenuItem",
+            "type": "dijit.MenuItem",
             "category": "untested",
             "collection": "dijit",
             "tags": "MenuItem",
@@ -1444,12 +1444,12 @@
                 "label": "Menu Item"
             },
             "resizable": "none",
-            "allowedParent": "dijit/Menu, dijit/PopupMenuBarItem"
+            "allowedParent": "dijit.Menu, dijit.PopupMenuBarItem"
         },
         {
             "name": "CheckedMenuItem",
             "description": "Checked Menu Item",
-            "type": "dijit/CheckedMenuItem",
+            "type": "dijit.CheckedMenuItem",
             "category": "untested",
             "collection": "dijit",
             "tags": "CheckedMenuItem",
@@ -1460,12 +1460,12 @@
                 "label": "Checked Menu Item"
             },
             "resizable": "none",
-            "allowedParent": "dijit/Menu"
+            "allowedParent": "dijit.Menu"
         },
         {
             "name": "MenuSeparator",
             "description": "Menu Separator",
-            "type": "dijit/MenuSeparator",
+            "type": "dijit.MenuSeparator",
             "category": "untested",
             "collection": "dijit",
             "tags": "MenuSeparator",
@@ -1476,12 +1476,12 @@
                 "label": "Menu Separator"
             },
             "resizable": "none",
-            "allowedParent": "dijit/Menu"
+            "allowedParent": "dijit.Menu"
         },
         {
             "name": "PopupMenuItem",
             "description": "Popup Menu Item",
-            "type": "dijit/PopupMenuItem",
+            "type": "dijit.PopupMenuItem",
             "category": "untested",
             "collection": "dijit",
             "tags": "PopupMenuItem",
@@ -1492,12 +1492,12 @@
                 "label": "Popup Menu Item"
             },
             "resizable": "none",
-            "allowedParent": "dijit/Menu"
+            "allowedParent": "dijit.Menu"
         },
         {
             "name": "Editor",
             "description": "Editor",
-            "type": "dijit/Editor",
+            "type": "dijit.Editor",
             "category": "untested",
             "collection": "dijit",
             "tags": "Editor",
@@ -1507,7 +1507,7 @@
         {
             "name": "InlineEditBox",
             "description": "Inline Edit Box",
-            "type": "dijit/InlineEditBox",
+            "type": "dijit.InlineEditBox",
             "category": "untested",
             "collection": "dijit",
             "tags": "InlineEditBox",
@@ -1524,7 +1524,7 @@
         {
             "name": "ProgressBar",
             "description": "Progress Bar",
-            "type": "dijit/ProgressBar",
+            "type": "dijit.ProgressBar",
             "category": "untested",
             "collection": "dijit",
             "tags": "ProgressBar",
@@ -1539,20 +1539,20 @@
         {
             "name": "Range",
             "description": "Range",
-            "type": "dojox/gauges/Range",
+            "type": "dojox.gauges.Range",
             "category": "untested",
             "collection": "dijit",
             "tags": "Range",
             "class": "DojoxGauges",
             "icon": "resources/images/analoggauge.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC1CdF1wmVt3qoedxIugxmmEsm+JtXGLt3qTvYihyYyix42jx6Gz0bnH38TQ49DZ6Ka51o2z4Zu95aPC56bC5s/e8JfG+Z3J+pO44rfX+tPh8ODt+6bP+rDU+tnp+eDt+sbf9svh9tHl9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACMALAAAAAAQABAAAAaAwJFwSCwah4HjMQBIKouA5/DBQAAQjIdysGhkAJnGYmAUQDpoALoDERAPAo6cA5hzBAehIzERXP4AfxcCGgkOIwQUEn0XFgAWgx8fFQQjBRgYEhICCgAKAh6hHgUjAhGnpwIAAiAiriJupqgRABsAICG5IW4GAr6/q7++BlLFxUEAOw==",
-            "allowedParent": "dojox/gauges/AnalogGauge",
+            "allowedParent": "dojox.gauges.AnalogGauge",
             "helper": "./dojox/gauges/RangeHelper"
         },
         {
             "name": "AnalogLineIndicator",
             "description": "AnalogLineIndicator",
-            "type": "dojox/gauges/AnalogLineIndicator",
+            "type": "dojox.gauges.AnalogLineIndicator",
             "category": "untested",
             "collection": "dijit",
             "tags": "AnalogLineIndicator",
@@ -1568,12 +1568,12 @@
                 "offset": 0,
                 "front": false
             },
-            "allowedParent": "dojox/gauges/AnalogGauge"
+            "allowedParent": "dojox.gauges.AnalogGauge"
         },
         {
             "name": "AnalogArcIndicator",
             "description": "AnalogArcIndicator",
-            "type": "dojox/gauges/AnalogArcIndicator",
+            "type": "dojox.gauges.AnalogArcIndicator",
             "category": "untested",
             "collection": "dijit",
             "tags": "AnalogArcIndicator",
@@ -1588,12 +1588,12 @@
                 "offset": 100,
                 "front": false
             },
-            "allowedParent": "dojox/gauges/AnalogGauge"
+            "allowedParent": "dojox.gauges.AnalogGauge"
         },
         {
             "name": "AnalogArrowIndicator",
             "description": "AnalogArrowIndicator",
-            "type": "dojox/gauges/AnalogArrowIndicator",
+            "type": "dojox.gauges.AnalogArrowIndicator",
             "category": "untested",
             "collection": "dijit",
             "tags": "AnalogArrowIndicator",
@@ -1608,12 +1608,12 @@
                 "title": "Arrow",
                 "front": false
             },
-            "allowedParent": "dojox/gauges/AnalogGauge"
+            "allowedParent": "dojox.gauges.AnalogGauge"
         },
         {
             "name": "AnalogNeedleIndicator",
             "description": "AnalogNeedleIndicator",
-            "type": "dojox/gauges/AnalogNeedleIndicator",
+            "type": "dojox.gauges.AnalogNeedleIndicator",
             "category": "untested",
             "collection": "dijit",
             "tags": "AnalogNeedleIndicator",
@@ -1628,12 +1628,12 @@
                 "title": "Needle",
                 "front": false
             },
-            "allowedParent": "dojox/gauges/AnalogGauge"
+            "allowedParent": "dojox.gauges.AnalogGauge"
         },
         {
             "name": "AnalogGauge",
             "description": "AnalogGauge",
-            "type": "dojox/gauges/AnalogGauge",
+            "type": "dojox.gauges.AnalogGauge",
             "category": "untested",
             "collection": "dijit",
             "tags": "AnalogGauge",
@@ -1658,7 +1658,7 @@
             },
             "children": [
                 {
-                    "type": "dojox/gauges/AnalogLineIndicator",
+                    "type": "dojox.gauges.AnalogLineIndicator",
                     "properties": {
                         "value": 0,
                         "width": 3,
@@ -1672,7 +1672,7 @@
                     }
                 },
                 {
-                    "type": "dojox/gauges/Range",
+                    "type": "dojox.gauges.Range",
                     "properties": {
                         "low": 0,
                         "high": 100,
@@ -1689,7 +1689,7 @@
         {
             "name": "BarGauge",
             "description": "BarGauge",
-            "type": "dojox/gauges/BarGauge",
+            "type": "dojox.gauges.BarGauge",
             "category": "untested",
             "collection": "dijit",
             "tags": "BarGauge",
@@ -1766,7 +1766,7 @@
         {
             "name": "EnhancedCalendar",
             "description": "Calendar (Enhanced)",
-            "type": "dojox/widget/Calendar",
+            "type": "dojox.widget.Calendar",
             "category": "untested",
             "collection": "dijit",
             "tags": "EnhancedCalendar",
@@ -1776,7 +1776,7 @@
         {
             "name": "Chart2D",
             "description": "Chart2D",
-            "type": "dojox/charting/widget/Chart2D",
+            "type": "dojox.charting.widget.Chart2D",
             "category": "untested",
             "collection": "dijit",
             "tags": "Chart2D",
@@ -1822,7 +1822,7 @@
         {
             "name": "MultiComboBox",
             "description": "Combo Box (Multiple)",
-            "type": "dojox/form/MultiComboBox",
+            "type": "dojox.form.MultiComboBox",
             "category": "untested",
             "collection": "dijit",
             "tags": "MultiComboBox",
@@ -1857,7 +1857,7 @@
         {
             "name": "CheckedMultiSelect",
             "description": "Select (Check Box)",
-            "type": "dojox/form/CheckedMultiSelect",
+            "type": "dojox.form.CheckedMultiSelect",
             "category": "untested",
             "collection": "dijit",
             "tags": "CheckedMultiSelect",
@@ -1895,7 +1895,7 @@
         {
             "name": "FileInput",
             "description": "File Input",
-            "type": "dojox/form/FileInput",
+            "type": "dojox.form.FileInput",
             "category": "untested",
             "collection": "dijit",
             "tags": "FileInput",
@@ -1906,7 +1906,7 @@
         {
             "name": "FileInputAuto",
             "description": "File Input (Auto)",
-            "type": "dojox/form/FileInputAuto",
+            "type": "dojox.form.FileInputAuto",
             "category": "untested",
             "collection": "dijit",
             "tags": "FileInputAuto",
@@ -1917,7 +1917,7 @@
         {
             "name": "FileInputBlind",
             "description": "File Input (Blind)",
-            "type": "dojox/form/FileInputBlind",
+            "type": "dojox.form.FileInputBlind",
             "category": "untested",
             "collection": "dijit",
             "tags": "FileInputBlind",
@@ -1928,7 +1928,7 @@
         {
             "name": "Rating",
             "description": "Rating",
-            "type": "dojox/form/Rating",
+            "type": "dojox.form.Rating",
             "category": "controls",
             "collection": "dijit",
             "tags": "Rating",
@@ -1941,7 +1941,7 @@
         {
             "name": "SortList",
             "description": "List (Sorted)",
-            "type": "dojox/widget/SortList",
+            "type": "dojox.widget.SortList",
             "category": "untested",
             "collection": "dijit",
             "tags": "SortList",
@@ -1970,7 +1970,7 @@
         {
             "name": "GridContainer",
             "description": "Grid Container",
-            "type": "dojox/layout/GridContainer",
+            "type": "dojox.layout.GridContainer",
             "category": "untested",
             "collection": "dijit",
             "tags": "GridContainer",
@@ -1995,7 +1995,7 @@
         {
             "name": "FloatingPane",
             "description": "Floating Pane",
-            "type": "dojox/layout/FloatingPane",
+            "type": "dojox.layout.FloatingPane",
             "category": "untested",
             "collection": "dijit",
             "tags": "FloatingPane",
@@ -2014,7 +2014,7 @@
         {
             "name": "RadioGroup",
             "description": "Radio Group",
-            "type": "dojox/layout/RadioGroup",
+            "type": "dojox.layout.RadioGroup",
             "category": "untested",
             "collection": "dijit",
             "tags": "RadioGroup",
@@ -2025,14 +2025,14 @@
             },
             "children": [
                 {
-                    "type": "dijit/layout/ContentPane",
+                    "type": "dijit.layout.ContentPane",
                     "properties": {
                         "title": "Page 1",
                         "doLayout": false
                     }
                 },
                 {
-                    "type": "dijit/layout/ContentPane",
+                    "type": "dijit.layout.ContentPane",
                     "properties": {
                         "title": "Page 2",
                         "doLayout": false
@@ -2040,13 +2040,13 @@
                 }
             ],
             "initialSize": "auto",
-            "allowedChild": "dijit/layout/ContentPane",
+            "allowedChild": "dijit.layout.ContentPane",
             "inlineEdit": "./dijit/layout/StackContainerInput"
         },
         {
             "name": "RadioGroupFade",
             "description": "Radio Group Fade",
-            "type": "dojox/layout/RadioGroupFade",
+            "type": "dojox.layout.RadioGroupFade",
             "category": "untested",
             "collection": "dijit",
             "tags": "RadioGroupFade",
@@ -2057,14 +2057,14 @@
             },
             "children": [
                 {
-                    "type": "dijit/layout/ContentPane",
+                    "type": "dijit.layout.ContentPane",
                     "properties": {
                         "title": "Page 1",
                         "doLayout": false
                     }
                 },
                 {
-                    "type": "dijit/layout/ContentPane",
+                    "type": "dijit.layout.ContentPane",
                     "properties": {
                         "title": "Page 2",
                         "doLayout": false
@@ -2072,13 +2072,13 @@
                 }
             ],
             "initialSize": "auto",
-            "allowedChild": "dijit/layout/ContentPane",
+            "allowedChild": "dijit.layout.ContentPane",
             "inlineEdit": "./dijit/layout/StackContainerInput"
         },
         {
             "name": "RadioGroupSlide",
             "description": "Radio Group Slide",
-            "type": "dojox/layout/RadioGroupSlide",
+            "type": "dojox.layout.RadioGroupSlide",
             "category": "untested",
             "collection": "dijit",
             "tags": "RadioGroupSlide",
@@ -2089,14 +2089,14 @@
             },
             "children": [
                 {
-                    "type": "dijit/layout/ContentPane",
+                    "type": "dijit.layout.ContentPane",
                     "properties": {
                         "title": "Page 1",
                         "doLayout": false
                     }
                 },
                 {
-                    "type": "dijit/layout/ContentPane",
+                    "type": "dijit.layout.ContentPane",
                     "properties": {
                         "title": "Page 2",
                         "doLayout": false
@@ -2104,13 +2104,13 @@
                 }
             ],
             "initialSize": "auto",
-            "allowedChild": "dijit/layout/ContentPane",
+            "allowedChild": "dijit.layout.ContentPane",
             "inlineEdit": "./dijit/layout/StackContainerInput"
         },
         {
             "name": "ColorPicker",
             "description": "Color Picker",
-            "type": "dojox/widget/ColorPicker",
+            "type": "dojox.widget.ColorPicker",
             "category": "untested",
             "collection": "dijit",
             "tags": "ColorPicker",
@@ -2121,7 +2121,7 @@
         {
             "name": "ItemFileReadStore",
             "description": "ItemFileReadStore",
-            "type": "dojo/data/ItemFileReadStore",
+            "type": "dojo.data.ItemFileReadStore",
             "category": "controls-obj",
             "collection": "dijit",
             "tags": "ItemFileReadStore",
@@ -2137,7 +2137,7 @@
         {
             "name": "ItemFileWriteStore",
             "description": "ItemFileWriteStore",
-            "type": "dojo/data/ItemFileWriteStore",
+            "type": "dojo.data.ItemFileWriteStore",
             "category": "controls-obj",
             "collection": "dijit",
             "tags": "ItemFileWriteStore",
@@ -2152,7 +2152,7 @@
         {
             "name": "CsvStore",
             "description": "CsvStore",
-            "type": "dojox/data/CsvStore",
+            "type": "dojox.data.CsvStore",
             "category": "controls-obj",
             "collection": "dijit",
             "tags": "CsvStore",
@@ -2167,8 +2167,8 @@
         },
         {
             "name": "Memory",
-            "description": "This is a basic in-memory object store. It implements dojo/store/api.Store.",
-            "type": "dojo/store/Memory",
+            "description": "This is a basic in-memory object store. It implements dojo.store.api.Store.",
+            "type": "dojo.store.Memory",
             "category": "controls-obj",
             "collection": "dijit",
             "tags": "Memory",
@@ -2182,7 +2182,7 @@
         },
         {
             "name": "ForestStoreModel",
-            "type": "dijit/tree/ForestStoreModel",
+            "type": "dijit.tree.ForestStoreModel",
             "category": "controls-obj",
             "collection": "dijit",
             "tags": "ForestStoreModel",
@@ -2192,7 +2192,7 @@
         },
         {
             "name": "ObjectStoreModel",
-            "type": "dijit/tree/ObjectStoreModel",
+            "type": "dijit.tree.ObjectStoreModel",
             "category": "controls-obj",
             "collection": "dijit",
             "tags": "ObjectStoreModel",
@@ -2203,7 +2203,7 @@
         {
             "name": "DataList",
             "description": "DataList",
-            "type": "dijit/form/DataList",
+            "type": "dijit.form.DataList",
             "category": "untested",
             "collection": "dijit",
             "tags": "DataList",
@@ -2244,7 +2244,7 @@
         },
         {
             "name": "ScrollableView",
-            "type": "dojox/mobile/ScrollableView",
+            "type": "dojox.mobile.ScrollableView",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "ScrollableView",
@@ -2263,7 +2263,7 @@
         },
         {
             "name": "SwapView",
-            "type": "dojox/mobile/SwapView",
+            "type": "dojox.mobile.SwapView",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "SwapView",
@@ -2282,7 +2282,7 @@
         },
         {
             "name": "View",
-            "type": "dojox/mobile/View",
+            "type": "dojox.mobile.View",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "View",
@@ -2305,7 +2305,7 @@
         {
             "name": "TreeView",
             "description": "TreeView",
-            "type": "dojox/mobile/TreeView",
+            "type": "dojox.mobile.TreeView",
             "category": "untested",
             "collection": "dojoxmobile",
             "tags": "TreeView",
@@ -2313,7 +2313,7 @@
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAOJJREFUeNpi/P//PwMlgImBQsCCzAnvPwB3zspCB0aSDQCB7lgLhtLFJzAMxGUwigH//v5lKF5wjIEBGi5EuQIUiMg4qG3nf3QxfBjDC3/+/MawxL9py39GBpBj/jNsqPNhxBsGf3/+ZvCpWQ/xAyMjSA8YTCvwYMiasINwIP759YthR1cYii2eZav+p3dtYvhPTCz8/YXphe1oBpJsgFPWfHC8gEzZNy2RQBj8/s1glzob4tr/IE3A0AZqWdIexxBbsRjDcEZi8oJl0sz//xghqf7k3FRGkg2gaWai2ACAAAMAVbWDTF4DhaYAAAAASUVORK5CYII=",
             "data": [
                 {
-                    "type": "dojo/store/Memory",
+                    "type": "dojo.store.Memory",
                     "properties": {
                         "data": [
                             {
@@ -2364,7 +2364,7 @@
                     }
                 },
                 {
-                    "type": "dijit/tree/ObjectStoreModel",
+                    "type": "dijit.tree.ObjectStoreModel",
                     "properties": {
                         "labelAttr": "label",
                         "query": {
@@ -2373,7 +2373,7 @@
                     }
                 },
                 {
-                    "type": "dojox/mobile/TreeView",
+                    "type": "dojox.mobile.TreeView",
                     "properties": {}
                 }
             ],
@@ -2382,7 +2382,7 @@
         },
         {
             "name": "Heading",
-            "type": "dojox/mobile/Heading",
+            "type": "dojox.mobile.Heading",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "Heading",
@@ -2393,14 +2393,14 @@
                     "fixed": {
                         "refreshFromSource": true,
                         "mustHaveAncestor": [
-                            "dojox/mobile/ScrollableView"
+                            "dojox.mobile.ScrollableView"
                         ]
                     },
                     "moveTo": {
                         "dropdownQueryValues": [
-                            "[data-dojo-type='dojox/mobile/View']",
-                            "[data-dojo-type='dojox/mobile/SwapView']",
-                            "[data-dojo-type='dojox/mobile/ScrollableView']"
+                            "[data-dojo-type='dojox.mobile.View']",
+                            "[data-dojo-type='dojox.mobile.SwapView']",
+                            "[data-dojo-type='dojox.mobile.ScrollableView']"
                         ],
                         "dropdownQueryAttribute": "id"
                     }
@@ -2413,13 +2413,13 @@
                 "supportsHTML": true
             },
             "allowedParent": "ANY",
-            "allowedChild": "dojox/mobile/ToolBarButton, dojox/mobile/TabBar",
+            "allowedChild": "dojox.mobile.ToolBarButton, dojox.mobile.TabBar",
             "iconLarge": "resources/imagesLarge/Heading.png",
             "iconLargeBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAnJJREFUeNrsmMtu00AUhuf4glToJkXQbZ6iJNmy4wXyFPQVykvRFSxpqgQpO7ZkXR4AV67P4VxmHNtxk6qVWiPNKLHGc/3mPxdNAl+/LdzwSsbfTx8ng2K6/H6duEGWiBWxIlbEilgRK2INGivr3CheEKV5v8r29D3zHetetbjc3PwZnBG5HB+/GSKWc+QIqK47aHUB6IDQIG/a4l8BiFoNDmQ5ZwuSn9GY/HCsgMDrg1utVr1YaZqOx+OTtyfPpBZWvDeZSsvlKsvz10dHRF4LodWusix/bzaj0ahu8SdxWwm0nVxLXhlN3gBeVngQFokJefTy5zJLs1d5XlWViES2kCyFiohVhVwlY/UW0bcgKej5tlsbh3VCbVQ1CxzEQh6yXq+BIEnSsrxrOYJxyZ6EXFhaR+fnn3ndJElsdQjFWuxplVYe1/aLiy88B3ecbAcLkYGKokB0xe2t9zFxWfFmD6Zny7OcBzuAp/iQGocIDhmRULQ4O/twvVhwVTbuixlGS9NEQWk+nz8aizcg1xOR/ZHINNPp9MfVFWtP4kv9oWqVyWTazhduT+R3zkb3jEx2NyM9wN+iYDJj2pksir57fyrSos3QRyVPlE/dGLpQK2Fw6PJtJtl+I6LZjF2nQpzNZt1kW0c0iavKeUnjSRwQNQylwcZhyBIUdCG/vM4JjkkHXf5OXN4iWHMBmDhbx25Eufk/NWKeLJNAnZK0W8PT5wElAE9tB+pLXf/DfavpySasSeEcUdOMtUtT843qceSoYxzLq2EVotakHrfvYq1/bQan1nD+f4s/MSJWxIpYEStiRayI9biLzcv+29Zb/gkwAOtXllEIY4+BAAAAAElFTkSuQmCC"
         },
         {
             "name": "ToolBarButton",
-            "type": "dojox/mobile/ToolBarButton",
+            "type": "dojox.mobile.ToolBarButton",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "ToolBarButton",
@@ -2431,14 +2431,14 @@
                 "displayOnCreate": true,
                 "supportsHTML": true
             },
-            "allowedParent": "dojox/mobile/Heading",
+            "allowedParent": "dojox.mobile.Heading",
             "metadata": {
                 "property": {
                     "moveTo": {
                         "dropdownQueryValues": [
-                            "[data-dojo-type='dojox/mobile/View']",
-                            "[data-dojo-type='dojox/mobile/SwapView']",
-                            "[data-dojo-type='dojox/mobile/ScrollableView']"
+                            "[data-dojo-type='dojox.mobile.View']",
+                            "[data-dojo-type='dojox.mobile.SwapView']",
+                            "[data-dojo-type='dojox.mobile.ScrollableView']"
                         ],
                         "dropdownQueryAttribute": "id"
                     }
@@ -2449,7 +2449,7 @@
         },
         {
             "name": "RoundRectCategory",
-            "type": "dojox/mobile/RoundRectCategory",
+            "type": "dojox.mobile.RoundRectCategory",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "RoundRectCategory",
@@ -2466,18 +2466,18 @@
         },
         {
             "name": "RoundRectList",
-            "type": "dojox/mobile/RoundRectList",
+            "type": "dojox.mobile.RoundRectList",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "RoundRectList",
             "icon": "resources/images/dx-mbl-roundrectlist.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAADlck9jf6ra/zGiKukNvpERvo/P3/Ex7r0x9sUx8r1KHuVKHuFaOv3io0bnW78jg8////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABEALAAAAAAQABAAAAVWYCSOZGmeptEwbNs2hmgwgWHfd8DETQD9wKAh0IgsDBBEcGlQRBLIpfTwdFiv2CsVKp1GCkhlF2IgRAaC8c8gGEQeAAFuLgA8RI8BYM/nD+4ogYKDgiEAOw==",
-            "allowedChild": "dojox/mobile/ListItem",
+            "allowedChild": "dojox.mobile.ListItem",
             "inlineEdit": "./dojox/mobile/EdgeToEdgeListInput",
             "refreshOnDescendantChange": true,
             "children": [
                 {
-                    "type": "dojox/mobile/ListItem",
+                    "type": "dojox.mobile.ListItem",
                     "children":[
                     	{
                     		"type": "html.label",
@@ -2490,7 +2490,7 @@
                     ]
                 },
                 {
-                    "type": "dojox/mobile/ListItem",
+                    "type": "dojox.mobile.ListItem",
                     "children":[
                     	{
                     		"type": "html.label",
@@ -2509,7 +2509,7 @@
         },
         {
             "name": "RoundRectDataList",
-            "type": "dojox/mobile/RoundRectDataList",
+            "type": "dojox.mobile.RoundRectDataList",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "RoundRectDataList",
@@ -2517,7 +2517,7 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPP1+vDz+lpzp2V+sGqEtW2FsHSLtNfi9Tlck22GsHOLtH2Uu5q03W56jr7J2+Lq99jf6ubt+La/zGiKutXi9ERvo/P3/Ex7r0x9sUx8r8TU5ejx+lKHuVKHuFaOv3io0bnW78jg8+zz+IB2ToV5TIx8SoZ4TI18Sq6OP6eKQZ+FRJ+GRLSQPaiJQf///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAC8ALAAAAAAQABAAAAaEwNfL8vEYj8ePRWjxQCzQaBTiWX4grqx2a4F8Xh2LC7MtWzivjLjMvqRB8PhmTt9o0usta89nvSpiZFooAIWFKC8TEmwpAQsKBQEtLyEIElIWKyKbmypCIRMIoggOJRELBgkRJ0KtriYPsbEkrrUjBwcMBAcjtbUNFAMvDAK+tQzGybVBADs=",
             "data": [
                 {
-                    "type": "dojo/data/ItemFileReadStore",
+                    "type": "dojo.data.ItemFileReadStore",
                     "properties": {
                         "data": {
                             "identifier": "label",
@@ -2535,7 +2535,7 @@
                     }
                 },
                 {
-                    "type": "dojox/mobile/RoundRectDataList",
+                    "type": "dojox.mobile.RoundRectDataList",
                     "properties": {
                         "query": {
                             "label": "*"
@@ -2551,7 +2551,7 @@
         },
         {
             "name": "EdgeToEdgeCategory",
-            "type": "dojox/mobile/EdgeToEdgeCategory",
+            "type": "dojox.mobile.EdgeToEdgeCategory",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "EdgeToEdgeCategory",
@@ -2568,18 +2568,18 @@
         },
         {
             "name": "EdgeToEdgeList",
-            "type": "dojox/mobile/EdgeToEdgeList",
+            "type": "dojox.mobile.EdgeToEdgeList",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "EdgeToEdgeList",
             "icon": "resources/images/dx-mbl-edge-edgellist.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAC5KhTJRijdakzlckztfljtglj5kmz9mnT5lmkFqoEJqoEVyp0ZxpkVypkl3q0p4q0x9sU+CtU1+sVCDtVSLvVKHuVOHuVWLvVaOv7nW7////////wAAAAAAAAAAAAAAACH5BAEAABsALAAAAAAQABAAAAVa4CaOZCliaKquG6a9cAxjG6UBNxAIxyJVFc1lY5EZX5XNJMNsOpuRjeRohGwct9yu9ws+NgyqrLFJPM9MxcYgjiE2hCxAx/MBNYXNoA0b6AeAgYKCJoWGhyIhADs=",
-            "allowedChild": "dojox/mobile/ListItem",
+            "allowedChild": "dojox.mobile.ListItem",
             "inlineEdit": "./dojox/mobile/EdgeToEdgeListInput",
             "refreshOnDescendantChange": true,
             "children": [
                 {
-                    "type": "dojox/mobile/ListItem",
+                    "type": "dojox.mobile.ListItem",
                     "children":[
                     	{
                     		"type": "html.label",
@@ -2592,7 +2592,7 @@
                     ]
                 },
                 {
-                    "type": "dojox/mobile/ListItem",
+                    "type": "dojox.mobile.ListItem",
                     "children":[
                     	{
                     		"type": "html.label",
@@ -2611,7 +2611,7 @@
         },
         {
             "name": "EdgeToEdgeDataList",
-            "type": "dojox/mobile/EdgeToEdgeDataList",
+            "type": "dojox.mobile.EdgeToEdgeDataList",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "EdgeToEdgeDataList",
@@ -2619,7 +2619,7 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAPP1+vDz+i5KhVpzp2V+sDJRimqEtW2FsHSLtNfi9Tdakzlck22GsHOLtH2Uu5q03Yecvoidvm56juLq9+bt+Dtflj5kmz9mnUFqoNXi9EZxpkl3q5Sx0E+CtU1+sVCDtVSLvVKHuVOHuVWLvVaOv7nW79Xm9ezz+IB2ToV5TIx8SoZ4TI18Sq6OP6eKQZ+FRJ+GRLSQPaiJQf///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADQALAAAAAAQABAAAAaAQBppSCwWacKZcslUkpCgmUAqKCgunlBoNkKKmuBZCPkpmc9ocwfpCTc5yI2UWoDE7vgYTRNuAf5/LTQYaSUmLgEODQcBMjQWYTAnk5MvNBVzAlUQKhQOCAwULDQLYSsTqKgppAutrhEoCQkPBgkoSLi5NBIZBDQPA7rCD8LFxUEAOw==",
             "data": [
                 {
-                    "type": "dojo/data/ItemFileReadStore",
+                    "type": "dojo.data.ItemFileReadStore",
                     "properties": {
                         "data": {
                             "identifier": "label",
@@ -2637,7 +2637,7 @@
                     }
                 },
                 {
-                    "type": "dojox/mobile/EdgeToEdgeDataList",
+                    "type": "dojox.mobile.EdgeToEdgeDataList",
                     "properties": {
                         "query": {
                             "label": "*"
@@ -2653,7 +2653,7 @@
         },
         {
             "name": "ListItem",
-            "type": "dojox/mobile/ListItem",
+            "type": "dojox.mobile.ListItem",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "ListItem",
@@ -2665,15 +2665,15 @@
                 "useParent": true
             },
             "children": "List Item",
-            "allowedParent": "dojox/mobile/RoundRectList, dojox/mobile/EdgeToEdgeList",
+            "allowedParent": "dojox.mobile.RoundRectList, dojox.mobile.EdgeToEdgeList",
             "allowedChild": "ANY",
             "metadata": {
                 "property": {
                     "moveTo": {
                         "dropdownQueryValues": [
-                            "[data-dojo-type='dojox/mobile/View']",
-                            "[data-dojo-type='dojox/mobile/SwapView']",
-                            "[data-dojo-type='dojox/mobile/ScrollableView']"
+                            "[data-dojo-type='dojox.mobile.View']",
+                            "[data-dojo-type='dojox.mobile.SwapView']",
+                            "[data-dojo-type='dojox.mobile.ScrollableView']"
                         ],
                         "dropdownQueryAttribute": "id"
                     }
@@ -2684,7 +2684,7 @@
         },
         {
             "name": "Button",
-            "type": "dojox/mobile/Button",
+            "type": "dojox.mobile.Button",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "Button",
@@ -2702,7 +2702,7 @@
         },
         {
             "name": "ToggleButton",
-            "type": "dojox/mobile/ToggleButton",
+            "type": "dojox.mobile.ToggleButton",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "ToggleButton",
@@ -2718,7 +2718,7 @@
         },
         {
             "name": "Switch",
-            "type": "dojox/mobile/Switch",
+            "type": "dojox.mobile.Switch",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "Switch",
@@ -2731,7 +2731,7 @@
         },
         {
             "name": "Slider",
-            "type": "dojox/mobile/Slider",
+            "type": "dojox.mobile.Slider",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "Slider",
@@ -2742,7 +2742,7 @@
         },
         {
             "name": "CheckBox",
-            "type": "dojox/mobile/CheckBox",
+            "type": "dojox.mobile.CheckBox",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "CheckBox",
@@ -2753,7 +2753,7 @@
         },
         {
             "name": "RadioButton",
-            "type": "dojox/mobile/RadioButton",
+            "type": "dojox.mobile.RadioButton",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "RadioButton",
@@ -2764,7 +2764,7 @@
         },
         {
             "name": "TextBox",
-            "type": "dojox/mobile/TextBox",
+            "type": "dojox.mobile.TextBox",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "TextBox",
@@ -2780,7 +2780,7 @@
         },
         {
             "name": "ComboBox",
-            "type": "dojox/mobile/ComboBox",
+            "type": "dojox.mobile.ComboBox",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "ComboBox",
@@ -2788,7 +2788,7 @@
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjgyQUEwNTdCNTk1MTExRTBCODIzOTk0QzIzMzdBNkNGIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjgyQUEwNTdDNTk1MTExRTBCODIzOTk0QzIzMzdBNkNGIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6ODJBQTA1Nzk1OTUxMTFFMEI4MjM5OTRDMjMzN0E2Q0YiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6ODJBQTA1N0E1OTUxMTFFMEI4MjM5OTRDMjMzN0E2Q0YiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7ZOYfnAAABBUlEQVR42pRSKxCDMAztdgjkJBKJnKxETk5WIpGTlcjKykpk5SSyEolETk4iI9eRrpSud7tF5NK8vHweHHoz38cHSdmVlhFkM5lN9W2dJDTKRJDNZBgxrum5oOdynB7j9NSC+aJhXjC4VCfrHQErLO0dsN2cBUDwjosOn0fyy2y19+8JsMDWjMA3QSkRPjMCW9GJ5CFWFzllu+qW1RmsXfHoW0OlNv7oYX52XRsS+rtVCbajrdGq9EeH2/rMQfZGaRPNxYwPdivpYRo1D8W+tAo3kVJ/Q+478Bt32UH5PSAFHWFVqVllRr/ploLc0VWRCyl2nT9BBDlZ8T8hKUYE/a3SS4ABAP4rm5Sxt9t9AAAAAElFTkSuQmCC",
             "data": [
                 {
-                    "type": "dijit/form/DataList",
+                    "type": "dijit.form.DataList",
                     "properties": {
                         "data-dojo-props": "id:\"items\""
                     },
@@ -2820,7 +2820,7 @@
                     ]
                 },
                 {
-                    "type": "dojox/mobile/ComboBox",
+                    "type": "dojox.mobile.ComboBox",
                     "properties": {
                         "data-dojo-props": "value:\"Item 1\", list:\"items\""
                     }
@@ -2834,7 +2834,7 @@
         },
         {
             "name": "TextArea",
-            "type": "dojox/mobile/TextArea",
+            "type": "dojox.mobile.TextArea",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "TextArea",
@@ -2850,7 +2850,7 @@
         },
         {
             "name": "ExpandingTextArea",
-            "type": "dojox/mobile/ExpandingTextArea",
+            "type": "dojox.mobile.ExpandingTextArea",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "ExpandingTextArea",
@@ -2867,7 +2867,7 @@
         {
             "name": "SearchBox",
             "description": "SearchBox",
-            "type": "dojox/mobile/SearchBox",
+            "type": "dojox.mobile.SearchBox",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "SearchBox",
@@ -2878,7 +2878,7 @@
         },
         {
             "name": "IconContainer",
-            "type": "dojox/mobile/IconContainer",
+            "type": "dojox.mobile.IconContainer",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "IconContainer",
@@ -2886,19 +2886,19 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAACVLiiVLiDlck/P2+zxhlzpppj9mnDh3xUJtokdzp3ak21ON0FCDvEp6rU6As1SKvFaOv////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABEALAAAAAAQABAAAAVoYBRBZGmWIjSsbMtC0TMo9FzTyvBEzrD8PuBvMXBEGoODMrlUHgaNSMJFXSUiiAGgwNByvV1ExFClGiIEWw6nHhAigiBxKB8I4MynM2/Hl1t3cQFfg12FfXF/LHdwAo6PkI4ik5SVkyEAOw==",
             "data": [
                 {
-                    "type": "dojox/mobile/IconContainer",
+                    "type": "dojox.mobile.IconContainer",
                     "properties": {
                         "iconBase": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAdCAMAAABhTZc9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAMBQTFRFkaO4nazAucXThpmyt8PRsr7O3+Tr2N7mw83ZdIqmmqq+g5evq7jJ4ufsy9PegZWuztbgpLLEq7nJiZy0d4yomKi94ebsfpOsfJGrlqe8jp+3wsvYobHD6OzwboWiiJuzfZKsrrvMprTGzdXfx9DbydLdxc7au8bUb4ajxs/bc4mlk6S6197lwcvX2d/neY6pv8nW5enuo7LE4OXrn67Bmam+1dzkz9bgyNDbqLbHcYekjqC2lKW62+Hoipy0////GCC5wQAAAEB0Uk5T////////////////////////////////////////////////////////////////////////////////////AMJ7sUQAAAFASURBVHjafNPZcoIwFIDhExAULKAYBJfixq4stRZKEHn/tyoI6Y1Nv4tM5p85k8nFgaZJ5vB4BfOkaaDx5Un9/qqeyH4DY0P5+JtiJGB4nywTGfi8Zsl50HI2DcyCzQTrm82CNKM24tLNMrWe/ZYU8IhyFUXkYkVZcrRgkA6UI4qiX7SHQIsEUYWOHf0otJ8QiroujgMUAZGwtjjL8cW9ZhcV+Ze8ROUNyeeFhgkEpIPd04xbG+f7fbtaOTPOwl0NwO4JnrexbaIFtn14Xp+GWTKNQ4GgTZitiReGhz4G7bs9XKW601kJDrfvG4Eopebuk/PgaYlA2g8qdcDRspcATwf6ieJpwpDuBrJ3ioVy5KlvtOxSsCo2C8w7mwnaF5sGPLqxIB4MdGVBMoyhZKmSdhdgW+qvyi20u/DvHv0IMAAbv4T3o6uF6wAAAABJRU5ErkJggg%3D%3D"
                     },
                     "children": [
                         {
-                            "type": "dojox/mobile/IconItem",
+                            "type": "dojox.mobile.IconItem",
                             "properties": {
                                 "label": "Item 1"
                             }
                         },
                         {
-                            "type": "dojox/mobile/IconItem",
+                            "type": "dojox.mobile.IconItem",
                             "properties": {
                                 "label": "Item 2"
                             }
@@ -2907,28 +2907,28 @@
                 }
             ],
             "tool": "./dojox/mobile/IconContainerCreateTool",
-            "allowedChild": "dojox/mobile/IconItem",
+            "allowedChild": "dojox.mobile.IconItem",
             "inlineEdit": "./dojox/mobile/IconContainerInput",
             "iconLarge": "resources/imagesLarge/IconContainer.png",
             "iconLargeBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAthJREFUeNrsWc1rE0EU3/nYZJukbkErtmqj+AUqREEK9lakUMSTgmcVqR6lf4EXwUuP+l8IXooI1V60rRUCPUSRVPCgSZFYK02q3Y8ZX7LtspnMiqWZ7R72QZZh9/dmf+/tm/m9MGh6Zl6Ln1H4jY4UYsVpdm4Ja7E06o/W1n7tOZu+PlOkBTYwcAiunPPVuiU47O9NSyfqIrhaXZFky7MnL8rP3n3dl9WF+/Xfzs3LRybGTkYDbqPluu7r0vfb14d7s2K4K7X1xWL57hWGMVYEDqXlOI5lM85hwARnxrjjMpjdf1PXwaG0GAMf7tjMxqKz05y0aRGAJbUFZlsuRVjmrEUG7qAFebZcW+twttzms6jA0mxxonWk2pHGrwos0sIInB2ioY5Uu53xqwO30YKFc+5wz8KHZSMl0m1s2pfyWYRQBGCRFqV08urx4qdv1dUG4ywQKM4fNAunjxJCIgBLsmWa5kjBsG1biEnXdcMw/H1IKVikBZkE0PijNzrBKYJ7KDF0Atc0JRTjqXuFaMDylfjq4ej/a74iMBUUHsx12Y/1TR5YHkhD/aaBtk0RWE4L3EAinr5cfr5YyWVEnW/8cW4MD06MnfBqUwU4NFtQj7Ol2q0QnX9fLN9xHKhNL7Kug4OySINqCs4g5mE6D58AGgGoXHiTCrCcltcV8XCdb/m7EYAltQXlGKbz24XLlYJDN4gwnZfKryLwDjoIbSdNwS7B4i6P/qHzLUAE4DZa8AC2mfODmYWPn3t0GgwBPOqg88cy/oJXB5bQgvX8YHyo9KVW/bkBKzao//l+88zQARj4b1IEltPK5XIXTulnLav1p2DLIFZP5719SClY/hHT6fS1x2+BeYogw9N5uKlTnZCp+xd9T3XgLZuemd9oWaVS5XtqQMBjApSSDiLpIJIOIukgkg4i6SCSDiLpIHbZQQTPEeJy5uOft8TBYnxCNju3FDdafwUYAP3WRXODqDxPAAAAAElFTkSuQmCC"
         },
         {
             "name": "IconItem",
-            "type": "dojox/mobile/IconItem",
+            "type": "dojox.mobile.IconItem",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "IconItem",
             "icon": "resources/images/dx-mbl--icon-item.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAC5KhTBOiW+DrW+DrDNTjTJRijdakzthmTthmD9mnUBonz9pn0RwpkVyp0VwpUh4rEl4rLDN7LTP7Ux+sk1/sk1+sVGEt4i14ZO75JjA557D6KPG6qPH6qTG6qPG6aTG6aTH6abI6ajJ66jJ6qnJ66nK66nJ6q7M6rXR7brT7b7W71CFt1SKvFSKu4O14oS04Ya14Ym55Iq55Iq545G95pG85ZG95ZO95JfA55jB55jB5pjA5Z/F6Z7E6J/F51aOv3qx4IO24oS24oa34Yq65Im544mw0v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEcALAAAAAAQABAAAAefgEeCP4SFhj+Cg0YqjI2NRoiCLSkqEZaXESopLIkWKCUmIyYiJiYkIxIrnSgbHBwgHR4cHyCpiRMnPT0avLq6JxSJDyE6OcU4OsUZIRCJDDw0NjY1NdLTPg6JCjsz3TExRTFEMjsLiQcYLi5B7EHrQjcIiQQXMED3+EAwQwSJAQIvAgoUOCBAoiMAEipcCOCgw4cQFxYwkKBBBYgYDwYCADs=",
             "helper": "./dojox/mobile/IconItemHelper",
-            "allowedParent": "dojox/mobile/IconContainer",
+            "allowedParent": "dojox.mobile.IconContainer",
             "metadata": {
                 "property": {
                     "moveTo": {
                         "dropdownQueryValues": [
-                            "[data-dojo-type='dojox/mobile/View']",
-                            "[data-dojo-type='dojox/mobile/SwapView']",
-                            "[data-dojo-type='dojox/mobile/ScrollableView']"
+                            "[data-dojo-type='dojox.mobile.View']",
+                            "[data-dojo-type='dojox.mobile.SwapView']",
+                            "[data-dojo-type='dojox.mobile.ScrollableView']"
                         ],
                         "dropdownQueryAttribute": "id"
                     }
@@ -2939,7 +2939,7 @@
         },
         {
             "name": "TabBar",
-            "type": "dojox/mobile/TabBar",
+            "type": "dojox.mobile.TabBar",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "TabBar",
@@ -2950,7 +2950,7 @@
                     "fixed": {
                         "refreshFromSource": true,
                         "mustHaveAncestor": [
-                            "dojox/mobile/ScrollableView"
+                            "dojox.mobile.ScrollableView"
                         ]
                     }
                 }
@@ -2958,10 +2958,10 @@
             "helper": "./dojox/mobile/TabBarHelper",
             "inlineEdit": "./dojox/mobile/TabBarInput",
             "tool": "./dojox/mobile/TabBarCreateTool",
-            "allowedChild": "dojox/mobile/TabBarButton",
+            "allowedChild": "dojox.mobile.TabBarButton",
             "children": [
                 {
-                    "type": "dojox/mobile/TabBarButton",
+                    "type": "dojox.mobile.TabBarButton",
                     "properties": {
                         "label": "Tab 1",
                         "selected": true,
@@ -2970,7 +2970,7 @@
                     }
                 },
                 {
-                    "type": "dojox/mobile/TabBarButton",
+                    "type": "dojox.mobile.TabBarButton",
                     "properties": {
                         "label": "Tab 2",
                         "icon1": "samples/sample_data/images/i-icon-2.png",
@@ -2978,7 +2978,7 @@
                     }
                 },
                 {
-                    "type": "dojox/mobile/TabBarButton",
+                    "type": "dojox.mobile.TabBarButton",
                     "properties": {
                         "label": "Tab 3",
                         "icon1": "samples/sample_data/images/i-icon-3.png",
@@ -2991,14 +2991,14 @@
         },
         {
             "name": "TabBarButton",
-            "type": "dojox/mobile/TabBarButton",
+            "type": "dojox.mobile.TabBarButton",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "TabBarButton",
             "icon": "resources/images/dx-mbl--toolbar-button.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAC5KhTFPijZXkDZYkDxhmTtimUJsouHr9/D1+0h2q0l3q7XQ7bbQ7bbQ7MLX79vo9k6AtE6Bs6TH6bbR7NLj9FKJu1OJulaNv5C95aTH6KTI6LXR7L/Z8Mje8laOv36z4X604JC95LnW77/a8Nzr9////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACUALAAAAAAQABAAAAZiwJJwSCwaj8hk0cP0XJpQj9ByqFqvVUSlFDk4vuCw4wApKR6MxmLCbm8mj0TJQNFI7nh8hmIoFTohGIKDgyEdBCUDHCAfHyCPkI0jAiUBIpeYmZckAUIAn6ChoEqkpaanRUEAOw==",
             "helper": "./dojox/mobile/TabBarButtonHelper",
-            "allowedParent": "dojox/mobile/TabBar",
+            "allowedParent": "dojox.mobile.TabBar",
             "inlineEdit": {
                 "property": "label",
                 "displayOnCreate": true,
@@ -3010,9 +3010,9 @@
                 "property": {
                     "moveTo": {
                         "dropdownQueryValues": [
-                            "[data-dojo-type='dojox/mobile/View']",
-                            "[data-dojo-type='dojox/mobile/SwapView']",
-                            "[data-dojo-type='dojox/mobile/ScrollableView']"
+                            "[data-dojo-type='dojox.mobile.View']",
+                            "[data-dojo-type='dojox.mobile.SwapView']",
+                            "[data-dojo-type='dojox.mobile.ScrollableView']"
                         ],
                         "dropdownQueryAttribute": "id"
                     }
@@ -3023,7 +3023,7 @@
         },
         {
             "name": "RoundRect",
-            "type": "dojox/mobile/RoundRect",
+            "type": "dojox.mobile.RoundRect",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "RoundRect",
@@ -3036,7 +3036,7 @@
         },
         {
             "name": "ContentPane",
-            "type": "dojox/mobile/ContentPane",
+            "type": "dojox.mobile.ContentPane",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "ContentPane",
@@ -3050,7 +3050,7 @@
         {
             "name": "Container",
             "description": "Container",
-            "type": "dojox/mobile/Container",
+            "type": "dojox.mobile.Container",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "Container",
@@ -3062,7 +3062,7 @@
         {
             "name": "Pane",
             "description": "Pane",
-            "type": "dojox/mobile/Pane",
+            "type": "dojox.mobile.Pane",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "Pane",
@@ -3074,7 +3074,7 @@
         {
             "name": "ScrollablePane",
             "description": "Scroll Pane",
-            "type": "dojox/mobile/ScrollablePane",
+            "type": "dojox.mobile.ScrollablePane",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "ScrollablePane",
@@ -3087,25 +3087,25 @@
         },
         {
             "name": "FixedSplitter",
-            "type": "dojox/mobile/FixedSplitter",
+            "type": "dojox.mobile.FixedSplitter",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "FixedSplitter",
             "icon": "resources/images/FixedSplitter.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAMQAAPDw+DxgljtelDxglT9jmT5kmUBnnUBnnENsoUJsoUZxpUl2qkh2qUx7rkt7rk6AsqDA4HiAiFOJu1GFt1GFtlOJulWMvVaOv/D4+P///////wAAAAAAAAAAAAAAAAAAACH5BAEAABoALAAAAAAQABAAAAVeoHaNZGmKQKpGqnppFgDNEMDStaVJMg1gvRmgopkEazcfRfPA4GxHwEPTiGaiDs0imhQyNApuVKFJWKMIzcHp69YMGoL4WdAMzs+ARtBKsfoCewKDhIWFGoiJiosaIQA7",
-            "allowedChild": "dojox/mobile/Pane, dojox/mobile/Container, dojox/mobile/ContentPane",
+            "allowedChild": "dojox.mobile.Pane, dojox.mobile.Container, dojox.mobile.ContentPane",
             "properties": {
                 "orientation": "H"
             },
             "children": [
                 {
-                    "type": "dojox/mobile/Pane",
+                    "type": "dojox.mobile.Pane",
                     "properties": {
                         "style": "width: 200px;"
                     }
                 },
                 {
-                    "type": "dojox/mobile/Pane"
+                    "type": "dojox.mobile.Pane"
                 }
             ],
             "inlineEdit": "./dojox/mobile/FixedSplitterInput",
@@ -3115,7 +3115,7 @@
         {
             "name": "Accordion",
             "description": "Accordion",
-            "type": "dojox/mobile/Accordion",
+            "type": "dojox.mobile.Accordion",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "Accordion",
@@ -3127,20 +3127,20 @@
             },
             "children": [
                 {
-                    "type": "dojox/mobile/ContentPane",
+                    "type": "dojox.mobile.ContentPane",
                     "properties": {
                         "label": "Pane 1",
                         "selected": "true"
                     }
                 },
                 {
-                    "type": "dojox/mobile/ContentPane",
+                    "type": "dojox.mobile.ContentPane",
                     "properties": {
                         "label": "Pane 2"
                     }
                 }
             ],
-            "allowedChild": "dojox/mobile/ContentPane, dojox/mobile/ScrollableView",
+            "allowedChild": "dojox.mobile.ContentPane, dojox.mobile.ScrollableView",
             "inlineEdit": "./dojox/mobile/AccordionInput",
             "helper": "./dojox/mobile/InitialSizeHelper",
             "iconLarge": "resources/imagesLarge/Accordion.png",
@@ -3149,7 +3149,7 @@
         {
             "name": "GridLayout",
             "description": "GridLayout",
-            "type": "dojox/mobile/GridLayout",
+            "type": "dojox.mobile.GridLayout",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "GridLayout",
@@ -3158,25 +3158,25 @@
             },
             "children": [
                 {
-                    "type": "dojox/mobile/Pane"
+                    "type": "dojox.mobile.Pane"
                 },
                 {
-                    "type": "dojox/mobile/Pane"
+                    "type": "dojox.mobile.Pane"
                 },
                 {
-                    "type": "dojox/mobile/Pane"
+                    "type": "dojox.mobile.Pane"
                 },
                 {
-                    "type": "dojox/mobile/Pane"
+                    "type": "dojox.mobile.Pane"
                 },
                 {
-                    "type": "dojox/mobile/Pane"
+                    "type": "dojox.mobile.Pane"
                 },
                 {
-                    "type": "dojox/mobile/Pane"
+                    "type": "dojox.mobile.Pane"
                 }
             ],
-            "allowedChild": "dojox/mobile/Pane",
+            "allowedChild": "dojox.mobile.Pane",
             "inlineEdit": "./dojox/mobile/GridLayoutInput",
             "icon": "resources/images/SpinWheelDatePicker.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAPb1+/D0/Eh1qq7M8Ed2q0d2qkh2q0h2qk6CtNTl9ez1/Mns/////wAAAAAAAAAAACH5BAEAAAwALAAAAAAQABAAAARSkMlJqxRi6M21XEIgDmJAjl84lqeZKvAAK3J8ZV2esjzKgIDgIAgYClNEYzF5y+l+gqT0CJ0uqUChdXA5EAiGwmEsxhw+hUQCtGgL2guEZU6JAAA7",
@@ -3185,7 +3185,7 @@
         },
         {
             "name": "IconMenu",
-            "type": "dojox/mobile/IconMenu",
+            "type": "dojox.mobile.IconMenu",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "IconMenu",
@@ -3197,7 +3197,7 @@
             },
             "children": [
                 {
-                    "type": "dojox/mobile/IconMenuItem",
+                    "type": "dojox.mobile.IconMenuItem",
                     "properties": {
                         "selected": "true",
                         "label": "Menu 1",
@@ -3205,42 +3205,42 @@
                     }
                 },
                 {
-                    "type": "dojox/mobile/IconMenuItem",
+                    "type": "dojox.mobile.IconMenuItem",
                     "properties": {
                         "label": "Menu 2",
                         "icon": "samples/sample_data/images/i-icon-2.png"
                     }
                 },
                 {
-                    "type": "dojox/mobile/IconMenuItem",
+                    "type": "dojox.mobile.IconMenuItem",
                     "properties": {
                         "label": "Menu 3",
                         "icon": "samples/sample_data/images/i-icon-3.png"
                     }
                 },
                 {
-                    "type": "dojox/mobile/IconMenuItem",
+                    "type": "dojox.mobile.IconMenuItem",
                     "properties": {
                         "label": "Menu 4",
                         "icon": "samples/sample_data/images/i-icon-4.png"
                     }
                 },
                 {
-                    "type": "dojox/mobile/IconMenuItem",
+                    "type": "dojox.mobile.IconMenuItem",
                     "properties": {
                         "label": "Menu 5",
                         "icon": "samples/sample_data/images/i-icon-5.png"
                     }
                 },
                 {
-                    "type": "dojox/mobile/IconMenuItem",
+                    "type": "dojox.mobile.IconMenuItem",
                     "properties": {
                         "label": "Menu 6",
                         "icon": "samples/sample_data/images/i-icon-6.png"
                     }
                 }
             ],
-            "allowedChild": "dojox/mobile/IconMenuItem",
+            "allowedChild": "dojox.mobile.IconMenuItem",
             "inlineEdit": "./dojox/mobile/IconMenuInput",
             "tool": "./dojox/mobile/IconMenuCreateTool",
             "iconLarge": "resources/imagesLarge/IconMenu.png",
@@ -3248,25 +3248,25 @@
         },
         {
             "name": "IconMenuItem",
-            "type": "dojox/mobile/IconMenuItem",
+            "type": "dojox.mobile.IconMenuItem",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "IconMenuItem",
             "icon": "resources/images/menuitem.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAP39//39/pimxPL1/DBNiJmoxfj6/jFRiuTs+fX4/TximTximD1imEBmnebu+ujv+TdimztimUNrofX4/ENvpEVxpkl2q0h2q0l4q0x8sKa916S71Ut8r0+CtU6Bs0+Bs6fA2vT4/Pr8/v3+/1KHuVSLvFOJupi94FaOv7bb8Mjn+L3h88jo98/t+/3+/v///////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADAALAAAAAAQABAAAAaJwBNqSCwWT6aWcslkmj4qwuEQnVYPLdYHsxIUCt1vuNBaYSiptNA4PKUoJ4ZigXrZ73ZU5ATrw0oAAC6CASMAJX5+JCIEFxwekCIkiX0dBgIbGiCbBh2UMBkTCaMhoxMZnxYDjY+QAxafFQ+YmpsPFZ8SDru8uxKfDQjCw8INnycQycrJfJ/OiUEAOw==",
-            "allowedParent": "dojox/mobile/IconMenu",
+            "allowedParent": "dojox.mobile.IconMenu",
             "iconLarge": "resources/imagesLarge/IconMenuItem.png",
             "iconLargeBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAABStJREFUeNrcWFtoHUUYntmd3XON8ZwUrBesPkoFwVZNaKABpRKDeMOG4IX41qeCNZUmFktCmxQJ0QefVPBBX4pQqGAfxJbWl1TR+NIWrUWbt9prtB7Ss7sz4z//7G7Odc8lG3vIcM6c3Tnf/Pv915lZ+s1386TzGoPvc0/3dhSn4yfOKFpXrlztRGtls5nSISnJzYJTgctn7Zrz1wjMwgnQwfezk4vHfv7rrrRVgfv3tvvS1o2jA5sUTPqDn55c/DoCvP1BSiigsQfwpWiwf08DWkIIzYxzfvrXG2+9/GRXJlEx+fK1Wz/+dOGNfo8aBkUVPMG/jwL/9no/Nw0DsRIkNwBv46ZpAHsqy2kRSl3PdTwB/DxPVEwWQnqce65nWUyjXceJBAvP8yiz0AnUcaIlw8el1Ebj0JAWXgvCPQ5/eK5wjcrJMCilBAuZ0pSoFCoTBRacC9NUGkjJRbRkjRUkiCWG7hMqAIgSBbeuwxk1ak0mggvBUQd1LZsCY7hI0UAyEIdP4MPQWsgR9Seew11SNdnhijYQVzrAg6i+iAAL6eupdBCyIRg+NHBiGWh5ebnoinq15EbBhfY/gFcKRNioMrU0SVUEeFJWiVs7sI4tGU6F9IecMXX1KIsACAsSgNHUlEaDEYfpgaWroWR0YknIQ5ToupdKJh7daM2f+z1pV1qxUPQeuz/JmClQB3hSKpHcfK9dF/xA0mJMxZ/CkkSqARgk++bR8mEHsWXzw5KqaMPOt1twSTV9/PWLtopgSBxVIVSgKig+W1lwxfTUtwvaQAbTddVXE/CBGqWMb8AINSjUVGPh/J9MW01LxwJG1UwifEJUK0D1L0FW3BPvfHUh9uV5avC+RDIpLVYWW76WgbZ65fPzlZREJdoKfo+8PRAjp+EPTy39vdRNutNG2qf1y/lLLYlQyQw+lOHCqj2C0Y0erdw4lOcjqbO7WDh7sfvuXCaTtWCBu37tat+WRyrKRnQrFovk3M3V2Gbf+Hh4fXhmRl/ck0tu2JDp6ckvnP2DpdLpfD7vr9ZN0xLyunbs4y9+AP0PR9/t3TnLGDNAUZuZtsUsC3pT9cy0VrLv6P4h6Kenp/XtxMSETm1IoFwu1wOk8vlU+jKz7UQ2m5U1SlrdBkaWegUjZNdIvx7cNbxNlSZIJEgm6A2TMkM3igu2v1+oeo4eAbuk00Akm8lkgBJoCMzsllyAax3Xmoy+2qcHR1/p06VTVzXEYU6Xh5Oo0j+wlrSDpqx+Z/fsUwcP1Ry/w7SijhhtNO64py7+EyMPEBgDLVh8eh/qipHWx5yvXyeush2a3B9ev3fgYGy0ZGDz7cOz0J8+Mjbw2lwz5fSLvYOlVEJ+fhlcfWzpw4Aup3DdZDmtL5DHQSs47o280KvL5cjzTxF/yxbsiQiRLejZSSFfM7DWXzl13fnFWx1YTnnfpi69xaOli3jD2KJ1c2j9OhGsdTs8JdPS3XGJlcKje5mJ1H+zM++H92PjU9XWarecwjYQnz345hz0336559nRj5opp5/s3gH9nn2T+nbu8IFgvxVH3YIqjy9UWt+dVm3O9Uhc1vK3mUM7noDeceXQM1sDH9Eo79fZNEvRSSG/e+/kei+n6n2AkCNjn9f8Ux0sALJylFAjel2PdjAcqEzTVAfgtmkdm9u5tLRUKBRaOvdGH/LgKAZ9+7RAp1QqBRcgiJev/G03kAmcQKyJadsOLch5EAE9vkyVsdCi2Ez1Hslo34kmtrUL+Q7NxA4uEMdPnOk0Wv8JMAABsXWAhrN8JAAAAABJRU5ErkJggg=="
         },
         {
             "name": "ScreenSizeAware",
-            "type": "dojox/mobile/ScreenSizeAware",
+            "type": "dojox.mobile.ScreenSizeAware",
             "category": "untested"
         },
         {
             "name": "ProgressIndicator",
             "description": "ProgressIndicator",
-            "type": "dojox/mobile/ProgressIndicator",
+            "type": "dojox.mobile.ProgressIndicator",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "ProgressIndicator",
@@ -3277,7 +3277,7 @@
         },
         {
             "name": "Carousel",
-            "type": "dojox/mobile/Carousel",
+            "type": "dojox.mobile.Carousel",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "Carousel",
@@ -3291,10 +3291,10 @@
             },
             "children": [
                 {
-                    "type": "dojox/mobile/SwapView",
+                    "type": "dojox.mobile.SwapView",
                     "children": [
                         {
-                            "type": "dojox/mobile/CarouselItem",
+                            "type": "dojox.mobile.CarouselItem",
                             "properties": {
                                 "value": "one",
                                 "headerText": "one",
@@ -3302,7 +3302,7 @@
                             }
                         },
                         {
-                            "type": "dojox/mobile/CarouselItem",
+                            "type": "dojox.mobile.CarouselItem",
                             "properties": {
                                 "value": "two",
                                 "headerText": "two",
@@ -3312,10 +3312,10 @@
                     ]
                 },
                 {
-                    "type": "dojox/mobile/SwapView",
+                    "type": "dojox.mobile.SwapView",
                     "children": [
                         {
-                            "type": "dojox/mobile/CarouselItem",
+                            "type": "dojox.mobile.CarouselItem",
                             "properties": {
                                 "value": "three",
                                 "headerText": "three",
@@ -3323,7 +3323,7 @@
                             }
                         },
                         {
-                            "type": "dojox/mobile/CarouselItem",
+                            "type": "dojox.mobile.CarouselItem",
                             "properties": {
                                 "value": "four",
                                 "headerText": "four",
@@ -3333,7 +3333,7 @@
                     ]
                 }
             ],
-            "allowedChild": "dojox/mobile/SwapView",
+            "allowedChild": "dojox.mobile.SwapView",
             "inlineEdit": "./dojox/mobile/CarouselInput",
             "helper": "./dojox/mobile/CarouselHelper",
             "iconLarge": "resources/imagesLarge/Carousel.png",
@@ -3342,19 +3342,19 @@
         {
             "name": "CarouselItem",
             "description": "Carousel Item",
-            "type": "dojox/mobile/CarouselItem",
+            "type": "dojox.mobile.CarouselItem",
             "category": "untested",
             "collection": "dojoxmobile",
             "tags": "CarouselItem",
             "properties": {},
             "resizable": "none",
-            "allowedParent": "dojox/mobile/SwapView",
+            "allowedParent": "dojox.mobile.SwapView",
             "iconLarge": "resources/imagesLarge/CarouselItem.png",
             "iconLargeBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAABYBJREFUeNrsWFtsFFUYnnNmZnthC2W7u2V7y2pDW9ZKhYDCApbSgEARCIliWh5aHwxq0GBIiCYmJj4g6INiTJBotPgCBMVQMCIC2sgW5VJ6SS+ILS0stGmh6LZlO3Mu/rNTlrah2+5uh/ShJ7uTyZnzffvN/5/zXxad+LVKmHxDgm+BO29SaTrrqcHCpBxTsqZkGXkShw5CyLd/9YwHWfrsTEmSQiyIhmokr9/vh+u2wozQRJ+fboeVZrM5xJpoqB5hLf3msrd3xCPGGMaa0+enmoeuDGGtoVRB+NAxGtV491Z3Z8c3e/dEs10ADiTRbnlKGKUscKXnfz+9/5MPGSHaDGXhCiIEoAy+QAJUOkloqlH3rEII4kJ/n6/iYHmnt92e7JBkk6IQFL6dNB9xJMsmIKn8uaK5rubFzaXxCWYegbVUhfj9ypHyL//r6U6y2hDS9CgqgU+4spQBoigq3AAJUAHhkQP7/PcVmA/fWoqGWV+8teHSH63NdcFJxHm4sgZUzfDB4Zq3KHfBUhU8GIETVU2WxpYzf2mSI6O26gwhqgqmCluVTiVwzk0xcXMXr7A5MigXKLwhEsKWRYa8isWe5l79UlO1B05ABGdQ39r2VGfOPDcoG8+hkcZJrb3oosJoAkRY8FFlbVjknKgEFwGVNFpCmChNkVGNlAUpM9/W5fP5QsMSEhIkyTEGdRRUI2XFxsY6HA6bzTbmT8LK0GuioXqEtULXBWE4Igqqqeo0+pMYIumeOLQTQfBHHDFRQExF3EQ5weKwd2UCFzmGUC4MBnJAFG3eHbqajVyWXnBmb9wb7ts3HX17zGo2KmtxpPn92OX2k1/9IEoY6SNQHsBXGJ7mIA+qhB/+4vVGhMesZiOXpdW+SGOfLicUbys9frIJa0MT5uu4Kt2/p93hhymYMRDGYEpHGSgLURmum3JnNNc0r1s9p5f2OTsuHmhIybCY89asOPO9Z0BVdGU8IIupFDGmowyUpXAaqC94Vl42qm/p7GgSBuqfX+lmNN2dmXZlmnSrV8RY96jAGUecYSTrKANlERIP1xhLLBy+K30NB8tPZdHOhe53S5fmtHSsfmrN4vaKJu2casbimrUwxyLVUUbKotrOSQ34JFs1xzRXdCQ+6flTVv3ty6rLTOnOfLrlQmY65kxTxZggcSwwHWWkE+kgpO2z3XPi/n7l5bSufsva1hukthX8tGZ67E/4ePy9p2fbc7z/9rqeW6ZSLstyEGWUrOBoPVpuzXEVqg6EMU9OdpW81lmwtuVStbWuuqjbK6X2mbPzoQ2jzPgoH+gyBiEn529yWtBd1dvX0NnXcs01t3FDwdqK7w6//9Gum93X2ltoGupp6+onHPZZShBlnBPxg0hBCl7dGjfTuW/LC8k+X0/9Bc+xX5iA4mKF7ptd5+pbJRHDaVSv1orrnwmijJLlfxCBtA0NfbYqWO9PW5iVTmquWMT9G998Bx55kXKqqnGB2AWh/zev+h5G/jDjVtgVhEokNNjPUEIJv3t7+8c7zFYrsiXeud52vfI8PFqQnT+X3hIgqmK8bJYoChhQxsqiqknPgSXby+LU+CecjhZzZqLLNcNqBQvaK6uEmsokk7ChbHPSrOTbN25qbaWooR5TvZU3OzczK0P/FwWV7Pxn01sWu+3OcveOr08kxAtLlqyC3EwDSfFxlIH9RIYkN5yCX/KckxiVEqdfTM5644NdMDktXnCvXEIUBQI8yAOUsVveJ9oD/5E8zHEp6Y6U9HXaXdGq2YHDoD9dXrASPkNRBsqCGuXTPT8irhBRFiiTEaZQjLJhuQXqUobBiDCLH8wYmXyg6t1enDNm6zdKMygZJWucrV9kfWVU1pqoLnKqT5zYPvGsp2ayyfpfgAEAH/eopYDJRhAAAAAASUVORK5CYII="
         },
         {
             "name": "DataCarousel",
-            "type": "dojox/mobile/DataCarousel",
+            "type": "dojox.mobile.DataCarousel",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "DataCarousel",
@@ -3362,7 +3362,7 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAAKFMUiI5ZjxsuTlckz1jmj1jmVyL0T1kmUNvpERvpERuo0Rvo16W2jx7wEeO4Et7r0x7r26ayUt8r0x8rqrS+lGHuVKHuZXN/1aOv6u7yJypq+38++v6+aiysJ6uqWpNK5RcON6CV+esnbq2tf/X0t26tuxmXtaJhL+Zmf///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAACkALAAAAAAQABAAAAZswJRwSCwSA8YhUrlMBpbPpjEqfCarUmlRezVivmBMKgweXyIMgUGMOafXKcvog2o4LKnKvH5PTUIgIh0UECkPgIIUEikLGQAnGxoJKQiOkBoKKQUcJSYkHgUpBJyeHgcpA6mqA6irqV2wsUJBADs=",
             "data": [
                 {
-                    "type": "dojo/data/ItemFileReadStore",
+                    "type": "dojo.data.ItemFileReadStore",
                     "properties": {
                         "data": {
                             "items": [
@@ -3386,7 +3386,7 @@
                     }
                 },
                 {
-                    "type": "dojox/mobile/DataCarousel",
+                    "type": "dojox.mobile.DataCarousel",
                     "properties": {
                         "navButton": true,
                         "numVisible": 2,
@@ -3403,16 +3403,16 @@
         },
         {
             "name": "SpinWheel",
-            "type": "dojox/mobile/SpinWheel",
+            "type": "dojox.mobile.SpinWheel",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "SpinWheel",
             "icon": "resources/images/SpinWheel.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAADlck4idvtjf6vP2+zxhlz9mnPH1+pi515q72aXG48nd7t7p8u30+f///////wAAACH5BAEAAA4ALAAAAAAQABAAAARb0MlJq0Q4L7BydsggDg1gNuOAOMegKIwpM+9wOEmqp4lT/MCg0EEwGI9I44DgAAwS0Kg0B2g+p9NB1bnbbWXgsAnX3fUCLliYphgEHOiUTPcO2O8CgOB+t/gnEQA7",
-            "allowedChild": "dojox/mobile/SpinWheelSlot",
+            "allowedChild": "dojox.mobile.SpinWheelSlot",
             "children": [
                 {
-                    "type": "dojox/mobile/SpinWheelSlot",
+                    "type": "dojox.mobile.SpinWheelSlot",
                     "properties": {
                         "labels": [
                             "A",
@@ -3424,7 +3424,7 @@
                     }
                 },
                 {
-                    "type": "dojox/mobile/SpinWheelSlot",
+                    "type": "dojox.mobile.SpinWheelSlot",
                     "properties": {
                         "labels": [
                             "A",
@@ -3441,13 +3441,13 @@
         },
         {
             "name": "SpinWheelSlot",
-            "type": "dojox/mobile/SpinWheelSlot",
+            "type": "dojox.mobile.SpinWheelSlot",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "SpinWheelSlot",
             "icon": "resources/images/SpinWheelSlot.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAADlck/P2+zxhlz9mnPH1+qXG49Pn+O30+f///////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAkALAAAAAAQABAAAARKMMlJqzQ4650M+iAAgkY3HkA6IqW3vmwyzHRtJwKh77weCAlAoEAsGgsBQHB4PCaXgah0GlWmrtis0gUbtVbX1Rf8am3OGYt6EgEAOw==",
-            "allowedParent": "dojox/mobile/SpinWheel",
+            "allowedParent": "dojox.mobile.SpinWheel",
             "properties": {
                 "labels": [
                     "A",
@@ -3464,7 +3464,7 @@
         },
         {
             "name": "SpinWheelDatePicker",
-            "type": "dojox/mobile/SpinWheelDatePicker",
+            "type": "dojox.mobile.SpinWheelDatePicker",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "SpinWheelDatePicker",
@@ -3475,7 +3475,7 @@
         },
         {
             "name": "SpinWheelTimePicker",
-            "type": "dojox/mobile/SpinWheelTimePicker",
+            "type": "dojox.mobile.SpinWheelTimePicker",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "SpinWheelTimePicker",
@@ -3487,20 +3487,20 @@
         {
             "name": "ValuePicker",
             "description": "ValuePicker",
-            "type": "dojox/mobile/ValuePicker",
+            "type": "dojox.mobile.ValuePicker",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "ValuePicker",
             "children": [
                 {
-                    "type": "dojox/mobile/ValuePickerSlot",
+                    "type": "dojox.mobile.ValuePickerSlot",
                     "properties": {
                         "labelFrom": 0,
                         "labelTo": 9
                     }
                 },
                 {
-                    "type": "dojox/mobile/ValuePickerSlot",
+                    "type": "dojox.mobile.ValuePickerSlot",
                     "properties": {
                         "labels": [
                             "miles",
@@ -3509,7 +3509,7 @@
                     }
                 }
             ],
-            "allowedChild": "dojox/mobile/ValuePickerSlot",
+            "allowedChild": "dojox.mobile.ValuePickerSlot",
             "icon": "resources/images/Overlay.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAADlck4idvtjf6vP2+zxhlz9mnPH1+pi515q72aXG48nd7t7p8u30+f///////wAAACH5BAEAAA4ALAAAAAAQABAAAARb0MlJq0Q4L7BydsggDg1gNuOAOMegKIwpM+9wOEmqp4lT/MCg0EEwGI9I44DgAAwS0Kg0B2g+p9NB1bnbbWXgsAnX3fUCLliYphgEHOiUTPcO2O8CgOB+t/gnEQA7",
             "iconLarge": "resources/imagesLarge/ValuePicker.png",
@@ -3518,11 +3518,11 @@
         {
             "name": "ValuePickerSlot",
             "description": "ValuePickerSlot",
-            "type": "dojox/mobile/ValuePickerSlot",
+            "type": "dojox.mobile.ValuePickerSlot",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "ValuePickerSlot",
-            "allowedParent": "dojox/mobile/ValuePicker",
+            "allowedParent": "dojox.mobile.ValuePicker",
             "icon": "resources/images/Overlay.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMLAPP2+zlck6XG44idvpq72T9mnMnd7vH1+u30+Zi51zxhl////wAAAAAAAAAAAAAAACH5BAEAAAsALAAAAAAQABAAAARTcMlJqyQ4670I+GAAgsSSAEaKBCySGkCyCGM9Ckuh73y/KIegcBgEKBYigXLJpAWQgKYU8BTZbFWWdsudXW24AUqldaUAg4W4Zh2lB/C4fG6pTyIAOw==",
             "iconLarge": "resources/imagesLarge/ValuePickerSlot.png",
@@ -3530,7 +3530,7 @@
         },
         {
             "name": "ValuePickerDatePicker",
-            "type": "dojox/mobile/ValuePickerDatePicker",
+            "type": "dojox.mobile.ValuePickerDatePicker",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "ValuePickerDatePicker",
@@ -3541,7 +3541,7 @@
         },
         {
             "name": "ValuePickerTimePicker",
-            "type": "dojox/mobile/ValuePickerTimePicker",
+            "type": "dojox.mobile.ValuePickerTimePicker",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "ValuePickerTimePicker",
@@ -3552,7 +3552,7 @@
         },
         {
             "name": "DatePicker",
-            "type": "dojox/mobile/DatePicker",
+            "type": "dojox.mobile.DatePicker",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "DatePicker",
@@ -3563,7 +3563,7 @@
         },
         {
             "name": "TimePicker",
-            "type": "dojox/mobile/TimePicker",
+            "type": "dojox.mobile.TimePicker",
             "category": "mobile",
             "collection": "dojoxmobile",
             "tags": "TimePicker",
@@ -3574,7 +3574,7 @@
         },
         {
             "name": "Overlay",
-            "type": "dojox/mobile/Overlay",
+            "type": "dojox.mobile.Overlay",
             "category": "untested",
             "collection": "dojoxmobile",
             "tags": "Overlay",

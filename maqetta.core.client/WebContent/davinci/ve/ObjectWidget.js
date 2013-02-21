@@ -56,8 +56,10 @@ return declare("davinci.ve.ObjectWidget", _Widget, {
 	},
 
 	getObjectType: function() {
-		var node = this.domNode;
-		return domAttr.get(node, 'data-dojo-type') || domAttr.get(node, 'dojoType');
+		var node = this.domNode,
+			type = domAttr.get(node, 'data-dojo-type') || domAttr.get(node, 'dojoType');
+		type = type.replace(/\./g, "/");
+		return type;
 	},
 
 	getObjectId: function() {

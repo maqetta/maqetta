@@ -14,7 +14,6 @@ define([
 	"davinci/ve/input/SmartInput",
 	"davinci/ve/widget",
 	"davinci/ve/commands/ModifyCommand",
-	"davinci/ve/commands/ModifyAttributeCommand",
 	"davinci/ve/commands/AddCommand",
 	"davinci/ve/commands/RemoveCommand",
 	"davinci/commands/OrderedCompoundCommand",
@@ -43,7 +42,6 @@ define([
 	SmartInput,
 	Widget,
 	ModifyCommand,
-	ModifyAttributeCommand,
 	AddCommand,
 	RemoveCommand,
 	OrderedCompoundCommand,
@@ -284,10 +282,7 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 	hide: function(){
 		if (this._isEmbedded()) {
 			if (this._inline) {
-				var value;
-				while (connection = this._connection.pop()){
-					dojo.disconnect(connection);
-				}
+				this._connection.forEach(dojo.disconnect);
 				this._inline.destroyRecursive();
 				delete this._inline;  
 			}
@@ -323,12 +318,12 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 		
 		// id for the new store
 		var newStoreId = storeId;
-		if (storeWidget.type != "dojo.data.ItemFileReadStore") {
-			newStoreId = Widget.getUniqueObjectId("dojo.data.ItemFileReadStore", context.getDocument());
+		if (storeWidget.type != "dojo/data/ItemFileReadStore") {
+			newStoreId = Widget.getUniqueObjectId("dojo/data/ItemFileReadStore", context.getDocument());
 		}
 
 		var data = {
-			"type": "dojo.data.ItemFileReadStore",
+			"type": "dojo/data/ItemFileReadStore",
 			"properties": {
 				id: newStoreId,
 				jsId: newStoreId,
@@ -555,12 +550,12 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 		var newDataStoreData = null;
 		if (this._dataType == "csv") {
 			// replace store with csv
-			if (storeWidget.type != "dojox.data.CsvStore") {
+			if (storeWidget.type != "dojox/data/CsvStore") {
 				//changing store type, so let's get a new store id
-				newStoreId = Widget.getUniqueObjectId("dojox.data.CsvStore", context.getDocument());
+				newStoreId = Widget.getUniqueObjectId("dojox/data/CsvStore", context.getDocument());
 			}
 			newDataStoreData = {
-				type: "dojox.data.CsvStore",
+				type: "dojox/data/CsvStore",
 				properties: {
 					id: newStoreId,
 					jsId: newStoreId,
@@ -570,12 +565,12 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 				context: context,
 			};
 		} else {
-			if (storeWidget.type != "dojo.data.ItemFileReadStore") {
+			if (storeWidget.type != "dojo/data/ItemFileReadStore") {
 				//changing store type, so let's get a new store id
-				newStoreId = Widget.getUniqueObjectId("dojo.data.ItemFileReadStore", context.getDocument());
+				newStoreId = Widget.getUniqueObjectId("dojo/data/ItemFileReadStore", context.getDocument());
 			}
 			newDataStoreData = {
-				type: "dojo.data.ItemFileReadStore",
+				type: "dojo/data/ItemFileReadStore",
 				properties: {
 					id: newStoreId,
 					jsId: newStoreId,
@@ -604,11 +599,7 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 	},
 	
 	_isEmbedded: function() {
-		if  (this._embeddingContentPane) {
-			return true;
-		} else {
-			return false;
-		}
+		return this._embeddingContentPane;
 	},
 	
 	_loading: function(height, width) {		
@@ -716,7 +707,7 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 	},
 
 	getCallback: function(url) {
-		var helper = Widget.getWidgetHelper('dojo.data.ItemFileReadStore');
+		var helper = Widget.getWidgetHelper('dojo/data/ItemFileReadStore');
 		if(helper && helper.getXhrScriptPluginParameters){
 			var xhrParams = helper.getXhrScriptPluginParameters(url, this._widget._edit_context);
 			if ( xhrParams){ // must be the one we were looking for.
@@ -726,7 +717,7 @@ var DataStoreBasedWidgetInput = declare(SmartInput, {
 	},
 
 	setCallback: function(url){
-		var helper = Widget.getWidgetHelper('dojo.data.ItemFileReadStore');
+		var helper = Widget.getWidgetHelper('dojo/data/ItemFileReadStore');
 		if(helper && helper.setXhrScriptPluginParameters){
 			helper.setXhrScriptPluginParameters(url, this._widget._edit_context);
 		}

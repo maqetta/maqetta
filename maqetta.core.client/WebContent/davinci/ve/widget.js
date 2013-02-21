@@ -205,7 +205,7 @@ getUniqueObjectId: function(type, node) {
 		return undefined;
 	}
 
-	var base = type.substring(type.lastIndexOf(".") + 1);
+	var base = type.substring((type.lastIndexOf("/") || type.lastIndexOf(".")) + 1);
 	var i = 1;
 	var id = base + "_" + i++;
 	var dj = widgetObject._dojo(node);
@@ -272,6 +272,7 @@ getLabelForNode: function(node) {
 	if(!type){
 		type = node.tagName.toLowerCase();
 	}
+	type = type.replace(/\./g, "/");
 	var text = this._getWidgetNameText(type);
 	//FIXME: temporarily not showing classname because mobile views look better
 	// in review/commenting, but really instead of hard-coding this, we should
@@ -293,7 +294,7 @@ getLabel: function(widget) {
 
 	//TODO: move to getWidgetText helper methods
 	var domNode = widget.domNode;
-	switch(widget.type){
+	switch(widget.type.replace(/\//g, ".")){
 		case 'dijit.form.ComboBox':
 		case 'dijit.form.Button':
 			widgetText = widget.attr("label");

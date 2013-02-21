@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 @SuppressWarnings("serial")
 public class DavinciCommandServlet extends HttpServlet {
 
-	static private Logger theLogger = Logger.getLogger(ServerManager.class.getName());
+	static private Logger theLogger = Logger.getLogger(DavinciCommandServlet.class.getName());
 
 	private HashMap<String, CommandDescriptor> commands = new HashMap<String, CommandDescriptor>();
     private boolean initialized = false;
@@ -92,7 +92,7 @@ public class DavinciCommandServlet extends HttpServlet {
 
     private IUser checkLogin(HttpServletRequest req, HttpServletResponse resp, CommandDescriptor commandDescriptor) throws IOException {
 
-        IUser user = ServerManager.getServerManger().getUserManager().getUser(req);
+        IUser user = ServerManager.getServerManager().getUserManager().getUser(req);
         if (user == null) {
             if (!ServerManager.LOCAL_INSTALL &&!commandDescriptor.isNoLogin()) {
                     resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);

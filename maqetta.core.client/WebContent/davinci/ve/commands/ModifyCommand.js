@@ -1,11 +1,12 @@
 define([
     	"dojo/_base/declare",
+    	"davinci/ve/commands/_hierarchyCommand",
     	"../widget",
     	"../utils/ImageUtils",
     	"../States"
-], function(declare, Widget, ImageUtils, States){
+], function(declare, _hierarchyCommand, Widget, ImageUtils, States){
 
-return declare("davinci.ve.commands.ModifyCommand", null, {
+return declare("davinci.ve.commands.ModifyCommand", [_hierarchyCommand], {
 	name: "modify",
 
 	// XXX Most often only called with first 2 params. SmartInput.js passes in
@@ -235,30 +236,6 @@ return declare("davinci.ve.commands.ModifyCommand", null, {
 	 */
 	_isRefreshParentOnPropChange: function(widget) {
 		return davinci.ve.metadata.queryDescriptor(widget.type, "refreshParentOnPropChange");
-	},
-	
-	/**
-	 * Check if an ancestor widget needs to be refreshed due to a change with
-	 * one of its children (in particular, this widget) based on "refreshOnDescendantChange"
-	 * property for an ancestor widget.
-	 * 
-	 * @param  {davinci.ve._Widget} widget
-	 * 				The widget instance that has been modified.
-	 * @return {null | davinci.ve._Widget} 
-	 * 				if ancestor widget has the 'refreshOnDescendantChange' attribute set
-	 * 				in its metadata, returns that ancestor widget
-	 */
-	_isRefreshOnDescendantChange: function(widget) {
-		var ancestor;
-		var w = widget;
-		while(w && w.domNode && w.domNode.tagName != "BODY"){
-			var parent = w.getParent();
-			if(parent && davinci.ve.metadata.queryDescriptor(parent.type, "refreshOnDescendantChange")){
-				ancestor = parent;
-			}
-			w = parent;
-		}
-		return ancestor;
 	},
 	
 	undo: function(){

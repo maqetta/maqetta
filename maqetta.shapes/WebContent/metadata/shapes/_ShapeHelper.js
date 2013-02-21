@@ -187,6 +187,7 @@ _ShapeHelper.prototype = {
 				return;
 			}
 			if(tool.isInstanceOf(CreateTool)){
+				this._removeDragConnects();
 				var fakeEvent = this._makeFakeEvent(e);
 				tool.onMouseUp(fakeEvent);
 				return;

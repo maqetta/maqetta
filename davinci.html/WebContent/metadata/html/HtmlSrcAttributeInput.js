@@ -47,7 +47,12 @@ return declare(SmartInput, {
 		};
 
 		var container = new BorderContainer({});
-		this._inline = Dialog.showDialog(htmlNls.selectSource, container, {width: 350, height:420}, dojo.hitch(this, okClicked));
+		this._inline = Dialog.showDialog({
+			title: htmlNls.selectSource, 
+			content: container, 
+			style: {width: 350, height:420}, 
+			okCallback: dojo.hitch(this, okClicked)
+		});
 
 		var cp1 = new ContentPane({region: "center"});
 		container.addChild(cp1);

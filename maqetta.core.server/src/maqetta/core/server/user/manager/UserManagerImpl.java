@@ -2,6 +2,7 @@ package maqetta.core.server.user.manager;
 
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,6 +21,8 @@ import org.maqetta.server.ServerManager;
 
 public class UserManagerImpl implements IUserManager {
 
+	static final private Logger theLogger = Logger.getLogger(UserManagerImpl.class.getName());
+
 	private static IUser localUser;
     protected static UserManagerImpl theUserManager;
   //  protected HashMap                users    = new HashMap();
@@ -31,7 +34,7 @@ public class UserManagerImpl implements IUserManager {
 
 
     public UserManagerImpl() {
-    	ServerManager serverManger = ServerManager.getServerManger();
+    	ServerManager serverManger = ServerManager.getServerManager();
 
     	initWorkspace();
     	
@@ -40,23 +43,17 @@ public class UserManagerImpl implements IUserManager {
             this.maxUsers = Integer.valueOf(maxUsersStr).intValue();
         }
 
-        this.personManager = ServerManager.getServerManger().getPersonManager();
+        this.personManager = ServerManager.getServerManager().getPersonManager();
 
     }
 
     protected void initWorkspace(){
-    	ServerManager serverManger = ServerManager.getServerManger();
-    	try{
-        	this.baseDirectory= ServerManager.getServerManger().getBaseDirectory();
-        	this.usersCount = this.baseDirectory.list().length;
-    	}catch(Exception ex){
-    		System.out.println("FATAL ERROR Starting maqetta: " + ex);
-    		
-    	}
-    	 if (ServerManager.DEBUG_IO_TO_CONSOLE) {
-             System.out.println("\nSetting [user space] to: " + baseDirectory.getAbsolutePath());
-         }
+    	this.baseDirectory= ServerManager.getServerManager().getBaseDirectory();
+    	this.usersCount = this.baseDirectory.list().length;
+
+    	theLogger.info("Setting [user space] to: " + baseDirectory.getAbsolutePath());
     }
+
     /*
      * (non-Javadoc)
      * 
@@ -68,7 +65,7 @@ public class UserManagerImpl implements IUserManager {
         /*
          * deny permision to direct access of a users workspace
          */
-        return (resource != "");
+        return resource != "";
     }
 
     /*
@@ -219,7 +216,7 @@ public class UserManagerImpl implements IUserManager {
 	            	IVResource project = localUser.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
 	        	}
     		} catch (IOException e) {
-    			return null;
+    			return null; //TODO
     		}
     	}
     	return localUser;

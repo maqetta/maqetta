@@ -20,7 +20,7 @@ public class LogOff extends Command {
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
         if (user.getUserID().startsWith(IDavinciServerConstants.GUEST_USER_PREFIX)) {
             try {
-                ServerManager.getServerManger().getUserManager().removeUser(user.getUserID());
+                ServerManager.getServerManager().getUserManager().removeUser(user.getUserID());
             } catch (UserException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

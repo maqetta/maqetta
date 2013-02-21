@@ -35,7 +35,7 @@ public class Register extends Command {
         }
 
         try {
-            user = ServerManager.getServerManger().getUserManager().addUser(name, password, email);
+            user = ServerManager.getServerManager().getUserManager().addUser(name, password, email);
             this.responseString = "OK";
             HttpSession session = req.getSession(true);
             session.setAttribute(IDavinciServerConstants.SESSION_USER, user);

@@ -296,7 +296,14 @@ return declare(SmartInput, {
 
 		this._containerInput = new ContinerInputWidget({data: this._widget.getData()});
 
-		this._inline = Dialog.showDialog(dojoxNLS.fixedSpliterInputTitle, this._containerInput, {width: 550, height: 300}, dojo.hitch(this, "_onOk"), null, hideCancel);
+		this._inline = Dialog.showDialog({
+			title: dojoxNLS.fixedSpliterInputTitle, 
+			content: this._containerInput, 
+			style: {width: 550, height: 300}, 
+			okCallback: dojo.hitch(this, "_onOk"), 
+			okLabel: null, 
+			hideCancel: hideCancel
+		});
 	},
 
 	_onOk: function() {

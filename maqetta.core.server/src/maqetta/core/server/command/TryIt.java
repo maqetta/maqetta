@@ -28,7 +28,7 @@ public class TryIt extends Command {
         name = IDavinciServerConstants.GUEST_USER_PREFIX + String.valueOf(System.currentTimeMillis());
 
         try {
-            user = ServerManager.getServerManger().getUserManager().addUser(name, password, email);
+            user = ServerManager.getServerManager().getUserManager().addUser(name, password, email);
 
             // this effectively logs the guest into the session
             HttpSession session = req.getSession(true);

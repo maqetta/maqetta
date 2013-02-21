@@ -38,7 +38,12 @@ return declare(SmartInput, {
 	show: function(widgetId) {
 		this._widget = Widget.byId(widgetId);
 
-		this._inline = Dialog.showDialog(this.dialogTitle, this._getTemplate(), {width: 550, height: 300}, dojo.hitch(this, "_onOk"));
+		this._inline = Dialog.showDialog({
+			title: this.dialogTitle, 
+			content: this._getTemplate(), 
+			style: {width: 550, height: 300}, 
+			okCallback: dojo.hitch(this, "_onOk")
+		});
 
 		// fill in rows
 		var data = this._widget.getData();

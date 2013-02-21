@@ -1,10 +1,12 @@
 define([
     "dojo/_base/declare",
+	"davinci/ve/commands/_hierarchyCommand",
     "../widget",
-    "../States"
-], function(declare, Widget, States) {
+    "../States",
+	"davinci/ve/commands/ModifyCommand"
+], function(declare, _hierarchyCommand, Widget, States, ModifyCommand) {
 
-return declare("davinci.ve.commands.ReparentCommand", null, {
+return declare("davinci.ve.commands.ReparentCommand", [_hierarchyCommand], {
 	name: "reparent",
 
 	constructor: function(widget, parent, index){
@@ -25,7 +27,10 @@ return declare("davinci.ve.commands.ReparentCommand", null, {
 		if(!oldParent){ oldParent = dojo.byId("myapp"); }
 		var newParent = Widget.byId(this._newParentId);
 		if(!newParent){ newParent = dojo.byId("myapp"); }
-
+		
+		// Some situations require that we recreate an ancestor widget (e.g., RoundRectList) so that we
+		// will invoke the widget library creation logic to re-initialize everything properly
+		var oldAncestor = this._isRefreshOnDescendantChange(widget);
 
 		if(!this._oldParentId){
 			this._oldParentId = oldParent.id;
@@ -55,6 +60,22 @@ return declare("davinci.ve.commands.ReparentCommand", null, {
 			widget.renderWidget();
 
 			context.widgetChanged(context.WIDGET_REPARENTED, widget, [oldParent, newParent]);
+
+			// Some situations require that we recreate an ancestor widget (e.g., RoundRectList) so that we
+			// will invoke the widget library creation logic to re-initialize everything properly
+			var newAncestor = this._isRefreshOnDescendantChange(widget);
+			
+			// Note we're executing the ModifyCommand directly as opposed to adding to it to the 
+			// command stack since we're not really changing anything on the parent and don't
+			// need to allow user to undo it.
+			if(oldAncestor){
+				var command = new ModifyCommand(oldAncestor, null, null, context);
+				command.execute();
+			}
+			if(newAncestor){
+				var command = new ModifyCommand(newAncestor, null, null, context);
+				command.execute();
+			}
 		}
 		
 		// Recompute styling properties in case we aren't in Normal state
@@ -77,6 +98,10 @@ return declare("davinci.ve.commands.ReparentCommand", null, {
 		if(!newParent){
 			return;
 		}
+		
+		// Some situations require that we recreate an ancestor widget (e.g., RoundRectList) so that we
+		// will invoke the widget library creation logic to re-initialize everything properly
+		var newAncestor = this._isRefreshOnDescendantChange(widget);
 
 		var context = oldParent.getContext();
 
@@ -92,6 +117,22 @@ return declare("davinci.ve.commands.ReparentCommand", null, {
 			widget.renderWidget();
 
 			context.widgetChanged(context.WIDGET_REPARENTED, widget, [oldParent, newParent]);
+
+			// Some situations require that we recreate an ancestor widget (e.g., RoundRectList) so that we
+			// will invoke the widget library creation logic to re-initialize everything properly
+			var oldAncestor = this._isRefreshOnDescendantChange(widget);
+			
+			// Note we're executing the ModifyCommand directly as opposed to adding to it to the 
+			// command stack since we're not really changing anything on the parent and don't
+			// need to allow user to undo it.
+			if(newAncestor){
+				var command = new ModifyCommand(newAncestor, null, null, context);
+				command.execute();
+			}
+			if(oldAncestor){
+				var command = new ModifyCommand(oldAncestor, null, null, context);
+				command.execute();
+			}
 		}
 		
 		// Recompute styling properties in case we aren't in Normal state

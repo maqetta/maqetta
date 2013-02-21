@@ -1,5 +1,6 @@
 package org.davinci.ajaxLibrary;
 
+import java.io.IOException;
 import java.net.URL;
 
 public abstract class Library {
@@ -64,7 +65,7 @@ public abstract class Library {
 
     }
 
-    public abstract String getMetadata();
+    public abstract String getMetadata() throws IOException;
 
     public abstract URL getURL(String path, boolean useSource);
 

@@ -26,8 +26,8 @@ public class OrionUserManager extends UserManagerImpl {
 	private Properties authProperties;
 
     public OrionUserManager() {
-    	ServerManager serverManger = ServerManager.getServerManger();
-    	this.personManager = ServerManager.getServerManger().getPersonManager();
+    	ServerManager serverManger = ServerManager.getServerManager();
+    	this.personManager = ServerManager.getServerManager().getPersonManager();
         
 
         String maxUsersStr = serverManger.getDavinciProperty(IDavinciServerConstants.MAX_USERS);

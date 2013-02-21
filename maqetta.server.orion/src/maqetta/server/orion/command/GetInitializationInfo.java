@@ -6,10 +6,13 @@ import java.io.IOException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import maqetta.core.server.command.Download;
 import maqetta.server.orion.MaqettaOrionServerConstants;
 
 import org.davinci.server.user.IUser;
@@ -22,6 +25,7 @@ import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ServerManager;
 
 public class GetInitializationInfo extends Command {
+	static final private Logger theLogger = Logger.getLogger(Download.class.getName());
 	private String siteConfigJson = null;
 
 	@SuppressWarnings("serial")
@@ -54,12 +58,11 @@ public class GetInitializationInfo extends Command {
 					+ "\t\t'email': '" + user.getPerson().getEmail() + "'\n"
 					+ "\t}" + "\t" + c + "\n" + "}";
 		} catch (MaqettaConfigException e) {
-			System.err.println("Maqetta Configuration Exception: "
-					+ e.getMessage());
-			e.printStackTrace();
+			theLogger.log(Level.SEVERE, "Maqetta Configuration Exception: "
+					+ e.getMessage(), e);
 			// TODO: throw a 500, for now. Consider whether we should send this
 			// error back in JSON instead
-			throw new IOException(e);
+			throw new Error(e);
 		}
 
 	}
@@ -70,7 +73,7 @@ public class GetInitializationInfo extends Command {
 			return this.siteConfigJson;
 		}
 		String ret = "";
-		String siteConfigDir = ServerManager.getServerManger()
+		String siteConfigDir = ServerManager.getServerManager()
 				.getDavinciProperty(
 						IDavinciServerConstants.SITECONFIG_DIRECTORY_PROPERTY);
 		if (siteConfigDir == null) {

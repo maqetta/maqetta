@@ -361,6 +361,12 @@ define(['domReady'], function(domReady) {
 		document.getElementById('landingArea').classList.add('register');
 
 	}
+	
+	function revealNewUserRegistration () {
+		document.getElementById('orionLogin').style.visibility = 'hidden';
+		document.getElementById('orionRegister').style.visibility = 'hidden';
+		document.getElementById('newUserSignup').style.visibility = '';
+	}
 
 	
 	function revealUserValidation() {
@@ -506,7 +512,7 @@ define(['domReady'], function(domReady) {
 
 	
 
-		document.getElementById("registerButton").onclick = revealRegistration;
+		document.getElementById("registerButton").onclick = revealNewUserRegistration;
 		
 		document.getElementById("create_login").onkeyup = function(event) {
 			if (event.keyCode === 13) {

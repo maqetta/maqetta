@@ -14,7 +14,7 @@ public class GetMetaRoot extends Command {
 
     @Override
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
-        Library[] libs = ServerManager.getServerManger().getLibraryManager().getAllLibraries();
+        Library[] libs = ServerManager.getServerManager().getLibraryManager().getAllLibraries();
         String libraryID = req.getParameter("id");
         String libraryVersion = req.getParameter("version");
 

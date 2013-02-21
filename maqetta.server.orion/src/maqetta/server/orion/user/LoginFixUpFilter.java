@@ -11,6 +11,10 @@
 package maqetta.server.orion.user;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.servlet.Filter;
@@ -20,10 +24,13 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.orion.internal.server.servlets.ProtocolConstants;
+import org.eclipse.orion.internal.server.servlets.workspace.WebUser;
 import org.eclipse.orion.server.core.resources.Base64Counter;
 import org.eclipse.orion.server.useradmin.IOrionCredentialsService;
 import org.eclipse.orion.server.useradmin.User;
@@ -53,16 +60,18 @@ import org.eclipse.orion.server.useradmin.UserServiceHelper;
 // Also, if the 'name' parameter is not specified, we default to using the value of 'email'.  This
 // differs from Orion, which sets the former to the value of 'login'.  In our case, that would
 // result in 'name' containing a seemingly random alphanumeric sequence, which isn't very useful.
+//
+// NOTE: This class works in conjunction with LoginFixUpDecorator.  Keep the two in sync.
 
 @SuppressWarnings("restriction")
 public class LoginFixUpFilter implements Filter {
 
 	private static final Base64Counter userCounter = new Base64Counter();
 
-	private static final String USERS_SERVLET_ALIAS = "/users";
-	private static final String LOGIN_SERVLET_ALIAS = "/login";
+	public static final String USERS_SERVLET_ALIAS = "/users";
+	public static final String LOGIN_SERVLET_ALIAS = "/login";
 
-	private static final String ID_TEMPLATE = "00MaqTempId00";
+	public static final String ID_TEMPLATE = "00MaqTempId00";
 
 	static final private Logger theLogger = Logger.getLogger(LoginFixUpFilter.class.getName());
 
@@ -124,8 +133,20 @@ public class LoginFixUpFilter implements Filter {
 		if (user != null) {
 			String value = user.getLogin();
 			if (value.startsWith(ID_TEMPLATE)) {
-				user.setLogin(user.getUid());
-				userAdmin.updateUser(user.getUid(), user);  // errors logged by Orion
+				String uid = user.getUid();
+
+				// update credentials service
+				user.setLogin(uid);
+				userAdmin.updateUser(uid, user);  // errors logged by Orion
+
+				// update user object for workspace service
+				WebUser webUser = WebUser.fromUserId(uid);
+				webUser.setUserName(uid);
+				try {
+					webUser.save();
+				} catch (CoreException e) {
+					throw new ServletException("Could not save WebUser", e);
+				}
 			}
 		}
 
@@ -203,5 +224,60 @@ public class LoginFixUpFilter implements Filter {
 		}
 
 		return user;
+	}
+
+	//============================================================================================//
+	
+	class RequestWrapper extends HttpServletRequestWrapper {
+
+		private HashMap<String, String[]> updatedMap = new HashMap<String, String[]>();
+
+		public RequestWrapper(HttpServletRequest request) {
+			super(request);
+			
+			updatedMap.putAll(request.getParameterMap());
+		}
+
+		/* (non-Javadoc)
+		 * @see javax.servlet.ServletRequestWrapper#getParameter(java.lang.String)
+		 */
+		@Override
+		public String getParameter(String name) {
+			String[] values = updatedMap.get(name);
+			if (values != null && values.length > 0) {
+				return values[0];
+			}
+			return null;
+		}
+
+		/* (non-Javadoc)
+		 * @see javax.servlet.ServletRequestWrapper#getParameterMap()
+		 */
+		@Override
+		public Map<String, String[]> getParameterMap() {
+			return updatedMap;
+		}
+
+		/* (non-Javadoc)
+		 * @see javax.servlet.ServletRequestWrapper#getParameterNames()
+		 */
+		@Override
+		public Enumeration<String> getParameterNames() {
+			return Collections.enumeration(updatedMap.keySet());
+		}
+
+		/* (non-Javadoc)
+		 * @see javax.servlet.ServletRequestWrapper#getParameterValues(java.lang.String)
+		 */
+		@Override
+		public String[] getParameterValues(String name) {
+			return updatedMap.get(name);
+		}
+
+		public void setParameter(String name, String value) {
+			String[] values = { value };
+			updatedMap.put(name, values);
+		}
+
 	}
 }

@@ -9,13 +9,19 @@
  * Contributors: IBM Corporation - initial API and implementation
  ******************************************************************************/
 
-/*jslint browser:true devel:true*/
-/*global define window*/
+/*jslint browser:true */
+/*global LoginWindowShiftKey:true */
 
-define(['domReady'], function(domReady) {
+define([
+	'domReady',
+	'dojo/request/xhr'
+], function(
+	domReady,
+	xhr
+) {
 	var ua = window.navigator.userAgent;
 	var ieIndex = ua.indexOf('MSIE');
-	var isIE = (ieIndex>=0) ? parseInt(ua.substr(ieIndex+4)) : false;
+	var isIE = (ieIndex>=0) ? parseInt(ua.substr(ieIndex+4), 10) : false;
 	if(isIE){
 		var browser_not_supported = document.getElementById("browser_not_supported");
 		browser_not_supported.style.display = "";
@@ -152,36 +158,35 @@ define(['domReady'], function(domReady) {
 			setResetMessage(true, "Provide username or email to reset.");
 			return;
 		}
-		var mypostrequest = new XMLHttpRequest();
-		mypostrequest.onreadystatechange = function() {
-			document.getElementById("errorWin").style.visibility = 'hidden';
-			if (mypostrequest.readyState === 4) {
-				if (mypostrequest.status === 200) {
-					responseObject = JSON.parse(mypostrequest.responseText);
-					if (responseObject.Message) {
-						setResetMessage(false, responseObject.Message);
-					} else {
-						document.getElementById("errorWin").style.visibility = '';
-					}
-				} else {
-					try {
-						responseObject = JSON.parse(mypostrequest.responseText);
-						if (responseObject.Message) {
-							setResetMessage(true, responseObject.Message);
-							return;
-						}
-					} catch (e) {
-						// not json
-					}
-					setResetMessage(true, mypostrequest.statusText);
-				}
-			}
-		};
 
-		mypostrequest.open("POST", "../useremailconfirmation", true);
-		mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		mypostrequest.setRequestHeader("Orion-Version", "1");
-		mypostrequest.send("{login='" + document.getElementById("reset").value + "', email='" + document.getElementById("resetEmail").value + "'}");
+		xhr.post('../useremailconfirmation', {
+			data: {
+				login: document.getElementById("reset").value,
+				email: document.getElementById("resetEmail").value
+			},
+			headers: {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Orion-Version': '1'
+			},
+			handleAs: 'json'
+		}).then(function(data) {	// success
+			if (data.Message) {
+				setResetMessage(false, data.Message);
+			} else {
+				document.getElementById("errorWin").style.visibility = '';
+			}
+		}, function(err) {			// error
+			try {
+				var responseObject = err.response.data;
+				if (responseObject && responseObject.Message) {
+					setResetMessage(true, responseObject.Message);
+					return;
+				}
+			} catch (e) {
+				// not json
+			}
+			setResetMessage(true, err.response.xhr.statusText);
+		});
 
 		setResetMessage(false, "Sending password reset confirmation...");
 	}
@@ -214,38 +219,37 @@ define(['domReady'], function(domReady) {
 		// shiftkey-click on Login causes Maqetta to open with no editors showing
 		// Needed sometimes if Maqetta is hanging with a particular open file
 		var resetWorkBench = LoginWindowShiftKey ? 'resetWorkbenchState=1' : '';
-		var mypostrequest = new XMLHttpRequest();
-		mypostrequest.onreadystatechange = function() {
-			if (mypostrequest.readyState === 4) {
-				if (mypostrequest.status !== 200 && window.location.href.indexOf("http") !== -1) {
-					var responseObject = JSON.parse(mypostrequest.responseText);
-					document.getElementById("errorMessage").innerHTML = responseObject.error;
-					document.getElementById("errorWin").style.visibility = '';
-				} else {
-					var redirect = getRedirect();
-					if (redirect !== null) {
-						if(resetWorkBench){
-							if(redirect.indexOf('?')>=0){
-								redirect += '&'+resetWorkBench;
-							}else{
-								redirect += '?'+resetWorkBench;
-							}
-						}
-						setCookie("login", email);
-						window.location = decodeURIComponent(redirect);
-					} else {
-						window.close();
+
+		xhr.post('../login/form', {
+			query: {
+				email: email,
+				password: password
+			},
+			headers: {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Orion-Version': '1'
+			},
+			handleAs: 'json'
+		}).then(function(data) {	// success
+			var redirect = getRedirect();
+			if (redirect !== null) {
+				if(resetWorkBench){
+					if(redirect.indexOf('?')>=0){
+						redirect += '&'+resetWorkBench;
+					}else{
+						redirect += '?'+resetWorkBench;
 					}
-
 				}
+				setCookie("login", email);
+				window.location = decodeURIComponent(redirect);
+			} else {
+				window.close();
 			}
-		};
-
-		var parameters = "email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password);
-		mypostrequest.open("POST", "../login/form", true);
-		mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		mypostrequest.setRequestHeader("Orion-Version", "1");
-		mypostrequest.send(parameters);
+		}, function(err) {			// error
+			var responseObject = err.response.data;
+			document.getElementById("errorMessage").innerHTML = responseObject.error;
+			document.getElementById("errorWin").style.visibility = '';
+		});
 	}
 
 	function validateEmail(value) {
@@ -284,30 +288,29 @@ define(['domReady'], function(domReady) {
 		}
 		document.getElementById("create_password").setAttribute("aria-invalid", "false");
 		document.getElementById("create_passwordRetype").setAttribute("aria-invalid", "false");
-		var mypostrequest = new XMLHttpRequest();
 		var password = document.getElementById("create_password").value;
-		mypostrequest.onreadystatechange = function() {
-			if (mypostrequest.readyState === 4) {
-				if (mypostrequest.status !== 200 && window.location.href.indexOf("http") !== -1) {
-					if (!mypostrequest.responseText) {
-						return;
-					}
-					var responseObject = JSON.parse(mypostrequest.responseText);
-					document.getElementById("errorMessage").innerHTML = responseObject.Message;
-					document.getElementById("errorWin").style.visibility = '';
-				} else {
-					confirmLogin(email, password);
-				}
-			}
+
+		var xhrParams = {
+			email: email,
+			password: password
 		};
-		var parameters = "email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password);
 		if (name) {
-			parameters += "&Name=" + encodeURIComponent(name);
+			xhrParams.Name = name;
 		}
-		mypostrequest.open("POST", "../users", true);
-		mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		mypostrequest.setRequestHeader("Orion-Version", "1");
-		mypostrequest.send(parameters);
+		xhr.post('../users', {
+			query: xhrParams,
+			headers: {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Orion-Version': '1'
+			},
+			handleAs: 'json'
+		}).then(function(data) {	// success
+			confirmLogin(email, password);
+		}, function(err) {			// error
+			var responseObject = err.response.data;
+			document.getElementById("errorMessage").innerHTML = responseObject.Message;
+			document.getElementById("errorWin").style.visibility = '';
+		});
 	}
 
 	function revealRegistration() {
@@ -369,7 +372,8 @@ define(['domReady'], function(domReady) {
 		var today = new Date();
 		var expireDate = new Date();
 		expireDate.setTime(today.getTime() + 3600000 * 24 * numberDays);
-		document.cookie = cookieName + "=" + escape(cookieValue) + ";expires=" + expireDate.toGMTString();
+		document.cookie = cookieName + "=" + window.escape(cookieValue) + ";expires=" +
+				expireDate.toGMTString();
 	}
 	
 	function getCookie(cookieName){
@@ -379,7 +383,7 @@ define(['domReady'], function(domReady) {
 			var eq = c.indexOf('=');
 			var name = c.substr(0, eq);
 			if(name == cookieName){
-				return unescape(c.substr(eq+1));
+				return window.unescape(c.substr(eq+1));
 			}
 		}
 		return null;
@@ -402,45 +406,33 @@ define(['domReady'], function(domReady) {
 			document.getElementById("errorMessage").innerHTML = errorMessage;
 		}
 
-		var checkusersrequest = new XMLHttpRequest();
-		checkusersrequest.onreadystatechange = function() {
-			if (checkusersrequest.readyState === 4) {
-				if (checkusersrequest.status === 200) {
-					var responseObject = JSON.parse(checkusersrequest.responseText);
-					userCreationEnabled = responseObject.CanAddUsers;
-					registrationURI = responseObject.RegistrationURI;
-					if (!userCreationEnabled && !registrationURI) {
-						formatForNoUserCreation();
-					}
-					document.getElementById("login-window").style.display = '';
-					document.getElementById("login").focus();
-				}
+		xhr.post('../login/canaddusers', {
+			headers: {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Orion-Version': '1'
+			},
+			handleAs: 'json'
+		}).then(function(data) {	// success
+			userCreationEnabled = data.CanAddUsers;
+			registrationURI = data.RegistrationURI;
+			if (!userCreationEnabled && !registrationURI) {
+				formatForNoUserCreation();
 			}
-		};
+			document.getElementById("login-window").style.display = '';
+			document.getElementById("login").focus();
+		});
 
-		checkusersrequest.open("POST", "../login/canaddusers", true);
-		checkusersrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		checkusersrequest.setRequestHeader("Orion-Version", "1");
-		checkusersrequest.send();
-
-		var checkemailrequest = new XMLHttpRequest();
-		checkemailrequest.onreadystatechange = function() {
-			if (checkemailrequest.readyState === 4) {
-				if (checkemailrequest.status === 200) {
-					var responseObject = JSON.parse(checkemailrequest.responseText);
-					if (responseObject.emailConfigured === false) {
-						document.getElementById("resetUserLink").style.display = 'none';
-					}
-
-				}
+		xhr.post('../useremailconfirmation/cansendemails', {
+			headers: {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Orion-Version': '1'
+			},
+			handleAs: 'json'
+		}).then(function(data) {	// success
+			if (data.emailConfigured === false) {
+				document.getElementById("resetUserLink").style.display = 'none';
 			}
-		};
-
-		checkemailrequest.open("POST", "../useremailconfirmation/cansendemails", true);
-		checkemailrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		checkemailrequest.setRequestHeader("Orion-Version", "1");
-		checkemailrequest.send();
-
+		});
 
 		injectPlaceholderShims();
 

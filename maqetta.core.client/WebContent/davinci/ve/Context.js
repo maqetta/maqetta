@@ -263,7 +263,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}else if(widget.isObjectWidget){
 				widget.type = widget.getObjectType();
 			}else{
-				widget.type = widget.declaredClass;
+				widget.type = widget.declaredClass.replace(/\./g, "/"); //FIXME: not a safe association
 			}
 		}
 

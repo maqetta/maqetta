@@ -314,14 +314,16 @@ define([
 				'Orion-Version': '1'
 			},
 			handleAs: 'json'
-		}).then(function(data) {	// success
+		}).then(function(response) {	// success
+			if (response.HttpCode === 201) {
+				showErrorMessage(response.Message);
+				hideRegistration();
+				return;
+			}
 			confirmLogin(email, password);
 		}, function(err) {			// error
-			var responseObject = err.response.data;
-			showErrorMessage(responseObject.Message);
-			if (err.response.status === 201) {
-				hideRegistration();
-			}
+			var response = err.response.data;
+			showErrorMessage(response.Message);
 		});
 	}
 

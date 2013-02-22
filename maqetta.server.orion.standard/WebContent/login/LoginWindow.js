@@ -14,10 +14,12 @@
 
 define([
 	'domReady',
-	'dojo/request/xhr'
+	'dojo/request/xhr',
+	'orion/PageUtil'
 ], function(
 	domReady,
-	xhr
+	xhr,
+	PageUtil
 ) {
 	var ua = window.navigator.userAgent;
 	var ieIndex = ua.indexOf('MSIE');
@@ -146,10 +148,21 @@ define([
 		return utftext;
 	}
 
-	function setResetMessage(isError, message) {
-		document.getElementById("errorMessage").innerHTML = message;
-		//document.getElementById("reset_errorList").className = isError ? "loginError" : "loginInfo";
+	function showErrorMessage(msg) {
+		if (typeof msg !== "undefined") {
+			document.getElementById("errorMessage").textContent = msg;
+		}
 		document.getElementById("errorWin").style.visibility = '';
+	}
+
+	function hideErrorMessage() {
+		document.getElementById("errorMessage").textContent = "\u00a0";
+		document.getElementById("errorWin").style.visibility = 'hidden';
+	}
+
+	function setResetMessage(isError, message) {
+		//document.getElementById("reset_errorList").className = isError ? "loginError" : "loginInfo";
+		showErrorMessage(message);
 	}
 
 	function confirmResetUser() {
@@ -173,7 +186,7 @@ define([
 			if (data.Message) {
 				setResetMessage(false, data.Message);
 			} else {
-				document.getElementById("errorWin").style.visibility = '';
+				showErrorMessage();
 			}
 		}, function(err) {			// error
 			try {
@@ -200,8 +213,8 @@ define([
 	function createOpenIdLink(openid) {
 		if (openid !== "" && openid !== null) {
 			var redirect = getRedirect();
-			if (redirect !== null) {
-				return "../login/openid?openid=" + encodeURIComponent(openid) + "&redirect=" + getRedirect();
+			if (redirect !== null && PageUtil.validateURLScheme(decodeURIComponent(redirect))) {
+				return "../login/openid?openid=" + encodeURIComponent(openid) + "&redirect=" + redirect;
 			} else {
 				return "../login/openid?openid=" + encodeURIComponent(openid);
 			}
@@ -241,37 +254,34 @@ define([
 					}
 				}
 				setCookie("login", email);
-				window.location = decodeURIComponent(redirect);
-			} else {
-				window.close();
+				redirect = decodeURIComponent(redirect);
+				if(PageUtil.validateURLScheme(redirect)) {
+					window.location = redirect;
+					return;
+				}
 			}
+			window.close();
 		}, function(err) {			// error
-			var responseObject = err.response.data;
-			document.getElementById("errorMessage").innerHTML = responseObject.error;
-			document.getElementById("errorWin").style.visibility = '';
+			showErrorMessage(err.response.data.error);
 		});
 	}
 
 	function validateEmail(value) {
 		var regex = /[a-z0-9!#$%&'*+/=?^_`{|}~.-]+@[a-z0-9-]+(\.[a-z0-9-]+)*/;
 		if(!regex.test(value)){
-			document.getElementById("errorWin").style.visibility = '';
-			document.getElementById("errorMessage").innerHTML = "Not valid email address";
+			showErrorMessage("Not valid email address");
 			return false;
 		}
-		document.getElementById("errorWin").style.visibility = 'hidden';
-		document.getElementById("errorMessage").innerHTML = "&nbsp;";
+		hideErrorMessage();
 		return true;
 	}
 
 	function validatePassword() {
 		if (document.getElementById("create_password").value !== document.getElementById("create_passwordRetype").value) {
-			document.getElementById("errorWin").style.visibility = '';
-			document.getElementById("errorMessage").innerHTML = "Passwords don't match!";
+			showErrorMessage("Passwords don't match!");
 			return false;
 		}
-		document.getElementById("errorWin").style.visibility = 'hidden';
-		document.getElementById("errorMessage").innerHTML = "&nbsp;";
+		hideErrorMessage();
 		return true;
 	}
 
@@ -308,8 +318,10 @@ define([
 			confirmLogin(email, password);
 		}, function(err) {			// error
 			var responseObject = err.response.data;
-			document.getElementById("errorMessage").innerHTML = responseObject.Message;
-			document.getElementById("errorWin").style.visibility = '';
+			showErrorMessage(responseObject.Message);
+			if (err.response.status === 201) {
+				hideRegistration();
+			}
 		});
 	}
 
@@ -334,9 +346,6 @@ define([
 
 	function formatForNoUserCreation() {
 		document.getElementById('orionRegister').style.visibility = 'hidden';
-		document.getElementById('orionOpen').style.top = '188px';
-		document.getElementById('orionOpen').style.height = '85px';
-		document.getElementById('orionOpen').style.paddingTop = '45px';
 	}
 
 	function revealResetUser() {
@@ -344,25 +353,20 @@ define([
 		if (!userCreationEnabled && !registrationURI) {
 			document.getElementById('orionRegister').style.visibility = 'hidden';
 			document.getElementById('orionReset').style.height = '212px';
-			document.getElementById('orionOpen').style.top = '251px';
-			document.getElementById('orionOpen').style.height = '50px';
-			document.getElementById('orionOpen').style.paddingTop = '17px';
 		}
 		document.getElementById('newUserHeaderShown').style.display = 'none';
 		document.getElementById('orionReset').style.visibility = '';
+		document.getElementById('reset').focus();
 	}
 
 	function hideResetUser() {
 		document.getElementById('orionLogin').style.visibility = '';
-		if (userCreationEnabled || registrationURI) {
-			document.getElementById('orionRegister').style.visibility = '';
-		} else {
-			document.getElementById('orionOpen').style.top = '188px';
-			document.getElementById('orionOpen').style.height = '85px';
-			document.getElementById('orionOpen').style.paddingTop = '45px';
-		}
 		document.getElementById('newUserHeaderShown').style.display = '';
 		document.getElementById('orionReset').style.visibility = 'hidden';
+	}
+
+	function openServerInformation() {
+		window.open("/mixloginstatic/ServerStatus.html");
 	}
 	
 	function setCookie(cookieName, cookieValue, numberDays){
@@ -402,8 +406,7 @@ define([
 		if (error) {
 			var errorMessage = decodeBase64(error);
 
-			document.getElementById("errorWin").style.visibility = '';
-			document.getElementById("errorMessage").innerHTML = errorMessage;
+			showErrorMessage(errorMessage);
 		}
 
 		xhr.post('../login/canaddusers', {
@@ -434,6 +437,24 @@ define([
 			}
 		});
 
+		xhr.get('/server-status.json', { //$NON-NLS-0$
+			timeout: 15000,
+			handleAs: 'json'
+		}).then(function(results) {
+			var messages = results.messages;
+			if (messages.length > 0) {
+				var currentDate = new Date();
+				var startDate = new Date(messages[0].startdate);
+				startDate.setHours(0, 0, 0, 0);
+				if (startDate > currentDate) return;
+				var endDate = new Date(messages[0].enddate);
+				endDate.setHours(23, 59, 59);
+				if (endDate <= currentDate)  return;
+				document.getElementById("orionInfoArea").style.visibility = '';
+				document.getElementById("orionInfoMessage").textContent = messages[0].title;
+			}
+		});
+
 		injectPlaceholderShims();
 
 		var loginCookie = getCookie('login');
@@ -461,6 +482,8 @@ define([
 			confirmLogin(null, null, e);
 			return false;
 		};
+
+		document.getElementById("orionInfoArea").onclick = openServerInformation;
 
 		document.getElementById("resetUserLink").onclick = revealResetUser;
 

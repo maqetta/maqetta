@@ -3,7 +3,6 @@ package org.davinci.server.user;
 import java.io.IOException;
 
 import org.davinci.ajaxLibrary.ILibInfo;
-import org.maqetta.server.ILinks;
 import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;
 

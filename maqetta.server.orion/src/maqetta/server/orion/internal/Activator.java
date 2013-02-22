@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 
 import maqetta.server.orion.MaqettaProjectDecorator;
 import maqetta.server.orion.user.LoginFixUpDecorator;
@@ -21,6 +22,8 @@ import org.eclipse.core.runtime.IRegistryChangeEvent;
 import org.eclipse.core.runtime.IRegistryChangeListener;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.orion.internal.server.core.IWebResourceDecorator;
+import org.eclipse.orion.server.core.PreferenceHelper;
+import org.eclipse.orion.server.useradmin.UserEmailUtil;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.maqetta.server.IDavinciServerConstants;
 import org.osgi.framework.Bundle;
@@ -48,6 +51,7 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer,
 
 	public static final String PI_SERVER_SERVLETS = "org.eclipse.orion.server.servlets"; //$NON-NLS-1$
 	public static final String PROP_USER_AREA = "org.eclipse.orion.server.core.userArea"; //$NON-NLS-1$
+
 	private ArrayList<IRegistryListener> registryChangeListeners = new ArrayList<IRegistryListener>();
 	static Activator singleton;
 
@@ -243,6 +247,8 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer,
 		registryTracker.open();
 		initializeFileSystem();
 		registerDecorators();
+		
+		fixOrion10EmailBug();
 	}
 
 	public static Bundle getBundle() {
@@ -265,4 +271,11 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer,
 		}
 	}
 
+	// Workaround for bug in Orion v1.0, where TLS was always enabled for mail.
+	private void fixOrion10EmailBug() {
+		final String CONFIG_MAIL_SMTP_STARTTLS = "mail.smtp.starttls.enable"; //$NON-NLS-1$
+		UserEmailUtil.getUtil();
+		Properties properties = System.getProperties();
+		properties.put("mail.smtp.starttls.enable", PreferenceHelper.getString(CONFIG_MAIL_SMTP_STARTTLS, "true"));
+	}
 }

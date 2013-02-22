@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.mail.MessagingException;
-import javax.mail.SendFailedException;
 import javax.servlet.ServletConfig;
 
 import org.davinci.ajaxLibrary.ILibraryManager;
@@ -29,8 +27,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
-import org.maqetta.server.mail.SimpleMessage;
-import org.maqetta.server.mail.SmtpPop3Mailer;
 
 public class ServerManager implements IServerManager {
 
@@ -44,7 +40,6 @@ public class ServerManager implements IServerManager {
 	private ILibraryManager        libraryManager;
 
 	public ServletConfig  servletConfig;
-	private static SmtpPop3Mailer mailer = null;
 	private IStorage userDir;
 	private Hashtable<String, String> options = new Hashtable<String, String>();
 
@@ -56,13 +51,6 @@ public class ServerManager implements IServerManager {
 		if (localInstall != null) {
 			ServerManager.LOCAL_INSTALL = Boolean.parseBoolean(localInstall);
 		}
-	}
-
-	public SmtpPop3Mailer getMailer(){
-		if(mailer == null) {
-			mailer = SmtpPop3Mailer.getDefault();
-		}
-		return mailer;
 	}
 
 	private ServerManager() {
@@ -323,33 +311,5 @@ public class ServerManager implements IServerManager {
 			}
 		}
 		return this.userDir;
-	}
-
-	public boolean sendEmail( String from, String to, String subject, String content) {
-		SimpleMessage email = new SimpleMessage(from, to, null, null,subject, content);
-		Exception e = null;
-
-		try {
-			SmtpPop3Mailer mailer = this.getMailer();
-
-			if(mailer==null) {
-				theLogger.log(Level.SEVERE, "Unable to get mailer");
-				return false;
-			}
-
-			mailer.sendMessage(email);
-			theLogger.log(Level.INFO, "Sent mail from: "+from+" to: "+to+ "subject: "+subject);
-			theLogger.log(Level.FINEST, "E-mail contents sent: " + content);
-		} catch (SendFailedException sfe) {
-			e = sfe;
-		} catch (MessagingException me) {
-			e = me;
-		}
-
-		if (e != null) {
-			theLogger.log(Level.SEVERE, "Failed to send mail from: "+from+" to: "+to+ "subject: "+subject, e);
-		}
-
-		return e == null;
 	}
 }

@@ -1,6 +1,7 @@
 package maqetta.core.server.command;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -24,10 +25,13 @@ import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.review.user.IDesignerUser;
 import org.davinci.server.user.IUser;
 import org.davinci.server.user.IUserManager;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.orion.server.useradmin.UserEmailUtil;
 import org.maqetta.server.Command;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ServerManager;
 
+@SuppressWarnings("restriction")
 public class AddComment extends Command {
 
 	@Override
@@ -80,16 +84,13 @@ public class AddComment extends Command {
 		}
 	}
 
-	protected void notifyRelatedPersons(IUser reviewer, IUser designer, Comment comment, HttpServletRequest req) {
+	protected void notifyRelatedPersons(IUser reviewer, IUser designer, Comment comment,
+			HttpServletRequest req) throws URISyntaxException, IOException, CoreException {
 		String to = designer.getPerson().getEmail();
 		if (to != null && !to.trim().equals("")) {
+			String subject = Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT_NOTIFICATION_SUBJECT);
 			String htmlContent = getHtmlContent(reviewer, comment, req.getRequestURL().toString());
-			String notifId = Utils.getCommonNotificationId(req);
-			ServerManager.getServerManager().sendEmail(
-					notifId,
-					designer.getPerson().getEmail(),
-					Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT_NOTIFICATION_SUBJECT),
-					htmlContent);
+			UserEmailUtil.getUtil().sendEmail(subject, htmlContent, to);
 		}
 	}
 

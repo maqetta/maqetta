@@ -10,7 +10,6 @@ plugin@maqetta.server.orion=GIT,repo=git://github.com/maqetta/maqetta.git,tag=or
 plugin@davinci.html=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/davinci.html
 plugin@maqetta.core.server=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/maqetta.core.server
 plugin@maqetta.shapes=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/maqetta.shapes
-git,tag=orion_1_0_3481,path=/davinci.joomla
 plugin@maqetta.client.orion=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/maqetta.client.orion
 plugin@maqetta.client.plugins.defaults=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/maqetta.client.plugins.defaults
 plugin@org.apache.commons.fileupload=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion_1_0_3481,path=/org.apache.commons.fileupload

@@ -176,11 +176,10 @@ define([
 			return;
 		}
 
+		var dataStr = "{login='" + document.getElementById("reset").value + "', email='" +
+				document.getElementById("resetEmail").value + "'}";
 		xhr.post('../useremailconfirmation', {
-			data: {
-				login: document.getElementById("reset").value,
-				email: document.getElementById("resetEmail").value
-			},
+			data: dataStr,
 			headers: {
 				'Content-type': 'application/x-www-form-urlencoded',
 				'Orion-Version': '1'

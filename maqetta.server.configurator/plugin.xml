@@ -47,6 +47,10 @@
             alias="/login/form"
             class="maqetta.server.orion.user.LoginFixUpFilter">
       </filter>
+      <filter
+            alias="/useremailconfirmation"
+            class="maqetta.server.orion.user.LoginFixUpFilter">
+      </filter>
    </extension>
    <extension
          point="org.eclipse.equinox.http.registry.httpcontexts">

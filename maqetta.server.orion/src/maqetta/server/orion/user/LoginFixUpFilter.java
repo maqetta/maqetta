@@ -269,11 +269,9 @@ public class LoginFixUpFilter implements Filter {
 		// set new values
 		user.setLogin(uid);
 		user.setEmail(email);
-		if (name.equals(email) || name.length() == 0) {
-			// By default, "name" was set to "login" (which was really an email).  Now set to same
-			// as new "login", to match Orion 1.0+ behavior.  The `if` statement checks that "name"
-			// still contains the default value; if it was changed by user, do not overwrite.
-			user.setName(user.getLogin());
+		if (name.length() == 0) {
+			// default 'name' to same value as 'email'
+			user.setName(email);
 		}
 
 		// update

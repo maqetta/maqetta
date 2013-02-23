@@ -26,7 +26,7 @@ public class LoginFixUpDecorator implements IWebResourceDecorator {
 		// handle POST /users/
 		try {
 			String login = representation.getString(UserConstants.KEY_LOGIN);
-			if (login.startsWith(LoginFixUpFilter.ID_TEMPLATE)) {
+			if (login.startsWith(LoginFixUpFilter.ID_PREFIX)) {
 				// if one of our temporary 'login' values, replace with UID
 				String uid = representation.getString(UserConstants.KEY_UID);
 				representation.put(UserConstants.KEY_LOGIN, uid);

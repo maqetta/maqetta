@@ -71,7 +71,7 @@ public class LoginFixUpFilter implements Filter {
 	public static final String USERS_SERVLET_ALIAS = "/users";
 	public static final String LOGIN_SERVLET_ALIAS = "/login";
 
-	public static final String ID_TEMPLATE = "00MaqTempId00";
+	public static final String ID_PREFIX = "00MaqTempId00";
 
 	static final private Logger theLogger = Logger.getLogger(LoginFixUpFilter.class.getName());
 
@@ -132,7 +132,7 @@ public class LoginFixUpFilter implements Filter {
 		User user = userAdmin.getUser(UserConstants.KEY_EMAIL, email);
 		if (user != null) {
 			String value = user.getLogin();
-			if (value.startsWith(ID_TEMPLATE)) {
+			if (value.startsWith(ID_PREFIX)) {
 				String uid = user.getUid();
 
 				// update credentials service
@@ -194,7 +194,7 @@ public class LoginFixUpFilter implements Filter {
 		synchronized (userCounter) {
 			String candidate;
 			do {
-				candidate = ID_TEMPLATE + userCounter.toString();
+				candidate = ID_PREFIX + userCounter.toString();
 				userCounter.increment();
 			} while (userAdmin.getUser(UserConstants.KEY_LOGIN, candidate) != null);
 			return candidate;

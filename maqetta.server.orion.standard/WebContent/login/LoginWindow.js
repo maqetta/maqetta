@@ -34,7 +34,11 @@ define([
 	}
 	var userCreationEnabled;
 	var registrationURI;
-	var admin_userid = 'admin';
+
+	var GENERIC_SERVER_MSG = 'A unexpected error prevented the operation from completing.  ' +
+			'Please try again.  If the problem persists, please contact the server administrator.';
+	var ADMIN_USERID = 'admin';
+	var ID_PREFIX = '00MaqTempId00'; // keep in sync w/ LoginFixUpFilter.java
 
 	function injectPlaceholderShims() {
 		function textFocus(e) {
@@ -191,10 +195,8 @@ define([
 		}, function(err) {			// error
 			try {
 				var responseObject = err.response.data;
-				if (responseObject && responseObject.Message) {
-					setResetMessage(true, responseObject.Message);
-					return;
-				}
+				setResetMessage(true, responseObject.Message);
+				return;
 			} catch (e) {
 				// not json
 			}
@@ -226,7 +228,7 @@ define([
 			email = document.getElementById('login').value;
 			password = document.getElementById('password').value;
 		}
-		if (email != admin_userid && !validateEmail(email)){
+		if (email != ADMIN_USERID && !validateEmail(email)){
 			return;
 		}
 		// shiftkey-click on Login causes Maqetta to open with no editors showing
@@ -285,6 +287,11 @@ define([
 		return true;
 	}
 
+	function fixLogin(msg, replacement) {
+		var regex = new RegExp(ID_PREFIX + '\\w+', 'g');
+		return msg.replace(regex, replacement);
+	}
+
 	function confirmCreateUser() {
 		var email = document.getElementById("create_login").value;
 		if (!validateEmail(email)){
@@ -316,14 +323,20 @@ define([
 			handleAs: 'json'
 		}).then(function(response) {	// success
 			if (response.HttpCode === 201) {
-				showErrorMessage(response.Message);
+				showErrorMessage(fixLogin(response.Message, email));
 				hideRegistration();
 				return;
 			}
 			confirmLogin(email, password);
 		}, function(err) {			// error
-			var response = err.response.data;
-			showErrorMessage(response.Message);
+			try {
+				var response = err.response.data;
+				showErrorMessage(fixLogin(response.Message, email));
+				return;
+			} catch (e) {
+				// not json
+			}
+			showErrorMessage(GENERIC_SERVER_MSG);
 		});
 	}
 

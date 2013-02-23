@@ -810,6 +810,32 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 	
 	_createTree: function(latestData){
+require(["dijit/tree/dndSource"], function(dndSource){
+	
+		//on item tree , we want to drop on containers, the root node itself, or between items in the containers
+		var itemTreeCheckItemAcceptance = function(node,source,position){
+			console.log('position='+position);
+			var sourceItem;
+			source.forInSelectedItems(function(TreeNodeItem){
+				sourceItem = TreeNodeItem.data && TreeNodeItem.data.item;
+				if(sourceItem){
+					console.log("testing drop item of type " + sourceItem.type[0]);
+				}
+				//console.log("testing to drop item of type " + item.type[0] + " and data " + item.data + ", position " + position);
+			});
+			var targetItem = dijit.getEnclosingWidget(node).item;
+			//if(item && (item.root || this._sceneStore.hasAttribute(item,"numberOfItems"))){
+				// NOTE: type == 'AppState'
+				console.log("node - type " + targetItem.type[0]);
+				//return true;
+			//}
+			//return position != "over";
+			return (sourceItem.type[0] == 'AppState' && targetItem.type[0] == 'AppState' && position != 'over');
+		}.bind(this);
+		var dndDone = function(source, nodes, copy){
+			source.__proto__.onDndDrop.call(source, source, nodes, copy);
+		}.bind(this);
+
 		if(!this._editor){
 			return;
 		}
@@ -824,6 +850,11 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 			persist: false,
 			showRoot: false,
 			autoExpand: true,
+			dndController: "dijit.tree.dndSource",
+			dragThreshold:8,
+			betweenThreshold:5,
+			checkItemAcceptance:itemTreeCheckItemAcceptance,
+			onDndDrop: dndDone,
 			className: 'StatesViewTree',
 			style: 'height:150px; overflow-x:hidden; overflow-y:auto;', 
 			_createTreeNode: function(args) {
@@ -930,6 +961,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				window.setTimeout(function(){parent.resize()}, 0);
 			}
 		}
+}.bind(this));
+
 	},
 
 //FIXME: sceneId for states might not be unique the way things are written now

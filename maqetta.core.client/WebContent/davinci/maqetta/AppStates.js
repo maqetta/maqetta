@@ -919,6 +919,21 @@ States.prototype = {
 	},
 	
 	/**
+	 * Call JSON stringify on an object, make sure
+	 * all single quotes are escaped and replace double-quotes with single quotes
+	 */
+	stringifyWithQuotes: function(o){
+		str = JSON.stringify(o);
+		// Escape single quotes that aren't already escaped
+		str = str.replace(/(\\)?'/g, function($0, $1){ 
+			return $1 ? $0 : "\\'";
+		});
+		// Replace double quotes with single quotes
+		str = str.replace(/"/g, "'");
+		return str;
+	},
+	
+	/**
 	 * Convert the _maqAppStates and _maqDeltas properties on the given node into JSON-encoded strings.
 	 * @param {Element} node
 	 * @returns {object}  Object of form {maqAppStates:<string>,maqDeltas:<string>} 
@@ -927,23 +942,17 @@ States.prototype = {
 	 */
 	serialize: function(node) {
 		var that = this;
-		function munge(propval){
+		var munge = function(propval){
 			var str = null;
 			if(node[propval]){
 				var o = require("dojo/_base/lang").clone(node[propval]);
 				delete o["undefined"];
 				if (!that._isEmpty(o)) {
-					str = JSON.stringify(o);
-					// Escape single quotes that aren't already escaped
-					str = str.replace(/(\\)?'/g, function($0, $1){ 
-						return $1 ? $0 : "\\'";
-					});
-					// Replace double quotes with single quotes
-					str = str.replace(/"/g, "'");
+					str = this.stringifyWithQuotes(o);
 				}
 			}
 			return str;
-		}
+		}.bind(this);
 		var obj = {};
 		if (!node){
 			return obj;

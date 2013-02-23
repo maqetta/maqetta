@@ -25,9 +25,10 @@ return declare(CreateTool, {
 		this._data.context = this._context;
 
 		new DeferredList(this._requireHelpers(this._data)).then(function() {
-			var widget = this._create({parent: bodyWidget}),
-				body = States.getContainer();
-			States.add(body, "_show:" + widget.getId());
+			var deferred = this._create({parent: bodyWidget});
+			deferred.then(function(widget){
+				States.add(bodyWidget, "_show:" + widget.getId());
+			});
 		}.bind(this));
 	}
 

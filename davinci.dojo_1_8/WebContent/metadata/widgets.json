@@ -627,7 +627,7 @@
             "name": "Dialog",
             "description": "Dialog",
             "type": "dijit.Dialog",
-            "category": "untested",
+            "category": "controls",
             "collection": "dijit",
             "tags": "Dialog",
             "icon": "resources/images/dialog.gif",

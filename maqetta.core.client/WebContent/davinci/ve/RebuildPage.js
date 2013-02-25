@@ -1,15 +1,13 @@
 define([
 	"dojo/_base/declare",
 	"../Workbench",
-	"../workbench/Preferences",
 	"./Context",
-	"../Theme",
 	"../model/Path",
 	"davinci/model/Factory",
 	"dojo/Deferred",
 	"dojo/promise/all",
 	"davinci/ve/commands/ChangeThemeCommand"
-], function(declare, Workbench, Preferences, Context, Theme, Path, Factory, Deferred, all, ChangeThemeCommand) {
+], function(declare, Workbench, Context, Path, Factory, Deferred, all, ChangeThemeCommand) {
 
 return declare("davinci.ve.RebuildPage", Context, {
 	/* rebuilds a pages imports based on widget dependencies.
@@ -54,10 +52,9 @@ return declare("davinci.ve.RebuildPage", Context, {
 		/* make sure this isn't an HTML fragment */
 		var headless = this._srcDocument.find({elementType: "HTMLElement", 'tag':'html'}, true);
 		if(headless==null){
-			
 			var deferred = new Deferred();
-	        return deferred.resolve(source);
-	        
+			deferred.resolve(source);
+	        return deferred;
 		}
 		 
         var elements = this._srcDocument.find({elementType: "HTMLElement"}),

@@ -36,7 +36,19 @@
 		<li>In the Scenes palette, click on the + icon to define two states "aaa" and "bbb"</li>
 		<li>In the Scenes palette, select the "bbb" state and click on the - icon to delete that state</li>
 		<li>In the Scenes palette, click on the + icon to define two states "ccc" and "ddd"</li>
-		<li>In the Scenes palette, select the "ccc" state and click on the - icon to delete that state.</li>
+		<li>In the Scenes palette, click on the + icon to define two states "ccc" and "ddd"</li>
+		<li>Verify that you can drag/drop re-order states. Try to drag states aaa, ccc, and ddd around
+			to change their order. Click undo and redo after moving a state.
+            <div class='expectedResults_subsection'>
+            	<ul>
+            		<li>You should be able to reorder states aaa, ccc and ddd by drag/drop.</li>
+            		<li>You should NOT be able to put any of the custom states before the Background state.</li>
+            		<li>You should NOT be able to move the Background state to a different position (should be locked to first position).</li>
+            		<li>As you drag, the green color indicator should only show up at valid insertion points.</li>
+            		<li>Reorder operations should be undoable.</li>
+            	</ul>
+            </div>
+		</li>
 		<li>In the Scenes palette, select the "aaa" state. Go to Outline palette and 
 				click on the eyeball icon for the Label and Map to make them invisible for the "aaa" state.
 				(These widgets should become invisible on the canvas).</li>

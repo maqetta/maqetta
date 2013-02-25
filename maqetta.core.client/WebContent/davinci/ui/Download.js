@@ -58,8 +58,8 @@ define(["dojo/_base/declare",
 				uiArray = uiArray.concat([
 				    "<td class='columna'>" + name + "</td>",
 					"<td class='columnb'>" + userLib.version + "</td>",
-					"<td class='columnc'><input type='checkbox' dojoType='dijit.form.CheckBox' checked></input></td>",
-					"<td class='columnd'><input type='text' dojoType='dijit.form.TextBox' value='" + userLib.initRoot + "'></input></td>",
+					"<td class='columnc'><input type='checkbox' data-dojo-type='dijit/form/CheckBox' checked></input></td>",
+					"<td class='columnd'><input type='text' data-dojo-type='dijit/form/TextBox' value='" + userLib.initRoot + "'></input></td>",
 					"</tr>"]);
 			}, this);
 			uiArray.push("</table>");
@@ -151,20 +151,6 @@ define(["dojo/_base/declare",
 		
 		okButton: function(){
 			if (this.__fileName.isValid()) {
-				function makeTimeoutFunction(downloadFiles, fileName, root, libs, options){
-					return function(){
-						var files = downloadFiles;
-						var fn = fileName;
-
-						Resource.download(files, fn, root, libs, options);		
-						/*
-						for(var i=0;i<pgs.length;i++){
-							pgs[i].removeWorkingCopy();
-						}
-						*/
-						
-					};
-				}
 				var fileName = dojo.attr( this.__fileName, "value");
 				if (fileName.slice(-4) != ".zip") {
 					fileName += ".zip";
@@ -186,7 +172,7 @@ define(["dojo/_base/declare",
 						options.fullsource = "1";
 					}
 					
-					setTimeout(makeTimeoutFunction(userFiles, fileName, this.getRoot(), actualLibs, options), 300);					
+					setTimeout(Resource.download(userFiles, fileName, this.getRoot(), actualLibs, options), 300);					
 				}.bind(this));
 			}
 		},

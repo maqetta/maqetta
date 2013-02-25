@@ -683,28 +683,19 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return this._fullResourcePath;
 	},
 
-	getCurrentBasePath: function(){
-		var base = new Path(Workbench.getProject());
-		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
-		if(prefs.webContentFolder!==null && prefs.webContentFolder!==""){
-			basePath = base.append(prefs.webContentFolder);
-		}else{
-			basePath = base;
+	_getCurrentBasePath: function(){
+		var base = new Path(Workbench.getProject()),
+			prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base);
+
+		if (prefs.webContentFolder!==null && prefs.webContentFolder!=="") {
+			base = base.append(prefs.webContentFolder);
 		}
-		return basePath;
+		return base;
 	},
 
-	//FIXME: private. inline?
-	getCurrentHtmlFolderPath: function(){
-		var currentHtmlFilePath = this.getFullResourcePath();
-		return currentHtmlFilePath.getParentPath();
-	},
-
-	//FIXME: private
 	getRelativeFileString: function(filename){
-		var currentHtmlFolderPath = this.getCurrentHtmlFolderPath();
-		var folderPath = this.getCurrentBasePath();
-		var filePath = folderPath.append(filename);
+		var currentHtmlFolderPath = this.getFullResourcePath().getParentPath(),
+			filePath = this._getCurrentBasePath().append(filename);
 		return filePath.relativeTo(currentHtmlFolderPath).toString();
 	},
 
@@ -715,9 +706,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		return this._appCssRelativeFile;
 	},
-	
+
 	//FIXME: consider inlining.  Is caching necessary?
-	getAppJsRelativeFile: function(){
+	_getAppJsRelativeFile: function(){
 		if(!this._appJsRelativeFile){
 			this._appJsRelativeFile = this.getRelativeFileString('app.js');
 		}
@@ -840,7 +831,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			// Automatically include app.css and app.js so users 
 			// have a place to put their custom CSS rules and JavaScript logic
 			this.addModeledStyleSheet(this.getAppCssRelativeFile(), true /*skipDomUpdate*/);
-			var appJsUrl = this.getAppJsRelativeFile();
+			var appJsUrl = this._getAppJsRelativeFile();
 			this.addHeaderScript(appJsUrl);
 		}
 		

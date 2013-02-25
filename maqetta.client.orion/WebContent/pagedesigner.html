@@ -79,7 +79,8 @@
 							});
 						}
 					}
-					dojo.subscribe("/davinci/ui/initialPerspectiveReady", loadReviews)					
+					// dojo.subscribe("/davinci/ui/initialPerspectiveReady", loadReviews);	 #3763 this seems to fire to soon
+					dojo.subscribe("/davinci/workbench/ready", loadReviews);  // #3763 on slow network with FF we need to wait until the workbench is ready	
 					Workbench.run();
 				};
 

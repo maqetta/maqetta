@@ -66,7 +66,7 @@ define(["dojo/_base/declare",
 			dojo.place(uiArray.join(""), this._tableDiv);
 
 			// parse dijits
-			dojo.parser.parse(this._tableDiv);
+			parser.parse(this._tableDiv);
 		},
 	
 		_getLibRoot: function(id,version){
@@ -156,7 +156,6 @@ define(["dojo/_base/declare",
 					fileName += ".zip";
 				}
 				this._rewriteUrls().then(function() {
-					/* have to close the dialog before the download call starts */
 					var actualLibs = this._getLibs().filter(function(lib){
 						return lib.includeSrc;
 					});
@@ -168,15 +167,16 @@ define(["dojo/_base/declare",
 					if (this.__fullSource && this.__fullSource.getValue()) {
 						options.fullsource = "1";
 					}
-					
-					setTimeout(
+
+					// have to close the dialog before the download call starts
+					setTimeout(function(){
 						Resource.download(
 							this._getResources(),
 							fileName,
 							this.getRoot(),
 							actualLibs,
-							options),
-						300);					
+							options);
+					}.bind(this), 300);
 				}.bind(this));
 			}
 		},

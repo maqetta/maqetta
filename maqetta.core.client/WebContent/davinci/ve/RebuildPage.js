@@ -1,13 +1,12 @@
 define([
 	"dojo/_base/declare",
-	"../Workbench",
 	"./Context",
 	"../model/Path",
 	"davinci/model/Factory",
 	"dojo/Deferred",
 	"dojo/promise/all",
 	"davinci/ve/commands/ChangeThemeCommand"
-], function(declare, Workbench, Context, Path, Factory, Deferred, all, ChangeThemeCommand) {
+], function(declare, Context, Path, Factory, Deferred, all, ChangeThemeCommand) {
 
 return declare("davinci.ve.RebuildPage", Context, {
 	/* rebuilds a pages imports based on widget dependencies.

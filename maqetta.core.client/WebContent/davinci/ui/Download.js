@@ -156,11 +156,8 @@ define(["dojo/_base/declare",
 					fileName += ".zip";
 				}
 				this._rewriteUrls().then(function() {
-					var userLibs = this._getLibs(),
-						userFiles = this._getResources();
-
 					/* have to close the dialog before the download call starts */
-					var actualLibs = userLibs.filter(function(lib){
+					var actualLibs = this._getLibs().filter(function(lib){
 						return lib.includeSrc;
 					});
 		
@@ -172,7 +169,14 @@ define(["dojo/_base/declare",
 						options.fullsource = "1";
 					}
 					
-					setTimeout(Resource.download(userFiles, fileName, this.getRoot(), actualLibs, options), 300);					
+					setTimeout(
+						Resource.download(
+							this._getResources(),
+							fileName,
+							this.getRoot(),
+							actualLibs,
+							options),
+						300);					
 				}.bind(this));
 			}
 		},

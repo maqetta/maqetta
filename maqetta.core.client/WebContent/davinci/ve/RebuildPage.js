@@ -72,7 +72,7 @@ return declare("davinci.ve.RebuildPage", Context, {
             	promises.push(this.loadRequires(type.replace(/\./g, "/"), true, true, true));
             }
         }
-        ;
+
         if (theme) {
             this.changeThemeBase(theme, this._resourcePath);
         }
@@ -85,7 +85,7 @@ return declare("davinci.ve.RebuildPage", Context, {
         var cssChanges = this.getPageCss();
         var jsChanges = this.getPageJs();
 
-        var basePath = this.getCurrentBasePath();
+        var basePath = this._getCurrentBasePath();
         var resourceParentPath = this._resourcePath.getParentPath();
         for ( var i = 0; i < cssChanges.length; i++ ) {
             var cssFilePath = basePath.append(cssChanges[i]);
@@ -182,15 +182,6 @@ return declare("davinci.ve.RebuildPage", Context, {
 				this.addModeledStyleSheet(relativePath.toString(), new Path(file), true);
 			}, this);
 		}
-	},
-	
-	getCurrentBasePath: function(){
-		var base = new Path(Workbench.getProject());
-		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base);
-		if(prefs.webContentFolder !== null && prefs.webContentFolder !== ""){
-			base = base.append(prefs.webContentFolder);
-		}
-		return base;
 	}
 });
 });

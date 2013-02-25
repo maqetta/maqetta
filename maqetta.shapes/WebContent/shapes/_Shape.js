@@ -46,21 +46,36 @@ define([
 		},
 		
 		startup: function(){
-			if(this.domNode){
-				this.resize();
-				this._bboxStartup = this._bbox;
-			}
-			var that = this;
-			//FIXME: setTimeout hack to address possible timing problem
+			
+			// In some scenarios, there is a possible timing problem
 			//with loading of the shapes.css file, which might not be available
 			//for the first shapes widget added to a document.
-			setTimeout(function(){
-				// In case shape has been deleted before timeout gets triggered
-				if(that.domNode && that.domNode.ownerDocument){
-					that.resize();
-					that._bboxStartup = that._bbox;
+			var shapes_css_check = function(counter){
+				var styleSheets = this.domNode && this.domNode.ownerDocument && this.domNode.ownerDocument.styleSheets;
+				if(!styleSheets){
+					styleSheets = [];
 				}
-			}, 1000);
+				var loaded = false;
+				for(var ss=0; ss<styleSheets.length; ss++){
+					var styleSheet = styleSheets[ss];
+					if(styleSheet.href.indexOf('shapes.css') >= 0 && styleSheet.cssRules && styleSheet.cssRules.length > 0){
+						loaded = true;
+						this.resize();
+						this._bboxStartup = this._bbox;
+						break;
+					}
+				}
+				// Try again once every second for up to 10 tries
+				if(!loaded && counter<10){
+					setTimeout(function(counter){
+						shapes_css_check(++counter)
+					}.bind(this, counter), 1000);
+				}
+				
+			}.bind(this);
+			
+			var counter = 0;
+			shapes_css_check(counter);
 		},
 		
 		resize: function(){

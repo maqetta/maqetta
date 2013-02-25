@@ -11,6 +11,7 @@ define([
 	"dojo/i18n!dijit/nls/common",
 	//"dojo/i18n!./nls/webContent",
 	"dojo/text!./templates/MultiFieldSmartInput.html",
+	"dijit/Tooltip",
 	"davinci/css!./templates/MultiFieldSmartInput.css"
 ], function(
 	declare,
@@ -24,7 +25,8 @@ define([
 	entities,
 	commonNls,
 //	webContent,
-	mainTemplateString
+	mainTemplateString,
+	Tooltip
 ) {
 
  
@@ -193,11 +195,25 @@ var MultiFieldSmartInput = declare(SmartInput, {
 	},
 	
 	connectEditBoxes: function() {
+		debugger;
 		this.property.forEach (function(p) {
-			var targetEditBoxDijit = dijit.byId('MultiFieldSmartInput_SmartInput_'+p.property);
-			this._connection.push(dojo.connect(targetEditBoxDijit, "onMouseDown", this, "stopEvent"));
+			var targetDijit = dijit.byId('MultiFieldSmartInput_SmartInput_'+p.property);
+			this._connection.push(dojo.connect(targetDijit, "onMouseDown", this, "stopEvent"));
+			targetDijit = dijit.byId('MultiFieldSmartInput_SmartInput_checkbox'+p.property);
+			this._connection.push(dojo.connect(targetDijit, "onClick", this, "htmlCheckbox"));
+			 new Tooltip({
+				 	id: 'MultiFieldSmartInput_SmartInput_tooltip'+p.property,
+		            connectId: [targetDijit.domNode],
+		            label: "the text for the tooltip"
+		        });
+			
 		}.bind(this));
 		
+		
+	},
+	
+	htmlCheckbox: function(e) {
+		debugger;
 	},
 	
 	setStartSize: function() {
@@ -250,6 +266,7 @@ var MultiFieldSmartInput = declare(SmartInput, {
 	resize: function(e) {
 	//	this.inherited(arguments);	
 		var labelWidth = 40;
+		
 		var tds = dojo.query('.MultiFieldSmartInput_SmartInput_label', 'davinci.ve.input.MultiFieldSmartInput_table');
 		// Find the widest label
 		tds.forEach(function(td){
@@ -261,6 +278,20 @@ var MultiFieldSmartInput = declare(SmartInput, {
 		tds.forEach(function(td){
 			if (td.clientWidth < labelWidth) {
 				dojo.style(td, 'width',  labelWidth + "px");
+			}
+		});
+		var checkboxWidth = 0;
+		tds = dojo.query('.MultiFieldSmartInput_SmartInput_checkbox', 'davinci.ve.input.MultiFieldSmartInput_table');
+		// Find the widest checkbox
+		tds.forEach(function(td){
+			if (td.clientWidth > checkboxWidth) {
+				checkboxWidth = td.clientWidth;
+			}
+		});
+		// set all checkbox tds to the widest label
+		tds.forEach(function(td){
+			if (td.clientWidth < checkboxWidth) {
+				dojo.style(td, 'width',  checkboxWidth + "px");
 			}
 		});
 		var targetObj = dojo.byId("iedResizeDiv");
@@ -275,7 +306,7 @@ var MultiFieldSmartInput = declare(SmartInput, {
 		}
 		this.property.forEach (function(p) {
 			var targetEditBoxDijit = dijit.byId('MultiFieldSmartInput_SmartInput_'+p.property);
-			targetEditBoxDijit._setStyleAttr({width: targetObj.clientWidth - (labelWidth + 20) + "px"});
+			targetEditBoxDijit._setStyleAttr({width: targetObj.clientWidth - (labelWidth + checkboxWidth + 20) + "px"});
 		}.bind(this));
 		/*if (targetEditBoxDijit) {
 			targetEditBoxDijit._setStyleAttr({width: boxWidth + "px", height: boxheight + "px", maxHeight: boxheight + "px"}); // needed for multi line
@@ -316,9 +347,13 @@ var MultiFieldSmartInput = declare(SmartInput, {
 			tableContent +=  '<tr><td class="MultiFieldSmartInput_SmartInput_label" >'+this.getTitle(p.property)+'</td>'+
 							'<td> <div class="MultiFieldSmartInput_SmartInput_value">'+
 							    '<input type="text" name="MultiFieldSmartInput_SmartInput_'+p.property+
-							    '"  data-dojo-type="dijit.form.TextBox" data-dojo-props="trim:true" value="'+value+
+							    '"  data-dojo-type="dijit/form/TextBox" data-dojo-props="trim:true" value="'+value+
 							    '" id="MultiFieldSmartInput_SmartInput_'+p.property+'">'+
-						    ' </div></td></tr>';
+						    ' </div></td>'+
+						    '<td class="MultiFieldSmartInput_SmartInput_checkbox">'+
+						    	'<input id="MultiFieldSmartInput_SmartInput_checkbox'+p.property+'" name="MultiFieldSmartInput_SmartInput_checkbox'+p.property+'" data-dojo-type="dijit/form/CheckBox" />'+
+						    	'<label for="MultiFieldSmartInput_SmartInput_checkbox'+p.property+'">html</label>'+
+						    '</td></tr>';
 			if (p.multiLine) {
 				/*<td class="MultiFieldSmartInput_SmartInput_label" >{value}</td> 
 		        <td>

@@ -151,7 +151,13 @@ var uiResource = {
 					themeSet:themeSet
 				};
 				uiResource.openResource(resource, newHtmlParams);
-				Workbench.workbenchStateCustomPropSet('nhfo',options);
+				var allOptions = Workbench.workbenchStateCustomPropGet('nhfo');
+				if(!allOptions){
+					allOptions = {};
+				}
+				var projectName = Workbench.getActiveProject();
+				allOptions[projectName] = options;
+				Workbench.workbenchStateCustomPropSet('nhfo',allOptions);
 			};
 			Workbench.showModal(newDialog, params.title, '', executor, true);
 		},

@@ -1,15 +1,12 @@
 define([
 	"dojo/_base/declare",
-	"../Workbench",
-	"../workbench/Preferences",
 	"./Context",
-	"../Theme",
 	"../model/Path",
 	"davinci/model/Factory",
 	"dojo/Deferred",
 	"dojo/promise/all",
 	"davinci/ve/commands/ChangeThemeCommand"
-], function(declare, Workbench, Preferences, Context, Theme, Path, Factory, Deferred, all, ChangeThemeCommand) {
+], function(declare, Context, Path, Factory, Deferred, all, ChangeThemeCommand) {
 
 return declare("davinci.ve.RebuildPage", Context, {
 	/* rebuilds a pages imports based on widget dependencies.
@@ -54,10 +51,9 @@ return declare("davinci.ve.RebuildPage", Context, {
 		/* make sure this isn't an HTML fragment */
 		var headless = this._srcDocument.find({elementType: "HTMLElement", 'tag':'html'}, true);
 		if(headless==null){
-			
 			var deferred = new Deferred();
-	        return deferred.resolve(source);
-	        
+			deferred.resolve(source);
+	        return deferred;
 		}
 		 
         var elements = this._srcDocument.find({elementType: "HTMLElement"}),
@@ -69,10 +65,10 @@ return declare("davinci.ve.RebuildPage", Context, {
             var n = elements[i];
             var type = n.getAttribute("data-dojo-type") || n.getAttribute("dojoType") || n.getAttribute("dvwidget");
             if (type != null){
-            	promises.push(this.loadRequires(type, true, true, true));
+            	promises.push(this.loadRequires(type.replace(/\./g, "/"), true, true, true));
             }
         }
-        ;
+
         if (theme) {
             this.changeThemeBase(theme, this._resourcePath);
         }
@@ -85,7 +81,7 @@ return declare("davinci.ve.RebuildPage", Context, {
         var cssChanges = this.getPageCss();
         var jsChanges = this.getPageJs();
 
-        var basePath = this.getCurrentBasePath();
+        var basePath = this._getCurrentBasePath();
         var resourceParentPath = this._resourcePath.getParentPath();
         for ( var i = 0; i < cssChanges.length; i++ ) {
             var cssFilePath = basePath.append(cssChanges[i]);
@@ -182,15 +178,6 @@ return declare("davinci.ve.RebuildPage", Context, {
 				this.addModeledStyleSheet(relativePath.toString(), new Path(file), true);
 			}, this);
 		}
-	},
-	
-	getCurrentBasePath: function(){
-		var base = new Path(Workbench.getProject());
-		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base);
-		if(prefs.webContentFolder !== null && prefs.webContentFolder !== ""){
-			base = base.append(prefs.webContentFolder);
-		}
-		return base;
 	}
 });
 });

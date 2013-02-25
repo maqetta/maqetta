@@ -51,7 +51,12 @@ define(["dojo/_base/declare",
 			if(!showDevices){
 				this.nhfo_outer2.style.display = 'none';
 			}
-			var lastDialogValues = Workbench.workbenchStateCustomPropGet('nhfo');
+			var lastDialogValues;
+			var allOptions = Workbench.workbenchStateCustomPropGet('nhfo');
+			if(allOptions){
+				var projectName = Workbench.getActiveProject();
+				lastDialogValues = allOptions[projectName];
+			}
 			//var defaultThemeSet = this.getDefaultThemeSet();
 			var defaultThemeSet = Runtime.getDefaultThemeSet();
 			this._selectedThemeSet = lastDialogValues ? lastDialogValues.themeSet : defaultThemeSet /*undefined*/;

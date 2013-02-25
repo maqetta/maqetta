@@ -231,7 +231,15 @@ define(["dojo/_base/declare",
 							}
 
 							var cwm = new ChangeWillModify();
-							var dialog = davinci.Workbench.showDialog("", cwm, {width: 350}, dojo.hitch(this, _submit), null, null, true);
+							var dialog = davinci.Workbench.showDialog({
+								title: "", 
+								content: cwm, 
+								style: {width: 350}, 
+								okCallback: dojo.hitch(this, _submit), 
+								okLabel: null, 
+								hideCancel: null, 
+								submitOnEnter: true
+							});
 
 							dojo.connect(dialog, "onCancel", dojo.hitch(this, function() {
 									if (cascadeBatch){

@@ -73,7 +73,7 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 			dijitWidget.domNode._dvWidget = this;
 			this.isLayoutContainer = dijitWidget.isLayoutContainer;
 		} else {
-			this.type = dijitWidget.declaredClass;
+			this.type = dijitWidget.declaredClass.replace(/\./g, "/"); //FIXME: not a safe association;
 		}
 
 		var allowedChild = davinci.ve.metadata.getAllowedChild(this.type);

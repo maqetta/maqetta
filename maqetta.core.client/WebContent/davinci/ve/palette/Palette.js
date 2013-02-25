@@ -2,6 +2,7 @@ define([
     "dojo/_base/declare",
     "dojo/_base/lang",
 	"dojo/_base/connect",
+	"dojo/on",
 	"dojo/query",
 	"dojo/dom-class",
 	"dojo/Deferred",
@@ -26,6 +27,7 @@ define([
 	declare,
 	Lang,
 	connect,
+	On,
 	Query,
 	domClass,
 	Deferred,
@@ -368,7 +370,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 			if(component.items){
 				dojo.forEach(component.items, function(item){
 					var iconSrc = item.iconBase64 || this._getIconUri(item.icon, "ve/resources/images/file_obj.gif");
-					var selector = "img.davinci_"+item.type.replace(/\./g, "_");
+					var selector = "img.davinci_"+item.type.replace(/[\.\/]/g, "_");
 					var rule = "{background-image: url(" + iconSrc + ")}";
 					if(dojo.isIE){
 						sheet.addRule(selector, rule);
@@ -537,13 +539,23 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		td2.className = "dojoyPaletteHeaderTableCol2";
 		tr.appendChild(td2);
 
+		var filterContainer = dojo.doc.createElement("div");
+		filterContainer.className = 'dojoyPaletteFilterContainer';
+		td1.appendChild(filterContainer);
+
 		var input = dojo.doc.createElement("input");
-		td1.appendChild(input);
-		this.toolbarDiv.appendChild(div);
+		filterContainer.appendChild(input);
 		
 		var searchString =  this._resource["filter"]+"...";
-		this.filterField = new TextBox({style: "width: 99%", placeHolder: searchString}, input);
+		this.filterField = new TextBox({style: "width: 99%", placeHolder: searchString, 'class':'dojoyPaletteFilterTextBox'}, input);
 		dojo.connect(this.filterField, "onKeyUp", this, "_filter");
+		
+		var clearIcon = dojo.doc.createElement("div");
+		clearIcon.className = 'dojoyPaletteFilterClearIcon';
+		filterContainer.appendChild(clearIcon);
+		On(clearIcon, "click", function(e){
+			this._clearFilter();
+		}.bind(this));
 
 		var menu = new DropDownMenu({ style: "display: none;"});
 		var menuItem1 = new MenuItem({
@@ -570,6 +582,8 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		});
 		td2.appendChild(button.domNode);
 
+		this.toolbarDiv.appendChild(div);
+
 	},
 	
 	_updateShowAllWidgetsPreference: function(newValue){
@@ -595,7 +609,12 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		}
 	},
 	
-	_filter: function(e) {
+	_clearFilter: function(){
+		this.filterField.set("value", ""),
+		this._filter();
+	},
+	
+	_filter: function() {
 		var context = Runtime.currentEditor.getContext();
 		var comptype = context.getCompType();
 		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', Workbench.getProject());
@@ -642,9 +661,11 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 	    if (value === '') {
 	        action = resetWidgets;
 	        dojo.removeClass(this.domNode, 'maqWidgetsFiltered');
+	        dojo.removeClass(this.toolbarDiv, 'maqWidgetsToolbarFiltered');
 	    } else {
 	        action = filterWidgets;
 	        dojo.addClass(this.domNode, 'maqWidgetsFiltered');
+	        dojo.addClass(this.toolbarDiv, 'maqWidgetsToolbarFiltered');
 	    }
         this.getChildren().forEach(action);
 	},

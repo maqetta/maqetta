@@ -59,7 +59,14 @@ return declare(ContainerInput, {
 			hideCancel = true;
 		}
 
-		this._inline = Dialog.showDialog(dijitNls.borderContainerDialog, this._input, {width: 560, height: 380}, lang.hitch(this, "updateWidget"), null, hideCancel);
+		this._inline = Dialog.showDialog({
+			title: dijitNls.borderContainerDialog, 
+			content: this._input, 
+			style: {width: 560, height: 380}, 
+			okCallback: lang.hitch(this, "updateWidget"), 
+			okLabel: null, 
+			hideCancel: hideCancel
+		});
 
 		this._input.domNode.onkeypress = lang.hitch(this,"onKeyPress");
 		var obj = this._input.sidebarRadio;

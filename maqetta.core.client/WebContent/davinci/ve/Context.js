@@ -263,7 +263,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}else if(widget.isObjectWidget){
 				widget.type = widget.getObjectType();
 			}else{
-				widget.type = widget.declaredClass;
+				widget.type = widget.declaredClass.replace(/\./g, "/"); //FIXME: not a safe association
 			}
 		}
 
@@ -683,28 +683,19 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return this._fullResourcePath;
 	},
 
-	getCurrentBasePath: function(){
-		var base = new Path(Workbench.getProject());
-		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
-		if(prefs.webContentFolder!==null && prefs.webContentFolder!==""){
-			basePath = base.append(prefs.webContentFolder);
-		}else{
-			basePath = base;
+	_getCurrentBasePath: function(){
+		var base = new Path(Workbench.getProject()),
+			prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base);
+
+		if (prefs.webContentFolder!==null && prefs.webContentFolder!=="") {
+			base = base.append(prefs.webContentFolder);
 		}
-		return basePath;
+		return base;
 	},
 
-	//FIXME: private. inline?
-	getCurrentHtmlFolderPath: function(){
-		var currentHtmlFilePath = this.getFullResourcePath();
-		return currentHtmlFilePath.getParentPath();
-	},
-
-	//FIXME: private
 	getRelativeFileString: function(filename){
-		var currentHtmlFolderPath = this.getCurrentHtmlFolderPath();
-		var folderPath = this.getCurrentBasePath();
-		var filePath = folderPath.append(filename);
+		var currentHtmlFolderPath = this.getFullResourcePath().getParentPath(),
+			filePath = this._getCurrentBasePath().append(filename);
 		return filePath.relativeTo(currentHtmlFolderPath).toString();
 	},
 
@@ -715,9 +706,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 		return this._appCssRelativeFile;
 	},
-	
+
 	//FIXME: consider inlining.  Is caching necessary?
-	getAppJsRelativeFile: function(){
+	_getAppJsRelativeFile: function(){
 		if(!this._appJsRelativeFile){
 			this._appJsRelativeFile = this.getRelativeFileString('app.js');
 		}
@@ -840,7 +831,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			// Automatically include app.css and app.js so users 
 			// have a place to put their custom CSS rules and JavaScript logic
 			this.addModeledStyleSheet(this.getAppCssRelativeFile(), true /*skipDomUpdate*/);
-			var appJsUrl = this.getAppJsRelativeFile();
+			var appJsUrl = this._getAppJsRelativeFile();
 			this.addHeaderScript(appJsUrl);
 		}
 		
@@ -1345,7 +1336,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			//to always check that scriptAdditions includes the dojo.require() for this widget.
 			//Cleans up after a bug we had (7714) where model wasn't getting updated, so
 			//we had old files that were missing some of their dojo.require() statements.
-			prereqs.push(this.loadRequires(type, false/*doUpdateModel*/, true/*doUpdateModelDojoRequires*/));
+			prereqs.push(this.loadRequires((type||"").replace(/\./g, "/"), false/*doUpdateModel*/, true/*doUpdateModelDojoRequires*/));
 			prereqs.push(this._preProcess(n));
 //			this.resolveUrl(n);
 			this._preserveStates(n, states);
@@ -1437,7 +1428,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		//need a helper to pre process widget
 		// also, prime the helper cache
         var type = node.getAttribute("data-dojo-type") || node.getAttribute("dojoType");
-        return Widget.requireWidgetHelper(type).then(function(helper) {        	
+        return Widget.requireWidgetHelper((type||"").replace(/\./g, "/")).then(function(helper) {        	
 	        if(helper && helper.preProcess){
 	            helper.preProcess(node, this);
 	        }

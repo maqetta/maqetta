@@ -29,7 +29,7 @@ return declare("davinci.ve.ObjectWidget", _Widget, {
 			domAttr.set(this.domNode, 'jsId', id);
 			var type = this.getObjectType();
 			if (type) {
-				var c = dj.getObject(type);
+				var c = dj.getObject(type.replace(/\//g, ".")); // FIXME: assumes global object definition matching module id
 				if (c) {
 					if (c.markupFactory) {
 						object = c.markupFactory(this._params, this.domNode, c);
@@ -56,8 +56,10 @@ return declare("davinci.ve.ObjectWidget", _Widget, {
 	},
 
 	getObjectType: function() {
-		var node = this.domNode;
-		return domAttr.get(node, 'data-dojo-type') || domAttr.get(node, 'dojoType');
+		var node = this.domNode,
+			type = domAttr.get(node, 'data-dojo-type') || domAttr.get(node, 'dojoType');
+		type = type.replace(/\./g, "/");
+		return type;
 	},
 
 	getObjectId: function() {

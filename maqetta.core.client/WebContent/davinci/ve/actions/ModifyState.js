@@ -108,6 +108,7 @@ var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_Widget
 		}
 		dijitFocus.focus(state_rename_new_name_node);
 		var state_rename_do_it_button = dijit.byId('state_rename_do_it');
+		var state_rename_cancel_button = dijit.byId('state_rename_cancel');
 		state_rename_do_it_button.connect(state_rename_do_it_button, "onMouseDown", function(e){
 			// There is something funny going on in Maqetta with mousedown listeners
 			// where focus is getting reassigned. This messes up Dojo's logic for 
@@ -118,8 +119,16 @@ var ModifyStateWidget = declare("davinci.ve.actions.ModifyStateWidget", [_Widget
 			// before the onClick event would ever fire.
 			e.stopPropagation();
 		});
+		state_rename_cancel_button.connect(state_rename_do_it_button, "onMouseDown", function(e){
+			// See comment above
+			e.stopPropagation();
+		});
 		state_rename_do_it_button.connect(state_rename_do_it_button, "onClick", function(e){
 			this.renameStateDoIt(e);
+		}.bind(this));
+		state_rename_cancel_button.connect(state_rename_cancel_button, "onClick", function(e){
+			var state_rename_tooltip_dialog = dijit.byId('state_rename_tooltip_dialog');
+			dijitPopup.close(state_rename_tooltip_dialog);
 		}.bind(this));
 	},
 	

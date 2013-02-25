@@ -13,7 +13,7 @@
     "widgets": [
         {
             "name": "Text",
-            "type": "shapes.Text",
+            "type": "shapes/Text",
             "category": "shapes",
             "collection": "shapes",
             "tags": "Text",
@@ -37,7 +37,7 @@
         },
         {
             "name": "Line",
-            "type": "shapes.Line",
+            "type": "shapes/Line",
             "category": "shapes",
             "collection": "shapes",
             "tags": "Line",
@@ -57,7 +57,7 @@
         },
         {
             "name": "Arrow",
-            "type": "shapes.Line",
+            "type": "shapes/Line",
             "category": "shapes",
             "collection": "shapes",
             "tags": "Arrow",
@@ -78,7 +78,7 @@
         },
         {
             "name": "Polyline",
-            "type": "shapes.Line",
+            "type": "shapes/Line",
             "category": "shapes",
             "collection": "shapes",
             "tags": "Polyline",
@@ -99,7 +99,7 @@
         },
         {
             "name": "Polyline Arrow",
-            "type": "shapes.Line",
+            "type": "shapes/Line",
             "category": "shapes",
             "collection": "shapes",
             "tags": "PolylineArrow",
@@ -121,7 +121,7 @@
         },
         {
             "name": "Circle",
-            "type": "shapes.Circle",
+            "type": "shapes/Circle",
             "category": "shapes",
             "collection": "shapes",
             "tags": "Circle",
@@ -138,7 +138,7 @@
         },
         {
             "name": "Rectangle",
-            "type": "shapes.Rectangle",
+            "type": "shapes/Rectangle",
             "category": "shapes",
             "collection": "shapes",
             "tags": "Rectangle",
@@ -155,7 +155,7 @@
         },
         {
             "name": "RoundedRectangle",
-            "type": "shapes.Rectangle",
+            "type": "shapes/Rectangle",
             "category": "shapes",
             "collection": "shapes",
             "tags": "RoundedRectangle",

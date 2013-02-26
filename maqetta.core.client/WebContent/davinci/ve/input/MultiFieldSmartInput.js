@@ -199,13 +199,18 @@ var MultiFieldSmartInput = declare(SmartInput, {
 		this.property.forEach (function(p) {
 			var targetDijit = dijit.byId('MultiFieldSmartInput_SmartInput_'+p.property);
 			this._connection.push(dojo.connect(targetDijit, "onMouseDown", this, "stopEvent"));
-			targetDijit = dijit.byId('MultiFieldSmartInput_SmartInput_checkbox'+p.property);
-			this._connection.push(dojo.connect(targetDijit, "onClick", this, "htmlCheckbox"));
-			 new Tooltip({
-				 	id: 'MultiFieldSmartInput_SmartInput_tooltip'+p.property,
-		            connectId: [targetDijit.domNode],
-		            label: "the text for the tooltip"
-		        });
+			var checkboxDiv = dojo.byId('MultiFieldSmartInput_SmartInput_checkbox_div_'+p.property);
+			if (p.supportsHTML) {
+				targetDijit = dijit.byId('MultiFieldSmartInput_SmartInput_checkbox_'+p.property);
+				this._connection.push(dojo.connect(targetDijit, "onClick", this, "htmlCheckbox"));
+				 new Tooltip({
+					 	id: 'MultiFieldSmartInput_SmartInput_checkbox_'+p.property+'_tooltip',
+			            connectId: [checkboxDiv],
+			            label: "the text for the tooltip"
+			        });
+			} else {
+				dojo.style(checkboxDiv, 'display', 'none');
+			}
 			
 		}.bind(this));
 		
@@ -213,6 +218,18 @@ var MultiFieldSmartInput = declare(SmartInput, {
 	},
 	
 	htmlCheckbox: function(e) {
+		debugger;
+		var id = e.currentTarget.id.split("_");
+		var prop = id[id.length-1];
+		var editBox = dijit.byId('MultiFieldSmartInput_SmartInput_'+prop);
+		var targetDijit = dijit.byId(e.currentTarget.id+'_tooltip');
+		var text = editBox.getValue();
+		var format = 'html';
+		if (!e.currentTarget.checked) {
+			text = entities.encode(text);
+			format = 'text'
+		} 
+		targetDijit.attr('label','Format contents as '+format+':<br>'+text);
 		debugger;
 	},
 	
@@ -351,8 +368,10 @@ var MultiFieldSmartInput = declare(SmartInput, {
 							    '" id="MultiFieldSmartInput_SmartInput_'+p.property+'">'+
 						    ' </div></td>'+
 						    '<td class="MultiFieldSmartInput_SmartInput_checkbox">'+
-						    	'<input id="MultiFieldSmartInput_SmartInput_checkbox'+p.property+'" name="MultiFieldSmartInput_SmartInput_checkbox'+p.property+'" data-dojo-type="dijit/form/CheckBox" />'+
-						    	'<label for="MultiFieldSmartInput_SmartInput_checkbox'+p.property+'">html</label>'+
+						    	'<div id="MultiFieldSmartInput_SmartInput_checkbox_div_'+p.property+'">' +
+						    	'<input id="MultiFieldSmartInput_SmartInput_checkbox_'+p.property+'" name="MultiFieldSmartInput_SmartInput_checkbox_'+p.property+'" data-dojo-type="dijit/form/CheckBox" />'+
+						    	'<label for="MultiFieldSmartInput_SmartInput_checkbox_'+p.property+'">html</label>'+
+						    	'</div>'+
 						    '</td></tr>';
 			if (p.multiLine) {
 				/*<td class="MultiFieldSmartInput_SmartInput_label" >{value}</td> 

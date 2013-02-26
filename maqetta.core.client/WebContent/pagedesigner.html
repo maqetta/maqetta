@@ -29,8 +29,7 @@
 			});
 
 			var Workbench = require("davinci/Workbench"),
-				Runtime = require("davinci/Runtime"),
-				revResource = require("davinci/review/model/resource/root")
+				Runtime = require("davinci/Runtime")
 		
 			var resetWorkbenchState = dojo.queryToObject(dojo.doc.location.search.substr((dojo.doc.location.search[0] === "?" ? 1 : 0))).resetWorkbenchState;
 			if(resetWorkbenchState){
@@ -45,44 +44,6 @@
 	 		Runtime.initialPerspective="davinci.ve.pageDesign";
 
 			require(["dojo/i18n!davinci/nls/webContent", "dojo/domReady!"], function (webContent) {
-				var run = function() {
-					// set up for review and commenting...
-					var designerName  = dojo.cookie("davinci_designer");
-					var reviewVersion = dojo.cookie("davinci_version");
-					dojo.cookie("davinci_designer", null, {expires: -1, path:"/"});
-					dojo.cookie("davinci_version", null, {expires: -1, path:"/"});
-					
-					/* This code loads the first file from a given review.  The review comes in as a URL parameter from an invitation.
-					   
-					This could be refactored, but I'm not sure where to put it. If we need this functionality somewhere else, then we can decide where to move it.
-					Leaving here for now.
-					
-					*/
-					var loadReviews = function(){
-						if (reviewVersion && designerName) {
-							revResource.findVersion(designerName, reviewVersion).then(function(node) {
-								if (node) {
-									// if we found a node, then the user clicked a review link to get here, so
-									// let's open review files (up to a cap)
-									var cap = 1; 
-									node.getChildren(function(children){
-										dojo.forEach(children, function(child, index){
-											if (index < cap) {
-												Workbench.openEditor({
-													fileName: child,
-													content: node.getText()
-												});
-											}
-										})
-									});
-								}
-							});
-						}
-					}
-					// dojo.subscribe("/davinci/ui/initialPerspectiveReady", loadReviews);	 #3763 this seems to fire to soon
-					dojo.subscribe("/davinci/workbench/ready", loadReviews);  // #3763 on slow network with FF we need to wait until the workbench is ready	
-					Workbench.run();
-				};
 
 				// Display a warning dialog for unsupported browsers
 				if (!(dojo.isFF >= 4 || dojo.isChrome >= 5 || dojo.isSafari >= 5.1)) {
@@ -100,7 +61,7 @@
 					});
 					unsupportedDialog.show();
 				} else {
-					run();
+					Workbench.run();
 				}
 			});
 

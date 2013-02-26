@@ -1,6 +1,6 @@
 define(["dojo/_base/declare", "./RebuildPage", "../library"], function(declare, RebuildPage, library){
 
-return declare("davinci.ve.RebaseDownload", RebuildPage, {
+return declare(RebuildPage, {
 	
 	/* libs should look like:
 	 * [{id:'dojo', version '1.8' base:'http://blahblahblah/dojo/'}]

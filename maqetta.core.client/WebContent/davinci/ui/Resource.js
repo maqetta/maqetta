@@ -305,8 +305,9 @@ var uiResource = {
 				// Create a new editor for the new filename
 				var file = Resource.createResource(resourcePath);
 				new RebuildPage().rebuildSource(oldContent, file, theme, themeSet).then(function(newText) {
-					file.setContents(newText);
-					Workbench.openEditor({fileName: file, content: newText});					
+					file.setContents(newText).then(function(){
+						Workbench.openEditor({fileName: file});
+					});
 				});
 			};
 			Workbench.showModal(newDialog, uiNLS.saveFileAs, '', executor);

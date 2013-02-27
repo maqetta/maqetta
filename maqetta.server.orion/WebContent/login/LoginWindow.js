@@ -13,11 +13,9 @@
 /*global LoginWindowShiftKey:true */
 
 define([
-	'domReady',
 	'dojo/request/xhr',
 	'orion/PageUtil'
 ], function(
-	domReady,
 	xhr,
 	PageUtil
 ) {
@@ -407,7 +405,7 @@ define([
 		return null;
 	}
 
-	domReady(function() {
+	require(['dojo/domReady!'], function() {
 		
 		// global variable
 		LoginWindowShiftKey = false;

@@ -11,6 +11,7 @@ define([
 	"dojo/i18n!dijit/nls/common",
 	//"dojo/i18n!./nls/webContent",
 	"dojo/text!./templates/MultiFieldSmartInput.html",
+	"dojo/text!./templates/MultiFieldTableRowSmartInput.html",
 	"dijit/Tooltip",
 	"davinci/css!./templates/MultiFieldSmartInput.css"
 ], function(
@@ -26,6 +27,7 @@ define([
 	commonNls,
 //	webContent,
 	mainTemplateString,
+	trTemplateString,
 	Tooltip
 ) {
 
@@ -34,19 +36,19 @@ define([
 var MultiFieldSmartInput = declare(SmartInput, {
 
 	property: [{"property":"placeholder", "multiLine": false}, {"property":"value", "multiLine": false}],
-	//propertyDisplayLabels: ['Hint', 'Value'],
 	displayOnCreate: "true",
-	
 	delimiter: ", ",
-	
 	multiLine: "true",
 	supportsHTML: "false", 
-
 	//helpText: "Enter values....",
-
 	_substitutedMainTemplate: null,
 	
-	
+	destroyTooltips: function() {
+		this.property.forEach (function(p) {
+			var tooltip = dijit.byId('MultiFieldSmartInput_SmartInput_checkbox_'+p.property+'_tooltip');
+			tooltip.destroyRecursive();			
+		}.bind(this));
+	},
 	_getEditor: function() {
 		return Runtime.currentEditor;
 	},
@@ -58,27 +60,33 @@ var MultiFieldSmartInput = declare(SmartInput, {
 	
 	getHelpText: function() {
 		var str="";
-		this.property.forEach(function(p){
-			var description = this._widget.metadata.property[p.property].description;
-			var title = this._widget.metadata.property[p.property].title;
-			if (!title) {
-				title = p.property;
-			}
-			if (description) {
-				str = str + "<i>"+title+":</i> "+ entities.encode(description) + "<br>";
-			}
-		}.bind(this));
+		if (this.helpText) {
+			str = this.helpText;
+		} else {
+			this.property.forEach(function(p){
+				var description = this._widget.metadata.property[p.property].description;
+				if (p.helpText) {
+					description = p.helpText;
+				}
+				if (description) {
+					str = str + "<i>"+this.getTitle(p.property)+":</i> "+ entities.encode(description) + "<br>";
+				}
+			}.bind(this));
+		}
+		if (str.length < 1) {
+			str = 'The toolkit provider has not supplied help for this widget, please consult your provider.';
+		}
 		return str;
 		
 	},
 	
 	getTitle: function(prop) {
-		
-		if (this._widget.metadata.property[prop].title) {
+		return prop; // just use the prop as the title.
+		/*if (this._widget.metadata.property[prop].title) {
 			return this._widget.metadata.property[prop].title;
 		} else {
 			return prop;
-		}
+		}*/
 	},
 	
 	getPropertyObject: function(prop) {
@@ -110,7 +118,6 @@ var MultiFieldSmartInput = declare(SmartInput, {
 
 	hide: function(){
 
-			//this.inherited(arguments, [ true ]); // we already updated the widget so just do a hide like cancel
 			if (this._inline) {
 				var value;
 				while (connection = this._connection.pop()){
@@ -129,17 +136,11 @@ var MultiFieldSmartInput = declare(SmartInput, {
 				if(this._inline.style.display != "none" ){
 					this._format = this.getFormat();
 					this._inline.style.display = "none";
+					this.destroyTooltips();
 					this._inline.destroyRecursive();
 					delete this._inline;  
 	                var iebPointer = smartInputContainer.ownerDocument.getElementById('iebPointer');
 					smartInputContainer.removeChild(iebPointer);
-					
-				/*	if(value != null && !cancel){
-					if (!this.disableEncode && this._format === 'text' ) // added to support dijit.TextBox that does not support html markup in the value and should not be encoded. wdr
-							value = entities.encode(value);
-					
-						this.updateWidget(value);
-					}*/
 					var context=this._widget.getContext();
 					var userdoc = context.getDocument();	// inner document = user's document
 					userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
@@ -151,7 +152,7 @@ var MultiFieldSmartInput = declare(SmartInput, {
 	
 	
 	show: function(widgetId) {
-		debugger;
+
 		this._widget = Widget.byId(widgetId);
 		var data = this._widget.getData();
 		
@@ -163,44 +164,17 @@ var MultiFieldSmartInput = declare(SmartInput, {
 		dojo.addClass('ieb', "MultiFieldSmartInput");
 		var content = this._getTemplate();
 		this._inline.attr("content", content);
-		//this._inline.eb = dijit.byId("davinciIleb");
-//		this._connection.push(dojo.connect(this._inline, "onBlur", this, "onOk")); 
-		//this._connection.push(dojo.connect(this._inline.eb, "onKeyUp", this, "handleEvent"));
+		this._connection.push(dojo.connect(this._inline, "onBlur", this, "onOk")); 
 		this._connectHelpDiv();
 		this._connectResizeHandle();
 		this._connectSimDiv();
 		if (this._loadingDiv) {
 			this._loadingDiv.style.backgroundImage = 'none'; // turn off spinner
 		}
-	/*	var labelTextBox = dijit.byId("MultiFieldSmartInput_SmartInput_label_editbox"); 
-		if (data.properties[this.property[0].property]) {
-			labelTextBox.setValue(data.properties[this.property[0].property]);
-		}
-		this._connection.push(dojo.connect(labelTextBox, "onMouseDown", this, "stopEvent"));
-		this._inline.eb = dijit.byId("davinciIleb");
-		if (data.properties[this.property[1].property]) {
-			this._inline.eb.setValue( data.properties[this.property[1].property]);
-		}
-		this._connection.push(dojo.connect(this._inline.eb, "onMouseDown", this, "stopEvent"));*/
-		
-
-		
-		/*if (this.containsHtmlMarkUp(str)) {
-			//var html = this._widget.getPropertyValue('escapeHTMLInData');
-			var htmlRadio = dijit.byId('davinci.ve.input.SmartInput_radio_html');
-			var textRadio = dijit.byId('davinci.ve.input.SmartInput_radio_text');
 	
-			if(html){
-				htmlRadio.set("checked", false);
-				textRadio.set("checked", true);
-			}else{
-				htmlRadio.set("checked", true);
-				textRadio.set("checked", false);					
-			}
-		}
-*/
-	//	this.updateFormats();
-		//this._inline.eb.focus();
+		var targetEdit = dijit.byId('MultiFieldSmartInput_SmartInput_'+this.property[0].property);
+		dijit.selectInputText(targetEdit.textbox);
+		targetEdit.focus();
 		this.connectEditBoxes();
 		this.setStartSize();
 		this.resize(null);
@@ -208,25 +182,21 @@ var MultiFieldSmartInput = declare(SmartInput, {
 	},
 	
 	connectEditBoxes: function() {
-		debugger;
+
 		this.property.forEach (function(p) {
 			var targetDijit = dijit.byId('MultiFieldSmartInput_SmartInput_'+p.property);
 			this._connection.push(dojo.connect(targetDijit, "onMouseDown", this, "stopEvent"));
 			this._connection.push(dojo.connect(targetDijit, "onKeyUp", this, "handleEvent"));
 			var checkboxDiv = dojo.byId('MultiFieldSmartInput_SmartInput_checkbox_div_'+p.property);
-		//	if (p.supportsHTML) {
-				targetDijit = dijit.byId('MultiFieldSmartInput_SmartInput_checkbox_'+p.property);
-				this._connection.push(dojo.connect(targetDijit, "onClick", this, "htmlCheckbox"));
-				 new Tooltip({
-					 	id: 'MultiFieldSmartInput_SmartInput_checkbox_'+p.property+'_tooltip',
-			            connectId: [checkboxDiv],
-			            label: "the text for the tooltip"
-			        });
-		//	} else {
-		//		dojo.style(checkboxDiv, 'display', 'none');
-		//	}
-			 this.updateFormats(p.property);
-			
+			targetDijit = dijit.byId('MultiFieldSmartInput_SmartInput_checkbox_'+p.property);
+			this._connection.push(dojo.connect(targetDijit, "onClick", this, "htmlCheckbox"));
+			new Tooltip({
+				 	id: 'MultiFieldSmartInput_SmartInput_checkbox_'+p.property+'_tooltip',
+		            connectId: [checkboxDiv],
+		            label: "the text for the tooltip"
+		       });
+		
+			this.updateFormats(p.property);
 		}.bind(this));
 		
 		
@@ -240,7 +210,7 @@ var MultiFieldSmartInput = declare(SmartInput, {
 	},
 	
 	htmlCheckbox: function(e) {
-		debugger;
+
 		var id = e.currentTarget.id.split("_");
 		var prop = id[id.length-1];
 		var editBox = dijit.byId('MultiFieldSmartInput_SmartInput_'+prop);
@@ -252,7 +222,7 @@ var MultiFieldSmartInput = declare(SmartInput, {
 			format = 'text'
 		} 
 		targetDijit.attr('label','Format contents as '+format+':<br>'+text);
-		debugger;
+	
 	},
 	
 	setStartSize: function() {
@@ -344,8 +314,6 @@ var MultiFieldSmartInput = declare(SmartInput, {
 			}
 		});
 		var targetObj = dojo.byId("iedResizeDiv");
-		//var targetEditBoxDijit = dijit.byId("davinciIleb");
-		//var labelEditBoxDijit = dijit.byId("MultiFieldSmartInput_SmartInput_label_editbox");
 		var boxWidth = targetObj.clientWidth	- 5;
 		var boxheight = targetObj.clientHeight -6;
 		boxWidth = targetObj.clientWidth	/*+2*/ -8;
@@ -385,40 +353,26 @@ var MultiFieldSmartInput = declare(SmartInput, {
 	
 	_addPropertiesToHTML: function(){
 		
-		//var table = dojo.byId("davinci.ve.input.MultiFieldSmartInput_table");
 		var data = this._widget.getData();
 		var tableContent = "";
 		this.property.forEach(function(p){
-			var description = this._widget.metadata.property[p.property].description;
-			var title = this._widget.metadata.property[p.property].title;
 			var value = data.properties[p.property]  ||  ""; 
 			var checked = this.containsHtmlMarkUp(value) ? "checked" : "";
 			//value = value ? value : "";
-			tableContent +=  '<tr><td class="MultiFieldSmartInput_SmartInput_label" >'+this.getTitle(p.property)+'</td>'+
-							'<td> <div class="MultiFieldSmartInput_SmartInput_value">'+
-							    '<input type="text" name="MultiFieldSmartInput_SmartInput_'+p.property+
-							    '"  data-dojo-type="dijit/form/TextBox" data-dojo-props="trim:true" value="'+value+
-							    '" id="MultiFieldSmartInput_SmartInput_'+p.property+'">'+
-						    ' </div></td>'+
-						    '<td class="MultiFieldSmartInput_SmartInput_checkbox">'+
-						    	'<div id="MultiFieldSmartInput_SmartInput_checkbox_div_'+p.property+'">' +
-						    	'<input id="MultiFieldSmartInput_SmartInput_checkbox_'+p.property+'" name="MultiFieldSmartInput_SmartInput_checkbox_'+p.property+'" data-dojo-type="dijit/form/CheckBox" '+checked+' />'+
-						    	'<label for="MultiFieldSmartInput_SmartInput_checkbox_'+p.property+'">html</label>'+
-						    	'</div>'+
-						    '</td></tr>';
-			if (p.multiLine) {
-				/*<td class="MultiFieldSmartInput_SmartInput_label" >{value}</td> 
-		        <td>
-		        	<div class="MultiFieldSmartInput_SmartInput_value">
-		           <textarea  dojoType="dijit.form.SimpleTextarea" name="davinciIleb"  trim="true" id="davinciIleb" class="smartInputTextAreaMulti"></textarea>
-		           	</div>
-		        </td>*/
+			tableContent +=
+				dojo.replace(trTemplateString, {
+						label: this.getTitle(p.property),
+						textboxId: 'MultiFieldSmartInput_SmartInput_'+p.property,
+						textboxValue: value,
+						checkboxDivId: 'MultiFieldSmartInput_SmartInput_checkbox_div_'+p.property,
+						checkboxId: 'MultiFieldSmartInput_SmartInput_checkbox_'+p.property,
+						checked: checked
+				});
+/*			if (p.multiLine) {
+				
 			} else {
 				
-			}
-/*			var tr = dojo.create("tr", {
-	        	innerHTML: innerHtml,
-	    	}, table);*/
+			}*/
 			
 		}.bind(this));
 		return tableContent;

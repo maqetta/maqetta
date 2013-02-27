@@ -708,26 +708,6 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 								Workbench.showMessage(widgetsNls.warning, dialogContent);
 							}
 							
-							//Open the new review
-							var version = resultEntry.version;
-							var designer = resultEntry.designer;
-							if (version && designer) {
-								ReviewRoot.findVersion(designer, version).then(function(node) {
-									if (node) {
-										node.getChildren(function(childs) {
-											if(childs.length > 1) {
-												return;
-											}
-											dojo.forEach(childs, function(child){
-												Workbench.openEditor({
-													fileName: child,
-													content: node.getText()
-												});
-											});
-										}.bind(this));
-									}
-								}.bind(this));
-							}
 						}
 					}
 				}

@@ -34,7 +34,8 @@ define([
 	"./review/model/resource/root",
 	"dojo/i18n!./ve/nls/common",
 	"./ve/utils/GeomUtils",
-	"dojo/i18n!./workbench/nls/workbench"
+	"dojo/i18n!./workbench/nls/workbench",
+	"davinci/review/model/resource/root",
 ], function(
 		lang,
 		require,
@@ -71,7 +72,8 @@ define([
 		reviewResource,
 		veNLS,
 		GeomUtils,
-		workbenchStrings
+		workbenchStrings,
+		revResource
 ) {
 
 var paletteTabWidth = 71;	// Width of tabs for left- and right-side palettes
@@ -209,7 +211,7 @@ var initializeWorkbenchState = function(){
 					
 					var noSelect = editor != state.activeEditor;
 		
-					if (noSelect && !isActiveEditorInProject) {
+					if (noSelect && !isActiveEditorInProject && !isReview(state.activeEditor)) {
 						// if the active editor is not in our project, force selection
 						noSelect = false;
 						state.activeEditor = editor; // this is now the active editor
@@ -244,7 +246,42 @@ var initializeWorkbenchState = function(){
 	if (!Workbench._state){
 		Workbench._state = Runtime.getWorkbenchState();
 	}
-	init(Workbench._state);
+
+	
+	// This code loads the first file from a given review.  The review comes in as a URL parameter from an invitation.
+
+	var designerName  = dojo.cookie("davinci_designer");
+	var reviewVersion = dojo.cookie("davinci_version");
+	dojo.cookie("davinci_designer", null, {expires: -1, path:"/"});
+	dojo.cookie("davinci_version", null, {expires: -1, path:"/"});
+	if (reviewVersion && designerName) {
+		//we got here from a review link so add the review files to the editors to be opened 
+		// at start up
+		revResource.findVersion(designerName, reviewVersion).then(function(node) {
+			if (node) {
+				// if we found a node, then the user clicked a review link to get here, so
+				node.getChildren(function(children){
+						// if we found a node, then the user clicked a review link to get here, so
+						// let's open review files 
+						children.forEach(function(review, index){
+							var p = review.getPath();
+							if (index == 0) {
+								// set the active editor to the first review file
+								Workbench._state.activeEditor = p; 
+							}
+							// check to ensure that the review is not already in the list of editors open
+							if (Workbench._state.editors.indexOf(p) < 0) {
+								Workbench._state.editors.push(p);
+							}
+						}.bind(this));
+					init(Workbench._state);
+				});
+				
+			}
+		}.bind(this));
+	} else {
+		init(Workbench._state);
+	}
 	Workbench.setupGlobalKeyboardHandler();
 };
 

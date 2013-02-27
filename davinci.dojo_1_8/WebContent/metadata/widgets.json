@@ -639,7 +639,8 @@
             "allowedChild": "ANY",
             "isLayered": true,
             "resizable": "none",
-            "tool": "./dijit/DialogCreateTool",
+            "requiresId": true,
+            //"tool": "./dijit/DialogCreateTool",
             "helper": "./dijit/DialogHelper"
         },
         {

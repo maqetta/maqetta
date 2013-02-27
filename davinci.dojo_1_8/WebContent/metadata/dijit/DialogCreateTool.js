@@ -27,8 +27,8 @@ return declare(CreateTool, {
 		new DeferredList(this._requireHelpers(this._data)).then(function() {
 			var deferred = this._create({parent: bodyWidget});
 			deferred.then(function(widget){
-				States.add(bodyWidget, "_show:" + widget.getId());
-			});
+				States.add(this._context.rootNode, "_show:" + widget.getId());
+			}.bind(this));
 		}.bind(this));
 	}
 

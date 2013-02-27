@@ -11,12 +11,14 @@ define([
 		"davinci/ve/States",
 		"davinci/ve/widget",
 		"davinci/ve/_Widget",
+		"davinci/ve/commands/AppStateCommand",
 		"dojo/data/ItemFileWriteStore",
 		"dijit/tree/ForestStoreModel",
 		"dijit/Tree",
 		"dojo/_base/window"
 ], function(declare, domQuery, domClass, connect, veNls, ViewPart, BorderContainer, ContentPane, 
-		XPathUtils, States, WidgetUtils, Widget, ItemFileWriteStore, ForestStoreModel, Tree, win
+		XPathUtils, States, WidgetUtils, Widget, AppStateCommand, 
+		ItemFileWriteStore, ForestStoreModel, Tree, win
 ){
 
 var PlainTextTreeNode = declare(Tree._TreeNode, {}),
@@ -56,6 +58,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		this.subscribe("/davinci/ui/context/statesLoaded", this._statesLoaded.bind(this));
 		this.subscribe("/davinci/ui/context/pagebuilt", this._pagebuilt.bind(this));
 		this.subscribe("/davinci/ui/context/pagerebuilt", this._pagerebuilt.bind(this));
+		this.subscribe("/davinci/states/statesReordered", this._statesReordered.bind(this));
 		this.subscribe("/davinci/ui/deviceChanged", this._deviceChanged.bind(this));
 		this.subscribe("/davinci/states/state/added", this._addState.bind(this));
 		this.subscribe("/davinci/states/state/removed", this._removeState.bind(this));
@@ -84,6 +87,11 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 	
 	_pagerebuilt: function() {
+		this._destroyTree();
+		this._statesLoaded.apply(this, arguments);
+	},
+	
+	_statesReordered: function() {
 		this._destroyTree();
 		this._statesLoaded.apply(this, arguments);
 	},
@@ -810,126 +818,195 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	},
 	
 	_createTree: function(latestData){
-		if(!this._editor){
-			return;
-		}
-		var context = this._editor.getContext();
-		var sceneManagers = context.sceneManagers;
-		var skeletonData = { identifier: 'id', label: 'name', items: []};
-		this._sceneStore = new ItemFileWriteStore({ data: skeletonData, clearOnClose:true });
-		this._forest = new ForestStoreModel({ store:this._sceneStore, query:{type:'file'},
-			  rootId:'StoryRoot', rootLabel:'All', childrenAttrs:['children']});
-		this._tree = new Tree({
-			model: this._forest,
-			persist: false,
-			showRoot: false,
-			autoExpand: true,
-			className: 'StatesViewTree',
-			style: 'height:150px; overflow-x:hidden; overflow-y:auto;', 
-			_createTreeNode: function(args) {
-/*FIXME: OLD LOGIC
-				var item = args.item;
-				if(item.type && item.category && item.category[0] === 'AppStates'){
-					// Custom TreeNode class (based on dijit.TreeNode) that allows rich text labels
-					return new RichHTMLTreeNode(args);
-				}else{
-					// Custom TreeNode class (based on dijit.TreeNode) that uses default plain text labels
-					return new PlainTextTreeNode(args);
+		// For some reason, require didn't work when put at top of file
+		require(["dijit/tree/dndSource"], function(dndSource){
+	
+			//on item tree , we want to drop on containers, the root node itself, or between items in the containers
+			var itemTreeCheckItemAcceptance = function(node,source,position){
+				var sourceItem, sourceParentItem, sourceIndex;
+				source.forInSelectedItems(function(TreeNodeItem){
+					sourceItem = TreeNodeItem.data && TreeNodeItem.data.item;
+					if(sourceItem){
+						sourceParentItem = sourceItem.parentItem && sourceItem.parentItem[0];
+						sourceIndex = sourceParentItem.children && sourceParentItem.children.indexOf(sourceItem);
+					}
+				});
+				var targetItem, targetParentItem, targetIndex;
+				targetItem = dijit.getEnclosingWidget(node).item;
+				if(targetItem){
+					targetParentItem = targetItem.parentItem && targetItem.parentItem[0];
+					if(targetParentItem){
+						targetIndex = targetParentItem.children && targetParentItem.children.indexOf(targetItem);
+					}
 				}
-*/
-				return new RichHTMLTreeNode(args);
-			},
-			getIconClass: function(/*dojo.data.Item*/ item, /*Boolean*/ opened){
-				return "dijitLeaf";
-			}
-		});
-		this.centerPane.domNode.appendChild(this._tree.domNode);	
-		dojo.connect(this._tree, "onClick", this, function(item){
-			var currentEditor = this._editor;
-			var context = currentEditor ? currentEditor.getContext() : null;
-			var bodyNode = context ? context.rootNode : null;
-			var stateContainerNode = null;
-			var type = null;
-			var newState = null;
-			if (item && item.type){
-				type = item.type[0];
-				var category = item.category && item.category[0];
-				if(type == 'AppState' || (type == 'SceneManagerRoot' && category == 'AppStates')) {
-					stateContainerNode = item.sceneContainerNode ? item.sceneContainerNode[0] : null;
-				//FIXME: using type == 'file' for HTMLElements, too. That's wrong.
-				}else if(item.node && item.node[0]._maqAppStates){
-					stateContainerNode = item.node[0];
+				return (
+					position != 'over' &&
+					sourceItem && targetItem && sourceParentItem && targetParentItem &&
+					sourceItem.type[0] == 'AppState' &&	// Only allow moving application states
+					targetItem.type[0] == 'AppState' &&
+					sourceParentItem == targetParentItem &&	// Only allow moving within same state container
+					sourceIndex !== 0 &&	// First state ("Background") can't be moved
+					!(position == 'before' && targetIndex === 0) &&	// Can't move custom state before background
+					!(position == 'before' && sourceIndex+1 == targetIndex) &&	// Can't move to same spot
+					!(position == 'after' && sourceIndex == targetIndex+1)	// Can't move to same spot
+				);
+			}.bind(this);
+			var dndDone = function(source, nodes, copy){
+				// Find the item that is being moved, and its parent
+				var sourceItem, sourceParentItem;
+				source.forInSelectedItems(function(TreeNodeItem){
+					sourceItem = TreeNodeItem.data && TreeNodeItem.data.item;
+					if(sourceItem){
+						sourceParentItem = sourceItem.parentItem && sourceItem.parentItem[0];
+					}
+				});
+				// Invoke the standard drag/drop logic for updating the model
+				source.__proto__.onDndDrop.call(source, source, nodes, copy);
+				// Retrieve the new ordered list of states
+				var stateContainerNode = sourceParentItem.sceneContainerNode && sourceParentItem.sceneContainerNode[0];
+				if(stateContainerNode && stateContainerNode._maqAppStates && stateContainerNode._maqAppStates.states){
+					var statesList = [];
+					for(var i=1; i<sourceParentItem.children.length; i++){
+						var state = sourceParentItem.children[i].sceneId[0];
+						statesList.push(state);
+					}
+					var command = new AppStateCommand({
+						action:'reorder',
+						newStatesList:statesList,
+						stateContainerNode:stateContainerNode,
+						context:context
+					});
+					context.getCommandStack().execute(command);
 				}
+			}.bind(this);
+	
+			if(!this._editor){
+				return;
 			}
-			if (this.isThemeEditor()){
-				this.publish("/davinci/states/state/changed", 
-						[{editorClass:currentEditor.declaredClass, widget:'$all', 
-						newState:item.sceneId[0], oldState:this._themeState, context: this._editor.context}]);
-				this._themeState = item.sceneId[0];
-			} else {	// PageEditor
-				if(context && stateContainerNode){
-					if(type == 'AppState') {
-						newState = item.sceneId ? item.sceneId[0] : null;
+			var context = this._editor.getContext();
+			var sceneManagers = context.sceneManagers;
+			var skeletonData = { identifier: 'id', label: 'name', items: []};
+			this._sceneStore = new ItemFileWriteStore({ data: skeletonData, clearOnClose:true });
+			this._forest = new ForestStoreModel({ store:this._sceneStore, query:{type:'file'},
+				  rootId:'StoryRoot', rootLabel:'All', childrenAttrs:['children']});
+			this._tree = new Tree({
+				model: this._forest,
+				persist: false,
+				showRoot: false,
+				autoExpand: true,
+				dndController: "dijit.tree.dndSource",
+				dragThreshold:8,
+				betweenThreshold:5,
+				checkItemAcceptance:itemTreeCheckItemAcceptance,
+				onDndDrop: dndDone,
+				className: 'StatesViewTree',
+				style: 'height:150px; overflow-x:hidden; overflow-y:auto;', 
+				_createTreeNode: function(args) {
+	/*FIXME: OLD LOGIC
+					var item = args.item;
+					if(item.type && item.category && item.category[0] === 'AppStates'){
+						// Custom TreeNode class (based on dijit.TreeNode) that allows rich text labels
+						return new RichHTMLTreeNode(args);
 					}else{
-						newState = States.getState(stateContainerNode);
+						// Custom TreeNode class (based on dijit.TreeNode) that uses default plain text labels
+						return new PlainTextTreeNode(args);
 					}
-					States.setState(newState, stateContainerNode, { focus:true, updateWhenCurrent:true });
-					if(this._editor.declaredClass === "davinci.ve.PageEditor"){
-						context.deselectInvisible();
-						context.clearCachedWidgetBounds();
-						context.updateFocusAll();
+	*/
+					return new RichHTMLTreeNode(args);
+				},
+				getIconClass: function(/*dojo.data.Item*/ item, /*Boolean*/ opened){
+					return "dijitLeaf";
+				}
+			});
+			this.centerPane.domNode.appendChild(this._tree.domNode);	
+			dojo.connect(this._tree, "onClick", this, function(item){
+				var currentEditor = this._editor;
+				var context = currentEditor ? currentEditor.getContext() : null;
+				var bodyNode = context ? context.rootNode : null;
+				var stateContainerNode = null;
+				var type = null;
+				var newState = null;
+				if (item && item.type){
+					type = item.type[0];
+					var category = item.category && item.category[0];
+					if(type == 'AppState' || (type == 'SceneManagerRoot' && category == 'AppStates')) {
+						stateContainerNode = item.sceneContainerNode ? item.sceneContainerNode[0] : null;
+					//FIXME: using type == 'file' for HTMLElements, too. That's wrong.
+					}else if(item.node && item.node[0]._maqAppStates){
+						stateContainerNode = item.node[0];
 					}
 				}
-				if(item.sceneId){
-					// Loop through plugin scene managers, eg Dojo Mobile Views
-					for(var smIndex in sceneManagers){
-						var sm = sceneManagers[smIndex];
-						if(sm.selectScene){
-							if(sm.selectScene({ sceneId:item.sceneId[0]})){
-								break;
-							}
+				if (this.isThemeEditor()){
+					this.publish("/davinci/states/state/changed", 
+							[{editorClass:currentEditor.declaredClass, widget:'$all', 
+							newState:item.sceneId[0], oldState:this._themeState, context: this._editor.context}]);
+					this._themeState = item.sceneId[0];
+				} else {	// PageEditor
+					if(context && stateContainerNode){
+						if(type == 'AppState') {
+							newState = item.sceneId ? item.sceneId[0] : null;
+						}else{
+							newState = States.getState(stateContainerNode);
+						}
+						States.setState(newState, stateContainerNode, { focus:true, updateWhenCurrent:true });
+						if(this._editor.declaredClass === "davinci.ve.PageEditor"){
+							context.deselectInvisible();
+							context.clearCachedWidgetBounds();
+							context.updateFocusAll();
 						}
 					}
-				//FIXME: shouldn't be using 'file' for Elements
-				}else if(item.type && item.type[0] == 'file' && item.node && item.node[0]._dvWidget){
-					// If user clicked on a TreeNode that corresponds to a widget, then select that widget
-					context.select(item.node[0]._dvWidget);
+					if(item.sceneId){
+						// Loop through plugin scene managers, eg Dojo Mobile Views
+						for(var smIndex in sceneManagers){
+							var sm = sceneManagers[smIndex];
+							if(sm.selectScene){
+								if(sm.selectScene({ sceneId:item.sceneId[0]})){
+									break;
+								}
+							}
+						}
+					//FIXME: shouldn't be using 'file' for Elements
+					}else if(item.type && item.type[0] == 'file' && item.node && item.node[0]._dvWidget){
+						// If user clicked on a TreeNode that corresponds to a widget, then select that widget
+						context.select(item.node[0]._dvWidget);
+					}
+					this._updateSelection();
 				}
-				this._updateSelection();
+			});
+	
+			var newItemRecursive = function(obj, parentItem){
+				var o = dojo.mixin({}, obj);
+				var id = this.nextId+'';
+				this.nextId++;
+				o.id = id;		// ensure unique ID
+				o.parentItem = parentItem;
+				delete o.children;	// remove children property before calling newItem
+				var thisItem;
+				if(parentItem){
+					thisItem = this._sceneStore.newItem(o, {parent:parentItem, attribute:'children'});
+				}else{
+					thisItem = this._sceneStore.newItem(o);
+				}
+				if(obj.children){
+					obj.children.forEach(function(child){
+						newItemRecursive(child, thisItem);
+					});
+				}
+			}.bind(this);
+	
+			latestData.forEach(function(obj){
+				newItemRecursive(obj);
+			});
+			this._sceneStore.save();
+			// In some scenarios, necessary to resize the ContentPane that surrounds the Tree
+			if(this._tree.getParent){
+				var parent = this._tree.getParent();
+				if(parent.resize){
+					window.setTimeout(function(){parent.resize()}, 0);
+				}
 			}
-		});
+		}.bind(this));
 
-		var newItemRecursive = function(obj, parentItem){
-			var o = dojo.mixin({}, obj);
-			var id = this.nextId+'';
-			this.nextId++;
-			o.id = id;		// ensure unique ID
-			o.parentItem = parentItem;
-			delete o.children;	// remove children property before calling newItem
-			var thisItem;
-			if(parentItem){
-				thisItem = this._sceneStore.newItem(o, {parent:parentItem, attribute:'children'});
-			}else{
-				thisItem = this._sceneStore.newItem(o);
-			}
-			if(obj.children){
-				obj.children.forEach(function(child){
-					newItemRecursive(child, thisItem);
-				});
-			}
-		}.bind(this);
-
-		latestData.forEach(function(obj){
-			newItemRecursive(obj);
-		});
-		this._sceneStore.save();
-		// In some scenarios, necessary to resize the ContentPane that surrounds the Tree
-		if(this._tree.getParent){
-			var parent = this._tree.getParent();
-			if(parent.resize){
-				window.setTimeout(function(){parent.resize()}, 0);
-			}
-		}
 	},
 
 //FIXME: sceneId for states might not be unique the way things are written now

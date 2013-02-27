@@ -205,7 +205,7 @@ getUniqueObjectId: function(type, node) {
 		return undefined;
 	}
 
-	var base = type.substring(type.lastIndexOf(".") + 1);
+	var base = type.substring((type.lastIndexOf("/") || type.lastIndexOf(".")) + 1);
 	var i = 1;
 	var id = base + "_" + i++;
 	var dj = widgetObject._dojo(node);
@@ -272,6 +272,7 @@ getLabelForNode: function(node) {
 	if(!type){
 		type = node.tagName.toLowerCase();
 	}
+	type = type.replace(/\./g, "/");
 	var text = this._getWidgetNameText(type);
 	//FIXME: temporarily not showing classname because mobile views look better
 	// in review/commenting, but really instead of hard-coding this, we should
@@ -293,7 +294,7 @@ getLabel: function(widget) {
 
 	//TODO: move to getWidgetText helper methods
 	var domNode = widget.domNode;
-	switch(widget.type){
+	switch(widget.type.replace(/\//g, ".")){
 		case 'dijit.form.ComboBox':
 		case 'dijit.form.Button':
 			widgetText = widget.attr("label");
@@ -416,10 +417,10 @@ createWidget: function(widgetData) {
 		}
 	}
 	var widgetClassId = metadata.queryDescriptor(type, "widgetClass");
-	var widgetClassName;
+	var widgetClass;
 	if(widgetClassId == "object"){
 		dojoType = type;
-		widgetClassName="davinci.ve.ObjectWidget";
+		widgetClass = ObjectWidget;
 		// Temporary Hack: Required when object specifies a jsId, otherwise object is not created
 		// see davinci.ve.ObjectWidget::postCreate::if(id)::var type = this.getObjectType(); (type = undefined without the following lines to add dojoType to the element attributes)
 		// Drag tree onto canvas to test.
@@ -427,19 +428,19 @@ createWidget: function(widgetData) {
 		md.attributes = md.attributes || {};
 		md.attributes.dojoType = dojoType;
 	}else if(widgetClassId == "html"){
-		widgetClassName="davinci.ve.HTMLWidget";
+		widgetClass = HTMLWidget;
 //	}else if(widgetClassId == "OpenAjax"){
 //		widgetClassName="davinci.ve.OpenAjaxWidget";
 	}else if(widgetClassId == "dijit"){
-		widgetClassName="davinci.ve.DijitWidget";
+		widgetClass = DijitWidget;
 	} else { // if(widgetClassId == "generic"){
-		widgetClassName="davinci.ve.GenericWidget";
+		widgetClass = GenericWidget;
 	}
-	if(!widgetClassName){
+	if(!widgetClass){
 		//debugger;
 		return undefined;
 	}
-	c = dojo.getObject(widgetClassName);
+	c = widgetClass;
 
 	// XXX eventually replace with dojo.place()?
 	// XXX Technically, there can be more than one 'content'

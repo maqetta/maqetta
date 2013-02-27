@@ -1,17 +1,14 @@
 define([
 	"dojo/_base/declare",
-	"../Workbench",
-	"../workbench/Preferences",
 	"./Context",
-	"../Theme",
 	"../model/Path",
 	"davinci/model/Factory",
 	"dojo/Deferred",
 	"dojo/promise/all",
 	"davinci/ve/commands/ChangeThemeCommand"
-], function(declare, Workbench, Preferences, Context, Theme, Path, Factory, Deferred, all, ChangeThemeCommand) {
+], function(declare, Context, Path, Factory, Deferred, all, ChangeThemeCommand) {
 
-return declare("davinci.ve.RebuildPage", Context, {
+return declare(null, {
 	/* rebuilds a pages imports based on widget dependencies.
 	 * useful if dependencies break due to library path changes or missing deps.
 	 * 
@@ -20,6 +17,10 @@ return declare("davinci.ve.RebuildPage", Context, {
 	 */
 	constructor: function(args){
 		dojo.mixin(this, args);
+
+		//FIXME: Instantiating a new Context object so we can use loadRequires.  Need to factor this better.
+		// This module shouldn't have any dependency on the visual editor code.
+		this.context = new Context();
 	},
 	
 	//FIXME: We should be traversing the page looking for CSS and JS files
@@ -37,56 +38,55 @@ return declare("davinci.ve.RebuildPage", Context, {
 	
 	rebuildSource: function(source, resource, theme, themeSet){
 		if ( !( resource && resource.extension && resource.extension == "html")) {
-			 var deferred = new Deferred();
-        	 deferred.resolve(source);
+			var deferred = new Deferred();
+			deferred.resolve(source);
 	        return deferred;
 		}
-				
-		this.model = this._srcDocument = Factory.getNewFromResource(resource); //getModel({url: resource.getPath()}); // 2453 getNewFromResource(resource);
+
+		this.context.model = this.context._srcDocument = Factory.getNewFromResource(resource); //getModel({url: resource.getPath()}); // 2453 getNewFromResource(resource);
 		
-		this._resourcePath = new Path(resource ? resource.getPath() : "");
+		var resourcePath = new Path(resource ? resource.getPath() : "");
 		
-		this.model.fileName = this._resourcePath.toString();
+		this.context.model.fileName = resourcePath.toString();
 		/* big cheat here.  removing 1 layer of .. for prefix of project, could figure this out with logic and have infinite project depth */
 		
-		this._srcDocument.setText(source, true);
+		this.context._srcDocument.setText(source, true);
 		
 		/* make sure this isn't an HTML fragment */
-		var headless = this._srcDocument.find({elementType: "HTMLElement", 'tag':'html'}, true);
+		var headless = this.context._srcDocument.find({elementType: "HTMLElement", 'tag':'html'}, true);
 		if(headless==null){
-			
 			var deferred = new Deferred();
-	        return deferred.resolve(source);
-	        
+			deferred.resolve(source);
+	        return deferred;
 		}
 		 
-        var elements = this._srcDocument.find({elementType: "HTMLElement"}),
+        var elements = this.context._srcDocument.find({elementType: "HTMLElement"}),
         	promises = [];
 
-        promises.push(this.loadRequires("html.body", true, true, true));
+        promises.push(this.context.loadRequires("html.body", true, true, true));
         
         for ( var i = 0; i < elements.length; i++ ) {
             var n = elements[i];
             var type = n.getAttribute("data-dojo-type") || n.getAttribute("dojoType") || n.getAttribute("dvwidget");
             if (type != null){
-            	promises.push(this.loadRequires(type, true, true, true));
+            	promises.push(this.context.loadRequires(type.replace(/\./g, "/"), true, true, true));
             }
         }
-        ;
+
         if (theme) {
-            this.changeThemeBase(theme, this._resourcePath);
+            this.changeThemeBase(theme, resourcePath);
         }
         
         if (themeSet && themeSet.mobileTheme ){
-        	var c = new ChangeThemeCommand(themeSet, this);
-        	c._dojoxMobileAddTheme(this, themeSet.mobileTheme);
+        	var c = new ChangeThemeCommand(themeSet, this.context);
+        	c._dojoxMobileAddTheme(this.context, themeSet.mobileTheme);
         }
        
         var cssChanges = this.getPageCss();
         var jsChanges = this.getPageJs();
 
-        var basePath = this.getCurrentBasePath();
-        var resourceParentPath = this._resourcePath.getParentPath();
+        var basePath = this.context._getCurrentBasePath();
+        var resourceParentPath = resourcePath.getParentPath();
         for ( var i = 0; i < cssChanges.length; i++ ) {
             var cssFilePath = basePath.append(cssChanges[i]);
             var cssFileString = cssFilePath.relativeTo(resourceParentPath).toString();
@@ -100,7 +100,7 @@ return declare("davinci.ve.RebuildPage", Context, {
         }
         var deferred = new Deferred();
         all(promises).then(function(){
-        	deferred.resolve(this._srcDocument.getText());
+        	deferred.resolve(this.context._srcDocument.getText());
         }.bind(this));
         return deferred;
 	},
@@ -111,7 +111,7 @@ return declare("davinci.ve.RebuildPage", Context, {
 		// * wrong directory
 		 //
 		
-		var elements = this._srcDocument.find({elementType: "CSSImport"});
+		var elements = this.context._srcDocument.find({elementType: "CSSImport"});
 		if (elements.some(function(n) {
 			if(n.url && n.url.indexOf(baseSrcPath) > -1){
 				n.setUrl(url);
@@ -122,27 +122,12 @@ return declare("davinci.ve.RebuildPage", Context, {
 		}
 
 		/*FIXME: This is needed for LINK elements	
-       this._srcDocument.addStyleSheet(url, null, true);
+       this.context._srcDocument.addStyleSheet(url, null, true);
 */
-    },
- 
-    _findScriptAdditions: function(){
-    	// this is a bit gross and dojo specific, but...... guess a necisary evil.
-    	   	
-    	var documentHeader = this._srcDocument.find({elementType: "HTMLElement", tag: 'head'}, true);
-    	var scriptsInHeader = documentHeader.find({elementType: "HTMLElement", tag: 'script'});
-    	for(var i=0;i<scriptsInHeader.length;i++){
-    		var text = scriptsInHeader[i].getText();
-    		if(text.indexOf("dojo.require") > -1) {
-    			return scriptsInHeader[i];    			
-    		}
-    	}
-    	// no requires js header area found
-    	return null;
     },
 
     addJavaScript: function(url, text, doUpdateModel, doUpdateDojo, baseSrcPath) {
-		var elements = this._srcDocument.find({elementType: "HTMLElement", tag: 'script'});
+		var elements = this.context._srcDocument.find({elementType: "HTMLElement", tag: 'script'});
 		if (elements.some(function(n) {
 			var elementUrl = n.getAttribute("src");
 			if(elementUrl && elementUrl.indexOf(baseSrcPath) > -1){
@@ -156,41 +141,25 @@ return declare("davinci.ve.RebuildPage", Context, {
     	if (url) {
             if(url.indexOf("dojo.js")>-1){
                 	// nasty nasty nasty special case for dojo attribute thats required.. need to generalize in the metadata somehow.
-               	this.addHeaderScript(url,{'data-dojo-config': "parseOnLoad: true"});
+               	this.context.addHeaderScript(url,{'data-dojo-config': "parseOnLoad: true"});
             }
-           	this.addHeaderScript(url);
-        }else if (text) {
-        	this._scriptAdditions = this.addHeaderScriptSrc(
-        			text,
-        			this._findScriptAdditions(),
-        			this._srcDocument.find({elementType: "HTMLElement", tag: 'head'}, true));
+           	this.context.addHeaderScript(url);
         }
     },
 
     changeThemeBase: function(theme, resourcePath){
     	
 		var parentPath = new Path(theme.getFile().parent.getPath());
-		theme.files.forEach(function(file) {
+		var addFile = function(file) {
 			var filename = parentPath.append(file);
 			var relativePath = filename.relativeTo(resourcePath, true);
 			this.addModeledStyleSheet(relativePath.toString(), new Path(file), true);
-		}, this);
+		}.bind(this);
+
+		theme.files.forEach(addFile);
 		if (theme.conditionalFiles) {
-			theme.conditionalFiles.forEach(function(file) {
-				var filename = parentPath.append(file);
-				var relativePath = filename.relativeTo(resourcePath, true);
-				this.addModeledStyleSheet(relativePath.toString(), new Path(file), true);
-			}, this);
+			theme.conditionalFiles.forEach(addFile);
 		}
-	},
-	
-	getCurrentBasePath: function(){
-		var base = new Path(Workbench.getProject());
-		var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs', base);
-		if(prefs.webContentFolder !== null && prefs.webContentFolder !== ""){
-			base = base.append(prefs.webContentFolder);
-		}
-		return base;
 	}
 });
 });

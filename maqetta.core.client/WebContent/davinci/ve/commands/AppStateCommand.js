@@ -1,15 +1,16 @@
 define([
     	"dojo/_base/declare",
     	"dojo/_base/lang",
+    	"dojo/topic",
     	"davinci/XPathUtils",
     	"davinci/html/HtmlFileXPathAdapter",
     	"davinci/ve/States"
-], function(declare, lang, XPathUtils, HtmlFileXPathAdapter, States){
+], function(declare, lang, topic, XPathUtils, HtmlFileXPathAdapter, States){
 
 
 return declare("davinci.ve.commands.AppStateCommand", null, {
 	name: "AppStateCommand",
-	_actions:['add','remove','modify'],
+	_actions:['add','remove','modify','reorder'],
 
 	/**
 	 * @param {object} params
@@ -22,6 +23,8 @@ return declare("davinci.ve.commands.AppStateCommand", null, {
 	 *				if undefined, don't change anything
 	 *				if "undefined", set initial state to undefined state
 	 *				if a string other than "undefined", set initial state to that state
+	 *		(the following parameters only apply to 'reorder')
+	 *		params.newStatesList [{string}] New order for the list of states on the StateContainer
 	 */
 	constructor: function(params){
 		if(!params){
@@ -33,6 +36,16 @@ return declare("davinci.ve.commands.AppStateCommand", null, {
 			this._params.stateContainerId = stateContainerNode.id;
 			this._params.stateContainerXpath = XPathUtils.getXPath(stateContainerNode._dvWidget._srcElement,
 					HtmlFileXPathAdapter);
+		}
+		if(this._params.action == 'reorder'){
+			// Verify that all parameters have been supplied properly
+			stateContainerNode = this._getStateContainerNode();
+			if(!stateContainerNode || !params.newStatesList.length){
+				this._params = null;
+			}else{
+				this._oldStatesList = States.getStates(stateContainerNode);
+				this._oldStatesList.shift();	// Remove "Normal" state
+			}
 		}
 	},
 	
@@ -83,6 +96,7 @@ return declare("davinci.ve.commands.AppStateCommand", null, {
 			// which includes both the AppStateCommand({action:'add',...}) and all of the
 			// appropriate StyleCommands.
 			States.add(stateContainerNode, state);
+			this._setStateAndFocus(stateContainerNode);
 		}else if(action == 'remove'){
 			// However, for removing a state, RemoveState.js simply creates
 			// an AppStateCommand({action:'remove', ...}), and the States.remove()
@@ -98,6 +112,7 @@ return declare("davinci.ve.commands.AppStateCommand", null, {
 			this._preservedStateValues = [];
 			this._preserveStateFromNodeRecursive(stateContainerNode, state);
 			States.remove(stateContainerNode, state);
+			this._setStateAndFocus(stateContainerNode);
 		}else if(action == 'modify'){
 			if(this._params.newState){
 				this._traverseRenameState(this._params.state, this._params.newState);
@@ -114,10 +129,17 @@ return declare("davinci.ve.commands.AppStateCommand", null, {
 				States.setState(initialState, stateContainerNode, 
 						{initial:initialState, updateWhenCurrent:true});
 			}
+			this._setStateAndFocus(stateContainerNode);
+		}else if(action == 'reorder'){
+			if(stateContainerNode && stateContainerNode._maqAppStates && stateContainerNode._dvWidget){
+				stateContainerNode._maqAppStates.states = this._params.newStatesList;
+				var attrValue = States.stringifyWithQuotes(stateContainerNode._maqAppStates);
+				stateContainerNode.setAttribute(States.APPSTATES_ATTRIBUTE, attrValue);
+				srcElement = stateContainerNode._dvWidget._srcElement;
+				srcElement.setAttribute(States.APPSTATES_ATTRIBUTE, attrValue);
+				topic.publish("/davinci/states/statesReordered", [stateContainerNode, this._params.newStatesList]);
+			}
 		}
-		var currentState = States.getState(stateContainerNode);
-		States.setState(currentState, stateContainerNode, 
-				{focus:currentState, updateWhenCurrent:true});
 	},
 
 	undo: function(){
@@ -132,10 +154,12 @@ return declare("davinci.ve.commands.AppStateCommand", null, {
 		}
 		if(action == 'add'){
 			States.remove(stateContainerNode, state);
+			this._setStateAndFocus(stateContainerNode);
 		}else if(action == 'remove'){
 			States.add(stateContainerNode, state, {index:this._stateIndex});
 			this._restoreState(state);
 			States.setState(state, stateContainerNode, {focus:true});
+			this._setStateAndFocus(stateContainerNode);
 		}else if(action == 'modify'){
 			if(typeof this._params.initialState == 'string'){
 				States.setState(this._oldInitialState, stateContainerNode, 
@@ -144,7 +168,20 @@ return declare("davinci.ve.commands.AppStateCommand", null, {
 			if(this._params.newState){
 				this._traverseRenameState(this._params.newState, this._params.state);
 			}
+			this._setStateAndFocus(stateContainerNode);
+		}else if(action == 'reorder'){
+			if(stateContainerNode && stateContainerNode._maqAppStates && stateContainerNode._dvWidget){
+				stateContainerNode._maqAppStates.states = this._oldStatesList;
+				var attrValue = States.stringifyWithQuotes(stateContainerNode._maqAppStates);
+				stateContainerNode.setAttribute(States.APPSTATES_ATTRIBUTE, attrValue);
+				srcElement = stateContainerNode._dvWidget._srcElement;
+				srcElement.setAttribute(States.APPSTATES_ATTRIBUTE, attrValue);
+				topic.publish("/davinci/states/statesReordered", [stateContainerNode, this._params.newStatesList]);
+			}
 		}
+	},
+	
+	_setStateAndFocus: function(stateContainerNode){
 		var currentState = States.getState(stateContainerNode);
 		States.setState(currentState, stateContainerNode, 
 				{focus:currentState, updateWhenCurrent:true});

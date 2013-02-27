@@ -1,5 +1,6 @@
 #orionBody {
 	background:white;
+	overflow:auto;
 }
 #davinci_top_bar {
 	padding:0;

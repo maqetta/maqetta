@@ -22,19 +22,19 @@ require([
 <script type="text/javascript"  src="../app.js"></script>
 </head>
 <body class="claro" data-maq-device="iphone" data-maq-flow-layout="true" data-maq-ws="collapse" id="myapp">
- <div data-dojo-type="dojox.mobile.View" id="root_view" style="height: 100%;" selected="selected">
-<h1 label="My Mobile App" data-dojo-type="dojox.mobile.Heading"></h1>
-<ul data-dojo-type="dojox.mobile.RoundRectList">
-  <li data-dojo-type="dojox.mobile.ListItem" moveTo="alerts_view">
+ <div data-dojo-type="dojox/mobile/View" id="root_view" style="height: 100%;" selected="selected">
+<h1 label="My Mobile App" data-dojo-type="dojox/mobile/Heading"></h1>
+<ul data-dojo-type="dojox/mobile/RoundRectList">
+  <li data-dojo-type="dojox/mobile/ListItem" moveTo="alerts_view">
     Alerts</li>
-  <li data-dojo-type="dojox.mobile.ListItem">
+  <li data-dojo-type="dojox/mobile/ListItem">
   Status</li>
-  <li data-dojo-type="dojox.mobile.ListItem">
+  <li data-dojo-type="dojox/mobile/ListItem">
     News</li>
 </ul>
 </div>
- <div data-dojo-type="dojox.mobile.View" id="alerts_view" style="height: 100%; display: none;">
-  <h1 label="Alerts" data-dojo-type="dojox.mobile.Heading" back="Home" moveTo="root_view"></h1>
+ <div data-dojo-type="dojox/mobile/View" id="alerts_view" style="height: 100%; display: none;">
+  <h1 label="Alerts" data-dojo-type="dojox/mobile/Heading" back="Home" moveTo="root_view"></h1>
   <div style="margin: 1em;">
   Today's alerts:</div>
   <div style="margin-left: 1em;">

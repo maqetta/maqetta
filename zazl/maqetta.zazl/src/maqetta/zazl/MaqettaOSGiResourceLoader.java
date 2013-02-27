@@ -8,16 +8,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.davinci.ajaxLibrary.ILibInfo;
-import org.davinci.ajaxLibrary.LibInfo;
 import org.davinci.ajaxLibrary.Library;
 import org.davinci.server.user.IUser;
 import org.davinci.server.user.IUserManager;
-import org.davinci.server.user.LibrarySettings;
 import org.dojotoolkit.server.util.osgi.OSGiResourceLoader;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.maqetta.server.IDavinciServerConstants;
-import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;
 import org.osgi.framework.BundleContext;
 
@@ -40,6 +36,10 @@ public class MaqettaOSGiResourceLoader extends OSGiResourceLoader {
 		IUser user = null;
 		IPath ipath = new Path(path);
 		if (ipath.segment(0).equals("maqetta")) {
+			// Current war packaging results in /maqetta/maqetta url prefix
+			if (ipath.segment(1).equals("maqetta")) {
+				ipath.removeFirstSegments(1);
+			}
 			if (ipath.segment(1).equals("user")) {
 		 		ipath = ipath.removeFirstSegments(2);
 				String userName = ipath.segment(0);

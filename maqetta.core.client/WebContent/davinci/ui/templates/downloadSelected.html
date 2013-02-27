@@ -1,14 +1,14 @@
 <div class='downloadDialog'>	 
 	<div class="dijitDialogPaneContentArea">
 		<div style="margin-bottom: 20px">
-		  ${fileName}: <input dojoType='dijit.form.ValidationTextBox' type="text" maxLength='${_fileNameMaxLength}' dojoAttachPoint="__fileName" value='${_projectName}.zip' data-dojo-props="regExp:'${_fileNameValidationRegExp}', required:true, invalidMessage:'${invalidDownloadFileName}'"></input>
+		  ${fileName}: <input data-dojo-type='dijit/form/ValidationTextBox' type="text" maxLength='${_fileNameMaxLength}' data-dojo-attach-point="__fileName" value='${_projectName}.zip' data-dojo-props="regExp:'${_fileNameValidationRegExp}', required:true, invalidMessage:'${invalidDownloadFileName}'"></input>
 		</div>
 		
-		<div dojoAttachPoint="_selectionDiv"></div>
+		<div data-dojo-attach-point="_selectionDiv"></div>
 
   </div>
 	<div class="dijitDialogPaneActionBar">
-		<button dojoType='dijit.form.Button' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='${downloadButtonLabel}' class="maqPrimaryButton" type="submit"></button>
-		<button dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='${buttonCancel}' class="maqSecondaryButton"></button>
+		<button data-dojo-type='dijit/form/Button' data-dojo-attach-point="_okButton" data-dojo-attach-event='onClick:okButton' label='${downloadButtonLabel}' class="maqPrimaryButton" type="submit"></button>
+		<button data-dojo-type='dijit/form/Button' data-dojo-attach-event='onClick:cancelButton' label='${buttonCancel}' class="maqSecondaryButton"></button>
 	</div>
 </div>

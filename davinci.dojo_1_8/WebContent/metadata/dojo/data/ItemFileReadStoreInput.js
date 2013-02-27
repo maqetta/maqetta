@@ -7,6 +7,7 @@ define([
 	"davinci/ve/commands/RemoveCommand",
 	"davinci/ve/widget",
 	"system/resource",
+	"dijit/Dialog",
 	"dojo/i18n!dijit/nls/common",
 	"dojo/i18n!../nls/dojo",
 	"davinci/ve/utils/URLRewrite"
@@ -19,6 +20,7 @@ define([
 	RemoveCommand,
 	Widget,
 	Resource,
+	Dialog,
 	commonNls,
 	dojoNls,
 	URLRewrite
@@ -60,7 +62,7 @@ return declare(SmartInput, {
 		this._getContext().getCommandStack().execute(command);
 		var widget = command.newWidget;
 		// this works just as well for ItemFileWriteStore
-		var ds = new dojo.data.ItemFileReadStore({url: props.url});
+		var ds = new ItemFileReadStore({url: props.url});
 		var dsId = props.jsId;
 		dojo.publish("/davinci/data/datastoreAdded", [dsId, ds, widget.type]);
 	},
@@ -87,36 +89,36 @@ return declare(SmartInput, {
 	
 	show: function(widgetId) {
 		this._widget = Widget.byId(widgetId);
-		this._inline = new dijit.Dialog({
+		this._inline = new Dialog({
 			title: dojoNls.dataStoreDetails,
 			style: "width: 500px; height:350px"
 		});
 		
 		// XXX TODO Move to HTML template file.
-		var s = '<div dojotype="dijit.layout.BorderContainer" design="headline" livesplitters="true" iscontainer="true" style="height: 300px; width: 480px; padding: 0px;">';
-		s    += '    <div dojotype="dijit.layout.ContentPane" parseonload="true" iscontainer="true" region="bottom" style="height: 50px; bottom: 5px; left: 78px; right: 78px;" splitter="true">';
-		s    += '        <input id="okButton" type="button" dojotype="dijit.form.Button" label="'+commonNls.buttonOk+'" showlabel="true" scrollonfocus="true" style="top: 20px; left: 95px; position: absolute;">';
-		s    += '        <input id="cancelButton" type="button" dojotype="dijit.form.Button" label="'+commonNls.buttonCancel+'" showlabel="true" scrollonfocus="true" style="left: 145px; top: 20px; position: absolute;">';
+		var s = '<div data-dojo-type="dijit/layout/BorderContainer" design="headline" livesplitters="true" iscontainer="true" style="height: 300px; width: 480px; padding: 0px;">';
+		s    += '    <div data-dojo-type="dijit/layout/ContentPane" parseonload="true" iscontainer="true" region="bottom" style="height: 50px; bottom: 5px; left: 78px; right: 78px;" splitter="true">';
+		s    += '        <input id="okButton" type="button" data-dojo-type="dijit/form/Button" label="'+commonNls.buttonOk+'" showlabel="true" scrollonfocus="true" style="top: 20px; left: 95px; position: absolute;">';
+		s    += '        <input id="cancelButton" type="button" data-dojo-type="dijit/form/Button" label="'+commonNls.buttonCancel+'" showlabel="true" scrollonfocus="true" style="left: 145px; top: 20px; position: absolute;">';
 		s    += '    </div>';
-		s    += '    <div dojotype="dijit.layout.ContentPane" parseonload="true" iscontainer="true" region="center" style="top: 78px; left: 78px; right: 78px; bottom: 78px;">';
+		s    += '    <div data-dojo-type="dijit/layout/ContentPane" parseonload="true" iscontainer="true" region="center" style="top: 78px; left: 78px; right: 78px; bottom: 78px;">';
 		s    += '        <div style="width: 282px; height: 37px;">';
 		s    += '            <label id="LABEL_T" style="left: 15px; position: absolute; top: 20px;">Type</label>';
-		s    += '            <select id="typeInput" type="text" dojotype="dijit.form.Select" style="position: absolute; left: 100px; top: 18px; width: 350px;">';
-		s    += '                <option value="dojo.data.ItemFileReadStore">'+dojoNls.itemFileReadStore+'</option>';
-		s    += '                <option value="dojo.data.ItemFileWriteStore">'+dojoNls.itemFileWriteStore+'</option>';
+		s    += '            <select id="typeInput" type="text" data-dojo-type="dijit/form/Select" style="position: absolute; left: 100px; top: 18px; width: 350px;">';
+		s    += '                <option value="dojo/data/ItemFileReadStore">'+dojoNls.itemFileReadStore+'</option>';
+		s    += '                <option value="dojo/data/ItemFileWriteStore">'+dojoNls.itemFileWriteStore+'</option>';
 		s    += '            </select>';
 		s    += '        </div>';
 		s    += '        <div style="width: 282px; height: 37px;">';
 		s    += '            <label id="LABEL_0" style="left: 15px; position: absolute; top: 55px;">'+dojoNls.dataStoreId+'</label>';
-		s    += '            <input id="jsIdInput" type="text" dojotype="dijit.form.TextBox" style="position: absolute; left: 100px; top: 55px; width: 350px;">';
+		s    += '            <input id="jsIdInput" type="text" data-dojo-type="dijit/form/TextBox" style="position: absolute; left: 100px; top: 55px; width: 350px;">';
 		s    += '        </div>';
 		s    += '        <div style="width: 282px; height: 37px;">';
 		s    += '            <label id="LABEL_1" style="left: 15px; position: absolute; top: 90px;">'+dojoNls.url+'</label>';
-		s    += '            <input id="urlInput" type="text" dojotype="dijit.form.TextBox" style="top: 90px; left: 100px; position: absolute; width: 350px;">';
+		s    += '            <input id="urlInput" type="text" data-dojo-type="dijit/form/TextBox" style="top: 90px; left: 100px; position: absolute; width: 350px;">';
 		s    += '        </div>';
 		s    += '        <div style="width: 282px; height: 37px;">';
 		s    += '            <label id="LABEL_2" style="left: 15px; position: absolute; top: 125px;">'+dojoNls.scriptLabel+'</label>';
-		s    += '            <input id="scriptInput" type="text" dojotype="dijit.form.Textarea" style="top: 125px; left: 100px; position: absolute; width: 350px;">';
+		s    += '            <input id="scriptInput" type="text" data-dojo-type="dijit/form/Textarea" style="top: 125px; left: 100px; position: absolute; width: 350px;">';
 		s    += '        </div>';
 		s    += '    </div>';
 		s    += '</div>';

@@ -78,8 +78,8 @@ return declare(null, {
         }
         
         if (themeSet && themeSet.mobileTheme ){
-        	var c = new ChangeThemeCommand(themeSet, context);
-        	c._dojoxMobileAddTheme(context, themeSet.mobileTheme);
+        	var c = new ChangeThemeCommand(themeSet, this.context);
+        	c._dojoxMobileAddTheme(this.context, themeSet.mobileTheme);
         }
        
         var cssChanges = this.getPageCss();

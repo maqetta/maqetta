@@ -304,7 +304,7 @@
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAASlJREFUeNpi/P//PwMlgAVEBHbuxGnKgbf/GS1+f8SQP8HKzwg3gOEHA8P6enesBngWrvxflOyGId43d9d/kCEsEP0/GFYevInTmUDFWMUduBn/w13gbaaMVREucRAI7doK88IPMLXt8ksGRqjk//9AFuN/ND6YBeZ76YqD9UG8ADXg1x+ksAJqZkAOOiAfFGGMDAjhHx+gBoD9ACL//gPrg1n7H2oO3BnIYlB9YAO+/mQCc3/++QexjAHNcphGNHGQPrAB/37/hngB6IL/MGVAPzOCnI3BRwCQPrABP3/8RHEBNPwQzmaEBQkkIGFyIH0syNHy8+9/JCcjHAzjMzJAXYhkOtgAli+/wJxiJ0WS8gHTt68M8JRoGtRKVmZipDQ3MjFQCAACDAAZhYTuU0wrQQAAAABJRU5ErkJggg==",
             "properties": {
                 "style": "min-width:1em; min-height:1em;",
-                "controllerWidget": "dijit/layout/TabController"
+                "controllerWidget": "dijit.layout.TabController"
             },
             "children": [
                 {

@@ -715,14 +715,25 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 								ReviewRoot.findVersion(designer, version).then(function(node) {
 									if (node) {
 										node.getChildren(function(childs) {
-											if(childs.length > 1) {
-												return;
-											}
-											dojo.forEach(childs, function(child){
-												Workbench.openEditor({
-													fileName: child,
-													content: node.getText()
-												});
+											var index;
+											dojo.forEach(childs, function(child, index){
+												if (index == 0) {
+													Workbench.openEditor({
+														fileName: child,
+														content: node.getText()
+													});
+												} else {
+													/*
+													 * deffer loading content until user selects the tab
+													 */
+													Workbench.openEditor({
+														fileName: child,
+														noSelect: true,
+														isDirty: child.isDirty(),
+														startup: false,
+														initializationTime: true
+													});
+												}
 											});
 										}.bind(this));
 									}

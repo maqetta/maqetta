@@ -113,92 +113,95 @@ return declare([], {
 			if(!this.initialSet){
 				this.context.deactivate();
 				this.context._setSource(htmlFile, function(failureInfo) {
-					if (failureInfo.errorMessage) {
-						this.loadingDiv.innerHTML = failureInfo.errorMessage;
-						return;
-					} else if (failureInfo instanceof Error) {
-						var message = "Uh oh! An error has occurred:<br><b>" + failureInfo.message + "</b>";
-						if (failureInfo.fileName) {
-							message += "<br>file: " + failureInfo.fileName + "<br>line: " + failureInfo.lineNumber;
+					try {
+						if (failureInfo instanceof Error) {
+							throw failureInfo;
 						}
-						if (failureInfo.stack) {
-							message += "<br>" + failureInfo.stack;
-						}
-						this.loadingDiv.innerHTML = message;
-						dojo.addClass(this.loadingDiv, 'error');
-						return;
-					}
 
-					this.savePoint = 0;
-					// Make sure the theme css file is the last one in the head
-					var doc = this.context.getDocument();
-					for (var x = 0; x < doc.head.children.length; x++){
-						var node = doc.head.children[x];
-						if (node.tagName == 'LINK' && (node.getAttribute('href').indexOf(this.theme.files[0]) > -1) ) {
-							doc.head.removeChild(node);
-							doc.head.appendChild(node);
-							break;
-						}
-					}
-					//FIXME: include a LINK element for document.css for all themes.
-					//Just so happens that desktop Dojo themes have document.css
-					//and mobile themes don't.
-					//We need to drive this from theme metadata somehow.
-					//See issue #2381
-
-				     var helper;
-				     if (this.theme && this.theme.helper){
-				         helper = Theme.getHelper(this.theme);
-				         if (helper && helper.preThemeConfig){
-				             helper.preThemeConfig(this.context);
-				         } else if (helper && helper.then){ // it might not be loaded yet so check for a deferred
-				        	 helper.then(function(result){
-				        		 if (result.helper && result.helper.preThemeConfig){
-				        			 result.helper.preThemeConfig(this.context); 
-				        			 this.theme.helper = result.helper;
-				    			 }
-				        	 }.bind(this));
-				          }
-				     }
-				     
-
-					this.context.activate();
-
-					// Because widget sizing css rules were not included in the HEAD at page load,
-					// we must resize all of the widgets manually after the browser has had a chance
-					// to repaint.  To avoid this workaround, we should either move the CSS rules
-					// to the head of the document prior to page load, or resize() should be called
-					// directly to conform with the way Dijit works.
-					setTimeout(dojo.hitch(this, function(){
-						
-						this.context.getTopWidgets().forEach(function(widget){
-							if (widget.resize){
-								widget.resize({});
+						this.savePoint = 0;
+						// Make sure the theme css file is the last one in the head
+						var doc = this.context.getDocument();
+						for (var x = 0; x < doc.head.children.length; x++){
+							var node = doc.head.children[x];
+							if (node.tagName == 'LINK' && (node.getAttribute('href').indexOf(this.theme.files[0]) > -1) ) {
+								doc.head.removeChild(node);
+								doc.head.appendChild(node);
+								break;
 							}
-						});
-						dojo.publish("/davinci/states/state/changed", [{
-							editorClass: 'davinci.themeEditor.ThemeEditor',
-							widget: '$all', 
-							newState: "Normal",
-							context: this.context}]); // send state message to get Theme and StatesView in same init state
-					}), 1500);
-					this.initialSet=true;
-					
+						}
+						//FIXME: include a LINK element for document.css for all themes.
+						//Just so happens that desktop Dojo themes have document.css
+						//and mobile themes don't.
+						//We need to drive this from theme metadata somehow.
+						//See issue #2381
+	
+						var helper;
+						if (this.theme && this.theme.helper){
+							helper = Theme.getHelper(this.theme);
+							if (helper && helper.preThemeConfig){
+								helper.preThemeConfig(this.context);
+							} else if (helper && helper.then){ // it might not be loaded yet so check for a deferred
+								helper.then(function(result){
+									if (result.helper && result.helper.preThemeConfig){
+										result.helper.preThemeConfig(this.context); 
+										this.theme.helper = result.helper;
+									}
+								}.bind(this));
+							}
+						}
+	
+						this.context.activate();
+	
+						// Because widget sizing css rules were not included in the HEAD at page load,
+						// we must resize all of the widgets manually after the browser has had a chance
+						// to repaint.  To avoid this workaround, we should either move the CSS rules
+						// to the head of the document prior to page load, or resize() should be called
+						// directly to conform with the way Dijit works.
+						setTimeout(dojo.hitch(this, function(){
+							this.context.getTopWidgets().forEach(function(widget){
+								if (widget.resize){
+									widget.resize({});
+								}
+							});
+							dojo.publish("/davinci/states/state/changed", [{
+								editorClass: 'davinci.themeEditor.ThemeEditor',
+								widget: '$all', 
+								newState: "Normal",
+								context: this.context}]); // send state message to get Theme and StatesView in same init state
+						}), 1500);
+						this.initialSet=true;
 
-					var ldojoVersion = this.context.getDojo().version.major +'.'+ this.context.getDojo().version.minor;
-					if (ldojoVersion !== this.theme.version){
-						var cookieName = 'maqetta_'+this.theme.name+'_'+this.theme.version;
-						var warnCookie = dojo.cookie(cookieName);
-						if (!warnCookie){
-							dojo.cookie(cookieName, "true");
-							this.themeVersionWarn(true);
+						var ldojoVersion = this.context.getDojo().version.major +'.'+ this.context.getDojo().version.minor;
+						if (ldojoVersion !== this.theme.version){
+							var cookieName = 'maqetta_'+this.theme.name+'_'+this.theme.version;
+							var warnCookie = cookie(cookieName);
+							if (!warnCookie){
+								cookie(cookieName, "true");
+								this.themeVersionWarn(true);
+							}
+						}
+					} catch(e) {
+						failureInfo = e;
+					} finally {
+						if (failureInfo.errorMessage) {
+							this.loadingDiv.innerHTML = failureInfo.errorMessage;
+						} else if (failureInfo instanceof Error) {
+							var message = "Uh oh! An error has occurred:<br><b>" + failureInfo.message + "</b>";
+							if (failureInfo.fileName) {
+								message += "<br>file: " + failureInfo.fileName + "<br>line: " + failureInfo.lineNumber;
+							}
+							if (failureInfo.stack) {
+								message += "<br>" + failureInfo.stack;
+							}
+							this.loadingDiv.innerHTML = message;
+							dojo.addClass(this.loadingDiv, 'error');
+						} else {
+							if (this.loadingDiv.parentNode) {
+								this.loadingDiv.parentNode.removeChild(this.loadingDiv);							
+							}
+							delete this.loadingDiv;
 						}
 					}
-
-					if (this.loadingDiv.parentNode) {
-						this.loadingDiv.parentNode.removeChild(this.loadingDiv);							
-					}
-					delete this.loadingDiv;
 				}, this);
 			}
 		}

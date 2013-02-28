@@ -23,7 +23,7 @@ return declare(HorizontalSliderInput, {
 	},
 	
 	_getWidgetTypeForSlider: function() {
-		return "dijit.form.VerticalSlider";
+		return "dijit/form/VerticalSlider";
 	},
 	
 	_getWidgetStyleForSlider: function() {
@@ -31,11 +31,11 @@ return declare(HorizontalSliderInput, {
 	},
 	
 	_getWidgetTypeForRule: function() {
-		return "dijit.form.VerticalRule";
+		return "dijit/form/VerticalRule";
 	},
 	
 	_getWidgetTypeForRuleLabels: function() {
-		return "dijit.form.VerticalRuleLabels";
+		return "dijit/form/VerticalRuleLabels";
 	},
 	
 	_getPropertiesForNewChildData: function(type) {

@@ -3,12 +3,10 @@ define([
 	"dojo/_base/xhr",
 	"dojo/_base/connect",
 	"dojo/Deferred",
-	"dijit/registry",
 	"davinci/Runtime",
 	"davinci/model/Model",
-	"davinci/model/Path",
-	"davinci/ve/utils/URLRewrite"
-], function(declare, xhr, connect, Deferred, registry, Runtime, Model, Path, URLRewrite) {
+	"davinci/model/Path"
+], function(declare, xhr, connect, Deferred, Runtime, Model, Path) {
 
 return declare("davinci.model.resource.Resource", Model, {
 

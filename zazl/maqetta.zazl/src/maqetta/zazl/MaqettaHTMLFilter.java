@@ -33,8 +33,10 @@ import org.maqetta.server.IDavinciServerConstants;
 public class MaqettaHTMLFilter implements Filter {
 	private static Logger logger = Logger.getLogger("maqetta.zazl");
 	private StringBuffer configScriptTag = null;
+	private MaqettaOSGiResourceLoader resourceLoader = null;
 
-	public MaqettaHTMLFilter() {
+	public MaqettaHTMLFilter(MaqettaOSGiResourceLoader resourceLoader) {
+		this.resourceLoader = resourceLoader;
 		configScriptTag = new StringBuffer();
 		configScriptTag.append("<script type=\"text/javascript\">\n");
 		configScriptTag.append("var dojoConfig = __DOJOCONFIG__;\n");
@@ -54,6 +56,9 @@ public class MaqettaHTMLFilter implements Filter {
 	public void init(FilterConfig filterConfig) throws ServletException {}
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		if (!resourceLoader.contextPathSet()) {
+			resourceLoader.setContextPath(((HttpServletRequest)request).getContextPath());
+		}
 		String pathInfo = ((HttpServletRequest)request).getPathInfo();
 		boolean isZazlRequest = false;
 		String strIsZazlRequest = request.getParameter("zazl");

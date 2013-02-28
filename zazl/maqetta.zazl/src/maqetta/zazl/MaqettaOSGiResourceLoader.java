@@ -21,11 +21,24 @@ public class MaqettaOSGiResourceLoader extends OSGiResourceLoader {
 	private static Logger logger = Logger.getLogger("maqetta.zazl");
 	private IUserManager userManager = null;
 	private List<Library> srcLibs = null;
+	private String contextPathSegment = null;
 	
 	public MaqettaOSGiResourceLoader(BundleContext bundleContext, String[] bundleIds, IUserManager userManager, List<Library> srcLibs) {
 		super(bundleContext, bundleIds);
 		this.userManager = userManager;
 		this.srcLibs = srcLibs;
+	}
+	
+	public void setContextPath(String contextPath) {
+		if (!contextPath.equals("")) {
+			contextPathSegment = contextPath.substring(1);
+		} else {
+			contextPathSegment = "";
+		}
+	}
+	
+	public boolean contextPathSet() {
+		return contextPathSegment == null ? false : true;
 	}
 	
 	protected URL _getResource(String path) {
@@ -35,11 +48,10 @@ public class MaqettaOSGiResourceLoader extends OSGiResourceLoader {
 		}
 		IUser user = null;
 		IPath ipath = new Path(path);
+		if (ipath.segment(0).equals(contextPathSegment)) {
+	 		ipath = ipath.removeFirstSegments(1);
+		}
 		if (ipath.segment(0).equals("maqetta")) {
-			// Current war packaging results in /maqetta/maqetta url prefix
-			if (ipath.segment(1).equals("maqetta")) {
-				ipath.removeFirstSegments(1);
-			}
 			if (ipath.segment(1).equals("user")) {
 		 		ipath = ipath.removeFirstSegments(2);
 				String userName = ipath.segment(0);

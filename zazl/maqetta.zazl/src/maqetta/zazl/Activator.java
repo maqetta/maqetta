@@ -78,7 +78,7 @@ public class Activator implements BundleActivator {
 					srcLibraryList.add(library);
 				}
 			}
-			ResourceLoader resourceLoader = new MaqettaOSGiResourceLoader(bundleContext, bundleIds, ServerManager.getServerManager().getUserManager(), srcLibraryList);
+			MaqettaOSGiResourceLoader resourceLoader = new MaqettaOSGiResourceLoader(bundleContext, bundleIds, ServerManager.getServerManager().getUserManager(), srcLibraryList);
 			RhinoClassLoader rhinoClassLoader = new RhinoClassLoader(resourceLoader);
 			JSCompressorFactory jsCompressorFactory = null;
 			Boolean jscompress = Boolean.valueOf(System.getProperty("maqetta.zazl.jscompress", "false"));
@@ -88,7 +88,7 @@ public class Activator implements BundleActivator {
 			JSOptimizerFactory jsOptimizerFactory = new AMDJSOptimizerFactory();
 	
 			JSServlet jsServlet = new JSServlet(resourceLoader, jsOptimizerFactory, rhinoClassLoader, "zazl", null, null, jsCompressorFactory);
-			maqettaHTMLFilter = new MaqettaHTMLFilter();
+			maqettaHTMLFilter = new MaqettaHTMLFilter(resourceLoader);
 			try {
 				System.out.println("Registering Zazl JavaScript servlet");
 				httpService.registerServlet("/_javascript", jsServlet, null, null);

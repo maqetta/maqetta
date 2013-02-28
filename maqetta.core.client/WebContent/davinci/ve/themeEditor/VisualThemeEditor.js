@@ -189,7 +189,7 @@ return declare([], {
 							message += "<br>" + failureInfo.stack;
 						}
 						this.loadingDiv.innerHTML = message;
-						dojo.addClass(loading, 'error');
+						dojo.addClass(this.loadingDiv, 'error');
 					} else {
 						if (this.loadingDiv.parentNode) {
 							this.loadingDiv.parentNode.removeChild(this.loadingDiv);							
@@ -204,7 +204,7 @@ return declare([], {
 	themeVersionWarn: function(toolkit){
 		var msg = veNls.vteWarningMessage;
 		if (toolkit) {
-			msg = veNls.vteWarninToolkitgMessage
+			msg = veNls.vteWarninToolkitgMessage;
 		} 
 		Workbench.showMessage(veNls.vteWarningTitle, msg, {width: 250});
 		

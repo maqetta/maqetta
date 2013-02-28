@@ -99,19 +99,36 @@ return declare([], {
 			// add the style sheet to the theme editor
 		}else if(fileName == "DEFAULT_PAGE"){
 			var themeBase = Theme.getThemeLocation(); 
-			htmlFile = new HTMLFile();; // each theme editor HTML needs to be it's own instance NO singleton from the model
+			htmlFile = new HTMLFile(); // each theme editor HTML needs to be it's own instance NO singleton from the model
 			htmlFile.fileName = fileName;
 			htmlFile.setText(content, true); // no import
 			// #23 adjust for where html is located 
 			var relPath = themeBase.relativeTo(this.basePath, true);
 			htmlFile.themeCssFiles = [];
 			themeCssFiles.forEach(function(file){
-				htmlFile.themeCssFiles.push(relPath.toString()+'/'+this.theme.name+'/'+file); // #23 css files need to be added to doc before body content
+				// #23 css files need to be added to doc before body content
+				htmlFile.themeCssFiles.push(relPath.toString()+'/'+this.theme.name+'/'+file);
 			}.bind(this));
 			this.context.model = htmlFile;
 			if(!this.initialSet){
 				this.context.deactivate();
 				this.context._setSource(htmlFile, function(failureInfo) {
+					if (failureInfo.errorMessage) {
+						this.loadingDiv.innerHTML = failureInfo.errorMessage;
+						return;
+					} else if (failureInfo instanceof Error) {
+						var message = "Uh oh! An error has occurred:<br><b>" + failureInfo.message + "</b>";
+						if (failureInfo.fileName) {
+							message += "<br>file: " + failureInfo.fileName + "<br>line: " + failureInfo.lineNumber;
+						}
+						if (failureInfo.stack) {
+							message += "<br>" + failureInfo.stack;
+						}
+						this.loadingDiv.innerHTML = message;
+						dojo.addClass(this.loadingDiv, 'error');
+						return;
+					}
+
 					this.savePoint = 0;
 					// Make sure the theme css file is the last one in the head
 					var doc = this.context.getDocument();
@@ -178,24 +195,10 @@ return declare([], {
 						}
 					}
 
-					if (failureInfo.errorMessage) {
-						this.loadingDiv.innerHTML = failureInfo.errorMessage;
-					} else if (failureInfo instanceof Error) {
-						var message = "Uh oh! An error has occurred:<br><b>" + failureInfo.message + "</b>";
-						if (failureInfo.fileName) {
-							message += "<br>file: " + failureInfo.fileName + "<br>line: " + failureInfo.lineNumber;
-						}
-						if (failureInfo.stack) {
-							message += "<br>" + failureInfo.stack;
-						}
-						this.loadingDiv.innerHTML = message;
-						dojo.addClass(this.loadingDiv, 'error');
-					} else {
-						if (this.loadingDiv.parentNode) {
-							this.loadingDiv.parentNode.removeChild(this.loadingDiv);							
-						}
-						delete this.loadingDiv;
+					if (this.loadingDiv.parentNode) {
+						this.loadingDiv.parentNode.removeChild(this.loadingDiv);							
 					}
+					delete this.loadingDiv;
 				}, this);
 			}
 		}

@@ -149,7 +149,7 @@ define({ root:
 		"vteWarningMessage": "Theme version does not match Maqetta version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.",
 		"vteWarningUnsuportedBrowserTitle": "Unsupported brower",
 		"vteWarningUnsuportedBrowserMessage": "Editing mobile themes is only supported on webkit browsers, we sugguest using Chrome or Safari to customize mobile themes.",
-		"vteWarninToolkitgMessage": "Theme version does not match workspace library version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.",
+		"vteWarningToolkitMessage": "Theme version does not match workspace library version this could produce unexpected results. We suggest recreating the custom theme using the current version of Maqetta and deleting the existing theme.",
 		"vteErrorTitle": "Theme Version Error",
 		"vteErrorMessage": "Theme version is not supported by this version of Maqetta. You must recreating custom theme using the current version of Maqetta and deleting the existing theme..",
 		

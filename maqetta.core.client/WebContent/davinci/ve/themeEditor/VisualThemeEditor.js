@@ -1,17 +1,16 @@
 define([
     	"dojo/_base/declare",
-    	"davinci/Runtime",
     	"davinci/Workbench",
-    	"davinci/ve/themeEditor/Context",
+    	"./Context",
     	"davinci/workbench/Preferences",
     	"davinci/model/Path",
-    	"davinci/model/Factory",
     	"davinci/html/HTMLFile",
     	"davinci/Theme",
-    	"dojo/i18n!davinci/ve/nls/ve",
-    	"davinci/ve/utils/URLRewrite",
-    	"dojo/_base/sniff"
-], function(declare, Runtime, Workbench, Context, Preferences, Path, Factory, HTMLFile, Theme, veNls,URLRewrite, has) {
+    	"dojo/i18n!../nls/ve",
+    	"../utils/URLRewrite",
+    	"dojo/cookie"
+//    	"dojo/_base/sniff"
+], function(declare, Workbench, Context, Preferences, Path, HTMLFile, Theme, veNls, URLRewrite, cookie/*, has*/) {
 
 return declare([], {
 
@@ -59,9 +58,8 @@ return declare([], {
 		dojo.xhrGet({
 				url: URLRewrite.encodeURI(resource.getURL()),
 				handleAs: "text",
-				sync: false,
 				content:{} 
-			}).addCallback(dojo.hitch(this, function(result){
+			}).then(dojo.hitch(this, function(result){
 				this.setContent("DEFAULT_PAGE", 
 								result,
 								themeCssFiles);
@@ -86,9 +84,9 @@ return declare([], {
 		
 		if (this.theme.specVersion < this.THEME_EDITOR_SPEC){
 			var cookieName = 'maqetta_'+this.theme.name+'_'+this.theme.specVersion;
-			var warnCookie = dojo.cookie(cookieName);
+			var warnCookie = cookie(cookieName);
 			if (!warnCookie){
-				dojo.cookie(cookieName, "true");
+				cookie(cookieName, "true");
 				this.themeVersionWarn(); //just warn for now
 			}
 		}
@@ -119,16 +117,17 @@ return declare([], {
 						}
 
 						this.savePoint = 0;
+
 						// Make sure the theme css file is the last one in the head
 						var doc = this.context.getDocument();
-						for (var x = 0; x < doc.head.children.length; x++){
-							var node = doc.head.children[x];
+						dojo.some(doc.head.children, function(node) {
 							if (node.tagName == 'LINK' && (node.getAttribute('href').indexOf(this.theme.files[0]) > -1) ) {
 								doc.head.removeChild(node);
 								doc.head.appendChild(node);
-								break;
+								return true;
 							}
-						}
+						}, this);
+
 						//FIXME: include a LINK element for document.css for all themes.
 						//Just so happens that desktop Dojo themes have document.css
 						//and mobile themes don't.
@@ -210,7 +209,7 @@ return declare([], {
 	themeVersionWarn: function(toolkit){
 		var msg = veNls.vteWarningMessage;
 		if (toolkit) {
-			msg = veNls.vteWarninToolkitgMessage;
+			msg = veNls.vteWarningToolkitMessage;
 		} 
 		Workbench.showMessage(veNls.vteWarningTitle, msg, {width: 250});
 		

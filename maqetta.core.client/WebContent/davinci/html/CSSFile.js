@@ -109,7 +109,7 @@ return declare("davinci.html.CSSFile", CSSElement, {
 	},
 
 	getMatchingRules: function(domElement, rules, matchLevels) {
-
+		//console.log('CSSFILE:getMatchingRules looking in ' + this.url);
 		domElement = this._convertNode(domElement);
 		rules = rules || [];
 		matchLevels = matchLevels || [];
@@ -117,17 +117,32 @@ return declare("davinci.html.CSSFile", CSSElement, {
 			var child = this.children[i];
 			if (child.elementType == 'CSSRule') {
 				var level = child.matches(domElement);
+				//console.log('CSSFILE:getMatchingRules  ' + child.parent.url);
+				//console.log('CSSFILE:getMatchingRules selector ' + child.getSelectorText() + ' level '+level);
 				if (level) {
+					var added = false;
 					for ( var j = 0; j < matchLevels.length; j++ ) {
+						/*
+						 * Run the rules and add the rule based on it's match level 0 - NNN
+						 * 
+						 */
 						if (level >= matchLevels[j]) {
 							rules.splice(j, 0, child);
+						//	console.log('CSSFILE:getMatchingRules found ' + child.parent.url);
+						//	console.log('CSSFILE:getMatchingRules selector ' + child.getSelectorText() + ' level '+level);
 							matchLevels.splice(j, 0, level);
+							added = true;
 							break;
 						}
 					}
-					if (rules.length == 0) {
-						rules.push(child);
-						matchLevels.push(level);
+					/*
+					 * The rule is a match but either we have no rules in the array
+					 * or all the rules already in the array have a higer match level than this one
+					 * So add at the front
+					 */
+					if (!added) {
+						rules.splice(0, 0, child);
+						matchLevels.splice(0, 0, level);
 					}
 				}
 			} else if (child.elementType == 'CSSImport' && child.cssFile) {

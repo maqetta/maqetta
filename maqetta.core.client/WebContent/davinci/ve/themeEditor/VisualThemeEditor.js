@@ -42,7 +42,7 @@ return declare([], {
 			editor: this._themeEditor,
 			visualEditor: this,
 			containerNode: this.domNode,
-			baseURL: resource.getURL(),
+			baseURL: encodeURI(resource.getURL()),
 			theme: theme
 		});
 
@@ -55,7 +55,7 @@ return declare([], {
 		// have the server insert the dojo URL dynamically 
 		
 		dojo.xhrGet({
-				url: resource.getURL(),
+				url: encodeURI(resource.getURL()),
 				handleAs: "text",
 				content:{} 
 			}).then(dojo.hitch(this, function(result){

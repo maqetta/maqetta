@@ -1,36 +1,34 @@
-define([
-	"dojo/_base/declare",
-	"davinci/ve/utils/URLRewrite"
-], function(declare, URLRewrite){
-	
-return declare("davinci.html.ui.ImageViewer", null, {
+define([], function(){
 
-	isReadOnly : true,
+var ImageViewer = function(element) {
+	this.element = element;
+};
 
-	constructor : function (element) {
-		this.element = element;
+ImageViewer.prototype = {
+	isReadOnly: true,
+
+	save: function() {
 	},
 
-	save : function() {
+	getDefaultContent: function() {
 	},
 
-	getDefaultContent : function() {
-	},
-
-	supports : function (something) {
+	supports: function (something) {
 		return false;
 	},
 
-	setContent : function (fileName,content) {
+	setContent: function (fileName,content) {
 		this.fileName = fileName;
 		this.element.innerHTML = "<div style='overflow:auto'>"
-			+ "<img src='"+ URLRewrite.encodeURI(this.resourceFile.getURL())+"'/>"
+			+ "<img src='"+ encodeURI(this.resourceFile.getURL())+"'/>"
 			+ "</div>";
 		this.dirty = false;
 	},
 
-	destroy : function() {
+	destroy: function() {
 	}
+};
 
-});
+return ImageViewer;
+
 });

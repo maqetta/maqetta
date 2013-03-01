@@ -90,14 +90,18 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 			console.log('metadata:getStyleSelectors no widgetType');
 			return;
 		}
-		if(!state) state = 'Normal';
+		if(!state) {
+			state = 'Normal';
+		}
 		var selectors;
-		var p = widgetType.split('.');
+		var p = widgetType.split(/[\.\/]/);
 		var w = p[0];
 		var n = p[p.length-1];
 		if(subwidget && (w in this._widgets) && (n in this._widgets[w])){
 			var sw = (subwidget.id) ? subwidget.id : subwidget;
-			if (!this._widgets[w][n].subwidgets[''+sw].states[''+state]) return null; // not valid state
+			if (!this._widgets[w][n].subwidgets[''+sw].states[''+state]) {
+				return null; // not valid state
+			}
 			selectors = this._widgets[w][n].subwidgets[''+sw].states[''+state].selectors;
 			if (!selectors || selectors == '$auto'){
 				selectors = this._createDefaultSelectors(''+w+sw,state);
@@ -123,9 +127,11 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 			console.log('metadata:getElementStyleProperties no widgetType');
 			return;
 		}
-		if(!state) state = 'Normal';
+		if(!state) {
+			state = 'Normal';
+		}
 		var elementProps;
-		var p = widgetType.split('.');
+		var p = widgetType.split(/[\.\/]/);
 		var w = p[0];
 		var n = p[p.length-1];
 		if(subwidget && (w in this._widgets) && (n in this._widgets[w])){
@@ -146,13 +152,9 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 			}
 			
 		}else{
-			
-			
-			console.log("metadata not found for" + widgetType + " state: " + state + " subwidget " + subwidget)
-			
+			console.log("metadata not found for" + widgetType + " state: " + state + " subwidget " + subwidget);
 		}
 		return elementProps;
-		
 	},
 	_createDefaultSelectors: function(widgetName, state){
 		var selector;
@@ -161,7 +163,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 		} else {
 			selector = '.'+this._theme.className+' .' + widgetName + state;
 		}
-		var selectors = new Object();
+		var selectors = {};
 		selectors[selector] =  ["$std_10"];
 	   return selectors;		
 	},
@@ -223,8 +225,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
                         dojo.removeClass(n,simulate);
                     }
                 }
-           } 
-           catch(e){
+           } catch(e){
         	   console.error('CSSThemeProvider._simulateState invalid simulate in metadata for ' + updateWidget.type + " " + q + ": "  + s);
            }
         }
@@ -246,11 +247,11 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 //		if (widgetType == 'davinci.ve.widget.HtmlWidget' || widgetType == 'davinci.ve.helpers.HtmlWidget') {
 //			 widgetType = 'html.' + node.localName;
 //		 }
-		var p = widgetType.split('.');
+		var p = widgetType.split(/[\.\/]/);
 		var w = p[0];
 		var n = p[p.length-1];
-		var query;
-		var simulate;
+//		var query;
+//		var simulate;
 		var widget = this._widgets[w][n];
 		// some widgets do not start in a normal state. like TabContainer
 		if (state === 'Normal' && init == true && mode === 'remove' && this._widgets[w][n].startState){
@@ -269,14 +270,14 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 				var selectors = this.getStyleSelectors(widgetType, state);
 				var cssClass = '';
 				for (var selector in selectors){
-					cssClass = CSSThemeProvider_replacePseudoClass(selector)
+					cssClass = CSSThemeProvider_replacePseudoClass(selector);
 					cssClass  = cssClass.replace(/\./g,' ');
 					cssClass = cssClass.replace(this._theme.className,'');
-					s = s + ' ' + cssClass;
+					s += ' ' + cssClass;
 				}
 				if(state != 'Normal'){
 						s = w + state + ' ' + s; // add the default state class
-					}
+				}
 			}
 			if (state != 'Normal'){ // Normal is the base class do not remove it.
 				s = s + ' '+CSSThemeProvider_MAQETTA_PSEUDO_CLASS+state; // add the browser Pseudo Class emeulation
@@ -302,10 +303,10 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 					var cssClass = '';
 					s = ' ';
 					for (var selector in selectors){
-						cssClass = CSSThemeProvider_replacePseudoClass(selector)
+						cssClass = CSSThemeProvider_replacePseudoClass(selector);
 						cssClass  = cssClass.replace(/\./g,' ');
 						cssClass = cssClass.replace(this._theme.className,'');
-						s = s + ' ' + cssClass;
+						s += ' ' + cssClass;
 					}
 					if(state != 'Normal'){
 							s = w + state + ' ' + s; // add the default state class
@@ -364,7 +365,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 			state = 'Normal';
 		}
 			
-		var p = widgetType.split('.');
+		var p = widgetType.split(/[\.\/]/);
 		var w = p[0];
 		var n = p[p.length-1];
 		var query;
@@ -404,10 +405,12 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 	},
 	
 	getMetadata: function(widgetType){
-		if (!widgetType) return undefined;
-		var p = widgetType.split('.');
+		if (!widgetType) {
+			return undefined;
+		}
+		var p = widgetType.split(/[\.\/]/);
 		var w = p[0];
-		var n = p[p.length-1]
+		var n = p[p.length-1];
 		var s = this._widgets && this._widgets[w] && this._widgets[w][n];
 		return s;
 	},
@@ -590,6 +593,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 
 });
 
+//FIXME: these are global
 var CSSThemeProvider_MAQETTA_PSEUDO_CLASS = 'maqettaPseudoClass';
 
 function CSSThemeProvider_replacePseudoClass(selectorText) {

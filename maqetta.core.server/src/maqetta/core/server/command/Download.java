@@ -110,11 +110,7 @@ public class Download extends Command {
         } catch (IOException e) {
             responseString = "Error creating download file : " + e;
         } finally {
-        	try {
-        		resp.getOutputStream().close();
-        	} catch (java.io.EOFException eof) {
-        		// User cancelled download
-        	}
+        	resp.getOutputStream().close();
         }
     }
 

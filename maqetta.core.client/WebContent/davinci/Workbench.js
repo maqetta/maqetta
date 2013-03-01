@@ -636,7 +636,8 @@ var Workbench = {
 					var editorId = editorContainer.id;
 					var shadowId = editorIdToShadowId(editorId);
 					var shadowTabContainer = dijit.byId("davinci_file_tabs");
-					shadowTabContainer.tablist.pane2button[shadowId].attr('label', title);
+					var titleWithDirty = title + (editorContainer.isDirty ? '<span class="dirtyFileAsterisk"></span>'  : '');
+					shadowTabContainer.tablist.pane2button[shadowId].attr('label', titleWithDirty);
 				}
 			};
 			

@@ -2706,3 +2706,12 @@ td.welcome_section_cell {
 	font-size:90%;
 	font-style:italic;
 }
+.dirtyFileAsterisk {
+	display:inline-block;
+	margin-left:.25em;
+	margin-top:-6px;
+	background-image:url(img/sprite.png);
+	background-position:0px -100px;
+	width:7px;
+	height:5px;
+}

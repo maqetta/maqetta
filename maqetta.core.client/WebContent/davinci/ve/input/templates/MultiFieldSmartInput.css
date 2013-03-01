@@ -1,0 +1,42 @@
+#ieb.MultiFieldSmartInput {
+	padding: 5px;
+	background-color: #F7FDFF;
+}
+.MultiFieldSmartInput .MultiFieldSmartInput_SmartInput_CP {
+	padding:0;
+	width: 150%;
+	height:auto;
+}
+.MultiFieldSmartInput_SmartInput_label {
+	width: 40px;
+}
+.MultiFieldSmartInput_SmartInput_value {
+	padding-left: 5px;
+}
+
+.MultiFieldSmartInput .iedResizeDiv {
+	width: 250px; 
+	height: 80px; 
+	border: 1px solid #769DC0; 
+	margin: 5px;
+	padding: 5px;
+}
+
+.MultiFieldSmartInput .smartInputTextAreaMulti {
+	width: 240px; 
+	height: 60px; 
+	border-width: 1px;
+	overflow: auto;
+    resize:none;
+    outline:none;
+ 
+}
+
+.MultiFieldSmartInput_SmartInput_value .dijitTextArea {
+	padding: 0;
+}
+
+
+.MultiFieldSmartInputInput .smartInputHelpTextDivContentPane {
+	height:auto;	
+}

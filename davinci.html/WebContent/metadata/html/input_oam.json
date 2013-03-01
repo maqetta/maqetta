@@ -152,7 +152,8 @@
 		},
 		"placeholder": {
 			"datatype": "string",
-			"description": "Specifies a short hint that describes the expected value of an <input> element"
+			"description": "Specifies a short hint that describes the expected value of an <input> element",
+			"title": "Hint"
 		},
 		"readonly": {
 			"datatype": "boolean",
@@ -254,7 +255,8 @@
 		},
 		"value": {
 			"datatype": "string",
-			"description": "Specifies the value of an <input> element"
+			"description": "Specifies the value of an <input> element",
+			"title": "Value"
 		},
 		"width": {
 			"datatype": "string",

@@ -429,7 +429,7 @@ return declare(ContainerInput, {
 	},
 	
 	_getWidgetTypeForSlider: function() {
-		return "dijit.form.HorizontalSlider";
+		return "dijit/form/HorizontalSlider";
 	},
 	
 	_getWidgetStyleForSlider: function() {
@@ -437,11 +437,11 @@ return declare(ContainerInput, {
 	},
 	
 	_getWidgetTypeForRule: function() {
-		return "dijit.form.HorizontalRule";
+		return "dijit/form/HorizontalRule";
 	},
 	
 	_getWidgetTypeForRuleLabels: function() {
-		return "dijit.form.HorizontalRuleLabels";
+		return "dijit/form/HorizontalRuleLabels";
 	},
 	
 	_getPropertiesForNewChildData: function(type) {

@@ -307,7 +307,7 @@ define([
         lib_extends.forEach(function(ext) {
             for (var type in ext) if (ext.hasOwnProperty(type)) {
                 var e = ext[type];
-                var w = widgetTypes[type];
+                var w = widgetTypes[type/*.replace(/\./g, "/")*/];
                 if (e.mixin) {
                     lang.mixin(w, e.mixin);
                 }
@@ -1065,6 +1065,13 @@ define([
 	        	}else if (typeof moduleId === 'string') {
 	        		require([moduleId], function(Module) {
 	        			d.resolve(smartInputCache[type] = new Module());
+	        		});
+	        	} else if (Object.prototype.toString.call( moduleId.property ) === '[object Array]') {
+	        		// `moduleId` is an object
+	        		require(["davinci/ve/input/MultiFieldSmartInput"], function(MultiFieldSmartInput) {
+	        			var si = new MultiFieldSmartInput();
+	            		lang.mixin(si, moduleId);
+	        			d.resolve(smartInputCache[type] = si);
 	        		});
 	        	} else {
 	        		// `moduleId` is an object

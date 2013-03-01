@@ -125,21 +125,15 @@ return declare(ToolbaredContainer, {
 		//Need to clean up this logic (make less hacky)
 		//if(!davinci.Workbench.hideEditorTabs){
 			var title = this._getTitle();
-			if (isDirty){
-				title="*"+title;
-			}
+			this.lastModifiedTime=Date.now();
+			this.isDirty = isDirty;
 			var Workbench = require("../Workbench");
 			Workbench.editorTabs.setTitle(this,title);
 		//}
-		this.lastModifiedTime=Date.now();
-		this.isDirty = isDirty;
 	},
 	
 	_getTitle: function() {
 		var title=this.attr("title");
-		if (title[0]=="*"){
-			title=title.substring(1);
-		}
 		return title;
 	},
 	

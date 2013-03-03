@@ -823,6 +823,9 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 	
 			//on item tree , we want to drop on containers, the root node itself, or between items in the containers
 			var itemTreeCheckItemAcceptance = function(node,source,position){
+				if(!node || !source){
+					return;
+				}
 				var sourceItem, sourceParentItem, sourceIndex;
 				source.forInSelectedItems(function(TreeNodeItem){
 					sourceItem = TreeNodeItem.data && TreeNodeItem.data.item;
@@ -852,6 +855,10 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				);
 			}.bind(this);
 			var dndDone = function(source, nodes, copy){
+				// Dijit publishes a dndDone eent
+				if(source.tree != this._tree){
+					return;
+				}
 				// Find the item that is being moved, and its parent
 				var sourceItem, sourceParentItem;
 				source.forInSelectedItems(function(TreeNodeItem){

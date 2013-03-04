@@ -81,7 +81,7 @@ public class AddComment extends Command {
 		} catch (CoreException ce) {
 			// use logging
 			ce.printStackTrace();
-			errorString = "The review is not added successfully. Reason: " + e.getCause().getMessage();
+			errorString = "The review is not added successfully. Reason: " + ce.getCause().getMessage();
 		} catch (Exception e) { //FIXME: remove this catch-all
 			e.printStackTrace();
 			errorString = "The review is not added successfully. Reason: " + e.getMessage();

@@ -54,7 +54,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 	
 	getRelativeStyleSelectorsText: function(widgetType, state, subwidget,properties, className){
 		var selectors = this.getStyleSelectors(widgetType, state,subwidget);
-		var relativeSelectors = new Array();
+		var relativeSelectors = [];
 		for (s in selectors){
 			properties.forEach(function(property){
 				var foundProp = false;
@@ -168,24 +168,13 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 	},
 	
 	_createDefaultQuery: function(widgetName, state){
-		var query;
-			query = '.' + widgetName;
-	   return query;		
+		return '.' + widgetName;
 	},
 	 
     _simulateState: function(q, s, mode, updateWidget){
-        var querys = [];
-        if (!(q instanceof Array)){
-            querys.push(q);
-        } else {
-            querys = q; 
-        }
-        var simulates = [];
-        if (!(s instanceof Array)){
-            simulates.push(s);
-        } else {
-            simulates = s; 
-        }
+        var querys = (q instanceof Array) ? q : [q];
+        var simulates = (s instanceof Array) ? s : [s];
+
         for (var i = 0; i < simulates.length; i++){
             var simulate = simulates[i];
             var query = querys[i];
@@ -279,7 +268,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 				}
 			}
 			if (state != 'Normal'){ // Normal is the base class do not remove it.
-				s = s + ' '+CSSThemeProvider_MAQETTA_PSEUDO_CLASS+state; // add the browser Pseudo Class emeulation
+				s += ' '+CSSThemeProvider_MAQETTA_PSEUDO_CLASS+state; // add the browser Pseudo Class emeulation
 			    this._simulateState(q, s, mode, updateWidget);
 			}
 		}
@@ -535,7 +524,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 		if (!this._widgets){
 			return null;
 		}
-		states = new Array();
+		states = [];
 		for (var a in this._widgets){
 			var toolkit = this._widgets[a];
 			for (var b in toolkit){
@@ -553,7 +542,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
  			  }
 			}
 		 }
-		retStates = new Array();
+		retStates = [];
 		for (var s in states){
 			retStates.push(s);
 		}
@@ -597,7 +586,7 @@ var CSSThemeProvider_MAQETTA_PSEUDO_CLASS = 'maqettaPseudoClass';
 
 function CSSThemeProvider_replacePseudoClass(selectorText) {
 	var pseudoClass = ['hover', 'link', 'visited', 'active', 'focus', 'first-letter', 'first-line', 'first-child', 'before', 'after'];
-	pseudoClass.forEach(function(pClass){
+	pseudoClass.forEach(function(pClass){ //FIXME: use reduce?
 		var patt=new RegExp(':'+pClass,'g');
 		var maqettaPseudoClass = "."+CSSThemeProvider_MAQETTA_PSEUDO_CLASS + pClass[0].toUpperCase() + pClass.slice(1);
 		selectorText = selectorText.replace(patt, maqettaPseudoClass);

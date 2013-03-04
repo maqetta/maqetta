@@ -61,7 +61,7 @@ public class AddComment extends Command {
 			Version version = du.getVersion(comment.getPageVersion());
 
 			if (version != null && version.isClosed()){
-				errorString = "The version is closed by others during your editting. Please reload the review data.";
+				errorString = "The version was closed by another user while editing. Please reload the review data.";
 				return;
 			}
 			List<Comment> commentList = new ArrayList<Comment>(1);

@@ -61,7 +61,8 @@ public class AddComment extends Command {
 			Version version = du.getVersion(comment.getPageVersion());
 
 			if (version != null && version.isClosed()){
-				throw new Exception("The version is closed by others during your editting. Please reload the review data.");
+				errorString = "The version is closed by others during your editting. Please reload the review data.";
+				return;
 			}
 			List<Comment> commentList = new ArrayList<Comment>(1);
 			commentList.add(comment);
@@ -77,7 +78,11 @@ public class AddComment extends Command {
 					+ sdf.format(comment.getCreated()) /*+ ",order:'" + comment.getOrder()
 					+ "'*/ + "\",\"email\":\"" + user.getPerson().getEmail() + "\",\"reviewer\":\"" + user.getUserID()
 					+ "\"}";
-		} catch (Exception e) {
+		} catch (CoreException ce) {
+			// use logging
+			ce.printStackTrace();
+			errorString = "The review is not added successfully. Reason: " + e.getCause().getMessage();
+		} catch (Exception e) { //FIXME: remove this catch-all
 			e.printStackTrace();
 			errorString = "The review is not added successfully. Reason: " + e.getMessage();
 			//resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorString);

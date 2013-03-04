@@ -61,7 +61,7 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, GridWizar
 			if (command._properties && command._properties.structure) {
 				tableCommand = command;
 			} else if (command._data && command._data.type) {
-				if (command._data.type === "dojo.data.ItemFileReadStore" || (command._data.type === "dojox.data.CsvStore")){
+				if (command._data.type === "dojo/data/ItemFileReadStore" || (command._data.type === "dojox/data/CsvStore")){
 					storeCommand = command;
 				}
 			}

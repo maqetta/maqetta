@@ -1,4 +1,4 @@
-define(["dojo/_base/declare", "davinci/ve/utils/URLRewrite"], function(declare, URLRewrite) {
+define(["dojo/_base/declare"], function(declare) {
 
 //TODO: Create custom HTML metadata provider similar to CSS
 
@@ -9,9 +9,8 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 	
 	constructor: function(resources, theme){
 		this._theme = theme;
-		this.url = URLRewrite.encodeURI(resources[0].getURL());
+		this.url = encodeURI(resources[0].getURL());
 		this.getWidgets();
-		
 	},
 
 	getWidgets: function(){
@@ -597,13 +596,12 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 var CSSThemeProvider_MAQETTA_PSEUDO_CLASS = 'maqettaPseudoClass';
 
 function CSSThemeProvider_replacePseudoClass(selectorText) {
-	
-	pseudoClass = ['hover', 'link', 'visited', 'active', 'focus', 'first-letter', 'first-line', 'first-child', 'before', 'after'];
+	var pseudoClass = ['hover', 'link', 'visited', 'active', 'focus', 'first-letter', 'first-line', 'first-child', 'before', 'after'];
 	pseudoClass.forEach(function(pClass){
 		var patt=new RegExp(':'+pClass,'g');
 		var maqettaPseudoClass = "."+CSSThemeProvider_MAQETTA_PSEUDO_CLASS + pClass[0].toUpperCase() + pClass.slice(1);
 		selectorText = selectorText.replace(patt, maqettaPseudoClass);
-	}.bind(this));
+	});
 
 	return selectorText;
 }

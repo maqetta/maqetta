@@ -57,9 +57,8 @@ return declare("davinci.ve.themeEditor.metadata.query", null, {
 	},
 	
 	getMetaData : function(type){
-		
-		var path = type.split(".");
-	
+
+		var path = type.split(/[\.\/]/);
 			
 			/*
 			 * (12/1/2010)

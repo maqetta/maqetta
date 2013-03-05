@@ -13,4 +13,5 @@ Bundle-ClassPath: configurator.jar
 Eclipse-BundleShape: dir
 Import-Package: org.osgi.framework;version="1.7.0"
 Require-Bundle: maqetta.core.server;bundle-version="1.0.0",
- maqetta.server.orion;bundle-version="1.0.0"
+ maqetta.server.orion;bundle-version="1.0.0",
+ org.eclipse.orion.server.configurator;bundle-version="1.0.0"

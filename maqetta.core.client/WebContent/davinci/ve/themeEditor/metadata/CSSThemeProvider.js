@@ -1,4 +1,4 @@
-define(["dojo/_base/declare"], function(declare) {
+define(["dojo/_base/declare", "../../utils/pseudoClass"], function(declare, pseudoClass) {
 
 //TODO: Create custom HTML metadata provider similar to CSS
 
@@ -258,7 +258,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 				var selectors = this.getStyleSelectors(widgetType, state);
 				var cssClass = '';
 				for (var selector in selectors){
-					cssClass = CSSThemeProvider_replacePseudoClass(selector);
+					cssClass = pseudoClass.replace(selector);
 					cssClass  = cssClass.replace(/\./g,' ');
 					cssClass = cssClass.replace(this._theme.className,'');
 					s += ' ' + cssClass;
@@ -268,7 +268,7 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 				}
 			}
 			if (state != 'Normal'){ // Normal is the base class do not remove it.
-				s += ' '+CSSThemeProvider_MAQETTA_PSEUDO_CLASS+state; // add the browser Pseudo Class emeulation
+				s += ' ' + pseudoClass.MAQETTA_PSEUDO_CLASS + state; // add the browser Pseudo Class emeulation
 			    this._simulateState(q, s, mode, updateWidget);
 			}
 		}
@@ -291,9 +291,9 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 					var cssClass = '';
 					s = ' ';
 					for (var selector in selectors){
-						cssClass = CSSThemeProvider_replacePseudoClass(selector);
-						cssClass  = cssClass.replace(/\./g,' ');
-						cssClass = cssClass.replace(this._theme.className,'');
+						cssClass = pseudoClass.replace(selector)
+							.replace(/\./g,' ')
+							.replace(this._theme.className,'');
 						s += ' ' + cssClass;
 					}
 					if(state != 'Normal'){
@@ -580,17 +580,3 @@ return declare("davinci.ve.themeEditor.metadata.CSSThemeProvider", null, {
 });
 
 });
-
-//FIXME: these are global
-var CSSThemeProvider_MAQETTA_PSEUDO_CLASS = 'maqettaPseudoClass';
-
-function CSSThemeProvider_replacePseudoClass(selectorText) {
-	var pseudoClass = ['hover', 'link', 'visited', 'active', 'focus', 'first-letter', 'first-line', 'first-child', 'before', 'after'];
-	pseudoClass.forEach(function(pClass){ //FIXME: use reduce?
-		var patt=new RegExp(':'+pClass,'g');
-		var maqettaPseudoClass = "."+CSSThemeProvider_MAQETTA_PSEUDO_CLASS + pClass[0].toUpperCase() + pClass.slice(1);
-		selectorText = selectorText.replace(patt, maqettaPseudoClass);
-	});
-
-	return selectorText;
-}

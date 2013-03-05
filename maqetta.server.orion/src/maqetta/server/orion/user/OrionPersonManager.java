@@ -24,11 +24,11 @@ public class OrionPersonManager extends PersonManagerImpl {
 	static class OrionPersonImpl implements IPerson {
 		private String email;
 		private String name;
-		private String password;
+		//private String password;
 
 		public OrionPersonImpl(String userName, String password, String email) {
 			this.name = userName;
-			this.password = password;
+			//this.password = password;
 			this.email = email;
 		}
 
@@ -38,7 +38,7 @@ public class OrionPersonManager extends PersonManagerImpl {
 
 			User user = getOrionUser(this.getUserID());
 			if (user != null) {
-				this.email = user.getLogin();
+				this.email = user.getEmail();
 			} else {
 				theLogger.logp(
 					Level.SEVERE,

@@ -1,13 +1,11 @@
 define(
 [
 	"dojo/_base/declare",
-	"davinci/Runtime",
 	"davinci/Workbench",
 	"./layout/ContainerInput", 
 	"./TreeHelper",
 	"davinci/ve/widget", 
 	"davinci/ve/commands/ModifyCommand",
-	"davinci/ve/commands/ModifyAttributeCommand",
 	"davinci/commands/OrderedCompoundCommand",
 	"davinci/ve/widgets/EventSelection",
 	"davinci/ve/widgets/BackgroundDialog",
@@ -33,13 +31,11 @@ define(
 	"davinci/ui/widgets/FileFieldDialog" //user in template
 ],
 function(declare, 
-		Runtime,
 		Workbench,
 		ContainerInput, 
 		TreeHelper,
 		Widget,
 		ModifyCommand,
-		ModifyAttributeCommand,
 		OrderedCompoundCommand,
 		EventSelection,
 		BackgroundDialog,
@@ -242,14 +238,14 @@ return declare(ContainerInput, {
 		var treeWidgetData = this._widget.getData();
 		
 		var dataStoreItems = null;
-		if (storeWidgetData.type == "dojo.store.Memory") {
+		if (storeWidgetData.type == "dojo/store/Memory") {
 			dataStoreItems = storeWidgetData.properties.data;
-		} else if (storeWidgetData.type == "dojo.data.ItemFileReadStore") {
+		} else if (storeWidgetData.type == "dojo/data/ItemFileReadStore") {
 			// To preview and edit "legacy" data, convert format in 
 			// ItemFileReadStore (which uses "children" attribute) to
 			// relational format (where items point back to children)
 			this._isLegacy = true;
-			var rootNode = {"id":"treeRoot","label":"Root"};
+			var rootNode = {id: "treeRoot", label:"Root"};
 			dataStoreItems = [rootNode];
 			this._getRelationalFormat(rootNode, storeWidgetData.properties.data.items, dataStoreItems);
 		}
@@ -839,9 +835,9 @@ return declare(ContainerInput, {
 		
 		var previewStore = this._observablePreviewStore;
 		var userModifiedStoreData = null;
-		if (storeWidgetData.type == "dojo.store.Memory") {
+		if (storeWidgetData.type == "dojo/store/Memory") {
 			userModifiedStoreData = previewStore.data;
-		} else if (storeWidgetData.type == "dojo.data.ItemFileReadStore") {
+		} else if (storeWidgetData.type == "dojo/data/ItemFileReadStore") {
 			// For "legacy" mode we want to convert back from relational (using "parent
 			// attribute) to using "children" attribute
 			userModifiedStoreData = this._getDataForItemFileReadStore(previewStore);
@@ -866,10 +862,10 @@ return declare(ContainerInput, {
 				data: props.data
 			};
 			var newStore = null;
-			if (storeWidgetData.type == "dojo.store.Memory") {
+			if (storeWidgetData.type == "dojo/store/Memory") {
 				newStore = new MemoryPage(newMemoryProps);
 				this._treeHelper._addStoreFunctions(newStore);
-			} else if (storeWidgetData.type == "dojo.data.ItemFileReadStore") {
+			} else if (storeWidgetData.type == "dojo/data/ItemFileReadStore") {
 				//Handle legacy case
 				newStore = new ItemFileReadStore(newMemoryProps);
 			}
@@ -884,14 +880,14 @@ return declare(ContainerInput, {
 			//modify the tree using new model
 			var modelWidgetData = modelWidget.getData();
 			var newModel = null;
-			if (modelWidgetData.type == "dijit.tree.ObjectStoreModel") {
+			if (modelWidgetData.type == "dijit/tree/ObjectStoreModel") {
 				newModel = new ObjectStoreModelPage({
 					query: modelWidgetData.properties.query,
 					labelAttr: modelWidgetData.properties.labelAttr,
 					store: newStore
 				});
 				this._treeHelper._addModelFunctions(newModel);
-			} else if (modelWidgetData.type == "dijit.tree.ForestStoreModel") {
+			} else if (modelWidgetData.type == "dijit/tree/ForestStoreModel") {
 				newModel = new ForestStoreModel({
 					store: newStore
 				});
@@ -971,7 +967,7 @@ return declare(ContainerInput, {
 		
 		//Find and select the new table widget
 		dojo.some(compoundCommand._commands, function(command) {
-			if (command.newWidget && command.newWidget.type === "dijit.Tree") {
+			if (command.newWidget && command.newWidget.type === "dijit/Tree") {
 				var tree = command.newWidget;
 				context.select(tree);
 

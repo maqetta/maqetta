@@ -39,7 +39,7 @@ define([
 	"./utils/GeomUtils",
 	"dojo/text!./newfile.template.html",
 	"./utils/URLRewrite",
-	"davinci/ve/themeEditor/metadata/CSSThemeProvider",
+	"./utils/pseudoClass",
 	"dojox/html/_base"	// for dojox.html.evalInGlobal	
 ], function(
 	require,
@@ -82,7 +82,7 @@ define([
 	GeomUtils,
 	newFileTemplate,
 	URLRewrite,
-	CSSThemeProvider
+	pseudoClass
 ) {
 
 davinci.ve._preferences = {}; //FIXME: belongs in another object with a proper dependency
@@ -2503,7 +2503,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var fileName = URLRewrite.encodeURI(url);
 			var selectorText = rule.getSelectorText();
 			if (selectorText.indexOf(":") > -1) {
-				selectorText = CSSThemeProvider_replacePseudoClass(selectorText);
+				selectorText = pseudoClass.replace(selectorText);
 			}
 //			console.log("------------  Hot Modify looking  " + fileName + " ----------------:=\n" + selectorText + "\n");
 			selectorText = selectorText.replace(/^\s+|\s+$/g,""); // trim white space
@@ -2527,7 +2527,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				if (rule.properties.length) { // only insert rule if it has properties
 					var text = rule.getText({noComments:true});
 					if (text.indexOf(":") > -1) {
-						text = CSSThemeProvider_replacePseudoClass(text);
+						text = pseudoClass.replace(text);
 					}
 //					console.log("------------  Hot Modify Insert " + foundSheet.href +  "index " +r+" ----------------:=\n" + text + "\n");
 					foundSheet.insertRule(text, r);
@@ -2583,7 +2583,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					} else if (rules[r].type == CSSRule.STYLE_RULE){
 						var selectorText = rules[r].selectorText;
 						if (selectorText.indexOf(":") > -1) {
-							selectorText = CSSThemeProvider_replacePseudoClass(selectorText);
+							selectorText = pseudoClass.replace(selectorText);
 							/*
 							 * For now we will just replace the selector text,
 							 * if this does not work well we can just append

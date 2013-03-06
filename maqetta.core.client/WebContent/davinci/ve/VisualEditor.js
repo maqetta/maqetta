@@ -163,7 +163,6 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 	},
 
 	_objectPropertiesChange: function (event){
-
 		if (!this.isActiveEditor()) {
 			return;
 		}
@@ -272,7 +271,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 	   
 		if (!this.initialSet){
 		   	var workspaceUrl = Runtime.getUserWorkspaceUrl();
-		   	if(filename.indexOf( "./")==0 ){
+		   	if(filename.indexOf("./")==0 ){
 		   		filename = filename.substring(2,filename.length);
 			}				
 		   	var baseUrl=workspaceUrl+filename;
@@ -304,12 +303,11 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 
 			this.context._setSource(content, this._connectCallback, this, newHtmlParams);
 	   		// set flow layout on user prefs
-			var flow = this.context.getFlowLayout(); // gets the current layout, but also sets to default if missing..
+			this.context.getFlowLayout(); // gets the current layout, but also sets to default if missing..
 			this.initialSet=true;
 		}else{
 			this.context.setSource(content, this.context._restoreStates, this.context);
 		}
-
 	},
 
 	_connectCallback: function(failureInfo) {
@@ -461,11 +459,10 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 	
 	previewInBrowser: function(){
 		var deviceName = this.deviceName,
-			editor = Workbench.getOpenEditor(),
-			fileURL = editor.resourceFile.getURL(),
+			fileURL = Workbench.getOpenEditor().resourceFile.getURL(),
 			query = [];
 
-		if(deviceName && deviceName.length && deviceName != 'none'){
+		if(deviceName != 'none'){
 			query = [
 			    'preview=1',
 			    'device=' + encodeURIComponent(deviceName),

@@ -1,8 +1,8 @@
 define([
 	"dojo/_base/declare",
-	"davinci/Runtime",
+	"../Runtime",
 	"./TextEditor", 
-	"davinci/commands/SourceChangeCommand"
+	"../commands/SourceChangeCommand"
 ], 
 function(
 	declare,
@@ -14,7 +14,6 @@ function(
 return declare(TextEditor, {
 
     constructor: function (element, fileName) {
-
 		this.subscribe("/davinci/ui/selectionChanged", this.selectModel);
 	},
 	
@@ -39,18 +38,14 @@ return declare(TextEditor, {
         this.inherited(arguments);
         var oldText = this.model.getText();
 		var editor = Runtime.currentEditor;
-		if(editor && editor.getCommandStack){
+		if (editor && editor.getCommandStack) {
 			var commandStack = editor.getCommandStack();
 			var command = new SourceChangeCommand({model:this.model, oldText:oldText, newText:text});
 			commandStack.execute(command);
-		}else{
-			this._model.setText(this._args.newText);
-			var changeEvent = {
-				newModel: this._model
-			};
-			dojo.publish("/davinci/ui/modelChanged", [changeEvent]);
+		} else {
+			this.model.setText(text);
+			dojo.publish("/davinci/ui/modelChanged", [{newModel: this.model}]);
 		}
-		
 	},
 	
 	selectModel: function (selection, editor) {
@@ -97,16 +92,14 @@ return declare(TextEditor, {
 		this.model.setText(text);
 		
 		if (this.model.getSyntaxPositions) {
-			var positions = this.model.getSyntaxPositions(lineNumber);
-		
-			function sortPositions(a,b) {
-				if (a.line != b.line) {
-					return a.line-b.line;
+			return this.model.getSyntaxPositions(lineNumber).sort(
+				function (a,b) {
+					if (a.line != b.line) {
+						return a.line-b.line;
+					}
+					return a.col-b.col;
 				}
-				return a.col-b.col;
-			}
-			positions = positions.sort(sortPositions);
-			return positions;
+			);
 		}
 	},
 	

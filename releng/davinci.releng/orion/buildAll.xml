@@ -19,9 +19,10 @@
 		<!-- base maqetta out of common.xml -->
 		
 		<antcall target="MaqettaOrion"/>
+		<!--
 		<antcall target="scrubFeatures"/>
 		<antcall target="MaqettaOrionHosted"/>
-    	
+    	-->
 	</target>
 
     <target name="init">

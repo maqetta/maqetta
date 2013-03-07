@@ -3,6 +3,7 @@ define({ root:
     // common
     "save": "Save",
     "cancel": "Cancel",
+    "discard": "Discard",
     
     // SaveAsWidget dialog
     "sawdTitle": "Save As Widget",

@@ -36,12 +36,9 @@ define({ root:
 		
 		//davinci/Workbench.js
 		"fileHasUnsavedChanges":"Save changes to ${0}?",
-		"Yes":"Yes",
-		"No":"No",
 		"perspectiveNotFound":"perspective not found: ${0}",
 		"scopeNotDefined":"scope not defined for action: ${0}",
 		"funcNotDefined":"function not defined for action: ${0}",
 		"serverConnectError":"<h3>Error connecting to the Maqetta Server.</h3><br><div>Please click here to <a href='${redirectUrl}'>return to Maqetta</a><div><div>Error description: ${error}</div>"
-
 }
 });

@@ -1,21 +1,29 @@
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"davinci/html/CSSElement",
+	"davinci/html/CSSRule",
+	"davinci/html/CSSSelector",
+	"system/resource"
+], function(
+	declare,
+	lang,
+	CSSElement,
+	CSSRule,
+	CSSSelector,
+	systemResource
+) {
+
 /**
  * @class davinci.html.CSSFile
  * @constructor
  * @extends davinci.html.CSSElement
  */
-define([
-	"dojo/_base/declare",
-	"davinci/html/CSSElement",
-	"davinci/html/CSSRule",
-	"davinci/html/CSSSelector",
-	"system/resource"
-], function(declare, CSSElement, CSSRule, CSSSelector, systemResource) {
-
 return declare("davinci.html.CSSFile", CSSElement, {
 
 	constructor: function(args) {
 		this.elementType = "CSSFile";
-		dojo.mixin(this, args);
+		lang.mixin(this, args);
 		if (!this.options) { 
 			this.options = {
 				xmode: 'style',
@@ -109,7 +117,6 @@ return declare("davinci.html.CSSFile", CSSElement, {
 	},
 
 	getMatchingRules: function(domElement, rules, matchLevels) {
-		//console.log('CSSFILE:getMatchingRules looking in ' + this.url);
 		domElement = this._convertNode(domElement);
 		rules = rules || [];
 		matchLevels = matchLevels || [];
@@ -117,8 +124,6 @@ return declare("davinci.html.CSSFile", CSSElement, {
 			var child = this.children[i];
 			if (child.elementType == 'CSSRule') {
 				var level = child.matches(domElement);
-				//console.log('CSSFILE:getMatchingRules  ' + child.parent.url);
-				//console.log('CSSFILE:getMatchingRules selector ' + child.getSelectorText() + ' level '+level);
 				if (level) {
 					var added = false;
 					for ( var j = 0; j < matchLevels.length; j++ ) {
@@ -128,8 +133,6 @@ return declare("davinci.html.CSSFile", CSSElement, {
 						 */
 						if (level >= matchLevels[j]) {
 							rules.splice(j, 0, child);
-						//	console.log('CSSFILE:getMatchingRules found ' + child.parent.url);
-						//	console.log('CSSFILE:getMatchingRules selector ' + child.getSelectorText() + ' level '+level);
 							matchLevels.splice(j, 0, level);
 							added = true;
 							break;
@@ -175,7 +178,7 @@ return declare("davinci.html.CSSFile", CSSElement, {
 
 	getRules: function(selector) {
 		var selectors = CSSSelector.parseSelectors(selector);
-		var matchingRules = new Array();
+		var matchingRules = [];
 		for ( var i = 0; i < this.children.length; i++ ) {
 			var child = this.children[i];
 			if (child.elementType == 'CSSRule') {

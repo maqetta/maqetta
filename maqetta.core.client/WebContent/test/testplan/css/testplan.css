@@ -43,3 +43,11 @@ pre {
 	margin-left:1em;
 	padding:.75em;
 }
+
+.toc {
+	line-height: 130%;
+}
+
+.toc a {
+	text-decoration: none;
+}

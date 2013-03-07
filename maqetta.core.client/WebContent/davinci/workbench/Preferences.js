@@ -106,8 +106,24 @@ var Preferences = {
 				{width: DIALOG_WIDTH, height: DIALOG_HEIGHT});
 
 		var itemStore = new ItemFileReadStore({data: prefJson, jsId: "prefTreeDataStore"});	
-		var forestModel = new ForestStoreModel({jsId: "fileModel", labelAttr: "name", store: itemStore});
+		var forestModel = new ForestStoreModel({
+			jsId: "fileModel",
+			labelAttr: "name",
+			store: itemStore,
+			rootId: 'root'
+		});
 		
+		// save "path" for first pane
+		var path = ['root'];
+		var items = prefJson.items;
+		if (items) {
+			do {
+				var item = items[0];
+				path.push(item.id);
+				items = item.children;
+			} while (items);
+		}
+
 		var dojoTree = registry.byId("prefTree");
 		if(!dojoTree) {
 			dojoTree = new Tree({
@@ -118,12 +134,22 @@ var Preferences = {
 				label: "Preferences", 
 				labelAttr: "name", 
 				showRoot: false,
-				childrenAttrs: "children"
+				childrenAttrs: "children",
+				openOnClick: true,
+				autoExpand: true
 			});
 		}
 		dojoTree.onClick = function(node) { Preferences.setPaneContent(node); };
 		dom.byId("pref.TreePane").appendChild(dojoTree.domNode);
 		dojoTree.startup();
+
+		// auto-select first pane
+		dojoTree.onLoadDeferred.then(function() {
+			dojoTree.set('paths', [path]).then(function() {
+				dojoTree.focusNode(dojoTree.selectedNode);
+				Preferences.setPaneContent(dojoTree.selectedItem);
+			});
+		});
 	},
 
 	getPrefJson: function(){
@@ -161,7 +187,10 @@ var Preferences = {
 			};
 		});
 		
-		return {items: treeJson};
+		return {
+			identifier: 'id',
+			items: treeJson
+		};
 	},
 	
 	_getPrefJsonChildren: function(catId, valuesArray){

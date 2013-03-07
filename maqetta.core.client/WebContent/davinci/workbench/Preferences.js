@@ -1,12 +1,16 @@
 define([
+	"dojo/_base/declare",
+	"dojo/_base/xhr",
+	"dojo/_base/lang",
+	"dojo/topic",
+	"dojo/dom",
 //    "../Workbench",
-		"dojo/_base/declare",
-		"dojo/_base/xhr",
     "../Runtime",
 //   "../Theme",
     "dijit/_WidgetBase",
     "dijit/_TemplatedMixin",
     "dijit/_WidgetsInTemplateMixin",
+    "dijit/registry",
     "davinci/ui/Dialog",
     "dijit/Tree",
     "dijit/tree/ForestStoreModel",
@@ -15,8 +19,31 @@ define([
     "dojo/i18n!dijit/nls/common",
     "dojo/text!./templates/Preferences.html",
     "dijit/form/Button"
-], function(/*Workbench,*/ declare, xhr, Runtime, /*Theme,*/ WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, Dialog, Tree, ForestStoreModel, ItemFileReadStore, workbenchStrings, commonStrings, templateString) {
+], function(
+	declare,
+	xhr,
+	lang,
+	topic,
+	dom,
+	/*Workbench,*/
+	Runtime,
+	/*Theme,*/
+	WidgetBase,
+	TemplatedMixin,
+	WidgetsInTemplateMixin,
+	registry,
+	Dialog,
+	Tree,
+	ForestStoreModel,
+	ItemFileReadStore,
+	workbenchStrings,
+	commonStrings,
+	templateString
+) {
 
+
+var DIALOG_WIDTH = 650;
+var DIALOG_HEIGHT = 350;
 
 var PreferencesWidget = declare([WidgetBase, TemplatedMixin, WidgetsInTemplateMixin], {
 
@@ -35,7 +62,7 @@ var Preferences = {
 	savePreferences: function(id, base, preferences){
 		xhr.put({
 			url: "cmd/setPreferences?id="+id + "&base=" + encodeURIComponent(base),
-			putData: dojo.toJson(preferences),
+			putData: JSON.stringify(preferences),
 			handleAs: "json",
 			contentType: "text/html"
 		}).then(function() {
@@ -45,7 +72,7 @@ var Preferences = {
 			
 			Preferences._allPrefs[base][id] = preferences;
 			
-			dojo.publish("/davinci/preferencesChanged",[{id: id, preferences: preferences}]);
+			topic.publish("/davinci/preferencesChanged", {id: id, preferences: preferences});
 		});
 	},
 
@@ -55,33 +82,33 @@ var Preferences = {
 	
 	showPreferencePage: function(){
 		Preferences._loadExtensions();
-	    var prefJson = Preferences.getPrefJson();
-	    
-	    //FIXME: Temporary hack to hide project preferences
-	    //Can't just delete them because other parts of the code query for a particular preference
-	    //Instead, just make it so that project preferences don't appear in preferences dialog
-	    //Issue https://github.com/maqetta/maqetta/issues/3658 is reminder to restore project preferences
-	    if(prefJson.items){
-	    	for(var i=prefJson.items.length-1; i>=0; i--){
-	    		var item = prefJson.items[i];
-	    		if(item.hide){
-	    			prefJson.items.splice(i,1);
-	    		}
-	    	}
-	    }
-	    
- 	    if(!prefJson || prefJson.length < 1) {
- 	    	alert(workbenchStrings.noUserPref);
- 	    	return;
- 	    	
- 	    }
+		var prefJson = Preferences.getPrefJson();
 
-		this.dialog = Dialog.showModal(new PreferencesWidget({}), workbenchStrings.preferences, {width: 700, height: 500});
+		//FIXME: Temporary hack to hide project preferences
+		//Can't just delete them because other parts of the code query for a particular preference
+		//Instead, just make it so that project preferences don't appear in preferences dialog
+		//Issue https://github.com/maqetta/maqetta/issues/3658 is reminder to restore project preferences
+		if(prefJson.items){
+			for(var i=prefJson.items.length-1; i>=0; i--){
+				var item = prefJson.items[i];
+				if(item.hide){
+					prefJson.items.splice(i,1);
+				}
+			}
+		}
+
+		if(!prefJson || prefJson.length < 1) {
+			alert(workbenchStrings.noUserPref);
+			return;
+		}
+
+		this.dialog = Dialog.showModal(new PreferencesWidget({}), workbenchStrings.preferences,
+				{width: DIALOG_WIDTH, height: DIALOG_HEIGHT});
 
 		var itemStore = new ItemFileReadStore({data: prefJson, jsId: "prefTreeDataStore"});	
 		var forestModel = new ForestStoreModel({jsId: "fileModel", labelAttr: "name", store: itemStore});
 		
-		var dojoTree = dijit.byId("prefTree");
+		var dojoTree = registry.byId("prefTree");
 		if(!dojoTree) {
 			dojoTree = new Tree({
 				model: forestModel, 
@@ -95,14 +122,17 @@ var Preferences = {
 			});
 		}
 		dojoTree.onClick = function(node) { Preferences.setPaneContent(node); };
-		dojo.byId("pref.TreePane").appendChild(dojoTree.domNode);
+		dom.byId("pref.TreePane").appendChild(dojoTree.domNode);
 		dojoTree.startup();
 	},
+
 	getPrefJson: function(){
 		//build the proper json structure before returning it.  this is to save a lot of time over riding model methods for the tree.
 		var ejson = Preferences._extensions;
-		
-		if(ejson==null) return [];
+		if (!ejson) {
+			return [];
+		}
+
 		var flatNodeTree = [];
 		for(var i = 0;i<ejson.length;i++){
 			ejson[i]._index=i;
@@ -136,7 +166,9 @@ var Preferences = {
 	
 	_getPrefJsonChildren: function(catId, valuesArray){
 		var children = valuesArray[catId];
-		if(!children) return [];
+		if (!children) {
+			return [];
+		}
 		var freechildren = []; // FIXME: use map
 		for(var p = 0;p<children.length;p++){
 			freechildren[p] = {
@@ -154,15 +186,15 @@ var Preferences = {
 	setPaneContent: function(node){
 		var domNode;
 		delete Preferences._currentPane;
-		var extension= Preferences._extensions[node.index[0]];
-		var prefs=Preferences.getPreferences(extension.id, davinci.Workbench.getProject());
+		var extension = Preferences._extensions[node.index[0]];
+		var prefs = Preferences.getPreferences(extension.id, davinci.Workbench.getProject());
 		if (extension.pane){
 			require([extension.pane], function(cls) {
 				var pane=new cls();
 				Preferences._currentPane=pane;
 				Preferences._currentPane._extension=extension;
 				Preferences._currentPane.setPreferences(prefs);
-				dijit.byId("pref.RightPane").setContent(pane.domNode);
+				registry.byId("pref.RightPane").setContent(pane.domNode);
 			});
 		}
 		else if (extension.pageContent){
@@ -172,7 +204,7 @@ var Preferences = {
 			domNode=document.createTextNode("");
 		}
 		if (domNode) {
-			dijit.byId("pref.RightPane").setContent( domNode );
+			registry.byId("pref.RightPane").setContent( domNode );
 		}
 	},
 	
@@ -238,16 +270,16 @@ var Preferences = {
 		Preferences._loadExtensions();
 		for(var i =0;i<Preferences._extensions.length;i++){
 			if(Preferences._extensions[i].id==id){
-			    if (dojo.isString(Preferences._extensions[i].defaultValues)){
-			    	var prefs= Runtime.serverJSONRequest({
+				if (typeof Preferences._extensions[i].defaultValues === 'string'){
+					var prefs= Runtime.serverJSONRequest({
 						   url:Preferences._extensions[i].defaultValues, handleAs:"json", sync:true  });
-			    	return prefs.defaultValues;
-			    }
+					return prefs.defaultValues;
+				}
 				return Preferences._extensions[i].defaultValues;
 			}
 		}
 	}
 	
 };
-return dojo.setObject("davinci.workbench.Preferences", Preferences);
+return lang.setObject("davinci.workbench.Preferences", Preferences);
 });

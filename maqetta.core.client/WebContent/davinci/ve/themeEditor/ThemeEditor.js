@@ -1,26 +1,23 @@
 define([
     "dojo/_base/declare",
-	"dojo/_base/connect",
-	"davinci/ui/ModelEditor",
-	"davinci/ve/ThemeModifier",
-	"davinci/ve/themeEditor/VisualThemeEditor",
-	"davinci/ve/themeEditor/metadata/query",
-	"davinci/ve/themeEditor/metadata/CSSThemeProvider",
-	"davinci/ve/themeEditor/commands/ThemeEditorCommand",
-	"davinci/ve/themeEditor/commands/SubwidgetChangeCommand",
-	"davinci/ve/themeEditor/commands/StateChangeCommand",
+	"../../ui/ModelEditor",
+//	"../ThemeModifier",
+	"./VisualThemeEditor",
+	"./metadata/query",
+	"./metadata/CSSThemeProvider",
+	"./commands/ThemeEditorCommand",
+	"./commands/SubwidgetChangeCommand",
+	"./commands/StateChangeCommand",
 	"dijit/layout/ContentPane",
-	"davinci/commands/CompoundCommand",
-	"davinci/ve/themeEditor/ThemeColor",
-	"davinci/ve/utils/GeomUtils",
+	"../../commands/CompoundCommand",
+	"./ThemeColor",
 	"system/resource",
-	"davinci/model/Path",
-	"davinci/Theme",
+	"../../model/Path",
+	"../../Theme",
 	], function(
 			declare,
-			connect,
 			ModelEditor,
-			ThemeModifier,
+//			ThemeModifier,
 			VisualThemeEditor,
 			query,
 			CSSThemeProvider,
@@ -30,7 +27,6 @@ define([
 			ContentPane,
 			CompoundCommand,
 			ThemeColor,
-			GeomUtils,
 			systemResource,
 			Path,
 			Theme
@@ -140,8 +136,6 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 		this.getContext().getCommandStack().execute(new StateChangeCommand({_themeEditor: this,
 			_widget: widget, _newState: e.newState, _oldState: e.oldState, _firstRun: true
 		}));
-		
-		
 	},
 	
 	selectSubwidget: function(widget, subwidget){
@@ -196,8 +190,6 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 	},
 	
 	_getSelectionStyleValues: function (){
-		//debugger;;
-		
 		var rules=this._getCssRules();
 		if(rules.length==0) {
 			return null;
@@ -251,7 +243,6 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 			if(props[sh]){
 				var e = dojo.doc.createElement('div');
 				e.style.cssText = sh + ': '+ props[sh] + ';';
-				var i = 0;
 				for (n in e.style){
 					if (n.indexOf(sh)>-1){
 						var name = camelCaseToDashed(n);
@@ -272,7 +263,7 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 
 	        var newVal = '';
 	        val = val.split('-');
-	        // do not upppercase first word
+	        // do not uppercase first word
 	        newVal += val[0].substring(0,1).toLowerCase() + val[0].substring(1,val[0].length);
 	        for(var c=1; c < val.length; c++) {
 	        	if(val[c] != 'value' )
@@ -295,13 +286,12 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 		if(!selectors) {
 			return null;
 		}
-		var allProps = {};
 		for(var s = 0; s < selectors.length; s++){
 			var cssFiles = this.getContext()._getCssFiles();
 			if (cssFiles){
 				for(var i = 0;i<cssFiles.length;i++){
 					var selectorNodes = cssFiles[i].getRules(selectors[s]);
-					for (sn = 0; sn < selectorNodes.length; sn++){
+					for (var sn = 0; sn < selectorNodes.length; sn++){
 						var selectorNode = selectorNodes[sn];
 						if(selectorNode){
 							var rule = selectorNode.searchUp( "CSSRule");
@@ -365,8 +355,6 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 	},
 	
 	_loadCssSelectors : function(widget, subWidget, state){
-		//debugger;;
-		var context = this.getContext();
 		if (!widget){
 			widget = this._selectedWidget;
 			if (!subWidget){
@@ -379,8 +367,9 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 		
 		var widgetType = this.metaDataLoader.getType(widget);
 		
-		if(!widgetType)
+		if(!widgetType) {
 			return null;
+		}
 
 		var id = widget.id;
 		if(id.indexOf('all') === 0){ // this is a  mythical widget used for global change of widgets 
@@ -392,14 +381,14 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 			state = this._currentState; // the state is for all the widgets on the page
 		}
 	
-		if(!state)
+		if(!state) {
 			state = "Normal";
+		}
 		var allClasses = [];
 		if(this.__DEBUG_TO_CONSOLE) console.log("[theme editor] query metadata, widget: " + widget.declaredClass + " subwidget:" + subWidget  + " state:" + state);
 		var metadata = this._theme.getStyleSelectors(widgetType,state,subWidget);
 		
 		for(var aa in metadata){
-			
 			allClasses.push(aa);
 		}
 
@@ -746,17 +735,17 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 	destroy : function ()	{
 	    if(this._scrollHandler){
 	    	dojo.disconnect(this._scrollHandler);
-	    	this._scrollHandler = null;
+	    	delete this._scrollHandler;
 	    }
 		this.inherited(arguments);
-		if(this.visualEditor) { this.visualEditor.destroy(); }
 		this.getContext().destroy();
-		this._subscriptions.forEach(function(item) {
-			dojo.unsubscribe(item);
-		});
+		if (this.visualEditor) {
+			this.visualEditor.destroy();
+		}
+		this._subscriptions.forEach(dojo.unsubscribe);
 		if (this._loadedCSSConnects) {
 			dojo.forEach(this._loadedCSSConnects, dojo.disconnect);
-			delete 	this._loadedCSSConnects;
+			delete this._loadedCSSConnects;
 		}
 		delete this._tempRules;
 	},
@@ -865,10 +854,6 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 	enableWidget: function(widget){
 
 		if (!widget) { return; }
-		var domNode = widget;
-		if (widget.domNode) {
-			domNode = widget.domNode;
-		}
 		var frame = this.getContext().getDocument().getElementById("disableWidgetFocusFrame_" + widget.id); 
 		if (frame){
 			frame.parentNode.removeChild(frame);

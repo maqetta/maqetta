@@ -54,6 +54,7 @@ public class Download extends Command {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
     	// SECURITY, VALIDATION
     	//   'fileName': XXX not validated
@@ -82,14 +83,14 @@ public class Download extends Command {
         	this.buildURL = getBuildURL(user, req.getRequestURL().toString());
         }
 
-        ArrayList o = (ArrayList) JSONReader.read(res);
-        List lib = null;
+		ArrayList<String> o = (ArrayList<String>) JSONReader.read(res);
+        List<Map<String, String>> lib = null;
         boolean includeLibs = true;
         if(libs!=null){
-    	    lib = (List) JSONReader.read(libs);
+    	    lib = (List<Map<String, String>>) JSONReader.read(libs);
     	    includeLibs= false;
         }
-        String[] resources = (String[]) o.toArray(new String[o.size()]);
+        String[] resources = o.toArray(new String[o.size()]);
 
         IVResource[] files = new IVResource[resources.length];
         for (int i = 0; i < files.length; i++) {
@@ -117,7 +118,7 @@ public class Download extends Command {
 	private URL getBuildURL(IUser user, String requestURLString) throws IOException {
 		URL buildURL = null;
 		try {
-        	Map dependencies = analyzeWorkspace(user, requestURLString);
+        	Map<String, List<String>> dependencies = analyzeWorkspace(user, requestURLString);
     		String statusCookie = requestBuild(dependencies);
     		String result = null;
     		while (result == null) {
@@ -136,7 +137,8 @@ public class Download extends Command {
                     }        				
         			String content = baos.toString();
         			theLogger.finest("build status: " + content);
-        			Map json = (Map)JSONReader.read(content);
+        			@SuppressWarnings("unchecked")
+					Map<String, String> json = (Map<String, String>)JSONReader.read(content);
         			result = (String)json.get("result");
     			} finally {
     				is.close();
@@ -145,18 +147,18 @@ public class Download extends Command {
     		}
 
     		theLogger.finest("build result: " + result);
-    		buildURL = new URL(result);
+    		buildURL = new URL(new URL(buildBase), result);
         } catch (InterruptedException ie) {
         	throw new IOException("Thread interrupted.  Did not obtain build result.");
         }
         return buildURL;
 	}
 
-	private Map<String,Object> analyzeWorkspace(IUser user, String requestURL) throws IOException {
+	private Map<String, List<String>> analyzeWorkspace(IUser user, String requestURL) throws IOException {
     	IVResource[] files = user.findFiles("*.html", false, true);
         HttpClient client = new HttpClient();
         PostMethod method;
-        Map<String,Object> result = null;
+        Map<String, List<String>> result = null;
         String userID = user.getUserID();
 
         theLogger.finest("analyzeWorkspace: number of files: " + files.length);
@@ -188,12 +190,13 @@ public class Download extends Command {
 
 	            String content = body.substring(start + 10, end);
 	            theLogger.finest("build.dojotoolkit.org: Analyse result="+ content);
-	            Map<String,Object> dependencies = (Map)JSONReader.read(content);
+	            @SuppressWarnings("unchecked")
+				Map<String, List<String>> dependencies = (Map<String, List<String>>)JSONReader.read(content);
 	            if (result == null) {
 		            result = dependencies;           	
 	            } else {
-	            	List<String> requiredDojoModules = (List)result.get("requiredDojoModules");
-	            	List<String> additionalModules = (List)dependencies.get("requiredDojoModules");
+	            	List<String> requiredDojoModules = result.get("requiredDojoModules");
+	            	List<String> additionalModules = dependencies.get("requiredDojoModules");
 	            	// TODO: Does Java provide a better way to merge lists?  Sets?  Use an Iterator here?
 	                for(int j = 0; j < additionalModules.size(); j++) {
 	                	String additionalModule = additionalModules.get(j);
@@ -210,7 +213,7 @@ public class Download extends Command {
         return result;
     }
 
-    private String requestBuild(Map<String,Object> dependencies) throws IOException {
+    private String requestBuild(Map<String, List<String>> dependencies) throws IOException {
         JSONWriter jsonWriter = new JSONWriter(false);
         jsonWriter/*.startObject()*/
         	.addField("optimise", "shrinksafe")
@@ -228,7 +231,7 @@ public class Download extends Command {
         jsonWriter.addField("name", "dojo.js");
         jsonWriter.addFieldName("modules");
         jsonWriter.startArray();
-    	List<String> requiredDojoModules = (List)dependencies.get("requiredDojoModules");
+    	List<String> requiredDojoModules = dependencies.get("requiredDojoModules");
         for(int i = 0; i < requiredDojoModules.size(); i++) {
             jsonWriter.startObject();
         	jsonWriter.addField("name", (String)requiredDojoModules.get(i));
@@ -252,7 +255,8 @@ public class Download extends Command {
         	if (statusCode != HttpStatus.SC_ACCEPTED && statusCode != HttpStatus.SC_OK) {
         		throw new IOException(buildBase + "/api/build failed with status: " + statusCode + "\n" + json);
         	}
-            Map status = (Map)JSONReader.read(json);
+            @SuppressWarnings("unchecked")
+			Map<String, String> status = (Map<String, String>)JSONReader.read(json);
             String statusLink = (String)status.get("buildStatusLink");
             if (statusLink == null) {
             	throw new IOException(buildBase + "/api/build failed with error: " + (String)status.get("error"));
@@ -302,12 +306,12 @@ public class Download extends Command {
     	return true;
     }
     
-    private  void zipLibs(List libs, IPath root, ZipOutputStream zos, boolean useSource) throws IOException{
+    private void zipLibs(List<Map<String, String>> libs, IPath root, ZipOutputStream zos, boolean useSource) throws IOException{
         for (int i = 0; i < libs.size(); i++) {
-            Map libEntry = (Map) libs.get(i);
-            String id = (String) libEntry.get("id");
-            String version = (String) libEntry.get("version");
-            String path = (String) libEntry.get("root");
+            Map<String, String> libEntry = (Map<String, String>) libs.get(i);
+            String id = libEntry.get("id");
+            String version = libEntry.get("version");
+            String path = libEntry.get("root");
             Library lib = ServerManager.getServerManager().getLibraryManager().getLibrary(id, version);
             
             boolean sourceLibrary = (lib.getSourcePath()!=null && useSource);

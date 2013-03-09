@@ -116,14 +116,18 @@ public class Download extends Command {
     }
 
 	private URL getBuildURL(IUser user, String requestURLString) throws IOException {
-		URL buildURL = null;
+		URL buildURL = new URL(buildBase);
 		try {
         	Map<String, List<String>> dependencies = analyzeWorkspace(user, requestURLString);
+        	if (dependencies == null) {
+        		// nothing to build. Proceed to download zip without any build step.
+        		return null;
+        	}
     		String statusCookie = requestBuild(dependencies);
+    		URL status = new URL(buildURL, statusCookie);
     		String result = null;
     		while (result == null) {
                 // now poll for a response with a "result" property
-        		URL status = new URL(new URL(buildBase), statusCookie);
     			InputStream is = status.openStream();
     			try {
                     int size;
@@ -139,15 +143,15 @@ public class Download extends Command {
         			theLogger.finest("build status: " + content);
         			@SuppressWarnings("unchecked")
 					Map<String, String> json = (Map<String, String>)JSONReader.read(content);
-        			result = (String)json.get("result");
+        			result = json.get("result");
     			} finally {
     				is.close();
     			}
     			Thread.sleep(1000);
     		}
 
-    		theLogger.finest("build result: " + result);
-    		buildURL = new URL(new URL(buildBase), result);
+    		theLogger.fine("build result: " + result);
+    		buildURL = new URL(buildURL, result);
         } catch (InterruptedException ie) {
         	throw new IOException("Thread interrupted.  Did not obtain build result.");
         }
@@ -170,7 +174,7 @@ public class Download extends Command {
 			method = new PostMethod(buildBase + "/api/dependencies");
     		try {
 	            String url = new URL(new URL(requestURL), "/maqetta/user/" + userID + "/ws/workspace/" + files[i].getPath()).toExternalForm();
-	            theLogger.finest("build.dojotoolkit.org: Analyse url="+url);
+	            theLogger.finest("DWB: Analyse url="+url);
 	            Part[] parts = {
 	            	new StringPart("value", url, "utf-8"),
 	            	new StringPart("type", "URL")
@@ -189,7 +193,7 @@ public class Download extends Command {
 	            }
 
 	            String content = body.substring(start + 10, end);
-	            theLogger.finest("build.dojotoolkit.org: Analyse result="+ content);
+	            theLogger.finest("DWB: Analyse result="+ content);
 	            @SuppressWarnings("unchecked")
 				Map<String, List<String>> dependencies = (Map<String, List<String>>)JSONReader.read(content);
 	            if (result == null) {
@@ -234,7 +238,7 @@ public class Download extends Command {
     	List<String> requiredDojoModules = dependencies.get("requiredDojoModules");
         for(int i = 0; i < requiredDojoModules.size(); i++) {
             jsonWriter.startObject();
-        	jsonWriter.addField("name", (String)requiredDojoModules.get(i));
+        	jsonWriter.addField("name", requiredDojoModules.get(i));
         	jsonWriter.addField("package", "dojo");
             jsonWriter.endObject();
         }
@@ -257,9 +261,9 @@ public class Download extends Command {
         	}
             @SuppressWarnings("unchecked")
 			Map<String, String> status = (Map<String, String>)JSONReader.read(json);
-            String statusLink = (String)status.get("buildStatusLink");
+            String statusLink = status.get("buildStatusLink");
             if (statusLink == null) {
-            	throw new IOException(buildBase + "/api/build failed with error: " + (String)status.get("error"));
+            	throw new IOException(buildBase + "/api/build failed with error: " + status.get("error"));
             }
             return statusLink;
         } finally {
@@ -299,7 +303,7 @@ public class Download extends Command {
     private boolean addEntry(String path){
     	
     	for(int i=0;i<this.zippedEntries.size();i++){
-    		String entry = (String)zippedEntries.get(i);
+    		String entry = zippedEntries.get(i);
     		if(entry.compareTo(path)==0) return false;
     	}
     	zippedEntries.add(path);
@@ -314,7 +318,7 @@ public class Download extends Command {
             String path = libEntry.get("root");
             Library lib = ServerManager.getServerManager().getLibraryManager().getLibrary(id, version);
             
-            boolean sourceLibrary = (lib.getSourcePath()!=null && useSource);
+            boolean sourceLibrary = lib.getSourcePath() != null && useSource;
             
             IVResource libResource = new VLibraryResource(lib, lib.getURL("", sourceLibrary),path, "",sourceLibrary);
             zipDir(libResource,root, zos, true);
@@ -322,7 +326,7 @@ public class Download extends Command {
     }
     
 
-    private  void zipDir(IVResource zipDir, IPath root, ZipOutputStream zos, boolean includeLibs) throws IOException {
+    private void zipDir(IVResource zipDir, IPath root, ZipOutputStream zos, boolean includeLibs) throws IOException {
         IVResource[] dirList = zipDir.listFiles();
         
         if(!includeLibs && zipDir instanceof VLibraryResource)

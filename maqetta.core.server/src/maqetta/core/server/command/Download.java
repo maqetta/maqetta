@@ -282,6 +282,7 @@ public class Download extends Command {
 	        	String pathString = dirString.concat(entry.getName());
 				// place the zip entry in the ZipOutputStream object
 				zos.putNextEntry(new ZipEntry(pathString));
+	        	theLogger.finest("transferBuildStream:" + pathString);
 	            // now write the content of the file to the ZipOutputStream
 				while ((bytesIn = zis.read(readBuffer)) != -1) {
 					zos.write(readBuffer, 0, bytesIn);

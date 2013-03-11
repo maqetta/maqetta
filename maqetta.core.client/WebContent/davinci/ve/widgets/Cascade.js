@@ -148,7 +148,7 @@ define(["dojo/_base/declare",
 				 * user has selected a widget or subwidget and then a state not supported by the widget
 				 * then changes a property that 
 				 * the true fix to this will be when #226 is implemented
-				 * until then this will prevent and exception.
+				 * until then this will prevent an exception.
 				*/
 				return; // no cascade rules.
 			}

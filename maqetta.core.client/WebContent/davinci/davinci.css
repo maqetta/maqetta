@@ -1761,6 +1761,7 @@ background-position: -75px -745px;
 	z-index: 948;
 	display: block;
 	opacity: 1.0;
+	margin: 1em;
 	/*background-image: url('../dojox/image/resources/images/loading.gif');
 	background-repeat: no-repeat;
 	background-position: center;*/

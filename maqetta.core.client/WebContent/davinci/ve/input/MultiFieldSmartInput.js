@@ -103,6 +103,7 @@ var MultiFieldSmartInput = declare(SmartInput, {
 
 		var context = this._getContext();
 		var props = {};
+		var children = null;
 		this.property.forEach (function(p) {
 			var targetEditBoxDijit = dijit.byId('MultiFieldSmartInput_SmartInput_'+p.property);
 			var checkbox = dijit.byId('MultiFieldSmartInput_SmartInput_checkbox_'+p.property);
@@ -111,16 +112,62 @@ var MultiFieldSmartInput = declare(SmartInput, {
 				value = entities.encode(value);
 			}
 			if (p.multiLine) {
-				var items = this.parseItems(value);
-				debugger;
+				if (p.child) {
+					children = this.parseChildren(p, value);
+				}
 			} else {
 				props[p.property] = value;
 			}
 		}.bind(this));
-		var command =  new ModifyCommand(this._widget, props, null, context);
+		var command =  new ModifyCommand(this._widget, props, children, context);
 		context.getCommandStack().execute(command);
 		//Hide
 		this.hide(); 
+	},
+	
+	parseChildren: function(p, value) {
+		var data = this._widget.getData();
+		var items = this.parseItems(value);
+		var children = data.children;// this.getChildren(widget);
+		
+		for (var i = 0; i < items.length; i++) {
+			var value = items[i];
+			var text = value.text;
+			if (!p.supportsHTML){
+				items[i].text = dojox.html.entities.decode(text);
+			}
+			if (i < children.length) {
+				var child = children[i];
+				child.children = text;
+				child.properties.value = text;
+				child.properties.selected = value.selected;
+			} else {
+				//  new child
+				child = {};
+				child.type = p.type;
+				child.properties = {};
+				child.properties[p.property] = text;
+				if (value.selected) {
+					child.properties.selected = value.selected;
+				}
+				child.children = text || value;
+				children.push(child);
+				
+			}
+			
+		}
+		
+		if (items.length > 0) {
+			var length = children.length;
+			for (var i = items.length; i < length; i++) {
+				children.pop();
+			}
+		}
+		return children;
+		
+		/*var command = new ModifyCommand(widget, this.getProperties(widget, values), children);
+		this._getContext().getCommandStack().execute(command);
+		return command.newWidget;*/
 	},
 
 	hide: function(){

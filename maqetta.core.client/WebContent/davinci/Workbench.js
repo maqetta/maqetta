@@ -34,8 +34,8 @@ define([
 	"./review/model/resource/root",
 	"dojo/i18n!./ve/nls/common",
 	"./ve/utils/GeomUtils",
-	"dojo/i18n!./workbench/nls/workbench",
-	"davinci/review/model/resource/root",
+	"dojo/i18n!./ui/nls/common",
+	"davinci/review/model/resource/root"
 ], function(
 		lang,
 		require,
@@ -72,7 +72,7 @@ define([
 		reviewResource,
 		veNLS,
 		GeomUtils,
-		workbenchStrings,
+		uiCommonNls,
 		revResource
 ) {
 
@@ -1524,11 +1524,11 @@ var Workbench = {
 								title: editorContainer._getTitle(),
 								content: message, 
 								style: {width: 300}, 
-								okLabel: webContent.Yes,
+								okLabel: uiCommonNls.save,
 								okCallback: dojo.hitch(this,saveAndClose),
 								hideLabel: null,
 								submitOnEnter:true,
-								extendLabels: [webContent.No],
+								extendLabels: [uiCommonNls.discard],
 								extendCallbacks: [dojo.hitch(this,okToClose)]
 							});
 					} else {

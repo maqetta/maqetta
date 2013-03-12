@@ -58,7 +58,6 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	        this._bc.resize(); // kludge: forces primary tab to display	
 	
 	        this._connect(this.visualEditor,"onContentChange", "_visualChanged");
-	        this._connect(this.htmlEditor,"handleChange", "_srcChanged");
 	        this.subscribe("/davinci/ui/styleValuesChange",   this._stylePropertiesChange);
 	        this.subscribe("/davinci/ui/widgetSelected",   this._widgetSelectionChange);
 	        this.subscribe("/davinci/ui/selectionChanged",  this._modelSelectionChange);

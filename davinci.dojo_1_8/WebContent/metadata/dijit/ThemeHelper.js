@@ -45,7 +45,7 @@ return {
 		var anyDojoxMobileWidgets = false;
 		var topWidgets = context.getTopWidgets();
 		for(var i=0; i<topWidgets.length; i++){
-			anyDojoxMobileWidgets = checkWidgetTypePrefix(topWidgets[i], 'dojox.mobile.');
+			anyDojoxMobileWidgets = checkWidgetTypePrefix(topWidgets[i], 'dojox/mobile/');
 			if(anyDojoxMobileWidgets){
 				break;
 			}

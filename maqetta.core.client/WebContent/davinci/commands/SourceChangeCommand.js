@@ -12,26 +12,16 @@ return declare("davinci.commands.SourceChangeCommand", null, {
 	 * args.newText => new source text for the model
 	 */
 	constructor: function(args){
-		if(!args || !args.model || typeof args.oldText != 'string' || typeof args.newText != 'string'){
-			return;
-		}
 		this._model = args.model;
 		this._oldText = args.oldText;
 		this._newText = args.newText;
 	},
 	
 	incrementalUpdate: function(args){
-		if(!args || !args.model || typeof args.newText != 'string' || this._model !== args.model){
-			return;
-		}
 		this._newText = args.newText;
 	},
 
 	execute: function(){
-		if(!this._model || typeof this._newText != 'string'){
-			return;
-		}
-		
 		this._model.setText(this._newText);
 		var changeEvent = {
 			newModel: this._model
@@ -46,9 +36,6 @@ return declare("davinci.commands.SourceChangeCommand", null, {
 	},
 
 	undo: function(){
-		if(!this._model || typeof this._oldText != 'string'){
-			return;
-		}
 		this._model.setText(this._oldText);
 		var changeEvent = {
 			newModel: this._model
@@ -61,6 +48,5 @@ return declare("davinci.commands.SourceChangeCommand", null, {
 			}.bind(this));
 		}
 	}
-
 });
 });

@@ -142,6 +142,16 @@ define(["dojo/_base/declare",
 			if(this._value==this._getFieldValue() && valueArrayCompare(this._valueArray, this._valueArrayNew)){
 				return;
 			}
+			if (this._values.length < 1) {
+				/*
+				 * no cascade rules this should only happen when we are in theme editor and the 
+				 * user has selected a widget or subwidget and then a state not supported by the widget
+				 * then changes a property that 
+				 * the true fix to this will be when #226 is implemented
+				 * until then this will prevent an exception.
+				*/
+				return; // no cascade rules.
+			}
 			if(this._getFieldValue()=="(overrides)"){
 				if(this._setFieldValue){
 					this._setFieldValue("(overrides)", null);					

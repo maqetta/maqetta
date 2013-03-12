@@ -2,6 +2,8 @@ define([
 	"dojo/_base/declare",
 	"dojo/_base/lang",
 	"dojo/_base/connect",
+	"dojo/dom-class",
+	"dojo/dom-construct",
 	"dojo/promise/all",
 	"dojo/text!./template.html",
 	"../Runtime",
@@ -10,6 +12,7 @@ define([
 	"./metadata",
 	"./Context",
 	"preview/silhouetteiframe",
+	"preview/loadIndicator",
 	"../workbench/Preferences",
 	"./widget",
 	"../XPathUtils",
@@ -19,6 +22,8 @@ define([
 	declare,
 	lang,
 	connect,
+	domClass,
+	domConstruct,
 	all,
 	template,
 	Runtime,
@@ -27,6 +32,7 @@ define([
 	Metadata,
 	Context,
 	SilhouetteIframe,
+	loadIndicator,
 	Preferences,
 	widgetUtils,
 	XPathUtils,
@@ -43,7 +49,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 	constructor: function(element, pageEditor)	{
 		this._pageEditor = pageEditor;
 		this.contentPane = dijit.getEnclosingWidget(element);
-		this.loadingDiv = dojo.create("div", {
+		this.loadingDiv = domConstruct.create("div", {
 			className: "loading",
 			innerHTML: dojo.replace(
 					'<table><tr><td><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;{0}</td></tr></table>',
@@ -52,9 +58,9 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 			this.contentPane.domNode.parentNode,
 			"first");
 
-		dojo.addClass(this.contentPane.domNode, "fullPane");
-		var silhouette_div_container = dojo.create("div", {className: "silhouette_div_container"}, this.contentPane.domNode);
-		dojo.create("span", {className: "silhouetteiframe_object_container"}, silhouette_div_container);
+		domClass.add(this.contentPane.domNode, "fullPane");
+		var silhouette_div_container = domConstruct.create("div", {className: "silhouette_div_container"}, this.contentPane.domNode);
+		domConstruct.create("span", {className: "silhouetteiframe_object_container"}, silhouette_div_container);
 		this.silhouetteiframe = new SilhouetteIframe({
 			rootNode: silhouette_div_container,
 			margin: 20
@@ -85,12 +91,12 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		var visualEditorBorder = document.getElementById('visualEditorBorder');
 		if(!visualEditorBorder){
 			var editorsStackContainer = document.getElementById('editorsStackContainer');
-			visualEditorBorder = dojo.create('div', {id:'visualEditorBorder'}, editorsStackContainer);
-			dojo.create('div', {id:'visualEditorBorderTopLeft'}, visualEditorBorder);
-			dojo.create('div', {id:'visualEditorBorderTopRight'}, visualEditorBorder);
-			dojo.create('div', {id:'visualEditorBorderTop'}, visualEditorBorder);
-			dojo.create('div', {id:'visualEditorBorderRight'}, visualEditorBorder);
-			dojo.create('div', {id:'visualEditorBorderLeft'}, visualEditorBorder);
+			visualEditorBorder = domConstruct.create('div', {id:'visualEditorBorder'}, editorsStackContainer);
+			domConstruct.create('div', {id:'visualEditorBorderTopLeft'}, visualEditorBorder);
+			domConstruct.create('div', {id:'visualEditorBorderTopRight'}, visualEditorBorder);
+			domConstruct.create('div', {id:'visualEditorBorderTop'}, visualEditorBorder);
+			domConstruct.create('div', {id:'visualEditorBorderRight'}, visualEditorBorder);
+			domConstruct.create('div', {id:'visualEditorBorderLeft'}, visualEditorBorder);
 		}
 		
 	},
@@ -163,7 +169,6 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 	},
 
 	_objectPropertiesChange: function (event){
-
 		if (!this.isActiveEditor()) {
 			return;
 		}
@@ -272,7 +277,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 	   
 		if (!this.initialSet){
 		   	var workspaceUrl = Runtime.getUserWorkspaceUrl();
-		   	if(filename.indexOf( "./")==0 ){
+		   	if(filename.indexOf("./")==0 ){
 		   		filename = filename.substring(2,filename.length);
 			}				
 		   	var baseUrl=workspaceUrl+filename;
@@ -304,12 +309,11 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 
 			this.context._setSource(content, this._connectCallback, this, newHtmlParams);
 	   		// set flow layout on user prefs
-			var flow = this.context.getFlowLayout(); // gets the current layout, but also sets to default if missing..
+			this.context.getFlowLayout(); // gets the current layout, but also sets to default if missing..
 			this.initialSet=true;
 		}else{
 			this.context.setSource(content, this.context._restoreStates, this.context);
 		}
-
 	},
 
 	_connectCallback: function(failureInfo) {
@@ -378,7 +382,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 					message += "<br><pre>" + failureInfo.stack + "</pre>";
 				}
 				this.loadingDiv.innerHTML = message;
-				dojo.addClass(this.loadingDiv, 'error');
+				domClass.add(this.loadingDiv, 'error');
 			} else {
 				if (this.loadingDiv.parentNode) {
 					this.loadingDiv.parentNode.removeChild(this.loadingDiv);				
@@ -461,11 +465,10 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 	
 	previewInBrowser: function(){
 		var deviceName = this.deviceName,
-			editor = Workbench.getOpenEditor(),
-			fileURL = editor.resourceFile.getURL(),
+			fileURL = Workbench.getOpenEditor().resourceFile.getURL(),
 			query = [];
 
-		if(deviceName && deviceName.length && deviceName != 'none'){
+		if(deviceName != 'none'){
 			query = [
 			    'preview=1',
 			    'device=' + encodeURIComponent(deviceName),
@@ -483,7 +486,11 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		if (query.length) {
 			fileURL += "?" + query.join("&");
 		}
-		window.open(fileURL, "preview_" + fileURL); // TODO: any restrictions on characters, length? Use hash value?
+
+		var preview = window.open(fileURL, "preview_" + fileURL); // TODO: cache busting needed?
+		// Attach load indicator to window
+		loadIndicator(preview, Runtime.location()
+				+ require.toUrl("dojox/image/resources/images/loading.gif"), "gray");
 	},
 
 	/**

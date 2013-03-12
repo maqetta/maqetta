@@ -11,7 +11,7 @@ dependencies = {
 	//But in general for a build, console.warn/error should be the only things to survive anyway.
 //	stripConsole: "normal",
 
-	selectorEngine: "acme",
+	selectorEngine: "lite",
 
 	layers: [
 		{
@@ -109,4 +109,4 @@ dependencies = {
 		[ "dijit", "../dijit" ],
 		[ "dojox", "../dojox" ]
 	]
-}
+};

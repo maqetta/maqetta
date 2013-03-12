@@ -88,8 +88,7 @@ return {
 		{
 			name: "HTML",
 			id: "general",
-			category: "",
-			pageContent: "HTML preferences content here"
+			category: ""
 		}
 	],
 	"davinci.fileType": [

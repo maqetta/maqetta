@@ -18,7 +18,7 @@ define([
 // AppStates functions are only available on the prototype object
 var States = AppStates.prototype;
 
-return declare("davinci.review.editor.Context", [Context], {
+return declare([Context], {
 
 	setSource: function(){
 				
@@ -53,26 +53,25 @@ return declare("davinci.review.editor.Context", [Context], {
 						// Migrate old M6 attribute name to new M7-or-later attribute name
 						deviceName = deviceNameM6;
 					}
-					var svgFilename = (!deviceName || deviceName == 'none' || deviceName == 'desktop') ?
-							null : "app/preview/images/" + deviceName + ".svg";
-					if (svgFilename) {
-						userWindow.require('dojo/ready')(function(){
+					var svgFilename = null;
+					if (deviceName && deviceName != 'none' && deviceName != 'desktop') {
+						svgFilename = "app/preview/images/" + deviceName + ".svg";
+						userWindow.require && userWindow.require('dojo/ready')(function(){
 				    		var deviceTheme = userWindow.require('dojox/mobile/deviceTheme');        	
 				        	deviceTheme.loadDeviceTheme(Silhouette.getMobileTheme(svgFilename));
 						});
 					}
-//					if (dj && dj.subscribe) {
-						connect.subscribe("/davinci/scene/selectionChanged", this, function(SceneManager, sceneId) {
-							if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
-								return; 
-							}
-							if (this._commentView) {
-								this._commentView.updateStatesScenes();
-							}							
-						});
-//					}
 
-					userWindow.require(["dojo/_base/connect"], function(userWindowConnect) {
+					connect.subscribe("/davinci/scene/selectionChanged", this, function(SceneManager, sceneId) {
+						if (!Runtime.currentEditor || Runtime.currentEditor.editorID != "davinci.review.CommentReviewEditor") { 
+							return; 
+						}
+						if (this._commentView) {
+							this._commentView.updateStatesScenes();
+						}							
+					});
+
+					userWindow.require && userWindow.require(["dojo/_base/connect"], function(userWindowConnect) {
 						userWindowConnect.subscribe("/maqetta/appstates/state/changed", this, function(args) {
 							if (!args || !Runtime.currentEditor || Runtime.currentEditor.declaredClass != "davinci.review.editor.ReviewEditor") { 
 								return; 
@@ -358,21 +357,17 @@ return declare("davinci.review.editor.Context", [Context], {
 				delete this.surface;
 			}
 		} catch(err) { /*Do nothing*/ }
-		dojo.forEach(this._cxtConns, connect.disconnect);
-		dojo.forEach(this._cxtSubs, connect.unsubscribe);
+		this._cxtConns.forEach(connect.disconnect);
+		this._cxtSubs.forEach(connect.unsubscribe);
 	},
 	
 	getCurrentStates: function(){
-		var rootNode = this.rootNode;
-		var currentStates = States.getAllCurrentStates(rootNode);
-		var arr = [];
-		for(var i=0; i<currentStates.length; i++){
-			var node = currentStates[i].stateContainerNode;
+		return States.getAllCurrentStates(this.rootNode).map(function(state) {
+			var node = state.stateContainerNode;
 			var id = node ? node.id : '';
 			var xpath = node ? XPathUtils.getXPath(node) : '';
-			arr.push({ id:id, xpath:xpath, state:currentStates[i].state });
-		}
-		return arr;
+			return { id: id, xpath: xpath, state: state.state };
+		});
 	},
 	
 	getCurrentScenes: function(){
@@ -381,16 +376,12 @@ return declare("davinci.review.editor.Context", [Context], {
 		for (var smIndex in sceneManagers) {
 			var sm = sceneManagers[smIndex];
 			if (sm.getAllSceneContainers && sm.getCurrentScene) {
-				var sceneContainers = sm.getAllSceneContainers();
-				var arr = [];
-				for(var j=0; j<sceneContainers.length; j++){
-					var sc = sceneContainers[j];
+				sceneManagerObj[sm.id] = sm.getAllSceneContainers().map(function(sc) {
 					var scene = sm.getCurrentScene(sc);
 					var sceneId = (scene && scene.id) ? scene.id : '';
 					var sceneXpath = (scene && scene.id) ? XPathUtils.getXPath(scene) : '';
-					arr.push( {scId:sc.id, scXpath:XPathUtils.getXPath(sc), sceneId:sceneId, sceneXpath:sceneXpath });
-				}
-				sceneManagerObj[sm.id] = arr;
+					return {scId: sc.id, scXpath: XPathUtils.getXPath(sc), sceneId: sceneId, sceneXpath: sceneXpath };
+				});
 			}
 		}
 		return sceneManagerObj;
@@ -400,7 +391,6 @@ return declare("davinci.review.editor.Context", [Context], {
 	// instead of checking for current scene
 	getCurrentScene: function(){
 		var sceneManagers = this.sceneManagers;
-		var sceneManagerObj = {};
 		for (var smIndex in sceneManagers) {
 			var sm = sceneManagers[smIndex];
 			if (sm.getAllSceneContainers && sm.getCurrentScene) {

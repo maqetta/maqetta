@@ -1,43 +1,17 @@
 package org.davinci.server.review;
 
 
-import org.davinci.server.user.IUser;
-import org.maqetta.server.IDavinciServerConstants;
-
 public class Constants {
-	public static final String BUNDLE_ID = "davinci.review";
-	
-	public static final String CMD_URL = "/cmd";
-	
 	public static final String REVIEW_DIRECTORY_NAME=".review";
-
-	public static final String REVIEW_INFO = "DAVINCI.REVIEW";
-	public static final String REVIEW_COOKIE_DESIGNER = "davinci_designer";
-	public static final String REVIEW_COOKIE_DESIGNER_EMAIL = "davinci_designer_email";
-	public static final String REVIEW_COOKIE_VERSION = "davinci_version";
-	public static final String REVIEW_VERSION = "review_version";
-	public static final String REVIEW_COOKIE_CMTID = "davinci_commentId";
-	public static final String REVIEW_COOKIE_FILENAME = "davinci_commentFileName";
 	
 	public static final String FAKE_REVIEWER = "davinci.review.fakeReviewer";
 
 	public static final String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 	public static final String DATE_PATTERN_SHORT = "yyyyMMdd'T'HHmmss'Z'";
 
-	public static final String EXTENSION_POINT_MAIL_CONFIG = "mailConfig";
-	public static final String EP_TAG_MAIL_CONFIG = "mailConfig";
-	public static final String EP_ATTR_MAIL_CONFIG_MAILSERVER = "smtp.mailServer";
-	public static final String EP_ATTR_MAIL_CONFIG_NOTIFICATIONID = "smtp.notificationId";
-	public static final String EP_ATTR_MAIL_CONFIG_LOGINUSER = "smtp.loginUser";
-	public static final String EP_ATTR_MAIL_CONFIG_PASSWORD = "smtp.password";
-	
 	public static final String TEMPLATE_PROPERTY_FILE = "review.properties";
 	public static final String TEMPLATE_INVITATION_SUBJECT_PREFIX = "maqetta.review.invitationSubject";
 	public static final String TEMPLATE_INVITATION = "maqetta.review.invitationTemplate";
 	public static final String TEMPLATE_COMMENT_NOTIFICATION_SUBJECT = "maqetta.review.commentNotificationSubject";
 	public static final String TEMPLATE_COMMENT = "maqetta.review.commentTemplate";
-	
-	public static IUser LOCAL_INSTALL_USER_OBJ = null;
-
-	public static final String LOCAL_INSTALL_USER_NAME = IDavinciServerConstants.LOCAL_INSTALL_USER;
 }

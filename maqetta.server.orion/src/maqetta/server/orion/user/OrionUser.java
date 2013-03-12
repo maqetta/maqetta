@@ -45,22 +45,18 @@ public class OrionUser extends User {
 	private WebWorkspace webWorkspace;
 	protected static final IScopeContext scope = new OrionScope();	// XXX used?
 	protected IEclipsePreferences store;							// XXX used?
-	private static String DEFAULT_WORKSPACE = "MyWorkspace";
-	private static final String WORKSPACE_NODE_NAME = "Workspaces";//$NON-NLS-1$
+	private static String DEFAULT_WORKSPACE = "MyWorkspace"; //$NON-NLS-1$
 	
 	public OrionUser(IPerson person) {
 		super(person);
-		this.webuser = WebUser.fromUserName(this.getUserID());
+		this.webuser = WebUser.fromUserId(this.getUserID());
 		try {
 			JSONArray workspaceJson = webuser.getWorkspacesJSON();
-			for(int i=0;i<workspaceJson.length();i++){
-				JSONObject workObj = (JSONObject)workspaceJson.get(i);
-				webWorkspace = WebWorkspace.fromId(workObj.getString("Id"));
-				
+			if (workspaceJson.length() != 0) {
 				/* may need to default to other workspace here via the URL or a cookie, but taking first one found for now */
-				break;
-			}
-			if(workspaceJson.length()==0){
+				JSONObject workObj = (JSONObject)workspaceJson.get(0);
+				webWorkspace = WebWorkspace.fromId(workObj.getString("Id"));
+			} else {
 				webWorkspace = webuser.createWorkspace(DEFAULT_WORKSPACE);
 				try {
 					addOrionUserRight("/workspace/" + webWorkspace.getId());
@@ -69,7 +65,6 @@ public class OrionUser extends User {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
 			}
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
@@ -78,7 +73,7 @@ public class OrionUser extends User {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String workspaceId = webWorkspace.getId();
+
 		this.userDirectory = new VOrionWorkspaceStorage(webWorkspace, this.getUserID());
 		
 		rebuildWorkspace();
@@ -124,9 +119,11 @@ public class OrionUser extends User {
 		// return storage system
 		return this.userDirectory;
 	}
+
 	public boolean isProject(String projectName){
-		Collection baseFile = userDirectory.findFiles(userDirectory, projectName + "/" + IDavinciServerConstants.SETTINGS_DIRECTORY_NAME+ "/" + IDavinciServerConstants.LIBS_FILE, false);
-		
+		Collection<?> baseFile = userDirectory.findFiles(userDirectory, projectName + "/" +
+				IDavinciServerConstants.SETTINGS_DIRECTORY_NAME+ "/" +
+				IDavinciServerConstants.LIBS_FILE, false);
 		return baseFile.size() > 0;
 	}
 	
@@ -166,8 +163,8 @@ public class OrionUser extends User {
 			
 		
 		if(initFiles){
-			List extensions = ServerManager.getServerManager().getExtensions(IDavinciServerConstants.EXTENSION_POINT_INITIAL_USER_FILES, IDavinciServerConstants.EP_TAG_INITIAL_USER_FILE);
-	        for (Iterator iterator = extensions.iterator(); iterator.hasNext();) {
+			List<?> extensions = ServerManager.getServerManager().getExtensions(IDavinciServerConstants.EXTENSION_POINT_INITIAL_USER_FILES, IDavinciServerConstants.EP_TAG_INITIAL_USER_FILE);
+	        for (Iterator<?> iterator = extensions.iterator(); iterator.hasNext();) {
 	            IConfigurationElement libraryElement = (IConfigurationElement) iterator.next();
 	            String path = libraryElement.getAttribute(IDavinciServerConstants.EP_ATTR_INITIAL_USER_FILE_PATH);
 	            String name = libraryElement.getDeclaringExtension().getContributor().getName();
@@ -189,6 +186,7 @@ public class OrionUser extends User {
 	public boolean isValid(String path){
 	     return true;
 	}
+
 	public IVResource createResource(String path, boolean isFolder) throws IOException {
 		/* serve working copy files if they exist */
 

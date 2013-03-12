@@ -1,6 +1,7 @@
 package maqetta.core.server.command;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -24,10 +25,13 @@ import org.davinci.server.review.cache.ReviewCacheManager;
 import org.davinci.server.review.user.IDesignerUser;
 import org.davinci.server.user.IUser;
 import org.davinci.server.user.IUserManager;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.orion.server.useradmin.UserEmailUtil;
 import org.maqetta.server.Command;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ServerManager;
 
+@SuppressWarnings("restriction")
 public class AddComment extends Command {
 
 	@Override
@@ -57,7 +61,8 @@ public class AddComment extends Command {
 			Version version = du.getVersion(comment.getPageVersion());
 
 			if (version != null && version.isClosed()){
-				throw new Exception("The version is closed by others during your editting. Please reload the review data.");
+				errorString = "The version was closed by another user while editing. Please reload the review data.";
+				return;
 			}
 			List<Comment> commentList = new ArrayList<Comment>(1);
 			commentList.add(comment);
@@ -73,23 +78,24 @@ public class AddComment extends Command {
 					+ sdf.format(comment.getCreated()) /*+ ",order:'" + comment.getOrder()
 					+ "'*/ + "\",\"email\":\"" + user.getPerson().getEmail() + "\",\"reviewer\":\"" + user.getUserID()
 					+ "\"}";
-		} catch (Exception e) {
+		} catch (CoreException ce) {
+			// use logging
+			ce.printStackTrace();
+			errorString = "The review is not added successfully. Reason: " + ce.getCause().getMessage();
+		} catch (Exception e) { //FIXME: remove this catch-all
 			e.printStackTrace();
 			errorString = "The review is not added successfully. Reason: " + e.getMessage();
 			//resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorString);
 		}
 	}
 
-	protected void notifyRelatedPersons(IUser reviewer, IUser designer, Comment comment, HttpServletRequest req) {
+	protected void notifyRelatedPersons(IUser reviewer, IUser designer, Comment comment,
+			HttpServletRequest req) throws URISyntaxException, IOException, CoreException {
 		String to = designer.getPerson().getEmail();
 		if (to != null && !to.trim().equals("")) {
+			String subject = Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT_NOTIFICATION_SUBJECT);
 			String htmlContent = getHtmlContent(reviewer, comment, req.getRequestURL().toString());
-			String notifId = Utils.getCommonNotificationId(req);
-			ServerManager.getServerManager().sendEmail(
-					notifId,
-					designer.getPerson().getEmail(),
-					Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT_NOTIFICATION_SUBJECT),
-					htmlContent);
+			UserEmailUtil.getUtil().sendEmail(subject, htmlContent, to);
 		}
 	}
 

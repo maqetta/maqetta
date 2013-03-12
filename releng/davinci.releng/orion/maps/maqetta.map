@@ -10,21 +10,18 @@ plugin@maqetta.server.orion=GIT,repo=git://github.com/maqetta/maqetta.git,tag=ma
 plugin@davinci.html=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/davinci.html
 plugin@maqetta.core.server=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.core.server
 plugin@maqetta.shapes=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.shapes
-#  plugin@davinci.joomla=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/davinci.joomla
 plugin@maqetta.client.orion=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.client.orion
 plugin@maqetta.client.plugins.defaults=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.client.plugins.defaults
-#  plugin@maqetta.core.server.standalone=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.core.server.standalone
 plugin@org.apache.commons.fileupload=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/org.apache.commons.fileupload
-#  plugin@davinci.product=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/releng/davinci.product
-plugin@maqetta.server.orion.hosted=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.server.orion.hosted
-plugin@maqetta.server.orion.standard=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.server.orion.standard
 plugin@maqetta.server.orion.authentication.ldap=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.server.orion.authentication.ldap
+plugin@maqetta.server.configurator=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.server.configurator
 
 #
 # maqetta features
 #
-feature@maqetta.orion.feature=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.orion.feature
-feature@maqetta.orion.hosted.feature=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.orion.hosted.feature
+feature@maqetta.server.feature=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.server.feature
+feature@maqetta.client.feature=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.client.feature
+feature@maqetta.libraries.feature=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.libraries.feature
 
 #
 # zazl plugins

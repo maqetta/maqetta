@@ -41,7 +41,7 @@ public class ReviewCacheManager extends Thread {
 		stop = false;
 	}
 
-	public boolean updateComments(List<Comment> comments) throws Exception {
+	public boolean updateComments(List<Comment> comments) {
 		IDavinciProject project;
 		Hashtable<String, Comment> reviewHash;
 		for (Comment comment : comments) {

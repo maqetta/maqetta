@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="copyright" content="Copyright (c) 2010,2012 IBM Corporation and others.">
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="stylesheet" type="text/css" href="css/landing.css" />
+<link rel="stylesheet" type="text/css" href="./LoginWindow.css" />
+<script src="../maqetta/app/dojo/dojo.js"></script>
+<script type="text/javascript">
+/*global require*/
+require({
+  baseUrl: '..',
+
+  // set the paths to our library packages
+  packages: [
+    {
+      name: 'dojo',
+      location: 'maqetta/app/dojo',
+      main: 'lib/main-browser',
+      lib: '.'
+    },
+    {
+      name: 'dijit',
+      location: 'maqetta/app/dijit',
+      main: 'lib/main',
+      lib: '.'
+    },
+    {
+      name: 'dojox',
+      location: 'maqetta/app/dojox',
+      main: 'lib/main',
+      lib: '.'
+    }		    
+  ]
+});
+
+require(["LoginWindow.js"]);
+</script>
+<title>Login Page</title>
+<link rel="shortcut icon" href="../maqetta/app/davinci/img/maqetta.png" />
+</head>
+<body style="margin: 0; padding: 0; min-height:400px;" id="orionBody">
+	<div id="davinci_top_bar">
+		<div id="davinci_top_bar_main">
+			<span class="maq_banner_name_box">
+				<span class="maq_banner_logo"></span>
+				<span class="maq_banner_name">Maqetta</span>
+			</span>
+		</div>
+		<div id="davinci_top_bar_divider"></div>
+		<div id="maqetta_slogan">Visual authoring of HTML5 user interfaces - in the browser!</div>
+		<div id="browser_not_supported" style="display:none;">Internet explorer is not supported - please use Chrome, Firefox or Safari instead.</div>
+	</div>
+	<div class="orion-login-container" id="login-window" style="display:none;min-height:400px;">
+		<div id="landingArea" class="orion-landing-area">
+			<div id="orionInfoArea"  class="orion-info" style="visibility: hidden;" aria-atomic="true" aria-live="assertive">
+					<div id="orionInfoMessage" class="orion-info-message">&nbsp;</div>
+					<div id="orionInfoLink" class="orion-info-link"> [more info...]</div>
+			</div>
+			<div id="errorWin"  class="orion-error" style="visibility: hidden;" aria-atomic="true" aria-live="assertive">
+					<div id="errorMessage">&nbsp;</div>
+			</div>
+			<div class="orion-login" id="orionLogin">
+				<div id='loginLogo'></div>
+				<div id='loginContainer'>
+					<div class="orion-login-header">Login</div>
+					<form id='loginForm'>
+						<div class="orion-input-holder">
+							<input type="text" class="orion-text-input" name="login" id="login" placeholder="email" title="Email" autocomplete="on" autofocus="true" spellcheck="false">
+						</div>
+						<div class="orion-input-holder">
+							<input name="password" type="password" id="password" class="orion-text-input" placeholder="password" title="Password">
+						</div>
+						<div class="orion-login-button-holder">
+							<input type="submit" name="password" id="loginButton" class="orion-login-button" value="Log In" tabindex="0">
+						</div>
+						<div class="orion-login-forgot-holder">
+							<a id="resetUserLink" class="orion-forgot-password">Forgot your password?</a>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<div class="orion-register" id="orionRegister">
+				<div class="orion-register-header">New to Maqetta?</div>
+				<form>
+					<div class="orion-login-button-holder">
+						<input id="registerButton" type="button" class="orion-register-button" value="Register" tabindex="0">
+					</div>
+				</form>
+			</div>
+
+			<div class="orion-signup" id="newUserHeaderShown" style="visibility: hidden;">
+				<div id='signupLogo'></div>
+				<div id='signupContainer'>
+					<div class="orion-login-header">Create an account</div>
+					<form>
+						<div class="orion-register-input-holder">
+							<input type="text" class="orion-text-input" placeholder="email" title="Email" autocomplete="on" autofocus="autofocus" id="create_login" spellcheck="false">
+						</div>
+						<div class="orion-register-input-holder">
+							<input type="text" class="orion-text-input" placeholder="full name" title="Full name" autocomplete="on" autofocus="autofocus" id="create_name" spellcheck="false">
+						</div>
+						<div class="orion-register-input-holder">
+							<input type="password" class="orion-text-input" placeholder="password" title="password" autocomplete="on" id="create_password" aria-required="true">
+						</div>
+						<div class="orion-register-input-holder">
+							<input type="password" class="orion-text-input" placeholder="retype password" title="retype password" autocomplete="on" name="passwordRetype" id="create_passwordRetype" aria-required="true">
+						</div>
+						<div class="orion-register-button-holder">
+							<input id="createButton" type="button" class="orion-login-button" value="Sign up" tabindex="0">
+						</div>
+						<div style="padding-right: 5px;"></div>
+						<div class="orion-register-button-holder">
+							<input id="hideRegisterButton" type="button" class="orion-cancel-button" value="Cancel" tabindex="0">
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<div class="orion-reset" id="orionReset" style="visibility: hidden;">
+				<div id='resetLogo'></div>
+				<div id='resetContainer'>
+					<div class="orion-reset-header">Reset password</div>
+					<div class="orion-reset-note">Provide your email to reset your password.</div>
+					<form>
+						<div class="orion-reset-input-holder orion-reset-input-holder-username" style='display:none'>
+							<input type="text" class="orion-text-input" id="reset" placeholder="username">
+						</div>
+						<div class="orion-reset-input-holder orion-reset-input-holder-useremail">
+							<input type="text" class="orion-text-input" id="resetEmail" placeholder="email">
+						</div>
+						<div class="orion-reset-button-holder">
+							<input type="button" id="sendResetButton" class="orion-send-button" tabindex="0" value="Send">
+						</div>
+						<div class="orion-reset-button-holder">
+							<input type="button" id="cancleResetButton" class="orion-cancel-button" tabindex="0" value="Cancel">
+						</div>
+					</form>
+				</div>
+			</div>			
+		</div>
+		<div id="loginDivider"></div>
+	</div>
+</body>
+</html>

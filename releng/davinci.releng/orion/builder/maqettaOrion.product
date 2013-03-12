@@ -39,7 +39,9 @@
    </plugins>
 
    <features>
-      <feature id="maqetta.orion.feature"/>
+      <feature id="maqetta.server.feature"/>
+      <feature id="maqetta.client.feature"/>
+      <feature id="maqetta.libraries.feature"/>
       <feature id="org.eclipse.orion"/>
       <feature id="maqetta.zazl.feature"/>
    </features>

@@ -1,18 +1,21 @@
 /* Styles for rulers */
 .ruler {
+	background-color: white;
 }
 .ruler.annotations {
+	border-right: 1px solid lightgray;
 	width: 16px;
 }
 .ruler.folding {
-	background-color: white;
+	border-right: 1px solid lightgray;
 	width: 14px;
 }
 .ruler.lines {
-	background-color: white;
+	border-right: 1px solid lightgray;
 	text-align: right;
 }
 .ruler.overview {
+	border-left: 1px solid lightgray;
 	width: 14px;
 }
 

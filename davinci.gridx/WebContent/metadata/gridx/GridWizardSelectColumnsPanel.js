@@ -72,7 +72,7 @@ return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin, GridWizar
 		// pointing at a different JSON source), then we can assume we've shifted for a fundamentally different 
 		// data store
 		var dataStoreShift = false;
-		if (currentWidgetData.properties.store.declaredClass != storeCommand._data.type ||
+		if (currentWidgetData.properties.store.declaredClass != storeCommand._data.type.replace(/\//g,'.') ||
 				currentWidgetData.properties.store.url != storeCommand._data.properties.url) {
 			dataStoreShift = true;
 		}

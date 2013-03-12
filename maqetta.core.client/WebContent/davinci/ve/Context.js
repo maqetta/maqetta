@@ -1807,15 +1807,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// Call setState() on all of the state containers that have non-default
 		// values for their current state (which was set to initial state earlier
 		// in this routine).
-		var allStateContainers = davinci.ve.states.getAllStateContainers(this.rootNode);
-		var statesInfo = []; //FIXME: unused?
-		for(var i=0; i<allStateContainers.length; i++){
-			var stateContainer = allStateContainers[i];
+		davinci.ve.states.getAllStateContainers(this.rootNode).forEach(function(stateContainer) {			
 			if(stateContainer._maqAppStates && typeof stateContainer._maqAppStates.current == 'string'){
 				var focus = stateContainer._maqAppStates.focus;
 				davinci.states.setState(stateContainer._maqAppStates.current, stateContainer, {updateWhenCurrent:true, focus:focus});
 			}
-		}
+		});
 	},
 	
 	/**
@@ -3051,7 +3048,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		 * This is where we add the regexp string to the stringified object.
 		 * Read the note above about why this is needed.
 		 */
-		str += regEx,
+		str += regEx;
 		dojoScript.setAttribute('data-dojo-config', str);
 	},
 
@@ -3068,7 +3065,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				var cssFiles = item[2];
 				this.themeCssFiles = this.themeCssFiles.concat(cssFiles);
 
-				this._themePath = new davinci.model.Path(this.visualEditor.fileName);
+				this._themePath = new Path(this.visualEditor.fileName);
 				// Connect to the css files, so we can update the canvas when
 				// the model changes.
 				this._getCssFiles().forEach(function(file) {
@@ -3267,42 +3264,39 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	getStatesScenes: function() {
 		var statesFocus = States.getFocus(this.rootNode);
 		if(!statesFocus){
-			statesFocus = {};
-			statesFocus.stateContainerNode = this.rootNode;
+			statesFocus = {stateContainerNode: this.rootNode};
 		}
 		if(typeof statesFocus.state != 'string'){
 			statesFocus.state = States.NORMAL;
 		}
-		var allStateContainers = States.getAllStateContainers(this.rootNode);
-		var statesInfo = [];
-		for(var i=0; i<allStateContainers.length; i++){
-			var stateContainer = allStateContainers[i];
+		var statesInfo = States.getAllStateContainers(this.rootNode).map(function(stateContainer) {			
 			var currentState = States.getState(stateContainer);
 			var currentStateString = typeof currentState == 'string' ? currentState : States.NORMAL;
-			var xpath = XPathUtils.getXPath(stateContainer._dvWidget._srcElement,
-						HtmlFileXPathAdapter);
-			var focus = (statesFocus.stateContainerNode == stateContainer &&
-							statesFocus.state == currentStateString);
-			statesInfo.push({ currentStateXPath:xpath, state:currentState, focus:focus });
-		}
+			var xpath = XPathUtils.getXPath(
+					stateContainer._dvWidget._srcElement,
+					HtmlFileXPathAdapter);
+			var focus = statesFocus.stateContainerNode == stateContainer &&
+						statesFocus.state == currentStateString;
+			return { currentStateXPath:xpath, state:currentState, focus:focus };
+		});
 		scenesInfo = {};
 		var sceneManagers = this.sceneManagers;
 		for(var smIndex in sceneManagers){
 			var sm = sceneManagers[smIndex];
-			scenesInfo[smIndex] = { sm:sm, sceneContainers:[] };
-			var allSceneContainers = sm.getAllSceneContainers();
-			for(i=0; i<allSceneContainers.length; i++){
-				var o = {};
-				var sceneContainer = allSceneContainers[i];
+			scenesInfo[smIndex] = { sm: sm };
+			scenesInfo[smIndex].sceneContainers = sm.getAllSceneContainers().map(function(sceneContainer) {
 				var currentScene = sm.getCurrentScene(sceneContainer);
-				var xpath = XPathUtils.getXPath(sceneContainer._dvWidget._srcElement,
+				var sceneContainerXPath = XPathUtils.getXPath(
+						sceneContainer._dvWidget._srcElement,
 						HtmlFileXPathAdapter);
-				o.sceneContainerXPath = xpath;
-				var xpath = XPathUtils.getXPath(currentScene._dvWidget._srcElement,
+				var currentSceneXPath = XPathUtils.getXPath(
+						currentScene._dvWidget._srcElement,
 						HtmlFileXPathAdapter);
-				o.currentSceneXPath = xpath;
-				scenesInfo[smIndex].sceneContainers.push(o);
-			}
+				return {
+					sceneContainerXPath: sceneContainerXPath,
+					currentSceneXPath: currentSceneXPath
+				};
+			});
 		}
 		return { statesInfo:statesInfo, scenesInfo:scenesInfo };
 	},
@@ -3434,12 +3428,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 */
 	getAllWidgets: function(){
 		var result = [];
-		function find(widget) {
+		var find = function(widget) {
 			result.push(widget);
 			widget.getChildren().forEach(function(child) {
 				find(child);
 			});
-		}
+		};
 		if(this.rootWidget){
 			find(this.rootWidget);
 		}

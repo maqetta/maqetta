@@ -27,9 +27,11 @@ import org.davinci.server.review.user.IDesignerUser;
 import org.davinci.server.review.user.Reviewer;
 import org.davinci.server.user.IUser;
 import org.davinci.server.util.JSONWriter;
+import org.eclipse.orion.server.useradmin.UserEmailUtil;
 import org.maqetta.server.Command;
 import org.maqetta.server.ServerManager;
 
+@SuppressWarnings("restriction")
 public class Publish extends Command {
 	
 
@@ -157,10 +159,8 @@ public class Publish extends Command {
 				if (mail != null && !mail.equals("") && set.add(mail)) {
 					String url = ReviewManager.getReviewManager().getReviewUrl(user.getUserID(), version.getTime(), requestUrl);
 					String htmlContent = getHtmlContent(user, message, url);
-					
-					String notifId = Utils.getCommonNotificationId(req);
-					emailResult = notifyRelatedPersons(notifId, mail,
-							Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION_SUBJECT_PREFIX) + " " + versionTitle, htmlContent);
+					String subject = Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION_SUBJECT_PREFIX) + " " + versionTitle;
+					emailResult = notifyRelatedPersons(mail, subject, htmlContent);
 				}
 			}
 			if (emailResult != null) {
@@ -172,13 +172,12 @@ public class Publish extends Command {
         resp.setContentType("application/json;charset=UTF-8");
 	}
 
-	private String notifyRelatedPersons(String from, String to, String subject,
-			String htmlContent) {
-		
-		if( ServerManager.getServerManager().sendEmail(from, to, subject, htmlContent) ){
+	private String notifyRelatedPersons(String to, String subject, String htmlContent) {
+		try {
+			UserEmailUtil.getUtil().sendEmail(subject, htmlContent, to);
 			return "OK";
-		}else{
-			return htmlContent;
+		} catch (Exception e) {
+			return htmlContent;	// XXX this seems odd
 		}
 	}
 

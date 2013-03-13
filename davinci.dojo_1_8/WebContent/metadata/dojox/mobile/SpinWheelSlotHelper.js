@@ -1,4 +1,6 @@
-define(function() {
+define([
+        "dojo/_base/lang",
+],function(lang) {
 
 var SpinWheelSlotHelper = function() {};
 SpinWheelSlotHelper.prototype = {
@@ -28,6 +30,12 @@ SpinWheelSlotHelper.prototype = {
 					data.properties.labelFrom > data.properties.labelTo){
 				data.properties.labelTo = data.properties.labelFrom;
 			}
+		  if(lang.isString(data.properties.labels)){ 
+			  data.properties.labels = data.properties.labels.split(',');
+			  for (var i = 0; i < data.properties.labels.length; i++ ) { 
+				  data.properties.labels[i] = data.properties.labels[i].trim(); 
+			  }
+		  }
 		}
 		return data;
 	}

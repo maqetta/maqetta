@@ -11,9 +11,11 @@ define([
 	"./VisualEditor",
 	"./VisualEditorOutline",
 	"./widget",
+	"./States",
+	"../XPathUtils",
 	"./utils/GeomUtils",
 	"dojo/i18n!./nls/ve"
-], function(declare, ModelEditor, BorderContainer, ContentPane, Runtime, Moveable, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, GeomUtils, veNls){
+], function(declare, ModelEditor, BorderContainer, ContentPane, Runtime, Moveable, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, States, XPathUtils, GeomUtils, veNls){
 
 return declare("davinci.ve.PageEditor", ModelEditor, {
 
@@ -308,17 +310,98 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 			this.visualEditor.skipSave = true;
 		}
 		var context = this.visualEditor.context,
-			statesScenes = context ? context.getStatesScenes() : undefined;
+			statesScenes = context && this._getStatesScenes(context);
 		this.visualEditor.setContent(this.fileName, this.htmlEditor.model);
 		this.editorContainer.updateToolbars();
 		dojo.publish('/davinci/ui/context/pagerebuilt', [context]);
 		if(statesScenes){
-			context.setStatesScenes(statesScenes);
+			this._setStatesScenes(context, statesScenes);
 		}
 		delete this.visualEditor.skipSave;
 		this._setDirty();
 	},
+
+	/**
+	 * Returns an object holding the set of currently selected application states and (mobile) scenes
+	 * @return {object}  { statesInfo:statesInfo, scenesInfo:scenesInfo }
+	 */
+	_getStatesScenes: function(context) {
+		var statesFocus = States.getFocus(context.rootNode);
+		if(!statesFocus){
+			statesFocus = {stateContainerNode: context.rootNode};
+		}
+		if(typeof statesFocus.state != 'string'){
+			statesFocus.state = States.NORMAL;
+		}
+		var statesInfo = States.getAllStateContainers(context.rootNode).map(function(stateContainer) {			
+			var currentState = States.getState(stateContainer);
+			var currentStateString = typeof currentState == 'string' ? currentState : States.NORMAL;
+			var xpath = XPathUtils.getXPath(
+					stateContainer._dvWidget._srcElement,
+					HtmlFileXPathAdapter);
+			var focus = statesFocus.stateContainerNode == stateContainer &&
+						statesFocus.state == currentStateString;
+			return { currentStateXPath:xpath, state:currentState, focus:focus };
+		});
+		scenesInfo = {};
+		var sceneManagers = context.sceneManagers;
+		for(var smIndex in sceneManagers){
+			var sm = sceneManagers[smIndex];
+			scenesInfo[smIndex] = { sm: sm };
+			scenesInfo[smIndex].sceneContainers = sm.getAllSceneContainers().map(function(sceneContainer) {
+				var currentScene = sm.getCurrentScene(sceneContainer);
+				var sceneContainerXPath = XPathUtils.getXPath(
+						sceneContainer._dvWidget._srcElement,
+						HtmlFileXPathAdapter);
+				var currentSceneXPath = XPathUtils.getXPath(
+						currentScene._dvWidget._srcElement,
+						HtmlFileXPathAdapter);
+				return {
+					sceneContainerXPath: sceneContainerXPath,
+					currentSceneXPath: currentSceneXPath
+				};
+			});
+		}
+		return { statesInfo:statesInfo, scenesInfo:scenesInfo };
+	},
 	
+	/**
+	 * Sets the current scene(s) and/or current application state
+	 * @param {object}  object of form { statesInfo:statesInfo, scenesInfo:scenesInfo }
+	 */
+	_setStatesScenes: function(context, statesScenes) {
+		var statesInfo = statesScenes.statesInfo;
+		if(statesInfo){
+			for(var i=0; i<statesInfo.length; i++){
+				var info = statesInfo[i],
+					xpath = info.currentStateXPath,
+					element = context.model.evaluate(xpath);
+				if (!element) { continue; }
+				var widget = Widget.byId(element.getAttribute('id'), context.getDocument());
+				States.setState(info.state, widget.domNode, {focus: info.focus});
+			}
+		}
+
+		var scenesInfo = statesScenes.scenesInfo;
+		for(var smIndex in scenesInfo){
+			var sm = scenesInfo[smIndex].sm,
+				allSceneContainers = scenesInfo[smIndex].sceneContainers;
+			for(i=0; i<allSceneContainers.length; i++){
+				var sceneContainer = allSceneContainers[i],
+					xpath = sceneContainer.sceneContainerXPath,
+					element = context.model.evaluate(xpath);
+				if (!element) { continue; }
+				var widget = Widget.byId(element.getAttribute('id'), context.getDocument()),
+					sceneContainerNode = widget.domNode;
+
+				xpath = sceneContainer.currentSceneXPath;
+				element = context.model.evaluate(xpath);
+				if (!element) { continue; }
+				sm.selectScene({ sceneContainerNode: sceneContainerNode, sceneId: element.getAttribute('id') });
+			}
+		}
+	},
+
 	getContext: function() {
 		return this.visualEditor.context;
 	},

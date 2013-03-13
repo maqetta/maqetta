@@ -28,7 +28,6 @@ define([
 	"./ChooseParent",
 	"./Snap",
 	"./States",
-	"../XPathUtils",
 	"../html/HtmlFileXPathAdapter",
 	"./HTMLWidget",
 	"../html/CSSImport",
@@ -71,7 +70,6 @@ define([
 	ChooseParent,
 	Snap,
 	States,
-	XPathUtils,
 	HtmlFileXPathAdapter,
 	HTMLWidget,
 	CSSImport,
@@ -3254,87 +3252,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		if(!this.sceneManagers[id]){
 			this.sceneManagers[id] = sceneManager;
 			connect.publish('/davinci/ui/context/registerSceneManager', [sceneManager]);
-		}
-	},
-
-	/**
-	 * Returns an object holding the set of currently selected application states and (mobile) scenes
-	 * @return {object}  { statesInfo:statesInfo, scenesInfo:scenesInfo }
-	 */
-	getStatesScenes: function() {
-		var statesFocus = States.getFocus(this.rootNode);
-		if(!statesFocus){
-			statesFocus = {stateContainerNode: this.rootNode};
-		}
-		if(typeof statesFocus.state != 'string'){
-			statesFocus.state = States.NORMAL;
-		}
-		var statesInfo = States.getAllStateContainers(this.rootNode).map(function(stateContainer) {			
-			var currentState = States.getState(stateContainer);
-			var currentStateString = typeof currentState == 'string' ? currentState : States.NORMAL;
-			var xpath = XPathUtils.getXPath(
-					stateContainer._dvWidget._srcElement,
-					HtmlFileXPathAdapter);
-			var focus = statesFocus.stateContainerNode == stateContainer &&
-						statesFocus.state == currentStateString;
-			return { currentStateXPath:xpath, state:currentState, focus:focus };
-		});
-		scenesInfo = {};
-		var sceneManagers = this.sceneManagers;
-		for(var smIndex in sceneManagers){
-			var sm = sceneManagers[smIndex];
-			scenesInfo[smIndex] = { sm: sm };
-			scenesInfo[smIndex].sceneContainers = sm.getAllSceneContainers().map(function(sceneContainer) {
-				var currentScene = sm.getCurrentScene(sceneContainer);
-				var sceneContainerXPath = XPathUtils.getXPath(
-						sceneContainer._dvWidget._srcElement,
-						HtmlFileXPathAdapter);
-				var currentSceneXPath = XPathUtils.getXPath(
-						currentScene._dvWidget._srcElement,
-						HtmlFileXPathAdapter);
-				return {
-					sceneContainerXPath: sceneContainerXPath,
-					currentSceneXPath: currentSceneXPath
-				};
-			});
-		}
-		return { statesInfo:statesInfo, scenesInfo:scenesInfo };
-	},
-	
-	/**
-	 * Sets the current scene(s) and/or current application state
-	 * @param {object}  object of form { statesInfo:statesInfo, scenesInfo:scenesInfo }
-	 */
-	setStatesScenes: function(statesScenes) {
-		var statesInfo = statesScenes.statesInfo;
-		if(statesInfo){
-			for(var i=0; i<statesInfo.length; i++){
-				var info = statesInfo[i],
-					xpath = info.currentStateXPath,
-					element = this.model.evaluate(xpath);
-				if (!element) { continue; }
-				var widget = Widget.byId(element.getAttribute('id'), this.getDocument());
-				States.setState(info.state, widget.domNode, {focus: info.focus});
-			}
-		}
-
-		var scenesInfo = statesScenes.scenesInfo;
-		for(var smIndex in scenesInfo){
-			var sm = scenesInfo[smIndex].sm,
-				allSceneContainers = scenesInfo[smIndex].sceneContainers;
-			for(i=0; i<allSceneContainers.length; i++){
-				var sceneContainer = allSceneContainers[i],
-					xpath = sceneContainer.sceneContainerXPath,
-					element = this.model.evaluate(xpath);
-				if (!element) { continue; }
-				var widget = Widget.byId(element.getAttribute('id'), this.getDocument()),
-					sceneContainerNode = widget.domNode;
-
-				xpath = sceneContainer.currentSceneXPath;
-				element = this.model.evaluate(xpath);
-				if (!element) { continue; }
-				sm.selectScene({ sceneContainerNode: sceneContainerNode, sceneId: element.getAttribute('id') });
-			}
 		}
 	},
 

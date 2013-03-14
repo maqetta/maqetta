@@ -1,6 +1,5 @@
 {
 	"/plugins":{
-		
 		"maqetta/app/orionplugin/maqettaPlugin.html": true,
 		"plugins/authenticationPlugin.html": true,
 		"plugins/fileClientPlugin.html":true,

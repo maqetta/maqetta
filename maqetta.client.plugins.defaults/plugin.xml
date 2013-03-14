@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-    <extension point="org.eclipse.equinox.http.registry.resources">
-        <!-- over ride the default orion plugins to add the maqetta plugin -->     
-        <resource alias="/defaults.pref" base-name="/WebContent/maq-defaults.pref" />      
-    </extension>
-    
     <extension point="maqetta.core.server.welcomePage">
         <welcomePage path="WebContent/welcome.html" priority="2"/>
     </extension>

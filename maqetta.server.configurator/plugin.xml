@@ -56,6 +56,19 @@
             alias="/maqetta/cmd"
             class="org.eclipse.orion.server.configurator.servlet.LoggedInUserFilter">
       </filter>
+      <!-- override the default orion plugins to add the maqetta plugin -->
+      <filter
+            alias="/defaults.pref"
+            class="maqetta.server.configurator.servlet.ForwardingFilter">
+         <init-param
+               name="path"
+               value="/maq-defaults.pref">
+         </init-param>
+         <init-param
+               name="filter-priority"
+               value="0">
+         </init-param>
+      </filter>
    </extension>
    <extension
          point="org.eclipse.equinox.http.registry.httpcontexts">
@@ -65,19 +78,26 @@
                bundle="maqetta.core.client"
                path="/WebContent">
          </resource-mapping>
-      </httpcontext>      
+      </httpcontext>
       <httpcontext
             id="maqetta.server.configurator.httpcontext.app.orionplugin">
          <resource-mapping
                bundle="maqetta.client.orion"
                path="/WebContent/orion">
          </resource-mapping>
-      </httpcontext>      
+      </httpcontext>
       <httpcontext
             id="maqetta.server.configurator.httpcontext.auth.ldap">
          <resource-mapping
                bundle="maqetta.server.orion.authentication.ldap"
                path="/web">
+         </resource-mapping>
+      </httpcontext>
+      <httpcontext
+            id="maqetta.server.configurator.httpcontext.client.plugins.defaults">
+         <resource-mapping
+               bundle="maqetta.client.plugins.defaults"
+               path="/WebContent/maq-defaults.pref">
          </resource-mapping>
       </httpcontext>
    </extension>
@@ -95,6 +115,9 @@
             alias="/ldaplogin"
             httpcontextId="maqetta.server.configurator.httpcontext.auth.ldap">
       </resource>
-
+      <resource
+            alias="/maq-defaults.pref"
+            httpcontextId="maqetta.server.configurator.httpcontext.client.plugins.defaults">
+      </resource>
    </extension>
 </plugin>

@@ -1,13 +1,13 @@
 define([
 	"dojo/_base/declare",
-	"davinci/html/CSSFile",
-	"davinci/js/JSFile",
-	"davinci/html/HTMLFile",
+	"../html/CSSFile",
+	"../js/JSFile",
+	"../html/HTMLFile",
 	"system/resource"
 ], function(declare, CSSFile, JSFile, HTMLFile, systemResource) {
 
-var _instances = [];
-var _resources = [];
+var _instances = [],
+	_resources = [];
 
 var Factory = {
 
@@ -29,7 +29,7 @@ var Factory = {
 		if (/\.css$/.test(url_lc)) {
 			return Factory.newCSS(args);
 		}
-		if (/\.html$/.test(url_lc) || /\.htm$/.test(url_lc)) {
+		if (/\.html?$/.test(url_lc)) {
 			return Factory.newHTML(args);
 		}
 		if(/\.js$/.test(url_lc)) {
@@ -92,7 +92,7 @@ var Factory = {
 	},
 
 	getNewFromResource: function(resource) {
-		// temp models, no need to singlton them....
+		// temp models, no need to singleton them....
 		var extension = resource.extension;
 		if (!extension) { return new HTMLFile(); } // default to HTML
 

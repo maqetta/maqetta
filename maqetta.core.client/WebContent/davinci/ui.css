@@ -140,14 +140,14 @@
 }
 .newFolderIcon {
 	background-image: url(img/sprite.png);
-	background-position: -21px -22px;
+	background-position: 0 -271px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
 }
 .uploadIcon {
 	background-image: url(img/sprite.png);
-	background-position: 0 -450px;
+	background-position: -27px -274px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
@@ -246,7 +246,7 @@
 .renameIcon {
 	/* same as redo icon for now */
 	background-image: url(img/sprite.png); /* FIXME: add logic for redo-disabled.gif? */
-	background-position: 0px -2114px;
+	background-position: 0px -2113px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;

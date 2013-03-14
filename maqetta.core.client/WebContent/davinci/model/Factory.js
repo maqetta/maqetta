@@ -26,13 +26,13 @@ var Factory = {
 			}
 		}
 		var url_lc = url.toLowerCase();
-		if (url_lc.lastIndexOf(".css") >= 0) {
+		if (/\.css$/.test(url_lc)) {
 			return Factory.newCSS(args);
 		}
-		if (url_lc.lastIndexOf(".html") >= 0 || url_lc.lastIndexOf(".htm") >= 0) {
+		if (/\.html$/.test(url_lc) || /\.htm$/.test(url_lc)) {
 			return Factory.newHTML(args);
 		}
-		if(url_lc.lastIndexOf(".js") >= 0) {
+		if(/\.js$/.test(url_lc)) {
 			return Factory.newJS(args);
 		}
 		

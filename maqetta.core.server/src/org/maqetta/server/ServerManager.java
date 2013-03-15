@@ -1,9 +1,7 @@
 package org.maqetta.server;
 
-
 import java.io.BufferedReader;
 import java.io.DataInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,6 +25,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.orion.server.configurator.ConfiguratorActivator;
+import org.eclipse.osgi.service.datalocation.Location;
 
 public class ServerManager implements IServerManager {
 
@@ -283,33 +283,12 @@ public class ServerManager implements IServerManager {
 		return this.personManager;
 	}
 
-	public void setBaseDirectory(IStorage baseDirectory){
-		this.userDir = baseDirectory;
-	}
-
-	public IStorage getBaseDirectory(){
-		if(this.userDir == null){
-
-			String basePath = getDavinciProperty(IDavinciServerConstants.BASE_DIRECTORY_PROPERTY);
-
-			if (basePath != null && basePath.length() > 0) {
-				IStorage dir = new StorageFileSystem(basePath);
-				if (dir.exists()) {
-					userDir = dir;
-				} else {
-					String desc = "User directory does not exist.";
-					theLogger.log(Level.SEVERE, desc);
-					throw new Error("User directory does not exist.");
-				}
-			}
-			if (userDir == null) {
-				File tempDir = (File) servletConfig.getServletContext().getAttribute("javax.servlet.context.tempdir");
-				userDir = new StorageFileSystem(tempDir);
-			}
-			if (userDir == null) {
-				userDir = new StorageFileSystem(".");
-			}
+	public IStorage getBaseDirectory() {
+		if (userDir == null) {
+			// Use the same directory as the Orion workspace
+			Location instanceLoc = ConfiguratorActivator.getDefault().getInstanceLocation();
+			userDir = new StorageFileSystem(instanceLoc.getURL().getFile());
 		}
-		return this.userDir;
+		return userDir;
 	}
 }

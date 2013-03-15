@@ -14,7 +14,6 @@
 -Dhelp.lucene.tokenizer=standard
 -Xms40m
 -Xmx384m
--Dmaqetta.baseDirectory=${env_var:MAQETTA_WORKSPACE} 
 -Dmaqetta.serverDebug=true 
 -Dmaqetta.cacheLevel=100
 -Dorion.core.configFile=${project_loc:org.eclipse.orion.client.core}/web-ide.conf</vmArgs>

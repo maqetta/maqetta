@@ -4,7 +4,6 @@ public interface IDavinciServerConstants {
 
 	public static final String SITECONFIG_DIRECTORY_PROPERTY = "maqetta.siteConfigDirectory";
 	public static final String CONFIG_FILE = "orion.core.configFile";
-	public static final String SERVER_DEBUG = "maqetta.serverDebug";
 	public static final String LOCAL_INSTALL = "maqetta.localInstall";
 	public static final String MAX_USERS = "maqetta.maxUsers";
 	public static final String DOJO_WEB_BUILDER = "maqetta.dojoWebBuilder";

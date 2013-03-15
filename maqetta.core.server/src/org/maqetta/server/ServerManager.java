@@ -43,7 +43,6 @@ public class ServerManager implements IServerManager {
 	private IStorage userDir;
 	private Hashtable<String, String> options = new Hashtable<String, String>();
 
-	public static boolean DEBUG_IO_TO_CONSOLE = false;
 	public static boolean LOCAL_INSTALL = false;
 
 	{
@@ -60,10 +59,6 @@ public class ServerManager implements IServerManager {
 			String desc = "Unable to read config file";
 			theLogger.log(Level.SEVERE, desc, e);
 			throw new Error(desc, e);
-		}
-		String shouldDebug = this.getDavinciProperty(IDavinciServerConstants.SERVER_DEBUG);
-		if (shouldDebug != null && "true".equals(shouldDebug)) { //FIXME: true check seems redundant
-			ServerManager.DEBUG_IO_TO_CONSOLE = Boolean.parseBoolean(shouldDebug);
 		}
 
 		Activator.getActivator().addRegistryChangeListener(new IRegistryListener() {

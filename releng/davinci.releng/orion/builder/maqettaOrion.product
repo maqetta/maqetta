@@ -10,13 +10,8 @@
       <programArgs>-consoleLog -console -clean -product org.eclipse.orion.product</programArgs>
       <vmArgs>-Dorg.eclipse.equinox.http.jetty.http.port=8081
 -Dorg.eclipse.equinox.http.jetty.autostart=false
--DloginUrl=&quot;/maqetta/welcome&quot;
--Dhelp.lucene.tokenizer=standard
--Xms40m
--Xmx384m
--Dmaqetta.serverDebug=true 
--Dmaqetta.cacheLevel=100
--Dorion.core.configFile=${project_loc:org.eclipse.orion.client.core}/web-ide.conf</vmArgs>
+-Dorion.core.configFile=${project_loc:davinci.releng}/orion/builder/rootfiles/maqetta.conf
+-Dmaqetta.siteConfigDirectory=${project_loc:davinci.releng}/orion/builder/rootfiles/siteConfig</vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 

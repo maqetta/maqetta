@@ -105,6 +105,8 @@ define({ root:
 		"uploading":"Uploading...",
 		"completed":"completed: ${0} \n",
 		"done":"Done",
+		"explodeZip":"Explode all .zip files",
+		"explodeZipWarning":"Warning: Contents of .zip files will overwrite any conflicting files",
 		
 		//checkFileName
 		"mustEnterFileName":"You must enter a file name.",

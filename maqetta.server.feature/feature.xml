@@ -16,6 +16,10 @@
       [Enter License Description here.]
    </license>
 
+   <requires>
+      <import feature="org.eclipse.orion.server.feature" version="1.0.0.qualifier"/>
+   </requires>
+
    <plugin
          id="maqetta.core.server"
          download-size="0"

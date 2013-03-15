@@ -248,7 +248,7 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer,
 		initializeFileSystem();
 		registerDecorators();
 		
-		fixOrion10EmailBug();
+//		fixOrion10EmailBug();
 	}
 
 	public static Bundle getBundle() {

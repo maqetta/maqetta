@@ -7,14 +7,11 @@ define(["dojo/_base/declare",
         "dojox/form/uploader/FileList", 
        	"dojox/form/Uploader",
         "dojo/i18n!../nls/ui",
-        "dojo/i18n!dijit/nls/common",
         "dojo/text!./templates/AddFiles.html",
         "dijit/form/Button"
-],function(declare, _TemplatedMixin, _WidgetBase, _WidgetsInTemplateMixin, Path, Resource, FileList, Uploader, uiNLS, commonNLS, templateString){
+],function(declare, _TemplatedMixin, _WidgetBase, _WidgetsInTemplateMixin, Path, Resource, FileList, Uploader, uiNLS, templateString){
 	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		templateString: templateString,
-
-		selectedResource: null,
 		uiNLS: uiNLS,
 
 		_assignCommand: function() {

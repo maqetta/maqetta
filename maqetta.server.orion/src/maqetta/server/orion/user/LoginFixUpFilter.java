@@ -249,7 +249,7 @@ public class LoginFixUpFilter implements Filter {
 		return UserServiceHelper.getDefault().getUserStore();
 	}
 
-	private String nextUserId(IOrionCredentialsService userAdmin) {
+	public static String nextUserId(IOrionCredentialsService userAdmin) {
 		synchronized (userCounter) {
 			String candidate;
 			do {

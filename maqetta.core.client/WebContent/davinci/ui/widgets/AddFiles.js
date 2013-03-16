@@ -1,21 +1,31 @@
 define(["dojo/_base/declare",
-        "dijit/_Templated",
-        "dijit/_Widget",
+        "dijit/_TemplatedMixin",
+        "dijit/_WidgetBase",
+		"dijit/_WidgetsInTemplateMixin",
         "../../model/Path",
         "system/resource",
         "dojox/form/uploader/FileList", 
        	"dojox/form/Uploader",
-        "dojo/i18n!davinci/ui/nls/ui",
+        "dojo/i18n!../nls/ui",
         "dojo/i18n!dijit/nls/common",
         "dojo/text!./templates/AddFiles.html",
         "dijit/form/Button"
-],function(declare, _Templated, _Widget, Path, Resource, FileList, Uploader, uiNLS, commonNLS, templateString){
-	return declare("davinci.ui.widgets.AddFiles", [_Widget,_Templated], {
-		widgetsInTemplate: true,
+],function(declare, _TemplatedMixin, _WidgetBase, _WidgetsInTemplateMixin, Path, Resource, FileList, Uploader, uiNLS, commonNLS, templateString){
+	return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		templateString: templateString,
 
 		selectedResource: null,
 		uiNLS: uiNLS,
+
+		_assignCommand: function() {
+			var cmd = "cmd/addFiles?path=" + encodeURIComponent(folder.getPath()),
+				explode = this.explodeZip.get("value");
+			if (explode) {
+				cmd += "&explodeZip=1";
+			}
+			dojo.style(this.zipWarning, "display", explode ? "block" : "none");
+			this.uploader.set("url", cmd);
+		},
 
 		postCreate: function() {
 			var folder=Resource.getRoot();
@@ -26,9 +36,10 @@ define(["dojo/_base/declare",
 //			dijit.byId('fileDialogParentFolder').set('value',folder.getPath());
 			this.fileDialogParentFolder.innerHTML=folder.getPath();
 
-			this.uploader.set("url", 'cmd/addFiles?path=' + folder.getPath()); 
+			this._assignCommand();
+			dojo.connect(this.explodeZip, "onChange", this, this._assignCommand);
 
-			var list = new FileList({uploader:this.uploader}, this.filelist);
+			new FileList({uploader:this.uploader}, this.filelist);
 
 			var uploadHandler, uploadBtn = this.uploadBtn;
 			uploadBtn.set("disabled", true);
@@ -58,16 +69,20 @@ define(["dojo/_base/declare",
 			};
 
 			dojo.connect(this.uploader, "onComplete", function(dataArray){
-				dojo.forEach(dataArray, function(data){
-					
-					/* 
-					 * need to add to the client side without a server call, mimic the results of a server call
-					 * private API call since this is all part of the resource package.
-					 * 
-					 *  */
-					folder._appendFiles([{isDir:false, isLib:false, isNew:false,name:data.file}]);
-					var changed = new Path(folder.getPath()).append(data.file);
-					Resource.resourceChanged('updated', changed.toString());
+				dataArray.forEach(function(data){
+					// need to add to the client side without a server call, mimic the results of a server call
+					// private API call since this is all part of the resource package.
+					var type, changed = new Path(folder.getPath());
+					if (data.file.indexOf("/") == -1) {
+						folder._appendFiles([{isDir: false, isLib: false, isNew: false, name: data.file}]);						
+						changed.append(data.file);
+						type = "updated";
+					} else {
+						//FIXME: Could iterate through results and create hierarchies without fetching from server
+						folder.getChildrenSync(function(){}, true);
+						type = "reload";
+					}
+					Resource.resourceChanged(type, changed.toString());
 				});
 				setDone();
 			});

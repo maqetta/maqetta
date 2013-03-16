@@ -2554,16 +2554,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 			return foundSheet;
 		}
-		var sheets = this.getDocument().styleSheets;
-		dojo.some(sheets, function(sheet) {
+
+		dojo.some(this.getDocument().styleSheets, function(sheet) {
 			return updateSheet(sheet, r);
 		});
 	},
 	
 	addPseudoClassSelectors: function (selectors) {
 		
-		function updateSheet(sheet){
-
+		var updateSheet = function(sheet){
 			if (sheet){
 				var rules = sheet.cssRules;
 				var r = 0;
@@ -2588,19 +2587,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 							break;
 						}
 					}
-					
 				}
 				return true;
 			}
 			return false;
-		}
+		};
 
-		
-		var sheets = this.getDocument().styleSheets;
-		dojo.some(sheets, function(sheet) {
-			return updateSheet(sheet);
-		});
-
+		dojo.some(this.getDocument().styleSheets, updateSheet);
 	},
 	
 	//FIXME: refactor. Move to Cascade.js?  need to account for polymorphism in themeEditor/Context

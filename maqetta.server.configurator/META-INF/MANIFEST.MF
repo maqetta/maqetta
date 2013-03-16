@@ -6,7 +6,8 @@ Bundle-Name: %Bundle-Name
 Bundle-Vendor: %Bundle-Vendor
 Bundle-Localization: bundle
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: maqetta.server.configurator
+Export-Package: maqetta.server.configurator,
+ maqetta.server.configurator.servlet
 Bundle-Activator: maqetta.server.configurator.ConfiguratorActivator
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: configurator.jar

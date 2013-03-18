@@ -8,8 +8,8 @@ define([
 	"orion/editor/editorFeatures",
 	"orion/editor/htmlGrammar",
 	"orion/editor/textMateStyler",
-	"orion/textview/textView",
-	"orion/textview/textModel",
+	"orion/editor/textView",
+	"orion/editor/textModel",
     "orion/editor/contentAssist",
     "orion/editor/jsContentAssist",
     "orion/editor/cssContentAssist",
@@ -244,7 +244,7 @@ return declare(null, {
 			try {
 				this._progSelect = true;
 				// reverse arguments so that insertion caret (and the scroll) happens at the beginning of the selection
-				this.editor.setSelection(selectionInfo.endOffset,selectionInfo.startOffset);
+				this.editor.setSelection(selectionInfo.endOffset,selectionInfo.startOffset/*, true*/);
 			} finally {
 				delete this._progSelect;				
 			}

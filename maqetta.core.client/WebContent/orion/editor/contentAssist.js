@@ -173,7 +173,7 @@ define("orion/editor/contentAssist", ['i18n!orion/editor/nls/messages', 'orion/t
 			var deletion = event.removedCharCount > 0 && event.addedCharCount === 0,
 			    view = this.textView,
 			    overWhitespace = (event.start+1 <= view.getModel().getCharCount()) && /^\s*$/.test(view.getText(event.start, event.start+1));
-			return event.removedLineCount > 0 || (deletion && overWhitespace);
+			return event.removedLineCount > 0 || event.addedLineCount > 0 || (deletion && overWhitespace);
 		},
 		/** @private */
 		setState: function(state) {

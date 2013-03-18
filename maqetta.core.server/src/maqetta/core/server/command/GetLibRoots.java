@@ -18,10 +18,7 @@ public class GetLibRoots extends Command {
         String base = req.getParameter("base");
 
         String libRoot = user.getLibPath(id, version, base);
-        if (libRoot != null) {
-            responseString = "[{libRoot:{'root':'" + libRoot + "'}}]";
-        } else {
-            responseString = "null";
-        }
+        responseString = (libRoot == null) ? "null" : "[{\"libRoot\":{\"root\":\"" + libRoot + "\"}}]";
+        resp.setContentType("application/json;charset=UTF-8");
     }
 }

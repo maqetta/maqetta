@@ -10,6 +10,10 @@
 	color: #00008F;
 }
 
+a.token_singleline_comment, a.token_multiline_comment, a.token_doc_comment {
+	text-decoration: underline;
+}
+
 .token_doc_html_markup {
 	color: #7F7F9F;
 }
@@ -52,4 +56,3 @@
 .line_caret {
 	background-color: #EAF2FE;
 }
-

@@ -11,7 +11,7 @@
  *******************************************************************************/
 /*global define */
 /*jslint browser:true forin:true*/
-define("orion/editor/mirror", ["i18n!orion/editor/nls/messages", "orion/textview/eventTarget", "orion/textview/annotations"], function(messages, mEventTarget, mAnnotations) {
+define("orion/editor/mirror", ["i18n!orion/editor/nls/messages", "orion/editor/eventTarget", "orion/editor/annotations"], function(messages, mEventTarget, mAnnotations) {
 	// TODO this affects indentation, which we don't support. Should be a parameter.
 	var tabSize = 4;
 	
@@ -80,7 +80,7 @@ define("orion/editor/mirror", ["i18n!orion/editor/nls/messages", "orion/textview
 			}
 		},
 		backUp: function(/**Number*/ n) { this.pos -= n; },
-		/** @returns Number */
+		/** @returns {Number} */
 		column: function() {
 			var col = 0, i = 0;
 			while (i < this.tokenStart) {
@@ -97,7 +97,7 @@ define("orion/editor/mirror", ["i18n!orion/editor/nls/messages", "orion/textview
 			}
 			return col;
 		},
-		/** @returns String */
+		/** @returns {String} */
 		current: function() { return this.string.substring(this.tokenStart, this.pos); },
 		advance: function() { this.tokenStart = this.pos; }
 	};
@@ -229,11 +229,11 @@ define("orion/editor/mirror", ["i18n!orion/editor/nls/messages", "orion/textview
 	/**
 	 * @name orion.mirror.ModeApplier
 	 * @class Driver for CodeMirror modes.
-	 * @description A <code>ModeApplier</code> listens to text changes on a {@link orion.textview.TextModel} and drives
+	 * @description A <code>ModeApplier</code> listens to text changes on a {@link orion.editor.TextModel} and drives
 	 * a CodeMirror mode to calculate highlighting in response to the change. Clients can use the highlighting information
-	 * to style a {@link orion.textview.TextView}.
+	 * to style a {@link orion.editor.TextView}.
 	 * 
-	 * <p>After a change is made to the {@link orion.textview.TextModel}, ModeApplier immediately updates the highlighting 
+	 * <p>After a change is made to the {@link orion.editor.TextModel}, ModeApplier immediately updates the highlighting 
 	 * information for a small portion of the file around where the change occurred. Successive portions of the file are
 	 * updated by short jobs that run periodically to avoid slowing down the rest of the application.</p>
 	 * 
@@ -241,14 +241,14 @@ define("orion/editor/mirror", ["i18n!orion/editor/nls/messages", "orion/textview
 	 * a portion of the file. The event contains information about which lines were highlighted. The style for any highlighted
 	 * line can be obtained by calling {@link #getLineStyle}.</p>
 	 * 
-	 * @param {orion.textview.TextModel} model The text model to listen to.
+	 * @param {orion.editor.TextModel} model The text model to listen to.
 	 * @param {orion.mirror.Mirror} mirror The {@link orion.mirror.Mirror} to use for loading modes.
 	 * @param {Object} [options]
 	 * <!-- @param {Boolean} [options.whitespacesVisible] If <code>true</code>, causes ModeApplier 
 	 * to generate style regions for any whitespace characters that are not claimed as tokens by the mode. -->
-	 * @borrows orion.textview.EventTarget#addEventListener as #addEventListener
-	 * @borrows orion.textview.EventTarget#removeEventListener as #removeEventListener
-	 * @borrows orion.textview.EventTarget#dispatchEvent as #dispatchEvent
+	 * @borrows orion.editor.EventTarget#addEventListener as #addEventListener
+	 * @borrows orion.editor.EventTarget#removeEventListener as #removeEventListener
+	 * @borrows orion.editor.EventTarget#dispatchEvent as #dispatchEvent
 	 */
 	function ModeApplier(model, codeMirror, options) {
 		options = options || {};
@@ -601,14 +601,14 @@ define("orion/editor/mirror", ["i18n!orion/editor/nls/messages", "orion/textview
 			this.endLine = Math.max(this.endLine, endLine);
 		},
 		/**
-		 * Converts a <code>MirrorLineStyle</code> to a {@link orion.textview.StyleRange[]}.
+		 * Converts a <code>MirrorLineStyle</code> to a {@link orion.editor.StyleRange[]}.
 		 * @param {orion.mirror.MirrorLineStyle} style The line style to convert.
 		 * @param {Number} [lineIndex] The line index of the line having the given style. If omitted, the returned 
-		 * {@link orion.textview.StyleRange[]} objects will have offsets relative to the line, not the document.
+		 * {@link orion.editor.StyleRange[]} objects will have offsets relative to the line, not the document.
 		 * 
-		 * @returns {orion.textview.StyleRange[][]} An array of 2 elements. The first element is an {@link orion.textview.StyleRange[]}
+		 * @returns {orion.editor.StyleRange[][]} An array of 2 elements. The first element is an {@link orion.editor.StyleRange[]}
 		 * giving the styles for the line. 
-		 * <p>The second element is an {@link orion.textview.StyleRange[]} containing only those elements of
+		 * <p>The second element is an {@link orion.editor.StyleRange[]} containing only those elements of
 		 * the first array that represent syntax errors. (By CodeMirror convention, anything assigned the <code>"cm-error"</code> tag
 		 * is assumed to be an error).</p>
 		 */
@@ -650,8 +650,8 @@ define("orion/editor/mirror", ["i18n!orion/editor/nls/messages", "orion/textview
 
 	/**
 	 * @name orion.mirror.CodeMirrorStyler
-	 * @class A styler that uses CodeMirror modes to provide styles for a {@link orion.textview.TextView}.
-	 * @description A <code>CodeMirrorStyler</code> applies one or more CodeMirror modes to provide styles for a {@link orion.textview.TextView}.
+	 * @class A styler that uses CodeMirror modes to provide styles for a {@link orion.editor.TextView}.
+	 * @description A <code>CodeMirrorStyler</code> applies one or more CodeMirror modes to provide styles for a {@link orion.editor.TextView}.
 	 * It uses modes that are registered with the {@link orion.mirror.Mirror} object passed to the CodeMirrorStyler constructor.
 	 * 
 	 * <p>The process for using CodeMirrorStyler is as follows:</p>
@@ -667,9 +667,9 @@ define("orion/editor/mirror", ["i18n!orion/editor/nls/messages", "orion/textview
 	 * dependent modes have been registered with the Mirror before calling {@link #setMode}.</p>
 	 * </li>
 	 * 
-	 * @param {orion.textview.TextView} textView The TextView to provide style for.
+	 * @param {orion.editor.TextView} textView The TextView to provide style for.
 	 * @param {orion.mirror.Mirror} codeMirror The Mirror object to load modes from.
-	 * @param {orion.textview.AnnotationModel} [annotationModel]
+	 * @param {orion.editor.AnnotationModel} [annotationModel]
 	 */
 	function CodeMirrorStyler(textView, codeMirror, annotationModel) {
 		this.init(textView, codeMirror, annotationModel);

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * @license
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
  * available under the terms of the Eclipse Public License v1.0 
  * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
@@ -9,9 +9,15 @@
  * Contributors: IBM Corporation - initial API and implementation
  ******************************************************************************/
 
-/*global define setTimeout clearTimeout setInterval clearInterval Node */
+/*global define Node */
 
-define("orion/textview/tooltip", ['i18n!orion/textview/nls/messages', 'orion/textview/textView', 'orion/textview/textModel', 'orion/textview/projectionTextModel'], function(messages, mTextView, mTextModel, mProjectionTextModel) { //$NON-NLS-4$ //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+define("orion/editor/tooltip", [ //$NON-NLS-0$
+	'i18n!orion/editor/nls/messages', //$NON-NLS-0$
+	'orion/editor/textView', //$NON-NLS-0$
+	'orion/editor/textModel', //$NON-NLS-0$
+	'orion/editor/projectionTextModel', //$NON-NLS-0$
+	'orion/editor/util' //$NON-NLS-0$
+], function(messages, mTextView, mTextModel, mProjectionTextModel, util) {
 
 	/** @private */
 	function Tooltip (view) {
@@ -25,17 +31,21 @@ define("orion/textview/tooltip", ['i18n!orion/textview/nls/messages', 'orion/tex
 		}
 		return view._tooltip;
 	};
-	Tooltip.prototype = /** @lends orion.textview.Tooltip.prototype */ {
+	Tooltip.prototype = /** @lends orion.editor.Tooltip.prototype */ {
 		_create: function(document) {
 			if (this._tooltipDiv) { return; }
-			var tooltipDiv = this._tooltipDiv = document.createElement("DIV"); //$NON-NLS-0$
+			var tooltipDiv = this._tooltipDiv = util.createElement(document, "div"); //$NON-NLS-0$
 			tooltipDiv.className = "textviewTooltip"; //$NON-NLS-0$
 			tooltipDiv.setAttribute("aria-live", "assertive"); //$NON-NLS-1$ //$NON-NLS-0$
 			tooltipDiv.setAttribute("aria-atomic", "true"); //$NON-NLS-1$ //$NON-NLS-0$
-			var tooltipContents = this._tooltipContents = document.createElement("DIV"); //$NON-NLS-0$
+			var tooltipContents = this._tooltipContents = util.createElement(document, "div"); //$NON-NLS-0$
 			tooltipDiv.appendChild(tooltipContents);
 			document.body.appendChild(tooltipDiv);
 			this.hide();
+		},
+		_getWindow: function() {
+			var document = this._tooltipDiv.ownerDocument;
+			return document.defaultView || document.parentWindow;
 		},
 		destroy: function() {
 			if (!this._tooltipDiv) { return; }
@@ -55,16 +65,17 @@ define("orion/textview/tooltip", ['i18n!orion/textview/nls/messages', 'orion/tex
 			if (this._tooltipDiv) {
 				this._tooltipDiv.style.visibility = "hidden"; //$NON-NLS-0$
 			}
+			var window = this._getWindow();
 			if (this._showTimeout) {
-				clearTimeout(this._showTimeout);
+				window.clearTimeout(this._showTimeout);
 				this._showTimeout = null;
 			}
 			if (this._hideTimeout) {
-				clearTimeout(this._hideTimeout);
+				window.clearTimeout(this._hideTimeout);
 				this._hideTimeout = null;
 			}
 			if (this._fadeTimeout) {
-				clearInterval(this._fadeTimeout);
+				window.clearInterval(this._fadeTimeout);
 				this._fadeTimeout = null;
 			}
 		},
@@ -81,7 +92,8 @@ define("orion/textview/tooltip", ['i18n!orion/textview/nls/messages', 'orion/tex
 					self.show(true);
 				}
 				else {
-					self._showTimeout = setTimeout(function() {
+				var window = this._getWindow();
+					self._showTimeout = window.setTimeout(function() {
 						self.show(true);
 					}, delay ? delay : 500);
 				}
@@ -105,6 +117,7 @@ define("orion/textview/tooltip", ['i18n!orion/textview/nls/messages', 'orion/tex
 			} else if (contents instanceof mProjectionTextModel.ProjectionTextModel) {
 				var view = this._view;
 				var options = view.getOptions();
+				options.wrapMode = false;
 				options.parent = tooltipContents;
 				var tooltipTheme = "tooltip"; //$NON-NLS-0$
 				var theme = options.themeClass;
@@ -155,9 +168,10 @@ define("orion/textview/tooltip", ['i18n!orion/textview/nls/messages', 'orion/tex
 			tooltipDiv.style.visibility = "visible"; //$NON-NLS-0$
 			if (autoHide) {
 				var self = this;
-				self._hideTimeout = setTimeout(function() {
+				var window = this._getWindow();
+				self._hideTimeout = window.setTimeout(function() {
 					var opacity = parseFloat(self._getNodeStyle(tooltipDiv, "opacity", "1")); //$NON-NLS-1$ //$NON-NLS-0$
-					self._fadeTimeout = setInterval(function() {
+					self._fadeTimeout = window.setInterval(function() {
 						if (tooltipDiv.style.visibility === "visible" && opacity > 0) { //$NON-NLS-0$
 							opacity -= 0.1;
 							tooltipDiv.style.opacity = opacity;

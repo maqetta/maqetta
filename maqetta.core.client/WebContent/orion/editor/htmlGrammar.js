@@ -1,6 +1,6 @@
 /******************************************************************************* 
  * @license
- * Copyright (c) 2011 IBM Corporation and others.
+ * Copyright (c) 2011, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
  * available under the terms of the Eclipse Public License v1.0 
  * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
@@ -80,11 +80,11 @@ define("orion/editor/htmlGrammar", [], function() {
 				},
 				"qqString": { // double quoted string
 					"match": "(\")[^\"]+(\")",
-					"name": "string.quoted.double.html"
+					"name": "token.string"
 				},
 				"qString": { // single quoted string
 					"match": "(')[^']+(\')",
-					"name": "string.quoted.single.html"
+					"name": "token.string"
 				},
 				"entity": {
 					"match": "&[A-Za-z0-9]+;",

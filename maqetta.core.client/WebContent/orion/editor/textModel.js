@@ -1,6 +1,6 @@
 /*******************************************************************************
  * @license
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
  * available under the terms of the Eclipse Public License v1.0 
  * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
@@ -11,10 +11,9 @@
  *		Silenio Quarti (IBM Corporation) - initial API and implementation
  ******************************************************************************/
  
-/*global define window*/
+/*global define*/
 
-define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEventTarget) { //$NON-NLS-1$ //$NON-NLS-0$
-	var isWindows = window.navigator.platform.indexOf("Win") !== -1; //$NON-NLS-0$
+define("orion/editor/textModel", ['orion/editor/eventTarget', 'orion/editor/util'], function(mEventTarget, util) { //$NON-NLS-2$  //$NON-NLS-1$ //$NON-NLS-0$
 
 	/**
 	 * Constructs a new TextModel with the given text and default line delimiter.
@@ -22,19 +21,19 @@ define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEve
 	 * @param {String} [text=""] the text that the model will store
 	 * @param {String} [lineDelimiter=platform delimiter] the line delimiter used when inserting new lines to the model.
 	 *
-	 * @name orion.textview.TextModel
+	 * @name orion.editor.TextModel
 	 * @class The TextModel is an interface that provides text for the view. Applications may
 	 * implement the TextModel interface to provide a custom store for the view content. The
 	 * view interacts with its text model in order to access and update the text that is being
 	 * displayed and edited in the view. This is the default implementation.
 	 * <p>
 	 * <b>See:</b><br/>
-	 * {@link orion.textview.TextView}<br/>
-	 * {@link orion.textview.TextView#setModel}
+	 * {@link orion.editor.TextView}<br/>
+	 * {@link orion.editor.TextView#setModel}
 	 * </p>
-	 * @borrows orion.textview.EventTarget#addEventListener as #addEventListener
-	 * @borrows orion.textview.EventTarget#removeEventListener as #removeEventListener
-	 * @borrows orion.textview.EventTarget#dispatchEvent as #dispatchEvent
+	 * @borrows orion.editor.EventTarget#addEventListener as #addEventListener
+	 * @borrows orion.editor.EventTarget#removeEventListener as #removeEventListener
+	 * @borrows orion.editor.EventTarget#dispatchEvent as #dispatchEvent
 	 */
 	function TextModel(text, lineDelimiter) {
 		this._lastLineIndex = -1;
@@ -44,10 +43,10 @@ define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEve
 		this.setLineDelimiter(lineDelimiter);
 	}
 
-	TextModel.prototype = /** @lends orion.textview.TextModel.prototype */ {
+	TextModel.prototype = /** @lends orion.editor.TextModel.prototype */ {
 		/**
 		 * @class This object describes the options to use while finding occurrences of a string in a text model.
-		 * @name orion.textview.FindOptions
+		 * @name orion.editor.FindOptions
 		 *
 		 * @property {String} string the search string to be found.
 		 * @property {Boolean} [regex=false] whether or not the search string is a regular expression.
@@ -62,9 +61,9 @@ define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEve
 		 * @class This object represents a find occurrences iterator.
 		 * <p>
 		 * <b>See:</b><br/>
-		 * {@link orion.textview.TextModel#find}<br/>
+		 * {@link orion.editor.TextModel#find}<br/>
 		 * </p>		 
-		 * @name orion.textview.FindIterator
+		 * @name orion.editor.FindIterator
 		 * 
 		 * @property {Function} hasNext Determines whether there are more occurrences in the iterator.
 		 * @property {Function} next Returns the next matched range {start,end} in the iterator.
@@ -72,8 +71,8 @@ define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEve
 		/**
 		 * Finds occurrences of a string in the text model.
 		 *
-		 * @param {orion.textview.FindOptions} options the search options
-		 * @return {orion.textview.FindIterator} the find occurrences iterator.
+		 * @param {orion.editor.FindOptions} options the search options
+		 * @return {orion.editor.FindIterator} the find occurrences iterator.
 		 */
 		find: function(options) {
 			if (this._text.length > 1) {
@@ -385,7 +384,7 @@ define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEve
 		 * Notifies all listeners that the text is about to change.
 		 * <p>
 		 * This notification is intended to be used only by the view. Application clients should
-		 * use {@link orion.textview.TextView#event:onModelChanging}.
+		 * use {@link orion.editor.TextView#event:onModelChanging}.
 		 * </p>
 		 * <p>
 		 * NOTE: This method is not meant to called directly by application code. It is called internally by the TextModel
@@ -393,7 +392,7 @@ define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEve
 		 * purposes and to allow integration with other toolkit frameworks.
 		 * </p>
 		 *
-		 * @param {orion.textview.ModelChangingEvent} modelChangingEvent the changing event
+		 * @param {orion.editor.ModelChangingEvent} modelChangingEvent the changing event
 		 */
 		onChanging: function(modelChangingEvent) {
 			return this.dispatchEvent(modelChangingEvent);
@@ -402,7 +401,7 @@ define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEve
 		 * Notifies all listeners that the text has changed.
 		 * <p>
 		 * This notification is intended to be used only by the view. Application clients should
-		 * use {@link orion.textview.TextView#event:onModelChanged}.
+		 * use {@link orion.editor.TextView#event:onModelChanged}.
 		 * </p>
 		 * <p>
 		 * NOTE: This method is not meant to called directly by application code. It is called internally by the TextModel
@@ -410,7 +409,7 @@ define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEve
 		 * purposes and to allow integration with other toolkit frameworks.
 		 * </p>
 		 *
-		 * @param {orion.textview.ModelChangedEvent} modelChangedEvent the changed event
+		 * @param {orion.editor.ModelChangedEvent} modelChangedEvent the changed event
 		 */
 		onChanged: function(modelChangedEvent) {
 			return this.dispatchEvent(modelChangedEvent);
@@ -438,7 +437,7 @@ define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEve
 					lineDelimiter = this.getText(this.getLineEnd(0), this.getLineEnd(0, true));
 				}
 			}
-			this._lineDelimiter = lineDelimiter ? lineDelimiter : (isWindows ? "\r\n" : "\n"); //$NON-NLS-1$ //$NON-NLS-0$
+			this._lineDelimiter = lineDelimiter ? lineDelimiter : util.platformDelimiter;
 			if (all) {
 				var lineCount = this.getLineCount();
 				if (lineCount > 1) {

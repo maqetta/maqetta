@@ -33,6 +33,11 @@
 	text-decoration: line-through;
 }
 
+.invalid {
+	color: red;
+	font-weight: bold;
+}
+
 .keyword-control {
 	color: #7F0055;
 	font-weight: bold;

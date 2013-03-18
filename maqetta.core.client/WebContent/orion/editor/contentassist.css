@@ -1,0 +1,18 @@
+
+.contentassist {
+	display: none;
+	background-color: #FFFFFF;
+	padding: 2px;
+	top: 100px;
+	left: 100px;
+	border: 1px solid #CCCCCC;
+	z-index:10;
+	cursor: default;
+	overflow: auto;
+	height: 150px;
+	width: 200px;
+}
+
+.contentassist .selected {
+	background-color: #EAF2FE;
+}

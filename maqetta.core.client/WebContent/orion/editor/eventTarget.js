@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
  * available under the terms of the Eclipse Public License v1.0 
  * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
@@ -11,12 +11,12 @@
  ******************************************************************************/
  
 /*global define */
-define("orion/textview/eventTarget", [], function() { //$NON-NLS-0$
+define("orion/editor/eventTarget", [], function() { //$NON-NLS-0$
 	/** 
 	 * Constructs a new EventTarget object.
 	 * 
 	 * @class 
-	 * @name orion.textview.EventTarget
+	 * @name orion.editor.EventTarget
 	 */
 	function EventTarget() {
 	}
@@ -33,7 +33,7 @@ define("orion/textview/eventTarget", [], function() { //$NON-NLS-0$
 			}
 		}
 	};
-	EventTarget.prototype = /** @lends orion.textview.EventTarget.prototype */ {
+	EventTarget.prototype = /** @lends orion.editor.EventTarget.prototype */ {
 		/**
 		 * Adds an event listener to this event target.
 		 * 
@@ -57,9 +57,13 @@ define("orion/textview/eventTarget", [], function() { //$NON-NLS-0$
 		 * @param {Event} evt The event to dispatch.
 		 */
 		dispatchEvent: function(evt) {
-			if (!this._eventTypes) { return; }
 			var type = evt.type;
-			var state = this._eventTypes[type];
+			this._dispatchEvent("pre" + type, evt); //$NON-NLS-0$
+			this._dispatchEvent(type, evt);
+			this._dispatchEvent("post" + type, evt); //$NON-NLS-0$
+		},
+		_dispatchEvent: function(type, evt) {
+			var state = this._eventTypes ? this._eventTypes[type] : null;
 			if (state) {
 				var listeners = state.listeners;
 				try {

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * @license
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
  * available under the terms of the Eclipse Public License v1.0 
  * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
@@ -13,36 +13,36 @@
 
 /*global define */
 
-define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion/textview/eventTarget'], function(messages, mEventTarget) { //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+define("orion/editor/annotations", ['i18n!orion/editor/nls/messages', 'orion/editor/eventTarget'], function(messages, mEventTarget) { //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 	/**
 	 * @class This object represents a decoration attached to a range of text. Annotations are added to a
 	 * <code>AnnotationModel</code> which is attached to a <code>TextModel</code>.
 	 * <p>
 	 * <b>See:</b><br/>
-	 * {@link orion.textview.AnnotationModel}<br/>
-	 * {@link orion.textview.Ruler}<br/>
+	 * {@link orion.editor.AnnotationModel}<br/>
+	 * {@link orion.editor.Ruler}<br/>
 	 * </p>		 
-	 * @name orion.textview.Annotation
+	 * @name orion.editor.Annotation
 	 * 
 	 * @property {String} type The annotation type (for example, orion.annotation.error).
 	 * @property {Number} start The start offset of the annotation in the text model.
 	 * @property {Number} end The end offset of the annotation in the text model.
 	 * @property {String} html The HTML displayed for the annotation.
 	 * @property {String} title The text description for the annotation.
-	 * @property {orion.textview.Style} style The style information for the annotation used in the annotations ruler and tooltips.
-	 * @property {orion.textview.Style} overviewStyle The style information for the annotation used in the overview ruler.
-	 * @property {orion.textview.Style} rangeStyle The style information for the annotation used in the text view to decorate a range of text.
-	 * @property {orion.textview.Style} lineStyle The style information for the annotation used in the text view to decorate a line of text.
+	 * @property {orion.editor.Style} style The style information for the annotation used in the annotations ruler and tooltips.
+	 * @property {orion.editor.Style} overviewStyle The style information for the annotation used in the overview ruler.
+	 * @property {orion.editor.Style} rangeStyle The style information for the annotation used in the text view to decorate a range of text.
+	 * @property {orion.editor.Style} lineStyle The style information for the annotation used in the text view to decorate a line of text.
 	 */
 	/**
 	 * Constructs a new folding annotation.
 	 * 
 	 * @param {Number} start The start offset of the annotation in the text model.
 	 * @param {Number} end The end offset of the annotation in the text model.
-	 * @param {orion.textview.ProjectionTextModel} projectionModel The projection text model.
+	 * @param {orion.editor.ProjectionTextModel} projectionModel The projection text model.
 	 * 
 	 * @class This object represents a folding annotation.
-	 * @name orion.textview.FoldingAnnotation
+	 * @name orion.editor.FoldingAnnotation
 	 */
 	function FoldingAnnotation (start, end, projectionModel) {
 		this.start = start;
@@ -53,7 +53,7 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 		this.expanded = true;
 	}
 	
-	FoldingAnnotation.prototype = /** @lends orion.textview.FoldingAnnotation.prototype */ {
+	FoldingAnnotation.prototype = /** @lends orion.editor.FoldingAnnotation.prototype */ {
 		_expandedHTML: "<div class='annotationHTML expanded'></div>", //$NON-NLS-0$
 		_expandedStyle: {styleClass: "annotation expanded"}, //$NON-NLS-0$
 		_collapsedHTML: "<div class='annotationHTML collapsed'></div>", //$NON-NLS-0$
@@ -88,7 +88,7 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 	 
 	/**
 	 * @class This object represents a regitry of annotation types.
-	 * @name orion.textview.AnnotationType
+	 * @name orion.editor.AnnotationType
 	 */
 	function AnnotationType() {
 	}
@@ -137,6 +137,14 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 	 * Matching search annotation type.
 	 */
 	AnnotationType.ANNOTATION_MATCHING_SEARCH = "orion.annotation.matchingSearch"; //$NON-NLS-0$
+	/**
+	 * Read Occurrence annotation type.
+	 */
+	AnnotationType.ANNOTATION_READ_OCCURRENCE = "orion.annotation.readOccurrence"; //$NON-NLS-0$
+	/**
+	 * Write Occurrence annotation type.
+	 */
+	AnnotationType.ANNOTATION_WRITE_OCCURRENCE = "orion.annotation.writeOccurrence"; //$NON-NLS-0$
 	
 	/** @private */
 	var annotationTypes = {};
@@ -147,7 +155,8 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 	 * @param {String} type The annotation type (for example, orion.annotation.error).
 	 * @param {Object|Function} properties The common annotation properties of the registered
 	 *		annotation type. All annotations create with this annotation type will expose these
-	 *		properties.	 */
+	 *		properties.
+	 */
 	AnnotationType.registerType = function(type, properties) {
 		var constructor = properties;
 		if (typeof constructor !== "function") { //$NON-NLS-0$
@@ -170,7 +179,7 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 	 * @param {Number} start The start offset of the annotation in the text model.
 	 * @param {Number} end The end offset of the annotation in the text model.
 	 * @param {String} [title] The text description for the annotation if different then the type description.
-	 * @return {orion.textview.Annotation} the new annotation
+	 * @return {orion.editor.Annotation} the new annotation
 	 */
 	AnnotationType.createAnnotation = function(type, start, end, title) {
 		return new (this.getType(type))(start, end, title);
@@ -215,6 +224,8 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 	registerType(AnnotationType.ANNOTATION_MATCHING_BRACKET);
 	registerType(AnnotationType.ANNOTATION_CURRENT_SEARCH);
 	registerType(AnnotationType.ANNOTATION_MATCHING_SEARCH);
+	registerType(AnnotationType.ANNOTATION_READ_OCCURRENCE);
+	registerType(AnnotationType.ANNOTATION_WRITE_OCCURRENCE);
 	registerType(AnnotationType.ANNOTATION_CURRENT_LINE, true);
 	AnnotationType.registerType(AnnotationType.ANNOTATION_FOLDING, FoldingAnnotation);
 	
@@ -222,7 +233,7 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 	 * Constructs a new AnnotationTypeList object.
 	 * 
 	 * @class This represents an interface of prioritized annotation types.
-	 * @name orion.textview.AnnotationTypeList
+	 * @name orion.editor.AnnotationTypeList
 	 */
 	function AnnotationTypeList () {
 	}
@@ -239,7 +250,7 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 			}
 		}
 	};	
-	AnnotationTypeList.prototype = /** @lends orion.textview.AnnotationTypeList.prototype */ {
+	AnnotationTypeList.prototype = /** @lends orion.editor.AnnotationTypeList.prototype */ {
 		/**
 		 * Adds an annotation type to the receiver.
 		 * <p>
@@ -283,10 +294,10 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 		/**
 		 * Returns an array of annotations in the specified annotation model for the given range of text sorted by type.
 		 *
-		 * @param {orion.textview.AnnotationModel} annotationModel the annotation model.
+		 * @param {orion.editor.AnnotationModel} annotationModel the annotation model.
 		 * @param {Number} start the start offset of the range.
 		 * @param {Number} end the end offset of the range.
-		 * @return {orion.textview.Annotation[]} an annotation array.
+		 * @return {orion.editor.Annotation[]} an annotation array.
 		 */
 		getAnnotationsByType: function(annotationModel, start, end) {
 			var iter = annotationModel.getAnnotations(start, end);
@@ -342,13 +353,13 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 	 * @class This object manages annotations for a <code>TextModel</code>.
 	 * <p>
 	 * <b>See:</b><br/>
-	 * {@link orion.textview.Annotation}<br/>
-	 * {@link orion.textview.TextModel}<br/> 
+	 * {@link orion.editor.Annotation}<br/>
+	 * {@link orion.editor.TextModel}<br/> 
 	 * </p>	
-	 * @name orion.textview.AnnotationModel
-	 * @borrows orion.textview.EventTarget#addEventListener as #addEventListener
-	 * @borrows orion.textview.EventTarget#removeEventListener as #removeEventListener
-	 * @borrows orion.textview.EventTarget#dispatchEvent as #dispatchEvent
+	 * @name orion.editor.AnnotationModel
+	 * @borrows orion.editor.EventTarget#addEventListener as #addEventListener
+	 * @borrows orion.editor.EventTarget#removeEventListener as #removeEventListener
+	 * @borrows orion.editor.EventTarget#dispatchEvent as #dispatchEvent
 	 */
 	function AnnotationModel(textModel) {
 		this._annotations = [];
@@ -361,12 +372,12 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 		this.setTextModel(textModel);
 	}
 
-	AnnotationModel.prototype = /** @lends orion.textview.AnnotationModel.prototype */ {
+	AnnotationModel.prototype = /** @lends orion.editor.AnnotationModel.prototype */ {
 		/**
 		 * Adds an annotation to the annotation model. 
 		 * <p>The annotation model listeners are notified of this change.</p>
 		 * 
-		 * @param {orion.textview.Annotation} annotation the annotation to be added.
+		 * @param {orion.editor.Annotation} annotation the annotation to be added.
 		 * 
 		 * @see #removeAnnotation
 		 */
@@ -386,7 +397,7 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 		/**
 		 * Returns the text model. 
 		 * 
-		 * @return {orion.textview.TextModel} The text model.
+		 * @return {orion.editor.TextModel} The text model.
 		 * 
 		 * @see #setTextModel
 		 */
@@ -397,9 +408,9 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 		 * @class This object represents an annotation iterator.
 		 * <p>
 		 * <b>See:</b><br/>
-		 * {@link orion.textview.AnnotationModel#getAnnotations}<br/>
+		 * {@link orion.editor.AnnotationModel#getAnnotations}<br/>
 		 * </p>		 
-		 * @name orion.textview.AnnotationIterator
+		 * @name orion.editor.AnnotationIterator
 		 * 
 		 * @property {Function} hasNext Determines whether there are more annotations in the iterator.
 		 * @property {Function} next Returns the next annotation in the iterator.
@@ -409,7 +420,7 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 		 *
 		 * @param {Number} start the start offset of the range.
 		 * @param {Number} end the end offset of the range.
-		 * @return {orion.textview.AnnotationIterator} an annotation iterartor.
+		 * @return {orion.editor.AnnotationIterator} an annotation iterartor.
 		 */
 		getAnnotations: function(start, end) {
 			var annotations = this._annotations, current;
@@ -443,7 +454,7 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 		 * Notifies the annotation model that the given annotation has been modified.
 		 * <p>The annotation model listeners are notified of this change.</p>
 		 * 
-		 * @param {orion.textview.Annotation} annotation the modified annotation.
+		 * @param {orion.editor.Annotation} annotation the modified annotation.
 		 * 
 		 * @see #addAnnotation
 		 */
@@ -462,9 +473,9 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 		/**
 		 * Notifies all listeners that the annotation model has changed.
 		 *
-		 * @param {orion.textview.Annotation[]} added The list of annotation being added to the model.
-		 * @param {orion.textview.Annotation[]} changed The list of annotation modified in the model.
-		 * @param {orion.textview.Annotation[]} removed The list of annotation being removed from the model.
+		 * @param {orion.editor.Annotation[]} added The list of annotation being added to the model.
+		 * @param {orion.editor.Annotation[]} changed The list of annotation modified in the model.
+		 * @param {orion.editor.Annotation[]} removed The list of annotation being removed from the model.
 		 * @param {ModelChangedEvent} textModelChangedEvent the text model changed event that trigger this change, can be null if the change was trigger by a method call (for example, {@link #addAnnotation}).
 		 */
 		onChanged: function(e) {
@@ -507,7 +518,7 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 		 * Removes an annotation from the annotation model. 
 		 * <p>The annotation model listeners are notified of this change.</p>
 		 * 
-		 * @param {orion.textview.Annotation} annotation the annotation to be removed.
+		 * @param {orion.editor.Annotation} annotation the annotation to be removed.
 		 * 
 		 * @see #addAnnotation
 		 */
@@ -527,8 +538,8 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 		 * Removes and adds the specifed annotations to the annotation model. 
 		 * <p>The annotation model listeners are notified of this change.  Only one changed event is generated.</p>
 		 * 
-		 * @param {orion.textview.Annotation} remove the annotations to be removed.
-		 * @param {orion.textview.Annotation} add the annotations to be added.
+		 * @param {orion.editor.Annotation} remove the annotations to be removed.
+		 * @param {orion.editor.Annotation} add the annotations to be added.
 		 * 
 		 * @see #addAnnotation
 		 * @see #removeAnnotation
@@ -563,7 +574,7 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 		 * model listens for changes in the text model to update and remove
 		 * annotations that are affected by the change.
 		 * 
-		 * @param {orion.textview.TextModel} textModel the text model.
+		 * @param {orion.editor.TextModel} textModel the text model.
 		 * 
 		 * @see #getTextModel
 		 */
@@ -645,16 +656,16 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 	/**
 	 * Constructs a new styler for annotations.
 	 * 
-	 * @param {orion.textview.TextView} view The styler view.
-	 * @param {orion.textview.AnnotationModel} view The styler annotation model.
+	 * @param {orion.editor.TextView} view The styler view.
+	 * @param {orion.editor.AnnotationModel} view The styler annotation model.
 	 * 
 	 * @class This object represents a styler for annotation attached to a text view.
-	 * @name orion.textview.AnnotationStyler
-	 * @borrows orion.textview.AnnotationTypeList#addAnnotationType as #addAnnotationType
-	 * @borrows orion.textview.AnnotationTypeList#getAnnotationTypePriority as #getAnnotationTypePriority
-	 * @borrows orion.textview.AnnotationTypeList#getAnnotationsByType as #getAnnotationsByType
-	 * @borrows orion.textview.AnnotationTypeList#isAnnotationTypeVisible as #isAnnotationTypeVisible
-	 * @borrows orion.textview.AnnotationTypeList#removeAnnotationType as #removeAnnotationType
+	 * @name orion.editor.AnnotationStyler
+	 * @borrows orion.editor.AnnotationTypeList#addAnnotationType as #addAnnotationType
+	 * @borrows orion.editor.AnnotationTypeList#getAnnotationTypePriority as #getAnnotationTypePriority
+	 * @borrows orion.editor.AnnotationTypeList#getAnnotationsByType as #getAnnotationsByType
+	 * @borrows orion.editor.AnnotationTypeList#isAnnotationTypeVisible as #isAnnotationTypeVisible
+	 * @borrows orion.editor.AnnotationTypeList#removeAnnotationType as #removeAnnotationType
 	 */
 	function AnnotationStyler (view, annotationModel) {
 		this._view = view;
@@ -672,10 +683,10 @@ define("orion/textview/annotations", ['i18n!orion/textview/nls/messages', 'orion
 			}
 		};
 		view.addEventListener("Destroy", this._listener.onDestroy); //$NON-NLS-0$
-		view.addEventListener("LineStyle", this._listener.onLineStyle); //$NON-NLS-0$
+		view.addEventListener("postLineStyle", this._listener.onLineStyle); //$NON-NLS-0$
 		annotationModel.addEventListener("Changed", this._listener.onChanged); //$NON-NLS-0$
 	}
-	AnnotationStyler.prototype = /** @lends orion.textview.AnnotationStyler.prototype */ {
+	AnnotationStyler.prototype = /** @lends orion.editor.AnnotationStyler.prototype */ {
 		/**
 		 * Destroys the styler. 
 		 * <p>

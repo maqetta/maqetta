@@ -12,6 +12,8 @@
 .annotation.matchingBracket, 
 .annotation.currentLine, 
 .annotation.matchingSearch,  
+.annotation.readOccurrence,
+.annotation.writeOccurrence, 
 .annotation.currentSearch {
 }
 
@@ -136,6 +138,14 @@
 	background-color: #53D1FF;
 	border: 1px solid black;
 }
+.annotationOverview.readOccurrence {
+	background-color: lightgray;
+	border: 1px solid black;
+}
+.annotationOverview.writeOccurrence {
+	background-color: Gold;
+	border: 1px solid darkred;
+}
 
 /* Styles for text range */
 .annotationRange {
@@ -175,6 +185,12 @@
 }
 .annotationRange.currentSearch {
 	background-color: #53D1FF;
+}
+.annotationRange.readOccurrence {
+	background-color: lightgray;
+}
+.annotationRange.writeOccurrence {
+	background-color: yellow;
 }
 
 /* Styles for lines of text */

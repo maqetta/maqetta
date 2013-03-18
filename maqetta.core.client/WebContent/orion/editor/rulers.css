@@ -18,6 +18,7 @@
 
 /* Styles for the line number ruler */
 .rulerLines {
+	color: silver;
 }
 .rulerLines.even
 .rulerLines.odd {

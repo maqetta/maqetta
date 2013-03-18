@@ -1,6 +1,6 @@
 /*******************************************************************************
  * @license
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
  * available under the terms of the Eclipse Public License v1.0 
  * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
@@ -13,7 +13,7 @@
 
 /*global define */
 
-define("orion/textview/projectionTextModel", ['orion/textview/textModel', 'orion/textview/eventTarget'], function(mTextModel, mEventTarget) { //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+define("orion/editor/projectionTextModel", ['orion/editor/textModel', 'orion/editor/eventTarget'], function(mTextModel, mEventTarget) { //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 
 	/**
 	 * @class This object represents a projection range. A projection specifies a
@@ -21,21 +21,21 @@ define("orion/textview/projectionTextModel", ['orion/textview/textModel', 'orion
 	 * base text model associated to a projection model.
 	 * <p>
 	 * <b>See:</b><br/>
-	 * {@link orion.textview.ProjectionTextModel}<br/>
-	 * {@link orion.textview.ProjectionTextModel#addProjection}<br/>
+	 * {@link orion.editor.ProjectionTextModel}<br/>
+	 * {@link orion.editor.ProjectionTextModel#addProjection}<br/>
 	 * </p>		 
-	 * @name orion.textview.Projection
+	 * @name orion.editor.Projection
 	 * 
 	 * @property {Number} start The start offset of the projection range. 
 	 * @property {Number} end The end offset of the projection range. This offset is exclusive.
-	 * @property {String|orion.textview.TextModel} [text=""] The projection text to be inserted
+	 * @property {String|orion.editor.TextModel} [text=""] The projection text to be inserted
 	 */
 	/**
 	 * Constructs a new <code>ProjectionTextModel</code> based on the specified <code>TextModel</code>.
 	 *
-	 * @param {orion.textview.TextModel} baseModel The base text model.
+	 * @param {orion.editor.TextModel} baseModel The base text model.
 	 *
-	 * @name orion.textview.ProjectionTextModel
+	 * @name orion.editor.ProjectionTextModel
 	 * @class The <code>ProjectionTextModel</code> represents a projection of its base text
 	 * model. Projection ranges can be added to the projection text model to hide and/or insert
 	 * ranges to the base text model.
@@ -45,27 +45,27 @@ define("orion/textview/projectionTextModel", ['orion/textview/textModel', 'orion
 	 * </p>
 	 * <p>
 	 * <b>See:</b><br/>
-	 * {@link orion.textview.TextView}<br/>
-	 * {@link orion.textview.TextModel}
-	 * {@link orion.textview.TextView#setModel}
+	 * {@link orion.editor.TextView}<br/>
+	 * {@link orion.editor.TextModel}
+	 * {@link orion.editor.TextView#setModel}
 	 * </p>
-	 * @borrows orion.textview.EventTarget#addEventListener as #addEventListener
-	 * @borrows orion.textview.EventTarget#removeEventListener as #removeEventListener
-	 * @borrows orion.textview.EventTarget#dispatchEvent as #dispatchEvent
+	 * @borrows orion.editor.EventTarget#addEventListener as #addEventListener
+	 * @borrows orion.editor.EventTarget#removeEventListener as #removeEventListener
+	 * @borrows orion.editor.EventTarget#dispatchEvent as #dispatchEvent
 	 */
 	function ProjectionTextModel(baseModel) {
 		this._model = baseModel;	/* Base Model */
 		this._projections = [];
 	}
 
-	ProjectionTextModel.prototype = /** @lends orion.textview.ProjectionTextModel.prototype */ {
+	ProjectionTextModel.prototype = /** @lends orion.editor.ProjectionTextModel.prototype */ {
 		/**
 		 * Adds a projection range to the model.
 		 * <p>
 		 * The model must notify the listeners before and after the the text is
 		 * changed by calling {@link #onChanging} and {@link #onChanged} respectively. 
 		 * </p>
-		 * @param {orion.textview.Projection} projection The projection range to be added.
+		 * @param {orion.editor.Projection} projection The projection range to be added.
 		 * 
 		 * @see #removeProjection
 		 */
@@ -112,7 +112,7 @@ define("orion/textview/projectionTextModel", ['orion/textview/textModel', 'orion
 		/**
 		 * Returns all projection ranges of this model.
 		 * 
-		 * @return {orion.textview.Projection[]} The projection ranges.
+		 * @return {orion.editor.Projection[]} The projection ranges.
 		 * 
 		 * @see #addProjection
 		 */
@@ -122,7 +122,7 @@ define("orion/textview/projectionTextModel", ['orion/textview/textModel', 'orion
 		/**
 		 * Gets the base text model.
 		 *
-		 * @return {orion.textview.TextModel} The base text model.
+		 * @return {orion.editor.TextModel} The base text model.
 		 */
 		getBaseModel: function() {
 			return this._model;
@@ -164,7 +164,7 @@ define("orion/textview/projectionTextModel", ['orion/textview/textModel', 'orion
 		 * changed by calling {@link #onChanging} and {@link #onChanged} respectively. 
 		 * </p>
 		 * 
-		 * @param {orion.textview.Projection} projection The projection range to be removed.
+		 * @param {orion.editor.Projection} projection The projection range to be removed.
 		 * 
 		 * @see #addProjection
 		 */
@@ -222,7 +222,7 @@ define("orion/textview/projectionTextModel", ['orion/textview/textModel', 'orion
 			return high;
 		},
 		/**
-		 * @see orion.textview.TextModel#getCharCount
+		 * @see orion.editor.TextModel#getCharCount
 		 */
 		getCharCount: function() {
 			var count = this._model.getCharCount(), projections = this._projections;
@@ -233,7 +233,7 @@ define("orion/textview/projectionTextModel", ['orion/textview/textModel', 'orion
 			return count;
 		},
 		/**
-		 * @see orion.textview.TextModel#getLine
+		 * @see orion.editor.TextModel#getLine
 		 */
 		getLine: function(lineIndex, includeDelimiter) {
 			if (lineIndex < 0) { return null; }
@@ -275,7 +275,7 @@ define("orion/textview/projectionTextModel", ['orion/textview/textModel', 'orion
 			return result.join("");
 		},
 		/**
-		 * @see orion.textview.TextModel#getLineAtOffset
+		 * @see orion.editor.TextModel#getLineAtOffset
 		 */
 		getLineAtOffset: function(offset) {
 			var model = this._model, projections = this._projections;
@@ -296,7 +296,7 @@ define("orion/textview/projectionTextModel", ['orion/textview/textModel', 'orion
 			return model.getLineAtOffset(offset - delta) + lineDelta;
 		},
 		/**
-		 * @see orion.textview.TextModel#getLineCount
+		 * @see orion.editor.TextModel#getLineCount
 		 */
 		getLineCount: function() {
 			var model = this._model, projections = this._projections;
@@ -308,13 +308,13 @@ define("orion/textview/projectionTextModel", ['orion/textview/textModel', 'orion
 			return count;
 		},
 		/**
-		 * @see orion.textview.TextModel#getLineDelimiter
+		 * @see orion.editor.TextModel#getLineDelimiter
 		 */
 		getLineDelimiter: function() {
 			return this._model.getLineDelimiter();
 		},
 		/**
-		 * @see orion.textview.TextModel#getLineEnd
+		 * @see orion.editor.TextModel#getLineEnd
 		 */
 		getLineEnd: function(lineIndex, includeDelimiter) {
 			if (lineIndex < 0) { return -1; }
@@ -334,7 +334,7 @@ define("orion/textview/projectionTextModel", ['orion/textview/textModel', 'orion
 			return model.getLineEnd(lineIndex - delta, includeDelimiter) + offsetDelta;
 		},
 		/**
-		 * @see orion.textview.TextModel#getLineStart
+		 * @see orion.editor.TextModel#getLineStart
 		 */
 		getLineStart: function(lineIndex) {
 			if (lineIndex < 0) { return -1; }
@@ -354,7 +354,7 @@ define("orion/textview/projectionTextModel", ['orion/textview/textModel', 'orion
 			return model.getLineStart(lineIndex - delta) + offsetDelta;
 		},
 		/**
-		 * @see orion.textview.TextModel#getText
+		 * @see orion.editor.TextModel#getText
 		 */
 		getText: function(start, end) {
 			if (start === undefined) { start = 0; }
@@ -431,25 +431,25 @@ define("orion/textview/projectionTextModel", ['orion/textview/textModel', 'orion
 			}
 		},
 		/**
-		 * @see orion.textview.TextModel#onChanging
+		 * @see orion.editor.TextModel#onChanging
 		 */
 		onChanging: function(modelChangingEvent) {
 			return this.dispatchEvent(modelChangingEvent);
 		},
 		/**
-		 * @see orion.textview.TextModel#onChanged
+		 * @see orion.editor.TextModel#onChanged
 		 */
 		onChanged: function(modelChangedEvent) {
 			return this.dispatchEvent(modelChangedEvent);
 		},
 		/**
-		 * @see orion.textview.TextModel#setLineDelimiter
+		 * @see orion.editor.TextModel#setLineDelimiter
 		 */
 		setLineDelimiter: function(lineDelimiter) {
 			this._model.setLineDelimiter(lineDelimiter);
 		},
 		/**
-		 * @see orion.textview.TextModel#setText
+		 * @see orion.editor.TextModel#setText
 		 */
 		setText: function(text, start, end) {
 			if (text === undefined) { text = ""; }

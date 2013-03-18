@@ -1,6 +1,6 @@
 /*******************************************************************************
  * @license
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
  * available under the terms of the Eclipse Public License v1.0 
  * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
@@ -13,7 +13,7 @@
  
 /*global define */
 
-define("orion/textview/textDND", [], function() { //$NON-NLS-0$
+define("orion/editor/textDND", [], function() { //$NON-NLS-0$
 
 	function TextDND(view, undoStack) {
 		this._view = view;
@@ -113,7 +113,10 @@ define("orion/textview/textDND", [], function() { //$NON-NLS-0$
 		_onDragOver: function(e) {
 			var types = e.event.dataTransfer.types;
 			if (types) {
-				var allowed = types.contains ? types.contains("text/plain") : types.indexOf("text/plain") !== -1; //$NON-NLS-1$ //$NON-NLS-0$
+				var allowed = !this._view.getOptions("readonly"); //$NON-NLS-0$
+				if (allowed) {
+					allowed = types.contains ? types.contains("text/plain") : types.indexOf("text/plain") !== -1; //$NON-NLS-1$ //$NON-NLS-0$
+				}
 				if (!allowed) {
 					e.event.dataTransfer.dropEffect = "none"; //$NON-NLS-0$
 				}

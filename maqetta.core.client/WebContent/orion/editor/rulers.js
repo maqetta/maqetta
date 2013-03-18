@@ -1,6 +1,6 @@
 /*******************************************************************************
  * @license
- * Copyright (c) 2010, 2011 IBM Corporation and others.
+ * Copyright (c) 2010, 2012 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials are made 
  * available under the terms of the Eclipse Public License v1.0 
  * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
@@ -9,9 +9,9 @@
  * Contributors: IBM Corporation - initial API and implementation
  ******************************************************************************/
 
-/*global define setTimeout clearTimeout setInterval clearInterval Node */
+/*global define*/
 
-define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/textview/annotations', 'orion/textview/tooltip', 'orion/textview/i18nUtil'], function(messages, mAnnotations, mTooltip, i18nUtil) { //$NON-NLS-4$ //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+define("orion/editor/rulers", ['i18n!orion/editor/nls/messages', 'orion/editor/annotations', 'orion/editor/tooltip', 'orion/editor/util'], function(messages, mAnnotations, mTooltip, util) { //$NON-NLS-4$ //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 
 	/**
 	 * Constructs a new ruler. 
@@ -20,10 +20,10 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 	 * and is useful only for objects implementing rulers.
 	 * <p/>
 	 * 
-	 * @param {orion.textview.AnnotationModel} annotationModel the annotation model for the ruler.
+	 * @param {orion.editor.AnnotationModel} annotationModel the annotation model for the ruler.
 	 * @param {String} [rulerLocation="left"] the location for the ruler.
 	 * @param {String} [rulerOverview="page"] the overview for the ruler.
-	 * @param {orion.textview.Style} [rulerStyle] the style for the ruler. 
+	 * @param {orion.editor.Style} [rulerStyle] the style for the ruler. 
 	 * 
 	 * @class This interface represents a ruler for the text view.
 	 * <p>
@@ -35,18 +35,18 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 	 * visible, while a document ruler always shows the whole content.
 	 * </p>
 	 * <b>See:</b><br/>
-	 * {@link orion.textview.LineNumberRuler}<br/>
-	 * {@link orion.textview.AnnotationRuler}<br/>
-	 * {@link orion.textview.OverviewRuler}<br/> 
-	 * {@link orion.textview.TextView}<br/>
-	 * {@link orion.textview.TextView#addRuler}
+	 * {@link orion.editor.LineNumberRuler}<br/>
+	 * {@link orion.editor.AnnotationRuler}<br/>
+	 * {@link orion.editor.OverviewRuler}<br/> 
+	 * {@link orion.editor.TextView}<br/>
+	 * {@link orion.editor.TextView#addRuler}
 	 * </p>		 
-	 * @name orion.textview.Ruler
-	 * @borrows orion.textview.AnnotationTypeList#addAnnotationType as #addAnnotationType
-	 * @borrows orion.textview.AnnotationTypeList#getAnnotationTypePriority as #getAnnotationTypePriority
-	 * @borrows orion.textview.AnnotationTypeList#getAnnotationsByType as #getAnnotationsByType
-	 * @borrows orion.textview.AnnotationTypeList#isAnnotationTypeVisible as #isAnnotationTypeVisible
-	 * @borrows orion.textview.AnnotationTypeList#removeAnnotationType as #removeAnnotationType
+	 * @name orion.editor.Ruler
+	 * @borrows orion.editor.AnnotationTypeList#addAnnotationType as #addAnnotationType
+	 * @borrows orion.editor.AnnotationTypeList#getAnnotationTypePriority as #getAnnotationTypePriority
+	 * @borrows orion.editor.AnnotationTypeList#getAnnotationsByType as #getAnnotationsByType
+	 * @borrows orion.editor.AnnotationTypeList#isAnnotationTypeVisible as #isAnnotationTypeVisible
+	 * @borrows orion.editor.AnnotationTypeList#removeAnnotationType as #removeAnnotationType
 	 */
 	function Ruler (annotationModel, rulerLocation, rulerOverview, rulerStyle) {
 		this._location = rulerLocation || "left"; //$NON-NLS-0$
@@ -64,7 +64,7 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 		};
 		this.setAnnotationModel(annotationModel);
 	}
-	Ruler.prototype = /** @lends orion.textview.Ruler.prototype */ {
+	Ruler.prototype = /** @lends orion.editor.Ruler.prototype */ {
 		/**
 		 * Returns the annotations for a given line range merging multiple
 		 * annotations when necessary.
@@ -74,7 +74,7 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 		 *
 		 * @param {Number} startLine the start line index
 		 * @param {Number} endLine the end line index
-		 * @return {orion.textview.Annotation[]} the annotations for the line range. The array might be sparse.
+		 * @return {orion.editor.Annotation[]} the annotations for the line range. The array might be sparse.
 		 */
 		getAnnotations: function(startLine, endLine) {
 			var annotationModel = this._annotationModel;
@@ -121,7 +121,7 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 		/**
 		 * Returns the annotation model.
 		 *
-		 * @returns {orion.textview.AnnotationModel} the ruler annotation model.
+		 * @returns {orion.editor.AnnotationModel} the ruler annotation model.
 		 *
 		 * @see #setAnnotationModel
 		 */
@@ -151,10 +151,20 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 		/**
 		 * Returns the style information for the ruler.
 		 *
-		 * @returns {orion.textview.Style} the style information.
+		 * @returns {orion.editor.Style} the style information.
 		 */
 		getRulerStyle: function() {
 			return this._rulerStyle;
+		},
+		/**
+		 * Returns the text view.
+		 *
+		 * @returns {orion.editor.TextView} the text view.
+		 *
+		 * @see #setView
+		 */
+		getView: function() {
+			return this._view;
 		},
 		/**
 		 * Returns the widest annotation which determines the width of the ruler.
@@ -166,7 +176,7 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 		 * This method is called by the text view when the ruler is redrawn.
 		 * </p>
 		 *
-		 * @returns {orion.textview.Annotation} the widest annotation.
+		 * @returns {orion.editor.Annotation} the widest annotation.
 		 *
 		 * @see #getAnnotations
 		 */
@@ -176,7 +186,7 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 		/**
 		 * Sets the annotation model for the ruler.
 		 *
-		 * @param {orion.textview.AnnotationModel} annotationModel the annotation model.
+		 * @param {orion.editor.AnnotationModel} annotationModel the annotation model.
 		 *
 		 * @see #getAnnotationModel
 		 */
@@ -194,7 +204,7 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 		 * annotations.  This annotation is used when there are different types of
 		 * annotations in a given line.
 		 *
-		 * @param {orion.textview.Annotation} annotation the annotation for lines with multiple annotations.
+		 * @param {orion.editor.Annotation} annotation the annotation for lines with multiple annotations.
 		 * 
 		 * @see #setMultiAnnotationOverlay
 		 */
@@ -206,7 +216,7 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 		 * top of the computed annotation for a given line when there are multiple annotations of the same type
 		 * in the line. It is also used when the multiple annotation is not set.
 		 *
-		 * @param {orion.textview.Annotation} annotation the annotation overlay for lines with multiple annotations.
+		 * @param {orion.editor.Annotation} annotation the annotation overlay for lines with multiple annotations.
 		 * 
 		 * @see #setMultiAnnotation
 		 */
@@ -220,7 +230,7 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 		 * is added to the view.
 		 * </p>
 		 *
-		 * @param {orion.textview.TextView} view the text view.
+		 * @param {orion.editor.TextView} view the text view.
 		 */
 		setView: function (view) {
 			if (this._onTextModelChanged && this._view) {
@@ -415,19 +425,19 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 	/**
 	 * Constructs a new line numbering ruler. 
 	 *
-	 * @param {orion.textview.AnnotationModel} annotationModel the annotation model for the ruler.
+	 * @param {orion.editor.AnnotationModel} annotationModel the annotation model for the ruler.
 	 * @param {String} [rulerLocation="left"] the location for the ruler.
-	 * @param {orion.textview.Style} [rulerStyle=undefined] the style for the ruler.
-	 * @param {orion.textview.Style} [oddStyle={style: {backgroundColor: "white"}] the style for lines with odd line index.
-	 * @param {orion.textview.Style} [evenStyle={backgroundColor: "white"}] the style for lines with even line index.
+	 * @param {orion.editor.Style} [rulerStyle=undefined] the style for the ruler.
+	 * @param {orion.editor.Style} [oddStyle={style: {backgroundColor: "white"}] the style for lines with odd line index.
+	 * @param {orion.editor.Style} [evenStyle={backgroundColor: "white"}] the style for lines with even line index.
 	 *
-	 * @augments orion.textview.Ruler
+	 * @augments orion.editor.Ruler
 	 * @class This objects implements a line numbering ruler.
 	 *
 	 * <p><b>See:</b><br/>
-	 * {@link orion.textview.Ruler}
+	 * {@link orion.editor.Ruler}
 	 * </p>
-	 * @name orion.textview.LineNumberRuler
+	 * @name orion.editor.LineNumberRuler
 	 */
 	function LineNumberRuler (annotationModel, rulerLocation, rulerStyle, oddStyle, evenStyle) {
 		Ruler.call(this, annotationModel, rulerLocation, "page", rulerStyle); //$NON-NLS-0$
@@ -475,31 +485,31 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 	 * @class This is class represents an annotation for the AnnotationRuler. 
 	 * <p> 
 	 * <b>See:</b><br/> 
-	 * {@link orion.textview.AnnotationRuler}
+	 * {@link orion.editor.AnnotationRuler}
 	 * </p> 
 	 * 
-	 * @name orion.textview.Annotation 
+	 * @name orion.editor.Annotation 
 	 * 
 	 * @property {String} [html=""] The html content for the annotation, typically contains an image.
-	 * @property {orion.textview.Style} [style] the style for the annotation.
-	 * @property {orion.textview.Style} [overviewStyle] the style for the annotation in the overview ruler.
+	 * @property {orion.editor.Style} [style] the style for the annotation.
+	 * @property {orion.editor.Style} [overviewStyle] the style for the annotation in the overview ruler.
 	 */ 
 	/**
 	 * Constructs a new annotation ruler. 
 	 *
-	 * @param {orion.textview.AnnotationModel} annotationModel the annotation model for the ruler.
+	 * @param {orion.editor.AnnotationModel} annotationModel the annotation model for the ruler.
 	 * @param {String} [rulerLocation="left"] the location for the ruler.
-	 * @param {orion.textview.Style} [rulerStyle=undefined] the style for the ruler.
-	 * @param {orion.textview.Annotation} [defaultAnnotation] the default annotation.
+	 * @param {orion.editor.Style} [rulerStyle=undefined] the style for the ruler.
+	 * @param {orion.editor.Annotation} [defaultAnnotation] the default annotation.
 	 *
-	 * @augments orion.textview.Ruler
+	 * @augments orion.editor.Ruler
 	 * @class This objects implements an annotation ruler.
 	 *
 	 * <p><b>See:</b><br/>
-	 * {@link orion.textview.Ruler}<br/>
-	 * {@link orion.textview.Annotation}
+	 * {@link orion.editor.Ruler}<br/>
+	 * {@link orion.editor.Annotation}
 	 * </p>
-	 * @name orion.textview.AnnotationRuler
+	 * @name orion.editor.AnnotationRuler
 	 */
 	function AnnotationRuler (annotationModel, rulerLocation, rulerStyle) {
 		Ruler.call(this, annotationModel, rulerLocation, "page", rulerStyle); //$NON-NLS-0$
@@ -514,18 +524,18 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 	 * view to scroll to the annotated line.
 	 * </p>
 	 *
-	 * @param {orion.textview.AnnotationModel} annotationModel the annotation model for the ruler.
+	 * @param {orion.editor.AnnotationModel} annotationModel the annotation model for the ruler.
 	 * @param {String} [rulerLocation="left"] the location for the ruler.
-	 * @param {orion.textview.Style} [rulerStyle=undefined] the style for the ruler.
+	 * @param {orion.editor.Style} [rulerStyle=undefined] the style for the ruler.
 	 *
-	 * @augments orion.textview.Ruler
+	 * @augments orion.editor.Ruler
 	 * @class This objects implements an overview ruler.
 	 *
 	 * <p><b>See:</b><br/>
-	 * {@link orion.textview.AnnotationRuler} <br/>
-	 * {@link orion.textview.Ruler} 
+	 * {@link orion.editor.AnnotationRuler} <br/>
+	 * {@link orion.editor.Ruler} 
 	 * </p>
-	 * @name orion.textview.OverviewRuler
+	 * @name orion.editor.OverviewRuler
 	 */
 	function OverviewRuler (annotationModel, rulerLocation, rulerStyle) {
 		Ruler.call(this, annotationModel, rulerLocation, "document", rulerStyle); //$NON-NLS-0$
@@ -552,7 +562,7 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 				var lineStart = model.getLineStart(mapLine);
 				mapLine = model.getBaseModel().getLineAtOffset(model.mapOffset(lineStart));
 			}
-			return i18nUtil.formatMessage(messages.line, mapLine + 1);
+			return util.formatMessage(messages.line, mapLine + 1);
 		}
 		return Ruler.prototype._getTooltipContents.call(this, lineIndex, annotations);
 	};
@@ -572,18 +582,18 @@ define("orion/textview/rulers", ['i18n!orion/textview/nls/messages', 'orion/text
 	/**
 	 * Constructs a new folding ruler. 
 	 *
-	 * @param {orion.textview.AnnotationModel} annotationModel the annotation model for the ruler.
+	 * @param {orion.editor.AnnotationModel} annotationModel the annotation model for the ruler.
 	 * @param {String} [rulerLocation="left"] the location for the ruler.
-	 * @param {orion.textview.Style} [rulerStyle=undefined] the style for the ruler.
+	 * @param {orion.editor.Style} [rulerStyle=undefined] the style for the ruler.
 	 *
-	 * @augments orion.textview.Ruler
+	 * @augments orion.editor.Ruler
 	 * @class This objects implements an overview ruler.
 	 *
 	 * <p><b>See:</b><br/>
-	 * {@link orion.textview.AnnotationRuler} <br/>
-	 * {@link orion.textview.Ruler} 
+	 * {@link orion.editor.AnnotationRuler} <br/>
+	 * {@link orion.editor.Ruler} 
 	 * </p>
-	 * @name orion.textview.OverviewRuler
+	 * @name orion.editor.OverviewRuler
 	 */
 	function FoldingRuler (annotationModel, rulerLocation, rulerStyle) {
 		AnnotationRuler.call(this, annotationModel, rulerLocation, rulerStyle);

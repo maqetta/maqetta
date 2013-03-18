@@ -22,3 +22,7 @@
 	font-style: normal;
 	font-weight: bold;
 }
+
+.tooltip .annotationLine.currentLine {
+	background-color: transparent;
+}

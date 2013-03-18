@@ -137,7 +137,7 @@ public class DavinciCommandServlet extends HttpServlet {
 	      
 	        CommandDescriptor commandDescriptor = this.commands.get(pathInfo);
 	        if (commandDescriptor.isPut()) {
-	            throw new java.lang.AssertionError(new String("commandDescriptor is null or is Put in doPost"));
+	            throw new AssertionError(new String("commandDescriptor is Put in doPost"));
 	        }
 	        Command command = commandDescriptor.getCommand();
 	        command.init();

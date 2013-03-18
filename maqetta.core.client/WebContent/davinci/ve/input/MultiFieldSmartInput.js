@@ -114,7 +114,10 @@ var MultiFieldSmartInput = declare(SmartInput, {
 			if (p.multiLine) {
 				if (p.child) {
 					children = this.parseChildren(p, value);
+				} else {
+					props[p.property] = value;
 				}
+				
 			} else {
 				props[p.property] = value;
 			}
@@ -218,7 +221,7 @@ var MultiFieldSmartInput = declare(SmartInput, {
 		dojo.addClass('ieb', "MultiFieldSmartInput");
 		var content = this._getTemplate();
 		this._inline.attr("content", content);
-	//	this._connection.push(dojo.connect(this._inline, "onBlur", this, "onOk")); 
+		this._connection.push(dojo.connect(this._inline, "onBlur", this, "onOk")); 
 		this._connectHelpDiv();
 		this._connectResizeHandle();
 		this._connectSimDiv();

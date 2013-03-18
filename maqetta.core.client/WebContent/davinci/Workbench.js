@@ -2150,8 +2150,8 @@ var Workbench = {
 				url: "cmd/setWorkbenchState",
 				putData: JSON.stringify(Workbench._state),
 				handleAs:"text"
-			}.bind(this));
-		});
+			});
+		}.bind(this));
 	},
 
 	_autoSave: function(){

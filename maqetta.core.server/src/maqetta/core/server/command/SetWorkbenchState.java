@@ -1,8 +1,6 @@
 package maqetta.core.server.command;
 
 import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -20,13 +18,13 @@ public class SetWorkbenchState extends Command {
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
         IStorage settingsDir = user.getWorkbenchSettings();
         IStorage settingsFile = settingsDir.newInstance(settingsDir, IDavinciServerConstants.WORKBENCH_STATE_FILE);
-        if(! user.isValid(settingsFile.getAbsolutePath()) ) return;
-        if (!settingsFile.exists()) {
-            settingsFile.createNewFile();
-        }else{
-        	settingsFile.delete();
-        	settingsFile.createNewFile();
+        if (!user.isValid(settingsFile.getAbsolutePath())) {
+        	return;
         }
+        if (settingsFile.exists()) {
+        	settingsFile.delete();
+        }
+        settingsFile.createNewFile();
         OutputStream os = new BufferedOutputStream(settingsFile.getOutputStream());
         Command.transferStreams(req.getInputStream(), os, false);
     }

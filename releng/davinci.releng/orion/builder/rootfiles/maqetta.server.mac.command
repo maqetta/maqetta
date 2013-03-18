@@ -114,7 +114,6 @@ do_start() {
 		B=`basename "$base_dir"`
 		base_dir="`cd \"$D\" 2>/dev/null && pwd || echo \"$D\"`/$B"
 		# set default value
-		JAVA_ARGS="${JAVA_ARGS} -Dmaqetta.baseDirectory=${base_dir}"
 		APP_ARGS="${APP_ARGS} -data ${base_dir}"
 	fi
 	mkdir -p "$base_dir"

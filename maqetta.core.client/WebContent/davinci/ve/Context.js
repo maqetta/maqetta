@@ -29,8 +29,6 @@ define([
 	"./ChooseParent",
 	"./Snap",
 	"./States",
-	"../XPathUtils",
-	"../html/HtmlFileXPathAdapter",
 	"./HTMLWidget",
 	"../html/CSSImport",
 	"../html/HTMLElement",
@@ -73,8 +71,6 @@ define([
 	ChooseParent,
 	Snap,
 	States,
-	XPathUtils,
-	HtmlFileXPathAdapter,
 	HTMLWidget,
 	CSSImport,
 	HTMLElement,
@@ -1861,15 +1857,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// Call setState() on all of the state containers that have non-default
 		// values for their current state (which was set to initial state earlier
 		// in this routine).
-		var allStateContainers = davinci.ve.states.getAllStateContainers(this.rootNode);
-		var statesInfo = []; //FIXME: unused?
-		for(var i=0; i<allStateContainers.length; i++){
-			var stateContainer = allStateContainers[i];
+		davinci.ve.states.getAllStateContainers(this.rootNode).forEach(function(stateContainer) {			
 			if(stateContainer._maqAppStates && typeof stateContainer._maqAppStates.current == 'string'){
 				var focus = stateContainer._maqAppStates.focus;
 				davinci.states.setState(stateContainer._maqAppStates.current, stateContainer, {updateWhenCurrent:true, focus:focus});
 			}
-		}
+		});
 	},
 
 	// Temporarily stuff a unique class onto element with each _preserveDojoTypes call.
@@ -2648,16 +2641,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 			return foundSheet;
 		}
-		var sheets = this.getDocument().styleSheets;
-		dojo.some(sheets, function(sheet) {
+
+		dojo.some(this.getDocument().styleSheets, function(sheet) {
 			return updateSheet(sheet, r);
 		});
 	},
 	
 	addPseudoClassSelectors: function (selectors) {
 		
-		function updateSheet(sheet){
-
+		var updateSheet = function(sheet){
 			if (sheet){
 				var rules = sheet.cssRules;
 				var r = 0;
@@ -2682,19 +2674,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 							break;
 						}
 					}
-					
 				}
 				return true;
 			}
 			return false;
-		}
+		};
 
-		
-		var sheets = this.getDocument().styleSheets;
-		dojo.some(sheets, function(sheet) {
-			return updateSheet(sheet);
-		});
-
+		dojo.some(this.getDocument().styleSheets, updateSheet);
 	},
 	
 	//FIXME: refactor. Move to Cascade.js?  need to account for polymorphism in themeEditor/Context
@@ -3142,7 +3128,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		 * This is where we add the regexp string to the stringified object.
 		 * Read the note above about why this is needed.
 		 */
-		str += regEx,
+		str += regEx;
 		dojoScript.setAttribute('data-dojo-config', str);
 	},
 
@@ -3159,7 +3145,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				var cssFiles = item[2];
 				this.themeCssFiles = this.themeCssFiles.concat(cssFiles);
 
-				this._themePath = new davinci.model.Path(this.visualEditor.fileName);
+				this._themePath = new Path(this.visualEditor.fileName);
 				// Connect to the css files, so we can update the canvas when
 				// the model changes.
 				this._getCssFiles().forEach(function(file) {
@@ -3351,90 +3337,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		}
 	},
 
-	/**
-	 * Returns an object holding the set of currently selected application states and (mobile) scenes
-	 * @return {object}  { statesInfo:statesInfo, scenesInfo:scenesInfo }
-	 */
-	getStatesScenes: function() {
-		var statesFocus = States.getFocus(this.rootNode);
-		if(!statesFocus){
-			statesFocus = {};
-			statesFocus.stateContainerNode = this.rootNode;
-		}
-		if(typeof statesFocus.state != 'string'){
-			statesFocus.state = States.NORMAL;
-		}
-		var allStateContainers = States.getAllStateContainers(this.rootNode);
-		var statesInfo = [];
-		for(var i=0; i<allStateContainers.length; i++){
-			var stateContainer = allStateContainers[i];
-			var currentState = States.getState(stateContainer);
-			var currentStateString = typeof currentState == 'string' ? currentState : States.NORMAL;
-			var xpath = XPathUtils.getXPath(stateContainer._dvWidget._srcElement,
-						HtmlFileXPathAdapter);
-			var focus = (statesFocus.stateContainerNode == stateContainer &&
-							statesFocus.state == currentStateString);
-			statesInfo.push({ currentStateXPath:xpath, state:currentState, focus:focus });
-		}
-		scenesInfo = {};
-		var sceneManagers = this.sceneManagers;
-		for(var smIndex in sceneManagers){
-			var sm = sceneManagers[smIndex];
-			scenesInfo[smIndex] = { sm:sm, sceneContainers:[] };
-			var allSceneContainers = sm.getAllSceneContainers();
-			for(i=0; i<allSceneContainers.length; i++){
-				var o = {};
-				var sceneContainer = allSceneContainers[i];
-				var currentScene = sm.getCurrentScene(sceneContainer);
-				var xpath = XPathUtils.getXPath(sceneContainer._dvWidget._srcElement,
-						HtmlFileXPathAdapter);
-				o.sceneContainerXPath = xpath;
-				var xpath = XPathUtils.getXPath(currentScene._dvWidget._srcElement,
-						HtmlFileXPathAdapter);
-				o.currentSceneXPath = xpath;
-				scenesInfo[smIndex].sceneContainers.push(o);
-			}
-		}
-		return { statesInfo:statesInfo, scenesInfo:scenesInfo };
-	},
-	
-	/**
-	 * Sets the current scene(s) and/or current application state
-	 * @param {object}  object of form { statesInfo:statesInfo, scenesInfo:scenesInfo }
-	 */
-	setStatesScenes: function(statesScenes) {
-		var statesInfo = statesScenes.statesInfo;
-		if(statesInfo){
-			for(var i=0; i<statesInfo.length; i++){
-				var info = statesInfo[i],
-					xpath = info.currentStateXPath,
-					element = this.model.evaluate(xpath);
-				if (!element) { continue; }
-				var widget = Widget.byId(element.getAttribute('id'), this.getDocument());
-				States.setState(info.state, widget.domNode, {focus: info.focus});
-			}
-		}
-
-		var scenesInfo = statesScenes.scenesInfo;
-		for(var smIndex in scenesInfo){
-			var sm = scenesInfo[smIndex].sm,
-				allSceneContainers = scenesInfo[smIndex].sceneContainers;
-			for(i=0; i<allSceneContainers.length; i++){
-				var sceneContainer = allSceneContainers[i],
-					xpath = sceneContainer.sceneContainerXPath,
-					element = this.model.evaluate(xpath);
-				if (!element) { continue; }
-				var widget = Widget.byId(element.getAttribute('id'), this.getDocument()),
-					sceneContainerNode = widget.domNode;
-
-				xpath = sceneContainer.currentSceneXPath;
-				element = this.model.evaluate(xpath);
-				if (!element) { continue; }
-				sm.selectScene({ sceneContainerNode: sceneContainerNode, sceneId: element.getAttribute('id') });
-			}
-		}
-	},
-
 	onCommandStackExecute: function() {
 		this.clearCachedWidgetBounds();
 		if(this.editor && this.editor.editorContainer && this.editor.editorContainer.updateToolbars){
@@ -3525,12 +3427,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 */
 	getAllWidgets: function(){
 		var result = [];
-		function find(widget) {
+		var find = function(widget) {
 			result.push(widget);
 			widget.getChildren().forEach(function(child) {
 				find(child);
 			});
-		}
+		};
 		if(this.rootWidget){
 			find(this.rootWidget);
 		}

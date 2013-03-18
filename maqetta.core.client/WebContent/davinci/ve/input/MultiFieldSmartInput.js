@@ -12,6 +12,7 @@ define([
 	//"dojo/i18n!./nls/webContent",
 	"dojo/text!./templates/MultiFieldSmartInput.html",
 	"dojo/text!./templates/MultiFieldTableRowSmartInput.html",
+	"dojo/text!./templates/MultiFieldMultiLineTableRowSmartInput.html",
 	"dijit/Tooltip",
 	"davinci/css!./templates/MultiFieldSmartInput.css"
 ], function(
@@ -28,6 +29,7 @@ define([
 //	webContent,
 	mainTemplateString,
 	trTemplateString,
+	trMultiLineTemplateString,
 	Tooltip
 ) {
 
@@ -64,7 +66,7 @@ var MultiFieldSmartInput = declare(SmartInput, {
 			str = this.helpText;
 		} else {
 			this.property.forEach(function(p){
-				var description = this._widget.metadata.property[p.property].description;
+				var description = this._widget.metadata.property[p.property] ? this._widget.metadata.property[p.property].description : null;
 				if (p.helpText) {
 					description = p.helpText;
 				}
@@ -101,6 +103,7 @@ var MultiFieldSmartInput = declare(SmartInput, {
 
 		var context = this._getContext();
 		var props = {};
+		var children = null;
 		this.property.forEach (function(p) {
 			var targetEditBoxDijit = dijit.byId('MultiFieldSmartInput_SmartInput_'+p.property);
 			var checkbox = dijit.byId('MultiFieldSmartInput_SmartInput_checkbox_'+p.property);
@@ -108,12 +111,66 @@ var MultiFieldSmartInput = declare(SmartInput, {
 			if (!p.supportsHTML || !checkbox.checked) { // encode if plan text
 				value = entities.encode(value);
 			}
-			props[p.property] = value;
+			if (p.multiLine) {
+				if (p.child) {
+					children = this.parseChildren(p, value);
+				} else {
+					props[p.property] = value;
+				}
+				
+			} else {
+				props[p.property] = value;
+			}
 		}.bind(this));
-		var command =  new ModifyCommand(this._widget, props, null, context);
+		var command =  new ModifyCommand(this._widget, props, children, context);
 		context.getCommandStack().execute(command);
 		//Hide
 		this.hide(); 
+	},
+	
+	parseChildren: function(p, value) {
+		var data = this._widget.getData();
+		var items = this.parseItems(value);
+		var children = data.children;// this.getChildren(widget);
+		
+		for (var i = 0; i < items.length; i++) {
+			var value = items[i];
+			var text = value.text;
+			if (!p.supportsHTML){
+				items[i].text = dojox.html.entities.decode(text);
+			}
+			if (i < children.length) {
+				var child = children[i];
+				child.children = text;
+				child.properties.value = text;
+				child.properties.selected = value.selected;
+			} else {
+				//  new child
+				child = {};
+				child.type = p.type;
+				child.properties = {};
+				child.properties[p.property] = text;
+				if (value.selected) {
+					child.properties.selected = value.selected;
+				}
+				child.children = text || value;
+				children.push(child);
+				
+			}
+			
+		}
+		
+		if (items.length > 0) {
+			var length = children.length;
+			for (var i = items.length; i < length; i++) {
+				children.pop();
+			}
+		}
+		return children;
+		
+		/*var command = new ModifyCommand(widget, this.getProperties(widget, values), children);
+		this._getContext().getCommandStack().execute(command);
+		return command.newWidget;*/
 	},
 
 	hide: function(){
@@ -281,7 +338,21 @@ var MultiFieldSmartInput = declare(SmartInput, {
 				
 
 	},
-	
+	serializeChildren: function(data) {
+		
+		var result = [];
+		childData = this._widget.getChildrenData();
+		data.children.forEach(function(child){
+			var text = child.properties.value;
+			text = entities.decode(text);
+			var selected = (child.properties.selected || data.properties.value == text) ? "+" : "";
+			result.push(selected + text);
+		}.bind(this));
+			
+		return result = this.serializeItems(result);
+ 
+	},
+		
 	resize: function(e) {
 	//	this.inherited(arguments);	
 		var labelWidth = 40;
@@ -321,10 +392,25 @@ var MultiFieldSmartInput = declare(SmartInput, {
 		if (boxheight < 25) {
 			boxheight = 25;
 		}
+		var multiLineEditBoxs = [];
+		var singleLineEditBoxsHeight = 0;
 		this.property.forEach (function(p) {
 			var targetEditBoxDijit = dijit.byId('MultiFieldSmartInput_SmartInput_'+p.property);
 			targetEditBoxDijit._setStyleAttr({width: targetObj.clientWidth - (labelWidth + checkboxWidth + 20) + "px"});
+			if (p.multiLine) {
+				multiLineEditBoxs.push(targetEditBoxDijit);
+			} else {
+				singleLineEditBoxsHeight += targetEditBoxDijit.domNode.clientHeight;	
+			}
 		}.bind(this));
+		if (multiLineEditBoxs.length > 0) {
+			// we have multiline boxes to devide up the leftover hieght
+			var unusedHeight = targetObj.clientHeight - singleLineEditBoxsHeight;
+			var height = (unusedHeight- 25) / multiLineEditBoxs.length  ;
+			multiLineEditBoxs.forEach(function(textBox){
+				textBox._setStyleAttr({height: height + "px", maxHeight: height + "px"});
+			}.bind(this));
+		}
 		/*if (targetEditBoxDijit) {
 			targetEditBoxDijit._setStyleAttr({width: boxWidth + "px", height: boxheight + "px", maxHeight: boxheight + "px"}); // needed for multi line
 		}
@@ -358,8 +444,21 @@ var MultiFieldSmartInput = declare(SmartInput, {
 		this.property.forEach(function(p){
 			var value = data.properties[p.property]  ||  ""; 
 			var checked = this.containsHtmlMarkUp(value) ? "checked" : "";
-			//value = value ? value : "";
-			tableContent +=
+			if (p.multiLine) {
+				if (p.child) {
+					value = this.serializeChildren(data);
+				}
+				tableContent +=
+					dojo.replace(trMultiLineTemplateString, {
+							label: this.getTitle(p.property),
+							textboxId: 'MultiFieldSmartInput_SmartInput_'+p.property,
+							textboxValue: value,
+							checkboxDivId: 'MultiFieldSmartInput_SmartInput_checkbox_div_'+p.property,
+							checkboxId: 'MultiFieldSmartInput_SmartInput_checkbox_'+p.property,
+							checked: checked
+					});
+			} else {
+				tableContent +=
 				dojo.replace(trTemplateString, {
 						label: this.getTitle(p.property),
 						textboxId: 'MultiFieldSmartInput_SmartInput_'+p.property,
@@ -368,11 +467,7 @@ var MultiFieldSmartInput = declare(SmartInput, {
 						checkboxId: 'MultiFieldSmartInput_SmartInput_checkbox_'+p.property,
 						checked: checked
 				});
-/*			if (p.multiLine) {
-				
-			} else {
-				
-			}*/
+			}
 			
 		}.bind(this));
 		return tableContent;

@@ -49,14 +49,15 @@ public class GetInitializationInfo extends Command {
 				MaqettaOrionServerConstants.WORKBENCH_PREF, "{}");
 		try {
 			String c = this.getSiteJson();
-			this.responseString = "{\n" + "\t'workbenchState':"
-					+ workbenchSettings + ",\n" + "\t'userInfo':{'userId': '"
-					+ user.getUserID() + "'," + "\t\t'isLocalInstall': '"
-					+ String.valueOf(ServerManager.LOCAL_INSTALL) + "',"
-					+ "\t\t'userDisplayName': '"
-					+ String.valueOf(user.getPerson().getDisplayName()) + "',"
-					+ "\t\t'email': '" + user.getPerson().getEmail() + "'\n"
+			this.responseString = "{\n" + "\t\"workbenchState\":"
+					+ workbenchSettings + ",\n" + "\t\"userInfo\":{\"userId\": \""
+					+ user.getUserID() + "\"," + "\t\t\"isLocalInstall\": \""
+					+ String.valueOf(ServerManager.LOCAL_INSTALL) + "\","
+					+ "\t\t\"userDisplayName\": \""
+					+ String.valueOf(user.getPerson().getDisplayName()) + "\","
+					+ "\t\t\"email\": \"" + user.getPerson().getEmail() + "\"\n"
 					+ "\t}" + "\t" + c + "\n" + "}";
+	        resp.setContentType("application/json;charset=UTF-8");
 		} catch (MaqettaConfigException e) {
 			theLogger.log(Level.SEVERE, "Maqetta Configuration Exception: "
 					+ e.getMessage(), e);

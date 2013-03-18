@@ -439,34 +439,6 @@ return {
             visible: true,
             actions: [
                 {
-                    id: "davinci.ui.newfile",
-                    label: "New folder...",
-                    iconClass:"newFolderIcon",
-                    run: function() {
-                    	require(['./ui/Resource'], function(r) {
-                    		r.newFolder();
-                    	});
-                    },
-                    isEnabled: function(item) {
-                        return require('./ui/Resource').canModify(item);
-                    },
-                    menubarPath: "newfolder"
-                },
-                {
-                    id: "davinci.ui.addFiles",
-                    label: "Upload files...",
-                    iconClass:"uploadIcon",
-                    run: function() {
-                    	require(['./ui/Resource'], function(r) {
-                    		r.addFiles();
-                    	});
-                    },
-                    isEnabled: function(item) {
-                        return require('./ui/Resource').canModify(item);
-                    },
-                    menubarPath: "addFiles"
-                },
-                {
                     id: "davinci.ui.rename",
                     label: "Rename...",
                     iconClass:"renameIcon",
@@ -548,6 +520,20 @@ return {
             viewContribution: {
                 targetID: "workbench.Explorer",
                 actions: [
+	                {
+	                    id: "davinci.ui.newfile",
+	                    label: "New folder...",
+	                    iconClass:"newFolderIcon",
+	                    run: function() {
+	                    	require(['./ui/Resource'], function(r) {
+	                    		r.newFolder();
+	                    	});
+	                    },
+	                    isEnabled: function(item) {
+	                        return !item || require('./ui/Resource').canModify(item);
+	                    },
+                        toolbarPath: "download"
+	                },
                     {
                         id: "download",
                         iconClass: 'downloadAllIcon',
@@ -575,6 +561,34 @@ return {
                         toolbarPath: "download"
                     },
                     {
+                        id: "davinci.ui.addFiles",
+                        label: "Upload files...",
+                        iconClass:"uploadIcon",
+                        run: function() {
+                        	require(['./ui/Resource'], function(r) {
+                        		r.addFiles();
+                        	});
+                        },
+                        isEnabled: function(item) {
+                            return !item || require('./ui/Resource').canModify(item);
+                        },
+                        toolbarPath: "download"
+                    },
+                    {
+                        id: "davinci.ui.addFiles",
+                        label: "Upload and Extract ZIP file...",
+                        iconClass:"uploadIcon",
+                        run: function() {
+                        	require(['./ui/Resource'], function(r) {
+                        		r.addFilesZip();
+                        	});
+                        },
+                        isEnabled: function(item) {
+                            return !item || require('./ui/Resource').canModify(item);
+                        },
+                        toolbarPath: "download"
+                    },
+                    {
                         id: "userlibs",
                         iconClass: 'userLibIcon',
                         run: function() {
@@ -587,10 +601,6 @@ return {
                         label: "Modify Libraries",
                         toolbarPath: "download"
                     }
-                    
-                    
-                    
-                    
                 ]
             }
         }

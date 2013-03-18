@@ -1,13 +1,8 @@
 package maqetta.core.server.command;
 
 import java.io.ByteArrayInputStream;
-
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.channels.FileChannel;
-import java.nio.ByteBuffer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,13 +41,14 @@ public class GetInitializationInfo extends Command {
     	}while(i != -1);
 		this.responseString=
 				"{\n"+
-				"\t'workbenchState':"+buffer+",\n"+
-				"\t'userInfo':{'userId': '"+user.getUserID()+"',"+
-				"\t\t'isLocalInstall': '"+String.valueOf(ServerManager.LOCAL_INSTALL)+"',"+
-				"\t\t'userDisplayName': '"+String.valueOf(user.getPerson().getDisplayName())+"',"+
-				/*"\t\t'userLastName': '"+String.valueOf(user.getPerson().getLastName())+"',"+*/
-				"\t\t'email': '"+user.getPerson().getEmail()+"'\n"+
+				"\t\"workbenchState\":"+buffer+",\n"+
+				"\t\"userInfo\":{\"userId\": \""+user.getUserID()+"\","+
+				"\t\t\"isLocalInstall\": \""+String.valueOf(ServerManager.LOCAL_INSTALL)+"\","+
+				"\t\t\"userDisplayName\": \""+String.valueOf(user.getPerson().getDisplayName())+"\","+
+				/*"\t\t\"userLastName\": \""+String.valueOf(user.getPerson().getLastName())+"\","+*/
+				"\t\t\"email\": \""+user.getPerson().getEmail()+"\"\n"+
 				"\t}"+
 				"}";
+        resp.setContentType("application/json;charset=UTF-8");
     }
 }

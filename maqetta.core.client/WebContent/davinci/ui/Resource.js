@@ -12,18 +12,15 @@ define(['dojo/_base/declare',
        './widgets/NewFolder',
        './widgets/NewFile',
        './widgets/AddFiles',
+       './widgets/AddFilesZip',
        './NewProject',
-       'dojox/form/uploader/FileList', 
-       'dojox/form/Uploader',
        './Dialog',
        'dojo/i18n!./nls/ui',
-       'dojo/i18n!dijit/nls/common',
        'davinci/Theme',
-       "davinci/ve/commands/ChangeThemeCommand",       
        'dijit/form/Button',
        'dojox/form/uploader/plugins/HTML5',      
        
-],function(declare, Resource, Path, Runtime,Workbench, Preferences, RebuildPage, Rename, NewHTMLFileOption, OpenFile, NewFolder, NewFile, AddFiles, NewProject, FileList, Uploader, Dialog, uiNLS, commonNLS, Theme, ChangeThemeCommand){
+],function(declare, Resource, Path, Runtime,Workbench, Preferences, RebuildPage, Rename, NewHTMLFileOption, OpenFile, NewFolder, NewFile, AddFiles, AddFilesZip, NewProject, Dialog, uiNLS, Theme){
 
 var createNewDialog = function(fileNameLabel, createLabel, type, dialogSpecificClass, dialogSpecificClassOptions, fileName, existingResource, optionalMessage) {
 	var resource=existingResource || getSelectedResource();
@@ -349,10 +346,15 @@ var uiResource = {
 			};
 			Workbench.showModal(openDialog, uiNLS.openFile, {width: 350, height: 250}, executor, true);
 		},
-	
-	
+
 		addFiles: function(){
 			var addFiles = new AddFiles({selectedResource: getSelectedResource()});
+
+			Workbench.showModal(addFiles, uiNLS.addFiles, {width: 350}, null);
+		},
+
+		addFilesZip: function(){
+			var addFiles = new AddFilesZip({selectedResource: getSelectedResource()});
 
 			Workbench.showModal(addFiles, uiNLS.addFiles, {width: 350}, null);
 		},

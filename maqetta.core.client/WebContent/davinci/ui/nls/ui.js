@@ -100,11 +100,13 @@ define({ root:
 		
 		//addFiles
 		"selectFiles":"Select Files...",
+		"selectZip":"Select ZIP file...",
 		"upload":"Upload",
-		"addFiles":"Upload Files",
+		"addFiles":"Upload",
 		"uploading":"Uploading...",
 		"completed":"completed: ${0} \n",
 		"done":"Done",
+		"explodeZipWarning":"Warning: Contents of .zip files will overwrite any conflicting files in your workspace",
 		
 		//checkFileName
 		"mustEnterFileName":"You must enter a file name.",

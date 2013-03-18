@@ -1,4 +1,5 @@
 define([
+	"require",
 	"dojo/_base/declare",
 	"../ui/ModelEditor",
 	"dijit/layout/BorderContainer",
@@ -15,7 +16,7 @@ define([
 	"../XPathUtils",
 	"./utils/GeomUtils",
 	"dojo/i18n!./nls/ve"
-], function(declare, ModelEditor, BorderContainer, ContentPane, Runtime, Moveable, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, States, XPathUtils, GeomUtils, veNls){
+], function(require, declare, ModelEditor, BorderContainer, ContentPane, Runtime, Moveable, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, States, XPathUtils, GeomUtils, veNls){
 
 return declare("davinci.ve.PageEditor", ModelEditor, {
 
@@ -248,7 +249,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	     *     - we are in an editor mode which has a view editor (not source mode)
 	     *     - we are the current editor
 	     */
-		if(this._displayMode == "source" || Runtime.currentEditor !== this) {
+		if(this._displayMode == "source" || require("davinci/Runtime").currentEditor !== this) { //FIXME: require("davinci/Runtime")!=Runtime.  Why??
 			return;
 		}
 		

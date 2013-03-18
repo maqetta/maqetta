@@ -34,7 +34,6 @@
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAARVJREFUeNpi/P//PwMlgAVdQLBsB4PCy+dSQGYaEFdAhTuAeNYDccln77s88BsABSDNyUBcBuWXQukGgi6AglAg7gbaOAnEAboIRHVhM4CJgUKAywWrQc6G2gzzQgcpBsyC0l3IgYhNISN6NIJiAQZUf34HS95m52SEiREbC5AAYmMD2YE3DDACUYONFe4kRnY2BmZ2dqxyOA1gYWdluNXm8RvCZmdgAvJBACTGAmWjAFAYIGMGvbL/tp3H/7/6/f+3befR/3ZADGLbAcVAcujqMcJAwN2R8fDS9f/DWFlYmFkhNoZNPs1yaOl6sBxRCQmk8MCC1QyMQANA+MCCNVg1440FkIb9s5f/h7FxqWOkNDsDBBgAdphub5oEopsAAAAASUVORK5CYII=",
             "children": "Link",
             "resizable": "none",
-            "isControl": true,
             "allowedChild": "ANY",
             "inlineEdit": {
                 "property": "textContent",

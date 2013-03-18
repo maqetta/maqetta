@@ -134,8 +134,9 @@ define([
 					handleAs : "json"
 				}).then(function(data) {
 					if (data) {
+						var widgetsJsonParentPath = widgetsJsonPath.getParentPath();
 						return parseLibraryDescriptor(pkg.name, data,
-								widgetsJsonPath.getParentPath()); // lop off "*.json"
+								widgetsJsonParentPath, widgetsJsonParentPath); // lop off "*.json"
 		            }
 		        });
 			} else {
@@ -156,16 +157,17 @@ define([
         return deferred;
     }
 
-	function parseLibraryDescriptor(libName, descriptor, path) {
+	function parseLibraryDescriptor(libName, descriptor, descriptorParentFolderPath, moduleFolderPath) {
 		if (!libName) {
 			console.error("parseLibraryDescriptor: missing 'libName' arg");
 		}
 
 		var pkg = libraries[libName];
-
-		// XXX Should remove $path. This info is already stored in the packages
-		//   structure; just use that.
-        descriptor.$path = path.toString();
+		var path = descriptorParentFolderPath;
+		// XXX Should remove $descriptorFolderPath. This info is already stored in the packages
+		//   structure; just use that. (NOTE: $descriptorFolderPath is also used by custom widgets)
+        descriptor.$descriptorFolderPath = path.toString();
+        descriptor.$moduleFolderPath = moduleFolderPath.toString();
         
 		// Handle custom widgets, which call this function without first calling
 		// parsePackage().
@@ -175,6 +177,10 @@ define([
 				name:descriptor.name,
 				version:descriptor.version
 			};
+			// NOTE: Custom widgets include __metadataModuleId on the descriptor
+			if(descriptor.__metadataModuleId){
+				libraries[libName].__metadataModuleId = descriptor.__metadataModuleId;
+			}
 			pkg = libraries[libName];
 		} else if (pkg.$widgets) {
 			descriptor.widgets.forEach(function(item) {
@@ -220,7 +226,8 @@ define([
 			//          widgets: []
 			//          $providedTypes: {} - assoc attray, each entry points to a widget descriptor
 			//          $providedTags: {} - assoc array, each entry points to an array of widget descriptors
-			//          $path:
+			//          $descriptorFolderPath:
+			//          $moduleFolderPath:
 			//       }
 			//       $callbacks:  JS
 			//   }
@@ -406,7 +413,7 @@ define([
             wm,
             descriptorPath;
         if (lib) {
-            descriptorPath = lib.$wm.$path;
+            descriptorPath = lib.$wm.$descriptorFolderPath;
         }
         if (!descriptorPath) {
             return null;
@@ -414,9 +421,10 @@ define([
         wm = lib.$wm;
         
         var metadata = null;
-        var metadataUrl = [descriptorPath, "/", type.replace(/\./g, "/"), "_oam.json" ].join('');
+        var metadataUrl;
 
         if (!wm.localPath){
+            metadataUrl = [descriptorPath, "/", type.replace(/\./g, "/"), "_oam.json" ].join('');
 	        dojo.xhrGet({
 	            url: metadataUrl + "?" + info.revision,
 	            handleAs: "json",
@@ -425,9 +433,16 @@ define([
                 metadata = data;
 	        });
         }else{
-			var base = Workbench.getProject();
-        	var resource = system.resource.findResource("./"+ base + "/" + metadataUrl);
-        	metadata = dojo.fromJson(resource.getContentSync());
+
+			// Remove first token on type because it duplicates the folder name for the module
+			var typeWithSlashes = type.replace(/\./g, "/");
+			var typeTokens = typeWithSlashes.split('/');
+			typeTokens.shift();
+			var typeAdjusted = typeTokens.join('/');
+			metadataUrl = [wm.$moduleFolderPath, "/", typeAdjusted, "_oam.json" ].join('');
+			var resource = system.resource.findResource(metadataUrl);
+			var content = resource.getContentSync();
+			metadata = dojo.fromJson(content);
         }
         
         if (!metadata) {
@@ -580,9 +595,9 @@ define([
 		},
         
 		// used to update a library descriptor after the fact
-		parseMetaData: function(name, descriptor, path){
+		parseMetaData: function(name, descriptor, descriptorFolderPath, moduleFolderPath){
 		
-			return parseLibraryDescriptor(name, descriptor, path);
+			return parseLibraryDescriptor(name, descriptor, descriptorFolderPath, moduleFolderPath);
 		},
 		
         /**
@@ -857,7 +872,7 @@ define([
         getLibraryBase: function(type) {
             var lib = getLibraryForType(type);
             if (lib) {
-                return lib.$wm.$path;
+                return lib.$wm.$descriptorFolderPath;
             }
         },
 

@@ -25,13 +25,14 @@ var Factory = {
 				return _resources[i];
 			}
 		}
-		if (url.indexOf("css") > 0) {
+		var url_lc = url.toLowerCase();
+		if (/\.css$/.test(url_lc)) {
 			return Factory.newCSS(args);
 		}
-		if (url.indexOf("html") > 0) {
+		if (/\.html$/.test(url_lc) || /\.htm$/.test(url_lc)) {
 			return Factory.newHTML(args);
 		}
-		if(url.indexOf("js") > 0) {
+		if(/\.js$/.test(url_lc)) {
 			return Factory.newJS(args);
 		}
 		

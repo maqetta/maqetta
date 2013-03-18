@@ -20,6 +20,7 @@ define([
 	"./commands/ChangeThemeCommand",
 	"./tools/SelectTool",
 	"../model/Path",
+	"../Runtime",
 	"../Workbench",
 	"./widget",
 	"./Focus",
@@ -63,6 +64,7 @@ define([
 	ChangeThemeCommand,
 	SelectTool,
 	Path,
+	Runtime,
 	Workbench,
 	Widget,
 	Focus,
@@ -95,6 +97,22 @@ var MOBILE_DEV_ATTR = 'data-maq-device',
 	COMPTYPE_ATTR = 'data-maq-comptype';
 
 var contextCount = 0;
+
+var removeEventAttributes = function(node) {
+	if(node){
+		dojo.filter(node.attributes, function(attribute) {
+			return attribute.nodeName.substr(0,2).toLowerCase() == "on";
+		}).forEach(function(attribute) {
+			node.removeAttribute(attribute.nodeName);
+		});
+	}
+};
+
+var removeHrefAttribute = function(node) {
+	if(node.tagName.toUpperCase() == "A" && node.hasAttribute("href")){
+		node.removeAttribute("href");
+	}
+};
 
 return declare("davinci.ve.Context", [ThemeModifier], {
 
@@ -137,6 +155,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this._loadedCSSConnects = [];
 		this._chooseParent = new ChooseParent({context:this});
 		this.sceneManagers = {};
+		
+		this._customWidgetPackages = lang.clone(Library.getCustomWidgetPackages());
 
 	    // Invoke each library's onDocInit function, if library has such a function.
 		var libraries = metadata.getLibrary();	// No argument => return all libraries
@@ -189,6 +209,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this.loadStyleSheet(this._contentStyleSheet);
 		this._attachAll();
 		this._restoreStates();
+
+		query("*",this.rootNode).forEach(function(n){
+			// Strip off interactivity features from DOM on canvas
+			// Still present in model
+			removeEventAttributes(n);	// Make doubly sure there are no event attributes (was also done on original source)
+			removeHrefAttribute(n);		// Remove href attributes on A elements
+		});
 		this._AppStatesActivateActions();
 		// The initialization of states object for BODY happens as part of user document onload process,
 		// which sometimes happens after context loaded event. So, not good enough for StatesView
@@ -391,7 +418,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 
 			// store path
-			libs[libId] = new Path(context.getBase()).append(root);
+			libs[libId] = new Path(context.getBase()).append(root);	
 
 			// If 'library' element points to the main library JS (rather than
 			// just base directory), then load that file now.
@@ -890,7 +917,21 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					console.warn("Falling back to use workbench's Dojo in the editor iframe");
 				}
 			}
-			
+
+			// Make all custom widget module definitions relative to dojo.js
+			var currentFilePath = this.getFullResourcePath();
+			var currentFilePathFolder = currentFilePath.getParentPath();
+			var dojoPathRelative = new Path(dojoUrl);
+			var dojoPath = currentFilePathFolder.append(dojoPathRelative);
+			var dojoFolderPath = dojoPath.getParentPath();
+			var workspaceUrl = Runtime.getUserWorkspaceUrl();
+			for(var i=0; i<this._customWidgetPackages.length; i++){
+				var cwp = this._customWidgetPackages[i];
+				var relativePathString = cwp.location.substr(workspaceUrl.length);
+				var relativePath = new Path(relativePathString);
+				cwp.location = relativePath.relativeTo(dojoFolderPath).toString();
+			}
+
 			var containerNode = this.containerNode;
 			containerNode.style.overflow = "hidden";
 			var frame = domConstruct.create("iframe", this.iframeattrs, containerNode);
@@ -980,6 +1021,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					win.require("dojo/_base/lang").isArray = win.dojo.isArray=function(it){
 						return it && Object.prototype.toString.call(it)=="[object Array]";
 					};
+
+					// Add module paths for all folders in lib/custom (or wherever custom widgets are stored)
+					win.require({
+						packages: this._customWidgetPackages
+					});
+
 				} catch(e) {
 					console.error(e.stack || e);
 					// recreate the Error since we crossed frames
@@ -1229,17 +1276,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 		// Remove "on*" event attributes from editor DOM.
 		// They are already in the model. So, they will not be lost.
-
-		var removeEventAttributes = function(node) {
-			if(node){
-				dojo.filter(node.attributes, function(attribute) {
-					return attribute.nodeName.substr(0,2).toLowerCase() == "on";
-				}).forEach(function(attribute) {
-					node.removeAttribute(attribute.nodeName);
-				});
-			}
-		};
-
 		removeEventAttributes(containerNode);
 		query("*",containerNode).forEach(removeEventAttributes);
 
@@ -1330,8 +1366,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 */
 	_processWidgets: function(containerNode, attachWidgets, states, scripts) {
 		var prereqs = [];
+		this._loadFileDojoTypesCache = {};
 		dojo.forEach(query("*", containerNode), function(n){
 			var type =  n.getAttribute("data-dojo-type") || n.getAttribute("dojoType") || /*n.getAttribute("oawidget") ||*/ n.getAttribute("dvwidget");
+			//FIXME: This logic assume that if it doesn't have a dojo type attribute, then it's an HTML widget
+			//Need to generalize to have a check for all possible widget type designators
+			//(dojo and otherwise)
+			if(!type){
+				type = 'html.' + n.tagName.toLowerCase();
+			}
 			//doUpdateModelDojoRequires=true forces the SCRIPT tag with dojo.require() elements
 			//to always check that scriptAdditions includes the dojo.require() for this widget.
 			//Cleans up after a bug we had (7714) where model wasn't getting updated, so
@@ -1340,6 +1383,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			prereqs.push(this._preProcess(n));
 //			this.resolveUrl(n);
 			this._preserveStates(n, states);
+			this._preserveDojoTypes(n);
 		}, this);
 		var promise = new Deferred();
 		all(prereqs).then(function() {
@@ -1381,7 +1425,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					}
 
 					this.getGlobal()["require"]("dojo/parser").parse(containerNode).then(function(){
-						promise.resolve();						
+						// In some cases, parser wipes out the data-dojo-type. But we need
+						// the widget type in order to do our widget initialization logic.
+						this._restoreDojoTypes();	
+
+						promise.resolve();
 
 						if(attachWidgets){
 							this._attachAll();
@@ -1428,6 +1476,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		//need a helper to pre process widget
 		// also, prime the helper cache
         var type = node.getAttribute("data-dojo-type") || node.getAttribute("dojoType");
+		//FIXME: This logic assume that if it doesn't have a dojo type attribute, then it's an HTML widget
+		//Need to generalize to have a check for all possible widget type designators
+		//(dojo and otherwise)
+		if(!type){
+			type = 'html.' + node.tagName.toLowerCase();
+		}
         return Widget.requireWidgetHelper((type||"").replace(/\./g, "/")).then(function(helper) {        	
 	        if(helper && helper.preProcess){
 	            helper.preProcess(node, this);
@@ -1671,17 +1725,17 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	// with classes.
 	//FIXME: Need a more robust method, but not sure exactly how to make this bullet-proof and future-proof.
 	//Could maybe use XPath somehow to address the root node.
-	maqTempClassCount: 0,
-	maqTempClassPrefix: 'maqTempClass',
+	maqStatesClassCount: 0,
+	maqStatesClassPrefix: 'maqStatesClass',
 
 	// preserve states specified to node
 	_preserveStates: function(node, cache){
 		var statesAttributes = davinci.ve.states.retrieve(node);
 //FIXME: Need to generalize this to any states container
 		if (node.tagName.toUpperCase() != "BODY" && (statesAttributes.maqAppStates || statesAttributes.maqDeltas)) {
-			var tempClass = this.maqTempClassPrefix + this.maqTempClassCount;
+			var tempClass = this.maqStatesClassPrefix + this.maqStatesClassCount;
 			node.className = node.className + ' ' + tempClass;
-			this.maqTempClassCount++;
+			this.maqStatesClassCount++;
 			cache[tempClass] = {};
 			if(statesAttributes.maqAppStates){
 				cache[tempClass].maqAppStates = statesAttributes.maqAppStates;
@@ -1817,7 +1871,40 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		}
 	},
+
+	// Temporarily stuff a unique class onto element with each _preserveDojoTypes call.
+	// Dojo will sometimes replace the widget's root node with a different root node
+	// and transfer IDs and other properties to subnodes. However, Dojo doesn't mess
+	// with classes.
+	maqTypesClassCount: 0,
+	maqTypesClassPrefix: 'maqTypesClass',
 	
+	// Preserve data-dojo-type and dojoType values
+	_preserveDojoTypes: function(node){
+		var widgetType = node.getAttribute("data-dojo-type") || node.getAttribute("dojoType");
+		if(widgetType){
+			var cache = this._loadFileDojoTypesCache;
+			var tempClass = this.maqTypesClassPrefix + this.maqTypesClassCount;
+			node.className = node.className + ' ' + tempClass;
+			this.maqTypesClassCount++;
+			cache[tempClass] = widgetType;
+		}
+	},
+
+	// restore info from dojo-data-type attribute onto widgets so that getWidget() will
+	// be able to determine the widget types
+	_restoreDojoTypes: function(){
+		var cache = this._loadFileDojoTypesCache;
+		var doc = this.getDocument();
+		for(var id in cache){
+			node = doc.querySelectorAll('.'+id)[0];
+			if(node){
+				node.className = node.className.replace(' '+id,'');
+				node.setAttribute('data-dojo-type', cache[id]);
+			}
+		}
+	},
+
 	/**
 	 * Force a data-maq-appstates attribute on the BODY
 	 */
@@ -2716,6 +2803,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 						return true;
 					}
 				});
+
+			// Make sure we include all custom widget packages in the data-dojo-config in the model
+			config.packages = config.packages.concat(this._customWidgetPackages);
+
 			if (found) {
 				if (isDojoJS) {
 					this._updateDojoConfig(config);

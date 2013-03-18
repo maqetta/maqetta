@@ -85,7 +85,7 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		connect.subscribe("/davinci/preferencesChanged", this, "preferencesChanged");
 	},
 
-	addCustomWidget: function(lib){		
+	addCustomWidget: function(lib){
 		/* make sure the pallette has loaded. if it hasnt, the init will take care of customs */
 		if(!this._loaded) return;
 		if(!lib || !lib.$wm || !lib.$wm.widgets || !lib.$wm.widgets.length){
@@ -241,9 +241,12 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 				dojo.mixin(libraries, library);
 			}
 		});
-	
+
+		// For developer notes on how custom widgets work in Maqetta, see:
+		// https://github.com/maqetta/maqetta/wiki/Custom-widgets	
+
 		var customWidgets = Library.getCustomWidgets(Workbench.getProject());
-		
+		var customWidgetDescriptors = Library.getCustomWidgetDescriptors();
 		if (customWidgets) {
 			dojo.mixin(libraries, customWidgets);
 		}
@@ -291,13 +294,29 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 					if(!sections || !sections.length){
 						console.warning('No sections defined for preset '+p+' in widgetPalette.json (in siteConfig folder)');
 					}else{
-						if(customWidgets && customWidgets.custom && customWidgets.custom.$wm && 
-								customWidgets.custom.$wm.widgets && customWidgets.custom.$wm.widgets.length){
-							var custWidgets = customWidgets.custom.$wm.widgets;
-							var userWidgetSection = dojo.clone(this._userWidgetSection);
-							sections = sections.concat(userWidgetSection);
-							var customIncludes = userWidgetSection.includes;
-							for(var cw=0, len=custWidgets.length; cw<len; cw++){
+						var arr = [];
+						for(var cw in customWidgetDescriptors){
+							var obj = customWidgetDescriptors[cw];
+							if(obj.descriptor){
+								arr.push({name:cw, value:obj});								
+							}
+						}
+						arr.sort(function(a, b){
+							var aa = a.name.split('/').pop().toLowerCase();
+							var bb = b.name.split('/').pop().toLowerCase();
+							 return aa<bb ? -1 : (aa>bb ? 1 : 0);
+						});
+						var UserWidgetSectionAdded = false;
+						var userWidgetSection, customIncludes;
+						for(var j=0; j<arr.length; j++){
+							if(!UserWidgetSectionAdded){
+								userWidgetSection = dojo.clone(this._userWidgetSection);
+								sections = sections.concat(userWidgetSection);
+								UserWidgetSectionAdded = true;
+								customIncludes = userWidgetSection.includes;
+							}
+							var custWidgets = arr[j].value.descriptor.widgets;
+							for(var cw=0; cw<custWidgets.length; cw++){
 								var custWidget = custWidgets[cw];
 								customIncludes.push('type:'+custWidget.type);
 							}

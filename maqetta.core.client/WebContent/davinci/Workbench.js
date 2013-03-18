@@ -2145,12 +2145,13 @@ var Workbench = {
 			this._updateWorkbench.resolve();
 		}
 		
-		return this._updateWorkbench.then(
+		return this._updateWorkbench.then(function() {
 			this._updateWorkbench = xhr.put({
 				url: "cmd/setWorkbenchState",
 				putData: JSON.stringify(Workbench._state),
 				handleAs:"text"
-			}));
+			}).bind(this);
+		});
 	},
 
 	_autoSave: function(){

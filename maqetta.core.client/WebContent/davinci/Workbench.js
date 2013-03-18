@@ -2145,15 +2145,12 @@ var Workbench = {
 			this._updateWorkbench.resolve();
 		}
 		
-		this._updateWorkbench.then(dojo.hitch(this,function(){
+		return this._updateWorkbench.then(
 			this._updateWorkbench = xhr.put({
 				url: "cmd/setWorkbenchState",
-				putData: dojo.toJson(Workbench._state),
+				putData: JSON.stringify(Workbench._state),
 				handleAs:"text"
-			});
-		}));
-		
-		return this._updateWorkbench;
+			}));
 	},
 
 	_autoSave: function(){
@@ -2165,7 +2162,7 @@ var Workbench = {
 			}
 			
 			var modified = editor.lastModifiedTime;
-			if (modified && modified>lastSave){
+			if (modified && modified > lastSave){
 				try {
 					editor.save(true);
 				}catch(ex){
@@ -2175,7 +2172,7 @@ var Workbench = {
 			}
 		}
 		if(Workbench.editorTabs){
-			dojo.forEach(Workbench.editorTabs.getChildren(),	saveDirty);
+			dojo.forEach(Workbench.editorTabs.getChildren(), saveDirty);
 		}
 		if(!anyErrors){
 			Workbench._lastAutoSave = Date.now();

@@ -77,9 +77,7 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 			this.isLayoutContainer = dijitWidget.isLayoutContainer;
 		} else {
 			if(!widgetType){
-				console.warn('no widget type for this dijit widget.');
-				console.dir(dijitWidget);
-				this.type = 'dijit/_WidgetBase';
+				this.type = dijitWidget.declaredClass.replace(/\./g, "/"); //FIXME: not a safe association;
 			}else{
 				this.type = widgetType.replace(/\./g, "/");
 			}

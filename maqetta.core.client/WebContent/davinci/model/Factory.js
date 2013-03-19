@@ -1,10 +1,9 @@
 define([
-	"dojo/_base/declare",
 	"../html/CSSFile",
 	"../js/JSFile",
 	"../html/HTMLFile",
 	"system/resource"
-], function(declare, CSSFile, JSFile, HTMLFile, systemResource) {
+], function(CSSFile, JSFile, HTMLFile, systemResource) {
 
 var _instances = [],
 	_resources = [];
@@ -25,17 +24,15 @@ var Factory = {
 				return _resources[i];
 			}
 		}
-		var url_lc = url.toLowerCase();
-		if (/\.css$/.test(url_lc)) {
-			return Factory.newCSS(args);
-		}
-		if (/\.html$/.test(url_lc) || /\.htm$/.test(url_lc)) {
+		if (/\.html?$/i.test(url)) {
 			return Factory.newHTML(args);
 		}
-		if(/\.js$/.test(url_lc)) {
+		if (/\.css$/i.test(url)) {
+			return Factory.newCSS(args);
+		}
+		if(/\.js$/i.test(url)) {
 			return Factory.newJS(args);
 		}
-		
 	},
 
 	closeModel: function(model) {

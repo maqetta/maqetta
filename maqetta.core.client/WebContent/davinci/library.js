@@ -358,15 +358,6 @@ getLibRoot: function(id, version, base) {
     return value;
 },
 
-getMetaRoot: function(id,version) {
-	return Runtime.serverJSONRequest({
-		url: "cmd/getMetaRoot",
-		handleAs: "text",
-		content: {id: id, version: version},
-		sync:true
-	});
-},
-
 /*
  * JSON: [{id:'someLib', version'1.0', installed:'true', path:'/dojo'}]
  * installed and path may be left blank

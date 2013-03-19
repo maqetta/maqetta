@@ -570,7 +570,7 @@ define([
 			Library.getUserLibs(Workbench.getProject()).forEach(function(lib) {
 // XXX Shouldn't be dealing with 'package.json' here; that belongs in library.js
 // (or a combined object).  Putting it here for now, to quickly integrate.
-				var path = lib.metaRoot;//Library.getMetaRoot(lib.id, lib.version);
+				var path = lib.metaRoot;
 				if (path) {
 					// use cache-busting to assure that any development changes
 					// get picked up between library releases

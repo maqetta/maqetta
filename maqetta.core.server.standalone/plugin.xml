@@ -90,8 +90,6 @@
                class="maqetta.core.server.command.GetLibMetadata" />  
           <command path="modifyLib" 
                class="maqetta.core.server.command.ModifyLib" /> 
-          <command path="getMetaRoot" 
-               class="maqetta.core.server.command.GetMetaRoot" />   
            <command path="copy" 
                class="maqetta.core.server.command.Copy" /> 
            <command path="createProject" 

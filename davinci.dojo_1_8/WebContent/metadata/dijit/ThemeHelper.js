@@ -99,6 +99,8 @@ return {
 					var parent = documentCssImport.parent;
 					parent.removeChild(documentCssImport);
 					documentCssImport.close(); // removes the instance from the Factory
+					context.onContentChange(); 
+					context.editor.editorContainer.save(true); // save working copy
 				}
 				documentCssHeader = documentCssImport = null;
 			}

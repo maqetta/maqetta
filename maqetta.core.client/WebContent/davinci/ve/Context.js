@@ -37,7 +37,6 @@ define([
 	"preview/silhouetteiframe",
 	"./utils/GeomUtils",
 	"dojo/text!./newfile.template.html",
-	"./utils/URLRewrite",
 	"./utils/pseudoClass",
 	"dojox/html/_base"	// for dojox.html.evalInGlobal	
 ], function(
@@ -79,7 +78,6 @@ define([
 	Silhouette,
 	GeomUtils,
 	newFileTemplate,
-	URLRewrite,
 	pseudoClass
 ) {
 
@@ -2580,7 +2578,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		
 		function updateSheet(sheet, rule){
 			var url = systemResource.findResource(rule.parent.url).getURL(); // FIXME: can we skip findResource?
-			var fileName = URLRewrite.encodeURI(url);
+			var fileName = encodeURI(url); // FIXME: corresponding rule we compare this to is url encoded, but probably shouldn't be?
 			var selectorText = rule.getSelectorText();
 			if (selectorText.indexOf(":") > -1) {
 				selectorText = pseudoClass.replace(selectorText);
@@ -2591,8 +2589,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var foundSheet = findSheet(sheet, fileName);
 			if (foundSheet){
 				var rules = foundSheet.cssRules;
-				var r = 0;
-				for (r = 0; r < rules.length; r++){
+				for (var r = 0; r < rules.length; r++){
 					if (rules[r].type && rules[r].type == CSSRule.STYLE_RULE){
 						if (rules[r].selectorText == selectorText) {
 							/* delete the rule if it exists */
@@ -2602,7 +2599,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 							break;
 						}
 					}
-					
 				}
 				if (rule.properties.length) { // only insert rule if it has properties
 					var text = rule.getText({noComments:true});

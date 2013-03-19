@@ -1,6 +1,7 @@
 define([
     "dojo/_base/array",
     "dojo/dom-style",
+    "davinci/Runtime",
     "davinci/model/Path",
     "davinci/html/HTMLElement",
     "davinci/html/HTMLText",
@@ -11,6 +12,7 @@ define([
 ], function(
     array,
     domStyle,
+    Runtime,
     Path,
     HTMLElement,
     HTMLText,
@@ -26,7 +28,21 @@ return {
 	 * Looks at current document and decide if we need to update the document
 	 * to include or exclude document.css
 	 */
-	widgetAddedOrDeleted: function(context, resetEverything){		
+	widgetAddedOrDeleted: function(context, resetEverything){
+		
+		function updateContext(){
+			context.editor._visualChanged();	// ensure source pane gets updated
+			context.editor.editorContainer.save(true); // save working copy
+			setTimeout(function(){
+				// Call same Context cleanup functions that get called after command executes
+				// Done in setTimeout just like how Context does it
+				context.onCommandStackExecute();
+				context.onContentChange(); 
+			},0);
+		}
+		
+		var dojoOptions = Runtime.getSiteConfigData('dojoOptions');
+		var include_document_css = dojoOptions.include_document_css || {};
 		
 		// Include only if at least one dijit widget and no dojox.mobile widgets.
 		function checkWidgetTypePrefix(widget, prefix){
@@ -75,10 +91,14 @@ return {
 					themeCssImport = imports[imp];
 				}
 			}
-			// If resetEverything flag is set, then delete all current occurrences
-			// of document.css. If there are no dojoxmobile widgets, the next block
-			// will add it back in.
-			if(resetEverything || anyDojoxMobileWidgets){
+			// If resetEverything flag is set, or is at least one dojo mobile widget, or
+			// if include_document_css.desktop === false, then delete all current occurrences
+			// of document.css. 
+			// Note: if there are no dojoxmobile widgets, and if include_document_css.desktop !== false,
+			// then the next block will add document.css back in.
+			if(resetEverything || 
+					(!anyDojoxMobileWidgets && include_document_css.desktop === false) || 
+					(anyDojoxMobileWidgets && include_document_css.mobile !== true)){
 				if(documentCssHeader){
 					var idx = header.styleSheets.indexOf(documentCssHeader);
 					if(idx >= 0){
@@ -91,9 +111,11 @@ return {
 					parent.removeChild(documentCssImport);
 					documentCssImport.close(); // removes the instance from the Factory
 				}
+				updateContext();
 				documentCssHeader = documentCssImport = null;
 			}
-			if(!anyDojoxMobileWidgets){
+			if((!anyDojoxMobileWidgets && include_document_css.desktop !== false) ||
+					(anyDojoxMobileWidgets && include_document_css.mobile === true)){
 				if(!documentCssHeader && themeCssHeader){
 					var themeCssRootArr = themeCssHeader.split('/');
 					themeCssRootArr.pop();
@@ -119,6 +141,7 @@ return {
 						parent.addChild(css,0);
 					}
 				}
+				updateContext();
 			}
 			if(anyDojoxMobileWidgets && !context.anyDojoxMobileWidgets){
 				// this is the first time we found a mobile widget so ensure the mobile

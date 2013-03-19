@@ -86,8 +86,6 @@
                class="maqetta.core.server.command.ListLibs" />   
           <command path="getUserLibs" 
                class="maqetta.core.server.command.GetUserLibs" />   
-          <command path="getLibMetadata" 
-               class="maqetta.core.server.command.GetLibMetadata" />  
           <command path="modifyLib" 
                class="maqetta.core.server.command.ModifyLib" /> 
            <command path="copy" 

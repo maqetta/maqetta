@@ -302,12 +302,7 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 		if(!statesFocus || !statesFocus.stateContainerNode){
 			return;
 		}
-		var currentState = States.getState(statesFocus.stateContainerNode);
-		var obj = context.getAllWidgetsEffectiveDisplay(currentState);
-		var allWidgets = obj.allWidgets;	// Array of all widgets
-		var effectiveDisplay = obj.effectiveDisplay;	// Corresponding array of effective 'display' values
-		var widgets = context.getSelection().slice(0);	// clone operation
-		return widgets;
+		return context.getSelection().slice(0);	// clone operation
 	},
 
 	updateDialog: function(){
@@ -330,11 +325,10 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 			var countVisibleThisState = 0;
 			for(var j=0; j<widgets.length; j++){
 				var widget = widgets[j];
-				var overrides = {};
-				overrides['undefined'] = overrideBackground;
+				var overrides = {'undefined': overrideBackground};
 				var effectiveState = (state === undefined) ? 'undefined' : state;
 				overrides[effectiveState] = this._overrideDisplayValue[i];
-				var obj = context.getEffectiveDisplayValue(widget, state, overrides);
+				var obj = States.getEffectiveDisplayValue(context, widget, state, overrides);
 				if(obj.effectiveDisplayValue.indexOf('none') != 0){
 					countVisible++;
 					if(!state && obj.effectiveState == 'undefined'){
@@ -398,7 +392,7 @@ return declare("davinci.ve.actions._ManageStatesWidget", [_WidgetBase, _Template
 					}
 					var displayValue = this._overrideDisplayValue[i] ? this._overrideDisplayValue[i] :
 						(value == ALL_VISIBLE ? '' : 'none');
-					command.add(new StyleCommand(widget, [{'display':displayValue}], state));
+					command.add(new StyleCommand(widget, [{display: displayValue}], state));
 				}
 			}
 		}

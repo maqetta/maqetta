@@ -193,12 +193,12 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			* Feature in WekKit. Webkit limits the width of the lines
 			* computed below to the width of the client div.  This causes
 			* the lines to be wrapped even though "pre" is set.  The fix
-			* is to set the width of the client div to a larger number
+			* is to set the width of the client div to a "auto"
 			* before computing the lines width.  Note that this value is
 			* reset to the appropriate value further down.
 			*/
 			if (isWebkit) {
-				clientDiv.style.width = (0x7FFFF).toString() + "px"; //$NON-NLS-0$
+				clientDiv.style.width = "auto"; //$NON-NLS-0$
 			}
 			var lineCount = model.getLineCount();
 			for (var lineIndex=0; lineIndex<lineCount; lineIndex++) {
@@ -771,6 +771,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 		 * @property {Number} y The pointer location on the y axis, relative to the document the user is editing. 
 		 * @property {Number} screenX The pointer location on the x axis, relative to the screen. This is copied from the DOM contextmenu event.screenX property. 
 		 * @property {Number} screenY The pointer location on the y axis, relative to the screen. This is copied from the DOM contextmenu event.screenY property. 
+		 * @property {Boolean} preventDefault Determines whether the user agent context menu should be shown. It is not shown by default.
 		 */ 
 		/** 
 		 * This event is sent when the user invokes the view context menu. 
@@ -1578,16 +1579,34 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 					rootDiv.removeChild(child);
 				}
 			}
-			if (isFirefox || isIE) {
-				if (this._selDiv1) {
-					var color = "transparent"; //$NON-NLS-0$
-					this._selDiv1.style.background = color;
-					this._selDiv2.style.background = color;
-					this._selDiv3.style.background = color;
-					if (window.getSelection) {
-						var sel = window.getSelection();
-						if (sel.rangeCount > 0) { sel.removeAllRanges(); }
+			if (this._selDiv1) {
+				var color = "lightgray"; //$NON-NLS-0$
+				this._selDiv1.style.background = color;
+				this._selDiv2.style.background = color;
+				this._selDiv3.style.background = color;
+				/* Clear browser selection if selection is within clientDiv */
+				var temp;
+				if (window.getSelection) {
+					var sel = window.getSelection();
+					temp = sel.anchorNode;
+					while (temp) {
+						if (temp === this._clientDiv) {
+							if (sel.rangeCount > 0) { sel.removeAllRanges(); }
+							break;
+						}
+						temp = temp.parentNode;
 					}
+				} else if (document.selection) {
+					this._ignoreSelect = false;
+					temp = document.selection.createRange().parentElement();
+					while (temp) {
+						if (temp === this._clientDiv) {
+							document.selection.empty();
+							break;
+						}
+						temp = temp.parentNode;
+					}
+					this._ignoreSelect = true;
 				}
 			}
 			if (!this._ignoreFocus) {
@@ -1602,14 +1621,19 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				// See bug 366312 and 376508.
 				this._updateDOMSelection();
 			}
+			var preventDefault = true;
 			if (this.isListening("ContextMenu")) { //$NON-NLS-0$
 				var evt = this._createMouseEvent("ContextMenu", e); //$NON-NLS-0$
 				evt.screenX = e.screenX;
 				evt.screenY = e.screenY;
+				evt.preventDefault = true;
 				this.onContextMenu(evt);
+				preventDefault = evt.preventDefault;
 			}
-			if (e.preventDefault) { e.preventDefault(); }
-			return false;
+			if (preventDefault) {
+				if (e.preventDefault) { e.preventDefault(); }
+				return false;
+			}
 		},
 		_handleCopy: function (e) {
 			if (this._ignoreCopy) { return; }
@@ -1750,13 +1774,11 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			} else {
 				this._updateDOMSelection();
 			}
-			if (isFirefox || isIE) {
-				if (this._selDiv1) {
-					var color = this._hightlightRGB;
-					this._selDiv1.style.background = color;
-					this._selDiv2.style.background = color;
-					this._selDiv3.style.background = color;
-				}
+			if (this._selDiv1) {
+				var color = this._highlightRGB;
+				this._selDiv1.style.background = color;
+				this._selDiv2.style.background = color;
+				this._selDiv3.style.background = color;
 			}
 			if (!this._ignoreFocus) {
 				this.onFocus({type: "Focus"}); //$NON-NLS-0$
@@ -1919,7 +1941,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				}, 0);
 			}
 			if (this._clickCount === 1) {
-				result = this._setSelectionTo(e.clientX, e.clientY, e.shiftKey, !isOpera && this.isListening("DragStart")); //$NON-NLS-0$
+				result = this._setSelectionTo(e.clientX, e.clientY, e.shiftKey, !isOpera && this._hasFocus && this.isListening("DragStart")); //$NON-NLS-0$
 				if (result) { this._setGrab(target); }
 			} else {
 				/*
@@ -3416,6 +3438,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			if (!this._clientDiv) { return; }
 			var side = ruler.getLocation();
 			var rulerParent = side === "left" ? this._leftDiv : this._rightDiv; //$NON-NLS-0$
+			rulerParent.style.display = "block";
 			var div = document.createElement("DIV"); //$NON-NLS-0$
 			div._ruler = ruler;
 			div.rulerChanged = true;
@@ -3435,8 +3458,11 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			var rootDiv = document.createElement("DIV"); //$NON-NLS-0$
 			this._rootDiv = rootDiv;
 			rootDiv.tabIndex = -1;
-			rootDiv.style.position = "absolute"; //$NON-NLS-0$
+			rootDiv.style.position = "relative"; //$NON-NLS-0$
 			rootDiv.style.overflow = "hidden"; //$NON-NLS-0$
+			rootDiv.style.width = "100%"; //$NON-NLS-0$
+			rootDiv.style.height = "100%"; //$NON-NLS-0$
+			parent.style.overflow = "hidden"; //$NON-NLS-0$
 			rootDiv.setAttribute("role", "application"); //$NON-NLS-1$ //$NON-NLS-0$
 			parent.appendChild(rootDiv);
 			
@@ -3449,6 +3475,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			leftDiv.style.WebkitUserSelect = "none"; //$NON-NLS-0$
 			leftDiv.style.position = "absolute"; //$NON-NLS-0$
 			leftDiv.style.cursor = "default"; //$NON-NLS-0$
+			leftDiv.style.display = "none";
 			leftDiv.setAttribute("aria-hidden", "true"); //$NON-NLS-1$ //$NON-NLS-0$
 			var table = document.createElement("TABLE"); //$NON-NLS-0$
 			leftDiv.appendChild(table);
@@ -3474,6 +3501,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			rightDiv.className = "textviewRightRuler"; //$NON-NLS-0$
 			this._rightDiv = rightDiv;
 			rightDiv.tabIndex = -1;
+			rightDiv.style.display = "none";
 			rightDiv.style.overflow = "hidden"; //$NON-NLS-0$
 			rightDiv.style.MozUserSelect = "none"; //$NON-NLS-0$
 			rightDiv.style.WebkitUserSelect = "none"; //$NON-NLS-0$
@@ -3502,7 +3530,9 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				clipboardDiv.style.whiteSpace = "pre"; //$NON-NLS-0$
 				clipboardDiv.style.left = "-1000px"; //$NON-NLS-0$
 				rootDiv.appendChild(clipboardDiv);
-			
+			}
+
+			if (!isIE && !isPad) {
 				var clipDiv = document.createElement("DIV"); //$NON-NLS-0$
 				this._clipDiv = clipDiv;
 				clipDiv.style.position = "absolute"; //$NON-NLS-0$
@@ -3591,6 +3621,22 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			this._setReadOnly(this._readonly);
 			this._setThemeClass(this._themeClass, true);
 			this._setTabSize(this._tabSize, true);
+			if (!document.getElementById("_textviewStyle")) { //$NON-NLS-0$
+				var styleText = "";
+				if (isWebkit && this._metrics.scrollWidth > 0) {
+					styleText += "\n.textviewContainer ::-webkit-scrollbar-corner {background: #eeeeee;}"; //$NON-NLS-0$
+				}
+				if (isFirefox && isMac && this._highlightRGB && this._highlightRGB !== "Highlight") { //$NON-NLS-0$
+					styleText += "\n.textviewContainer ::-moz-selection {background: " + this._highlightRGB + ";}"; //$NON-NLS-1$ //$NON-NLS-0$
+				}
+				if (styleText) {
+					var stylesheet = document.createElement("STYLE"); //$NON-NLS-0$
+					stylesheet.id = "_textviewStyle"; //$NON-NLS-0$
+					var head = document.getElementsByTagName("HEAD")[0] || document.documentElement; //$NON-NLS-0$
+					stylesheet.appendChild(document.createTextNode(styleText));
+					head.insertBefore(stylesheet, head.firstChild);
+				}
+			}
 			this._hookEvents();
 			var rulers = this._rulers;
 			for (var i=0; i<rulers.length; i++) {
@@ -3623,6 +3669,9 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				if (index === cells.length) { return; }
 				row.cells[index]._ruler = undefined;
 				row.deleteCell(index);
+				if (cells.length !== 0) {
+					rulerParent.style.display = "none";
+				}
 			}
 		},
 		_destroyView: function() {
@@ -3660,7 +3709,6 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			this._rightDiv = null;
 			this._vScrollDiv = null;
 			this._hScrollDiv = null;
-			this._insertedSelRule = false;
 		},
 		_doAutoScroll: function (direction, x, y) {
 			this._autoScrollDir = direction;
@@ -4785,6 +4833,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			
 			this._setDOMFullSelection(startNode, startOffset, startLineEnd, endNode, endOffset, endLineEnd);
 
+			if (!this._hasFocus) { return; }
 			var range;
 			if (window.getSelection) {
 				//W3C
@@ -5062,8 +5111,8 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				return;
 			}
 			
-			if (!this._selDiv1 && (this._fullSelection && !isWebkit)) {
-				this._hightlightRGB = "Highlight"; //$NON-NLS-0$
+			if (!this._selDiv1 && (this._fullSelection && !isPad)) {
+				this._highlightRGB = isWebkit ? "transparent" : "Highlight"; //$NON-NLS-1$ //$NON-NLS-0$
 				var selDiv1 = document.createElement("DIV"); //$NON-NLS-0$
 				this._selDiv1 = selDiv1;
 				selDiv1.style.position = "absolute"; //$NON-NLS-0$
@@ -5071,7 +5120,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				selDiv1.style.margin = "0px"; //$NON-NLS-0$
 				selDiv1.style.padding = "0px"; //$NON-NLS-0$
 				selDiv1.style.outline = "none"; //$NON-NLS-0$
-				selDiv1.style.background = this._hightlightRGB;
+				selDiv1.style.background = this._highlightRGB;
 				selDiv1.style.width = "0px"; //$NON-NLS-0$
 				selDiv1.style.height = "0px"; //$NON-NLS-0$
 				selDiv1.style.zIndex = "0"; //$NON-NLS-0$
@@ -5083,7 +5132,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				selDiv2.style.margin = "0px"; //$NON-NLS-0$
 				selDiv2.style.padding = "0px"; //$NON-NLS-0$
 				selDiv2.style.outline = "none"; //$NON-NLS-0$
-				selDiv2.style.background = this._hightlightRGB;
+				selDiv2.style.background = this._highlightRGB;
 				selDiv2.style.width = "0px"; //$NON-NLS-0$
 				selDiv2.style.height = "0px"; //$NON-NLS-0$
 				selDiv2.style.zIndex = "0"; //$NON-NLS-0$
@@ -5095,7 +5144,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				selDiv3.style.margin = "0px"; //$NON-NLS-0$
 				selDiv3.style.padding = "0px"; //$NON-NLS-0$
 				selDiv3.style.outline = "none"; //$NON-NLS-0$
-				selDiv3.style.background = this._hightlightRGB;
+				selDiv3.style.background = this._highlightRGB;
 				selDiv3.style.width = "0px"; //$NON-NLS-0$
 				selDiv3.style.height = "0px"; //$NON-NLS-0$
 				selDiv3.style.zIndex = "0"; //$NON-NLS-0$
@@ -5119,17 +5168,10 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 						case "rgb(140, 78, 184)": rgb = "rgb(232, 184, 255)"; break; //$NON-NLS-1$ //$NON-NLS-0$
 						default: rgb = "rgb(180, 213, 255)"; break; //$NON-NLS-0$
 					}
-					this._hightlightRGB = rgb;
+					this._highlightRGB = rgb;
 					selDiv1.style.background = rgb;
 					selDiv2.style.background = rgb;
 					selDiv3.style.background = rgb;
-					if (!this._insertedSelRule) {
-						var stylesheet = document.createElement("STYLE"); //$NON-NLS-0$
-						var head = document.getElementsByTagName("HEAD")[0] || document.documentElement; //$NON-NLS-0$
-						stylesheet.appendChild(document.createTextNode("::-moz-selection {background: " + rgb + "; }")); //$NON-NLS-1$ //$NON-NLS-0$
-						head.insertBefore(stylesheet, head.firstChild);
-						this._insertedSelRule = true;
-					}
 				}
 				if (!init) {
 					this._updateDOMSelection();
@@ -5277,7 +5319,7 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 		},
 		_updateDOMSelection: function () {
 			if (this._ignoreDOMSelection) { return; }
-			if (!this._clientDiv || !this._hasFocus) { return; }
+			if (!this._clientDiv) { return; }
 			var selection = this._getSelection();
 			var model = this._model;
 			var startLine = model.getLineAtOffset(selection.start);
@@ -5334,19 +5376,21 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 			var top = Math.round((firstLine - lineStart) * lineHeight);
 			var partialY = this._partialY = Math.round((firstLine - topIndex) * lineHeight);
 			var scrollWidth, scrollHeight = lineCount * lineHeight;
-			var leftWidth, clientWidth, clientHeight;
+			var leftWidth, leftRect, clientWidth, clientHeight;
 			if (hScrollOnly) {
 				clientWidth = this._getClientWidth();
 				clientHeight = this._getClientHeight();
-				leftWidth = this._leftDiv ? this._leftDiv.scrollWidth : 0;
+				leftWidth = 0;
+				if (this._leftDiv) {
+					leftRect = this._leftDiv.getBoundingClientRect();
+					leftWidth = leftRect.right - leftRect.left;
+				}
 				scrollWidth = Math.max(this._maxLineWidth, clientWidth);
 			} else {
 				var parent = this._parent;
 				var rootDiv = this._rootDiv;
 				var parentWidth = parent.clientWidth;
 				var parentHeight = parent.clientHeight;
-				rootDiv.style.width = parentWidth + "px"; //$NON-NLS-0$
-				rootDiv.style.height = parentHeight + "px"; //$NON-NLS-0$
 
 				/* Update view height in order to have client height computed */
 				var viewDiv = this._viewDiv;
@@ -5395,12 +5439,12 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				* Feature in WekKit. Webkit limits the width of the lines
 				* computed below to the width of the client div.  This causes
 				* the lines to be wrapped even though "pre" is set.  The fix
-				* is to set the width of the client div to a larger number
+				* is to set the width of the client div to "auto"
 				* before computing the lines width.  Note that this value is
 				* reset to the appropriate value further down.
 				*/ 
 				if (isWebkit) {
-					clientDiv.style.width = (0x7FFFF).toString() + "px"; //$NON-NLS-0$
+					clientDiv.style.width = "auto"; //$NON-NLS-0$
 				}
 	
 				var rect;
@@ -5439,8 +5483,16 @@ define("orion/textview/textView", ['orion/textview/textModel', 'orion/textview/k
 				this._updateRuler(this._leftDiv, topIndex, bottomIndex);
 				this._updateRuler(this._rightDiv, topIndex, bottomIndex);
 				
-				leftWidth = this._leftDiv ? this._leftDiv.scrollWidth : 0;
-				var rightWidth = this._rightDiv ? this._rightDiv.scrollWidth : 0;
+				leftWidth = 0;
+				if (this._leftDiv) {
+					leftRect = this._leftDiv.getBoundingClientRect();
+					leftWidth = leftRect.right - leftRect.left;
+				}
+				var rightWidth = 0;
+				if (this._rightDiv) {
+					var rightRect = this._rightDiv.getBoundingClientRect();
+					rightWidth = rightRect.right - rightRect.left;
+				}
 				viewDiv.style.left = leftWidth + "px"; //$NON-NLS-0$
 				viewDiv.style.width = Math.max(0, parentWidth - leftWidth - rightWidth - viewPad.left - viewPad.right) + "px"; //$NON-NLS-0$
 				if (this._rightDiv) {

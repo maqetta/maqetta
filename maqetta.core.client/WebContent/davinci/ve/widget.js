@@ -556,7 +556,7 @@ createWidget: function(widgetData) {
 			}
 		}
 	}
-	var widget = new c(canvasAndModelProps, node, type, md, srcElement);
+	var widget = new c(canvasAndModelProps, node, type, md, srcElement, type);
 	widget._srcElement=srcElement;
 
 	if(widget.chart && (data.properties && data.properties.theme)){
@@ -657,8 +657,9 @@ getWidget: function(node){
 		{
 			var d = widgetObject._dijit(node);
 			var w = d.byNode(node);
+			var widgetType = node.getAttribute("data-dojo-type") || node.getAttribute("dojotype");
 			if (w) {
-				widget = new DijitWidget(data,node,w);
+				widget = new DijitWidget(data,node,w,null,null,widgetType);
 			} else {
 				widget = new ObjectWidget(data,node);
 			}

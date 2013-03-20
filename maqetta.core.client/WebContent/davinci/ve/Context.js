@@ -20,6 +20,7 @@ define([
 	"./commands/ChangeThemeCommand",
 	"./tools/SelectTool",
 	"../model/Path",
+	"../Runtime",
 	"../Workbench",
 	"./widget",
 	"./Focus",
@@ -29,14 +30,12 @@ define([
 	"./Snap",
 	"./States",
 	"./HTMLWidget",
-	"../html/CSSImport",
 	"../html/HTMLElement",
 	"../html/HTMLText",
 	"../workbench/Preferences",
 	"preview/silhouetteiframe",
 	"./utils/GeomUtils",
 	"dojo/text!./newfile.template.html",
-	"./utils/URLRewrite",
 	"./utils/pseudoClass",
 	"dojox/html/_base"	// for dojox.html.evalInGlobal	
 ], function(
@@ -61,6 +60,7 @@ define([
 	ChangeThemeCommand,
 	SelectTool,
 	Path,
+	Runtime,
 	Workbench,
 	Widget,
 	Focus,
@@ -70,14 +70,12 @@ define([
 	Snap,
 	States,
 	HTMLWidget,
-	CSSImport,
 	HTMLElement,
 	HTMLText,
 	Preferences,
 	Silhouette,
 	GeomUtils,
 	newFileTemplate,
-	URLRewrite,
 	pseudoClass
 ) {
 
@@ -91,6 +89,22 @@ var MOBILE_DEV_ATTR = 'data-maq-device',
 	COMPTYPE_ATTR = 'data-maq-comptype';
 
 var contextCount = 0;
+
+var removeEventAttributes = function(node) {
+	if(node){
+		dojo.filter(node.attributes, function(attribute) {
+			return attribute.nodeName.substr(0,2).toLowerCase() == "on";
+		}).forEach(function(attribute) {
+			node.removeAttribute(attribute.nodeName);
+		});
+	}
+};
+
+var removeHrefAttribute = function(node) {
+	if(node.tagName.toUpperCase() == "A" && node.hasAttribute("href")){
+		node.removeAttribute("href");
+	}
+};
 
 return declare("davinci.ve.Context", [ThemeModifier], {
 
@@ -133,6 +147,8 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this._loadedCSSConnects = [];
 		this._chooseParent = new ChooseParent({context:this});
 		this.sceneManagers = {};
+		
+		this._customWidgetPackages = lang.clone(Library.getCustomWidgetPackages());
 
 	    // Invoke each library's onDocInit function, if library has such a function.
 		var libraries = metadata.getLibrary();	// No argument => return all libraries
@@ -185,6 +201,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this.loadStyleSheet(this._contentStyleSheet);
 		this._attachAll();
 		this._restoreStates();
+
+		query("*",this.rootNode).forEach(function(n){
+			// Strip off interactivity features from DOM on canvas
+			// Still present in model
+			removeEventAttributes(n);	// Make doubly sure there are no event attributes (was also done on original source)
+			removeHrefAttribute(n);		// Remove href attributes on A elements
+		});
 		this._AppStatesActivateActions();
 		// The initialization of states object for BODY happens as part of user document onload process,
 		// which sometimes happens after context loaded event. So, not good enough for StatesView
@@ -354,7 +377,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 	//FIXME: private/protected?
 	getLibraryBase: function(id, version){
-		return Library.getLibRoot(id,version, this.getBase()) || "";
+		return Library.getLibRoot(id,version, this.getBase());
 	},
 
 	loadRequires: function(type, updateSrc, doUpdateModelDojoRequires, skipDomUpdate) {
@@ -367,120 +390,118 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			return noop;
 		}
 
-		var promises = [];
 		var libraries = metadata.query(type, 'library'),
 			libs = {},
-			context = this;
-		function loadLibrary(libId, lib) {
+			context = this,
+			_loadJSFile = function(libId, src) {
+				return context.addJavaScriptSrc(_getResourcePath(libId, src), updateSrc, src, skipDomUpdate);
+			},
+			_getResourcePath = function(libId, src) {
+				return libs[libId].append(src).relativeTo(context.getPath(), true).toString();
+			};
+
+		var loadLibrary = function(libId, lib) {
+			var d = new Deferred();
 			if (libs.hasOwnProperty(libId)) {
-				return true;
+				d.resolve();
+				return d;
 			}
 
 			// calculate base library path, used in loading relative required
 			// resources
-			var ver = metadata.getLibrary(libId).version || lib.version,
-				root = context.getLibraryBase(libId, ver);
-			
-			if (root == null /*empty string OK here, but null isn't. */) {
-				console.error("No library found for name = '" + libId +	"' version = '" + ver + "'");
-				return false;
-			}
-
-			// store path
-			libs[libId] = new Path(context.getBase()).append(root);
-
-			// If 'library' element points to the main library JS (rather than
-			// just base directory), then load that file now.
-			if (lib && lib.src && lib.src.substr(-3) === '.js') {
-				// XXX For now, lop off relative bits and use remainder as main
-				// library file.  In the future, we should use info from
-				// package.json and library.js to find out what part of this
-				// path is the piece we're interested in.
-				var m = lib.src.match(/((?:\.\.\/)*)(.*)/);
-						// m[1] => relative path
-						// m[2] => main library JS file
-				promises.push(_loadJSFile(libId, m[2]));
-			}
-
-			return true;
-		}
-
-		function _getResourcePath(libId, src) {
-			return libs[libId].append(src).relativeTo(context.getPath(), true).toString();
-		}
-
-		function _loadJSFile(libId, src) {
-			return context.addJavaScriptSrc(_getResourcePath(libId, src), updateSrc, src, skipDomUpdate);
-		}
-
-		// first load any referenced libraries
-		for (var libId in libraries) {
-			if (libraries.hasOwnProperty(libId)) {
-				if(!loadLibrary(libId, libraries[libId])) {
-					var d = new Deferred();
+			var ver = metadata.getLibrary(libId).version || lib.version;
+			return context.getLibraryBase(libId, ver).then(function(root) {
+				if (root == null /*empty string OK here, but null isn't. */) {
+					console.error("No library found for name = '" + libId +	"' version = '" + ver + "'");
 					d.reject();
 					return d;
 				}
+	
+				// store path
+				libs[libId] = new Path(context.getBase()).append(root);	
+	
+				// If 'library' element points to the main library JS (rather than
+				// just base directory), then load that file now.
+				if (lib && lib.src && lib.src.substr(-3) === '.js') {
+					// XXX For now, lop off relative bits and use remainder as main
+					// library file.  In the future, we should use info from
+					// package.json and library.js to find out what part of this
+					// path is the piece we're interested in.
+					var m = lib.src.match(/((?:\.\.\/)*)(.*)/);
+							// m[1] => relative path
+							// m[2] => main library JS file
+					return _loadJSFile(libId, m[2]);
+				}
+				d.resolve();
+				return d;
+			});
+		};
+
+		var libraryPromises = [];
+		// first load any referenced libraries
+		for (var libId in libraries) {
+			if (libraries.hasOwnProperty(libId)) {
+				libraryPromises.push(loadLibrary(libId, libraries[libId]));
 			}
 		}
 
-		// next, load the require statements
-		requires.every(function(r) {
-			// If this require belongs under a library, load library file first
-			// (if necessary).
-			if (r.$library) {
-				if (!loadLibrary(r.$library, libraries[r.$library])) {
-					return false; // break 'every' loop
+		return all(libraryPromises).then(function(){
+			// next, load the require statements
+			var requirePromises = [];
+			requires.every(function(r) {
+				// If this require belongs under a library, load library file first
+				// (if necessary).
+				if (r.$library) {
+					requirePromises.push(loadLibrary(r.$library, libraries[r.$library]));
 				}
-			}
-
-			switch (r.type) {
-				case "javascript":
-					if (r.src) {
-						promises.push(_loadJSFile(r.$library, r.src));
-					} else {
-						this.addJavaScriptText(r.$text, updateSrc || doUpdateModelDojoRequires, skipDomUpdate);
-					}
-					break;
-				
-				case "javascript-module":
-					// currently, only support 'amd' format
-					if (r.format !== 'amd') {
-						console.error("Unknown javascript-module format");
-					}
-					if (r.src) {
-						promises.push(
-							this.addJavaScriptModule(r.src, updateSrc || doUpdateModelDojoRequires, skipDomUpdate));
-					} else {
-						console.error("Inline 'javascript-module' not handled src=" + r.src);
-					}
-					break;
-				
-				case "css":
-					if (r.src) {
-						var src = _getResourcePath(r.$library, r.src);
-						if (updateSrc) {
-							this.addModeledStyleSheet(src, skipDomUpdate);
+	
+				switch (r.type) {
+					case "javascript":
+						if (r.src) {
+							requirePromises.push(_loadJSFile(r.$library, r.src));
 						} else {
-							this.loadStyleSheet(src);
+							this.addJavaScriptText(r.$text, updateSrc || doUpdateModelDojoRequires, skipDomUpdate);
 						}
-					} else {
-						console.error("Inline CSS not handled src=" + r.src);
-					}
-					break;
-				
-				case "image":
-					// Allow but ignore type=image
-					break;
+						break;
 					
-				default:
-					console.error("Unhandled metadata resource type='" + r.type +
-							"' for widget '" + type + "'");
-			}
-			return true;
-		}, this);
-
-		return all(promises);
+					case "javascript-module":
+						// currently, only support 'amd' format
+						if (r.format !== 'amd') {
+							console.error("Unknown javascript-module format");
+						}
+						if (r.src) {
+							requirePromises.push(
+								this.addJavaScriptModule(r.src, updateSrc || doUpdateModelDojoRequires, skipDomUpdate));
+						} else {
+							console.error("Inline 'javascript-module' not handled src=" + r.src);
+						}
+						break;
+					
+					case "css":
+						if (r.src) {
+							var src = _getResourcePath(r.$library, r.src);
+							if (updateSrc) {
+								this.addModeledStyleSheet(src, skipDomUpdate);
+							} else {
+								this.loadStyleSheet(src);
+							}
+						} else {
+							console.error("Inline CSS not handled src=" + r.src);
+						}
+						break;
+					
+					case "image":
+						// Allow but ignore type=image
+						break;
+						
+					default:
+						console.error("Unhandled metadata resource type='" + r.type +
+								"' for widget '" + type + "'");
+				}
+				return true;
+			}, this);
+			return all(requirePromises);
+		}.bind(this));
 	},
 
 	/**
@@ -886,7 +907,21 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					console.warn("Falling back to use workbench's Dojo in the editor iframe");
 				}
 			}
-			
+
+			// Make all custom widget module definitions relative to dojo.js
+			var currentFilePath = this.getFullResourcePath();
+			var currentFilePathFolder = currentFilePath.getParentPath();
+			var dojoPathRelative = new Path(dojoUrl);
+			var dojoPath = currentFilePathFolder.append(dojoPathRelative);
+			var dojoFolderPath = dojoPath.getParentPath();
+			var workspaceUrl = Runtime.getUserWorkspaceUrl();
+			for(var i=0; i<this._customWidgetPackages.length; i++){
+				var cwp = this._customWidgetPackages[i];
+				var relativePathString = cwp.location.substr(workspaceUrl.length);
+				var relativePath = new Path(relativePathString);
+				cwp.location = relativePath.relativeTo(dojoFolderPath).toString();
+			}
+
 			var containerNode = this.containerNode;
 			containerNode.style.overflow = "hidden";
 			var frame = domConstruct.create("iframe", this.iframeattrs, containerNode);
@@ -976,6 +1011,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					win.require("dojo/_base/lang").isArray = win.dojo.isArray=function(it){
 						return it && Object.prototype.toString.call(it)=="[object Array]";
 					};
+
+					// Add module paths for all folders in lib/custom (or wherever custom widgets are stored)
+					win.require({
+						packages: this._customWidgetPackages
+					});
+
 				} catch(e) {
 					console.error(e.stack || e);
 					// recreate the Error since we crossed frames
@@ -1042,9 +1083,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				console.error(error.stack || error.message);
 			});
 		} catch(e) {
+			failureInfo = e;
 			// recreate the Error since we crossed frames
-			failureInfo = new Error(e.message, e.fileName, e.lineNumber);
-			lang.mixin(failureInfo, e);
+//			failureInfo = new Error(e.message, e.fileName, e.lineNumber);
+//			lang.mixin(failureInfo, e);
 		} finally {
 			if (callback) {
 				if (promise) {
@@ -1225,17 +1267,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 		// Remove "on*" event attributes from editor DOM.
 		// They are already in the model. So, they will not be lost.
-
-		var removeEventAttributes = function(node) {
-			if(node){
-				dojo.filter(node.attributes, function(attribute) {
-					return attribute.nodeName.substr(0,2).toLowerCase() == "on";
-				}).forEach(function(attribute) {
-					node.removeAttribute(attribute.nodeName);
-				});
-			}
-		};
-
 		removeEventAttributes(containerNode);
 		query("*",containerNode).forEach(removeEventAttributes);
 
@@ -1326,8 +1357,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	 */
 	_processWidgets: function(containerNode, attachWidgets, states, scripts) {
 		var prereqs = [];
+		this._loadFileDojoTypesCache = {};
 		dojo.forEach(query("*", containerNode), function(n){
 			var type =  n.getAttribute("data-dojo-type") || n.getAttribute("dojoType") || /*n.getAttribute("oawidget") ||*/ n.getAttribute("dvwidget");
+			//FIXME: This logic assume that if it doesn't have a dojo type attribute, then it's an HTML widget
+			//Need to generalize to have a check for all possible widget type designators
+			//(dojo and otherwise)
+			if(!type){
+				type = 'html.' + n.tagName.toLowerCase();
+			}
 			//doUpdateModelDojoRequires=true forces the SCRIPT tag with dojo.require() elements
 			//to always check that scriptAdditions includes the dojo.require() for this widget.
 			//Cleans up after a bug we had (7714) where model wasn't getting updated, so
@@ -1336,6 +1374,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			prereqs.push(this._preProcess(n));
 //			this.resolveUrl(n);
 			this._preserveStates(n, states);
+			this._preserveDojoTypes(n);
 		}, this);
 		var promise = new Deferred();
 		all(prereqs).then(function() {
@@ -1377,7 +1416,11 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					}
 
 					this.getGlobal()["require"]("dojo/parser").parse(containerNode).then(function(){
-						promise.resolve();						
+						// In some cases, parser wipes out the data-dojo-type. But we need
+						// the widget type in order to do our widget initialization logic.
+						this._restoreDojoTypes();	
+
+						promise.resolve();
 
 						if(attachWidgets){
 							this._attachAll();
@@ -1424,6 +1467,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		//need a helper to pre process widget
 		// also, prime the helper cache
         var type = node.getAttribute("data-dojo-type") || node.getAttribute("dojoType");
+		//FIXME: This logic assume that if it doesn't have a dojo type attribute, then it's an HTML widget
+		//Need to generalize to have a check for all possible widget type designators
+		//(dojo and otherwise)
+		if(!type){
+			type = 'html.' + node.tagName.toLowerCase();
+		}
         return Widget.requireWidgetHelper((type||"").replace(/\./g, "/")).then(function(helper) {        	
 	        if(helper && helper.preProcess){
 	            helper.preProcess(node, this);
@@ -1667,17 +1716,17 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	// with classes.
 	//FIXME: Need a more robust method, but not sure exactly how to make this bullet-proof and future-proof.
 	//Could maybe use XPath somehow to address the root node.
-	maqTempClassCount: 0,
-	maqTempClassPrefix: 'maqTempClass',
+	maqStatesClassCount: 0,
+	maqStatesClassPrefix: 'maqStatesClass',
 
 	// preserve states specified to node
 	_preserveStates: function(node, cache){
 		var statesAttributes = davinci.ve.states.retrieve(node);
 //FIXME: Need to generalize this to any states container
 		if (node.tagName.toUpperCase() != "BODY" && (statesAttributes.maqAppStates || statesAttributes.maqDeltas)) {
-			var tempClass = this.maqTempClassPrefix + this.maqTempClassCount;
+			var tempClass = this.maqStatesClassPrefix + this.maqStatesClassCount;
 			node.className = node.className + ' ' + tempClass;
-			this.maqTempClassCount++;
+			this.maqStatesClassCount++;
 			cache[tempClass] = {};
 			if(statesAttributes.maqAppStates){
 				cache[tempClass].maqAppStates = statesAttributes.maqAppStates;
@@ -1810,7 +1859,40 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 		});
 	},
+
+	// Temporarily stuff a unique class onto element with each _preserveDojoTypes call.
+	// Dojo will sometimes replace the widget's root node with a different root node
+	// and transfer IDs and other properties to subnodes. However, Dojo doesn't mess
+	// with classes.
+	maqTypesClassCount: 0,
+	maqTypesClassPrefix: 'maqTypesClass',
 	
+	// Preserve data-dojo-type and dojoType values
+	_preserveDojoTypes: function(node){
+		var widgetType = node.getAttribute("data-dojo-type") || node.getAttribute("dojoType");
+		if(widgetType){
+			var cache = this._loadFileDojoTypesCache;
+			var tempClass = this.maqTypesClassPrefix + this.maqTypesClassCount;
+			node.className = node.className + ' ' + tempClass;
+			this.maqTypesClassCount++;
+			cache[tempClass] = widgetType;
+		}
+	},
+
+	// restore info from dojo-data-type attribute onto widgets so that getWidget() will
+	// be able to determine the widget types
+	_restoreDojoTypes: function(){
+		var cache = this._loadFileDojoTypesCache;
+		var doc = this.getDocument();
+		for(var id in cache){
+			node = doc.querySelectorAll('.'+id)[0];
+			if(node){
+				node.className = node.className.replace(' '+id,'');
+				node.setAttribute('data-dojo-type', cache[id]);
+			}
+		}
+	},
+
 	/**
 	 * Force a data-maq-appstates attribute on the BODY
 	 */
@@ -2493,7 +2575,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		
 		function updateSheet(sheet, rule){
 			var url = systemResource.findResource(rule.parent.url).getURL(); // FIXME: can we skip findResource?
-			var fileName = URLRewrite.encodeURI(url);
+			var fileName = encodeURI(url); // FIXME: corresponding rule we compare this to is url encoded, but probably shouldn't be?
 			var selectorText = rule.getSelectorText();
 			if (selectorText.indexOf(":") > -1) {
 				selectorText = pseudoClass.replace(selectorText);
@@ -2504,8 +2586,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var foundSheet = findSheet(sheet, fileName);
 			if (foundSheet){
 				var rules = foundSheet.cssRules;
-				var r = 0;
-				for (r = 0; r < rules.length; r++){
+				for (var r = 0; r < rules.length; r++){
 					if (rules[r].type && rules[r].type == CSSRule.STYLE_RULE){
 						if (rules[r].selectorText == selectorText) {
 							/* delete the rule if it exists */
@@ -2515,7 +2596,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 							break;
 						}
 					}
-					
 				}
 				if (rule.properties.length) { // only insert rule if it has properties
 					var text = rule.getText({noComments:true});
@@ -2538,9 +2618,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var foundSheet;
 			var rules = sheet.cssRules;
 			for (var r = 0; r < rules.length; r++){
-			    var x = '' + rules[r].constructor;
 				if (rules[r].type && rules[r].type === CSSRule.IMPORT_RULE){
-				    var n = rules[r].href;
 					if (rules[r].href == sheetName) {
 						foundSheet = rules[r].styleSheet;
 						//break;
@@ -2554,16 +2632,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			}
 			return foundSheet;
 		}
-		var sheets = this.getDocument().styleSheets;
-		dojo.some(sheets, function(sheet) {
+
+		dojo.some(this.getDocument().styleSheets, function(sheet) {
 			return updateSheet(sheet, r);
 		});
 	},
 	
 	addPseudoClassSelectors: function (selectors) {
 		
-		function updateSheet(sheet){
-
+		var updateSheet = function(sheet){
 			if (sheet){
 				var rules = sheet.cssRules;
 				var r = 0;
@@ -2588,19 +2665,13 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 							break;
 						}
 					}
-					
 				}
 				return true;
 			}
 			return false;
-		}
+		};
 
-		
-		var sheets = this.getDocument().styleSheets;
-		dojo.some(sheets, function(sheet) {
-			return updateSheet(sheet);
-		});
-
+		dojo.some(this.getDocument().styleSheets, updateSheet);
 	},
 	
 	//FIXME: refactor. Move to Cascade.js?  need to account for polymorphism in themeEditor/Context
@@ -2709,6 +2780,10 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 						return true;
 					}
 				});
+
+			// Make sure we include all custom widget packages in the data-dojo-config in the model
+			config.packages = config.packages.concat(this._customWidgetPackages);
+
 			if (found) {
 				if (isDojoJS) {
 					this._updateDojoConfig(config);
@@ -3355,133 +3430,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		return result;
 	},
 	
-	/**
-	 * Returns the effective value for the 'display' property for the given widget in the given state.
-	 * Also returns the state which defined the 'display' property.
-	 * @param widget {davinci.ve._Widget} A dvWidget
-	 * @param state [{String}] Optional parameter. If not provided or null or undefined or empty string,
-	 * 		then query for 'display' property on base state. Else, query for 'display' on given state.
-	 * @param overrides [{object}] Optional parameter. If provided, has the following fields
-	 * 			overrides['undefined'] [{string}] - Use this 'display' value for the Background/Normal/undefined state
-	 * 			overrides[state] [{string}] - Use this 'display' value for the state "state"
-	 * @return {Object} with two properties
-	 * 		effectiveDisplayValue {string} none|block|inline-block|etc
-	 * 		effectiveState {string} where "undefined" represents the base/NORMAL state
-	 */
-	getEffectiveDisplayValue: function(widget, state, overrides){
-		var domNode = widget ? widget.domNode : null;
-		var effectiveDisplayValue = 'none';
-		// Quirk in code: Normal state is represented as "undefined" in data structures
-		var effectiveState = state ? state : 'undefined';
-		
-		// If "state" represents a custom state and there is an override 'display' value for that state,
-		// then use that override value
-		if(overrides && typeof overrides[effectiveState] == 'string' && overrides[effectiveState] != '$MAQ_DELETE_PROPERTY$'){
-			effectiveDisplayValue = overrides[effectiveState];
-			stateOverride = true;
-			
-		}else{
-			if(domNode){
-				var stateOverride = false;
-				if(domNode._maqDeltas && !(overrides && overrides[effectiveState] == '$MAQ_DELETE_PROPERTY$')){
-					var style = (domNode._maqDeltas[state] && domNode._maqDeltas[state].style);
-					if(style){
-						for(var i=0; i<style.length; i++){
-							var styleArray = style[i];
-							for(var prop in styleArray){
-								if(prop == 'display'){
-									effectiveDisplayValue = styleArray[prop];
-									stateOverride = true;
-								}
-							}
-						}
-					}
-				}
-				if(!stateOverride){
-					// If there is an override 'display' value for the Background/Normal/undefined state,
-					// then use that override value
-					if(overrides && typeof overrides['undefined'] == 'string'){
-						effectiveDisplayValue = overrides['undefined'];
-					}else{
-						// See if there is a "undefined"/Normal/Background value in _maqDeltas
-						var undefinedStyle = (domNode._maqDeltas && domNode._maqDeltas['undefined'] && domNode._maqDeltas['undefined'].style);
-						var undefinedValue = false;
-						if(undefinedStyle){
-							for(var i=0; i<undefinedStyle.length; i++){
-								var styleArray = undefinedStyle[i];
-								for(var prop in styleArray){
-									if(prop == 'display'){
-										effectiveDisplayValue = styleArray[prop];
-										undefinedValue = true;
-									}
-								}
-							}
-						}
-						if(!undefinedValue){
-							// Else query the DOM for computed 'display' value
-							effectiveDisplayValue = domStyle.get(domNode, 'display');
-						}
-					}
-					effectiveState = 'undefined';
-				}
-				// If offsetLeft/Right/Top/Bottom are all zero, then widget is not visible
-				if(domNode.offsetLeft==0 && domNode.offsetTop==0 && domNode.offsetWidth==0 && domNode.offsetHeight==0){
-					effectiveDisplayValue = 'none';
-				}else{
-					// If any ancestors have display:none, then this widget is invisible
-					while(domNode && domNode.tagName.toUpperCase() != 'BODY'){
-						// Sometimes browsers haven't set up defaultView yet,
-						// and domStyle.get will raise exception if defaultView isn't there yet
-						if(domNode && domNode.ownerDocument && domNode.ownerDocument.defaultView){
-							var computedStyleDisplay = domStyle.get(domNode, 'display');
-							if(computedStyleDisplay == 'none'){
-								effectiveDisplayValue = 'none';
-								break;
-							}
-						}
-						domNode = domNode.parentNode;
-					}
-				}
-			}else{
-				effectiveDisplayValue = 'none';
-			}
-		}
-		return {effectiveDisplayValue:effectiveDisplayValue,effectiveState:effectiveState};
-	},
-	
-	/**
-	 * Returns the list of all currently visible widgets in the current document, 
-	 * along with their effective display values.
-	 * Visible widgets are ones that do not have display:none and 
-	 * have non-zero values for offsetLeft/Right/Top/Bottom
-	 * and do not have ancestors with display:none or zero values for offsetLeft/Right/Top/Bottom
-	 * @param [{state}] state Optional - retrieve info for a particular state (if null, get base state)
-	 * @return {object} An object consisting of two arrays:
-	 * { allWidgets:{array of widgets}, effectiveDisplay:{array of 'display' values}
-	 * The two arrays align exactly - effectiveDisplay[i] is the 'display' value for allWidgets[i].
-	 * Does not include the BODY widget
-	 * In the returned result, parents are listed before their children.
-	 */
-	getAllWidgetsEffectiveDisplay: function(state){
-		var allWidgets = [];
-		var effectiveDisplay = [];
-		var find = function(widget) {
-			var obj = this.getEffectiveDisplayValue(widget, state);
-			var effectiveDisplayValue = obj.effectiveDisplayValue;
-			if(widget.domNode.tagName.toUpperCase() != 'BODY'){
-				allWidgets.push(widget);
-				effectiveDisplay.push(effectiveDisplayValue);
-			}
-			widget.getChildren().forEach(function(child) {
-				find(child);
-			});
-		}.bind(this);
-		if(this.rootWidget){
-			find(this.rootWidget);
-		}
-		return {allWidgets:allWidgets, effectiveDisplay:effectiveDisplay};
-	},
-
 	/**
 	 * Returns the container node for all of the focus chrome DIVs
 	 */

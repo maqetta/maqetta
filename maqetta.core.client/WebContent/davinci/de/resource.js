@@ -6,16 +6,19 @@ define(["davinci/de/widgets/NewDijit",
         "davinci/de/DijitTemplatedGenerator",
         "davinci/library",
         "davinci/ui/Dialog",
-        "davinci/ve/actions/ReplaceAction"
+        "davinci/ve/actions/ReplaceAction",
+        "dojo/json"
         
        
-],function(NewDijit, Workbench, Preferences, Resource, Runtime, DijitTemplatedGenerator, dLibrary, Dialog, ReplaceAction){
+],function(NewDijit, Workbench, Preferences, Resource, Runtime, DijitTemplatedGenerator, dLibrary, Dialog, ReplaceAction, json){
+
+	// For developer notes on how custom widgets work in Maqetta, see:
+	// https://github.com/maqetta/maqetta/wiki/Custom-widgets	
+	
 	var dt= {
 		/* base packages.json metadata */
-		WIDGETS_JSON : {"name":"custom", 
-						longName:"Custom Widgets", 
-						version:"1.0", localPath:true, 
-						"categories":{"custom":{name:"User Widgets", description:"User Widgets", widgetClass:"dijit"}}, widgets:[]},
+		WIDGETS_JSON : {version:"1.0", localPath:true, customWidgetSpec:1,
+						"categories":{"custom":{name:"Custom widget", description:"Custom widget", widgetClass:"dijit"}}, widgets:[]},
 		
 		
 		createDijiFromNewDialog : function(){
@@ -33,7 +36,7 @@ define(["davinci/de/widgets/NewDijit",
     			return;
     		}
     		
-			Workbench.showModal(projectDialog, "Dijit Widget...", {height:160, width: 250}, function(){
+			Workbench.showModal(projectDialog, "Dijit Widget...", {height:60, width: 250}, function(){
 		    	if (!projectDialog.cancel) {
 		    		var widgetData = projectDialog.attr('value');
 		    		dt.createDijit(widgetData, model, oldResource, context, selection);
@@ -42,6 +45,12 @@ define(["davinci/de/widgets/NewDijit",
 		    			ra.run(context, widgetData.group + "." + widgetData.name);
 		    		}
 		    	}
+		    	//FIXME: Force a browser refresh. This is the atom bomb approach.
+		    	//Reason for doing this is that the custom palette list in widget palette
+		    	//and all of the require/packages logic happens during application initialization.
+		    	//It might be possible to prevent the reload without too much work, but for now we
+		    	//do a browser refresh.
+		    	window.location.reload(false);
 				return true;
 			});
 			
@@ -105,8 +114,8 @@ define(["davinci/de/widgets/NewDijit",
 		},
 		
 		createDijit : function(widgetData, model, resource, context, selection){
-			var qualifiedWidget = widgetData.group + "." + widgetData.name;
-			
+			var qualifiedWidgetDot = widgetData.name + "." + widgetData.name;
+			var qualifiedWidgetSlash = widgetData.name + "/" + widgetData.name;
 			
 			var base = Workbench.getProject();
 			var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
@@ -118,7 +127,7 @@ define(["davinci/de/widgets/NewDijit",
 			
 			var parent = dt._createFolder(prefs['widgetFolder']);
 			
-			var widgetNamespace = dt._createNameSpace(qualifiedWidget, parent);
+			var widgetNamespace = dt._createNameSpace(qualifiedWidgetDot, parent);
 			/*
 			if(namesplit.length>1){
 				widgetSingleName = namesplit[namesplit.length-1];
@@ -132,10 +141,12 @@ define(["davinci/de/widgets/NewDijit",
 			
 			/* packages.json metadata */
 			var customWidgetsJson = dojo.clone(dt.WIDGETS_JSON);
+			customWidgetsJson.name = widgetData.name;
+			customWidgetsJson.longName = widgetData.name;
 			
 			var widgetsObj = {name:widgetData.name, 
-				description: "Custom user widget " + widgetData.name, 
-				type:qualifiedWidget/*.replace(/\./g,"/")*/, 
+				description: widgetData.name, 
+				type:qualifiedWidgetSlash, 
 				category:"custom", 
 				iconLocal:true, 
 				icon:"app/davinci/img/maqetta.png"
@@ -151,13 +162,13 @@ define(["davinci/de/widgets/NewDijit",
 				}
 			}
 			customWidgetsJson.widgets.push(widgetsObj)
-			customWidgets.setContents(dojo.toJson(customWidgetsJson));
+			customWidgets.setContents(json.stringify(customWidgetsJson, undefined, '\t'));
 	
 			
 			var widgetFolder = parent;
 			
 			var generator = new DijitTemplatedGenerator({});
-			var content = generator.buildSource(model,qualifiedWidget,widgetData.name, false, context, selection);
+			var content = generator.buildSource(model,qualifiedWidgetSlash,widgetData.name, false, context, selection);
 			
 			for(var type in content){
 				
@@ -175,7 +186,7 @@ define(["davinci/de/widgets/NewDijit",
 					case 'metadata':
 						var metaResource = widgetNamespace.createResource(widgetData.name + "_oam.json");
 						metaResource.setContents(content.metadata);
-						dLibrary.addCustomWidgets(base, customWidgetsJson);
+						dLibrary.addCustomWidgets(base, customWidgets, widgetNamespace.getPath(), customWidgetsJson);
 						break;
 				}
 			

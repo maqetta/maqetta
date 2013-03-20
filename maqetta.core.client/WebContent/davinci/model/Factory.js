@@ -1,10 +1,9 @@
 define([
-	"dojo/_base/declare",
 	"../html/CSSFile",
 	"../js/JSFile",
 	"../html/HTMLFile",
 	"system/resource"
-], function(declare, CSSFile, JSFile, HTMLFile, systemResource) {
+], function(CSSFile, JSFile, HTMLFile, systemResource) {
 
 var _instances = [],
 	_resources = [];
@@ -34,7 +33,6 @@ var Factory = {
 		if(/\.js$/i.test(url)) {
 			return Factory.newJS(args);
 		}
-		
 	},
 
 	closeModel: function(model) {

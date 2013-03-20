@@ -1,0 +1,11 @@
+{
+	"include_document_css":{
+		"_COMMENT_1":"whether to include dojo file document.css in new html files",
+		"_COMMENT_2":"value can be set independently for desktop and mobile apps",
+		"_COMMENT_3":"where an app is mobile if it includes at least one dojo mobile widget",
+		"_COMMENT_4":"possible values: null|false|true",
+		"_COMMENT_5":"if null (or not specified), then use Maqetta default behavior",
+		"desktop":null,
+		"mobile":null
+	}
+}

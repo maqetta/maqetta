@@ -418,17 +418,20 @@ define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEve
 		/**
 		 * Sets the line delimiter that is used by the view
 		 * when new lines are inserted in the model due to key
-		 * strokes  and paste operations.
+		 * strokes and paste operations. The line delimiter of
+		 * existing lines are unchanged unless the to <code>all</code>
+		 * argument is <code>true</code>.
 		 * <p>
 		 * If lineDelimiter is "auto", the delimiter is computed to be
-		 * the first delimiter found the in the current text. If lineDelimiter
+		 * the first delimiter found in the current text. If lineDelimiter
 		 * is undefined or if there are no delimiters in the current text, the
 		 * platform delimiter is used.
 		 * </p>
 		 *
 		 * @param {String} lineDelimiter the line delimiter that is used by the view when inserting new lines.
+		 * @param {Boolean} [all=false] whether or not the delimiter of existing lines are changed.
 		 */
-		setLineDelimiter: function(lineDelimiter) {
+		setLineDelimiter: function(lineDelimiter, all) {
 			if (lineDelimiter === "auto") { //$NON-NLS-0$
 				lineDelimiter = undefined;
 				if (this.getLineCount() > 1) {
@@ -436,6 +439,16 @@ define("orion/textview/textModel", ['orion/textview/eventTarget'], function(mEve
 				}
 			}
 			this._lineDelimiter = lineDelimiter ? lineDelimiter : (isWindows ? "\r\n" : "\n"); //$NON-NLS-1$ //$NON-NLS-0$
+			if (all) {
+				var lineCount = this.getLineCount();
+				if (lineCount > 1) {
+					var lines = new Array(lineCount);
+					for (var i=0; i<lineCount; i++) {
+						lines[i] = this.getLine(i);
+					}
+					this.setText(lines.join(this._lineDelimiter));
+				}
+			}
 		},
 		/**
 		 * Replaces the text in the given range with the given text.

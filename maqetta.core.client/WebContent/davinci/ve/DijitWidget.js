@@ -25,7 +25,10 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 
 	isDijitWidget: true,
 
-	constructor: function(mixin, node, dijitWidget, metadata, srcElement) {
+	//FIXME: Horrible constructor design.
+	//For CreateTool, all 6 params are passed in, but dijitWidget and widgetType have same value
+	//For file opening, only dijitWidget (3rd param) and widgetType (6th param) are passed in.
+	constructor: function(mixin, node, dijitWidget, metadata, srcElement, widgetType) {
 		if (typeof dijitWidget === 'string') {
 			// XXX we should just add dojo type in metadata and remove this code
 			// add dojo type to node
@@ -73,7 +76,11 @@ return declare("davinci.ve.DijitWidget", _Widget, {
 			dijitWidget.domNode._dvWidget = this;
 			this.isLayoutContainer = dijitWidget.isLayoutContainer;
 		} else {
-			this.type = dijitWidget.declaredClass.replace(/\./g, "/"); //FIXME: not a safe association;
+			if(!widgetType){
+				this.type = dijitWidget.declaredClass.replace(/\./g, "/"); //FIXME: not a safe association;
+			}else{
+				this.type = widgetType.replace(/\./g, "/");
+			}
 		}
 
 		var allowedChild = davinci.ve.metadata.getAllowedChild(this.type);

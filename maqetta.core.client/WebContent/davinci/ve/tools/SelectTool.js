@@ -819,8 +819,10 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 				offsetTop += offsetNode.offsetTop;
 				offsetNode = offsetNode.offsetParent;
 			}
-			parentListDiv.style.left = (offsetLeft + event.pageX) + 'px';
-			parentListDiv.style.top = (offsetTop + event.pageY) + 'px';
+			var scrollLeft = GeomUtils.getScrollLeft(context.rootNode);
+			var scrollTop = GeomUtils.getScrollTop(context.rootNode);
+			parentListDiv.style.left = (offsetLeft + event.pageX - scrollLeft) + 'px';
+			parentListDiv.style.top = (offsetTop + event.pageY - scrollTop) + 'px';
 		}
 		
 		var editorPrefs = Preferences.getPreferences('davinci.ve.editorPrefs', 

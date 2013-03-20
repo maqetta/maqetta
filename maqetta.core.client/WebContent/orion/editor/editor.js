@@ -660,7 +660,7 @@ define("orion/editor/editor", ['i18n!orion/editor/nls/messages', 'orion/textview
 					return;
 				}
 			}
-			this.reportStatus(i18nUtil.formatMessage(messages.lineColumn, lineIndex + 1, offsetInLine + 1));
+//			this.reportStatus(i18nUtil.formatMessage(messages.lineColumn, lineIndex + 1, offsetInLine + 1));
 		},
 		
 		showProblems: function(problems) {

@@ -1,12 +1,6 @@
 package maqetta.server.orion.authentication.ldap;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -30,14 +24,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.davinci.server.user.IPerson;
-import org.davinci.server.user.IUser;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.orion.internal.server.servlets.ProtocolConstants;
 import org.eclipse.orion.internal.server.servlets.workspace.authorization.AuthorizationService;
 import org.eclipse.orion.server.core.LogHelper;
+import org.eclipse.orion.server.core.PreferenceHelper;
 import org.eclipse.orion.server.core.ServerConstants;
 import org.eclipse.orion.server.core.authentication.IAuthenticationService;
 import org.eclipse.orion.server.user.profile.IOrionUserProfileConstants;
@@ -60,17 +53,34 @@ import org.slf4j.LoggerFactory;
 public class LdapAuthenticationService implements IAuthenticationService {
 
 	private static Logger logger = LoggerFactory.getLogger("org.eclipse.orion.server.login"); //$NON-NLS-1$
+
 	private Properties defaultAuthenticationProperties;
 
 	private boolean registered = false;
 
+// from org.eclipse.orion.server.authentication.form.FormAuthHelper
 	private static IOrionCredentialsService userAdmin;
 
 	private static IOrionUserProfileService userProfileService;
 
 	private static boolean allowAnonymousAccountCreation;
+	private static boolean forceEmailWhileCreatingAccount;
+
+	public enum LoginResult {
+	    OK, FAIL, BLOCKED
+	}
 
 	private static String registrationURI;
+
+	static {
+		//if there is no list of users authorised to create accounts, it means everyone can create accounts
+		allowAnonymousAccountCreation = PreferenceHelper.getString(ServerConstants.CONFIG_AUTH_USER_CREATION, null) == null; //$NON-NLS-1$
+		forceEmailWhileCreatingAccount = PreferenceHelper.getString(ServerConstants.CONFIG_AUTH_USER_CREATION_FORCE_EMAIL, "false").equalsIgnoreCase("true"); //$NON-NLS-1$
+
+		//if there is an alternate URI to handle registrations retrieve it.
+		registrationURI = PreferenceHelper.getString(ServerConstants.CONFIG_AUTH_REGISTRATION_URI, null);
+	}
+// end org.eclipse.orion.server.authentication.form.FormAuthHelper
 	
 	private static String CONFIG_PROVIDER_URL= "maqetta.auth.ldap.provider.url";
 	private static String CONFIG_LOOKUP_PROVIDER_URL = "maqetta.auth.ldap.lookup.provider.url";
@@ -113,8 +123,7 @@ public class LdapAuthenticationService implements IAuthenticationService {
 	private static String KEYSTOREPW;
 	private static String BIND_USER;
 	private static String BIND_PASSWORD;
-	
-		
+
 	static {
 		ServerManager serverMgr = ServerManager.getServerManager();
 		
@@ -162,12 +171,6 @@ public class LdapAuthenticationService implements IAuthenticationService {
 		KEYSTOREPW = serverMgr.getDavinciProperty(CONFIG_KEYSTOREPASSWORD);
 		BIND_USER =  serverMgr.getDavinciProperty(CONFIG_SECURITY_PRINCIPAL);
 		BIND_PASSWORD = serverMgr.getDavinciProperty(CONFIG_SECURITY_CREDENTIALS);
-
-		//if there is no list of users authorised to create accounts, it means everyone can create accounts
-		allowAnonymousAccountCreation = serverMgr.getDavinciProperty(ServerConstants.CONFIG_AUTH_USER_CREATION) == null; //$NON-NLS-1$
-
-		//if there is an alternate URI to handle registrations retrieve it.
-		registrationURI = serverMgr.getDavinciProperty(ServerConstants.CONFIG_AUTH_REGISTRATION_URI);
 	}
 
 	public LdapAuthenticationService(){
@@ -209,11 +212,7 @@ public class LdapAuthenticationService implements IAuthenticationService {
 	 */
 	public String getAuthenticatedUser(HttpServletRequest req, HttpServletResponse resp, Properties properties) {
 		HttpSession s = req.getSession(true);
-		if (s.getAttribute("user") != null) { //$NON-NLS-1$
-			return (String) s.getAttribute("user"); //$NON-NLS-1$
-		}
-
-		return null;
+		return (String) s.getAttribute("user"); //$NON-NLS-1$
 	}
 
 	public String getAuthType() {
@@ -247,7 +246,7 @@ public class LdapAuthenticationService implements IAuthenticationService {
 				result.put("label", "Maqetta server");
 				result.put("SignInKey", "ldapUser"); //$NON-NLS-1$
 			} catch (JSONException e) {
-				LogHelper.log(new Status(IStatus.ERROR, Activator.PI_LDAP_SERVLETS, 1, "An error occured during authenitcation", e));
+				LogHelper.log(new Status(IStatus.ERROR, Activator.PI_LDAP_SERVLETS, 1, "An error occured during authentication", e));
 			}
 			resp.getWriter().print(result.toString());
 		}
@@ -281,7 +280,7 @@ public class LdapAuthenticationService implements IAuthenticationService {
 	}
 	
 	/**********************************************************************************************/
-	/***   Based on org.eclipse.orion.server.authentication.form.core.FormAuthHelper.             */
+	/***   Based on org.eclipse.orion.server.authentication.form.FormAuthHelper.                  */
 	/**********************************************************************************************/
 	
 	/**
@@ -295,12 +294,15 @@ public class LdapAuthenticationService implements IAuthenticationService {
 	 * @throws IOException
 	 * @throws UnsupportedUserStoreException 
 	 */
-	public static boolean performAuthentication(HttpServletRequest req, HttpServletResponse resp) throws IOException, UnsupportedUserStoreException {
+	public static LoginResult performAuthentication(HttpServletRequest req, HttpServletResponse resp) throws IOException, UnsupportedUserStoreException {
 		Logger logger = LoggerFactory.getLogger("org.eclipse.orion.server.login"); //$NON-NLS-1$
 		String login = req.getParameter("login");//$NON-NLS-1$
 		User user = getUserForCredentials(login, req.getParameter("password")); //$NON-NLS-1$
 
 		if (user != null) {
+			if (user.getBlocked()) {
+				return LoginResult.BLOCKED;
+			}
 			String actualLogin = user.getUid();
 			if (logger.isInfoEnabled())
 				logger.info("Login success: " + actualLogin); //$NON-NLS-1$ 
@@ -315,23 +317,26 @@ public class LdapAuthenticationService implements IAuthenticationService {
 				// just log that the login timestamp was not stored
 				LogHelper.log(e);
 			}
-			return true;
+			return LoginResult.OK;
 		}
 		//don't bother tracing malformed login attempts
 		if (login != null)
 			logger.info("Login failed: " + login); //$NON-NLS-1$
-		return false;
+		return LoginResult.FAIL;
 	}
 
 	private static User getUserForCredentials(String login, String password) throws UnsupportedUserStoreException {
 		if (userAdmin == null) {
 			throw new UnsupportedUserStoreException();
 		}
+		if (login == null) {
+			return null;
+		}
 		
 		// check for "admin" user first
 		if (login.equals("admin")) { //$NON-NLS-1$
-			User user = userAdmin.getUser("login", login); //$NON-NLS-1$
-			if (user != null && user.hasCredential("password", password)) { //$NON-NLS-1$
+			User user = userAdmin.getUser(UserConstants.KEY_LOGIN, login);
+			if (user != null && user.hasCredential(UserConstants.KEY_PASSWORD, password)) {
 				return user;
 			}
 		}
@@ -345,14 +350,10 @@ public class LdapAuthenticationService implements IAuthenticationService {
 				logger.info("authenticate dn, email, displayname" + " "+dn+ " "+email+ " "+displayname);
 				//String json = userHash.get("jsonAttrib").toString();
 				authenticate(dn, password);
-				/*
-				 * FIXME At the present time Maqetta expects the login name to be the email,
-				 * So we want to use the email to create/get user from orion so that 
-				 * Maqetta remains happy
-				 */
-				User user = userAdmin.getUser("login", email/*login*/); //$NON-NLS-1$
+
+				User user = userAdmin.getUser(UserConstants.KEY_LOGIN, login);
 				if (user == null) {
-					user = createOrionUser(email, displayname);
+					user = createOrionUser(login, email, displayname);
 				}
 				return user;
 			}
@@ -370,26 +371,35 @@ public class LdapAuthenticationService implements IAuthenticationService {
 		return null;
 	}
 
-	private static User createOrionUser(String login, String name) {
+	private static User createOrionUser(String login, String email, String name) {
 		if (name == null) {
 			name = login;
 		}
-		User newUser = new User(login, name, "");  // don't save password
+
+		User newUser = new User(login, name, null);  // don't save password
+		newUser.setEmail(email);
+
 		newUser = userAdmin.createUser(newUser);
+
 		try {
 			AuthorizationService.addUserRight(newUser.getUid(), newUser.getLocation());
 		} catch (CoreException e) {
 			LogHelper.log(e);
 		}
+
 		return newUser;
 	}
 
 	/**
-	 * Returns <code>true</code>ue if an unauthorised user can create a new account, 
+	 * Returns <code>true</code> if an unauthorized user can create a new account, 
 	 * and <code>false</code> otherwise.
 	 */
 	public static boolean canAddUsers() {
 		return allowAnonymousAccountCreation ? (userAdmin == null ? false : userAdmin.canCreateUsers()) : false;
+	}
+
+	public static boolean forceEmail() {
+		return forceEmailWhileCreatingAccount;
 	}
 
 	/**
@@ -444,7 +454,7 @@ public class LdapAuthenticationService implements IAuthenticationService {
 
 	}
 
-	public static IOrionUserProfileService getUserProfileService() {
+	private static IOrionUserProfileService getUserProfileService() {
 		return userProfileService;
 	}
 
@@ -515,7 +525,7 @@ public class LdapAuthenticationService implements IAuthenticationService {
 
         // Search the context specified in the String object "base".
         try {
-        	NamingEnumeration results = ctx.search(BASE, filter, constraints);
+        	NamingEnumeration<?> results = ctx.search(BASE, filter, constraints);
         	
 	        if (results.hasMoreElements()) {
 	        	logger.info("has returned results..\n");
@@ -538,13 +548,12 @@ public class LdapAuthenticationService implements IAuthenticationService {
 	    		// we can build a user object to return.
 	            Attributes attributes = sr.getAttributes();
 
-	            String attrType;
 	            Attribute attr;
-	            NamingEnumeration ne;
+	            NamingEnumeration<?> ne;
 
 	            // Iterate through the attributes.
 	            //String json = "{";
-	            for (NamingEnumeration a = attributes.getAll(); a.hasMore();) {
+	            for (NamingEnumeration<?> a = attributes.getAll(); a.hasMore();) {
 	                attr = (Attribute)a.next();
 	                
 	                //json = json + attr.getID() + ": { ";
@@ -576,11 +585,10 @@ public class LdapAuthenticationService implements IAuthenticationService {
     	
     }
 	
-	 public static void authenticate (String userDN, String pw) throws Exception 
-	 {
-	// Return the full user's DN
+	public static void authenticate (String userDN, String pw) throws Exception {
+		// Return the full user's DN
 	 	logger.info("authenticate " + userDN);
-		Hashtable env = new Hashtable(11);
+		Hashtable<String, String> env = new Hashtable<String, String>(11);
 		env.put(Context.INITIAL_CONTEXT_FACTORY, INITIAL_CONTEXT_FACTORY );
 		env.put(Context.PROVIDER_URL, PROVIDER_URL);
 		env.put(Context.SECURITY_AUTHENTICATION, SECURITY_AUTHENTICATION);
@@ -619,7 +627,6 @@ public class LdapAuthenticationService implements IAuthenticationService {
 				}
 			}
 		}
-    }
-	 
-		
+	}
+
 }

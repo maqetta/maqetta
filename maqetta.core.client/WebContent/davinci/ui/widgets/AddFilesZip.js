@@ -25,7 +25,7 @@ define(["dojo/_base/declare",
 
 			this.uploader.set("multiple", false);
 			this.uploader.set("label", uiNLS.selectZip);
-			this.uploader.set("url", this._getCommand());
+			this.uploader.set("url", this._getCommand(folder));
 
 //			new FileList({uploader:this.uploader}, this.filelist);
 

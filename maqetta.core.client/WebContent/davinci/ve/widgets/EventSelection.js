@@ -3,12 +3,12 @@ define(["dojo/_base/declare",
 		'system/resource',
 		'davinci/Workbench',
 		'davinci/model/Path',
-		'davinci/workbench/Preferences',
+		'../../workbench/Preferences',
 		"../../workbench/ViewLite",
+		"../commands/EventCommand",
 		"./HTMLStringUtil",
-		"davinci/ve/States",
-        "../commands/ModifyCommand"
-],function(declare, connect, Resource, Workbench, Path, Preferences, ViewLite, HTMLStringUtil, States, ModifyCommand){
+		"../States"
+],function(declare, connect, Resource, Workbench, Path, Preferences, ViewLite, EventCommand, HTMLStringUtil, States){
 
 var StateColonString = 'State:';
 var StatePatternDisplay=new RegExp('^'+StateColonString+'.*');
@@ -21,15 +21,14 @@ var LocationHrefString = 'location.href';
 var FilePatternSource=/^\s*location\.href\s*\=\s*([\'"])((?:(?!\1).)*)\1\s*$/;
 
 var getEventSelectionValues = function(root){
-	var items = [""];
-	
-	var states = [];
-	var stateContainers = root && States.getAllStateContainers(root);
+	var items = [""],
+		states = [],
+		stateContainers = root && States.getAllStateContainers(root);
+
 	if(stateContainers){
-		for(var j=0; j<stateContainers.length; j++){
-			var statesList = States.getStates(stateContainers[j]);
-			states = states.concat(statesList);
-		}
+		states = stateContainers.reduce(function(statesList, container){
+			return statesList.concat(States.getStates(container));
+		});
 	}
 	for(var i=0; i<states.length; i++){
 		var state = states[i];
@@ -45,10 +44,8 @@ var getEventSelectionValues = function(root){
 	if(prefs.webContentFolder!=null && prefs.webContentFolder!=""){
 		var fullPath = new Path(base).append(prefs.webContentFolder);
 		base = fullPath.toString();
-		folder = Resource.findResource(base);
-	}else{
-		folder= Resource.findResource(base);
 	}
+	var folder = Resource.findResource(base);
 	var samplesPath = new Path(base).append('samples');
 	var samplesFolder = Resource.findResource(samplesPath.toString());
 	var themePath = new Path(base).append(prefs.themeFolder);
@@ -64,7 +61,7 @@ var getEventSelectionValues = function(root){
 					if(!child._readOnly && child != samplesFolder && child != themeFolder && child != customWidgetFolder){
 						recurseFindHtmlFiles(child);
 					}
-				}else if(child.extension.toLowerCase() == 'html' || child.extension.toLowerCase() == 'htm'){
+				} else if(/\.html?$/i.test(child.extension)) {
 					htmlFiles.push(child);
 				}
 			}
@@ -90,8 +87,8 @@ var getEventSelectionValues = function(root){
 };
 
 var getEventScriptFromValue = function(value) {
-	value.replace(/'/,"\\'");
-	value.replace(/"/,'\\"');
+	value.replace(/'/,"\\'"); //FIXME: assign result
+	value.replace(/"/,'\\"'); //FIXME: assign result
 	
 	if (value && value.match(StatePatternDisplay)) {
 		var state = value.substring(StateColonString.length);
@@ -195,7 +192,7 @@ var EventSelection = declare("davinci.ve.widgets.EventSelection", [ViewLite], {
 			
 			properties[this.pageTemplate[index].target] = value;
 			
-			var command = new davinci.ve.commands.EventCommand(this._widget, properties);
+			var command = new EventCommand(this._widget, properties);
 			dojo.publish("/davinci/ui/widgetPropertiesChanges",[{source:this._editor.editor_id, command:command}]);
 	 		
 		},

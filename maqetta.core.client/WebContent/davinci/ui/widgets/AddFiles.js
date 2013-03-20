@@ -14,7 +14,7 @@ define(["dojo/_base/declare",
 		templateString: templateString,
 		uiNLS: uiNLS,
 
-		_getCommand: function() {
+		_getCommand: function(folder) {
 			return "cmd/addFiles?path=" + encodeURIComponent(folder.getPath());
 		},
 
@@ -27,7 +27,7 @@ define(["dojo/_base/declare",
 //			dijit.byId('fileDialogParentFolder').set('value',folder.getPath());
 			this.fileDialogParentFolder.innerHTML=folder.getPath();
 
-			this.uploader.set("url", this._getCommand());
+			this.uploader.set("url", this._getCommand(folder));
 
 			new FileList({uploader:this.uploader}, this.filelist);
 

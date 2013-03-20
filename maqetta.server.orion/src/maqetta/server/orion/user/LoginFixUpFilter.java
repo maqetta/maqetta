@@ -260,7 +260,7 @@ public class LoginFixUpFilter implements Filter {
 		}
 	}
 
-	private User fixOldUser(IOrionCredentialsService userAdmin, User user) {
+	public User fixOldUser(IOrionCredentialsService userAdmin, User user) {
 		// get old values
 		String email = user.getLogin();
 		String name = user.getName();

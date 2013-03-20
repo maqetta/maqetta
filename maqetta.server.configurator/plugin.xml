@@ -51,11 +51,6 @@
             alias="/useremailconfirmation"
             class="maqetta.server.orion.user.LoginFixUpFilter">
       </filter>
-      <!-- XXX Should be using AuthorizedUserFilter? -->
-      <filter
-            alias="/maqetta/cmd"
-            class="org.eclipse.orion.server.configurator.servlet.LoggedInUserFilter">
-      </filter>
       <!-- override the default orion plugins to add the maqetta plugin -->
       <filter
             alias="/defaults.pref"

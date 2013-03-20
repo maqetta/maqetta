@@ -63,11 +63,14 @@ public class DavinciCommandServlet extends HttpServlet {
 	        if (commandDescriptor == null || commandDescriptor.isPut()) {
 	            throw new AssertionError(new String("commandDescriptor is null or is Put in Get processing"));
 	        }
+	        IUser user = checkLogin(req, resp, commandDescriptor);
+	        if (user == null && !commandDescriptor.isNoLogin()) {
+	            return;
+	        }
 	
 	        Command command = commandDescriptor.getCommand();
 	        command.init();
 	
-	        IUser user = ServerManager.getServerManager().getUserManager().getUser(req);
 	        command.handleCommand(req, resp, user);
 	        if (command.getErrorString() != null) {
 	            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, command.getErrorString());
@@ -90,6 +93,18 @@ public class DavinciCommandServlet extends HttpServlet {
     	}
     }
 
+    private IUser checkLogin(HttpServletRequest req, HttpServletResponse resp, CommandDescriptor commandDescriptor) throws IOException {
+
+        IUser user = ServerManager.getServerManager().getUserManager().getUser(req);
+        if (user == null) {
+            if (!ServerManager.LOCAL_INSTALL &&!commandDescriptor.isNoLogin()) {
+                    resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                    return null;
+            }
+        }
+        return user;
+    }
+
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     	try {
@@ -105,11 +120,14 @@ public class DavinciCommandServlet extends HttpServlet {
 	        if (commandDescriptor == null || !commandDescriptor.isPut()) {
 	            throw new AssertionError(new String("commandDescriptor is null or is not Put in Put processing"));
 	        }
-
+	
+	        IUser user = checkLogin(req, resp, commandDescriptor);
+	        if (user == null && !commandDescriptor.isNoLogin()) {
+	            return;
+	        }
 	        Command command = commandDescriptor.getCommand();
 	        command.init();
 	
-	        IUser user = ServerManager.getServerManager().getUserManager().getUser(req);
 	        command.handleCommand(req, resp, user);
     	} catch (RuntimeException re) {
     		log(req, "doPut", re);
@@ -139,10 +157,16 @@ public class DavinciCommandServlet extends HttpServlet {
 	        if (commandDescriptor == null || commandDescriptor.isPut()) {
 	            throw new java.lang.AssertionError(new String("commandDescriptor is null or is Put in Post processing"));
 	        }
+	        IUser user = checkLogin(req, resp, commandDescriptor);
+	        if (user == null) {
+	            if (!commandDescriptor.isNoLogin()) {
+	                resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+	                return;
+	            }
+	        }
 	        Command command = commandDescriptor.getCommand();
 	        command.init();
 	
-	        IUser user = ServerManager.getServerManager().getUserManager().getUser(req);
 	        command.handleCommand(req, resp, user);
 	        if (command.getErrorString() != null) {
 	            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, command.getErrorString());

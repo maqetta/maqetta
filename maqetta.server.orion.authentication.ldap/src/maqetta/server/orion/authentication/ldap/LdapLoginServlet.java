@@ -8,6 +8,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import maqetta.server.orion.authentication.ldap.LdapAuthenticationService.LoginResult;
+
 import org.eclipse.orion.server.core.LogHelper;
 import org.eclipse.orion.server.core.resources.Base64;
 import org.eclipse.orion.server.servlets.OrionServlet;
@@ -16,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.osgi.framework.Version;
 
+@SuppressWarnings("restriction")
 public class LdapLoginServlet extends OrionServlet {
 
 	private LdapAuthenticationService authenticationService;
@@ -34,7 +37,8 @@ public class LdapLoginServlet extends OrionServlet {
 
 		if (pathInfo.startsWith("/form")) { //$NON-NLS-1$
 			try {
-				if (LdapAuthenticationService.performAuthentication(req, resp)) {
+				LoginResult authResult = LdapAuthenticationService.performAuthentication(req, resp);
+				if (authResult == LoginResult.OK) {
 					// redirection from
 					// FormAuthenticationService.setNotAuthenticated
 					String versionString = req.getHeader("Orion-Version"); //$NON-NLS-1$
@@ -59,6 +63,8 @@ public class LdapLoginServlet extends OrionServlet {
 						}
 					}
 					resp.flushBuffer();
+				} else if(authResult == LoginResult.BLOCKED){
+					displayError("Your account is not active. Please confirm your email before logging in.", req, resp);
 				} else {
 					displayError("Invalid user or password", req, resp);
 				}
@@ -73,6 +79,7 @@ public class LdapLoginServlet extends OrionServlet {
 			JSONObject jsonResp = new JSONObject();
 			try {
 				jsonResp.put("CanAddUsers", LdapAuthenticationService.canAddUsers());
+				jsonResp.put("ForceEmail", LdapAuthenticationService.forceEmail());
 				jsonResp.put("RegistrationURI", LdapAuthenticationService.registrationURI());
 			} catch (JSONException e) {
 			}

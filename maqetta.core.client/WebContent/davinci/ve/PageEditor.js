@@ -14,9 +14,10 @@ define([
 	"./widget",
 	"./States",
 	"../XPathUtils",
+	"../html/HtmlFileXPathAdapter",
 	"./utils/GeomUtils",
 	"dojo/i18n!./nls/ve"
-], function(require, declare, ModelEditor, BorderContainer, ContentPane, Runtime, Moveable, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, States, XPathUtils, GeomUtils, veNls){
+], function(require, declare, ModelEditor, BorderContainer, ContentPane, Runtime, Moveable, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, States, XPathUtils, HtmlFileXPathAdapter, GeomUtils, veNls){
 
 return declare("davinci.ve.PageEditor", ModelEditor, {
 

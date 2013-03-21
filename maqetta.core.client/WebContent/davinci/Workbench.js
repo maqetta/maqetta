@@ -2151,6 +2151,7 @@ var Workbench = {
 				putData: JSON.stringify(Workbench._state),
 				handleAs:"text"
 			});
+			return this._updateWorkbench;
 		}.bind(this));
 	},
 

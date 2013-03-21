@@ -189,7 +189,7 @@ return declare([], {
 								message += "<br>file: " + failureInfo.fileName + "<br>line: " + failureInfo.lineNumber;
 							}
 							if (failureInfo.stack) {
-								message += "<br>" + failureInfo.stack;
+								message += "<br><pre>" + failureInfo.stack + "</pre>";
 							}
 							this.loadingDiv.innerHTML = message;
 							dojo.addClass(this.loadingDiv, 'error');

@@ -1,24 +1,29 @@
 define(["dojo/_base/declare",
         "davinci/model/Path",
-        "davinci/ve/metadata"
-        
-       
-],function(declare, Path, mMetaData){
-	
+        "davinci/ve/metadata",
+        "dojo/json"
+],function(declare, Path, mMetaData, json){
+
+	// For developer notes on how custom widgets work in Maqetta, see:
+	// https://github.com/maqetta/maqetta/wiki/Custom-widgets	
+
 	return declare("davinci.de.DijitTemplatedGenerator", null, {
-	
+
 		constructor: function(args){
 			dojo.mixin(this, args);
 		},
 		
 		buildSource: function(model, dijitName, simpleName, inlineHtml, context, selection){
 			this.value = {js:"", metadata:"", amd:['dojo/_base/declare', 'dijit/_Widget','dijit/_Templated']};
-			this.metadata = {id:dijitName, name: dijitName, spec:"1.0", version: "1.0", require:[],library:{dojo:{src:"../../../../dojo/dojo.js"}}};
+			//FIXME: Hardcoded path to dojo.js assumes lib/custom and lib/dojo, which may not be true
+			//(Apparently, code doesn't actually use that path right now)
+			//See https://github.com/maqetta/maqetta/issues/3821
+			this.metadata = {id:simpleName, name: simpleName, spec:"1.0", version: "1.0", require:[],library:{dojo:{src:"../../dojo/dojo/dojo.js"}}};
 			this.model = this._srcDocument =  model;
 			/* no need to bother with the theme */
 			//var themeMetaobject = davinci.ve.metadata.loadThemeMeta(this._srcDocument);
 			var topElement = selection[0]._srcElement;
-			var htmlPath = "./" + simpleName + ".html";
+			var htmlPath = simpleName + "/" + simpleName + ".html";
 			
 			if(!inlineHtml){
 	        	this.value.amd.push("dojo/text!" + htmlPath.toString() );
@@ -45,7 +50,7 @@ define(["dojo/_base/declare",
 	        }
 	       
 			
-			this.metadata.require.push({$library:"dojo",format:"amd", src:"widgets/" + dijitName.replace(/\./g,"/"), type:"javascript-module"});
+			this.metadata.require.push({$library:"dojo",format:"amd", src:dijitName, type:"javascript-module"});
 			for(var lib in libs){
 				if(lib != 'dojo'){
 /*FIXME: IS THIS NEEDED?
@@ -99,7 +104,7 @@ define(["dojo/_base/declare",
 						
 			
 			this.value.js+="){\n\n";
-			this.value.js+=" return declare('" + dijitName + "',[ _Widget, _Templated"
+			this.value.js+=" return declare([ _Widget, _Templated"
 						
 			this.value.js+="], {\n"
 			this.value.js+="       widgetsInTemplate:true,\n"
@@ -111,7 +116,7 @@ define(["dojo/_base/declare",
 			}
 			this.value.js+="   \n});";
 			this.value.js+="\n});";
-			this.value.metadata = dojo.toJson(this.metadata);
+			this.value.metadata = json.stringify(this.metadata, undefined, '\t');
 			
 			return this.value;
 		},

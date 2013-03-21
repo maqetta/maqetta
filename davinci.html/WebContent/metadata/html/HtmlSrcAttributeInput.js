@@ -10,7 +10,6 @@ define([
 	"dijit/layout/BorderContainer",
 	"dijit/layout/ContentPane",
 	"dojo/text!./templates/srcAttributeInputFields.html",
-  "dojo/i18n!dijit/nls/common",
 	"dojo/i18n!./nls/html"
 ], function(
 	declare,
@@ -24,7 +23,6 @@ define([
 	BorderContainer,
 	ContentPane,
 	templateString,
-	commonNls,
 	htmlNls
 ) {
 
@@ -60,7 +58,8 @@ return declare(SmartInput, {
 		//Set-up file selection tree
 		var treeParms= {  
 			id: "htmlSrcAttributeInputSelectionTree",
-			style: "height:10em;margin-bottom:12px;;overflow:auto;",
+			persist: false,
+			style: "height:10em;margin-bottom:12px;overflow:auto;",
 			model: system.resource,
 			filters: "new system.resource.FileTypeFilter(parms.fileTypes || '*');" //See #1725
 			};
@@ -111,8 +110,7 @@ return declare(SmartInput, {
 	},
 
 	updateWidget: function(srcText, altText) {
-		var values = {};
-		values.src = srcText;
+		var values = {src: srcText};
 		if (this.supportsAltText) {
 			values.alt = altText;
 		}

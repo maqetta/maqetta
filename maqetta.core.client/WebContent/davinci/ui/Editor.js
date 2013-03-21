@@ -112,7 +112,7 @@ return declare(null, {
 
 		this.setValue(content, true);
 		this._updateStyler();
-		
+
 		// delay binding to the onChange event until after initializing the content 
 		if (this._textModel) {
 			dojo.disconnect(this._textModelConnection);
@@ -184,6 +184,9 @@ return declare(null, {
 		};
 		this.editor = new mEditor.Editor(options);
 		this.editor.installTextView();
+//		this._updateStyler();
+//		this.editor.highlightAnnotations();
+		
 //      	contentAssist.addEventListener("Activating", function() {
             if (/\.css$/.test(this.fileName)) {
                     contentAssist.setProviders([cssContentAssistProvider]);
@@ -222,12 +225,11 @@ return declare(null, {
 		case "js":
 		case "java":
 		case "css":
-			this._styler = new mTextStyler.TextStyler(view, lang, this.editor._annotationModel/*view.annotationModel*/);
+			this._styler = new mTextStyler.TextStyler(view, lang, this.editor.getAnnotationModel());
 			break;
 		case "html":
 			this._styler = new mTextMateStyler.TextMateStyler(view, new mHtmlGrammar.HtmlGrammar());
 		}
-		view.setText(this.getText());
 	},
 
 	selectionChange: function (selection) {

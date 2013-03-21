@@ -385,9 +385,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var requires = metadata.query(type, "require");
 
 		if (!requires) {
-			var noop = new Deferred();
-			noop.resolve();
-			return noop;
+			return new Deferred().resolve();
 		}
 
 		var libraries = metadata.query(type, 'library'),
@@ -413,8 +411,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			return context.getLibraryBase(libId, ver).then(function(root) {
 				if (root == null /*empty string OK here, but null isn't. */) {
 					console.error("No library found for name = '" + libId +	"' version = '" + ver + "'");
-					d.reject();
-					return d;
+					return d.reject();
 				}
 	
 				// store path
@@ -432,8 +429,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 							// m[2] => main library JS file
 					return _loadJSFile(libId, m[2]);
 				}
-				d.resolve();
-				return d;
+				return d.resolve();
 			});
 		};
 
@@ -1084,9 +1080,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			});
 		} catch(e) {
 			failureInfo = e;
-			// recreate the Error since we crossed frames
-//			failureInfo = new Error(e.message, e.fileName, e.lineNumber);
-//			lang.mixin(failureInfo, e);
 		} finally {
 			if (callback) {
 				if (promise) {

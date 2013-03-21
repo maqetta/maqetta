@@ -12,7 +12,7 @@
 
 /*global define */
 
-define("examples/editor/textStyler", ['orion/editor/annotations'], function(mAnnotations) {
+define(/*"examples/editor/textStyler",*/ ['orion/editor/annotations'], function(mAnnotations) {
 
 	var JS_KEYWORDS =
 		["break",

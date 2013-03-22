@@ -2134,6 +2134,7 @@ var Workbench = {
 	},
 	
 	updateWorkbenchState: function(){
+		delete Workbench.saveState;
 		return xhr.put({
 			url: "cmd/setWorkbenchState",
 			putData: JSON.stringify(Workbench._state),
@@ -2374,7 +2375,6 @@ var PopupMenu = declare(Menu, {
 // put workbench state upload on a timer to reduce number of requests to the server
 window.setInterval(function(){
 	if (Workbench.saveState) {
-		delete Workbench.saveState;
 		Workbench.updateWorkbenchState();		
 	}
 }, 1000);

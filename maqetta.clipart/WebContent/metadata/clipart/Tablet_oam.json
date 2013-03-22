@@ -1,0 +1,32 @@
+{
+    "id": "http://www.maqetta.org/clipart/Tablet",
+    "name": "Tablet",
+    "spec": "1.0",
+    "version": "1.0",
+    "library": {
+        "clipart": {
+            "src": "../../../clipart"
+        },
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "clipart/Tablet",
+            "$library": "clipart"
+        },
+        {
+            "type": "image",
+            "src": "Tablet.svg",
+            "$library": "clipart"
+        }
+    ],
+    "content": "<img></img>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Clipart icon: Tablet</p>"
+    }
+}

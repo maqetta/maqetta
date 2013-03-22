@@ -19,6 +19,8 @@ public interface IUser {
 	public IVResource createProject(String projectName, String basePath,
 			boolean initFiles) throws IOException;
 
+	public IStorage getProjectTemplatesDirectory() throws IOException;
+
 	/*
 	 * adds configuration settings for a new path
 	 * 

@@ -39,6 +39,8 @@ public interface IDavinciServerConstants {
 	public static final String REVIEW_DESIGNER_ATTR = "reviewDesigner";
 	public static final String REVIEW_VERSION_ATTR = "reviewVersion";
 	
+	public static final String PROJECT_TEMPLATES_DIRECTORY_NAME = ".project-templates";
+
 	// Extension point definitions
 	public static final String EXTENSION_POINT_COMMAND = "command";
 	public static final String EP_TAG_COMMAND = "command";

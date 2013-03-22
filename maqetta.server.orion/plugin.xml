@@ -101,6 +101,8 @@
          	   class="maqetta.core.server.command.ManagerVersion" />
          <command path="getReviewUserInfo"
          	   class="maqetta.core.server.command.GetReviewUserInfo" />   
+           <command path="createProjectTemplate" 
+               class="maqetta.core.server.command.CreateProjectTemplate" />         
                
       </extension>
 	

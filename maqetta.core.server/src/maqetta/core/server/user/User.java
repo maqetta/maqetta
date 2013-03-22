@@ -16,6 +16,7 @@ import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.ajaxLibrary.ILibraryFinder;
 import org.davinci.ajaxLibrary.Library;
 import org.davinci.server.internal.Activator;
+import org.davinci.server.review.Constants;
 import org.davinci.server.user.IPerson;
 import org.davinci.server.user.IUser;
 import org.davinci.server.user.LibrarySettings;
@@ -37,6 +38,7 @@ import org.osgi.framework.Bundle;
 public class User implements IUser {
 
 	protected IStorage userDirectory;
+	protected IStorage projectTemplatesDirectory;
 	//protected Links links;
 	protected IPerson person;
 	protected IVResource workspace;
@@ -197,6 +199,23 @@ public class User implements IUser {
         rebuildWorkspace();
 		return project;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * maqetta.core.server.user.IDesignerUser#getCommentingDirectory
+	 * ()
+	 */
+	public IStorage getProjectTemplatesDirectory() throws IOException {
+		IStorage baseDirectory = ServerManager.getServerManager().getBaseDirectory();
+		this.projectTemplatesDirectory = baseDirectory.newInstance(baseDirectory, IDavinciServerConstants.PROJECT_TEMPLATES_DIRECTORY_NAME);
+		if (!this.projectTemplatesDirectory.exists()) {
+			this.projectTemplatesDirectory.mkdir();
+		}
+		return this.projectTemplatesDirectory;
+	}
+
 	/*
 	 * adds configuration settings for a new path
 	 * 

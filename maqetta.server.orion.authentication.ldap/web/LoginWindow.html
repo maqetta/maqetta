@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="copyright" content="Copyright (c) 2010,2012 IBM Corporation and others.">
 <meta http-equiv="Content-Language" content="en-us">
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" type="text/css" href="css/landing.css" />
 <link rel="stylesheet" type="text/css" href="css/LoginWindow.css" />
-<script src="../requirejs/require.js"></script>
+<script src="../maqetta/app/dojo/dojo.js"></script>
 <script type="text/javascript">
 /*global require*/
 require({
@@ -15,28 +16,23 @@ require({
   packages: [
     {
       name: 'dojo',
-      location: 'org.dojotoolkit/dojo',
+      location: 'maqetta/app/dojo',
       main: 'lib/main-browser',
       lib: '.'
     },
     {
       name: 'dijit',
-      location: 'org.dojotoolkit/dijit',
+      location: 'maqetta/app/dijit',
       main: 'lib/main',
       lib: '.'
     },
     {
       name: 'dojox',
-      location: 'org.dojotoolkit/dojox',
+      location: 'maqetta/app/dojox',
       main: 'lib/main',
       lib: '.'
     }		    
-  ],
-  paths: {
-	  text: 'requirejs/text',
-	  i18n: 'requirejs/i18n',
-	  domReady: 'requirejs/domReady'
-  }
+  ]
 });
 
 require(["js/LoginWindow.js"]);
@@ -58,6 +54,10 @@ require(["js/LoginWindow.js"]);
 	</div>
 	<div class="orion-login-container" id="login-window" style="display:none;min-height:400px;">
 		<div id="landingArea" class="orion-landing-area">
+			<div id="orionInfoArea"  class="orion-info" style="visibility: hidden;" aria-atomic="true" aria-live="assertive">
+					<div id="orionInfoMessage" class="orion-info-message">&nbsp;</div>
+					<div id="orionInfoLink" class="orion-info-link"> [more info...]</div>
+			</div>
 			<div id="errorWin"  class="orion-error" style="visibility: hidden;" aria-atomic="true" aria-live="assertive">
 					<div id="errorMessage">&nbsp;</div>
 			</div>

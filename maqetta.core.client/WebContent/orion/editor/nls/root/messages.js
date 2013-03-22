@@ -16,6 +16,19 @@
 /*global define*/
 
 define({
+	"multipleAnnotations": "Multiple annotations:", //$NON-NLS-1$ //$NON-NLS-0$
+	"line": "Line: ${0}", //$NON-NLS-1$ //$NON-NLS-0$
+	"breakpoint": "Breakpoint", //$NON-NLS-1$ //$NON-NLS-0$
+	"bookmark": "Bookmark", //$NON-NLS-1$ //$NON-NLS-0$
+	"task": "Task", //$NON-NLS-1$ //$NON-NLS-0$
+	"error": "Error", //$NON-NLS-1$ //$NON-NLS-0$
+	"warning": "Warning", //$NON-NLS-1$ //$NON-NLS-0$
+	"matchingSearch": "Matching Search", //$NON-NLS-1$ //$NON-NLS-0$
+	"currentSearch": "Current Search", //$NON-NLS-1$ //$NON-NLS-0$
+	"currentLine": "Current Line", //$NON-NLS-1$ //$NON-NLS-0$
+	"matchingBracket": "Matching Bracket", //$NON-NLS-1$ //$NON-NLS-0$
+	"currentBracket": "Current Bracket", //$NON-NLS-1$ //$NON-NLS-0$
+			
 	"Comment": "Comment",
 	"Flat outline": "Flat outline",
 	"incrementalFind": "Incremental find: ${0}",
@@ -38,6 +51,10 @@ define({
 	"gotoLinePrompty": "Goto Line:",
 	"nextAnnotation": "Next Annotation",
 	"prevAnnotation": "Previous Annotation",
+	"expand": "Expand",
+	"collapse": "Collapse",
+	"expandAll": "Expand All", 
+	"collapseAll": "Collapse All",
 	"lastEdit": "Last Edit Location",
 	"toggleLineComment": "Toggle Line Comment",
 	"addBlockComment": "Add Block Comment",

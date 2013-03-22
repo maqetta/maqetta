@@ -1,11 +1,27 @@
+/*******************************************************************************
+ * @license
+ * Copyright (c) 2011, 2012 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials are made 
+ * available under the terms of the Eclipse Public License v1.0 
+ * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
+ * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
+ * 
+ * Contributors: IBM Corporation - initial API and implementation
+ ******************************************************************************/
 
-/*jslint browser:true devel:true*/
-/*global define window*/
+/*jslint browser:true */
+/*global LoginWindowShiftKey:true */
 
-define(['domReady'], function(domReady) {
+define([
+	'dojo/request/xhr',
+	'orion/PageUtil'
+], function(
+	xhr,
+	PageUtil
+) {
 	var ua = window.navigator.userAgent;
 	var ieIndex = ua.indexOf('MSIE');
-	var isIE = (ieIndex>=0) ? parseInt(ua.substr(ieIndex+4)) : false;
+	var isIE = (ieIndex>=0) ? parseInt(ua.substr(ieIndex+4), 10) : false;
 	if(isIE){
 		var browser_not_supported = document.getElementById("browser_not_supported");
 		browser_not_supported.style.display = "";
@@ -15,6 +31,12 @@ define(['domReady'], function(domReady) {
 		return;
 	}
 	var userCreationEnabled;
+	var registrationURI;
+
+	var GENERIC_SERVER_MSG = 'A unexpected error prevented the operation from completing.  ' +
+			'Please try again.  If the problem persists, please contact the server administrator.';
+	var ADMIN_USERID = 'admin';
+	var ID_PREFIX = '00MaqTempId00'; // keep in sync w/ LoginFixUpFilter.java
 
 	function injectPlaceholderShims() {
 		function textFocus(e) {
@@ -128,10 +150,21 @@ define(['domReady'], function(domReady) {
 		return utftext;
 	}
 
-	function setResetMessage(isError, message) {
-		document.getElementById("errorMessage").innerHTML = message;
-		//document.getElementById("reset_errorList").className = isError ? "loginError" : "loginInfo";
+	function showErrorMessage(msg) {
+		if (typeof msg !== "undefined") {
+			document.getElementById("errorMessage").textContent = msg;
+		}
 		document.getElementById("errorWin").style.visibility = '';
+	}
+
+	function hideErrorMessage() {
+		document.getElementById("errorMessage").textContent = "\u00a0";
+		document.getElementById("errorWin").style.visibility = 'hidden';
+	}
+
+	function setResetMessage(isError, message) {
+		//document.getElementById("reset_errorList").className = isError ? "loginError" : "loginInfo";
+		showErrorMessage(message);
 	}
 
 	function confirmResetUser() {
@@ -140,36 +173,32 @@ define(['domReady'], function(domReady) {
 			setResetMessage(true, "Provide username or email to reset.");
 			return;
 		}
-		var mypostrequest = new XMLHttpRequest();
-		mypostrequest.onreadystatechange = function() {
-			document.getElementById("errorWin").style.visibility = 'hidden';
-			if (mypostrequest.readyState === 4) {
-				if (mypostrequest.status === 200) {
-					responseObject = JSON.parse(mypostrequest.responseText);
-					if (responseObject.Message) {
-						setResetMessage(false, responseObject.Message);
-					} else {
-						document.getElementById("errorWin").style.visibility = '';
-					}
-				} else {
-					try {
-						responseObject = JSON.parse(mypostrequest.responseText);
-						if (responseObject.Message) {
-							setResetMessage(true, responseObject.Message);
-							return;
-						}
-					} catch (e) {
-						// not json
-					}
-					setResetMessage(true, mypostrequest.statusText);
-				}
-			}
-		};
 
-		mypostrequest.open("POST", "../useremailconfirmation", true);
-		mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		mypostrequest.setRequestHeader("Orion-Version", "1");
-		mypostrequest.send("{login='" + document.getElementById("reset").value + "', email='" + document.getElementById("resetEmail").value + "'}");
+		var dataStr = "{login='" + document.getElementById("reset").value + "', email='" +
+				document.getElementById("resetEmail").value + "'}";
+		xhr.post('../useremailconfirmation', {
+			data: dataStr,
+			headers: {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Orion-Version': '1'
+			},
+			handleAs: 'json'
+		}).then(function(data) {	// success
+			if (data.Message) {
+				setResetMessage(false, data.Message);
+			} else {
+				showErrorMessage();
+			}
+		}, function(err) {			// error
+			try {
+				var responseObject = err.response.data;
+				setResetMessage(true, responseObject.Message);
+				return;
+			} catch (e) {
+				// not json
+			}
+			setResetMessage(true, err.response.xhr.statusText);
+		});
 
 		setResetMessage(false, "Sending password reset confirmation...");
 	}
@@ -183,8 +212,8 @@ define(['domReady'], function(domReady) {
 	function createOpenIdLink(openid) {
 		if (openid !== "" && openid !== null) {
 			var redirect = getRedirect();
-			if (redirect !== null) {
-				return "../login/openid?openid=" + encodeURIComponent(openid) + "&redirect=" + getRedirect();
+			if (redirect !== null && PageUtil.validateURLScheme(decodeURIComponent(redirect))) {
+				return "../login/openid?openid=" + encodeURIComponent(openid) + "&redirect=" + redirect;
 			} else {
 				return "../login/openid?openid=" + encodeURIComponent(openid);
 			}
@@ -196,70 +225,65 @@ define(['domReady'], function(domReady) {
 			login = document.getElementById('login').value;
 			password = document.getElementById('password').value;
 		}
-		if (!validateUserId(login)){
+		if (login != ADMIN_USERID && !validateUserId(login)){
 			return;
 		}
 		// shiftkey-click on Login causes Maqetta to open with no editors showing
 		// Needed sometimes if Maqetta is hanging with a particular open file
 		var resetWorkBench = LoginWindowShiftKey ? 'resetWorkbenchState=1' : '';
-		var mypostrequest = new XMLHttpRequest();
-		mypostrequest.onreadystatechange = function() {
-			if (mypostrequest.readyState === 4) {
-				if (mypostrequest.status === 403) {
-					setResetMessage(false, "Invalid username or password");
-				}else if (mypostrequest.status !== 200 && window.location.href.indexOf("http") !== -1) {
-					var responseObject = JSON.parse(mypostrequest.responseText);
-					document.getElementById("errorMessage").innerHTML = responseObject.error;
-					document.getElementById("errorWin").style.visibility = '';
-				} else {
-					var redirect = getRedirect();
-					if (redirect !== null) {
-						if(resetWorkBench){
-							if(redirect.indexOf('?')>=0){
-								redirect += '&'+resetWorkBench;
-							}else{
-								redirect += '?'+resetWorkBench;
-							}
-						}
-						setCookie("login", login);
-						window.location = decodeURIComponent(redirect);
-					} else {
-						window.close();
-					}
 
+		xhr.post('../login/form', {
+			query: {
+				login: login,
+				password: password
+			},
+			headers: {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Orion-Version': '1'
+			},
+			handleAs: 'json'
+		}).then(function(data) {	// success
+			var redirect = getRedirect();
+			if (redirect !== null) {
+				if(resetWorkBench){
+					if(redirect.indexOf('?')>=0){
+						redirect += '&'+resetWorkBench;
+					}else{
+						redirect += '?'+resetWorkBench;
+					}
+				}
+				setCookie("login", login);
+				redirect = decodeURIComponent(redirect);
+				if(PageUtil.validateURLScheme(redirect)) {
+					window.location = redirect;
+					return;
 				}
 			}
-		};
-
-		var parameters = "login=" + encodeURIComponent(login) + "&password=" + encodeURIComponent(password);
-		mypostrequest.open("POST", "../login/form", true);
-		mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		mypostrequest.setRequestHeader("Orion-Version", "1");
-		mypostrequest.send(parameters);
+			window.close();
+		}, function(err) {			// error
+			if (err.response.status === 403) {
+				setResetMessage(false, "Invalid username or password");
+			}
+			showErrorMessage(err.response.data.error);
+		});
 	}
 
 	function validateUserId(value) {
 		return true; // no validation for now.
-		var regex = /[a-z0-9!#$%&'*+/=?^_`{|}~.-]+@[a-z0-9-]+(\.[a-z0-9-]+)*/;
-		if(!regex.test(value)){
-			document.getElementById("errorWin").style.visibility = '';
-			document.getElementById("errorMessage").innerHTML = "Not valid email address";
-			return false;
-		}
-		document.getElementById("errorWin").style.visibility = 'hidden';
-		document.getElementById("errorMessage").innerHTML = "&nbsp;";
-		return true;
 	}
 
 	function validatePassword() {
 		if (document.getElementById("create_password").value !== document.getElementById("create_passwordRetype").value) {
-			document.getElementById("errorWin").style.visibility = '';
-			document.getElementById("errorMessage").innerHTML = "Passwords don't match!";
+			showErrorMessage("Passwords don't match!");
 			return false;
 		}
-		document.getElementById("errorWin").style.visibility = 'hidden';
-		document.getElementById("errorMessage").innerHTML = "&nbsp;";
+		hideErrorMessage();
 		return true;
+	}
+
+	function fixLogin(msg, replacement) {
+		var regex = new RegExp(ID_PREFIX + '\\w+', 'g');
+		return msg.replace(regex, replacement);
 	}
 
 	function confirmCreateUser() {
@@ -267,6 +291,7 @@ define(['domReady'], function(domReady) {
 		if (!validateUserId(login)){
 			return;
 		}
+		var name = document.getElementById("create_name").value;
 		if (!validatePassword()) {
 			document.getElementById("create_password").setAttribute("aria-invalid", "true");
 			document.getElementById("create_passwordRetype").setAttribute("aria-invalid", "true");
@@ -274,97 +299,83 @@ define(['domReady'], function(domReady) {
 		}
 		document.getElementById("create_password").setAttribute("aria-invalid", "false");
 		document.getElementById("create_passwordRetype").setAttribute("aria-invalid", "false");
-		var mypostrequest = new XMLHttpRequest();
 		var password = document.getElementById("create_password").value;
-		var loginTolken = document.getElementById("loginTolken").value;
-		
-		mypostrequest.onreadystatechange = function() {
-			if (mypostrequest.readyState === 4) {
-				if (mypostrequest.status !== 200 && window.location.href.indexOf("http") !== -1) {
-					if (!mypostrequest.responseText) {
-						return;
-					}
-					var responseObject = JSON.parse(mypostrequest.responseText);
-					document.getElementById("errorMessage").innerHTML = responseObject.Message;
-					document.getElementById("errorWin").style.visibility = '';
-				} else {
-					confirmLogin(login, password);
-				}
-			}
+
+		var xhrParams = {
+			login: login,
+			password: password
 		};
-		var parameters = "login=" + encodeURIComponent(login) + "&password=" + encodeURIComponent(password) + "&loginTolken=" + loginTolken;
-		mypostrequest.open("POST", "../users", true);
-		mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		mypostrequest.setRequestHeader("Orion-Version", "1");
-		mypostrequest.send(parameters);
+		if (name) {
+			xhrParams.Name = name;
+		}
+		xhr.post('../users', {
+			query: xhrParams,
+			headers: {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Orion-Version': '1'
+			},
+			handleAs: 'json'
+		}).then(function(response) {	// success
+			if (response.HttpCode === 201) {
+				showErrorMessage(fixLogin(response.Message, login));
+				hideRegistration();
+				return;
+			}
+			confirmLogin(login, password);
+		}, function(err) {			// error
+			try {
+				var response = err.response.data;
+				showErrorMessage(fixLogin(response.Message, login));
+				return;
+			} catch (e) {
+				// not json
+			}
+			showErrorMessage(GENERIC_SERVER_MSG);
+		});
 	}
 
-	function submitRegister() {
-
-		var mypostrequest = new XMLHttpRequest();
-		var login = document.getElementById("signupEmail").value;
-		var parameters = "login=" + encodeURIComponent(login) ;
-		mypostrequest.open("POST", "../maqetta/cmd/register", true);
-		mypostrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		mypostrequest.setRequestHeader("Orion-Version", "1");
-		mypostrequest.send(parameters);
-		
-		document.getElementById("signupUserButton").style.visibility='hidden';
-		document.getElementById("hideRegisterButtonSignup").style.visibility='hidden';
-		document.getElementById("errorWin").style.visibility = '';
-		document.getElementById("errorMessage").innerHTML = "Email sent to " + login;
-	}
-	
 	function revealRegistration() {
-		document.getElementById('orionLogin').style.visibility = 'hidden';
-		document.getElementById('orionRegister').style.visibility = 'hidden';
-		document.getElementById('newUserSignup').style.visibility = '';
-	}
-
-	
-	function revealUserValidation() {
+		// If registrationURI is set and userCreation is not, open the URI in a new window
+		if (!userCreationEnabled && registrationURI) {
+			window.open(registrationURI);
+			return;
+		}
 		document.getElementById('orionLogin').style.visibility = 'hidden';
 		document.getElementById('orionRegister').style.visibility = 'hidden';
 		document.getElementById('newUserHeaderShown').style.visibility = '';
+		document.getElementById('landingArea').classList.add('register');
 	}
-	
+
 	function hideRegistration() {
 		document.getElementById('orionLogin').style.visibility = '';
 		document.getElementById('orionRegister').style.visibility = '';
-		document.getElementById('newUserSignup').style.visibility = 'hidden';
+		document.getElementById('newUserHeaderShown').style.visibility = 'hidden';
+		document.getElementById('landingArea').classList.remove('register');
 	}
 
 	function formatForNoUserCreation() {
 		document.getElementById('orionRegister').style.visibility = 'hidden';
-		document.getElementById('orionOpen').style.top = '188px';
-		document.getElementById('orionOpen').style.height = '75px';
-		document.getElementById('orionOpen').style.paddingTop = '55px';
 	}
 
 	function revealResetUser() {
 		document.getElementById('orionLogin').style.visibility = 'hidden';
-		if (!userCreationEnabled) {
+		if (!userCreationEnabled && !registrationURI) {
 			document.getElementById('orionRegister').style.visibility = 'hidden';
 			document.getElementById('orionReset').style.height = '212px';
-			document.getElementById('orionOpen').style.top = '251px';
-			document.getElementById('orionOpen').style.height = '50px';
-			document.getElementById('orionOpen').style.paddingTop = '17px';
 		}
-		document.getElementById('newUserSignup').style.display = 'none';
+		document.getElementById('newUserHeaderShown').style.display = 'none';
 		document.getElementById('orionReset').style.visibility = '';
+		document.getElementById('reset').focus();
 	}
 
 	function hideResetUser() {
 		document.getElementById('orionLogin').style.visibility = '';
-		if (userCreationEnabled) {
-			document.getElementById('orionRegister').style.visibility = '';
-		} else {
-			document.getElementById('orionOpen').style.top = '188px';
-			document.getElementById('orionOpen').style.height = '75px';
-			document.getElementById('orionOpen').style.paddingTop = '55px';
-		}
-		document.getElementById('newUserSignup').style.display = '';
+		document.getElementById('newUserHeaderShown').style.display = '';
 		document.getElementById('orionReset').style.visibility = 'hidden';
+	}
+
+	function openServerInformation() {
+		window.open("/mixloginstatic/ServerStatus.html");
 	}
 	
 	function setCookie(cookieName, cookieValue, numberDays){
@@ -374,7 +385,8 @@ define(['domReady'], function(domReady) {
 		var today = new Date();
 		var expireDate = new Date();
 		expireDate.setTime(today.getTime() + 3600000 * 24 * numberDays);
-		document.cookie = cookieName + "=" + escape(cookieValue) + ";expires=" + expireDate.toGMTString();
+		document.cookie = cookieName + "=" + window.escape(cookieValue) + ";expires=" +
+				expireDate.toGMTString();
 	}
 	
 	function getCookie(cookieName){
@@ -384,13 +396,13 @@ define(['domReady'], function(domReady) {
 			var eq = c.indexOf('=');
 			var name = c.substr(0, eq);
 			if(name == cookieName){
-				return unescape(c.substr(eq+1));
+				return window.unescape(c.substr(eq+1));
 			}
 		}
 		return null;
 	}
 
-	domReady(function() {
+	require(['dojo/domReady!'], function() {
 		
 		// global variable
 		LoginWindowShiftKey = false;
@@ -403,25 +415,60 @@ define(['domReady'], function(domReady) {
 		if (error) {
 			var errorMessage = decodeBase64(error);
 
-			document.getElementById("errorWin").style.visibility = '';
-			document.getElementById("errorMessage").innerHTML = errorMessage;
+			showErrorMessage(errorMessage);
 		}
+/*
+		xhr.post('../login/canaddusers', {
+			headers: {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Orion-Version': '1'
+			},
+			handleAs: 'json'
+		}).then(function(data) {	// success
+			userCreationEnabled = data.CanAddUsers;
+			registrationURI = data.RegistrationURI;
+			if (!userCreationEnabled && !registrationURI) {
+				formatForNoUserCreation();
+			}
+			document.getElementById("login-window").style.display = '';
+			document.getElementById("login").focus();
+		});
 
-		var loginToken = getParam('loginTolken');
-		
-		if(loginToken){
-			revealUserValidation();
-			var email = getParam('login');
-			document.getElementById("create_login").value = email;
-			document.getElementById("loginTolken").value = loginToken;
-		}
-		
+		xhr.post('../useremailconfirmation/cansendemails', {
+			headers: {
+				'Content-type': 'application/x-www-form-urlencoded',
+				'Orion-Version': '1'
+			},
+			handleAs: 'json'
+		}).then(function(data) {	// success
+			if (data.emailConfigured === false) {
+				document.getElementById("resetUserLink").style.display = 'none';
+			}
+		});
+*/
 		document.getElementById("login-window").style.display = '';
 		document.getElementById("login").focus();
-		
+
+		xhr.get('/server-status.json', { //$NON-NLS-0$
+			timeout: 15000,
+			handleAs: 'json'
+		}).then(function(results) {
+			var messages = results.messages;
+			if (messages.length > 0) {
+				var currentDate = new Date();
+				var startDate = new Date(messages[0].startdate);
+				startDate.setHours(0, 0, 0, 0);
+				if (startDate > currentDate) return;
+				var endDate = new Date(messages[0].enddate);
+				endDate.setHours(23, 59, 59);
+				if (endDate <= currentDate)  return;
+				document.getElementById("orionInfoArea").style.visibility = '';
+				document.getElementById("orionInfoMessage").textContent = messages[0].title;
+			}
+		});
 
 		injectPlaceholderShims();
-		
+
 		var loginCookie = getCookie('login');
 		if(loginCookie){
 			document.getElementById("login").value = loginCookie;
@@ -447,5 +494,61 @@ define(['domReady'], function(domReady) {
 			confirmLogin(null, null, e);
 			return false;
 		};
+
+		document.getElementById("orionInfoArea").onclick = openServerInformation;
+/*
+		document.getElementById("resetUserLink").onclick = revealResetUser;
+
+		document.getElementById("reset").onkeypress = function(event) {
+			if (event.keyCode === 13) {
+				confirmResetUser();
+			}
+			return true;
+		};
+		
+		document.getElementById("resetEmail").onkeyup = function(event) {
+			if (event.keyCode === 13) {
+				confirmResetUser();
+			} else {
+				validateEmail(document.getElementById("resetEmail").value);
+			}
+			return true;
+		};
+
+		document.getElementById("registerButton").onclick = revealRegistration;
+
+		document.getElementById("create_login").onkeyup = function(event) {
+			if (event.keyCode === 13) {
+				confirmCreateUser();
+			} else {
+				validateEmail(document.getElementById("create_login").value);
+			}
+		};
+
+		document.getElementById("create_password").onkeyup = function(event) {
+			if (event.keyCode === 13) {
+				confirmCreateUser();
+			} else {
+				validatePassword();
+			}
+		};
+
+		document.getElementById("create_passwordRetype").onkeyup = function(event) {
+			if (event.keyCode === 13) {
+				confirmCreateUser();
+			} else {
+				validatePassword();
+			}
+		};
+
+		document.getElementById("createButton").onclick = confirmCreateUser;
+
+		document.getElementById("hideRegisterButton").onclick = hideRegistration;
+
+		
+		document.getElementById("cancleResetButton").onclick = hideResetUser;
+
+		document.getElementById("sendResetButton").onclick = confirmResetUser;
+*/
 	});
 });

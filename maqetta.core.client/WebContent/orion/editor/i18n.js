@@ -6,23 +6,18 @@
  * (http://www.eclipse.org/legal/epl-v10.html), and the Eclipse Distribution 
  * License v1.0 (http://www.eclipse.org/org/documents/edl-v10.html). 
  * 
- * Contributors: 
- *		Felipe Heidrich (IBM Corporation) - initial API and implementation
- *		Silenio Quarti (IBM Corporation) - initial API and implementation
+ * Contributors: IBM Corporation - initial API and implementation
  ******************************************************************************/
 
-/*global define*/
-
-define(['orion/editor/i18n!orion/editor/nls/messages', 'orion/editor/nls/root/messages'], function(bundle, root) {
-	var result = {
-		root: root
-	};
-	for (var key in bundle) {
-		if (bundle.hasOwnProperty(key)) {
-			if (typeof result[key] === 'undefined') {
-				result[key] = bundle[key];
-			}
+/*global define */
+define({
+	load: function(name, parentRequire, onLoad, config) {
+		if (parentRequire.specified && parentRequire.specified("orion/bootstrap")) { //$NON-NLS-0$
+			parentRequire(["orion/i18n!" + name], function(languages) { //$NON-NLS-0$
+				onLoad(languages);
+			});
+		} else {
+			onLoad({});
 		}
 	}
-	return result;
 });

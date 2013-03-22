@@ -2,14 +2,16 @@
 //   only concern itself with the notion of a library.  Metadata is handled
 //   elsewhere.
 define([
+    "dojo/_base/xhr",
+    "dojo/Deferred",
     "davinci/Runtime",
     "davinci/model/Path",
 	"davinci/ve/themeEditor/metadata/CSSThemeProvider",
 	"davinci/ve/themeEditor/metadata/query",
-	"davinci/workbench/Preferences"
+	"davinci/workbench/Preferences",
 //	"davinci/ve/metadata" // FIXME: circular ref?
 ],
-function(Runtime,  Path, CSSThemeProvider, Query/*, Metadata*/, Preferences) {
+function(xhr, Deferred, Runtime, Path, CSSThemeProvider, Query/*, Metadata*/, Preferences) {
 
 /*
  * 
@@ -284,7 +286,6 @@ getCustomWidgets: function(base) {
 	}
 	
 	return {custom: library._customWidgets[base]};
-
 },
 
 getCustomWidgetPackages: function(){
@@ -325,37 +326,42 @@ getUserLibs: function(base) {
 },
 
 getLibRoot: function(id, version, base) {
+	var d = new Deferred();
     // check cache
 	
     var cache = _libRootCache;
     if (cache[base] && cache[base][id] && cache[base][id][version] !== undefined) {
-        return cache[base][id][version];
+        d.resolve(cache[base][id][version] || "");
+        return d;
     }
     
-    if(!cache[base])
-    	cache[base] = {};
+    if(!cache[base]) {
+    	cache[base] = {};    	
+    }
     
-    if(!cache[base][id])
-    	cache[base][id] = {};
+    if(!cache[base][id]) {
+    	cache[base][id] = {};    	
+    }
 
-   // send server request
-    var response = Runtime.serverJSONRequest({
-        url: "cmd/getLibRoots",
+    // send server request
+    return xhr.get({
+    	url: "cmd/getLibRoots",
         handleAs: "json",
         content: {
             libId: id,
             version: version,
             base: base
-        },
-        sync: true
+        }
+    }).then(function(response) {
+        var value = response ? response[0].libRoot.root : null;
+        // cache the response value
+        if (!cache[id]) {
+            cache[id] = {};
+        }
+        cache[base][id][version] = value;  
+        d.resolve(value || "");
+        return d;
     });
-    var value = response ? response[0].libRoot.root : null;
-    // cache the response value
-    if (!cache[id]) {
-        cache[id] = {};
-    }
-    cache[base][id][version] = value;
-    return value;
 },
 
 /*

@@ -1083,8 +1083,8 @@ var Workbench = {
 	
 	
 	loadProject: function(projectName) {
-		
-		return Workbench.setActiveProject(projectName).then(function(){
+		Workbench.setActiveProject(projectName);
+		return Workbench.updateWorkbenchState().then(function(){
 			// make sure the server has maqetta setup for the project
 			location.href="cmd/configProject?configOnly=true&project=" + encodeURIComponent(projectName);
 		});
@@ -1826,7 +1826,7 @@ var Workbench = {
 		}.bind(this));
 
 		if(!startup) {
-			Workbench._updateWorkbenchState();
+			Workbench.saveState = true;
 		}
 	},
 
@@ -2031,7 +2031,7 @@ var Workbench = {
 	            if (i != -1) {
 	            	Workbench._state.editors.splice(i, 1);
 	            }
-				Workbench._updateWorkbenchState();
+				Workbench.saveState = true;
 				if(!davinci.Workbench._shadowTabClosing[shadowId]){
 					shadowTabContainer.removeChild(shadowTab);
 					shadowTab.destroyRecursive();
@@ -2103,7 +2103,7 @@ var Workbench = {
 			Workbench._state = {};
 		}
 		Workbench._state.project = project;
-		return Workbench._updateWorkbenchState();
+		Workbench.saveState = true;
 	},
 	
 	/**
@@ -2129,30 +2129,17 @@ var Workbench = {
 			}else{
 				Workbench._state[propName] = propValue;
 			}
-			Workbench._updateWorkbenchState();
+			Workbench.saveState = true;
 		}
 	},
 	
-	clearWorkbenchState : function(){
-		Workbench._state = {};
-		return this._updateWorkbenchState();
-	},
-	
-	_updateWorkbenchState: function(){
-		
-		if(!this._updateWorkbench){
-			this._updateWorkbench = new Deferred();
-			this._updateWorkbench.resolve();
-		}
-		
-		return this._updateWorkbench.then(function() {
-			this._updateWorkbench = xhr.put({
-				url: "cmd/setWorkbenchState",
-				putData: JSON.stringify(Workbench._state),
-				handleAs:"text"
-			});
-			return this._updateWorkbench;
-		}.bind(this));
+	updateWorkbenchState: function(){
+		delete Workbench.saveState;
+		return xhr.put({
+			url: "cmd/setWorkbenchState",
+			putData: JSON.stringify(Workbench._state),
+			handleAs:"text"
+		});
 	},
 
 	_autoSave: function(){
@@ -2384,6 +2371,14 @@ var PopupMenu = declare(Menu, {
 		}
 	}
 });
+
+// put workbench state upload on a timer to reduce number of requests to the server
+window.setInterval(function(){
+	if (Workbench.saveState) {
+		Workbench.updateWorkbenchState();		
+	}
+}, 1000);
+
 dojo.setObject("davinci.Workbench", Workbench);
 return Workbench;
 });

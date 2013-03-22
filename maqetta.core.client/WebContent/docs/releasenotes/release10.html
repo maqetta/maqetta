@@ -32,10 +32,6 @@
 <p>The Maqetta 10 release includes the following updates:</p>
 
 <ul style="margin-top: 0pt;" type="disc">
-	<li><span class='majortopic'>Support for overlay widgets, including Dialog, Menu, Tooltip and TooltipDialog</span> - 
-		Maqetta now supports various Dojo "overlay" widgets that pop up dynamically at run-time
-		based on user actions. Supported widgets include Dialog, Menu, Tooltip and TooltipDialog.
-	</li>
 	<li><span class='majortopic'>Source edits are non undo-able</span> -
 		If you change HTML source code in the Maqetta source editor
 		(either in source view or one of the split views), those changes
@@ -58,6 +54,12 @@
 	<li><span class='majortopic'>Updated to Eclipse Orion 1.0</span> -
 		Previous versions of Maqetta embedded pre-release versions of Eclipse Orion.
 		With Release 10, Maqetta now embeds Orion 1.0.
+	</li>
+	<li><span class='majortopic'>Different behavior when Publishing a review</span> -
+		In previous releases, when you created a new review and clicked on the Publish button
+		in the Create Review wizard, the application would open up a review session within
+		the author's running copy of Maqetta. With Release 10, we no longer open a review session
+		when clicking on Publish. The user has to open review HTML files manually.
 	</li>
 	<li><span class='majortopic'>User actual name</span> -
 		In various parts of the UI, Maqetta now shows the user's real name

@@ -46,3 +46,9 @@ fragment@org.dojotoolkit.optimizer.amd.fragment=GIT,repo=git://github.com/maqett
 # zazl feature
 #
 feature@maqetta.zazl.feature=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/zazl/maqetta.zazl.feature
+
+#
+# aspects
+#
+feature@maqetta.server.orion.aspects.feature=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.server.orion.aspects.feature
+plugin@maqetta.server.orion.aspects=GIT,repo=git://github.com/maqetta/maqetta.git,tag=master,path=/maqetta.server.orion.aspects

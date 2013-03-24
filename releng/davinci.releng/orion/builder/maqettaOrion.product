@@ -11,7 +11,8 @@
       <vmArgs>-Dorg.eclipse.equinox.http.jetty.http.port=8081
 -Dorg.eclipse.equinox.http.jetty.autostart=false
 -Dorion.core.configFile=${project_loc:davinci.releng}/orion/builder/rootfiles/maqetta.conf
--Dmaqetta.siteConfigDirectory=${project_loc:davinci.releng}/orion/builder/rootfiles/siteConfig</vmArgs>
+-Dmaqetta.siteConfigDirectory=${project_loc:davinci.releng}/orion/builder/rootfiles/siteConfig
+-Dosgi.framework.extensions=org.eclipse.equinox.weaving.hook</vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
@@ -38,6 +39,7 @@
       <feature id="maqetta.libraries.feature"/>
       <feature id="org.eclipse.orion"/>
       <feature id="maqetta.zazl.feature"/>
+      <feature id="maqetta.server.orion.aspects.feature"/>
    </features>
 
    <configurations>

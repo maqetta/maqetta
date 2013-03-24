@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Export-Package: maqetta.server.orion.aspects;aspects="UserEmailUtilOverride"
+Eclipse-SupplementBundle: org.eclipse.orion.server.useradmin
+Require-Bundle: org.aspectj.runtime,
+ org.eclipse.orion.server.useradmin;bundle-version="1.0.0"
+Bundle-Vendor: %providerName
+Bundle-Version: 10.0.0.qualifier
+Bundle-Localization: plugin
+Bundle-Name: %bundleName
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: maqetta.server.orion.aspects;singleton:=true
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Import-Package: org.osgi.framework;version="1.7.0"
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: maqetta.server.orion.aspects.internal.Activator

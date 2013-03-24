@@ -26,6 +26,7 @@ public class CreateProjectTemplate extends Command {
         String projectTemplateName = req.getParameter("projectTemplateName");
         String projectToClone = req.getParameter("projectToClone");
         Boolean error = false;
+        String errorString = "";
         if (projectTemplateName == "" || projectTemplateName == null) {
         	errorString = "No project template name specified";
         	error = true;
@@ -41,47 +42,23 @@ public class CreateProjectTemplate extends Command {
         	error = true;
 		}
     	if(!error){
-            IStorage projectTemplatesDirectory = user.getProjectTemplatesDirectory();
-
-            /*
-    		Date currentTime = new Date();
-    		SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATE_PATTERN_SHORT);
-    		formatter.setCalendar(Calendar.getInstance(new SimpleTimeZone(0, "GMT")));
-    		String timeVersion = formatter.format(currentTime);
-    		*/
-            IPerson person = user.getPerson();
-            String email = person.getEmail();
-    		IStorage templateDir = projectTemplatesDirectory.newInstance(projectTemplatesDirectory, projectTemplateName + "_" + email /* + "_" + timeVersion*/);
-    		if(!templateDir.exists()) {
-    			templateDir.mkdir();
+    		errorString = user.createProjectTemplate(projectTemplateName, projectDir);
+    		if(errorString != null && errorString != ""){
+    			error = true;
     		}
-
-    		IStorage[] files = projectDir.listFiles();
-    		for (int i = 0; i < files.length; i++) {
-//    			String path = files[i].getAbsolutePath();
-    			if (files[i].isFile()/*
-    					&& path.indexOf(IDavinciServerConstants.WORKING_COPY_EXTENSION) < 0*/) {
-    				IStorage destination = templateDir.newInstance(templateDir, files[i].getName());
-    				copyFile(files[i], destination);
-    			} else if (files[i].isDirectory()/*
-//    					&& path.indexOf(IDavinciServerConstants.SETTINGS_DIRECTORY_NAME) < 0  // Need to copy the settings
-    					&& path.indexOf(IDavinciServerConstants.DOWNLOAD_DIRECTORY_NAME) < 0
-    					&& path.indexOf(Constants.REVIEW_DIRECTORY_NAME) < 0
-    					&& path.indexOf(".svn") < 0
-    					&& containsPublishedFiles(files[i], user, timeStamp)*/) {
-    				IStorage destination = templateDir.newInstance(templateDir, files[i].getName());
-    				copyDirectory(files[i], destination);
-    			}
-    		}
-
-//    		user.createProject(projectTemplateName);
     	}
     	String successString = error ? "false" : "true";
-        this.responseString = "{success:" + successString + "}";
+        this.responseString = "{success:" + successString;
+        if(error){
+        	// Escape backslashes, single quotes and double-quotes
+        	// BTW - Java regexps are horrible! To replace a single backslash with a double backslash, need 4 and 8!
+        	this.responseString += ", error:\"" + errorString.replaceAll("\\\\","\\\\\\\\").replaceAll("'","\\\\\\'").replaceAll("\"","\\\\\"") + "\"";
+        }
+        this.responseString += "}";
         resp.setContentType("application/json;charset=UTF-8");
     }
 
-
+/*
 	private void copyDirectory(IStorage sourceDir, IStorage destinationDir) throws IOException {
 		destinationDir.mkdirs();
 		IStorage[] file = sourceDir.listFiles();
@@ -121,5 +98,6 @@ public class CreateProjectTemplate extends Command {
 			}
 		}
 	}
-
+*/
+    
 }

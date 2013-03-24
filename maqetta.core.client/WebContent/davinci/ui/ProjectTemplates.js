@@ -16,6 +16,9 @@ var ProjectTemplates = {
 			content: { projectTemplateName: 'foo', projectToClone:Workbench.getProject() },
 			sync:true
 		});
+		if(!data || !data.success){
+			console.log("cmd/createProjectTemplate error:"+data.error);
+		}
 	}
 	
 };

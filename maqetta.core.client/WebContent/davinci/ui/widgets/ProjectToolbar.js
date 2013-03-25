@@ -22,8 +22,6 @@ define(["dojo/_base/declare",
 		postCreate: function(){
 			this.connect(this._projectSelection, "onChange", this._projectSelectionChanged);
 			this._currentProject = this._projectSelection.get("value");
-			domAttr.set(this._projectDelete, "title", uiNLS.deleteProjectButtonTitle);
-			domAttr.set(this._projectRename, "title", uiNLS.renameProjectButtonTitle);
 		},
 		
 		onChange: function(){

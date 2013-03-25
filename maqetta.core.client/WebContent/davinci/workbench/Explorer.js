@@ -4,6 +4,9 @@ define([
 	"davinci/Workbench",
 	"davinci/Runtime",
 	
+	"dijit/form/DropDownButton",
+	"dijit/DropDownMenu",
+	"dijit/MenuItem",
 	"dijit/Tree",
 	"dojo/mouse",
 	"davinci/ui/dnd/DragSource",
@@ -16,7 +19,10 @@ define([
 	"davinci/ui/Download",
 	"davinci/ui/DownloadSelected",
 	"davinci/ui/UserLibraries",
-], function(declare, ViewPart, Workbench, Runtime, Tree, mouse, DragSource) {
+	"dojo/i18n!davinci/ve/nls/common"
+	
+], function(declare, ViewPart, Workbench, Runtime, DropDownButton, DropDownMenu, MenuItem, Tree, mouse, DragSource,
+		Resource, TransformTreeMixin, resource, ProjectToolbar, Download, DownloadSelected, UserLibraries, commonNls) {
 	
 return declare("davinci.workbench.Explorer", ViewPart, {
 	
@@ -157,30 +163,56 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 	attachToolbar: function(){
 		//FIXME: Need to move project-related UI into here.
 		this.inherited(arguments);
-		if(Workbench.singleProjectMode()){
-			var projectRowDiv = dojo.doc.createElement("div");
-			projectRowDiv.className = "explorerHeaderProjectDiv";
-			var table = dojo.doc.createElement("table");
-			table.className = "explorerHeaderProjectTable";
-			projectRowDiv.appendChild(table);
-			var tr = dojo.doc.createElement("tr");
-			table.appendChild(tr);
-			var td1 = dojo.doc.createElement("td");
-			td1.className = "explorerHeaderProjectCol1";
-			tr.appendChild(td1);
-			var td2 = dojo.doc.createElement("td");
-			td2.className = "explorerHeaderProjectCol2";
-			tr.appendChild(td2);
+		var projectRowDiv = dojo.doc.createElement("div");
+		projectRowDiv.className = "explorerHeaderProjectDiv";
+		var table = dojo.doc.createElement("table");
+		table.className = "explorerHeaderProjectTable";
+		projectRowDiv.appendChild(table);
+		var tr = dojo.doc.createElement("tr");
+		table.appendChild(tr);
+		var td1 = dojo.doc.createElement("td");
+		td1.className = "explorerHeaderProjectCol1";
+		tr.appendChild(td1);
+		var td2 = dojo.doc.createElement("td");
+		td2.className = "explorerHeaderProjectCol2";
+		tr.appendChild(td2);
 
-			var projectSelection = new davinci.ui.widgets.ProjectToolbar({});
-			td1.appendChild(projectSelection.domNode);
-			var firstChild = this.toolbarDiv.children[0];
-			this.toolbarDiv.insertBefore(projectRowDiv, firstChild);
+		var projectSelection = new davinci.ui.widgets.ProjectToolbar({});
+		td1.appendChild(projectSelection.domNode);
+		var firstChild = this.toolbarDiv.children[0];
+		this.toolbarDiv.insertBefore(projectRowDiv, firstChild);
 
-			dojo.connect(projectSelection, "onChange", function(){
-				Workbench.loadProject(this.value);
-			});
-		}
+		dojo.connect(projectSelection, "onChange", function(){
+			Workbench.loadProject(this.value);
+		});
+		
+		// FIXME: Just dummy menu for now
+		var menu = new DropDownMenu({ style: "display: none;"});
+		var menuItem1 = new MenuItem({
+			id: 'ExplorerCommand1',
+		    label: commonNls.showSuggestedWidgets,
+		    iconClass: "dojoyPaletteMenuItemCheckMark",
+		    onClick: function(){
+		    	debugger;
+		    }.bind(this)
+		});
+		menu.addChild(menuItem1);
+		var menuItem2 = new MenuItem({
+			id: 'ExplorerCommand2',
+		    label: commonNls.showAllWidgets,
+		    iconClass: "dojoyPaletteMenuItemCheckMark",
+		    onClick: function(){
+		    	debugger;
+		    }.bind(this)
+		});
+		menu.addChild(menuItem2);
+		var button = new DropDownButton({
+		    showLabel: false,
+		    dropDown: menu
+		});
+		td2.appendChild(button.domNode);
+
+
 	},
 	
 	destroy: function(){

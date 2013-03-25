@@ -961,13 +961,15 @@ davinci_top_bar .dijitButtonNode {
     overflow-x: hidden;
     margin: 2px 3px 3px 4px;
 }
-.dojoyPaletteHeaderTable {
+.dojoyPaletteHeaderTable,
+.explorerHeaderProjectTable {
 	width:100%;
   	border-collapse:collapse;
   	border-spacing:0;
   	margin-bottom:1px;
 }
-.dojoyPaletteHeaderTable td {
+.dojoyPaletteHeaderTable td,
+.explorerHeaderProjectTable td {
 	padding:0;
 }
 .dojoyPaletteFilterContainer {
@@ -991,14 +993,20 @@ davinci_top_bar .dijitButtonNode {
 .maqWidgetsToolbarFiltered .dojoyPaletteFilterClearIcon {
 	display:block;
 }
-.dojoyPaletteHeaderTableCol2 {
+.explorerHeaderProjectCol1 {
+	width:100%;
+}
+.dojoyPaletteHeaderTableCol2,
+.explorerHeaderProjectCol2 {
 	width:16px;
 }
-.dojoyPaletteHeaderTableCol2 .dijitDropDownButton .dijitButtonNode {
+.dojoyPaletteHeaderTableCol2 .dijitDropDownButton .dijitButtonNode,
+.explorerHeaderProjectCol2 .dijitDropDownButton .dijitButtonNode {
 	border:none;
 	background:none;
 }
-.dojoyPaletteHeaderTableCol2 .dijitDropDownButton .dijitArrowButtonInner {
+.dojoyPaletteHeaderTableCol2 .dijitDropDownButton .dijitArrowButtonInner,
+.explorerHeaderProjectCol2 .dijitDropDownButton .dijitArrowButtonInner {
 	background-image:url(img/sprite.png);
 	background-position: -18px -39px;
 }

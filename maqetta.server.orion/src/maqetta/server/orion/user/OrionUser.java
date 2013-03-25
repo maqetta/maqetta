@@ -6,8 +6,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.ServletException;
-
 import maqetta.core.server.user.User;
 import maqetta.core.server.util.VResourceUtils;
 import maqetta.server.orion.VOrionResource;
@@ -20,12 +18,16 @@ import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.orion.internal.server.servlets.ProtocolConstants;
 import org.eclipse.orion.internal.server.servlets.workspace.WebProject;
 import org.eclipse.orion.internal.server.servlets.workspace.WebUser;
 import org.eclipse.orion.internal.server.servlets.workspace.WebWorkspace;
+import org.eclipse.orion.internal.server.servlets.workspace.WorkspaceResourceHandler;
 import org.eclipse.orion.internal.server.servlets.workspace.authorization.AuthorizationService;
 import org.eclipse.orion.server.core.users.OrionScope;
 import org.json.JSONArray;
@@ -47,7 +49,7 @@ public class OrionUser extends User {
 	protected IEclipsePreferences store;							// XXX used?
 	private static String DEFAULT_WORKSPACE = "MyWorkspace"; //$NON-NLS-1$
 	
-	public OrionUser(IPerson person) {
+	public OrionUser(IPerson person) throws CoreException {
 		super(person);
 		this.webuser = WebUser.fromUserId(this.getUserID());
 		try {
@@ -57,21 +59,11 @@ public class OrionUser extends User {
 				JSONObject workObj = (JSONObject)workspaceJson.get(0);
 				webWorkspace = WebWorkspace.fromId(workObj.getString("Id"));
 			} else {
-				webWorkspace = webuser.createWorkspace(DEFAULT_WORKSPACE);
-				try {
-					addOrionUserRight("/workspace/" + webWorkspace.getId());
-					addOrionUserRight("/workspace/" + webWorkspace.getId() + "/*");
-				} catch (ServletException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				// create default workspace for new user
+				webWorkspace = createWorkspace(DEFAULT_WORKSPACE);
 			}
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new CoreException(new Status(IStatus.ERROR, null, null, e));
 		}
 
 		this.userDirectory = new VOrionWorkspaceStorage(webWorkspace, this.getUserID());
@@ -84,35 +76,7 @@ public class OrionUser extends User {
 	}
 	
 	public IVResource createOrionProject(String name) throws IOException {
-		//make sure required fields are set
-		
-		IVResource res =  this.workspace.create(name);
-		if(res instanceof VOrionResource){
-			try {
-				addOrionUserRight(((VOrionResource)res).getOrionLocation());
-			} catch (ServletException e) {
-				throw new IOException(e);
-			}
-		}
-		return res;
-	}
-
-	private void addOrionUserRight(String location) throws ServletException {
-		if (location == null)
-			return;
-		try {
-			String locationPath = URI.create(location).getPath();
-			//right to access the location
-			AuthorizationService.addUserRight(this.getUserID(), locationPath);
-			//right to access all children of the location
-			if (locationPath.endsWith("/")) //$NON-NLS-1$
-				locationPath += "*"; //$NON-NLS-1$
-			else
-				locationPath += "/*"; //$NON-NLS-1$
-			AuthorizationService.addUserRight(this.getUserID(), locationPath);
-		} catch (CoreException e) {
-			throw new ServletException(e);
-		}
+		return this.workspace.create(name);
 	}
 	
 	private IStorage getStorage(){
@@ -263,24 +227,23 @@ public class OrionUser extends User {
 
 	}
 
-	public WebWorkspace createWorkspace(String workspaceName){
-		try {
-			WebWorkspace ws =  webuser.createWorkspace(workspaceName);
-			addOrionUserRight("/workspace/" + ws.getId());
-			addOrionUserRight("/workspace/" + ws.getId() + "/*");
-			return ws;
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ServletException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+	public WebWorkspace createWorkspace(String workspaceName) throws CoreException {
+		// see org.eclipse.orion.server.servlets.WorkspaceServlet.doCreateWorkspace()
+		WebWorkspace workspace =  webuser.createWorkspace(workspaceName);
+		JSONObject result = WorkspaceResourceHandler.toJSON(workspace, URI.create(Activator.LOCATION_WORKSPACE_SERVLET));
+		String resultLocation = result.optString(ProtocolConstants.KEY_LOCATION);
+
+		// add user rights for the workspace
+		AuthorizationService.addUserRight(workspace.getId(), URI.create(resultLocation).getPath());
+		AuthorizationService.addUserRight(workspace.getId(), URI.create(resultLocation).getPath() + "/*"); //$NON-NLS-1$
+		// add user rights for file servlet location
+		String filePath = Activator.LOCATION_FILE_SERVLET + '/' + workspace.getId();
+		AuthorizationService.addUserRight(workspace.getId(), filePath);
+		AuthorizationService.addUserRight(workspace.getId(), filePath + "/*"); //$NON-NLS-1$
+
+		return workspace;
 	}
-	
-	
-	
+
 	public IVResource[] listFiles(String path) {
 	    IVResource[] found = new IVResource[0];
 	    if (path == null || path.equals(".") ) {

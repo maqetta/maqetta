@@ -237,9 +237,4 @@ public class VOrionStorage implements IStorage {
 		return this.getPath();
 	}
 
-	public String getOrionLocation() {
-		VOrionStorage parent = this.getParentFile();
-		return parent.getOrionLocation() + "/" + name;
-	}
-
 }

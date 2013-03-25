@@ -48,9 +48,5 @@ public class VOrionProjectStorage extends VOrionStorage {
 		
 		return this.parent;
 	}
-	
-	public String getOrionLocation(){
-		return "/file/" + proj.getId();
-	}
 
 }

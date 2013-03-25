@@ -46,6 +46,7 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer,
 	 */
 	public static final boolean DEBUG = true;
 
+	public static final String LOCATION_WORKSPACE_SERVLET = "/workspace"; //$NON-NLS-1$
 	public static final String LOCATION_FILE_SERVLET = "/file"; //$NON-NLS-1$
 	public static final String LOCATION_PROJECT_SERVLET = "/project"; //$NON-NLS-1$
 

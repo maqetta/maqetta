@@ -10,6 +10,7 @@ import maqetta.core.server.user.manager.UserManagerImpl;
 import org.davinci.server.user.IPerson;
 import org.davinci.server.user.IUser;
 import org.davinci.server.user.UserException;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.orion.server.configurator.ConfiguratorActivator;
 import org.eclipse.orion.server.core.LogHelper;
@@ -61,7 +62,7 @@ public class OrionUserManager extends UserManagerImpl {
 		return OrionPersonManager.getOrionUserByEmail(email) != null;
 	}
 
-	public IUser getUser(String userName) {
+	public IUser getUser(String userName) throws UserException {
 		assertValidUserId(userName);
 
 		if (ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equals(userName)) {
@@ -75,7 +76,7 @@ public class OrionUserManager extends UserManagerImpl {
 		return null;
 	}
 
-    public IUser getUserByEmail(String email) {
+    public IUser getUserByEmail(String email) throws UserException {
          if (checkUserExistsByEmail(email)) {
              IPerson person = this.personManager.getPersonByEmail(email);
              return newUser(person, null);
@@ -83,14 +84,18 @@ public class OrionUserManager extends UserManagerImpl {
          return null;
     }
 
-    public IUser newUser(IPerson person, IStorage baseDirectory) {
-     	IUser user =  new OrionUser(person);
+    public IUser newUser(IPerson person, IStorage baseDirectory) throws UserException {
+     	IUser user;
+		try {
+			user = new OrionUser(person);
+		} catch (CoreException e) {
+			throw new UserException(e);
+		}
      	if(init(person.getUserID())){
      		try {
 				user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
 			} catch (IOException e) {
-				e.printStackTrace();
-				return null; // TODO: should throw?
+				throw new UserException(e);
 			}
      	}
      	return user;
@@ -165,7 +170,7 @@ public class OrionUserManager extends UserManagerImpl {
 	}
 
     @Override
-	public boolean isValidUserByEmail(String email) {
+	public boolean isValidUserByEmail(String email) throws UserException {
         IUser user = getUserByEmail(email);
         return user != null;
 	}

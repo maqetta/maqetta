@@ -31,6 +31,7 @@ import org.davinci.server.review.user.IDesignerUser;
 import org.davinci.server.review.user.IReviewManager;
 import org.davinci.server.review.user.Reviewer;
 import org.davinci.server.user.IUser;
+import org.davinci.server.user.UserException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.maqetta.server.IDavinciServerConstants;
@@ -221,7 +222,12 @@ public class ReviewManager implements IReviewManager {
 	public IDesignerUser getDesignerUser(String name) throws IOException {
 		IDesignerUser designer = designerUsers.get(name);
 		if (designer == null) {
-			IUser user = ServerManager.getServerManager().getUserManager().getUser(name);
+			IUser user;
+			try {
+				user = ServerManager.getServerManager().getUserManager().getUser(name);
+			} catch (UserException e) {
+				throw new RuntimeException(e);
+			}
 			
 			if(user==null) return null;
 			designer = getDesignerUser(user);
@@ -273,7 +279,6 @@ public class ReviewManager implements IReviewManager {
 
 	private IDesignerUser loadDesignerUser(IUser user) throws IOException {
 		//Create the designer user
-		String name = user.getUserID();
 		IDesignerUser designerUser = new DesignerUser(user);
 
 		//Initialize the latest version

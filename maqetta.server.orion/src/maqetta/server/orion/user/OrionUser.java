@@ -35,6 +35,7 @@ import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
+import org.maqetta.server.IProjectTemplatesManager;
 import org.osgi.framework.Bundle;
 
 
@@ -181,7 +182,8 @@ public class OrionUser extends User {
 	        }
 	        
 	        if(projectTemplateDirectoryName!=null && !projectTemplateDirectoryName.equals("")){
-		        IStorage projectTemplatesDirectory = getProjectTemplatesDirectory();
+	        	IProjectTemplatesManager projectTemplatesManager = ServerManager.getServerManager().getProjectTemplatesManager();
+		        IStorage projectTemplatesDirectory = projectTemplatesManager.getProjectTemplatesDirectory();
 				IStorage templateDir = projectTemplatesDirectory.newInstance(projectTemplatesDirectory, projectTemplateDirectoryName);
 				if(templateDir.exists()) {
 					IStorage[] files = templateDir.listFiles();

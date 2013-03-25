@@ -204,50 +204,6 @@ public class User implements IUser {
         rebuildWorkspace();
 		return project;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.davinci.server.user.IUser#createProject(java.lang.String, java.lang.String, boolean)
-	 */
-	public String createProjectTemplate(String projectTemplateName, IStorage projectDir) throws IOException {
-        IStorage projectTemplatesDirectory = getProjectTemplatesDirectory();
-
-        IPerson person = getPerson();
-        String email = person.getEmail();
-		IStorage templateDir = projectTemplatesDirectory.newInstance(projectTemplatesDirectory, projectTemplateName + "_" + email);
-		if(!templateDir.exists()) {
-			templateDir.mkdir();
-		}
-
-		IStorage[] files = projectDir.listFiles();
-		for (int i = 0; i < files.length; i++) {
-//			String path = files[i].getAbsolutePath();
-			if (files[i].isFile()) {
-				IStorage destination = templateDir.newInstance(templateDir, files[i].getName());
-				copyFile(files[i], destination);
-			} else if (files[i].isDirectory()) {
-				IStorage destination = templateDir.newInstance(templateDir, files[i].getName());
-				copyDirectory(files[i], destination);
-			}
-		}
-		return "";
-	}
-
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * maqetta.core.server.user.IDesignerUser#getCommentingDirectory
-	 * ()
-	 */
-	public IStorage getProjectTemplatesDirectory() throws IOException {
-		IStorage baseDirectory = ServerManager.getServerManager().getBaseDirectory();
-		this.projectTemplatesDirectory = baseDirectory.newInstance(baseDirectory, IDavinciServerConstants.PROJECT_TEMPLATES_DIRECTORY_NAME);
-		if (!this.projectTemplatesDirectory.exists()) {
-			this.projectTemplatesDirectory.mkdir();
-		}
-		return this.projectTemplatesDirectory;
-	}
 
 	/*
 	 * adds configuration settings for a new path

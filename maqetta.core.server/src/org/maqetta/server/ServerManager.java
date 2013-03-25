@@ -17,7 +17,6 @@ import javax.servlet.ServletConfig;
 import org.davinci.ajaxLibrary.ILibraryManager;
 import org.davinci.ajaxLibrary.LibraryManager;
 import org.maqetta.server.IProjectTemplatesManager;
-import org.maqetta.server.ProjectTemplatesManager;
 import org.davinci.server.internal.Activator;
 import org.davinci.server.internal.IRegistryListener;
 import org.davinci.server.user.IPersonManager;
@@ -268,19 +267,8 @@ public class ServerManager implements IServerManager {
 	 */
 	public synchronized IProjectTemplatesManager getProjectTemplatesManager() {
 		if (projectTemplatesManager == null) {
-			/*
-    		 IConfigurationElement libraryElement = ServerManager.getServerManager().getExtension(IDavinciServerConstants.EXTENSION_POINT_LIBRARY_MANAGER, IDavinciServerConstants.EP_TAG_LIBRARY_MANAGER);
-		        if (libraryElement != null) {
-		        try {
-		           this.libraryManager = (ILibraryManager) libraryElement.createExecutableExtension(IDavinciServerConstants.EP_ATTR_CLASS);
-		        } catch (CoreException e) {
-		           e.printStackTrace();
-		        }
-	        }
-			 */
 			projectTemplatesManager = new ProjectTemplatesManager();
 		}
-
 		return projectTemplatesManager;
 	}
 

@@ -215,7 +215,7 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 		return errorString;
 	}
 	
-	private IStorage getProjectTemplatesDirectory() throws IOException {
+	public IStorage getProjectTemplatesDirectory() throws IOException {
 		if(this.projectTemplatesDirectory!=null){
 			return this.projectTemplatesDirectory;
 		}

@@ -30,6 +30,7 @@ define([
 	"./Snap",
 	"./States",
 	"./HTMLWidget",
+	"../html/CSSImport",
 	"../html/HTMLElement",
 	"../html/HTMLText",
 	"../workbench/Preferences",
@@ -70,6 +71,7 @@ define([
 	Snap,
 	States,
 	HTMLWidget,
+	CSSImport,
 	HTMLElement,
 	HTMLText,
 	Preferences,
@@ -377,7 +379,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 	//FIXME: private/protected?
 	getLibraryBase: function(id, version){
-		return Library.getLibRoot(id,version, this.getBase());
+		return Library.getLibRoot(id,version, this.getBase()) || "";
 	},
 
 	loadRequires: function(type, updateSrc, doUpdateModelDojoRequires, skipDomUpdate) {
@@ -388,116 +390,120 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			return new Deferred().resolve();
 		}
 
+		var promises = [];
 		var libraries = metadata.query(type, 'library'),
 			libs = {},
-			context = this,
-			_loadJSFile = function(libId, src) {
-				return context.addJavaScriptSrc(_getResourcePath(libId, src), updateSrc, src, skipDomUpdate);
-			},
-			_getResourcePath = function(libId, src) {
-				return libs[libId].append(src).relativeTo(context.getPath(), true).toString();
-			};
-
-		var loadLibrary = function(libId, lib) {
-			var d = new Deferred();
+			context = this;
+		function loadLibrary(libId, lib) {
 			if (libs.hasOwnProperty(libId)) {
-				d.resolve();
-				return d;
+				return true;
 			}
 
 			// calculate base library path, used in loading relative required
 			// resources
-			var ver = metadata.getLibrary(libId).version || lib.version;
-			return context.getLibraryBase(libId, ver).then(function(root) {
-				if (root == null /*empty string OK here, but null isn't. */) {
-					console.error("No library found for name = '" + libId +	"' version = '" + ver + "'");
-					return d.reject();
-				}
-	
-				// store path
-				libs[libId] = new Path(context.getBase()).append(root);	
-	
-				// If 'library' element points to the main library JS (rather than
-				// just base directory), then load that file now.
-				if (lib && lib.src && lib.src.substr(-3) === '.js') {
-					// XXX For now, lop off relative bits and use remainder as main
-					// library file.  In the future, we should use info from
-					// package.json and library.js to find out what part of this
-					// path is the piece we're interested in.
-					var m = lib.src.match(/((?:\.\.\/)*)(.*)/);
-							// m[1] => relative path
-							// m[2] => main library JS file
-					return _loadJSFile(libId, m[2]);
-				}
-				return d.resolve();
-			});
-		};
+			var ver = metadata.getLibrary(libId).version || lib.version,
+				root = context.getLibraryBase(libId, ver);
+			
+			if (root == null /*empty string OK here, but null isn't. */) {
+				console.error("No library found for name = '" + libId +	"' version = '" + ver + "'");
+				return false;
+			}
 
-		var libraryPromises = [];
+			// store path
+			libs[libId] = new Path(context.getBase()).append(root);	
+
+			// If 'library' element points to the main library JS (rather than
+			// just base directory), then load that file now.
+			if (lib && lib.src && lib.src.substr(-3) === '.js') {
+				// XXX For now, lop off relative bits and use remainder as main
+				// library file.  In the future, we should use info from
+				// package.json and library.js to find out what part of this
+				// path is the piece we're interested in.
+				var m = lib.src.match(/((?:\.\.\/)*)(.*)/);
+						// m[1] => relative path
+						// m[2] => main library JS file
+				promises.push(_loadJSFile(libId, m[2]));
+			}
+
+			return true;
+		}
+
+		function _getResourcePath(libId, src) {
+			return libs[libId].append(src).relativeTo(context.getPath(), true).toString();
+		}
+
+		function _loadJSFile(libId, src) {
+			return context.addJavaScriptSrc(_getResourcePath(libId, src), updateSrc, src, skipDomUpdate);
+		}
+
 		// first load any referenced libraries
 		for (var libId in libraries) {
 			if (libraries.hasOwnProperty(libId)) {
-				libraryPromises.push(loadLibrary(libId, libraries[libId]));
+				if(!loadLibrary(libId, libraries[libId])) {
+					var d = new Deferred();
+					d.reject();
+					return d;
+				}
 			}
 		}
 
-		return all(libraryPromises).then(function(){
-			// next, load the require statements
-			var requirePromises = [];
-			requires.every(function(r) {
-				// If this require belongs under a library, load library file first
-				// (if necessary).
-				if (r.$library) {
-					requirePromises.push(loadLibrary(r.$library, libraries[r.$library]));
+		// next, load the require statements
+		requires.every(function(r) {
+			// If this require belongs under a library, load library file first
+			// (if necessary).
+			if (r.$library) {
+				if (!loadLibrary(r.$library, libraries[r.$library])) {
+					return false; // break 'every' loop
 				}
-	
-				switch (r.type) {
-					case "javascript":
-						if (r.src) {
-							requirePromises.push(_loadJSFile(r.$library, r.src));
+			}
+
+			switch (r.type) {
+				case "javascript":
+					if (r.src) {
+						promises.push(_loadJSFile(r.$library, r.src));
+					} else {
+						this.addJavaScriptText(r.$text, updateSrc || doUpdateModelDojoRequires, skipDomUpdate);
+					}
+					break;
+				
+				case "javascript-module":
+					// currently, only support 'amd' format
+					if (r.format !== 'amd') {
+						console.error("Unknown javascript-module format");
+					}
+					if (r.src) {
+						promises.push(
+							this.addJavaScriptModule(r.src, updateSrc || doUpdateModelDojoRequires, skipDomUpdate));
+					} else {
+						console.error("Inline 'javascript-module' not handled src=" + r.src);
+					}
+					break;
+				
+				case "css":
+					if (r.src) {
+						var src = _getResourcePath(r.$library, r.src);
+						if (updateSrc) {
+							this.addModeledStyleSheet(src, skipDomUpdate);
 						} else {
-							this.addJavaScriptText(r.$text, updateSrc || doUpdateModelDojoRequires, skipDomUpdate);
+							this.loadStyleSheet(src);
 						}
-						break;
+					} else {
+						console.error("Inline CSS not handled src=" + r.src);
+					}
+					break;
+				
+				case "image":
+					// Allow but ignore type=image
+					break;
 					
-					case "javascript-module":
-						// currently, only support 'amd' format
-						if (r.format !== 'amd') {
-							console.error("Unknown javascript-module format");
-						}
-						if (r.src) {
-							requirePromises.push(
-								this.addJavaScriptModule(r.src, updateSrc || doUpdateModelDojoRequires, skipDomUpdate));
-						} else {
-							console.error("Inline 'javascript-module' not handled src=" + r.src);
-						}
-						break;
-					
-					case "css":
-						if (r.src) {
-							var src = _getResourcePath(r.$library, r.src);
-							if (updateSrc) {
-								this.addModeledStyleSheet(src, skipDomUpdate);
-							} else {
-								this.loadStyleSheet(src);
-							}
-						} else {
-							console.error("Inline CSS not handled src=" + r.src);
-						}
-						break;
-					
-					case "image":
-						// Allow but ignore type=image
-						break;
-						
-					default:
-						console.error("Unhandled metadata resource type='" + r.type +
-								"' for widget '" + type + "'");
-				}
-				return true;
-			}, this);
-			return all(requirePromises);
-		}.bind(this));
+				default:
+					console.error("Unhandled metadata resource type='" + r.type +
+							"' for widget '" + type + "'");
+			}
+			return true;
+		}, this);
+
+		return all(promises);
 	},
 
 	/**
@@ -2611,7 +2617,9 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			var foundSheet;
 			var rules = sheet.cssRules;
 			for (var r = 0; r < rules.length; r++){
+			    var x = '' + rules[r].constructor;
 				if (rules[r].type && rules[r].type === CSSRule.IMPORT_RULE){
+				    var n = rules[r].href;
 					if (rules[r].href == sheetName) {
 						foundSheet = rules[r].styleSheet;
 						//break;

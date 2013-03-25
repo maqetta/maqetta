@@ -24,14 +24,14 @@ public class CreateProjectTemplate extends Command {
 		
 		String paramsJson = req.getParameter("params");
 		if (paramsJson == "" || paramsJson == null) {
-			errorString = "No params object";
+			errorString = "cmd/createProjectTemplate - No params object";
 			error = true;
 		}
 		JSONObject params = null;
 		try{
 			params = new JSONObject(paramsJson);
 		} catch (JSONException e) {
-			errorString = "getProjectTemplates - json exception";
+			errorString = "cmd/createProjectTemplate - json exception";
 			error = true;
 		}
 		

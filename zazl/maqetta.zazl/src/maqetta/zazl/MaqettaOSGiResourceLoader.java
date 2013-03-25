@@ -11,6 +11,7 @@ import org.davinci.ajaxLibrary.ILibInfo;
 import org.davinci.ajaxLibrary.Library;
 import org.davinci.server.user.IUser;
 import org.davinci.server.user.IUserManager;
+import org.davinci.server.user.UserException;
 import org.dojotoolkit.server.util.osgi.OSGiResourceLoader;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -55,7 +56,12 @@ public class MaqettaOSGiResourceLoader extends OSGiResourceLoader {
 			if (ipath.segment(1).equals("user")) {
 		 		ipath = ipath.removeFirstSegments(2);
 				String userName = ipath.segment(0);
-				user = userManager.getUser(userName);
+				try {
+					user = userManager.getUser(userName);
+				} catch (UserException e) {
+					e.printStackTrace();
+					return null;
+				}
 				ipath = ipath.removeFirstSegments(1);
 				if (ipath.segment(0).equals("ws") && ipath.segment(1).equals("workspace")) {
 					ipath = ipath.removeFirstSegments(2);

@@ -14,6 +14,7 @@ import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;
 import org.maqetta.server.VFile;
 
+@SuppressWarnings("restriction")
 public class VOrionResource extends VFile {
 
 	
@@ -25,11 +26,6 @@ public class VOrionResource extends VFile {
 	public VOrionResource(IStorage storage,  IVResource parent, String name) {
 		super(storage,parent);
 		this.virtualPath = name;
-	}
-
-	public String getOrionLocation(){
-		VOrionStorage storage = (VOrionStorage)this.file;
-		return storage.getOrionLocation();
 	}
 	
     protected IStorage getWorkingCopy(IStorage original) {

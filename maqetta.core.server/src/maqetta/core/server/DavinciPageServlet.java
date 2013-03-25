@@ -24,6 +24,7 @@ import org.davinci.ajaxLibrary.ILibraryManager;
 import org.davinci.server.internal.Activator;
 import org.davinci.server.user.IUser;
 import org.davinci.server.user.IUserManager;
+import org.davinci.server.user.UserException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -216,7 +217,12 @@ public class DavinciPageServlet extends HttpServlet {
 	private boolean validateReviewParms(String designerName, String reviewVersion) {
 		boolean returnVal = (designerName != null && reviewVersion != null);
 		if (returnVal) {
-			boolean validDesigner = ServerManager.getServerManager().getUserManager().isValidUser(designerName);
+			boolean validDesigner;
+			try {
+				validDesigner = ServerManager.getServerManager().getUserManager().isValidUser(designerName);
+			} catch (UserException e) {
+				throw new RuntimeException(e);
+			}
 			if (validDesigner) {
 				returnVal = Validator.isValidISOTimeStamp(reviewVersion);
 				if (!returnVal) {
@@ -239,7 +245,6 @@ public class DavinciPageServlet extends HttpServlet {
 	 * @return Bundle
 	 */
 	protected URL getPageExtensionPath(String extensionPoint, String extensionName) {
-
 		List extensions = serverManager.getExtensions(extensionPoint, extensionName);
 		IConfigurationElement winner = null;
 		int highest = -100000;
@@ -304,12 +309,16 @@ public class DavinciPageServlet extends HttpServlet {
 		path = path.removeFirstSegments(3);
 
 		/* unlocking user directory to un-authenticated users */
-		if ( user == null ) {
-			user = ServerManager.getServerManager().getUserManager().getUser(userName);
-		}
-
-		if(user!=null && user.getUserID().compareTo(userName)!=0){
-			user =  ServerManager.getServerManager().getUserManager().getUser(userName);
+		try {
+			if ( user == null ) {
+				user = ServerManager.getServerManager().getUserManager().getUser(userName);
+			}
+	
+			if(user!=null && user.getUserID().compareTo(userName)!=0){
+				user =  ServerManager.getServerManager().getUserManager().getUser(userName);
+			}
+		} catch (UserException e) {
+			throw new RuntimeException(e);
 		}
 		
 		if ( handleLibraryRequest(req, resp, path, user) ) {
@@ -318,7 +327,11 @@ public class DavinciPageServlet extends HttpServlet {
 		}
 
 		if ( user == null ) {
-			user = ServerManager.getServerManager().getUserManager().getUser(userName);
+			try {
+				user = ServerManager.getServerManager().getUserManager().getUser(userName);
+			} catch (UserException e) {
+				throw new RuntimeException(e);
+			}
 			if ( user == null ) {
 				theLogger.warning("user not found: " + userName);
 				resp.sendError(HttpServletResponse.SC_NOT_FOUND);

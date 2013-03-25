@@ -1,6 +1,5 @@
 package maqetta.core.server.user.manager;
 
-
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -16,7 +15,6 @@ import org.davinci.server.user.IUserManager;
 import org.davinci.server.user.UserException;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IStorage;
-import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
 
 public class UserManagerImpl implements IUserManager {
@@ -74,11 +72,11 @@ public class UserManagerImpl implements IUserManager {
      * @see org.davinci.server.user.impl.UserManager#getUser(java.lang.String)
      * 
      */
-    public IUser newUser(IPerson person, IStorage baseDirectory) {
+    public IUser newUser(IPerson person, IStorage baseDirectory) throws UserException {
     	 return new User(person, baseDirectory);
     }
     
-    public IUser getUser(String userName) {
+    public IUser getUser(String userName) throws UserException {
 
        // IUser user = (IUser) users.get(userName);
         if (ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equals(userName)) {
@@ -87,7 +85,6 @@ public class UserManagerImpl implements IUserManager {
         if (this.checkUserExists(userName)) {
             IPerson person = this.personManager.getPerson(userName);
             return newUser(person, this.baseDirectory.newInstance(this.baseDirectory, userName));
-            
         }
         return null;
     }
@@ -109,7 +106,6 @@ public class UserManagerImpl implements IUserManager {
         }
         IPerson person = this.personManager.addPerson(userName, password, email);
         if (person != null) {
-
             IUser user = newUser(person, this.baseDirectory.newInstance(this.baseDirectory, userName));
           //  users.put(userName, user);
             //File userDir = user.getUserDirectory();
@@ -119,8 +115,7 @@ public class UserManagerImpl implements IUserManager {
             try {
 				user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
 			} catch (IOException e) {
-				e.printStackTrace();
-				return null; //TODO: should throw?
+				throw new UserException(e);
 			}
             
             this.usersCount++;
@@ -156,13 +151,13 @@ public class UserManagerImpl implements IUserManager {
      * @see org.davinci.server.user.impl.UserManager#login(java.lang.String,
      * java.lang.String)
      */
-    public IUser login(String userName, String password) {
+    public IUser login(String userName, String password) throws UserException {
         if (!checkUserExists(userName)) {
             return null;
         }
         IPerson person = this.personManager.login(userName, password);
         if (person != null) {
-            return newUser(person, this.baseDirectory.newInstance(this.baseDirectory, userName));
+			return newUser(person, this.baseDirectory.newInstance(this.baseDirectory, userName));
         }
         return null;
     }
@@ -178,7 +173,7 @@ public class UserManagerImpl implements IUserManager {
      * @see
      * org.davinci.server.user.impl.UserManager#isValidUser(java.lang.String)
      */
-    public boolean isValidUser(String userName) {
+    public boolean isValidUser(String userName) throws UserException {
         if (ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equals(userName)) {
             return true;
         }
@@ -186,7 +181,7 @@ public class UserManagerImpl implements IUserManager {
         return user != null;
     }
 
-	public boolean isValidUserByEmail(String email) {
+	public boolean isValidUserByEmail(String email) throws UserException {
 		throw new Error("NOT IMPLEMENTED");
 //		return isValidUser(email);
 	}
@@ -213,7 +208,7 @@ public class UserManagerImpl implements IUserManager {
 	       		IStorage settingsDir = this.baseDirectory.newInstance(userDir, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
 	        	if (!settingsDir.exists()) {
 	           		settingsDir.mkdir();
-	            	IVResource project = localUser.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
+	            	localUser.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
 	        	}
     		} catch (IOException e) {
     			return null; //TODO

@@ -15,12 +15,10 @@ return declare(RebuildPage, {
 		for(var name in this.libs){
 			var item = this.libs[name];
 			if (item.id==id && item.version==version) {
-				var d = new Deferred();
-				d.resolve(item.root);
-				return d;
+				return item.root;
 			}
 		}
-		return library.getLibRoot(id, version);
+		return library.getLibRoot(id,version) || "";
 	}
 	
 });

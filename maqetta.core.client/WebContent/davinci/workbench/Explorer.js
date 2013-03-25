@@ -76,7 +76,7 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 		// Because there are two child elements in this layout container, and it only sizes the top (topDiv), we have to manage the size of the children
 		// ourselves (or use yet another layout container to do it)  We'll just use CSS to fix the bottom of the Tree to the bottom of the panel,
 		// using a variation of the 4-corners CSS trick.  An additional kludge seems necessary to set the Tree width properly to account for the scrollbar.
-		dojo.style(tree.domNode, {width: "100%", "overflow-x": "hidden", position: "absolute", bottom: 0, top: "20px"});
+		dojo.style(tree.domNode, {width: "100%", "overflow-x": "hidden", position: "absolute", bottom: 0, top: "7px"});
 
 		// The default tree dndController does a stopEvent in its mousedown handler, preventing us from doing our own DnD.
 		// Circumvent dojo.stopEvent temporarily.
@@ -104,16 +104,6 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 		tree.dndController.onMouseDown = dojo.hitch(null, handler, down);
 		
 		var topDiv = dojo.doc.createElement('div');
-
-		if(Workbench.singleProjectMode()){
-			var projectSelection = new davinci.ui.widgets.ProjectToolbar({});
-			topDiv.appendChild(projectSelection.domNode);
-
-			dojo.connect(projectSelection, "onChange", function(){
-				Workbench.loadProject(this.value);
-			});
-		}
-
 		topDiv.appendChild(tree.domNode);
 		this.setContent(topDiv);
 		this.attachToolbar();
@@ -164,9 +154,33 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 	 * so that we can supplement the standard buttons (from ui.plugin.js) with
 	 * additional UI, particularly project-related UI.
 	 */
-	_createToolbar: function(containerClass){
+	attachToolbar: function(){
 		//FIXME: Need to move project-related UI into here.
 		this.inherited(arguments);
+		if(Workbench.singleProjectMode()){
+			var projectRowDiv = dojo.doc.createElement("div");
+			projectRowDiv.className = "explorerHeaderProjectDiv";
+			var table = dojo.doc.createElement("table");
+			table.className = "explorerHeaderProjectTable";
+			projectRowDiv.appendChild(table);
+			var tr = dojo.doc.createElement("tr");
+			table.appendChild(tr);
+			var td1 = dojo.doc.createElement("td");
+			td1.className = "explorerHeaderProjectCol1";
+			tr.appendChild(td1);
+			var td2 = dojo.doc.createElement("td");
+			td2.className = "explorerHeaderProjectCol2";
+			tr.appendChild(td2);
+
+			var projectSelection = new davinci.ui.widgets.ProjectToolbar({});
+			td1.appendChild(projectSelection.domNode);
+			var firstChild = this.toolbarDiv.children[0];
+			this.toolbarDiv.insertBefore(projectRowDiv, firstChild);
+
+			dojo.connect(projectSelection, "onChange", function(){
+				Workbench.loadProject(this.value);
+			});
+		}
 	},
 	
 	destroy: function(){

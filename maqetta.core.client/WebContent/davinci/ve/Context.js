@@ -820,6 +820,12 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		// if it's NOT the theme editor loading
 		if (!source.themeCssFiles) { // css files need to be added to doc before body content
 			// ensure the top level body deps are met (ie. maqetta.js, states.js and app.css)
+			if(newHtmlParams){
+				var modelBodyElement = source.getDocumentElement().getChildElement("body");
+				modelBodyElement.setAttribute(MOBILE_DEV_ATTR, newHtmlParams.device);
+				modelBodyElement.setAttribute(PREF_LAYOUT_ATTR, newHtmlParams.flowlayout);
+				modelBodyElement.setAttribute(COMPTYPE_ATTR, newHtmlParams.comptype);
+			}
 			this.loadRequires(
 					"html.body",
 					true /*updateSrc*/,
@@ -840,10 +846,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		this.loadTheme(newHtmlParams);
 		//FIXME: Need to add logic for initial themes and device size.
 		if(newHtmlParams){
-			var modelBodyElement = source.getDocumentElement().getChildElement("body");
-			modelBodyElement.setAttribute(MOBILE_DEV_ATTR, newHtmlParams.device);
-			modelBodyElement.setAttribute(PREF_LAYOUT_ATTR, newHtmlParams.flowlayout);
-			modelBodyElement.setAttribute(COMPTYPE_ATTR, newHtmlParams.comptype);
 			if (newHtmlParams.themeSet){
     			var cmd = new ChangeThemeCommand(newHtmlParams.themeSet, this);
     			cmd._dojoxMobileAddTheme(this, newHtmlParams.themeSet.mobileTheme, true); // new file

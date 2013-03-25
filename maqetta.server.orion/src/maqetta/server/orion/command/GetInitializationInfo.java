@@ -17,6 +17,7 @@ import maqetta.server.orion.MaqettaOrionServerConstants;
 
 import org.davinci.server.user.IPerson;
 import org.davinci.server.user.IUser;
+import org.maqetta.server.IProjectTemplatesManager;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.orion.server.core.users.OrionScope;
 import org.json.JSONException;
@@ -142,46 +143,16 @@ public class GetInitializationInfo extends Command {
 	}
 
 	private JSONObject getProjectTemplates(IUser user) throws IOException, MaqettaConfigException {
-        IStorage projectTemplatesDirectory = user.getProjectTemplatesDirectory();
+		
+		IProjectTemplatesManager projectTemplatesManager = ServerManager.getServerManager().getProjectTemplatesManager();
 		JSONObject resultsObject = new JSONObject();
-		if(!projectTemplatesDirectory.exists()) {
-			return resultsObject;
-		}
-		IStorage indexFile = projectTemplatesDirectory.newInstance(projectTemplatesDirectory, IDavinciServerConstants.PROJECT_TEMPLATES_INDEX_FILE);
-		if(!indexFile.exists()) {
-			return resultsObject;
-		}
-        IPerson person = user.getPerson();
-        String userEmail = person.getEmail();
-		String indexFileContents = readFile(indexFile.getPath());
-		JSONArray templatesOut = new JSONArray();
+		JSONArray templates = projectTemplatesManager.getProjectTemplates(user);		
 		try{
-			JSONObject indexFileObject= new JSONObject(indexFileContents);
-			JSONArray templates = indexFileObject.getJSONArray("templates");
-			int count = templates.length();
-			for(int i=0 ; i< count; i++){
-				JSONObject template = templates.getJSONObject(i);
-				String authorEmail = template.getString("authorEmail");
-				String sharing = template.getString("sharingSimple");
-				if(userEmail.equals(authorEmail) || sharing == "all"){
-					templatesOut.put(template);
-					/*
-					String folder = template.getString("folder");
-					String name = template.getString("name");
-					String timestampCreation = template.getString("timestampCreation");
-					String timestampLastModified = template.getString("timestampLastModified");
-					*/
-				}
-			}
-			resultsObject.put("templates", templatesOut);
-			
+			resultsObject.put("templates", templates);			
 		} catch (JSONException e) {
 			throw new MaqettaConfigException(
-					"maqetta.server.orion.command.GetInitializationInfo "
-							+ indexFile.getPath()
-							+ " not valid json", e);
+					"maqetta.server.orion.command.GetInitializationInfo json put exception", e);
 		}
-		
 		return resultsObject;
 	}
 

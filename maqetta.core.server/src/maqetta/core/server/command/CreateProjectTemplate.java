@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.SimpleTimeZone;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,39 +16,40 @@ import javax.servlet.http.HttpServletResponse;
 import org.davinci.server.review.Constants;
 import org.davinci.server.user.IPerson;
 import org.davinci.server.user.IUser;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.maqetta.server.Command;
 import org.maqetta.server.IDavinciServerConstants;
+import org.maqetta.server.IProjectTemplatesManager;
+import org.maqetta.server.ServerManager;
 
 import org.maqetta.server.IStorage;
 
 public class CreateProjectTemplate extends Command {
+	static final private Logger theLogger = Logger.getLogger(ServerManager.class.getName());
 
-    @Override
-    public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
-        String projectTemplateName = req.getParameter("projectTemplateName");
-        String projectToClone = req.getParameter("projectToClone");
-        Boolean error = false;
-        String errorString = "";
-        if (projectTemplateName == "" || projectTemplateName == null) {
-        	errorString = "No project template name specified";
-        	error = true;
-        }
-        if (projectToClone == "" || projectToClone == null) {
-        	errorString = "No project to clone specified";
-        	error = true;
-        }
-		IStorage userDir = user.getUserDirectory();
-		IStorage projectDir = userDir.newInstance(projectToClone);
-		if(!projectDir.exists()){
-        	errorString = "Invalid project name to clone - project does not exist";
-        	error = true;
+	@Override
+	public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
+		Boolean error = false;
+		String errorString = "";
+		
+		String paramsJson = req.getParameter("params");
+		if (paramsJson == "" || paramsJson == null) {
+			errorString = "No params object";
+			error = true;
 		}
-    	if(!error){
-    		errorString = user.createProjectTemplate(projectTemplateName, projectDir);
-    		if(errorString != null && errorString != ""){
-    			error = true;
-    		}
-    	}
+		JSONObject params = null;
+		try{
+			params = new JSONObject(paramsJson);
+		} catch (JSONException e) {
+			String desc = "getProjectTemplates - json exception";
+			theLogger.log(Level.SEVERE, desc, e);
+			throw new Error(desc, e);
+		}
+		
+		IProjectTemplatesManager projectTemplatesManager = ServerManager.getServerManager().getProjectTemplatesManager();
+		errorString = projectTemplatesManager.addProjectTemplate(user, params);
+		error = (errorString == "" || errorString == null) ? false : true;
     	String successString = error ? "false" : "true";
         this.responseString = "{success:" + successString;
         if(error){
@@ -57,47 +60,5 @@ public class CreateProjectTemplate extends Command {
         this.responseString += "}";
         resp.setContentType("application/json;charset=UTF-8");
     }
-
-/*
-	private void copyDirectory(IStorage sourceDir, IStorage destinationDir) throws IOException {
-		destinationDir.mkdirs();
-		IStorage[] file = sourceDir.listFiles();
-		for (int i = 0; i < file.length; i++) {
-			if (file[i].isFile()) {
-				IStorage sourceFile = file[i];
-
-				IStorage targetFile = destinationDir.newInstance(destinationDir, file[i].getName());
-				copyFile(sourceFile, targetFile);
-			}
-
-			if (file[i].isDirectory()) {
-				IStorage destination = destinationDir.newInstance(destinationDir, file[i].getName());
-				copyDirectory(file[i], destination);
-			}
-		}
-	}
-
-	private void copyFile(IStorage source, IStorage destination) throws IOException {
-		InputStream in = null;
-		OutputStream out = null;
-		try {
-			destination.getParentFile().mkdirs();
-			in = source.getInputStream();
-			out = destination.getOutputStream();
-			byte[] buf = new byte[1024];
-			int len;
-			while ((len = in.read(buf)) > 0) {
-				out.write(buf, 0, len);
-			}
-		} finally {
-			if (in != null) {
-				in.close();
-			}
-			if (out != null) {
-				out.close();
-			}
-		}
-	}
-*/
     
 }

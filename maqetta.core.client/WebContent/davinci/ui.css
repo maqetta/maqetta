@@ -582,10 +582,20 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
     margin-right: 20px;
 }
 
+.NewProjectDialogTable {
+	width:100%;
+}
 .NewProjectDialogLabel {
 	white-space:nowrap;
 }
-
+.NewProjectTemplateName {
+	white-space:nowrap;
+} 
+.NewProjectTemplateAuthor {
+	float:right;
+	font-style:italic;
+	white-space:nowrap;
+} 
 .nhfo_dv {
 	white-space:nowrap;
 }

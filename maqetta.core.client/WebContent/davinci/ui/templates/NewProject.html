@@ -1,11 +1,26 @@
 <div>
 	<div class="dijitDialogPaneContentArea">
-		<table>
+		<table class="NewProjectDialogTable">
 		<tr>
-		<td class="NewProjectDialogLabel">${newProjectName}</td><td><input class='templateInput' data-dojo-type="dijit.form.ValidationTextBox" type='text' dojoAttachPoint="_projectName"></input></td><td><div dojoAttachPoint='_error4'></div></td>
+			<td class="NewProjectDialogLabel">${newProjectName}</td>
+			<td>
+				<input class='templateInput' data-dojo-type="dijit.form.ValidationTextBox" type='text' dojoAttachPoint="_projectName"></input>
+			</td>
+			<td><div dojoAttachPoint='_error4'></div></td>
 		</tr>
-		
-		<td class="NewProjectDialogLabel">${newProjectEclipseSupport}</td><td><input class='templateInput' type='checkbox' dojoAttachPoint="_eclipseSupport"></input></td><td><div dojoAttachPoint='_error5'></div></td>
+		<tr>
+			<td class="NewProjectTemplateLabel">${newProjectTemplate}</td>
+			<td>
+				<select dojoType="dijit.form.Select" dojoAttachPoint="projectTemplates" dojoAttachEvent="onChange: _onChangeTemplate" style="width:100%;">
+					<!-- Menu created dynamically -->
+				</select>
+			</div></td>
+		</tr>
+		<tr>
+			<td class="NewProjectDialogLabel">${newProjectEclipseSupport}</td>
+			<td><input class='templateInput' type='checkbox' dojoAttachPoint="_eclipseSupport"></input></td>
+			<td><div dojoAttachPoint='_error5'></div></td>
+		</tr>
 		</table>
 	</div>
 

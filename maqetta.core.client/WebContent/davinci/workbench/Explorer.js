@@ -193,7 +193,7 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 		    label: commonNls.showSuggestedWidgets,
 		    iconClass: "dojoyPaletteMenuItemCheckMark",
 		    onClick: function(){
-		    	debugger;
+		    	debugger;//FIXME
 		    }.bind(this)
 		});
 		menu.addChild(menuItem1);
@@ -202,7 +202,7 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 		    label: commonNls.showAllWidgets,
 		    iconClass: "dojoyPaletteMenuItemCheckMark",
 		    onClick: function(){
-		    	debugger;
+		    	debugger;//FIXME
 		    }.bind(this)
 		});
 		menu.addChild(menuItem2);

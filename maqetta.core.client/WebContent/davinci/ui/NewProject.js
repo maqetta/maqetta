@@ -14,12 +14,16 @@ define(["dojo/_base/declare",
         "dijit/form/ValidationTextBox"
         
 ],function(declare, _Templated, _Widget,  Library, Resource, Preferences,  Runtime, Workbench, uiNLS, commonNLS, templateString){
+
+	var noProjectTemplate = '_none_';
+
 	return dojo.declare("davinci.ui.NewProject",   [_Widget,_Templated], {
 		widgetsInTemplate: true,
 		templateString: templateString,
 		_okButton: null,
 		_projectName: null,
 		_eclipseSupport: null,
+		_projectTemplate: noProjectTemplate,
 		
 		postMixInProperties: function() {
 			var langObj = uiNLS;
@@ -58,6 +62,22 @@ define(["dojo/_base/declare",
 					
 					return isValid;
 			});
+			var projectTemplates = Runtime.getSiteConfigData("projectTemplates");
+			var opts = [{value:noProjectTemplate, label:uiNLS.newProjectNoTemplate}];
+			if(projectTemplates && projectTemplates.templates && projectTemplates.templates.length > 0){
+				opts.push({type:'separator'});
+				for(var i=0; i<projectTemplates.templates.length; i++){
+					var template = projectTemplates.templates[i];
+					if(template.folder && template.name){
+						var authorSpan = template.authorEmail ? 
+								'<span class="NewProjectTemplateAuthor">&nbsp;&nbsp;(Author: '+template.authorEmail+')</span>' :
+								'';
+						var label = '<span class="NewProjectTemplateName">'+template.name+'</span>'+authorSpan;
+						opts.push({value:template.folder, label:label});
+					}
+				}
+			}
+			this.projectTemplates.addOption(opts);
 		},
 		
 		_checkValid: function(){
@@ -72,8 +92,11 @@ define(["dojo/_base/declare",
 		okButton: function() {
 			var newProjectName = this._projectName.get("value");
 			var isEclipse = dojo.attr(this._eclipseSupport, 'checked');
+			var projectTemplateName = this._projectTemplate == noProjectTemplate ? '' : this._projectTemplate;
 
-			Resource.createProject(newProjectName, isEclipse).then(function() {
+			Resource.createProject({
+				newProjectName:newProjectName, projectTemplateName:projectTemplateName, isEclipse:isEclipse
+			}).then(function() {
 				if (isEclipse) {
 					Preferences.savePreferences(
 							'davinci.ui.ProjectPrefs',
@@ -86,9 +109,7 @@ define(["dojo/_base/declare",
 					);
 				}
 
-				if (Workbench.singleProjectMode()) {
-					Workbench.loadProject(newProjectName);
-				}
+				Workbench.loadProject(newProjectName);
 			});
 		},
 		
@@ -98,6 +119,11 @@ define(["dojo/_base/declare",
 		
 		_getValueAttr: function(){
 			return this.value;
+		},
+		
+		//FIXME: What parameters to change event?
+		_onChangeTemplate: function(newValue){
+			this._projectTemplate = newValue;
 		},
 
 		cancelButton: function(){

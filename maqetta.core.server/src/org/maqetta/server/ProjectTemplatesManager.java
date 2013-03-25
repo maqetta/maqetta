@@ -192,6 +192,7 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 					template = new JSONObject();
 					template.put("folder", templateFolderName);
 					template.put("name", projectTemplateName);
+					template.put("authorEmail", email);
 					template.put("clonedProject", projectToClone);
 					template.put("sharingSimple", sharingSimple);
 					template.put("timestamp", timestamp);

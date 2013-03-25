@@ -839,17 +839,18 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					true /*skipDomUpdate*/
 			).then(function(){
 					// make sure this file has a valid/good theme
-					this._setSourcePostLoadRequires(source, callback, scope, newHtmlParams);
+				this.loadTheme(newHtmlParams);
+				this._setSourcePostLoadRequires(source, callback, scope, newHtmlParams);
 			}.bind(this));
 		} else {
-			this._setSourcePosLoadRequires(source, callback, scope, newHtmlParams);
+			this._setSourcePostLoadRequires(source, callback, scope, newHtmlParams);
 		}
 
 
 	},
 	
 	_setSourcePostLoadRequires: function(source, callback, scope, newHtmlParams){
-		this.loadTheme(newHtmlParams);
+
 		//FIXME: Need to add logic for initial themes and device size.
 		if(newHtmlParams){
 			if (newHtmlParams.themeSet){

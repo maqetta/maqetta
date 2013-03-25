@@ -42,7 +42,7 @@ return {
 		}
 		
 		var dojoOptions = Runtime.getSiteConfigData('dojoOptions');
-		var include_document_css = dojoOptions.include_document_css || {};
+		var include_document_css = (dojoOptions && dojoOptions.include_document_css) || {};
 		
 		// Include only if at least one dijit widget and no dojox.mobile widgets.
 		function checkWidgetTypePrefix(widget, prefix){

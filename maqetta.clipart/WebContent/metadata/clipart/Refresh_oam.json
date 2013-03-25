@@ -1,0 +1,32 @@
+{
+    "id": "http://www.maqetta.org/clipart/Refresh",
+    "name": "Refresh",
+    "spec": "1.0",
+    "version": "1.0",
+    "library": {
+        "clipart": {
+            "src": "../../../clipart"
+        },
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "clipart/Refresh",
+            "$library": "clipart"
+        },
+        {
+            "type": "image",
+            "src": "Refresh.svg",
+            "$library": "clipart"
+        }
+    ],
+    "content": "<img></img>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Clipart icon: Refresh</p>"
+    }
+}

@@ -30,6 +30,18 @@
 				"Twitter"
 			]
 		},
+		"$ClipartSection_Devices":{
+			"id":"Devices",
+			"name": "Devices",
+            "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2hpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYxIDY0LjE0MDk0OSwgMjAxMC8xMi8wNy0xMDo1NzowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowMTgwMTE3NDA3MjA2ODExOTJCMEJDQTgxOTc0RDYxMiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo4NTQ0QUU2NjhCMzMxMUUyOTQ3N0ExRTg0NEJENzk4RiIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo4NTQ0QUU2NThCMzMxMUUyOTQ3N0ExRTg0NEJENzk4RiIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1LjEgTWFjaW50b3NoIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MDM4MDExNzQwNzIwNjgxMTkyQjBCQ0E4MTk3NEQ2MTIiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MDE4MDExNzQwNzIwNjgxMTkyQjBCQ0E4MTk3NEQ2MTIiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7l5plaAAAAIVBMVEX///8zMzP3+PnV1dZ+fn7ExMZ9fX4sKis1NTVZWVmgoKKPJ3BhAAAARElEQVR42mJgIAIwM8IBM1iAkRkO2KECTFBAiQCaoZjWsrKxcgIxEHKA+BysbGysQIKLi5OVEyjCiAYYWNAAYa8CBBgA3BQB3Pw68r4AAAAASUVORK5CYII=",
+			"includes":[
+				"Cellphone",
+				"Computer",
+				"Laptop",
+				"Server",
+				"Tablet"
+			]
+		},
 		"$ClipartSection_DeviceSilhouettes":{
 			"id":"DeviceSilhouettes",
 			"name": "Device Silhouettes",
@@ -50,11 +62,16 @@
 			"includes":[
 				"Camera",
 				"Chat",
+				"GraphBar",
+				"GraphLine",
+				"GraphPie",
 				"Image",
 				"Map",
 				"Microphone",
 				"PlayControl",
+				"Record",
 				"StreetMap",
+				"Table",
 				"VideoCamera",
 				"VideoPlayer"
 			]
@@ -64,12 +81,16 @@
 			"name": "User Interface Controls",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQALMAAFhYWtXV1qurrKGhooKCg/////X19TMzM////wAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAAgALAAAAAAQABAAAARSEElwqrUyHxG678KRIVthDoNZhGNZBFVgsppQGId5GKtYF5dKr8X5eGiSoNKXJAie0CeBSbKprsgqMDj84XS8rAt2kHWT1gJKJS4aA1nSspKJAAA7",
 			"includes":[
+				"File",
+				"Folder",
 				"FormattingToolbox",
 				"HScrollBar",
 				"HSplit",
+				"ProgressBar",
 				"SpinInput",
 				"VScrollBar",
-				"VSplit"
+				"VSplit",
+				"WaitingPending"
 			]
 		},
 		"$ClipartSection_UserInterfaceIcons":{
@@ -78,18 +99,28 @@
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAANXT1vj4+eLi49/f4Nra29nZ2tbW19XV1tTU1dDQ0c3NzpCQkf////7+/vX19fLy8vDw8O/v7+zs7OTk5OPj49nZ2dHR0c/Pz87Ozs3NzczMzKWlpaOjo6KioqGhoZ6enp2dnZycnJubm5mZmY+Pj4aGhoWFhYGBgX5+fnR0dHNzc2lpaWZmZllZWVdXV1VVVVNTU1FRUU5OTk1NTUxMTEJCQkBAQDY2NjMzMzIyMi8vLyoqKiYmJiMjI////wAAACH5BAEAAD4ALAAAAAAQABAAAAa8QJ/Qd0HRdD0dDXUZDj8ykqJgKGBIso/zs9IIIoFGICLQrLREWUZSmeHetookI2ueFgIGC6fSqHAzDAILJz4yFhF6LA8MD28MEQkyPjkEAQyYjS04LAwBBDk+PAYNmQ+bLYwNBjw+OJaZGzipmA4EOD4xB4mYIzgjmREHMT4mIhSZyZgUIiZELwgSvb+YEggvTT4eKQgDEB01HRATCCkcThwuIAcEAAQHIS/nTj4WJTA3OzcwJRb0/wB9BAEAOw==",
 			"includes":[
 				"Close",
+				"Copy",
+				"Delete",
+				"Edit",
+				"Error",
+				"Fatal",
 				"Help",
 				"Home",
+				"Info",
 				"Lock",
 				"Mail",
 				"Minus",
 				"Next",
+				"Paste",
 				"Plus",
 				"Previous",
 				"Print",
+				"Refresh",
+				"Save",
 				"Search",
 				"ShoppingCart",
-				"Trash"
+				"Trash",
+				"Warning"
 			]
 		},
 		"$ClipartSection_Other":{
@@ -110,6 +141,7 @@
 			"subsections":[
 				"$ClipartSection_Arrows",
 				"$ClipartSection_Community",
+				"$ClipartSection_Devices",
 				"$ClipartSection_DeviceSilhouettes",
 				"$ClipartSection_Media",
 				"$ClipartSection_UserInterfaceControls",

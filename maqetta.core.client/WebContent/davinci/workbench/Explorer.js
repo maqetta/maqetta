@@ -159,6 +159,16 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 		dojo.connect(tree.domNode, "onkeypress", this, "_onKeyPress");
 	},
 
+	/**
+	 * Subclass toolbar logic in parent class _ToolbaredContainer
+	 * so that we can supplement the standard buttons (from ui.plugin.js) with
+	 * additional UI, particularly project-related UI.
+	 */
+	_createToolbar: function(containerClass){
+		//FIXME: Need to move project-related UI into here.
+		this.inherited(arguments);
+	},
+	
 	destroy: function(){
 		this.inherited(arguments);
 	},

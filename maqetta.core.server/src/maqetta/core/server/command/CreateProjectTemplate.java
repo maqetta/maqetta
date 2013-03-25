@@ -1,29 +1,18 @@
 package maqetta.core.server.command;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.SimpleTimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.davinci.server.review.Constants;
-import org.davinci.server.user.IPerson;
 import org.davinci.server.user.IUser;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.maqetta.server.Command;
-import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IProjectTemplatesManager;
 import org.maqetta.server.ServerManager;
-
-import org.maqetta.server.IStorage;
 
 public class CreateProjectTemplate extends Command {
 	static final private Logger theLogger = Logger.getLogger(ServerManager.class.getName());

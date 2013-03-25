@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import maqetta.core.server.command.Download;
 import maqetta.server.orion.MaqettaOrionServerConstants;
 
-import org.davinci.server.user.IPerson;
 import org.davinci.server.user.IUser;
 import org.maqetta.server.IProjectTemplatesManager;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -25,7 +24,6 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import org.maqetta.server.Command;
 import org.maqetta.server.IDavinciServerConstants;
-import org.maqetta.server.IStorage;
 import org.maqetta.server.ServerManager;
 
 public class GetInitializationInfo extends Command {

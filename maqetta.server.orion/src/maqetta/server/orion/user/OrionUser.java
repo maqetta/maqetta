@@ -178,12 +178,12 @@ public class OrionUser extends User {
 						file = file.newInstance(project.getPath()+ "/" + basePath);
 				
 				
-	            VResourceUtils.copyDirectory(file, path, bundle);
-	        }
-	        
-	        if(projectTemplateDirectoryName!=null && !projectTemplateDirectoryName.equals("")){
-	        	IProjectTemplatesManager projectTemplatesManager = ServerManager.getServerManager().getProjectTemplatesManager();
-		        IStorage projectTemplatesDirectory = projectTemplatesManager.getProjectTemplatesDirectory();
+				VResourceUtils.copyDirectory(file, path, bundle);
+			}
+
+			if(projectTemplateDirectoryName!=null && !projectTemplateDirectoryName.equals("")){
+				IProjectTemplatesManager projectTemplatesManager = ServerManager.getServerManager().getProjectTemplatesManager();
+				IStorage projectTemplatesDirectory = projectTemplatesManager.getProjectTemplatesDirectory();
 				IStorage templateDir = projectTemplatesDirectory.newInstance(projectTemplatesDirectory, projectTemplateDirectoryName);
 				if(templateDir.exists()) {
 					IStorage[] files = templateDir.listFiles();
@@ -197,7 +197,7 @@ public class OrionUser extends User {
 						}
 					}
 				}
-	        }
+			}
 		
 		}
         addBaseSettings(projectName);

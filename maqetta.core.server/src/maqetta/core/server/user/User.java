@@ -633,6 +633,8 @@ public class User implements IUser {
 		return this.person;
 	}
 	
+	// Following routines are used by OrionUser.java
+	
 	public void copyDirectory(IStorage sourceDir, IStorage destinationDir) throws IOException {
 		destinationDir.mkdirs();
 		IStorage[] file = sourceDir.listFiles();

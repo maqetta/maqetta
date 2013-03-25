@@ -31,9 +31,8 @@ public class CreateProjectTemplate extends Command {
 		try{
 			params = new JSONObject(paramsJson);
 		} catch (JSONException e) {
-			String desc = "getProjectTemplates - json exception";
-			theLogger.log(Level.SEVERE, desc, e);
-			throw new Error(desc, e);
+			errorString = "getProjectTemplates - json exception";
+			error = true;
 		}
 		
 		IProjectTemplatesManager projectTemplatesManager = ServerManager.getServerManager().getProjectTemplatesManager();

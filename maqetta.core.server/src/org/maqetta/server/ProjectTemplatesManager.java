@@ -21,6 +21,7 @@ import org.json.JSONArray;
 
 public class ProjectTemplatesManager implements IProjectTemplatesManager {
 	private IStorage projectTemplatesDirectory = null;
+	private IStorage projectTemplatesIndexIStorage = null;
 	private JSONObject projectTemplatesIndex = null;
 	static final private Logger theLogger = Logger.getLogger(ServerManager.class.getName());
 	
@@ -29,6 +30,9 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 	}
 	
 	public JSONObject getProjectTemplatesIndex() throws IOException {
+		if(this.projectTemplatesIndex != null){
+			return this.projectTemplatesIndex;
+		}
 		IStorage indexFile = getProjectTemplatesIndexIStorage();
 		if(!indexFile.exists()) {
 			return null;
@@ -46,16 +50,18 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 	}
 
 	public IStorage getProjectTemplatesIndexIStorage() {
-		IStorage indexFile = null;
+		if(this.projectTemplatesIndexIStorage != null){
+			return this.projectTemplatesIndexIStorage;
+		}
 		try{
 			IStorage projectTemplatesDirectory = getProjectTemplatesDirectory();
-			indexFile = projectTemplatesDirectory.newInstance(projectTemplatesDirectory, IDavinciServerConstants.PROJECT_TEMPLATES_INDEX_FILE);
+			this.projectTemplatesIndexIStorage = projectTemplatesDirectory.newInstance(projectTemplatesDirectory, IDavinciServerConstants.PROJECT_TEMPLATES_INDEX_FILE);
 		}catch(IOException e){
 			String desc = "getProjectTemplates";
 			theLogger.log(Level.SEVERE, desc, e);
 			throw new Error(desc, e);
 		}
-		return indexFile;
+		return this.projectTemplatesIndexIStorage;
 	}
 
 	public JSONArray getProjectTemplates(){
@@ -152,6 +158,7 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 					for (int i = 0; i < files.length; i++) {
 						IStorage file = files[i];
 						if (file.isFile() || file.isDirectory()) {
+							// FIXME: Delete is not working for directories
 							file.delete();
 						}
 					}
@@ -188,6 +195,7 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 						throw new Error(desc, e);
 					}
 				}
+				// Add this template and write out a new copy of index file
 				try{
 					template = new JSONObject();
 					template.put("folder", templateFolderName);
@@ -203,7 +211,6 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 					throw new Error(desc, e);
 				}
 				
-				// Add this template and write out a new copy of index file
 				updateTemplates(newTemplates);
 	
 			} catch (IOException e) {

@@ -16,6 +16,7 @@ import javax.servlet.ServletConfig;
 
 import org.davinci.ajaxLibrary.ILibraryManager;
 import org.davinci.ajaxLibrary.LibraryManager;
+import org.maqetta.server.IProjectTemplatesManager;
 import org.davinci.server.internal.Activator;
 import org.davinci.server.internal.IRegistryListener;
 import org.davinci.server.user.IPersonManager;
@@ -38,6 +39,7 @@ public class ServerManager implements IServerManager {
 	private IExtensionRegistry    registry;
 	private IPersonManager personManager;
 	private ILibraryManager        libraryManager;
+	private IProjectTemplatesManager projectTemplatesManager;
 
 	public ServletConfig  servletConfig;
 	private IStorage userDir;
@@ -258,6 +260,16 @@ public class ServerManager implements IServerManager {
 		}
 
 		return libraryManager;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.davinci.server.IServerManager#getLibraryManager()
+	 */
+	public synchronized IProjectTemplatesManager getProjectTemplatesManager() {
+		if (projectTemplatesManager == null) {
+			projectTemplatesManager = new ProjectTemplatesManager();
+		}
+		return projectTemplatesManager;
 	}
 
 	public IPersonManager getPersonManager() {

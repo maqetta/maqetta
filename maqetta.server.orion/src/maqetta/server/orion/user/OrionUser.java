@@ -37,6 +37,7 @@ import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.IStorage;
 import org.maqetta.server.IVResource;
 import org.maqetta.server.ServerManager;
+import org.maqetta.server.IProjectTemplatesManager;
 import org.osgi.framework.Bundle;
 
 
@@ -112,11 +113,14 @@ public class OrionUser extends User {
 		return path;
 	}
 	
-	public IVResource createProject(String projectName, String basePath, boolean initFiles) throws IOException {
+	public IVResource createProject(String projectName, String projectTemplateDirectoryName, String basePath, boolean initFiles) throws IOException {
 		
 		if(isProject(projectName))  return getResource(projectName);
 		
 		IVResource project = createOrionProject(projectName);
+		IStorage userDir = getUserDirectory();
+		IStorage projectDir = userDir.newInstance(projectName);
+		
 		/*
 		 * Load the initial user files extension point and copy the files to the projects root
 		 */
@@ -124,8 +128,7 @@ public class OrionUser extends User {
 		if(basePath!=null && !basePath.equals("")){
 			project.create(basePath + "/");
 		}
-			
-		
+
 		if(initFiles){
 			List<?> extensions = ServerManager.getServerManager().getExtensions(IDavinciServerConstants.EXTENSION_POINT_INITIAL_USER_FILES, IDavinciServerConstants.EP_TAG_INITIAL_USER_FILE);
 	        for (Iterator<?> iterator = extensions.iterator(); iterator.hasNext();) {
@@ -139,8 +142,27 @@ public class OrionUser extends User {
 						file = file.newInstance(project.getPath()+ "/" + basePath);
 				
 				
-	            VResourceUtils.copyDirectory(file, path, bundle);
-	        }
+				VResourceUtils.copyDirectory(file, path, bundle);
+			}
+
+			if(projectTemplateDirectoryName!=null && !projectTemplateDirectoryName.equals("")){
+				IProjectTemplatesManager projectTemplatesManager = ServerManager.getServerManager().getProjectTemplatesManager();
+				IStorage projectTemplatesDirectory = projectTemplatesManager.getProjectTemplatesDirectory();
+				IStorage templateDir = projectTemplatesDirectory.newInstance(projectTemplatesDirectory, projectTemplateDirectoryName);
+				if(templateDir.exists()) {
+					IStorage[] files = templateDir.listFiles();
+					for (int i = 0; i < files.length; i++) {
+						if (files[i].isFile()) {
+							IStorage destination = projectDir.newInstance(projectDir, files[i].getName());
+							copyFile(files[i], destination);
+						} else if (files[i].isDirectory()) {
+							IStorage destination = projectDir.newInstance(projectDir, files[i].getName());
+							copyDirectory(files[i], destination);
+						}
+					}
+				}
+			}
+		
 		}
         addBaseSettings(projectName);
         rebuildWorkspace();

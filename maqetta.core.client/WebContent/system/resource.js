@@ -115,7 +115,8 @@ var Resource = {
 		return xhr.get({
 			url: "cmd/createProject",
 			handleAs: "text",
-			content: {name: projectName, eclipseSupport: eclipseSupport}
+			//content: {name: projectName, eclipseSupport: eclipseSupport}
+			content: {name: projectName, eclipseSupport: eclipseSupport, projectTemplate:'foo_john@example.com'}
 		});
 	},
 	

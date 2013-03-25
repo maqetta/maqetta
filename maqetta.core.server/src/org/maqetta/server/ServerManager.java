@@ -16,6 +16,8 @@ import javax.servlet.ServletConfig;
 
 import org.davinci.ajaxLibrary.ILibraryManager;
 import org.davinci.ajaxLibrary.LibraryManager;
+import org.maqetta.server.IProjectTemplatesManager;
+import org.maqetta.server.ProjectTemplatesManager;
 import org.davinci.server.internal.Activator;
 import org.davinci.server.internal.IRegistryListener;
 import org.davinci.server.user.IPersonManager;
@@ -38,6 +40,7 @@ public class ServerManager implements IServerManager {
 	private IExtensionRegistry    registry;
 	private IPersonManager personManager;
 	private ILibraryManager        libraryManager;
+	private IProjectTemplatesManager projectTemplatesManager;
 
 	public ServletConfig  servletConfig;
 	private IStorage userDir;
@@ -258,6 +261,27 @@ public class ServerManager implements IServerManager {
 		}
 
 		return libraryManager;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.davinci.server.IServerManager#getLibraryManager()
+	 */
+	public synchronized IProjectTemplatesManager getProjectTemplatesManager() {
+		if (projectTemplatesManager == null) {
+			/*
+    		 IConfigurationElement libraryElement = ServerManager.getServerManager().getExtension(IDavinciServerConstants.EXTENSION_POINT_LIBRARY_MANAGER, IDavinciServerConstants.EP_TAG_LIBRARY_MANAGER);
+		        if (libraryElement != null) {
+		        try {
+		           this.libraryManager = (ILibraryManager) libraryElement.createExecutableExtension(IDavinciServerConstants.EP_ATTR_CLASS);
+		        } catch (CoreException e) {
+		           e.printStackTrace();
+		        }
+	        }
+			 */
+			projectTemplatesManager = new ProjectTemplatesManager();
+		}
+
+		return projectTemplatesManager;
 	}
 
 	public IPersonManager getPersonManager() {

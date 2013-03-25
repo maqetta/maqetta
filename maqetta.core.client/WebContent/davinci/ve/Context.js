@@ -827,10 +827,17 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 					true /*skipDomUpdate*/
 			).then(function(){
 					// make sure this file has a valid/good theme
-					this.loadTheme(newHtmlParams);	
+					this._setSourcePostLoadRequires(source, callback, scope, newHtmlParams);
 			}.bind(this));
+		} else {
+			this._setSourcePosLoadRequires(source, callback, scope, newHtmlParams);
 		}
 
+
+	},
+	
+	_setSourcePostLoadRequires: function(source, callback, scope, newHtmlParams){
+		this.loadTheme(newHtmlParams);
 		//FIXME: Need to add logic for initial themes and device size.
 		if(newHtmlParams){
 			var modelBodyElement = source.getDocumentElement().getChildElement("body");
@@ -1045,25 +1052,6 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 				this.editor.handleKeyEvent(e);
 			}));	
 
-
-			/*win.onbeforeunload = function (e) {//The call in Runtime.js seems to take precedence over this one
-				var time = new Date().getTime();
-				var shouldDisplay = time - win.davinciBackspaceKeyTime < 100;
-				if (shouldDisplay) {
-					var message = "Careful! You are about to leave Maqetta.";
-					// Mozilla/IE
-					// Are you sure you want to navigate away from this page?
-					// Careful! You will lose any unsaved work if you leave this page now.
-					// Press OK to continue, or Cancel to stay on the current page.
-					if (e = e || win.event) {
-						e.returnValue = message;
-					}
-					// Webkit
-					// Careful! You will lose any unsaved work if you leave this page now.
-					// [Leave this Page] [Stay on this Page]
-					return message;
-				}
-			};*/
 		}
 	},
 

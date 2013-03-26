@@ -59,6 +59,7 @@ public class MaqettaOSGiResourceLoader extends OSGiResourceLoader {
 				try {
 					user = userManager.getUser(userName);
 				} catch (UserException e) {
+					// TODO surface error up the stack
 					e.printStackTrace();
 					return null;
 				}

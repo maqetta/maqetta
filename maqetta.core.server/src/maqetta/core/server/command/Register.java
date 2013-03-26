@@ -40,7 +40,7 @@ public class Register extends Command {
             HttpSession session = req.getSession(true);
             session.setAttribute(IDavinciServerConstants.SESSION_USER, user);
         } catch (UserException e) {
-            this.responseString = e.getReason();
+            this.responseString = e.getMessage();
         }
 
     }

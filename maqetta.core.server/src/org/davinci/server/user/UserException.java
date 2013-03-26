@@ -11,16 +11,20 @@ public class UserException extends Exception {
 
     public static final String ERROR_COPYING_USER_BASE_DIRECTORY = "Error while creating user base directory.";
 
-    public UserException(String reason) {
-        super(reason);
-    }
-    
-    public UserException(Exception e) {
-    	super(e);
-    }
+	public UserException() {
+		super();
+	}
 
-    public String getReason() {
-        return this.getMessage();
-    }
+	public UserException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public UserException(String mesage) {
+		super(mesage);
+	}
+
+	public UserException(Throwable cause) {
+		super(cause);
+	}
 
 }

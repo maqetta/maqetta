@@ -165,9 +165,10 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 					IStorage[] files = templateDir.listFiles();
 					for (int i = 0; i < files.length; i++) {
 						IStorage file = files[i];
-						if (file.isFile() || file.isDirectory()) {
-							// FIXME: Delete is not working for directories
+						if (file.isFile()) {
 							file.delete();
+						}else if(file.isDirectory()) {
+							deleteDirectory(file);
 						}
 					}
 				}else{
@@ -311,7 +312,7 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 		}
 	}
 	
-	public void copyDirectory(IStorage sourceDir, IStorage destinationDir) throws IOException {
+	private void copyDirectory(IStorage sourceDir, IStorage destinationDir) throws IOException {
 		destinationDir.mkdirs();
 		IStorage[] file = sourceDir.listFiles();
 		for (int i = 0; i < file.length; i++) {
@@ -329,7 +330,7 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 		}
 	}
 
-	public void copyFile(IStorage source, IStorage destination) throws IOException {
+	private void copyFile(IStorage source, IStorage destination) throws IOException {
 		InputStream in = null;
 		OutputStream out = null;
 		try {
@@ -349,6 +350,20 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 				out.close();
 			}
 		}
+	}
+	
+	private void deleteDirectory(IStorage dir) throws IOException {
+		IStorage[] file = dir.listFiles();
+		for (int i = 0; i < file.length; i++) {
+			if (file[i].isFile()) {
+				IStorage f = file[i];
+				f.delete();
+			}
+			if (file[i].isDirectory()) {
+				deleteDirectory(file[i]);
+			}
+		}
+		dir.delete();
 	}
 
 }

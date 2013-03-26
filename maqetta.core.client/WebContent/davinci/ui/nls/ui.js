@@ -118,6 +118,7 @@ define({ root:
 		
 		//deleteAction
 		"areYouSureDelete":"Are you sure you want to delete ${0}?",
+		"areYouSureDeleteProject":"Are you sure you want to delete project ${0}?",
 		"noResourcesSelected":"No resources are currently selected.",
 		
 		/*Templates*/
@@ -159,6 +160,13 @@ define({ root:
 		"renameButtonLabel": "Rename",
 		"renameDialogTitle": "Rename To...",
 
+		//Explorer
+		"createProjectMenuItem": "Create project...",
+		"deleteProjectMenuItem": "Delete project",
+		"renameProjectMenuItem": "Rename project...",
+		"createProjectTemplateMenuItem": "Create project template...",
+		"manageProjectTemplatesMenuItem": "Manage project templates...",
+		
 		//NewProject
 		"newProjectName": "Name:",
 		"newProjectEclipseSupport": "Eclipse support",
@@ -167,7 +175,6 @@ define({ root:
 		"newProjectNoTemplate":"(none)",
 
 		//NewProjectTemplate
-		"createProjectTemplateMenuItem": "Create project template...",
 		"createProjectTemplate": "Create project template",
 		"newProjectTemplateName": "Template Name:",
 		"newProjectNameExists": "A project with this name already exists",

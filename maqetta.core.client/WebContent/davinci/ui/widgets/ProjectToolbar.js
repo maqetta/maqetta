@@ -33,54 +33,7 @@ define(["dojo/_base/declare",
 				return;
 			}
 			Workbench.loadProject(newProject);
-		},
-		
-		_delete: function(){
-			var allProjects = this._projectSelection.get("projects");
-			if(allProjects.length < 2){
-				alert(uiNLS.deleteOnlyProjectError);
-				return;
-			}
-			var changeToProject = null;
-			var project = this._projectSelection.get("value");
-			for(var i=0;!changeToProject && i<allProjects.length;i++){
-				if(allProjects[i]!=project) {
-					changeToProject = allProjects[i];
-				}
-			}
-			
-			//Make the user confirm
-			if(!confirm(dojo.string.substitute(uiNLS.areYouSureDelete, [project]))){
-		    	return;
-		    }
-			
-			var resource = systemResource.findResource(project);
-			resource.deleteResource().then(function(){
-				Workbench.loadProject(changeToProject);				
-			});
-		},
-		
-		_rename: function(){
-			var oldProject = Workbench.getProject();
-			var renameDialog = new Rename({value:oldProject, invalid: this._projectSelection.get("projects")});
-			
-			Workbench.showModal(renameDialog, uiNLS.renameProjectDialogTitle, {height:110, width: 200},function(){
-				
-				var cancel = renameDialog.get("cancel");
-				if(!cancel){
-					var newName = renameDialog.get("value");
-					if(newName == oldProject) {
-						return;
-					}
-
-					var resource = systemResource.findResource(oldProject);
-					resource.rename(newName).then(function(){
-						Workbench.loadProject(newName);						
-					});
-				}
-
-				return true;
-			});
 		}
+
 	});
 });

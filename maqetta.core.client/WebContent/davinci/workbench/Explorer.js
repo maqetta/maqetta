@@ -7,14 +7,16 @@ define([
 	"dijit/form/DropDownButton",
 	"dijit/DropDownMenu",
 	"dijit/MenuItem",
+	"dijit/MenuSeparator",
 	"dijit/Tree",
 	"dojo/mouse",
+	"system/resource",
 	"davinci/ui/dnd/DragSource",
 	"davinci/ui/Resource",
 	"davinci/ui/widgets/TransformTreeMixin",
-	"system/resource",
 	"davinci/ui/widgets/ProjectToolbar",
-	"davinci/ui//NewProjectTemplate",
+	"davinci/ui/NewProjectTemplate",
+    "davinci/ui/Rename",
 	
 	//ui_plugin/js
 	"davinci/ui/Download",
@@ -23,8 +25,9 @@ define([
 	"dojo/i18n!davinci/ve/nls/common",
     "dojo/i18n!davinci/ui/nls/ui"
 	
-], function(declare, ViewPart, Workbench, Runtime, DropDownButton, DropDownMenu, MenuItem, Tree, mouse, DragSource,
-		Resource, TransformTreeMixin, resource, ProjectToolbar, NewProjectTemplate, Download, DownloadSelected, UserLibraries, commonNls, uiNLS) {
+], function(declare, ViewPart, Workbench, Runtime, DropDownButton, DropDownMenu, MenuItem, MenuSeparator,
+		Tree, mouse, systemResource, DragSource, Resource, TransformTreeMixin, ProjectToolbar, 
+		NewProjectTemplate, Rename, Download, DownloadSelected, UserLibraries, commonNls, uiNLS) {
 	
 return declare("davinci.workbench.Explorer", ViewPart, {
 	
@@ -190,25 +193,50 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 		
 		// FIXME: Just dummy menu for now
 		var menu = new DropDownMenu({ style: "display: none;"});
-		var menuItem1 = new MenuItem({
-			id: 'CreateProjectTemplate',
+		menu.addChild(new MenuItem({
+			id: 'ExplorerCreateProject',
+			label: uiNLS.createProjectMenuItem,
+			iconClass: "",
+			onClick: function(){
+				require(['davinci/ui/Resource'], function(r) {
+					r.newProject();
+				});
+		    }.bind(this)
+		}));
+		menu.addChild(new MenuItem({
+			id: 'ExplorerDeleteProject',
+			label: uiNLS.deleteProjectMenuItem,
+			iconClass: "",
+			onClick: function(){
+				this._deleteProject();
+		    }.bind(this)
+		}));
+		menu.addChild(new MenuItem({
+			id: 'ExplorerRenameProject',
+			label: uiNLS.renameProjectMenuItem,
+			iconClass: "",
+			onClick: function(){
+				this._renameProject();
+		    }.bind(this)
+		}));
+		menu.addChild(new MenuSeparator());
+		menu.addChild(new MenuItem({
+			id: 'ExplorerCreateProjectTemplate',
 			label: uiNLS.createProjectTemplateMenuItem,
 			iconClass: "",
 			onClick: function(){
 				var NewProjectTemplateDialog = new NewProjectTemplate({});
 				Workbench.showModal(NewProjectTemplateDialog, uiNLS.createProjectTemplate, {width:'330px'}, null, true);
 		    }.bind(this)
-		});
-		menu.addChild(menuItem1);
-		var menuItem2 = new MenuItem({
-			id: 'ExplorerCommand2',
-			label: commonNls.showAllWidgets,
-			iconClass: "dojoyPaletteMenuItemCheckMark",
+		}));
+		menu.addChild(new MenuItem({
+			id: 'ExplorerManageProjectTemplates',
+			label: uiNLS.manageProjectTemplatesMenuItem,
+			iconClass: "",
 			onClick: function(){
-				debugger;//FIXME
-			}.bind(this)
-		});
-		menu.addChild(menuItem2);
+				debugger;
+		    }.bind(this)
+		}));
 		var button = new DropDownButton({
 		    showLabel: false,
 		    dropDown: menu
@@ -218,6 +246,73 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 
 	},
 	
+	
+	_deleteProject: function(){
+		var allProjects = null;
+		systemResource.listProjects(function(projects){
+			allProjects = projects.map(function(project){ return project.name; });
+		}.bind(this));
+		if(!allProjects || allProjects.length < 2){
+			alert(uiNLS.deleteOnlyProjectError);
+			return;
+		}
+		var changeToProject = null;
+		var project = Workbench.getProject();
+		var found = false;
+		// Choose project before current project if there is one
+		// else next project
+		for(var i=0;i<allProjects.length;i++){
+			if(allProjects[i]==project) {
+				found = true;
+				if(changeToProject){
+					break;
+				}
+			}else{
+				changeToProject = allProjects[i];
+				if(found){
+					break;
+				}
+			}
+		}
+		
+		//Make the user confirm
+		if(!confirm(dojo.string.substitute(uiNLS.areYouSureDeleteProject, [project]))){
+	    	return;
+	    }
+		
+		var resource = systemResource.findResource(project);
+		resource.deleteResource().then(function(){
+			Workbench.loadProject(changeToProject);
+		});
+	},
+	
+	_renameProject: function(){
+		var oldProject = Workbench.getProject();
+		var allProjects = null;
+		systemResource.listProjects(function(projects){
+			allProjects = projects.map(function(project){ return project.name; });
+		}.bind(this));
+		var renameDialog = new Rename({value:oldProject, invalid: allProjects});
+		
+		Workbench.showModal(renameDialog, uiNLS.renameProjectDialogTitle, {height:110, width: 200},function(){
+			
+			var cancel = renameDialog.get("cancel");
+			if(!cancel){
+				var newName = renameDialog.get("value");
+				if(newName == oldProject) {
+					return;
+				}
+
+				var resource = systemResource.findResource(oldProject);
+				resource.rename(newName).then(function(){
+					Workbench.loadProject(newName);						
+				});
+			}
+
+			return true;
+		});
+	},
+
 	destroy: function(){
 		this.inherited(arguments);
 	},

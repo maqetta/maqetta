@@ -40,7 +40,7 @@ public class TryIt extends Command {
             resp.sendRedirect(redirectURL);
 
         } catch (UserException e) {
-            this.responseString = e.getReason();
+            this.responseString = e.getMessage();
         }
 
     }

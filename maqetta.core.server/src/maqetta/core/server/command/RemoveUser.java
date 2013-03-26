@@ -33,7 +33,7 @@ public class RemoveUser extends Command {
                 }
             }
         } catch (UserException e) {
-            this.responseString = e.getReason();
+            this.responseString = e.getMessage();
         }
     }
 }

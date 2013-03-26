@@ -221,12 +221,12 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 		}));
 		menu.addChild(new MenuSeparator());
 		menu.addChild(new MenuItem({
-			id: 'ExplorerCreateProjectTemplate',
-			label: uiNLS.createProjectTemplateMenuItem,
+			id: 'ExplorerSaveAsProjectTemplate',
+			label: uiNLS.saveAsProjectTemplateMenuItem,
 			iconClass: "",
 			onClick: function(){
 				var NewProjectTemplateDialog = new NewProjectTemplate({});
-				Workbench.showModal(NewProjectTemplateDialog, uiNLS.createProjectTemplate, {width:'330px'}, null, true);
+				Workbench.showModal(NewProjectTemplateDialog, uiNLS.saveAsProjectTemplate, {width:'330px'}, null, true);
 		    }.bind(this)
 		}));
 		menu.addChild(new MenuItem({

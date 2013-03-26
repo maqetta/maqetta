@@ -585,9 +585,10 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 .NewProjectDialogTable {
 	width:100%;
 }
-.NewProjectDialogLabel {
+.NewProjectDialogLabel, .NewProjectTemplateDialogLabel {
 	white-space:nowrap;
 }
+
 .NewProjectTemplateName {
 	white-space:nowrap;
 } 

@@ -164,7 +164,7 @@ define({ root:
 		"createProjectMenuItem": "Create project...",
 		"deleteProjectMenuItem": "Delete project",
 		"renameProjectMenuItem": "Rename project...",
-		"createProjectTemplateMenuItem": "Create project template...",
+		"saveAsProjectTemplateMenuItem": "Save as project template...",
 		"manageProjectTemplatesMenuItem": "Manage project templates...",
 		
 		//NewProject
@@ -175,10 +175,14 @@ define({ root:
 		"newProjectNoTemplate":"(none)",
 
 		//NewProjectTemplate
-		"createProjectTemplate": "Create project template",
-		"newProjectTemplateName": "Template Name:",
-		"newProjectNameExists": "A project with this name already exists",
-
+		"saveAsProjectTemplate": "Save as project template",
+		"newProjectTemplateName": "Project template name:",
+		"newProjectTemplateShareLabel": "Share with everyone",
+		"newProjectTemplateOverwrite": "Project template {0} already exists. OK to overwrite?",
+		"newProjectTemplateCreationSuccess":"Project template {0} has been saved",
+		"newProjectTemplateCreationFailure":"Error: Project template {0} save operation failed",
+		"newProjectTemplateCancelled":"Operation cancelled",
+		
 		//UserLibraries
 		"modify": "Modify",
 		

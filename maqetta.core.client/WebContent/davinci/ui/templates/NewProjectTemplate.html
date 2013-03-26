@@ -4,15 +4,20 @@
 		<tr>
 			<td class="NewProjectTemplateDialogLabel">${newProjectTemplateName}</td>
 			<td>
-				<input class='templateInput' data-dojo-type="dijit.form.ValidationTextBox" type='text' dojoAttachPoint="_projectTemplateName"></input>
+				<input class='templateInput' data-dojo-type="dijit.form.ComboBox" type='text' dojoAttachPoint="_projectTemplateName"></input>
 			</td>
-			<td><div dojoAttachPoint='_error4'></div></td>
+		</tr>
+		<tr class="NewProjectTemplateShareRow">
+			<td colspan="2">
+				<input id="NewProjectTemplateShare" data-dojo-type="dijit.form.CheckBox" dojoAttachPoint="_projectTemplateShare"></input>
+				<label for="NewProjectTemplateShare" class="newProjectTemplateShareLabel">${newProjectTemplateShareLabel}</label>
+			</td>
 		</tr>
 		</table>
 	</div>
 
 	<div class="dijitDialogPaneActionBar">
-		<button dojoType='dijit.form.Button' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='${create}' class="maqPrimaryButton" type="submit" disabled></button>
+		<button dojoType='dijit.form.Button' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='${save}' class="maqPrimaryButton" type="submit" disabled></button>
 		<button dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='${buttonCancel}' class="maqSecondaryButton"></button>
 	</div>
 		

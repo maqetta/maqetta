@@ -104,7 +104,14 @@ var Runtime = {
 		}
 		return displayName;		
 	},
-	
+
+	getUserEmail: function(userInfo) {
+		if (!userInfo) {
+			userInfo = this.getUser();
+		}
+		return userInfo.email;
+	},
+
 	/*
 	 * The goal is to return a string of the form:
 	 * 

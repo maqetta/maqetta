@@ -132,6 +132,14 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 			errorString = "No project template name specified";
 			error = true;
 		}
+		// Make sure project template name only contains alphas. 
+		// Guards against "../" and ensures there are no underscores in name
+		// Don't allow underscore because folder name we create has an underscore
+		// to separate the template name from the author's email
+		if (!projectTemplateName.matches("^[\\p{L}\\d\\.\\-]+$")){
+			errorString = "Invalid characters in project template name";
+			error = true;
+		}
 		if (projectToClone == "" || projectToClone == null) {
 			errorString = "No project to clone specified";
 			error = true;

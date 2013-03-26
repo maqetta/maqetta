@@ -15,7 +15,8 @@ define(["dojo/_base/declare",
         
 ],function(declare, _Templated, _Widget,  Library, Resource, Preferences,  Runtime, Workbench, uiNLS, commonNLS, templateString){
 
-	var noProjectTemplate = '_none_';
+	// Allow any unicode alpha, dijit, period or hyphen
+	var regex = "^[A-Za-z0-9\.\-]+$"; // This is validation regex used by server: "^[\p{L}\d\.\-]+$", but browsers don't support \p
 
 	return dojo.declare("davinci.ui.NewProjectTemplate",   [_Widget,_Templated], {
 		widgetsInTemplate: true,
@@ -34,17 +35,7 @@ define(["dojo/_base/declare",
 		postCreate: function(){
 			this.inherited(arguments);
 			dojo.connect(this._projectTemplateName, "onKeyUp", this, '_checkValid');
-
-			//FIXME: Why not just use a regex?
-			this._projectTemplateName.validator = dojo.hitch(this, function(value, constraints) {
-					var isValid = true;
-					if (!value) {
-						isValid = false;
-					} else {
-						this._projectTemplateName.invalidMessage = null;
-					}
-					return isValid;
-			});
+			this._projectTemplateName.set("regExp", regex);
 		},
 		
 		_checkValid: function(){

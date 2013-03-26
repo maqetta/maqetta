@@ -51,7 +51,6 @@ plugin@org.slf4j.jcl,1.6.4=p2IU,id=org.slf4j.jcl,version=1.6.4.v20120130-2120,re
 plugin@javax.mail.glassfish,1.4.1=p2IU,id=javax.mail.glassfish,version=1.4.1.v201108011116,repository=http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository
 plugin@javax.activation,1.1.0=p2IU,id=javax.activation,version=1.1.0.v201108011116,repository=http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository
 
-plugin@org.dojotoolkit,1.6.1=p2IU,id=org.dojotoolkit,version=1.6.1.v201108161253,repository=http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository
 plugin@org.openid4java,0.9.5=p2IU,id=org.openid4java,version=0.9.5.v201105210655,repository=http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository
 
 #eclipse platform 4.2 dependencies for org.eclipse.orion.server.ui.feature

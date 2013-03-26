@@ -490,16 +490,13 @@ var MultiFieldSmartInput = declare(SmartInput, {
 	
 	getSelectedOption: function(widget, options) {
 
-		var oldValue = widget.attr("value");
-		var value;
+		var value="";
 		for (var i = 0; i < options.length; i++) {
 			var option = options[i];
 			if (option.properties.selected) {
 				value = option.properties.value;
 				break;
-			} else if(option.properties.value == oldValue) {
-				value = oldValue;
-			}
+			} 
 		}
 		return value;
 	},

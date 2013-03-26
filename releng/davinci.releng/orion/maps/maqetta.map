@@ -56,7 +56,7 @@ plugin@maqetta.server.orion.aspects=GIT,repo=git://github.com/maqetta/maqetta.gi
 # aspectj plugins for equinox weaving plugins
 plugin@org.aspectj.runtime,1.7.2=p2IU,id=org.aspectj.runtime,version=1.7.2.20130214224500,repository=http://download.eclipse.org/tools/ajdt/42/update
 plugin@org.aspectj.weaver,1.7.2=p2IU,id=org.aspectj.weaver,version=1.7.2.20130214224500,repository=http://download.eclipse.org/tools/ajdt/42/update
-org.eclipse.equinox.weaving.aspectj,1.0.200=p2IU,id=org.eclipse.equinox.weaving.aspectj,version=1.0.200.I20130127-2000,repository=http://download.eclipse.org/tools/ajdt/42/update
-org.eclipse.equinox.weaving.caching,1.0.200=p2IU,id=org.eclipse.equinox.weaving.caching,version=1.0.200.I20130127-2000,repository=http://download.eclipse.org/tools/ajdt/42/update
-org.eclipse.equinox.weaving.caching.j9,1.0.200=p2IU,id=org.eclipse.equinox.weaving.caching.j9,version=1.0.200.I20130127-2000,repository=http://download.eclipse.org/tools/ajdt/42/update
-org.eclipse.equinox.weaving.hook,1.0.200=p2IU,id=org.eclipse.equinox.weaving.hook,version=1.0.200.I20130127-2000,repository=http://download.eclipse.org/tools/ajdt/42/update
+plugin@org.eclipse.equinox.weaving.aspectj,1.0.200=p2IU,id=org.eclipse.equinox.weaving.aspectj,version=1.0.200.I20130127-2000,repository=http://download.eclipse.org/tools/ajdt/42/update
+plugin@org.eclipse.equinox.weaving.caching,1.0.200=p2IU,id=org.eclipse.equinox.weaving.caching,version=1.0.200.I20130127-2000,repository=http://download.eclipse.org/tools/ajdt/42/update
+plugin@org.eclipse.equinox.weaving.caching.j9,1.0.200=p2IU,id=org.eclipse.equinox.weaving.caching.j9,version=1.0.200.I20130127-2000,repository=http://download.eclipse.org/tools/ajdt/42/update
+fragment@org.eclipse.equinox.weaving.hook,1.0.200=p2IU,id=org.eclipse.equinox.weaving.hook,version=1.0.200.I20130127-2000,repository=http://download.eclipse.org/tools/ajdt/42/update

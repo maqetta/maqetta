@@ -51,7 +51,7 @@ public class GetInitializationInfo extends Command {
 				MaqettaOrionServerConstants.WORKBENCH_PREF, "{}");
 		try {
 			String c = this.getSiteJson();
-			JSONObject projectTemplatesObject = this.getProjectTemplates(user);
+			JSONObject projectTemplatesObject = this.getProjectTemplatesObject(user);
 			String projectTemplates = projectTemplatesObject.toString();
 			String temp = "{\n" + "\t\"workbenchState\":"
 					+ workbenchSettings + ",\n" + "\t\"userInfo\":{\"userId\": \""
@@ -140,18 +140,11 @@ public class GetInitializationInfo extends Command {
 		return this.siteConfigJson;
 	}
 
-	private JSONObject getProjectTemplates(IUser user) throws IOException, MaqettaConfigException {
+	private JSONObject getProjectTemplatesObject(IUser user) throws IOException, MaqettaConfigException {
 		
 		IProjectTemplatesManager projectTemplatesManager = ServerManager.getServerManager().getProjectTemplatesManager();
-		JSONObject resultsObject = new JSONObject();
-		JSONArray templates = projectTemplatesManager.getProjectTemplates(user);		
-		try{
-			resultsObject.put("templates", templates);			
-		} catch (JSONException e) {
-			throw new MaqettaConfigException(
-					"maqetta.server.orion.command.GetInitializationInfo json put exception", e);
-		}
-		return resultsObject;
+		JSONObject projectTemplatesObject = projectTemplatesManager.getProjectTemplatesIndex(user);
+		return projectTemplatesObject;
 	}
 
 	private String readFile(String path) throws IOException {

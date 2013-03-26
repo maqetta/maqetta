@@ -6,7 +6,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Date;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
@@ -29,7 +28,10 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 	public ProjectTemplatesManager() {
 	}
 	
-	public JSONObject getProjectTemplatesIndex() throws IOException {
+	// Local routine that sees if the index file for project templates
+	// has been loaded into memory. If so, return that.
+	// Otherwise, load the index file from disk.
+	private JSONObject _getProjectTemplatesIndex() throws IOException {
 		if(this.projectTemplatesIndex != null){
 			return this.projectTemplatesIndex;
 		}
@@ -49,6 +51,48 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 		return this.projectTemplatesIndex;
 	}
 
+	// If no user specified, then return the full list of templates
+	public JSONObject getProjectTemplatesIndex() throws IOException {
+		return getProjectTemplatesIndex(null);
+	}
+	
+	// If a user is specified, then return only those templates that are available to that user	
+	public JSONObject getProjectTemplatesIndex(IUser user) throws IOException {
+		JSONObject projectTemplatesObject = _getProjectTemplatesIndex();
+		if(projectTemplatesObject == null){
+			return null;
+		}
+		if(user == null){
+			return projectTemplatesObject;
+		}
+		try{
+			// Clone the original project templates JSONObject
+			String originalProjectTemplatesObject = projectTemplatesObject.toString();
+			JSONObject returnObject = new JSONObject(originalProjectTemplatesObject);
+			
+			// Filter the list of templates
+			IPerson person = user.getPerson();
+			String userEmail = person.getEmail();			
+			JSONArray allTemplates = returnObject.getJSONArray("templates");
+			JSONArray userTemplates = new JSONArray();
+			int count = allTemplates.length();
+			for(int i=0 ; i< count; i++){
+				JSONObject template = allTemplates.getJSONObject(i);
+				String authorEmail = template.getString("authorEmail");
+				String sharing = template.getString("sharingSimple");
+				if(userEmail == null || userEmail.equals(authorEmail) || sharing == "all"){
+					userTemplates.put(template);
+				}
+			}
+			returnObject.put("templates", userTemplates);
+			return returnObject;
+		} catch (JSONException e) {
+			String desc = "getProjectTemplatesIndex - json exception";
+			theLogger.log(Level.SEVERE, desc, e);
+			throw new Error(desc, e);
+		}
+	}
+
 	public IStorage getProjectTemplatesIndexIStorage() {
 		if(this.projectTemplatesIndexIStorage != null){
 			return this.projectTemplatesIndexIStorage;
@@ -62,50 +106,6 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 			throw new Error(desc, e);
 		}
 		return this.projectTemplatesIndexIStorage;
-	}
-
-	public JSONArray getProjectTemplates(){
-		return getProjectTemplates(null);
-	}
-	
-	// If user is null, then return all templates
-	// Otherwise, only return templates that given user is authorized ot use
-	public JSONArray getProjectTemplates(IUser user) {
-		JSONArray templates = new JSONArray();
-		JSONObject indexFileObject = null;
-		try{
-			indexFileObject= getProjectTemplatesIndex();
-		}catch(IOException e){
-			String desc = "getProjectTemplates";
-			theLogger.log(Level.SEVERE, desc, e);
-			throw new Error(desc, e);
-		}
-		if(indexFileObject == null){
-			return templates;
-		}
-		IPerson person = null;
-		String userEmail = null;
-		if(user != null){
-			person = user.getPerson();
-			userEmail = person.getEmail();			
-		}
-		try{
-			JSONArray allTemplates = indexFileObject.getJSONArray("templates");
-			int count = allTemplates.length();
-			for(int i=0 ; i< count; i++){
-				JSONObject template = allTemplates.getJSONObject(i);
-				String authorEmail = template.getString("authorEmail");
-				String sharing = template.getString("sharingSimple");
-				if(userEmail == null || userEmail.equals(authorEmail) || sharing == "all"){
-					templates.put(template);
-				}
-			}
-		} catch (JSONException e) {
-			String desc = "getProjectTemplates - json exception";
-			theLogger.log(Level.SEVERE, desc, e);
-			throw new Error(desc, e);
-		}
-		return templates;
 	}
 	
 	public String addProjectTemplate(IUser user, JSONObject params){
@@ -178,7 +178,15 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 				}
 				
 				// Remove any templates from index that match this template
-				JSONArray oldTemplates = getProjectTemplates();
+				JSONObject projectTemplatesObject = getProjectTemplatesIndex();
+				JSONArray oldTemplates;
+				try{
+					oldTemplates = projectTemplatesObject.getJSONArray("templates");
+				} catch (JSONException e) {
+					String desc = "getProjectTemplatesIndex - json exception";
+					theLogger.log(Level.SEVERE, desc, e);
+					throw new Error(desc, e);
+				}
 				JSONArray newTemplates = new JSONArray();
 				JSONObject template;
 				int count = oldTemplates.length();

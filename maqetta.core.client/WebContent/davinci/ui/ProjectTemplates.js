@@ -28,6 +28,10 @@ var ProjectTemplates = {
 			});
 			if(!data || !data.success){
 				console.log("cmd/createProjectTemplate error:"+data.error);
+			}else{
+				if(data.projectTemplates){
+					Runtime.setSiteConfigData("projectTemplates", data.projectTemplates);
+				}
 			}
 		});
 	}

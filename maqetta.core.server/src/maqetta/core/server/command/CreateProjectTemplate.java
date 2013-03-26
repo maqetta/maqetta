@@ -32,10 +32,11 @@ public class CreateProjectTemplate extends Command {
 			errorString = "cmd/createProjectTemplate - json exception";
 			error = true;
 		}
-		
 		IProjectTemplatesManager projectTemplatesManager = ServerManager.getServerManager().getProjectTemplatesManager();
-		errorString = projectTemplatesManager.addProjectTemplate(user, params);
-		error = (errorString == "" || errorString == null) ? false : true;
+		if(!error){
+			errorString = projectTemplatesManager.addProjectTemplate(user, params);
+			error = (errorString == "" || errorString == null) ? false : true;
+		}
 		JSONObject responseObject = new JSONObject();
 		JSONObject projectTemplatesObject = projectTemplatesManager.getProjectTemplatesIndex(user);
 		try{

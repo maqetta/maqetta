@@ -330,7 +330,7 @@ return {
                     iconClass: 'appSettingsMenuIcon',
                     showLabel:false,
                     separator: [
-                        "settings", true, "projectTemplates", true, "additions", false
+                        "settings", true, "additions", false
                     ]
                 },
                 {
@@ -365,16 +365,6 @@ return {
                     },
                     label: "Theme sets...",
                     menubarPath: "davinci.settings/settings"
-                },
-                {
-                    id: "projectTemplatesCreate",
-                    run: function() {
-                    	require(['davinci/ui/ProjectTemplates'], function(ProjectTemplates){
-                    		ProjectTemplates.create();
-                    	});
-                    },
-                    label: "Create project template...",
-                    menubarPath: "davinci.settings/projectTemplates"
                 },
                 {
                     id: "showHelp",

@@ -166,6 +166,12 @@ define({ root:
 		"newProjectTemplate":"Template:",
 		"newProjectNoTemplate":"(none)",
 
+		//NewProjectTemplate
+		"createProjectTemplateMenuItem": "Create project template...",
+		"createProjectTemplate": "Create project template",
+		"newProjectTemplateName": "Template Name:",
+		"newProjectNameExists": "A project with this name already exists",
+
 		//UserLibraries
 		"modify": "Modify",
 		

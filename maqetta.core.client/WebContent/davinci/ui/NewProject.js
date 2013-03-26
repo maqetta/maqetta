@@ -121,7 +121,6 @@ define(["dojo/_base/declare",
 			return this.value;
 		},
 		
-		//FIXME: What parameters to change event?
 		_onChangeTemplate: function(newValue){
 			this._projectTemplate = newValue;
 		},

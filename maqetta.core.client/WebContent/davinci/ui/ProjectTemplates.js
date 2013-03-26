@@ -7,14 +7,14 @@ define(["dojo/_base/declare",
 	
 var ProjectTemplates = {
 
-	create: function() {
+	create: function(projectTemplateName) {
 		// Make async?
 		// Need a different server call to see if template already exists (client-side check)
 		// Are you sure check to see if any unsaved files
 		require(["dojo/_base/json"], function(json){
 			var timestamp = new Date().toISOString();
 			var params = {
-				projectTemplateName: 'foo', 
+				projectTemplateName: projectTemplateName, 
 				projectToClone:Workbench.getProject(),
 				sharingSimple:'all',
 				timestamp:timestamp
@@ -23,8 +23,7 @@ var ProjectTemplates = {
 			var data = Runtime.serverJSONRequest({
 				url: "cmd/createProjectTemplate",
 				handleAs: "json",
-				content: { projectTemplateName: 'foo', projectToClone:Workbench.getProject(),
-					params:paramsJson },
+				content: { params:paramsJson },
 				sync:true
 			});
 			if(!data || !data.success){

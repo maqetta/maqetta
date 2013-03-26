@@ -1,0 +1,19 @@
+<div>
+	<div class="dijitDialogPaneContentArea">
+		<table class="NewProjectTemplateDialogTable">
+		<tr>
+			<td class="NewProjectTemplateDialogLabel">${newProjectTemplateName}</td>
+			<td>
+				<input class='templateInput' data-dojo-type="dijit.form.ValidationTextBox" type='text' dojoAttachPoint="_projectTemplateName"></input>
+			</td>
+			<td><div dojoAttachPoint='_error4'></div></td>
+		</tr>
+		</table>
+	</div>
+
+	<div class="dijitDialogPaneActionBar">
+		<button dojoType='dijit.form.Button' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='${create}' class="maqPrimaryButton" type="submit" disabled></button>
+		<button dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='${buttonCancel}' class="maqSecondaryButton"></button>
+	</div>
+		
+</div>

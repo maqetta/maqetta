@@ -14,15 +14,17 @@ define([
 	"davinci/ui/widgets/TransformTreeMixin",
 	"system/resource",
 	"davinci/ui/widgets/ProjectToolbar",
+	"davinci/ui//NewProjectTemplate",
 	
 	//ui_plugin/js
 	"davinci/ui/Download",
 	"davinci/ui/DownloadSelected",
 	"davinci/ui/UserLibraries",
-	"dojo/i18n!davinci/ve/nls/common"
+	"dojo/i18n!davinci/ve/nls/common",
+    "dojo/i18n!davinci/ui/nls/ui"
 	
 ], function(declare, ViewPart, Workbench, Runtime, DropDownButton, DropDownMenu, MenuItem, Tree, mouse, DragSource,
-		Resource, TransformTreeMixin, resource, ProjectToolbar, Download, DownloadSelected, UserLibraries, commonNls) {
+		Resource, TransformTreeMixin, resource, ProjectToolbar, NewProjectTemplate, Download, DownloadSelected, UserLibraries, commonNls, uiNLS) {
 	
 return declare("davinci.workbench.Explorer", ViewPart, {
 	
@@ -189,21 +191,22 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 		// FIXME: Just dummy menu for now
 		var menu = new DropDownMenu({ style: "display: none;"});
 		var menuItem1 = new MenuItem({
-			id: 'ExplorerCommand1',
-		    label: commonNls.showSuggestedWidgets,
-		    iconClass: "dojoyPaletteMenuItemCheckMark",
-		    onClick: function(){
-		    	debugger;//FIXME
+			id: 'CreateProjectTemplate',
+			label: uiNLS.createProjectTemplateMenuItem,
+			iconClass: "",
+			onClick: function(){
+				var NewProjectTemplateDialog = new NewProjectTemplate({});
+				Workbench.showModal(NewProjectTemplateDialog, uiNLS.createProjectTemplate, {width:'330px'}, null, true);
 		    }.bind(this)
 		});
 		menu.addChild(menuItem1);
 		var menuItem2 = new MenuItem({
 			id: 'ExplorerCommand2',
-		    label: commonNls.showAllWidgets,
-		    iconClass: "dojoyPaletteMenuItemCheckMark",
-		    onClick: function(){
-		    	debugger;//FIXME
-		    }.bind(this)
+			label: commonNls.showAllWidgets,
+			iconClass: "dojoyPaletteMenuItemCheckMark",
+			onClick: function(){
+				debugger;//FIXME
+			}.bind(this)
 		});
 		menu.addChild(menuItem2);
 		var button = new DropDownButton({

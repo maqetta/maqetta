@@ -15,7 +15,9 @@ return declare(RebuildPage, {
 		for(var name in this.libs){
 			var item = this.libs[name];
 			if (item.id==id && item.version==version) {
-				return item.root;
+				var d = new Deferred();
+				d.resolve(item.root);
+				return d;
 			}
 		}
 		return library.getLibRoot(id,version) || "";

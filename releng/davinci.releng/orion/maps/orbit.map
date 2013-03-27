@@ -5,8 +5,8 @@ fragment@ch.qos.logback.slf4j,1.0.0=p2IU,id=ch.qos.logback.slf4j,version=1.0.0.v
 
 plugin@com.ibm.icu,4.2.1=p2IU,id=com.ibm.icu,version=4.2.1.v20100412,repository=http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository
 plugin@com.ibm.icu.source,4.2.1=p2IU,id=com.ibm.icu.source,version=4.2.1.v20100412,repository=http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository
-plugin@com.jcraft.jsch,0.1.44=p2IU,id=com.jcraft.jsch,version=0.1.44.v201101211721,repository=http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository
-plugin@com.jcraft.jsch.source,0.1.44=p2IU,id=com.jcraft.jsch.source,version=0.1.44.v201101211721,repository=http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository
+plugin@com.jcraft.jsch,0.1.46=p2IU,id=com.jcraft.jsch,version=0.1.46.v201205102330,repository=http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository
+plugin@com.jcraft.jsch.source,0.1.46=p2IU,id=com.jcraft.jsch.source,version=0.1.46.v201205102330,repository=http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository
 plugin@javax.xml,1.3.4=p2IU,id=javax.xml,version=1.3.4.v201005080400,repository=http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository
 plugin@org.json,1.0.0=p2IU,id=org.json,version=1.0.0.v201011060100,repository=http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository
 

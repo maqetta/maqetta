@@ -230,7 +230,8 @@ public class OrionUser extends User {
 	public WebWorkspace createWorkspace(String workspaceName) throws CoreException {
 		// see org.eclipse.orion.server.servlets.WorkspaceServlet.doCreateWorkspace()
 		WebWorkspace workspace =  webuser.createWorkspace(workspaceName);
-		JSONObject result = WorkspaceResourceHandler.toJSON(workspace, URI.create(Activator.LOCATION_WORKSPACE_SERVLET));
+		URI loc = URI.create(Activator.LOCATION_WORKSPACE_SERVLET);
+		JSONObject result = WorkspaceResourceHandler.toJSON(workspace, loc, loc);
 		String resultLocation = result.optString(ProtocolConstants.KEY_LOCATION);
 
 		// add user rights for the workspace

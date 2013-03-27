@@ -47,10 +47,6 @@
             alias="/login/form"
             class="maqetta.server.orion.user.LoginFixUpFilter">
       </filter>
-      <filter
-            alias="/useremailconfirmation"
-            class="maqetta.server.orion.user.LoginFixUpFilter">
-      </filter>
       <!-- override the default orion plugins to add the maqetta plugin -->
       <filter
             alias="/defaults.pref"

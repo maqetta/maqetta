@@ -66,7 +66,7 @@ setProperties () {
 	builderDir="${relEngDir}/orion/builder"
 	relEngDir="${relEngDir}/orion"
 	
-	basebuilderBranch=R3_7
+	basebuilderBranch=R3_8
 	publish=""
 	user=childsb
 	resultsEmail=orion-releng@eclipse.org

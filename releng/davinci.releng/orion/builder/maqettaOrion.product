@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="Maqetta Orion" uid="maqtta.orion" id="org.eclipse.maqetta.orion.product" application="org.eclipse.orion.application" version="0.4.0.qualifier" useFeatures="true" includeLaunchers="true">
+<product name="Maqetta Orion" uid="maqetta.orion" id="org.eclipse.maqetta.orion.product" application="org.eclipse.orion.application" version="0.4.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>

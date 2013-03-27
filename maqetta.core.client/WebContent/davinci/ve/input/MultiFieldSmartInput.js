@@ -353,7 +353,7 @@ var MultiFieldSmartInput = declare(SmartInput, {
 	serializeChildren: function(data) {
 		
 		var result = [];
-		childData = this._widget.getChildrenData();
+	//	childData = this._widget.getChildrenData();
 		data.children.forEach(function(child){
 			var text = child.properties.value;
 			text = entities.decode(text);

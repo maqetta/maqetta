@@ -17,6 +17,10 @@ define(["dojo/_base/declare",
 
 	var noProjectTemplate = '_none_';
 
+	// Allow any unicode alpha, dijit, period or hyphen
+	// Better regex would be: "^[\p{L}\d\.\-]+$", but browsers don't support \p
+	var regex = "^[A-Za-z0-9\.\-]+$";
+
 	return dojo.declare("davinci.ui.NewProject",   [_Widget,_Templated], {
 		widgetsInTemplate: true,
 		templateString: templateString,
@@ -47,21 +51,6 @@ define(["dojo/_base/declare",
 		postCreate: function(){
 			this.inherited(arguments);
 			dojo.connect(this._projectName, "onKeyUp", this, '_checkValid');
-
-			this._projectName.validator = dojo.hitch(this, function(value, constraints) {
-					var isValid = true;
-					
-					if (!this._projects || !value) {
-						isValid = false;
-					} else if (this._projects[value]) {
-						isValid = false;
-						this._projectName.invalidMessage = uiNLS.newProjectNameExists;
-					} else {
-						this._projectName.invalidMessage = null;
-					}
-					
-					return isValid;
-			});
 			var projectTemplates = Runtime.getSiteConfigData("projectTemplates");
 			var opts = [{value:noProjectTemplate, label:uiNLS.newProjectNoTemplate}];
 			if(projectTemplates && projectTemplates.templates && projectTemplates.templates.length > 0){
@@ -78,6 +67,7 @@ define(["dojo/_base/declare",
 				}
 			}
 			this.projectTemplates.addOption(opts);
+			this._projectName.set("regExp", regex);
 		},
 		
 		_checkValid: function(){
@@ -91,11 +81,16 @@ define(["dojo/_base/declare",
 		
 		okButton: function() {
 			var newProjectName = this._projectName.get("value");
+			var cloneExistingProject = dojo.attr(this._clondExistingProject, 'checked');
+			var projectToClone = cloneExistingProject ? Workbench.getProject() : '';
 			var isEclipse = dojo.attr(this._eclipseSupport, 'checked');
 			var projectTemplateName = this._projectTemplate == noProjectTemplate ? '' : this._projectTemplate;
 
 			Resource.createProject({
-				newProjectName:newProjectName, projectTemplateName:projectTemplateName, isEclipse:isEclipse
+				newProjectName:newProjectName, 
+				projectTemplateName:projectTemplateName,
+				projectToClone:projectToClone,
+				isEclipse:isEclipse
 			}).then(function() {
 				if (isEclipse) {
 					Preferences.savePreferences(

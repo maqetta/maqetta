@@ -10,15 +10,15 @@ public interface IUser {
 
 	public void rebuildWorkspace();
 
-	public IVResource createEclipseProject(String projectName, String projectTemplateDirectoryName) throws IOException;
+	public IVResource createEclipseProject(String projectName, String projectToClone, String projectTemplateDirectoryName) throws IOException;
 	public IVResource createEclipseProject(String projectName) throws IOException;
 
-	public IVResource createProject(String projectName, String projectTemplateDirectoryName) throws IOException;
+	public IVResource createProject(String projectName, String projectToClone, String projectTemplateDirectoryName) throws IOException;
 	public IVResource createProject(String projectName) throws IOException;
 	
 	public IVResource newWorkspaceRoot();
 	
-	public IVResource createProject(String projectName, String projectTemplateDirectoryName, 
+	public IVResource createProject(String projectName, String projectToClone, String projectTemplateDirectoryName, 
 			String basePath, boolean initFiles) throws IOException;
 
 	/*

@@ -15,13 +15,14 @@ public class CreateProject extends Command {
         if (projectName == "" || projectName == null) {
         	errorString = "No project name specified";
         }
+        String projectToClone = req.getParameter("projectToClone");
         String projectTemplateName = req.getParameter("projectTemplate");
 
         boolean eclipseProject = "true".equalsIgnoreCase(req.getParameter("eclipseSupport"));
         if (eclipseProject) {
-        	user.createEclipseProject(projectName, projectTemplateName);
+        	user.createEclipseProject(projectName, projectToClone, projectTemplateName);
         } else {
-        	user.createProject(projectName, projectTemplateName);
+        	user.createProject(projectName, projectToClone, projectTemplateName);
         }
         responseString = "OK";
     }

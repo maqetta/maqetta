@@ -113,7 +113,8 @@ public class OrionUser extends User {
 		return path;
 	}
 	
-	public IVResource createProject(String projectName, String projectTemplateDirectoryName, String basePath, boolean initFiles) throws IOException {
+	public IVResource createProject(String projectName, String projectToClone, String projectTemplateDirectoryName, 
+			String basePath, boolean initFiles) throws IOException {
 		
 		if(isProject(projectName))  return getResource(projectName);
 		
@@ -143,6 +144,22 @@ public class OrionUser extends User {
 				
 				
 				VResourceUtils.copyDirectory(file, path, bundle);
+			}
+
+			if(projectToClone!=null && !projectToClone.equals("")){
+				IStorage projectToCloneDir = userDir.newInstance(projectToClone);
+				if(projectToCloneDir.exists()) {
+					IStorage[] files = projectToCloneDir.listFiles();
+					for (int i = 0; i < files.length; i++) {
+						if (files[i].isFile()) {
+							IStorage destination = projectDir.newInstance(projectDir, files[i].getName());
+							copyFile(files[i], destination);
+						} else if (files[i].isDirectory()) {
+							IStorage destination = projectDir.newInstance(projectDir, files[i].getName());
+							copyDirectory(files[i], destination);
+						}
+					}
+				}
 			}
 
 			if(projectTemplateDirectoryName!=null && !projectTemplateDirectoryName.equals("")){

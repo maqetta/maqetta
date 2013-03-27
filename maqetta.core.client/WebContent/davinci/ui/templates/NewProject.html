@@ -17,9 +17,16 @@
 			</div></td>
 		</tr>
 		<tr>
-			<td class="NewProjectDialogLabel">${newProjectEclipseSupport}</td>
-			<td><input class='templateInput' type='checkbox' dojoAttachPoint="_eclipseSupport"></input></td>
-			<td><div dojoAttachPoint='_error5'></div></td>
+			<td colspan="2">
+				<input type='checkbox' dojoAttachPoint="_clondExistingProject"></input>
+				<span class="NewProjectDialogLabel">${newProjectCloneExistingProject}</span>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<input type='checkbox' dojoAttachPoint="_eclipseSupport"></input>
+				<span class="NewProjectDialogLabel">${newProjectEclipseSupport}</span>
+			</td>
 		</tr>
 		</table>
 	</div>

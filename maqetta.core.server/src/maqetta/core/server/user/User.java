@@ -111,10 +111,10 @@ public class User implements IUser {
 	 */
 	
 	public IVResource createEclipseProject(String projectName) throws IOException {
-		return createEclipseProject(projectName, "");
+		return createEclipseProject(projectName, "", "");
 	}
-	public IVResource createEclipseProject(String projectName, String projectTemplateDirectoryName ) throws IOException {
-		IVResource project = createProject(projectName, projectTemplateDirectoryName, "WebContent", true);
+	public IVResource createEclipseProject(String projectName, String projectToClone, String projectTemplateDirectoryName ) throws IOException {
+		IVResource project = createProject(projectName, projectToClone, projectTemplateDirectoryName, "WebContent", true);
 		/*
 		 * Load the initial user files extension point and copy the files to the projects root
 		 */
@@ -155,16 +155,17 @@ public class User implements IUser {
 	 * @see org.davinci.server.user.IUser#createProject(java.lang.String)
 	 */
 	public IVResource createProject(String projectName) throws IOException {
-		return this.createProject(projectName, "", "", true);
+		return this.createProject(projectName, "", "", "", true);
 	}
-	public IVResource createProject(String projectName, String projectTemplateDirectoryName) throws IOException {
-		return this.createProject(projectName, projectTemplateDirectoryName, "", true);
+	public IVResource createProject(String projectName, String projectToClone, String projectTemplateDirectoryName) throws IOException {
+		return this.createProject(projectName, projectToClone, projectTemplateDirectoryName, "", true);
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#createProject(java.lang.String, java.lang.String, boolean)
 	 */
-	public IVResource createProject(String projectName, String projectTemplateName, String basePath, boolean initFiles) throws IOException {
+	public IVResource createProject(String projectName, String projectToClone, String projectTemplateName, 
+			String basePath, boolean initFiles) throws IOException {
 		IVResource project = createResource(projectName + "/", true);
 		/*
 		 * Load the initial user files extension point and copy the files to the projects root

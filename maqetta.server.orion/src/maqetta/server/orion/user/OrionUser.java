@@ -146,10 +146,12 @@ public class OrionUser extends User {
 				VResourceUtils.copyDirectory(file, path, bundle);
 			}
 
-			if(projectToClone!=null && !projectToClone.equals("")){
-				IStorage projectToCloneDir = userDir.newInstance(projectToClone);
-				if(projectToCloneDir.exists()) {
-					IStorage[] files = projectToCloneDir.listFiles();
+			if(projectTemplateDirectoryName!=null && !projectTemplateDirectoryName.equals("")){
+				IProjectTemplatesManager projectTemplatesManager = ServerManager.getServerManager().getProjectTemplatesManager();
+				IStorage projectTemplatesDirectory = projectTemplatesManager.getProjectTemplatesDirectory();
+				IStorage templateDir = projectTemplatesDirectory.newInstance(projectTemplatesDirectory, projectTemplateDirectoryName);
+				if(templateDir.exists()) {
+					IStorage[] files = templateDir.listFiles();
 					for (int i = 0; i < files.length; i++) {
 						if (files[i].isFile()) {
 							IStorage destination = projectDir.newInstance(projectDir, files[i].getName());
@@ -162,12 +164,10 @@ public class OrionUser extends User {
 				}
 			}
 
-			if(projectTemplateDirectoryName!=null && !projectTemplateDirectoryName.equals("")){
-				IProjectTemplatesManager projectTemplatesManager = ServerManager.getServerManager().getProjectTemplatesManager();
-				IStorage projectTemplatesDirectory = projectTemplatesManager.getProjectTemplatesDirectory();
-				IStorage templateDir = projectTemplatesDirectory.newInstance(projectTemplatesDirectory, projectTemplateDirectoryName);
-				if(templateDir.exists()) {
-					IStorage[] files = templateDir.listFiles();
+			if(projectToClone!=null && !projectToClone.equals("")){
+				IStorage projectToCloneDir = userDir.newInstance(projectToClone);
+				if(projectToCloneDir.exists()) {
+					IStorage[] files = projectToCloneDir.listFiles();
 					for (int i = 0; i < files.length; i++) {
 						if (files[i].isFile()) {
 							IStorage destination = projectDir.newInstance(projectDir, files[i].getName());

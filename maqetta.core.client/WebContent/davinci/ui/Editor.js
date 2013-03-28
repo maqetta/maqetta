@@ -10,11 +10,12 @@ define([
 	"orion/editor/textMateStyler",
 	"orion/editor/textView",
 	"orion/editor/textModel",
-    "orion/editor/contentAssist",
+	"orion/editor/projectionTextModel",
+	"orion/editor/contentAssist",
     "orion/editor/jsContentAssist",
     "orion/editor/cssContentAssist",
 	"../UserActivityMonitor"
-], function(CommandStack, doLater, declare, Action, mTextStyler, mEditor, mEditorFeatures, mHtmlGrammar, mTextMateStyler, mTextView, mTextModel, mContentAssist, mJSContentAssist, mCSSContentAssist, UserActivityMonitor) {
+], function(CommandStack, doLater, declare, Action, mTextStyler, mEditor, mEditorFeatures, mHtmlGrammar, mTextMateStyler, mTextView, mTextModel, mProjectionTextModel, mContentAssist, mJSContentAssist, mCSSContentAssist, UserActivityMonitor) {
 	declare("davinci.ui._EditorCutAction", Action, {
 		constructor: function (editor) {
 			this._editor=editor;
@@ -106,7 +107,7 @@ return declare(null, {
 			this._createEditor();
 		}
 		if (!this._textModel) {
-			this._textModel = this.editor ? this.editor.getModel() : new mTextModel.TextModel();
+			this._textModel = this.editor ? this.editor.getModel() : new mProjectionTextModel.ProjectionTextModel(new mTextModel.TextModel());
 		}
 		this.fileName=filename;
 
@@ -160,26 +161,39 @@ return declare(null, {
         var cssContentAssistProvider = new mCSSContentAssist.CssContentAssistProvider();
         var jsContentAssistProvider = new mJSContentAssist.JavaScriptContentAssistProvider();
 
+		var keyBindingFactory = function(editor, keyModeStack, undoStack, contentAssist) {
+			
+			// Create keybindings for generic editing
+			var genericBindings = new mEditorFeatures.TextActions(editor, undoStack);
+			keyModeStack.push(genericBindings);
+			
+			// create keybindings for source editing
+			var codeBindings = new mEditorFeatures.SourceCodeActions(editor, undoStack, contentAssist);
+			keyModeStack.push(codeBindings);
+		};
+			
 		var parent = this.contentDiv,
 			model = this._textModel,
 			options = {
 				statusReporter: function(message, isError) {
 //					var method = isError ? "error" : "log";
 //					console[method]("orion.editor: " + message);
-				    if ( isError ) { console.error("orion.editor: " + message); }
+				    if (isError) { console.error("orion.editor: " + message); }
 				},
 				textViewFactory: function() {
 					return new mTextView.TextView({
 						parent: parent,
-						model: model,
+						model: model || new mProjectionTextModel.ProjectionTextModel(new mTextModel.TextModel()),
 						tabSize: 4
 					});
 				},
 				undoStackFactory: new mEditorFeatures.UndoFactory(),
 				annotationFactory: new mEditorFeatures.AnnotationFactory(),
+				foldingRulerFactory: new mEditorFeatures.FoldingRulerFactory(),
 				lineNumberRulerFactory: new mEditorFeatures.LineNumberRulerFactory(),
+//				textDNDFactory: new mEditorFeatures.TextDNDFactory(),
 				contentAssistFactory: contentAssistFactory,
-//TODO				keyBindingFactory: keyBindingFactory, 
+				keyBindingFactory: keyBindingFactory, 
 				domNode: parent // redundant with textView parent?
 		};
 		this.editor = new mEditor.Editor(options);
@@ -226,6 +240,7 @@ return declare(null, {
 		case "java":
 		case "css":
 			this._styler = new mTextStyler.TextStyler(view, lang, this.editor.getAnnotationModel());
+			this.editor.setFoldingRulerVisible(true);
 			break;
 		case "html":
 			this._styler = new mTextMateStyler.TextMateStyler(view, new mHtmlGrammar.HtmlGrammar());

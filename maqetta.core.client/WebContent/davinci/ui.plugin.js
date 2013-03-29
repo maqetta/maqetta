@@ -114,7 +114,7 @@ return {
                    path: "new",
                    id: "davinci.new",
                    separator: [
-                       "newApp", true, "newSketch", true, "newFolder", true, "newTheme", true, "newProject", true, "additions", true
+                       "newApp", true, "newSketch", true, "newFolder", true, "newTheme", true, "additions", true
                    ]
                },
                {
@@ -122,7 +122,7 @@ return {
                    path: "open",
                    id: "davinci.open",
                    separator: [
-                       "openFile", true, "openTheme", true, "openProject", true, "openOrion", true, "additions", false
+                       "openFile", true, "openTheme", true, "openOrion", true, "additions", false
                    ]
                }
            ],
@@ -224,17 +224,6 @@ return {
                    menubarPath: "davinci.new/newTheme"
                },
                {
-                   id: "newProject",
-                   run: function() {
-                   	require(['./ui/Resource'], function(r) {
-                   		r.newProject();
-                   	});
-                   },
-                   iconClass: "newOpenMenuItem newProjectMenuItem",
-                   label: "Project...",
-                   menubarPath: "davinci.new/newProject"
-               },
-               {
                    id: "openFile",
                    run: function() {
                    	require(['./ui/Resource'], function(r) {
@@ -275,19 +264,6 @@ return {
                    label: "Review...",
                    menubarPath: "davinci.open/openTheme"
                },
-/* Commenting out for M8 - UI is all messed up now
-               {
-                   id: "openProject",
-                   run: function() {
-                   	require(['davinci/Workbench', 'davinci/ui/SelectProjectDialog'], function(Workbench, SelectProjectDialog){
-                   			Workbench.showModal(new SelectProjectDialog(), 'Open Project', {width: 300}, null, true);
-                   	});
-                   },
-                   iconClass: "newOpenMenuItem newProjectMenuItem",
-                   label: "Project...",
-                   menubarPath: "davinci.open/openProject"
-               },
-*/
                {
                    id: "orionNavigator",
                    run: function() {

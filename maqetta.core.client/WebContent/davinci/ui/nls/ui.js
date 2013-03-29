@@ -75,6 +75,10 @@ define({ root:
 		"open":"Open",
 		"save":"Save",
 		"select": "Select",
+		"update":"Update",
+		
+		//general
+		"unknown":"unknown",
 		
 		//fileDialog
 		"fileName":"File name",//used in templates/download.html
@@ -183,6 +187,21 @@ define({ root:
 		"newProjectTemplateCreationSuccess":"Project template {0} has been saved",
 		"newProjectTemplateCreationFailure":"Error: Project template {0} save operation failed",
 		"newProjectTemplateCancelled":"Operation cancelled",
+		
+		//ManageProjectTemplates
+		"manageProjectTemplates": "Manage project templates",
+		"ManageProjectTemplatesHeaderName":"Project template name",
+		"ManageProjectTemplatesHeaderShared":"Share with everyone?",
+		"ManageProjectTemplatesHeaderCreatedBy":"Created by",
+		"ManageProjectTemplatesHeaderCreatedOn":"Created on",
+		"ManageProjectTemplatesHeaderLastModified":"Last updated",
+		"ManageProjectTemplatesNoTemplates":"You have not created any project templates.",
+		"DEL":"DEL",
+		"ManageProjectTemplatesDuplicateNames":"Invalid entries - two project templates have the same name",
+		"ManageProjectTemplateAboutToOccur":"The following actions are about to occur:",
+		"ManageProjectTemplateDeletions":"project template deletions",
+		"ManageProjectTemplateModifications":"project template modifications",
+		"ManageProjectTemplateOKToProceed":"OK to proceed?",
 		
 		//UserLibraries
 		"modify": "Modify",

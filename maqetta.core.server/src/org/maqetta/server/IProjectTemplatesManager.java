@@ -15,6 +15,8 @@ public interface IProjectTemplatesManager {
 	public JSONObject getProjectTemplatesIndex() throws IOException;
 	public JSONObject getProjectTemplatesIndex(IUser user) throws IOException;
 	public String addProjectTemplate(IUser user, JSONObject params);
+	public String deleteProjectTemplates(IUser user, JSONArray params);
+	public String modifyProjectTemplates(IUser user, JSONArray params);
 	public IStorage getProjectTemplatesDirectory() throws IOException;
 
 }

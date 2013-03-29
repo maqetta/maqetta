@@ -596,7 +596,44 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	float:right;
 	font-style:italic;
 	white-space:nowrap;
-} 
+}
+.ManageProjectTemplatesOuterDiv table {
+	border-spacing:0;
+	border-collapse:collapse;
+}
+.ManageProjectTemplatesOuterDiv table th {
+	white-space:nowrap;
+	padding:3px 5px;
+	text-align:center;
+}
+.ManageProjectTemplatesOuterDiv table td {
+	border:1px solid black;
+	padding:4px;
+}
+.mpt_sharingSimple_cell, .mpt_delete_cell {
+	text-align:center;
+}
+.ManageProjectTemplatesDuplicateNames {
+	visibility:hidden;
+	color:red;
+	font-size:13px;
+	font-style:italic;
+	padding:8px 0 2px;
+}
+.ManageProjectTemplatesDuplicateNames.ManageProjectTemplatesDuplicateNamesVisible {
+	visibility:visible;
+}
+.mpt_readonly {
+	color:gray;
+}
+.mpt_highlight {
+	background:#ddffff;
+}
+.mpt_row.mpt_delete_row,
+.mpt_row.mpt_delete_row .mpt_delete {
+	background:#ffdddd;
+	text-decoration:line-through;
+}
 .nhfo_dv {
 	white-space:nowrap;
 }

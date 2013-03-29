@@ -157,10 +157,10 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 				
 				IPerson person = user.getPerson();
 				String email = person.getEmail();
-				String templateFolderName = projectTemplateName + "_" + email;
+				String templateFolderName = makeProjectTemplateFolderName(projectTemplateName, email);
 				IStorage templateDir = projectTemplatesDirectory.newInstance(projectTemplatesDirectory, templateFolderName);
 				if(templateDir.exists()) {
-					// If template directory already existings,
+					// If template directory already exists,
 					// remove all of the current contents
 					IStorage[] files = templateDir.listFiles();
 					for (int i = 0; i < files.length; i++) {
@@ -174,7 +174,7 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 				}else{
 					templateDir.mkdir();
 				}
-	
+					
 				IStorage[] files = projectDir.listFiles();
 				for (int i = 0; i < files.length; i++) {
 					if (files[i].isFile()) {
@@ -189,52 +189,178 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 				// Remove any templates from index that match this template
 				JSONObject projectTemplatesObject = getProjectTemplatesIndex();
 				JSONArray oldTemplates;
-				try{
-					oldTemplates = projectTemplatesObject.getJSONArray("templates");
-				} catch (JSONException e) {
-					String desc = "getProjectTemplatesIndex - json exception";
-					theLogger.log(Level.SEVERE, desc, e);
-					throw new Error(desc, e);
-				}
+				oldTemplates = projectTemplatesObject.getJSONArray("templates");
 				JSONArray newTemplates = new JSONArray();
 				JSONObject template;
+				String oldCreationTimestamp = null;
 				int count = oldTemplates.length();
 				for(int i=0 ; i< count; i++){
-					try{
-						template = oldTemplates.getJSONObject(i);
-						String folder = template.getString("folder");
-						if(!folder.equals(templateFolderName)){
-							newTemplates.put(template);
-						}
-					} catch (JSONException e) {
-						String desc = "addProjectTemplate - json exception";
-						theLogger.log(Level.SEVERE, desc, e);
-						throw new Error(desc, e);
+					template = oldTemplates.getJSONObject(i);
+					String folder = template.getString("folder");
+					if(folder.equals(templateFolderName)){
+						oldCreationTimestamp = template.getString("creationTimestamp");
+					}else{
+						newTemplates.put(template);
 					}
 				}
 				// Add this template and write out a new copy of index file
-				try{
-					template = new JSONObject();
-					template.put("folder", templateFolderName);
-					template.put("name", projectTemplateName);
-					template.put("authorEmail", email);
-					template.put("clonedProject", projectToClone);
-					template.put("sharingSimple", sharingSimple);
-					template.put("timestamp", timestamp);
-					newTemplates.put(template);
-				} catch (JSONException e) {
-					String desc = "addProjectTemplate - json exception";
-					theLogger.log(Level.SEVERE, desc, e);
-					throw new Error(desc, e);
-				}
+				template = new JSONObject();
+				template.put("folder", templateFolderName);
+				template.put("name", projectTemplateName);
+				template.put("authorEmail", email);
+				template.put("clonedProject", projectToClone);
+				template.put("sharingSimple", sharingSimple);
+				template.put("creationTimestamp", oldCreationTimestamp == null ? timestamp : oldCreationTimestamp);
+				template.put("lastModifyTimestamp", timestamp);
+				newTemplates.put(template);
 				
 				updateTemplates(newTemplates);
 	
+			} catch (JSONException e) {
+				String desc = "addProjectTemplate - json exception";
+				theLogger.log(Level.SEVERE, desc, e);
+				throw new Error(desc, e);
 			} catch (IOException e) {
 				String desc = "IOException with createProjectTemplate";
 				theLogger.log(Level.SEVERE, desc, e);
 				throw new Error(desc, e);
 			}
+		}
+		return errorString;
+	}
+	
+	// Deletes a set of project templates
+	// User must be the owner of all the templates he is trying to delete, else operation fails
+	public String deleteProjectTemplates(IUser user, JSONArray templatesToDelete){
+		String errorString = null;
+		IPerson person = user.getPerson();
+		String email = person.getEmail();
+
+		JSONObject projectTemplatesObject;
+		JSONArray existingTemplates;
+		try{
+			IStorage projectTemplatesDirectory = getProjectTemplatesDirectory();
+			projectTemplatesObject = getProjectTemplatesIndex();
+			existingTemplates = projectTemplatesObject.getJSONArray("templates");
+			// Verify that all of the templatesToDelete exist
+			// and are owned by this user
+			int count = templatesToDelete.length();
+			for(int i=0 ; i< count; i++){
+				JSONObject templateToDelete = templatesToDelete.getJSONObject(i);
+				int found = findTemplateInArray(existingTemplates, templateToDelete, email);
+				if(found == -1){
+					return "at least one template to delete not found";
+				}
+			}
+			
+			// Delete the overridden template(s), both in the index file
+			// and on disk
+			JSONArray newTemplates = new JSONArray();
+			int existingCount = existingTemplates.length();
+			for(int j=0; j<existingCount; j++){
+				JSONObject existingTemplate = existingTemplates.getJSONObject(j);
+				String existingName = existingTemplate.getString("name");
+				String existingEmail = existingTemplate.getString("authorEmail");
+				Boolean found = false;
+				int deleteCount = templatesToDelete.length();
+				for(int i=0 ; i< deleteCount; i++){
+					JSONObject templateToDelete = templatesToDelete.getJSONObject(i);
+					String deleteName = templateToDelete.getString("name");
+					if(existingName.equals(deleteName) && existingEmail.equals(email)){
+						found = true;
+						break;
+					}
+				}
+				if(found){
+					String existingFolderName = makeProjectTemplateFolderName(existingName, existingEmail);
+					IStorage existingFolder = projectTemplatesDirectory.newInstance(projectTemplatesDirectory, existingFolderName);
+					deleteDirectory(existingFolder);
+				}else{
+					newTemplates.put(existingTemplate);
+				}
+			}
+			updateTemplates(newTemplates);
+		} catch (JSONException e) {
+			String desc = "deleteProjectTemplates - json exception";
+			theLogger.log(Level.SEVERE, desc, e);
+			throw new Error(desc, e);
+		} catch (IOException e) {
+			String desc = "IOException with deleteProjectTemplates";
+			theLogger.log(Level.SEVERE, desc, e);
+			throw new Error(desc, e);
+		}
+		return errorString;
+	}
+	
+	// Modify settings on a set of project templates
+	// User must be the owner of all the templates he is trying to modify, else operation fails
+	public String modifyProjectTemplates(IUser user, JSONArray templatesToModify){
+		String errorString = null;
+
+		IPerson person = user.getPerson();
+		String userEmail = person.getEmail();
+
+		JSONObject projectTemplatesObject;
+		JSONArray existingTemplates;
+		try{
+			projectTemplatesObject = getProjectTemplatesIndex();
+			existingTemplates = projectTemplatesObject.getJSONArray("templates");
+			// Verify that all of the templatesToModify exist
+			// and are owned by this user
+			int count = templatesToModify.length();
+			for(int i=0 ; i< count; i++){
+				JSONObject templateToModify = templatesToModify.getJSONObject(i);
+				int found = findTemplateInArray(existingTemplates, templateToModify, userEmail);
+				if(found == -1){
+					return "at least one template to modify not found";
+				}
+			}
+			
+			// Modify the templates
+			IStorage projectTemplatesDirectory = getProjectTemplatesDirectory();
+			JSONArray newTemplates = new JSONArray();
+			int existingCount = existingTemplates.length();
+			for(int j=0; j<existingCount; j++){
+				JSONObject existingTemplate = existingTemplates.getJSONObject(j);
+				String existingName = existingTemplate.getString("name");
+				String existingEmail = existingTemplate.getString("authorEmail");
+				int modifyCount = templatesToModify.length();
+				for(int i=0 ; i< modifyCount; i++){
+					JSONObject templateToModify = templatesToModify.getJSONObject(i);
+					String modifyName = templateToModify.getString("name");
+					if(existingName.equals(modifyName) && existingEmail.equals(userEmail)){
+						// Only valid fields to modify: sharingSimple and name (via newName property)
+						if(templateToModify.has("newName")){
+							String newName = templateToModify.getString("newName");
+							if(!newName.equals("") && newName != null){
+								String existingFolderName = makeProjectTemplateFolderName(existingName, userEmail);
+								String newFolderName =  makeProjectTemplateFolderName(newName, userEmail);
+								IStorage existingFolder = projectTemplatesDirectory.newInstance(projectTemplatesDirectory, existingFolderName);
+								IStorage newFolder = projectTemplatesDirectory.newInstance(projectTemplatesDirectory, newFolderName);
+								existingFolder.renameTo(newFolder);
+								existingTemplate.put("name", newName);
+								existingTemplate.put("folder", newFolderName);
+							}
+						}
+						if(templateToModify.has("sharingSimple")){
+							String newSharingSimply = templateToModify.getString("sharingSimple");
+							if(!newSharingSimply.equals("") && newSharingSimply != null){
+								existingTemplate.put("sharingSimple", newSharingSimply.equals("all") ? "all" : "none");
+							}
+						}
+					}
+				}
+				newTemplates.put(existingTemplate);
+			}
+			updateTemplates(newTemplates);
+		} catch (JSONException e) {
+			String desc = "modifyProjectTemplates - json exception";
+			theLogger.log(Level.SEVERE, desc, e);
+			throw new Error(desc, e);
+		} catch (IOException e) {
+			String desc = "IOException with modifyProjectTemplates";
+			theLogger.log(Level.SEVERE, desc, e);
+			throw new Error(desc, e);
 		}
 		return errorString;
 	}
@@ -253,7 +379,6 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 	
 	private void updateTemplates(JSONArray newTemplates){
 		JSONObject projectTemplatesIndex;
-		IStorage projectTemplatesDirectory;
 		String indexFileContents;
 		try{
 			projectTemplatesIndex = getProjectTemplatesIndex();
@@ -297,6 +422,35 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 			theLogger.log(Level.SEVERE, desc, e);
 			throw new Error(desc, e);
 		}
+	}
+	
+	private String makeProjectTemplateFolderName(String projectTemplateName, String authorEmail){
+		return projectTemplateName + "_" + authorEmail;
+
+	}
+	
+	// Return index of given template within the given templateArray
+	// Matches if template names match and author emails match.
+	private int findTemplateInArray(JSONArray templateArray, JSONObject templateToMatch, String emailToMatch){
+		int found = -1;
+		try{
+			String nameToMatch = templateToMatch.getString("name");
+			int count = templateArray.length();
+			for(int i=0; i<count; i++){
+				JSONObject template = templateArray.getJSONObject(i);
+				String name = template.getString("name");
+				String email = template.getString("authorEmail");
+				if(name.equals(nameToMatch) && email.equals(emailToMatch)){
+					found = i;
+					break;
+				}
+			}
+		} catch (JSONException e) {
+			String desc = "findTemplateInArray - json exception";
+			theLogger.log(Level.SEVERE, desc, e);
+			throw new Error(desc, e);
+		}
+		return found;
 	}
 
 	private String readFile(String path) throws IOException {

@@ -16,7 +16,8 @@ define([
 	"davinci/ui/widgets/TransformTreeMixin",
 	"davinci/ui/widgets/ProjectToolbar",
 	"davinci/ui/NewProjectTemplate",
-    "davinci/ui/Rename",
+	"davinci/ui/ManageProjectTemplates",
+	"davinci/ui/Rename",
 	
 	//ui_plugin/js
 	"davinci/ui/Download",
@@ -27,7 +28,7 @@ define([
 	
 ], function(declare, ViewPart, Workbench, Runtime, DropDownButton, DropDownMenu, MenuItem, MenuSeparator,
 		Tree, mouse, systemResource, DragSource, Resource, TransformTreeMixin, ProjectToolbar, 
-		NewProjectTemplate, Rename, Download, DownloadSelected, UserLibraries, commonNls, uiNLS) {
+		NewProjectTemplate, ManageProjectTemplates, Rename, Download, DownloadSelected, UserLibraries, commonNls, uiNLS) {
 	
 return declare("davinci.workbench.Explorer", ViewPart, {
 	
@@ -234,7 +235,14 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 			label: uiNLS.manageProjectTemplatesMenuItem,
 			iconClass: "",
 			onClick: function(){
-				debugger;
+				var ManageProjectTemplatesDialog = new ManageProjectTemplates({});
+				Workbench.showModal(ManageProjectTemplatesDialog, uiNLS.manageProjectTemplates, {}, null, true, 
+					// onShow() callback - the ManageProjectTemplates widget needs to do some
+					// housekeeping that is only possible when the dialog is actually showing
+					function(){
+						ManageProjectTemplatesDialog.onShow.call(ManageProjectTemplatesDialog);
+					}
+				);
 		    }.bind(this)
 		}));
 		var button = new DropDownButton({

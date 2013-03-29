@@ -6,6 +6,7 @@ define([
 	"davinci/Workbench",
 	"davinci/Runtime",
 	
+	"dijit/registry",
 	"dijit/form/DropDownButton",
 	"dijit/DropDownMenu",
 	"dijit/MenuItem",
@@ -28,7 +29,7 @@ define([
 	"dojo/i18n!davinci/ve/nls/common",
     "dojo/i18n!davinci/ui/nls/ui"
 	
-], function(declare, domClass, domConstruct, ViewPart, Workbench, Runtime, DropDownButton, DropDownMenu, MenuItem, MenuSeparator,
+], function(declare, domClass, domConstruct, ViewPart, Workbench, Runtime, registry, DropDownButton, DropDownMenu, MenuItem, MenuSeparator,
 		Tree, mouse, systemResource, DragSource, Resource, TransformTreeMixin, ProjectToolbar, 
 		NewProjectTemplate, ManageProjectTemplates, Rename, Download, DownloadSelected, UserLibraries, commonNls, uiNLS) {
 	
@@ -129,6 +130,7 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 		dojo.connect(tree, 'onDblClick', dojo.hitch(this,this._dblClick ));
 		tree.watch("selectedItems", dojo.hitch(this, function (prop, oldValue, newValue) {
 			var items = dojo.map(newValue, function(item){ return {resource:item}; });
+			this._updateToolbarIcons(items);
 			this.publish("/davinci/ui/selectionChanged", [items, this]);
 		}));
 
@@ -252,15 +254,50 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 		}));
 		var button = new DropDownButton({
 			"class":"ExplorerDropDownButton",
-			"iconClass":"ExplorerDropDownIcon",
+			iconClass:"ExplorerDropDownIcon",
+			title:uiNLS.ProjectMenu,
 		    showLabel: false,
 		    dropDown: menu
 		});
 		td2.appendChild(button.domNode);
-
-
 	},
 	
+	_updateToolbarIcons: function(items){
+		var anyReadonly = false;
+		for(var i=0; i<items.length; i++){
+			var resource = items[i].resource;
+			if(!resource){
+				return;
+			}
+			if(resource.readOnly()){
+				anyReadonly = true;
+			}
+		}
+		var deleteButtonSpan = document.querySelector('.FilesToolbarDeleteFile');
+		var deleteButtonWidget = registry.byNode(deleteButtonSpan);
+		var deleteButtonNode = document.querySelector('.FilesToolbarDeleteFileIcon');
+		if(deleteButtonWidget && deleteButtonNode){
+			if(anyReadonly || items.length == 0){
+				domClass.add(deleteButtonNode, 'FilesToolbarDeleteFileIconDisabled');
+				deleteButtonWidget.set("disabled", true);
+			}else{
+				domClass.remove(deleteButtonNode, 'FilesToolbarDeleteFileIconDisabled');
+				deleteButtonWidget.set("disabled", false);
+			}
+		}
+		var renameButtonSpan = document.querySelector('.FilesToolbarRenameFile');
+		var renameButtonWidget = registry.byNode(renameButtonSpan);
+		var renameButtonNode = document.querySelector('.FilesToolbarRenameFileIcon');
+		if(renameButtonWidget && renameButtonNode){
+			if(anyReadonly || items.length != 1){
+				domClass.add(renameButtonNode, 'FilesToolbarRenameFileIconDisabled');
+				renameButtonWidget.set("disabled", true);
+			}else{
+				domClass.remove(renameButtonNode, 'FilesToolbarRenameFileIconDisabled');
+				renameButtonWidget.set("disabled", false);
+			}
+		}
+	},
 	
 	_deleteProject: function(){
 		var allProjects = null;

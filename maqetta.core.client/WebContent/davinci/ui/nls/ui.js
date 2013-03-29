@@ -171,6 +171,7 @@ define({ root:
 		"saveAsProjectTemplateMenuItem": "Save as project template...",
 		"manageProjectTemplatesMenuItem": "Manage project templates...",
 		"projectColon":"Project:",
+		"ProjectMenu":"Project menu",
 		
 		//NewProject
 		"newProjectName": "Name:",

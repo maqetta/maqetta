@@ -138,12 +138,41 @@
 .templateInput {
 	width:100%;
 }
+#maqBody .FilesToolbarNewFolder {
+}
 .newFolderIcon {
 	background-image: url(img/sprite.png);
 	background-position: 0 -272px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
+}
+#maqBody .FilesToolbarDeleteFile {
+}
+.FilesToolbarDeleteFileIcon {
+	background-image: url(img/sprite.png);
+	background-position: -20px -2054px;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
+.FilesToolbarDeleteFileIcon.FilesToolbarDeleteFileIconDisabled {
+	background-position: -20px -2094px;
+}
+#maqBody .FilesToolbarRenameFile {
+}
+.FilesToolbarRenameFileIcon {
+	background-image: url(img/sprite.png);
+	background-position: 0 -2113px;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
+.FilesToolbarRenameFileIcon.FilesToolbarRenameFileIconDisabled {
+	background-position: 0 -2133px;
+}
+.FilesToolbarUploadFiles {
+	float:right;
 }
 .uploadIcon {
 	background-image: url(img/sprite.png);
@@ -152,12 +181,18 @@
 	width: 16px;
 	height: 16px;
 }
+.FilesToolbarUploadZip {
+	float:right;
+}
 .uploadZipIcon {
 	background-image: url(img/sprite.png);
 	background-position: -51px -273px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
+}
+.FilesToolbarDownloadAll {
+	float:right;
 }
 .downloadAllIcon {
 	background-image: url(img/sprite.png); /* FIXME: add logic for new_document-disabled.gif? */
@@ -166,12 +201,19 @@
 	width: 16px;
 	height: 16px;
 }
+#maqBody .FilesToolbarModifyLibraries {
+	float:right;
+	margin-right:5px;
+}
 .userLibIcon {
 	background-image: url(img/sprite.png); /* FIXME: add logic for new_document-disabled.gif? */
 	background-position: -82px -133px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
+}
+.FilesToolbarDownloadSelected {
+	float:right;
 }
 .downloadSomeIcon {
 	background-image: url(img/sprite.png); /* FIXME: add logic for new_document-disabled.gif? */

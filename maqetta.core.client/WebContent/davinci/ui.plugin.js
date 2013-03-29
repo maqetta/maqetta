@@ -577,7 +577,7 @@ return {
                     {
                         id: "davinci.ui.addFiles",
                         label: "Upload and Extract ZIP file...",
-                        iconClass:"uploadIcon",
+                        iconClass:"uploadZipIcon",
                         run: function() {
                         	require(['./ui/Resource'], function(r) {
                         		r.addFilesZip();

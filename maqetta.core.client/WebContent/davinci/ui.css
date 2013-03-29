@@ -140,7 +140,7 @@
 }
 .newFolderIcon {
 	background-image: url(img/sprite.png);
-	background-position: 0 -271px;
+	background-position: 0 -272px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
@@ -152,16 +152,23 @@
 	width: 16px;
 	height: 16px;
 }
+.uploadZipIcon {
+	background-image: url(img/sprite.png);
+	background-position: -51px -273px;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
 .downloadAllIcon {
 	background-image: url(img/sprite.png); /* FIXME: add logic for new_document-disabled.gif? */
-	background-position: 0 -1060px;
+	background-position: -81px -296px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
 }
 .userLibIcon {
 	background-image: url(img/sprite.png); /* FIXME: add logic for new_document-disabled.gif? */
-	background-position: -82px -132px;
+	background-position: -82px -133px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
@@ -373,7 +380,43 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 
 
 /* Explorer */
-  	
+/*#D1D1D1 #989898 #989898 white*/
+.explorerHeaderProjectDiv {
+	padding-top:1px;
+}
+.ExplorerToolbar {
+	background-color:#efefef;
+	border-bottom: #989898 1px solid;
+}
+.ExplorerToolbar .dijitToolbar.davinciToolbar {
+	padding: 0px 2px 5px 4px;
+	background-image: none;
+	margin-top: -3px;
+}
+.explorerHeaderProjectDiv .projectSelection {
+	padding-left:1px;
+}
+.ExplorerToolbar .ExplorerDropDownButton {
+}
+.ExplorerToolbar .ExplorerDropDownIcon {
+	background-image: url(img/sprite.png);
+	background-position: 0 -296px;
+	width:22px;
+	height:16px;
+}
+#maqBody .explorerHeaderProjectCol0 {
+	padding:0px 3px 0px 2px;;
+}
+.explorerHeaderProjectCol1 {
+	width:100%;
+}
+.explorerHeaderProjectCol2 .dijitDropDownButton .dijitArrowButtonInner {
+	display:none;
+}
+#maqBody .explorerHeaderProjectCol2 {
+	padding-right: 3px;
+	padding-left: 7px;
+}
 .readOnlyResource .dijitTreeLabel {
 	font-style: italic;
 	color: #5b5b5b;

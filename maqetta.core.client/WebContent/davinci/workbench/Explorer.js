@@ -1,5 +1,7 @@
 define([
 	"dojo/_base/declare",
+	"dojo/dom-class",
+	"dojo/dom-construct",
 	"davinci/workbench/ViewPart",
 	"davinci/Workbench",
 	"davinci/Runtime",
@@ -26,7 +28,7 @@ define([
 	"dojo/i18n!davinci/ve/nls/common",
     "dojo/i18n!davinci/ui/nls/ui"
 	
-], function(declare, ViewPart, Workbench, Runtime, DropDownButton, DropDownMenu, MenuItem, MenuSeparator,
+], function(declare, domClass, domConstruct, ViewPart, Workbench, Runtime, DropDownButton, DropDownMenu, MenuItem, MenuSeparator,
 		Tree, mouse, systemResource, DragSource, Resource, TransformTreeMixin, ProjectToolbar, 
 		NewProjectTemplate, ManageProjectTemplates, Rename, Download, DownloadSelected, UserLibraries, commonNls, uiNLS) {
 	
@@ -42,6 +44,8 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 	
 	postCreate: function(){
 		this.inherited(arguments);
+		
+		domClass.add(this.toolbarDiv, "ExplorerToolbar");
 
 		var dragSources=Runtime.getExtensions("davinci.dnd", function (extension){
 			 return dojo.some(extension.parts,function(item){ return item=="davinci.ui.navigator"; }) && extension.dragSource;
@@ -176,14 +180,15 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 		projectRowDiv.appendChild(table);
 		var tr = dojo.doc.createElement("tr");
 		table.appendChild(tr);
-		var td1 = dojo.doc.createElement("td");
-		td1.className = "explorerHeaderProjectCol1";
+		var td0 = domConstruct.create("td", {"class":"explorerHeaderProjectCol0", innerHTML:uiNLS.projectColon});
+		tr.appendChild(td0);
+		var td1 = domConstruct.create("td", {"class":"explorerHeaderProjectCol1"});
 		tr.appendChild(td1);
-		var td2 = dojo.doc.createElement("td");
-		td2.className = "explorerHeaderProjectCol2";
+		var td2 = domConstruct.create("td", {"class":"explorerHeaderProjectCol2"});
 		tr.appendChild(td2);
 
 		var projectSelection = new davinci.ui.widgets.ProjectToolbar({});
+		
 		td1.appendChild(projectSelection.domNode);
 		var firstChild = this.toolbarDiv.children[0];
 		this.toolbarDiv.insertBefore(projectRowDiv, firstChild);
@@ -246,6 +251,8 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 		    }.bind(this)
 		}));
 		var button = new DropDownButton({
+			"class":"ExplorerDropDownButton",
+			"iconClass":"ExplorerDropDownIcon",
 		    showLabel: false,
 		    dropDown: menu
 		});

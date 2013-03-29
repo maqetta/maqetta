@@ -165,11 +165,12 @@ define({ root:
 		"renameDialogTitle": "Rename To...",
 
 		//Explorer
-		"createProjectMenuItem": "Create project...",
-		"deleteProjectMenuItem": "Delete project",
-		"renameProjectMenuItem": "Rename project...",
+		"createProjectMenuItem": "New project...",
+		"deleteProjectMenuItem": "Delete this project...",
+		"renameProjectMenuItem": "Rename this project...",
 		"saveAsProjectTemplateMenuItem": "Save as project template...",
 		"manageProjectTemplatesMenuItem": "Manage project templates...",
+		"projectColon":"Project:",
 		
 		//NewProject
 		"newProjectName": "Name:",
@@ -195,7 +196,7 @@ define({ root:
 		"ManageProjectTemplatesHeaderCreatedBy":"Created by",
 		"ManageProjectTemplatesHeaderCreatedOn":"Created on",
 		"ManageProjectTemplatesHeaderLastModified":"Last updated",
-		"ManageProjectTemplatesNoTemplates":"You have not created any project templates.",
+		"ManageProjectTemplatesNoTemplates":"You have no project templates.",
 		"DEL":"DEL",
 		"ManageProjectTemplatesDuplicateNames":"Invalid entries - two project templates have the same name",
 		"ManageProjectTemplateAboutToOccur":"The following actions are about to occur:",

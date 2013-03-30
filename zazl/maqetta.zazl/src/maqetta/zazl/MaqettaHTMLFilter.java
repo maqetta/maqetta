@@ -31,6 +31,10 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import org.maqetta.server.IDavinciServerConstants;
 
 public class MaqettaHTMLFilter implements Filter {
+	private static final String CACHE_CONTROL = "Cache-Control";
+	private static final String PRAGMA = "Pragma";
+	private static final String EXPIRES = "Expires";
+	
 	private static Logger logger = Logger.getLogger("maqetta.zazl");
 	private StringBuffer configScriptTag = null;
 	private MaqettaOSGiResourceLoader resourceLoader = null;
@@ -42,6 +46,7 @@ public class MaqettaHTMLFilter implements Filter {
 		configScriptTag.append("var dojoConfig = __DOJOCONFIG__;\n");
 		configScriptTag.append("var zazlConfig = {\n");
 		configScriptTag.append("	directInject: true,\n");
+		configScriptTag.append("	warmupLoader: '__URLPREFIX__/dojo/dojo.js',\n");
 		//configScriptTag.append("	debug: true,\n");
 		configScriptTag.append("	injectUrl: '__CONTEXT_PATH__/_javascript',\n");
 		configScriptTag.append("	packages:[\n");
@@ -50,6 +55,9 @@ public class MaqettaHTMLFilter implements Filter {
 		configScriptTag.append("		{'name':'dojox','location':'__URLPREFIX__/dojox'}\n");
 		configScriptTag.append("	],\n	paths: {\n__PATHS__\n	}\n");
 		configScriptTag.append("};\n");
+		configScriptTag.append("dojoConfig.baseUrl='__CONTEXT_PATH__./';\n");
+		configScriptTag.append("dojoConfig.packages = zazlConfig.packages;\n");
+		configScriptTag.append("dojoConfig.paths = zazlConfig.paths;\n");
 		configScriptTag.append("</script>\n");
 	}
 	
@@ -66,6 +74,12 @@ public class MaqettaHTMLFilter implements Filter {
 			isZazlRequest = true;
 		}
 		if (isZazlRequest && pathInfo.endsWith(".html") && pathInfo.startsWith(IDavinciServerConstants.USER_URL)) {
+			HttpServletResponse resp = (HttpServletResponse)response;
+			if (resp.containsHeader(EXPIRES)) {
+				resp.setDateHeader(EXPIRES, 0);
+				resp.setHeader(CACHE_CONTROL, "no-cache");
+				resp.setHeader(PRAGMA, "no-cache");
+			}
 			PrintWriter out = response.getWriter();
 			String requestURI = ((HttpServletRequest)request).getRequestURI();
 			RequestWrapper requestWrapper = new RequestWrapper((HttpServletRequest)request);

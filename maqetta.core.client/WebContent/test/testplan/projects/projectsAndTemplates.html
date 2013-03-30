@@ -1,0 +1,227 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Projects and Project Templates Testing</title>
+
+	<!-- CUSTOMIZATION: Make sure "../" URLs for href/src attributes are correct -->
+	<link rel="stylesheet" type="text/css" href="../css/testplan.css" />
+	<style type="text/css">
+		.inlineExpected {
+		color:darkred;
+		font-style:italic;
+	}
+	</style>
+</head>
+
+<body>
+	<div class="navbar">
+		<a href="./" title="show directory contents"><code>./</code> (show contents of this directory)</a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="../" title="show directory contents"><code>../</code> (show contents of parent directory)</a>
+	</div>
+	<hr />
+	<h1 class="test_title">Projects and Project Templates Testing</h1>
+
+	<h2 class="test_section">New user - create default project</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>If possible, run a version of Maqetta where you are able to create a brand new login.</li>
+		<li>Open the Files palette. Look at the toolbar and show the contents of the projects dropdown menu.
+			<ul class='inlineExpected'>
+				<li>The DropDownSelect widget next to the label "Project:" should say "project1"</li>
+				<li>The DropDownSelect widget's menu should have one entry: "project1"</li>
+			</ul>
+		</li>
+		<li>Double-click on <code>app.css</code>, add a style rule to the bottom such as <code>#foo { color:red; }</code>, click on Save, then close the editor for <code>app.css.</code>.</li>
+		<li>From the menu at the top/right corner of the Files palette, issue a "New project..." command.
+			<ul class='inlineExpected'>
+				<li>The New Project dialog should appear</li>
+				<li>The three checkboxes should be unchecked by default.</li>
+				<li>The dropdown menu next to "User project template" should be disabled.</li>
+				<li>The Create button should be disabled until at least one character is typed into the name field</li>
+			</ul>
+		</li>
+		<li>Type various alphas, numbers and punctuation characters into the name field.
+			<ul class='inlineExpected'>
+				<li>Only alphas, numbers, hyphens and periods should be allowed</li>
+the name field</li>
+				<li>Whenever an invalid character is entered, a red exclamation point should appear on the right side of type-in field and Create button should be disabled</li>
+			</ul>
+		</li>
+		<li>Enter any valid string for the name field and click Create.
+			<ul class='inlineExpected'>
+				<li>Maqetta should refresh the browser page</li>
+				<li>A default project should appear (with app.js, app.css, lib, samples, themes)</li>
+				<li>The project dropdown menu should show the project name that you just typed.</li>
+			</ul>
+		</li>
+		<li>Double-click on app.css to open the source editor.
+			<ul class='inlineExpected'>
+				<li>You should see the original version of app.css - the style rule you added above should not be in the file.</li>
+			</ul>
+		</li>
+		<li>Close the editor for app.css.</li>
+			</ul>
+		</li>
+	</ol>
+
+	<h2 class="test_section">Clone existing project</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Issue a New Folder command and create a new folder (e.g., <code>folder1</code>).</li>
+		<li>Double-click on <code>app.css</code>, then SaveAs to <code>file1.css</code> into <code>folder1</code>, then close the editor for <code>file1.css.</code>.</li>
+		<li>Double-click on <code>app.css</code> again, add a style rule to the bottom such as <code>#foo { color:red; }</code>, click on Save, then close the editor for <code>app.css</code>.</li>
+		<li>From the menu at the top/right corner of the Files palette, issue a "New project..." command.</li>
+		<li>Turn on the checkbox that says "Copy files from current project into new project".</li>
+		<li>Enter any valid string for the name field and click Create
+			<ul class='inlineExpected'>
+				<li>Maqetta should refresh the browser page</li>
+				<li>The new project should have both the standard files (app.js, app.css, lib, samples, themes), but should also have <code>folder1</code> with <code>file1.css.</code> inside of <code>folder1</code>.</li>
+				<li>The project dropdown menu's current value should be the project name that you just typed.</li>
+			</ul>
+		</li>
+	</ol>
+
+	<h2 class="test_section">Rename and delete projects</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>From the menu at the top/right corner of the Files palette, issue a "Rename this project..." command. Enter a new name for the current project.
+			<ul class='inlineExpected'>
+				<li>Maqetta should refresh the browser page</li>
+				<li>The new project should have the same contents as previously.</li>
+				<li>The project dropdown menu's current value should show the rename project.</li>
+			</ul>
+		</li>
+		<li>From the menu at the top/right corner of the Files palette, issue a "Delete this project..." command. 
+			<ul class='inlineExpected'>
+				<li>An "are you sure" confirmation dialog should appear</li>
+			</ul>
+		</li>
+		<li>Click OK on the confirmation dialog. 
+			<ul class='inlineExpected'>
+				<li>Maqetta should refresh the browser page</li>
+				<li>One of the other projects should become the current project (e.g., project1).</li>
+				<li>The project dropdown menu's current value should show a different project, and the deleted project should not appear on list of projects on the dropdown menu.</li>
+			</ul>
+		</li>
+	</ol>
+
+	<h2 class="test_section">Create new project template - unshared</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>Issue a New Folder command and create a new folder (e.g., <code>a1</code>).</li>
+		<li>With <code>a1</code> selected in Files palette, issue a "Create CSS File" command and create file <code>a1.css</code> in folder <code>a1</code>, then close the editor for <code>a1.css.</code>.</li>
+		<li>Issue a New Folder command and create a new folder (e.g., <code>b1</code>).</li>
+		<li>With <code>b1</code> selected in Files palette, issue a "Create CSS File" command and create file <code>b1.css</code> in folder <code>b1</code>, then close the editor for <code>a1.css.</code>.</li>
+		<li>Double-click on <code>app.css</code>, add a style rule to the bottom such as <code>#aaa { color:red; }</code>, click on Save, then close the editor for <code>app.css</code>.</li>
+		<li>From the menu at the top/right corner of the Files palette, issue a "Save as project template..." command.
+			<ul class='inlineExpected'>
+				<li>The "Save as project template" dialog should appear</li>
+				<li>The "Share with everyone" checkboxes should be unchecked by default.</li>
+				<li>The Create button should be disabled until at least one character is typed into the name field</li>
+			</ul>
+		</li>
+		<li>Type various alphas, numbers and punctuation characters into the name field.
+			<ul class='inlineExpected'>
+				<li>Only alphas, numbers, hyphens and periods should be allowed</li>
+the name field</li>
+				<li>Whenever an invalid character is entered, a red exclamation point should appear on the right side of type-in field and Create button should be disabled</li>
+			</ul>
+		</li>
+		<li>Enter any valid string for the name field (e.g., template1) and click Create.
+			<ul class='inlineExpected'>
+				<li>An alert should appear confirming that the project template was created.</li>
+			</ul>
+		</li>
+		<li>In the Files palette, delete folder <code>b1</code>.</li>
+		<li>From the menu at the top/right corner of the Files palette, issue a "New project..." command.</li>
+		<li>Enter a name for the new project (e.g., projectX), click the checkbox for "Use project template", choose the project template you just created from the menu (e.g., template1), and click Create. Because you used a project template but did not clone the previous project:
+			<ul class='inlineExpected'>
+				<li>Maqetta should refresh the browser page</li>
+				<li>The current project should be "projectX" (or whatever you typed)</li>
+				<li>Folder <code>b1</code> should be there. (Copied from the template).</li>
+				<li>The new style rule that you entered into app.css should be missing.</li>
+			</ul>
+		</li>
+		<li>In a different browser, login to the same Maqetta server. Issue a "New project..." command.
+			<ul class='inlineExpected'>
+				<li>The project template you just created should not appear in the list of project templates (because that project template was not "shared with everyone").</li>
+			</ul>
+		</li>
+		<li>Go back to the browser with your original Maqetta session</li>
+	</ol>
+
+	<h2 class="test_section">Create new project template - use template and also clone</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>(Assumes folders <code>a1</code> and <code>a1</code> are present due to previous steps in test)</li>
+		<li>Delete folder <code>a1</code>.</li>
+		<li>Double-click on <code>b1/b1.css</code> and type some different content into that file.</li>
+		<li>Issue a New Folder command and create a new folder (e.g., <code>c1</code>).</li>
+		<li>With <code>c1</code> selected in Files palette, issue a "Create CSS File" command and create file <code>c1.css</code> in folder <code>c1</code>, then close the editor for <code>c1.css.</code>.</li>
+		<li>From the menu at the top/right corner of the Files palette, issue a "New project..." command.</li>
+		<li>Enter a name for the new project (e.g., projectY), click the checkbox for "Use project template", choose the project template you just created from the menu (e.g., template1), also click the checkbox that says "Copy files from current project into new project", and click Create. Because you both used a project template and cloned the current project:
+			<ul class='inlineExpected'>
+				<li>Maqetta should refresh the browser page</li>
+				<li>The current project should be "projectY" (or whatever you typed)</li>
+				<li>Folder <code>a1</code> should be there. (Copied from the template).</li>
+				<li>Folder <code>b1</code> should be there and file b1.css should show the changes you made earlier in this section (because current project contents overwrite same-named files from the template).</li>
+				<li>Folder <code>c1</code> should be there. (Cloned from previous project).</li>
+			</ul>
+		</li>
+	</ol>
+
+	<h2 class="test_section">Create new project template - shared</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>(Assumes folders <code>a1</code> and <code>a1</code> are present due to previous steps in test)</li>
+		<li>From the menu at the top/right corner of the Files palette, issue a "Save as project template..." command. Enter a template name (e.g., template2), turn on the "Share with everyone" checkbox, and click Create.
+			<ul class='inlineExpected'>
+				<li>An alert should appear confirming that the project template was created.</li>
+			</ul>
+		</li>
+		<li>In a different browser, login to the same Maqetta server. (If already logged in, then do a browser refresh.) Issue a "New project..." command.
+			<ul class='inlineExpected'>
+				<li>The project template you just created should not appear in the list of project templates (because that project template was "shared with everyone").</li>
+			</ul>
+		</li>
+		<li>Go back to the browser with your original Maqetta session</li>
+	</ol>
+
+	<h2 class="test_section">Manage project templates</h2>
+	<h3 class="steps_subsection">Steps</h3>
+	<ol class="steps">
+		<li>(Assumes two project templates have been created by previous steps (e.g., template1 and template2).</li>
+		<li>From the menu at the top/right corner of the Files palette, issue a "Manage project templates..." command. 
+			<ul class='inlineExpected'>
+				<li>The Manage project templates dialog should appear, with a tabular display of your project templates.</li>
+			</ul>
+		</li>
+		<li>For one of the project templates, rename it and change its sharing value. To rename, click on the name field. An inline edit control should appear. (You may have to hit Enter to make the change "take".) Click on the sharing checkbox to change its value.
+			<ul class='inlineExpected'>
+				<li>Changed values should have a pink background.</li>
+			</ul>
+		</li>
+		<li>For another of the templates, click on the DEL button 3 times.
+			<ul class='inlineExpected'>
+				<li>With the first click, the row should get a pink background and all text should have strike-though.</li>
+				<li>With the second click, the highlighting should go away (because you have "un-deleted" that template).</li>
+				<li>With the third click, the row should get a pink background and all text should have strike-though.</li>
+			</ul>
+		</li>
+		<li>Click on the Update button to commit your changes.
+			<ul class='inlineExpected'>
+				<li>A confirmation dialog should appear that summarizes the changes you are about to make..</li>
+			</ul>
+		</li>
+		<li>Click OK on the confirmation dialog.</li>
+		<li>Bring up the Manage project templates dialog again.
+			<ul class='inlineExpected'>
+				<li>The dialog should show the template name change, the sharing change, and the deleted project should no longer appear.</li>
+			</ul>
+		</li>
+	</ol>
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+<div>
+	<div class="dijitDialogPaneContentArea">
+		<table class="NewProjectTemplateDialogTable">
+		<tr>
+			<td class="NewProjectTemplateDialogLabel">${newProjectTemplateName}</td>
+			<td>
+				<input class='templateInput' data-dojo-type="dijit.form.ComboBox" type='text' dojoAttachPoint="_projectTemplateName"></input>
+			</td>
+		</tr>
+		<tr class="NewProjectTemplateShareRow">
+			<td colspan="2" class="NewProjectTemplateShareCell">
+				<input id="NewProjectTemplateShare" data-dojo-type="dijit.form.CheckBox" dojoAttachPoint="_projectTemplateShare"></input>
+				<label for="NewProjectTemplateShare" class="newProjectTemplateShareLabel">${newProjectTemplateShareLabel}</label>
+			</td>
+		</tr>
+		</table>
+	</div>
+
+	<div class="dijitDialogPaneActionBar">
+		<button dojoType='dijit.form.Button' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='${save}' class="maqPrimaryButton" type="submit" disabled></button>
+		<button dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='${buttonCancel}' class="maqSecondaryButton"></button>
+	</div>
+		
+</div>

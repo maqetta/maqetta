@@ -199,7 +199,6 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 			Workbench.loadProject(this.value);
 		});
 		
-		// FIXME: Just dummy menu for now
 		var menu = new DropDownMenu({ style: "display: none;"});
 		menu.addChild(new MenuItem({
 			id: 'ExplorerCreateProject',

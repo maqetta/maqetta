@@ -670,8 +670,24 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 .NewProjectDialogTable {
 	width:100%;
 }
+.NewProjectTemplateSelect .dijitButtonContents {
+	min-width:8em;
+}
+.NewProjectDialogLabel {
+	margin-left:2px;
+}
+.NewProjectUseTemplateLabel {
+	margin-right:10px;
+}
 .NewProjectDialogLabel, .NewProjectTemplateDialogLabel {
 	white-space:nowrap;
+}
+.NewProjectUseTemplateCell, .NewProjectCloneExistingCell, .NewProjectEclipseSupportCell {
+	vertical-align:middle;
+	height:22px;
+}
+.NewProjectUseTemplateCell {
+	padding-top:20px;
 }
 
 .NewProjectTemplateName {
@@ -681,6 +697,9 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	float:right;
 	font-style:italic;
 	white-space:nowrap;
+}
+.NewProjectTemplateShareCell {
+	padding-top:20px;
 }
 .ManageProjectTemplatesOuterDiv table {
 	border-spacing:0;

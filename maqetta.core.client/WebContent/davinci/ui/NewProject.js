@@ -1,4 +1,5 @@
 define(["dojo/_base/declare",
+        "dojo/on",
         "dijit/_Templated",
         "dijit/_Widget",
         "davinci/library",
@@ -13,7 +14,7 @@ define(["dojo/_base/declare",
         "dijit/form/RadioButton",
         "dijit/form/ValidationTextBox"
         
-],function(declare, _Templated, _Widget,  Library, Resource, Preferences,  Runtime, Workbench, uiNLS, commonNLS, templateString){
+],function(declare, on, _Templated, _Widget,  Library, Resource, Preferences,  Runtime, Workbench, uiNLS, commonNLS, templateString){
 
 	var noProjectTemplate = '_none_';
 
@@ -52,9 +53,8 @@ define(["dojo/_base/declare",
 			this.inherited(arguments);
 			dojo.connect(this._projectName, "onKeyUp", this, '_checkValid');
 			var projectTemplates = Runtime.getSiteConfigData("projectTemplates");
-			var opts = [{value:noProjectTemplate, label:uiNLS.newProjectNoTemplate}];
+			var opts = [];
 			if(projectTemplates && projectTemplates.templates && projectTemplates.templates.length > 0){
-				opts.push({type:'separator'});
 				for(var i=0; i<projectTemplates.templates.length; i++){
 					var template = projectTemplates.templates[i];
 					if(template.folder && template.name){
@@ -68,6 +68,10 @@ define(["dojo/_base/declare",
 			}
 			this.projectTemplates.addOption(opts);
 			this._projectName.set("regExp", regex);
+			on(this._useProjectTemplate, "change", function(){
+				this.projectTemplates.set("disabled", !this._useProjectTemplate.checked);
+			}.bind(this));
+			this.projectTemplates.set("disabled", !this._useProjectTemplate.checked);
 		},
 		
 		_checkValid: function(){
@@ -81,7 +85,7 @@ define(["dojo/_base/declare",
 		
 		okButton: function() {
 			var newProjectName = this._projectName.get("value");
-			var cloneExistingProject = dojo.attr(this._clondExistingProject, 'checked');
+			var cloneExistingProject = dojo.attr(this._cloneExistingProject, 'checked');
 			var projectToClone = cloneExistingProject ? Workbench.getProject() : '';
 			var isEclipse = dojo.attr(this._eclipseSupport, 'checked');
 			var projectTemplateName = this._projectTemplate == noProjectTemplate ? '' : this._projectTemplate;

@@ -176,10 +176,10 @@ define({ root:
 		//NewProject
 		"newProjectName": "Name:",
 		"newProjectTemplate":"Template:",
-		"newProjectCloneExistingProject":"Copy existing project files into new project",
-		"newProjectEclipseSupport": "Eclipse support",
+		"newProjectUseProjectTemplate":"Use project template",
+		"newProjectCloneExistingProject":"Copy files from current project into new project",
+		"newProjectEclipseSupport": "New project should be Eclipse-compatible",
 		"newProjectNameExists": "A project with this name already exists",
-		"newProjectNoTemplate":"(none)",
 
 		//NewProjectTemplate
 		"saveAsProjectTemplate": "Save as project template",

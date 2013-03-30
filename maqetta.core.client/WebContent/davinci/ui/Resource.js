@@ -385,7 +385,7 @@ var uiResource = {
 	
 		newProject: function(){
 			var projectDialog = new NewProject({});
-			Workbench.showModal(projectDialog, uiNLS.newProject, {width:'330px'}, null, true);
+			Workbench.showModal(projectDialog, uiNLS.newProject, {"min-width":'330px'}, null, true);
 		},
 	
 		renameAction: function(){

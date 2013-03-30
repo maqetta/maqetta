@@ -9,21 +9,22 @@
 			<td><div dojoAttachPoint='_error4'></div></td>
 		</tr>
 		<tr>
-			<td class="NewProjectTemplateLabel">${newProjectTemplate}</td>
-			<td>
-				<select dojoType="dijit.form.Select" dojoAttachPoint="projectTemplates" dojoAttachEvent="onChange: _onChangeTemplate" style="width:100%;">
+			<td colspan="2" class="NewProjectUseTemplateCell">
+				<input type='checkbox' dojoAttachPoint="_useProjectTemplate"></input>
+				<span class="NewProjectDialogLabel NewProjectUseTemplateLabel">${newProjectUseProjectTemplate}</span>
+				<select class="NewProjectTemplateSelect" dojoType="dijit.form.Select" dojoAttachPoint="projectTemplates" dojoAttachEvent="onChange: _onChangeTemplate">
 					<!-- Menu created dynamically -->
 				</select>
 			</div></td>
 		</tr>
 		<tr>
-			<td colspan="2">
-				<input type='checkbox' dojoAttachPoint="_clondExistingProject"></input>
+			<td colspan="2" class="NewProjectCloneExistingCell">
+				<input type='checkbox' dojoAttachPoint="_cloneExistingProject"></input>
 				<span class="NewProjectDialogLabel">${newProjectCloneExistingProject}</span>
 			</td>
 		</tr>
 		<tr>
-			<td colspan="2">
+			<td colspan="2" class="NewProjectEclipseSupportCell">
 				<input type='checkbox' dojoAttachPoint="_eclipseSupport"></input>
 				<span class="NewProjectDialogLabel">${newProjectEclipseSupport}</span>
 			</td>

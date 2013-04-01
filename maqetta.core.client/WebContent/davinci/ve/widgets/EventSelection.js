@@ -61,7 +61,7 @@ var getEventSelectionValues = function(root){
 					if(!child._readOnly && child != samplesFolder && child != themeFolder && child != customWidgetFolder){
 						recurseFindHtmlFiles(child);
 					}
-				} else if(/\.html?$/i.test(child.extension)) {
+				} else if(/^html?$/i.test(child.extension)) {
 					htmlFiles.push(child);
 				}
 			}

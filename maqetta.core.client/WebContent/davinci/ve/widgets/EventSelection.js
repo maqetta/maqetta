@@ -25,10 +25,10 @@ var getEventSelectionValues = function(root){
 		states = [],
 		stateContainers = root && States.getAllStateContainers(root);
 
-	if(stateContainers && stateContainers.length > 0){
+	if(stateContainers){
 		states = stateContainers.reduce(function(statesList, container){
 			return statesList.concat(States.getStates(container));
-		});
+		}, []);
 	}
 	for(var i=0; i<states.length; i++){
 		var state = states[i];

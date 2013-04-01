@@ -36,17 +36,19 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 			return this.projectTemplatesIndex;
 		}
 		IStorage indexFile = getProjectTemplatesIndexIStorage();
-		if(!indexFile.exists()) {
-			return null;
-		}else{
-			try{
+		try{
+			if(!indexFile.exists()) {
+				this.projectTemplatesIndex = new JSONObject();
+				JSONArray templates = new JSONArray();
+				this.projectTemplatesIndex.put("templates", templates);
+			}else{
 				String indexFileContents = readFile(indexFile.getPath());
 				this.projectTemplatesIndex = new JSONObject(indexFileContents);
-			} catch (JSONException e) {
-				String desc = "Project Templates index file - not a valid json file";
-				theLogger.log(Level.SEVERE, desc, e);
-				throw new Error(desc, e);
 			}
+		} catch (JSONException e) {
+			String desc = "Project Templates index file - not a valid json file";
+			theLogger.log(Level.SEVERE, desc, e);
+			throw new Error(desc, e);
 		}
 		return this.projectTemplatesIndex;
 	}

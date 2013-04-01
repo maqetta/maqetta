@@ -152,15 +152,19 @@ DialogClass._timedDestroy = function(dialog, handles) {
 	dialog.hide();
 }
 
-DialogClass.showModal = function(content, title, style, callback, submitOnEnter) {
+DialogClass.showModal = function(content, title, style, callback, submitOnEnter, onShow) {
 	var handles = [];
 
-	var myDialog = new DialogClass({
+	var params = {
 		title: title,
 		content: content,
 		contentStyle: style,
 		submitOnEnter: submitOnEnter
-	});
+	};
+	if(onShow){
+		params.onShow = onShow;
+	}
+	var myDialog = new DialogClass(params);
 
 	var _onExecute = dojo.hitch(this, function() {
 		var cancel = false;

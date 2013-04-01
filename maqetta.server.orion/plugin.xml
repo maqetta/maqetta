@@ -89,6 +89,12 @@
          	   class="maqetta.core.server.command.ManagerVersion" />
          <command path="getReviewUserInfo"
          	   class="maqetta.core.server.command.GetReviewUserInfo" />   
+         <command path="createProjectTemplate" 
+               class="maqetta.core.server.command.CreateProjectTemplate" />         
+         <command path="deleteProjectTemplates" 
+               class="maqetta.core.server.command.DeleteProjectTemplates" />         
+         <command path="modifyProjectTemplates" 
+               class="maqetta.core.server.command.ModifyProjectTemplates" />         
                
       </extension>
 	

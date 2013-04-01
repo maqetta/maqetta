@@ -961,13 +961,15 @@ davinci_top_bar .dijitButtonNode {
     overflow-x: hidden;
     margin: 2px 3px 3px 4px;
 }
-.dojoyPaletteHeaderTable {
+.dojoyPaletteHeaderTable,
+.explorerHeaderProjectTable {
 	width:100%;
   	border-collapse:collapse;
   	border-spacing:0;
   	margin-bottom:1px;
 }
-.dojoyPaletteHeaderTable td {
+.dojoyPaletteHeaderTable td,
+.explorerHeaderProjectTable td {
 	padding:0;
 }
 .dojoyPaletteFilterContainer {
@@ -994,7 +996,8 @@ davinci_top_bar .dijitButtonNode {
 .dojoyPaletteHeaderTableCol2 {
 	width:16px;
 }
-.dojoyPaletteHeaderTableCol2 .dijitDropDownButton .dijitButtonNode {
+.dojoyPaletteHeaderTableCol2 .dijitDropDownButton .dijitButtonNode,
+.explorerHeaderProjectCol2 .dijitDropDownButton .dijitButtonNode {
 	border:none;
 	background:none;
 }
@@ -1254,7 +1257,7 @@ davinci_top_bar .dijitButtonNode {
 	white-space: nowrap;
     border-width: 1px;
     border-style: solid;
-    border-color: #D1D1D1 #989898 #989898 white;
+    border-color: #D1D1D1 white #989898 white;
     border-top-color: transparent;
     font-family: arial, helvetica, sans-serif;
     font-size:11px;

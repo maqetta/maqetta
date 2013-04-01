@@ -16,10 +16,12 @@ import maqetta.core.server.command.Download;
 import maqetta.server.orion.MaqettaOrionServerConstants;
 
 import org.davinci.server.user.IUser;
+import org.maqetta.server.IProjectTemplatesManager;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.orion.server.core.users.OrionScope;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONArray;
 import org.maqetta.server.Command;
 import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ServerManager;
@@ -49,14 +51,26 @@ public class GetInitializationInfo extends Command {
 				MaqettaOrionServerConstants.WORKBENCH_PREF, "{}");
 		try {
 			String c = this.getSiteJson();
-			this.responseString = "{\n" + "\t\"workbenchState\":"
+			JSONObject projectTemplatesObject = this.getProjectTemplatesObject(user);
+			String projectTemplates = projectTemplatesObject.toString();
+			String temp = "{\n" + "\t\"workbenchState\":"
 					+ workbenchSettings + ",\n" + "\t\"userInfo\":{\"userId\": \""
 					+ user.getUserID() + "\"," + "\t\t\"isLocalInstall\": \""
 					+ String.valueOf(ServerManager.LOCAL_INSTALL) + "\","
 					+ "\t\t\"userDisplayName\": \""
 					+ String.valueOf(user.getPerson().getDisplayName()) + "\","
 					+ "\t\t\"email\": \"" + user.getPerson().getEmail() + "\"\n"
-					+ "\t}" + "\t" + c + "\n" + "}";
+					+ "\t}" + "\t" + c + ",\n"
+					+ "\t\"projectTemplates\":" + projectTemplates + "\n"
+					+ "}";
+			try{
+				JSONObject responseObject = new JSONObject(temp);
+				this.responseString = responseObject.toString(2);
+			} catch (JSONException e) {
+				theLogger.log(Level.SEVERE, "Maqetta Configuration Exception: GetInitializationInfo - responseString not valid json "
+						+ e.getMessage(), e);
+				throw new Error(e);
+			}
 	        resp.setContentType("application/json;charset=UTF-8");
 		} catch (MaqettaConfigException e) {
 			theLogger.log(Level.SEVERE, "Maqetta Configuration Exception: "
@@ -99,7 +113,7 @@ public class GetInitializationInfo extends Command {
 							String output = this.readFile(siteConfigDir + "/"
 									+ file);
 							JSONObject j = new JSONObject(output);
-							ret = ret + ",\n\t'" + fileNameWithOutExt + "': "
+							ret = ret + ",\n\t\"" + fileNameWithOutExt + "\": "
 									+ output;
 						} catch (JSONException e) {
 							throw new MaqettaConfigException(
@@ -124,6 +138,13 @@ public class GetInitializationInfo extends Command {
 		}
 		this.siteConfigJson = ret;
 		return this.siteConfigJson;
+	}
+
+	private JSONObject getProjectTemplatesObject(IUser user) throws IOException, MaqettaConfigException {
+		
+		IProjectTemplatesManager projectTemplatesManager = ServerManager.getServerManager().getProjectTemplatesManager();
+		JSONObject projectTemplatesObject = projectTemplatesManager.getProjectTemplatesIndex(user);
+		return projectTemplatesObject;
 	}
 
 	private String readFile(String path) throws IOException {

@@ -111,11 +111,15 @@ var Resource = {
 		parent.getChildren(onComplete, onError);
 	},
 	
-	createProject: function(projectName, eclipseSupport) {
+	createProject: function(params) {
+		var projectName = params.newProjectName;
+		var projectToClone = params.projectToClone;
+		var projectTemplateName = params.projectTemplateName;
+		var eclipseSupport = params.eclipseSupport ? true : false;
 		return xhr.get({
 			url: "cmd/createProject",
 			handleAs: "text",
-			content: {name: projectName, eclipseSupport: eclipseSupport}
+			content: {name: projectName, projectToClone: projectToClone, eclipseSupport: eclipseSupport, projectTemplate:projectTemplateName}
 		});
 	},
 	

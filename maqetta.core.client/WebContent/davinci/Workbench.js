@@ -908,8 +908,8 @@ var Workbench = {
 	getAllOpenEditorIds: function() {
 	},
 
-	showModal: function(content, title, style, callback, submitOnEnter) {
-		return Dialog.showModal(content, title, style, callback, submitOnEnter);
+	showModal: function(content, title, style, callback, submitOnEnter, onShow) {
+		return Dialog.showModal(content, title, style, callback, submitOnEnter, onShow);
 	},
 
 	// simple dialog with an automatic OK button that closes it.

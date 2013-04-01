@@ -1,4 +1,5 @@
 define(["dojo/_base/declare",
+        "dojo/on",
         "dijit/_Templated",
         "dijit/_Widget",
         "davinci/library",
@@ -13,13 +14,21 @@ define(["dojo/_base/declare",
         "dijit/form/RadioButton",
         "dijit/form/ValidationTextBox"
         
-],function(declare, _Templated, _Widget,  Library, Resource, Preferences,  Runtime, Workbench, uiNLS, commonNLS, templateString){
+],function(declare, on, _Templated, _Widget,  Library, Resource, Preferences,  Runtime, Workbench, uiNLS, commonNLS, templateString){
+
+	var noProjectTemplate = '_none_';
+
+	// Allow any unicode alpha, dijit, period or hyphen
+	// Better regex would be: "^[\p{L}\d\.\-]+$", but browsers don't support \p
+	var regex = "^[A-Za-z0-9\.\-]+$";
+
 	return dojo.declare("davinci.ui.NewProject",   [_Widget,_Templated], {
 		widgetsInTemplate: true,
 		templateString: templateString,
 		_okButton: null,
 		_projectName: null,
 		_eclipseSupport: null,
+		_projectTemplate: noProjectTemplate,
 		
 		postMixInProperties: function() {
 			var langObj = uiNLS;
@@ -43,21 +52,28 @@ define(["dojo/_base/declare",
 		postCreate: function(){
 			this.inherited(arguments);
 			dojo.connect(this._projectName, "onKeyUp", this, '_checkValid');
-
-			this._projectName.validator = dojo.hitch(this, function(value, constraints) {
-					var isValid = true;
-					
-					if (!this._projects || !value) {
-						isValid = false;
-					} else if (this._projects[value]) {
-						isValid = false;
-						this._projectName.invalidMessage = uiNLS.newProjectNameExists;
-					} else {
-						this._projectName.invalidMessage = null;
+			var projectTemplates = Runtime.getSiteConfigData("projectTemplates");
+			var opts = [];
+			if(projectTemplates && projectTemplates.templates && projectTemplates.templates.length > 0){
+				for(var i=0; i<projectTemplates.templates.length; i++){
+					var template = projectTemplates.templates[i];
+					if(template.folder && template.name){
+						var authorSpan = template.authorEmail ? 
+								'<span class="NewProjectTemplateAuthor">&nbsp;&nbsp;(Author: '+template.authorEmail+')</span>' :
+								'';
+						var label = '<span class="NewProjectTemplateName">'+template.name+'</span>'+authorSpan;
+						opts.push({value:template.folder, label:label});
 					}
-					
-					return isValid;
-			});
+				}
+			}else{
+				this._useProjectTemplate.disabled = true;
+			}
+			this.projectTemplates.addOption(opts);
+			this._projectName.set("regExp", regex);
+			on(this._useProjectTemplate, "change", function(){
+				this.projectTemplates.set("disabled", !this._useProjectTemplate.checked);
+			}.bind(this));
+			this.projectTemplates.set("disabled", !this._useProjectTemplate.checked);
 		},
 		
 		_checkValid: function(){
@@ -71,9 +87,18 @@ define(["dojo/_base/declare",
 		
 		okButton: function() {
 			var newProjectName = this._projectName.get("value");
+			var cloneExistingProject = dojo.attr(this._cloneExistingProject, 'checked');
+			var projectToClone = cloneExistingProject ? Workbench.getProject() : '';
 			var isEclipse = dojo.attr(this._eclipseSupport, 'checked');
+			var useProjectTemplate = dojo.attr(this._useProjectTemplate, 'checked');
+			var projectTemplateName = useProjectTemplate ? this.projectTemplates.get("value") : '';
 
-			Resource.createProject(newProjectName, isEclipse).then(function() {
+			Resource.createProject({
+				newProjectName:newProjectName, 
+				projectTemplateName:projectTemplateName,
+				projectToClone:projectToClone,
+				isEclipse:isEclipse
+			}).then(function() {
 				if (isEclipse) {
 					Preferences.savePreferences(
 							'davinci.ui.ProjectPrefs',
@@ -86,9 +111,7 @@ define(["dojo/_base/declare",
 					);
 				}
 
-				if (Workbench.singleProjectMode()) {
-					Workbench.loadProject(newProjectName);
-				}
+				Workbench.loadProject(newProjectName);
 			});
 		},
 		
@@ -98,6 +121,10 @@ define(["dojo/_base/declare",
 		
 		_getValueAttr: function(){
 			return this.value;
+		},
+		
+		_onChangeTemplate: function(newValue){
+			this._projectTemplate = newValue;
 		},
 
 		cancelButton: function(){

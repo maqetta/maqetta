@@ -235,10 +235,6 @@ define(["dojo/_base/declare",
 			}.bind(this), 1000);
 		},
 		
-		setFocus: function(){
-			this._cancelButton.focus();
-		},
-		
 		updateDuplicateNameError: function(){
 			this._anyDuplicateNames = false;
 			for(var i=0; i<this._myProjectTemplates.length; i++){
@@ -268,7 +264,7 @@ define(["dojo/_base/declare",
 			var sharings = [];
 			// checkForChanges loops through all elements in table
 			// and invokes callback if any values are different than their original values
-			// For this routine, we just check to see if even one value is different
+			// For this routine, gather change info and stuff into deletes, renames, sharings
 			this.checkForChanges(function(i, prop, value){
 				if(prop == 'deleted'){
 					deletes.push({name:this._myProjectTemplates[i].name});

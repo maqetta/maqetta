@@ -1,9 +1,8 @@
 define(["dojo/_base/declare",
-        "dojo/_base/json",
         "davinci/Runtime",
         "davinci/Workbench"
         
-],function(declare, json, Runtime, Workbench){
+],function(declare, Runtime, Workbench){
 	
 var ProjectTemplates = {
 
@@ -21,7 +20,7 @@ var ProjectTemplates = {
 			sharingSimple:sharingSimple,
 			timestamp:timestamp
 		};
-		var paramsJson = json.toJson(params, '\t');
+		var paramsJson = JSON.stringify(params, null, '\t');
 		var data = Runtime.serverJSONRequest({
 			url: "cmd/createProjectTemplate",
 			handleAs: "json",
@@ -42,7 +41,7 @@ var ProjectTemplates = {
 	// Assumes that calling routine has set up the params object to exactly match
 	// what is required by cmd/modifyProjectTemplate
 	modify: function(params) {
-		var paramsJson = json.toJson(params, '\t');
+		var paramsJson = JSON.stringify(params, null, '\t');
 		var data = Runtime.serverJSONRequest({
 			url: "cmd/modifyProjectTemplates",
 			handleAs: "json",
@@ -63,7 +62,7 @@ var ProjectTemplates = {
 	// Assumes that calling routine has set up the params object to exactly match
 	// what is required by cmd/modifyProjectTemplate
 	deleteTemplates: function(params) {
-		var paramsJson = json.toJson(params, '\t');
+		var paramsJson = JSON.stringify(params, null, '\t');
 		var data = Runtime.serverJSONRequest({
 			url: "cmd/deleteProjectTemplates",
 			handleAs: "json",

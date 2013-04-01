@@ -855,16 +855,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					!(position == 'after' && sourceIndex == targetIndex+1)	// Can't move to same spot
 				);
 			}.bind(this);
-			// We will interject before and after functions for standard tree widget drag/drop logic
-			// for the dndDone (/dnd/drop) event. The before call simply remembers
-			// the parameters that were passed with the /dnd/drop event because those parameters
-			// aren't available for the after call.
-			var dndDoneBefore = function(source, nodes, copy){
-				this._dndDoneSource = source;
-			}.bind(this);
-			var dndDoneAfter = function(){
-				var source = this._dndDoneSource;
-				
+			var dndDoneAfter = function(source, nodes, copy){
 				// Dijit publishes a dndDone eent event to all tree widgets that
 				// have dnd enabled. Only process dnd events that apply to the States palette.
 				if(source.tree != this._tree){
@@ -933,16 +924,8 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					return "dijitLeaf";
 				}
 			});
-			// Interject both before and after listeners for the routine that
-			// catches /dnd/done events within dndSource.js. The before call simply
-			// remembers the parameters so they are available for the after call.
 			if(this._tree.tree && this._tree.tree.dndController){
-				aspect.before(this._tree.tree.dndController, "onDndDrop", function(source, nodes, copy){
-					dndDoneBefore(source, nodes, copy);
-				});
-				aspect.after(this._tree.tree.dndController, "onDndDrop", function(){
-					dndDoneAfter();
-				});
+				aspect.after(this._tree.tree.dndController, "onDndDrop", dndDoneAfter, true);
 			}
 			this.centerPane.domNode.appendChild(this._tree.domNode);	
 			dojo.connect(this._tree, "onClick", this, function(item){

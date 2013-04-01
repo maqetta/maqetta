@@ -21,7 +21,7 @@ public class ModifyProjectTemplates extends Command {
 		String errorString = "";
 		
 		String paramsJson = req.getParameter("params");
-		if (paramsJson.equals("") || paramsJson == null) {
+		if (paramsJson == null || paramsJson.equals("")) {
 			errorString = "cmd/ModifyProjectTemplates - No params object";
 			error = true;
 		}
@@ -35,7 +35,7 @@ public class ModifyProjectTemplates extends Command {
 		IProjectTemplatesManager projectTemplatesManager = ServerManager.getServerManager().getProjectTemplatesManager();
 		if(!error){
 			errorString = projectTemplatesManager.modifyProjectTemplates(user, params);
-			error = (errorString.equals("") || errorString == null) ? false : true;
+			error = (errorString == null || errorString.equals("")) ? false : true;
 		}
 		JSONObject responseObject = new JSONObject();
 		JSONObject projectTemplatesObject = projectTemplatesManager.getProjectTemplatesIndex(user);

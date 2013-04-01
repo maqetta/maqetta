@@ -12,7 +12,7 @@ public class CreateProject extends Command {
 
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
         String projectName = req.getParameter("name");
-        if (projectName.equals("") || projectName == null) {
+        if (projectName == null || projectName.equals("")) {
         	errorString = "No project name specified";
         }
         String projectToClone = req.getParameter("projectToClone");

@@ -128,7 +128,7 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 			throw new Error(desc, e);
 		}
 		
-		if (projectTemplateName.equals("") || projectTemplateName == null) {
+		if (projectTemplateName == null || projectTemplateName.equals("")) {
 			return "No project template name specified";
 		}
 		// Make sure project template name only contains alphas. 
@@ -138,7 +138,7 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 		if (!projectTemplateName.matches("^[\\p{L}\\d\\.\\-]+$")){
 			return "Invalid characters in project template name";
 		}
-		if (projectToClone.equals("") || projectToClone == null) {
+		if (projectToClone == null || projectToClone.equals("")) {
 			return "No project to clone specified";
 		}
 

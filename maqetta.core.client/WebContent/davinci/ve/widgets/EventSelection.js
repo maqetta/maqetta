@@ -87,9 +87,6 @@ var getEventSelectionValues = function(root){
 };
 
 var getEventScriptFromValue = function(value) {
-	value.replace(/'/,"\\'"); //FIXME: assign result
-	value.replace(/"/,'\\"'); //FIXME: assign result
-	
 	if (value && value.match(StatePatternDisplay)) {
 		var state = value.substring(StateColonString.length);
 		var stateRuntimeValue = state == 'Background' ? 'Normal' : state;

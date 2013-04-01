@@ -211,7 +211,7 @@ return declare(null, {
 
 		// add the user activity monitoring to the document and save the connects to be 
 		// disconnected latter
-		this._activityConnections = UserActivityMonitor.addInActivityMonitor(this.contentDiv.ownerDocument);
+		this._activityConnections = UserActivityMonitor.addInactivityMonitor(this.contentDiv.ownerDocument);
 		this.editor.getTextView().focus();
 
 		dojo.style(this.contentDiv, "overflow", "hidden");

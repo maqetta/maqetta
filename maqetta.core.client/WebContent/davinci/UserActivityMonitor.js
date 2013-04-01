@@ -24,7 +24,7 @@ var maxInactiveInterval = 5 * 60 * 1000,
 var UserActivityMonitor = {
 	setUpInActivityMonitor: function(doc, Runtime) {
 		if (!Runtime.singleUserMode()) {
-			connections = UserActivityMonitor.addInActivityMonitor(doc);
+			connections = UserActivityMonitor.addInactivityMonitor(doc);
 			Runtime.subscribe('/dojo/io/load', UserActivityMonitor.lastServerConnection); // topic is deprecated
 			notify("load", UserActivityMonitor.lastServerConnection);
 
@@ -41,7 +41,7 @@ var UserActivityMonitor = {
 	/*
 	 *  Adds user activity monitoring for a document, that is most likely in an iframe (eg editors)
 	 */
-	addInActivityMonitor: function(doc) {
+	addInactivityMonitor: function(doc) {
 		return [
 			//dojo.connect(doc.documentElement, "mousemove", UserActivityMonitor, "userActivity"),
 			dojo.connect(doc.documentElement, "keydown",  UserActivityMonitor, "userActivity"),

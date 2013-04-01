@@ -6,8 +6,9 @@ define(["dojo/_base/declare",
         "dojo/on",
         "dojo/date/locale",
         "dijit/registry",
-        "dijit/_Templated",
-        "dijit/_Widget",
+        "dijit/_WidgetBase",
+        "dijit/_TemplatedMixin",
+        "dijit/_WidgetsInTemplateMixin",
         "davinci/library",
         "system/resource",
         "davinci/ui/ProjectTemplates",
@@ -24,7 +25,9 @@ define(["dojo/_base/declare",
         "dijit/form/CheckBox",
         "dojo/store/Memory"
         
-],function(declare, lang, array, domClass, domConstruct, on, locale, registry, _Templated, _Widget,  Library, Resource, 
+],function(declare, lang, array, domClass, domConstruct, on, locale, registry, 
+		_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
+		Library, Resource, 
 		ProjectTemplates, Preferences, Runtime, Workbench, uiNLS, commonNLS, templateString,
 		InlineEditBox, TextBox, Button, ValidationTextBox, CheckBox, Memory){
 	
@@ -63,9 +66,7 @@ define(["dojo/_base/declare",
 			return format(new Date(date), "MMM d, yyyy");
 		}
 	}
-	
-	return dojo.declare("davinci.ui.ManageProjectTemplates",   [_Widget,_Templated], {
-		widgetsInTemplate: true,
+	return dojo.declare("davinci.ui.ManageProjectTemplates", [_WidgetBase,_TemplatedMixin,_WidgetsInTemplateMixin], {
 		templateString: templateString,
 		_okButton: null,
 		

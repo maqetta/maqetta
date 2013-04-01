@@ -379,7 +379,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 					xpath = info.currentStateXPath,
 					element = context.model.evaluate(xpath);
 				if (!element) { continue; }
-				var widget = Widget.byId(element.getAttribute('id'), context.getDocument());
+				var widget = widgetUtils.byId(element.getAttribute('id'), context.getDocument());
 				States.setState(info.state, widget.domNode, {focus: info.focus});
 			}
 		}
@@ -393,7 +393,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 					xpath = sceneContainer.sceneContainerXPath,
 					element = context.model.evaluate(xpath);
 				if (!element) { continue; }
-				var widget = Widget.byId(element.getAttribute('id'), context.getDocument()),
+				var widget = widgetUtils.byId(element.getAttribute('id'), context.getDocument()),
 					sceneContainerNode = widget.domNode;
 
 				xpath = sceneContainer.currentSceneXPath;

@@ -69,6 +69,7 @@ define(["dojo/_base/declare",
 				this._useProjectTemplate.disabled = true;
 			}
 			this.projectTemplates.addOption(opts);
+			this.projectTemplates.set('maxHeight', 200);
 			this._projectName.set("regExp", regex);
 			on(this._useProjectTemplate, "change", function(){
 				this.projectTemplates.set("disabled", !this._useProjectTemplate.checked);

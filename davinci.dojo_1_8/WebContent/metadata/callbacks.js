@@ -107,7 +107,7 @@ define(function() {
 							}
 						}
 					}
-				});
+				}.bind(this));
 			}
 		},
 		selectScene: function(params){

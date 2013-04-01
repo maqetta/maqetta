@@ -183,7 +183,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		if(!sceneManager || !sceneManager.category || !sceneId){
 			return;
 		}
-		this._updateSelection(sceneManager.category, sceneId);
+		this._updateView();
 	},
 
 	_editorSelected: function (event){	

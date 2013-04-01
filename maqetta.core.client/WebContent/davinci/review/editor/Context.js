@@ -18,7 +18,7 @@ define([
 // AppStates functions are only available on the prototype object
 var States = AppStates.prototype;
 
-return declare([Context], {
+return declare("davinci.review.editor.Context", [Context], {
 
 	setSource: function(){
 				

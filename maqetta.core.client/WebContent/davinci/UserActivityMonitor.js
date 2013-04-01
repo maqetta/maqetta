@@ -1,4 +1,5 @@
 define([
+    "require",
     "dojo/_base/xhr",
 	"dojo/i18n!./nls/webContent"
 ], function(

@@ -65,6 +65,8 @@ define(["dojo/_base/declare",
 						opts.push({value:template.folder, label:label});
 					}
 				}
+			}else{
+				this._useProjectTemplate.disabled = true;
 			}
 			this.projectTemplates.addOption(opts);
 			this._projectName.set("regExp", regex);
@@ -88,7 +90,8 @@ define(["dojo/_base/declare",
 			var cloneExistingProject = dojo.attr(this._cloneExistingProject, 'checked');
 			var projectToClone = cloneExistingProject ? Workbench.getProject() : '';
 			var isEclipse = dojo.attr(this._eclipseSupport, 'checked');
-			var projectTemplateName = this._projectTemplate == noProjectTemplate ? '' : this._projectTemplate;
+			var useProjectTemplate = dojo.attr(this._useProjectTemplate, 'checked');
+			var projectTemplateName = useProjectTemplate ? this.projectTemplates.get("value") : '';
 
 			Resource.createProject({
 				newProjectName:newProjectName, 

@@ -39,7 +39,6 @@ define(["dojo/_base/declare",
 
 		postCreate: function(){
 			this.inherited(arguments);
-			dojo.connect(this._projectTemplateName, "onKeyUp", this, '_checkValid');
 			dojo.connect(this._projectTemplateName, "onChange", this, '_checkValid');
 			var projectTemplates = Runtime.getSiteConfigData("projectTemplates");
 			var data = [];
@@ -54,11 +53,16 @@ define(["dojo/_base/declare",
 			var store = new Memory({ data:data });
 			this._projectTemplateName.set("store", store);
 			this._projectTemplateName.set("regExp", regex);
+			this._projectTemplateName.set("intermediateChanges", true);
 		},
 		
 		_checkValid: function(){
 			var valid = this._projectTemplateName.isValid();
 			this._okButton.set('disabled', !valid);
+			// ComboBox's fancy search logic replaces the standard ValidationTextBox logic
+			// for updating validation error notices with each keystroke.
+			// Force error notice updates with the following call.
+			this._projectTemplateName._refreshState();
 		},
 		
 		okButton: function() {

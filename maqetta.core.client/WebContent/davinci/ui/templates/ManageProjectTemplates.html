@@ -1,0 +1,15 @@
+<div>
+	<div class="dijitDialogPaneContentArea">
+		<div dojoAttachPoint="_templateTableDiv" class="ManageProjectTemplatesOuterDiv">
+			<!--  Filled in dynamically -->
+		</div>
+		<div dojoAttachPoint="_ManageProjectTemplatesDuplicateNames" class="ManageProjectTemplatesDuplicateNames">
+			${ManageProjectTemplatesDuplicateNames}
+		</div>
+	</div>
+	<div class="dijitDialogPaneActionBar">
+		<button dojoType='dijit.form.Button' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='${update}' class="maqPrimaryButton" type="submit" disabled></button>
+		<button dojoType='dijit.form.Button' dojoAttachPoint="_cancelButton" dojoAttachEvent='onClick:cancelButton' label='${buttonCancel}' class="maqSecondaryButton"></button>
+	</div>
+		
+</div>

@@ -75,6 +75,10 @@ define({ root:
 		"open":"Open",
 		"save":"Save",
 		"select": "Select",
+		"update":"Update",
+		
+		//general
+		"unknown":"unknown",
 		
 		//fileDialog
 		"fileName":"File name",//used in templates/download.html
@@ -118,6 +122,7 @@ define({ root:
 		
 		//deleteAction
 		"areYouSureDelete":"Are you sure you want to delete ${0}?",
+		"areYouSureDeleteProject":"Are you sure you want to delete project ${0}?",
 		"noResourcesSelected":"No resources are currently selected.",
 		
 		/*Templates*/
@@ -159,11 +164,47 @@ define({ root:
 		"renameButtonLabel": "Rename",
 		"renameDialogTitle": "Rename To...",
 
+		//Explorer
+		"createProjectMenuItem": "New project...",
+		"deleteProjectMenuItem": "Delete this project...",
+		"renameProjectMenuItem": "Rename this project...",
+		"saveAsProjectTemplateMenuItem": "Save as project template...",
+		"manageProjectTemplatesMenuItem": "Manage project templates...",
+		"projectColon":"Project:",
+		"ProjectMenu":"Project menu",
+		
 		//NewProject
 		"newProjectName": "Name:",
-		"newProjectEclipseSupport": "Eclipse support",
+		"newProjectTemplate":"Template:",
+		"newProjectUseProjectTemplate":"Use project template",
+		"newProjectCloneExistingProject":"Copy files from current project into new project",
+		"newProjectEclipseSupport": "New project should be Eclipse-compatible",
 		"newProjectNameExists": "A project with this name already exists",
 
+		//NewProjectTemplate
+		"saveAsProjectTemplate": "Save as project template",
+		"newProjectTemplateName": "Project template name:",
+		"newProjectTemplateShareLabel": "Share with everyone",
+		"newProjectTemplateOverwrite": "Project template {0} already exists. OK to overwrite?",
+		"newProjectTemplateCreationSuccess":"Project template {0} has been saved",
+		"newProjectTemplateCreationFailure":"Error: Project template {0} save operation failed",
+		"newProjectTemplateCancelled":"Operation cancelled",
+		
+		//ManageProjectTemplates
+		"manageProjectTemplates": "Manage project templates",
+		"ManageProjectTemplatesHeaderName":"Project template name",
+		"ManageProjectTemplatesHeaderShared":"Share with everyone?",
+		"ManageProjectTemplatesHeaderCreatedBy":"Created by",
+		"ManageProjectTemplatesHeaderCreatedOn":"Created on",
+		"ManageProjectTemplatesHeaderLastModified":"Last updated",
+		"ManageProjectTemplatesNoTemplates":"You have no project templates.",
+		"DEL":"DEL",
+		"ManageProjectTemplatesDuplicateNames":"Invalid entries - two project templates have the same name",
+		"ManageProjectTemplateAboutToOccur":"The following actions are about to occur:",
+		"ManageProjectTemplateDeletions":"project template deletions",
+		"ManageProjectTemplateModifications":"project template modifications",
+		"ManageProjectTemplateOKToProceed":"OK to proceed?",
+		
 		//UserLibraries
 		"modify": "Modify",
 		

@@ -114,7 +114,7 @@ return {
                    path: "new",
                    id: "davinci.new",
                    separator: [
-                       "newApp", true, "newSketch", true, "newFolder", true, "newTheme", true, "newProject", true, "additions", true
+                       "newApp", true, "newSketch", true, "newFolder", true, "newTheme", true, "additions", true
                    ]
                },
                {
@@ -122,7 +122,7 @@ return {
                    path: "open",
                    id: "davinci.open",
                    separator: [
-                       "openFile", true, "openTheme", true, "openProject", true, "openOrion", true, "additions", false
+                       "openFile", true, "openTheme", true, "openOrion", true, "additions", false
                    ]
                }
            ],
@@ -224,17 +224,6 @@ return {
                    menubarPath: "davinci.new/newTheme"
                },
                {
-                   id: "newProject",
-                   run: function() {
-                   	require(['./ui/Resource'], function(r) {
-                   		r.newProject();
-                   	});
-                   },
-                   iconClass: "newOpenMenuItem newProjectMenuItem",
-                   label: "Project...",
-                   menubarPath: "davinci.new/newProject"
-               },
-               {
                    id: "openFile",
                    run: function() {
                    	require(['./ui/Resource'], function(r) {
@@ -275,19 +264,6 @@ return {
                    label: "Review...",
                    menubarPath: "davinci.open/openTheme"
                },
-/* Commenting out for M8 - UI is all messed up now
-               {
-                   id: "openProject",
-                   run: function() {
-                   	require(['davinci/Workbench', 'davinci/ui/SelectProjectDialog'], function(Workbench, SelectProjectDialog){
-                   			Workbench.showModal(new SelectProjectDialog(), 'Open Project', {width: 300}, null, true);
-                   	});
-                   },
-                   iconClass: "newOpenMenuItem newProjectMenuItem",
-                   label: "Project...",
-                   menubarPath: "davinci.open/openProject"
-               },
-*/
                {
                    id: "orionNavigator",
                    run: function() {
@@ -312,7 +288,7 @@ return {
                     ]
                 },
                 {
-                    label: "UserSettings",
+                    label: "User settings",
                     path: "usersettings",
                     id: "davinci.usersettings",
                     className: 'userSettingsMenu',
@@ -520,64 +496,61 @@ return {
             viewContribution: {
                 targetID: "workbench.Explorer",
                 actions: [
-	                {
+  	                {
 	                    id: "davinci.ui.newfile",
 	                    label: "New folder...",
 	                    iconClass:"newFolderIcon",
+	                    className: "FilesToolbarNewFolder",
 	                    run: function() {
 	                    	require(['./ui/Resource'], function(r) {
 	                    		r.newFolder();
 	                    	});
 	                    },
-	                    isEnabled: function(item) {
-	                        return !item || require('./ui/Resource').canModify(item);
+                        toolbarPath: "download"
+	                },
+	                {
+	                    id: "davinci.ui.deletefile",
+	                    label: "Delete file...",
+	                    iconClass:"FilesToolbarDeleteFileIcon",
+	                    className: "FilesToolbarDeleteFile",
+	                    run: function() {
+	                    	require(['./ui/Resource'], function(r) {
+	                    		r.deleteAction();
+	                    	});
+	                    },
+                        toolbarPath: "download"
+	                },
+	                {
+	                    id: "davinci.ui.renamefile",
+	                    label: "Rename file...",
+	                    iconClass:"FilesToolbarRenameFileIcon",
+	                    className: "FilesToolbarRenameFile",
+	                    run: function() {
+	                    	require(['./ui/Resource'], function(r) {
+	                    		r.renameAction();
+	                    	});
 	                    },
                         toolbarPath: "download"
 	                },
                     {
-                        id: "download",
-                        iconClass: 'downloadAllIcon',
+                        id: "userlibs",
+                        iconClass: 'userLibIcon',
+	                    className: "FilesToolbarModifyLibraries",
                         run: function() {
-                            require(['./Workbench', './ui/Download'],
-                                function(workbench, Download) {
-                                	workbench.showModal(new Download(), "Download", {width: 440});
+                            require(['./Workbench', './ui/UserLibraries'],
+                                function(workbench, UserLibraries) {
+                                    workbench.showModal(new UserLibraries(), "User Libraries", "width: 400px");
                                 }
                             );
                         },
-                        label: "Download Entire Project",
-                        toolbarPath: "download"
-                    },
-                    {
-                        id: "download",
-                        iconClass: 'downloadSomeIcon',
-                        run: function() {
-                            require(['./Workbench', './ui/DownloadSelected'],
-                                function(workbench, DownloadSelected) {
-                                	workbench.showModal(new DownloadSelected(), "Download", {width: 440});
-                                }
-                            );
-                        },
-                        label: "Download Selected Files",
-                        toolbarPath: "download"
-                    },
-                    {
-                        id: "davinci.ui.addFiles",
-                        label: "Upload files...",
-                        iconClass:"uploadIcon",
-                        run: function() {
-                        	require(['./ui/Resource'], function(r) {
-                        		r.addFiles();
-                        	});
-                        },
-                        isEnabled: function(item) {
-                            return !item || require('./ui/Resource').canModify(item);
-                        },
+                        label: "Modify Libraries",
                         toolbarPath: "download"
                     },
                     {
                         id: "davinci.ui.addFiles",
                         label: "Upload and Extract ZIP file...",
-                        iconClass:"uploadIcon",
+                        iconClass:"uploadZipIcon",
+	                    className: "FilesToolbarUploadZip",
                         run: function() {
                         	require(['./ui/Resource'], function(r) {
                         		r.addFilesZip();
@@ -589,16 +562,46 @@ return {
                         toolbarPath: "download"
                     },
                     {
-                        id: "userlibs",
-                        iconClass: 'userLibIcon',
+                        id: "davinci.ui.addFiles",
+                        label: "Upload files...",
+                        iconClass:"uploadIcon",
+	                    className: "FilesToolbarUploadFiles",
                         run: function() {
-                            require(['./Workbench', './ui/UserLibraries'],
-                                function(workbench, UserLibraries) {
-                                    workbench.showModal(new UserLibraries(), "User Libraries", "width: 400px");
+                        	require(['./ui/Resource'], function(r) {
+                        		r.addFiles();
+                        	});
+                        },
+                        isEnabled: function(item) {
+                            return !item || require('./ui/Resource').canModify(item);
+                        },
+                        toolbarPath: "download"
+                    },
+                    {
+                        id: "download",
+                        iconClass: 'downloadSomeIcon',
+	                    className: "FilesToolbarDownloadSelected",
+                        run: function() {
+                            require(['./Workbench', './ui/DownloadSelected'],
+                                function(workbench, DownloadSelected) {
+                                	workbench.showModal(new DownloadSelected(), "Download", {width: 440});
                                 }
                             );
                         },
-                        label: "Modify Libraries",
+                        label: "Download Selected Files",
+                        toolbarPath: "download"
+                    },
+                    {
+                        id: "download",
+                        iconClass: 'downloadAllIcon',
+	                    className: "FilesToolbarDownloadAll",
+                        run: function() {
+                            require(['./Workbench', './ui/Download'],
+                                function(workbench, Download) {
+                                	workbench.showModal(new Download(), "Download", {width: 440});
+                                }
+                            );
+                        },
+                        label: "Download Entire Project",
                         toolbarPath: "download"
                     }
                 ]

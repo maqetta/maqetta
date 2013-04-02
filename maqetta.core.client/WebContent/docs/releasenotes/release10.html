@@ -32,6 +32,156 @@
 <p>The Maqetta 10 release includes the following updates:</p>
 
 <ul style="margin-top: 0pt;" type="disc">
+	<li><span class='majortopic'>Upload ZIP from local file system</span> -
+		With Release 10, we have added an the ability to upload a ZIP file from your local
+		file system into your cloud workspace, and the ability to expand the contents
+		of the ZIP into a particular folder. (For related notes, see the subsequent section below about the UI changes
+		to the Files palette.)
+	</li>
+	<li><span class='majortopic'>Clone existing project and "Save as project template"</span> -
+		With Release 10, we have added a series of features that make it more convenient
+		to work with projects. The two main new features are the ability to clone
+		an existing project, and the ability to save the current project as a "project template"
+		that you or your colleagues can use in the future. Details:
+		<ul>
+			<li><span class='minortopic'>Clone existing project</span> -
+				With Release 10, there is a new checkbox on the "New project" dialog that says
+				"Copy files from current project into new project". If this option is checked
+				when you create a new project, then the new project will include
+				all of the same files you have in your current project.
+				See below for a snapshot of how the "New project" dialog looks in Release 10:<br/>
+				<img src='img/NewProjectDialogR10.png' style='vertical-align:middle; margin:0px 3px;height:170px;'/><br/>
+			</li>
+			<li><span class='minortopic'>Project templates</span> -
+				A major new feature in Release 10 is the ability to create project templates.
+				With this new feature, you can create re-usable project templates
+				that contain all of the folders, CSS, JavaScript, HTML and image files that
+				you want to be available with each new project you create. Details:
+				<ul>
+					<li><strong>Creating a new project template</strong> - 
+						To create a new project template, use other Maqetta facilities
+						to create and/or upload files into desired locations.
+						Then, using the "Project menu" (top/right of Files palette),
+						issue a "Save as project template..." command.
+						This will clone all of the files in your current project
+						into a named project template that you (or possibly your colleagues)
+						can use in the future.
+						<p>There is a checkbox on the "Save as project template" dialog
+						that allows you to choose whether to share the project template
+						with your colleagues or not. 
+						<span style="color:red; font-style:italic">
+						Note that if you share a project template,
+						it will be shared with all other Maqetta users on the same
+						server will have access to that template.</span>
+						(In a future release of Maqetta, we hope to add a "user group"
+						feature so that instead of sharing with everyone, you can
+						choose to share only with a particular group of users.)</p>
+						<p>See below for a snapshot of how the "Save as project template" dialog:<br/>
+						<img src='img/SaveAsProjectTemplateDialogR10.png' style='vertical-align:middle; margin:0px 3px;height:140px;'/></p>
+					</li>
+					<li><strong>Using a project template</strong> - 
+						To use a project template, issue a "New project..."
+						command (found on the "Project menu" at the top/right of Files palette).
+						Then, in the "New project" dialog, check the option labeled
+						"Use project template" and choose the desired project template
+						from the dropdown menu. This will cause your new project
+						to contain a clone of all of the files that are in the
+						given project template.
+						<p>Note that if you choose both 
+						"Use project template" and
+						"Copy files from current project into new project",
+						Maqetta will first clone the files from the project template, and then
+						clone the files from your current project. This means
+						that if the same file exists in both the template and in the
+						current project, the one from the template will be overwritten
+						by the one from the current project.</p>
+					</li>
+					<li><strong>Update an existing project template</strong> - 
+						To change the files that are in an existing project template, 
+						create a new project that uses the given project template,
+						change files appropriately, and then re-issue the 
+						"Save as project template..." command.
+						If you choose the same name as the existing project template,
+						the action will replace the files in the template with
+						the files found in your current project.
+					</li>
+					<li><strong>Manage project templates</strong> - 
+						You can rename project templates, delete project templates,
+						and change whether a given project template is shared or not
+						by using the "Manage project templates..." command
+						(found on the "Project menu" at the top/right of Files palette).
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li><p><span class='majortopic'>Files palette UI changes - changes to toolbar and context menus</span> - 
+		<p>With Release 10, the File palette has a redesigned toolbar, and the context menu has been changed.</p>
+		<p>Here is a snapshot of the new Files palette toolbar:</p>
+		<img src='img/FilesPaletteToolbarR10.png' style='vertical-align:middle; margin:0px 3px;height:110px;'/><br/>
+		<p>Details:</p>
+		<ul>
+			<li><span class='minortopic'>Toolbar row 1: project and project template actions</span> -
+				The first row in the Files palette toolbar contains project-related actions.
+				<ul>
+					<li><strong>Project selection control</strong> - 
+						At the left of the first row is the project selection control.
+						It displays the currently active project ("myproject" in the picture above)
+						and provides a dropdown menu that shows all of your projects.
+						To change projects, choose a different project name from the dropdown menu.</li>
+					<li><strong>Project menu</strong> - 
+					The icon at the right side of the first row brings up the project menu, which includes these commands:
+						<ul>
+							<li><strong>New project...</strong> - Allows you to create a new project.
+								(See other sections in these release notes about the various
+								enhancements to the "New project" dialog
+								that is included in Release 10.)</li>
+							<li><strong>Delete this project...</strong> - Allows you to delete
+								the currently open project.</li>
+							<li><strong>Rename this project...</strong> - Allows you to rename
+								the currently open project.</li>
+							<li><strong>Save as project template...</strong> - 
+								Takes a snapshot of your current project
+								and saves it as a re-usable "project template".
+								(See subsequent section for details about the new
+								"project template" feature that is included in Release 10.)</li>
+							<li><strong>Manage project templates...</strong> - 
+								Brings up a dialog that lists the project templates
+								you have created and allows you to modify and delete
+								those templates.
+								(See subsequent section for details about the new
+								"project template" feature that is included in Release 10.)</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li><span class='minortopic'>Toolbar row 2: file actions</span> -
+				The second row in the Files palette toolbar contains icons for various file-related actions.
+				<ul>
+					<li><strong>New folder</strong> - Creates a sub-folder inside the currently selected folder</li>
+					<li><strong>Rename selected file</strong></li>
+					<li><strong>Delete selected files</strong></li>
+					<li><strong>Download entire project</strong> - creates a ZIP containing your entire project</li>
+					<li><strong>Download selected files</strong> - creates a ZIP containing the currently selected files</li>
+					<li><strong>Upload files</strong> - allows you to upload files from your local file system into the currently selected folder</li>
+					<li><strong>Upload ZIP</strong> - allows you to upload a ZIP file from your local file system and optionally expand the contents of the ZIP into the currently selected folder</li>
+					<li><strong>Modify libraries</strong> - allows you to change properties on the JavaScript libraries that included in your project, such as the location of those libraries</li>
+				</ul>
+			</li>
+			<li><span class='minortopic'>Content menu changes</span> 
+				The context menu that appears when you right-click over a file in the Files palette
+				has changed. We have removed the "Upload files" and "Download" commands; instead,
+				to perform those actions, users must use the new icons on the Files palette toolbar.
+			</li>
+			<li><span class='minortopic'>NOTE: "Create project" no longer on the Create menu</span> -
+				In previous releases, there was a "Create project" command on the main Create menu.
+				With Release 10, the "Create project" menu item has been removed from the main Create menu
+				and moved to "New project..." command located on the "Projects" dropdown menu at the
+				top'right of the Files palette.
+			</li>
+			
+		</ul>
+	</li>
 	<li><span class='majortopic'>Source edits are non undo-able</span> -
 		If you change HTML source code in the Maqetta source editor
 		(either in source view or one of the split views), those changes
@@ -51,9 +201,10 @@
 		existing application states to a new position. Note that the Background state cannot be re-ordered.
 		It is locked in the first position.
 	</li>
-	<li><span class='majortopic'>Updated to Eclipse Orion 1.0</span> -
+	<li><span class='majortopic'>Updated to Eclipse Orion 2.0</span> -
 		Previous versions of Maqetta embedded pre-release versions of Eclipse Orion.
-		With Release 10, Maqetta now embeds Orion 1.0.
+		With Release 10, Maqetta has upgraded all the way to Orion 2.0.  A few new features are available
+		in the source editor, such as bracket matching and a folding ruler for comments when editing JS and CSS.
 	</li>
 	<li><span class='majortopic'>Different behavior when Publishing a review</span> -
 		In previous releases, when you created a new review and clicked on the Publish button

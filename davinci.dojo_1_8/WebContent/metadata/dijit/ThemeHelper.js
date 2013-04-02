@@ -30,17 +30,6 @@ return {
 	 */
 	widgetAddedOrDeleted: function(context, resetEverything){
 		
-		function updateContext(){
-			context.editor._visualChanged();	// ensure source pane gets updated
-			context.editor.editorContainer.save(true); // save working copy
-			setTimeout(function(){
-				// Call same Context cleanup functions that get called after command executes
-				// Done in setTimeout just like how Context does it
-				context.onCommandStackExecute();
-				context.onContentChange(); 
-			},0);
-		}
-		
 		var dojoOptions = Runtime.getSiteConfigData('dojoOptions');
 		var include_document_css = (dojoOptions && dojoOptions.include_document_css) || {};
 		
@@ -110,8 +99,9 @@ return {
 					var parent = documentCssImport.parent;
 					parent.removeChild(documentCssImport);
 					documentCssImport.close(); // removes the instance from the Factory
+					context.onContentChange(); 
+					context.editor.editorContainer.save(true); // save working copy
 				}
-				updateContext();
 				documentCssHeader = documentCssImport = null;
 			}
 			if((!anyDojoxMobileWidgets && include_document_css.desktop !== false) ||
@@ -141,7 +131,6 @@ return {
 						parent.addChild(css,0);
 					}
 				}
-				updateContext();
 			}
 			if(anyDojoxMobileWidgets && !context.anyDojoxMobileWidgets){
 				// this is the first time we found a mobile widget so ensure the mobile

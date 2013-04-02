@@ -1,11 +1,34 @@
 <div>
 	<div class="dijitDialogPaneContentArea">
-		<table>
+		<table class="NewProjectDialogTable">
 		<tr>
-		<td class="NewProjectDialogLabel">${newProjectName}</td><td><input class='templateInput' data-dojo-type="dijit.form.ValidationTextBox" type='text' dojoAttachPoint="_projectName"></input></td><td><div dojoAttachPoint='_error4'></div></td>
+			<td class="NewProjectDialogLabel">${newProjectName}</td>
+			<td>
+				<input class='templateInput' data-dojo-type="dijit.form.ValidationTextBox" type='text' dojoAttachPoint="_projectName"></input>
+			</td>
+			<td><div dojoAttachPoint='_error4'></div></td>
 		</tr>
-		
-		<td class="NewProjectDialogLabel">${newProjectEclipseSupport}</td><td><input class='templateInput' type='checkbox' dojoAttachPoint="_eclipseSupport"></input></td><td><div dojoAttachPoint='_error5'></div></td>
+		<tr>
+			<td colspan="2" class="NewProjectUseTemplateCell">
+				<input type='checkbox' dojoAttachPoint="_useProjectTemplate"></input>
+				<span class="NewProjectDialogLabel NewProjectUseTemplateLabel">${newProjectUseProjectTemplate}</span>
+				<select class="NewProjectTemplateSelect" dojoType="dijit.form.Select" dojoAttachPoint="projectTemplates" dojoAttachEvent="onChange: _onChangeTemplate">
+					<!-- Menu created dynamically -->
+				</select>
+			</div></td>
+		</tr>
+		<tr>
+			<td colspan="2" class="NewProjectCloneExistingCell">
+				<input type='checkbox' dojoAttachPoint="_cloneExistingProject"></input>
+				<span class="NewProjectDialogLabel">${newProjectCloneExistingProject}</span>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" class="NewProjectEclipseSupportCell">
+				<input type='checkbox' dojoAttachPoint="_eclipseSupport"></input>
+				<span class="NewProjectDialogLabel">${newProjectEclipseSupport}</span>
+			</td>
+		</tr>
 		</table>
 	</div>
 

@@ -25,10 +25,10 @@ var getEventSelectionValues = function(root){
 		states = [],
 		stateContainers = root && States.getAllStateContainers(root);
 
-	if(stateContainers && stateContainers.length > 0){
+	if(stateContainers){
 		states = stateContainers.reduce(function(statesList, container){
 			return statesList.concat(States.getStates(container));
-		});
+		}, []);
 	}
 	for(var i=0; i<states.length; i++){
 		var state = states[i];
@@ -61,7 +61,7 @@ var getEventSelectionValues = function(root){
 					if(!child._readOnly && child != samplesFolder && child != themeFolder && child != customWidgetFolder){
 						recurseFindHtmlFiles(child);
 					}
-				} else if(/\.html?$/i.test(child.extension)) {
+				} else if(/^html?$/i.test(child.extension)) {
 					htmlFiles.push(child);
 				}
 			}
@@ -87,9 +87,6 @@ var getEventSelectionValues = function(root){
 };
 
 var getEventScriptFromValue = function(value) {
-	value.replace(/'/,"\\'"); //FIXME: assign result
-	value.replace(/"/,'\\"'); //FIXME: assign result
-	
 	if (value && value.match(StatePatternDisplay)) {
 		var state = value.substring(StateColonString.length);
 		var stateRuntimeValue = state == 'Background' ? 'Normal' : state;

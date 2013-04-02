@@ -10,7 +10,7 @@ define([
 ], function(declare, Deferred, CommandStack, Widget, SelectTool, Context, Library, Metadata){
 
 
-return declare([Context], {
+return declare("davinci.ve.ThemeEditor.Context", [Context], {
 	
 	// comma-separated list of modules to load in the iframe
 	_bootstrapModules: "dijit/dijit,dijit/dijit-all", // dijit-all hangs FF4 and does not seem to be needed.

@@ -12,15 +12,17 @@ public class CreateProject extends Command {
 
     public void handleCommand(HttpServletRequest req, HttpServletResponse resp, IUser user) throws IOException {
         String projectName = req.getParameter("name");
-        if (projectName == "" || projectName == null) {
+        if (projectName == null || projectName.equals("")) {
         	errorString = "No project name specified";
         }
+        String projectToClone = req.getParameter("projectToClone");
+        String projectTemplateName = req.getParameter("projectTemplate");
 
         boolean eclipseProject = "true".equalsIgnoreCase(req.getParameter("eclipseSupport"));
         if (eclipseProject) {
-        	user.createEclipseProject(projectName);
+        	user.createEclipseProject(projectName, projectToClone, projectTemplateName);
         } else {
-        	user.createProject(projectName);
+        	user.createProject(projectName, projectToClone, projectTemplateName);
         }
         responseString = "OK";
     }

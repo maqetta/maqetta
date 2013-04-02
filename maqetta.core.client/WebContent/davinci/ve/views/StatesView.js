@@ -3,6 +3,7 @@ define([
 		"dojo/query",
 		"dojo/dom-class",
 		"dojo/_base/connect",
+		"dojo/aspect",
 		"dojo/i18n!../nls/ve",
 		"davinci/workbench/ViewPart",
 		"dijit/layout/BorderContainer",
@@ -16,7 +17,7 @@ define([
 		"dijit/tree/ForestStoreModel",
 		"dijit/Tree",
 		"dojo/_base/window"
-], function(declare, domQuery, domClass, connect, veNls, ViewPart, BorderContainer, ContentPane, 
+], function(declare, domQuery, domClass, connect, aspect, veNls, ViewPart, BorderContainer, ContentPane, 
 		XPathUtils, States, WidgetUtils, Widget, AppStateCommand, 
 		ItemFileWriteStore, ForestStoreModel, Tree, win
 ){
@@ -182,7 +183,7 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 		if(!sceneManager || !sceneManager.category || !sceneId){
 			return;
 		}
-		this._updateSelection(sceneManager.category, sceneId);
+		this._updateView();
 	},
 
 	_editorSelected: function (event){	
@@ -854,8 +855,9 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					!(position == 'after' && sourceIndex == targetIndex+1)	// Can't move to same spot
 				);
 			}.bind(this);
-			var dndDone = function(source, nodes, copy){
-				// Dijit publishes a dndDone eent
+			var dndDoneAfter = function(source, nodes, copy){
+				// Dijit publishes a dndDone eent event to all tree widgets that
+				// have dnd enabled. Only process dnd events that apply to the States palette.
 				if(source.tree != this._tree){
 					return;
 				}
@@ -867,8 +869,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 						sourceParentItem = sourceItem.parentItem && sourceItem.parentItem[0];
 					}
 				});
-				// Invoke the standard drag/drop logic for updating the model
-				source.__proto__.onDndDrop.call(source, source, nodes, copy);
 				// Retrieve the new ordered list of states
 				var stateContainerNode = sourceParentItem.sceneContainerNode && sourceParentItem.sceneContainerNode[0];
 				if(stateContainerNode && stateContainerNode._maqAppStates && stateContainerNode._maqAppStates.states){
@@ -905,7 +905,6 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 				dragThreshold:8,
 				betweenThreshold:5,
 				checkItemAcceptance:itemTreeCheckItemAcceptance,
-				onDndDrop: dndDone,
 				className: 'StatesViewTree',
 				style: 'height:150px; overflow-x:hidden; overflow-y:auto;', 
 				_createTreeNode: function(args) {
@@ -925,6 +924,9 @@ return declare("davinci.ve.views.StatesView", [ViewPart], {
 					return "dijitLeaf";
 				}
 			});
+			if(this._tree.tree && this._tree.tree.dndController){
+				aspect.after(this._tree.tree.dndController, "onDndDrop", dndDoneAfter, true);
+			}
 			this.centerPane.domNode.appendChild(this._tree.domNode);	
 			dojo.connect(this._tree, "onClick", this, function(item){
 				var currentEditor = this._editor;

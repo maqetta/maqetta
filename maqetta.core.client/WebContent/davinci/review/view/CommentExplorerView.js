@@ -421,10 +421,7 @@ var CommentExplorerView = declare(ViewPart, {
 					this._lastAnchorNode = node;
 					delete this._showTimer;
 					this._delTimer = setTimeout(dojo.hitch(this, function() {
-						if(this._lastAnchorNode){
-							dijit.hideTooltip(this._lastAnchorNode.rowNode);
-							this._lastAnchorNode = null;
-						}
+						this._hideTooltip();
 						delete this._delTimer;
 					}), 15000);
 				}), 1000);
@@ -443,12 +440,16 @@ var CommentExplorerView = declare(ViewPart, {
 		}
 		if (this._lastAnchorNode) {
 			this._delTimer = setTimeout(dojo.hitch(this, function() {
-				if (this._lastAnchorNode) {
-					dijit.hideTooltip(this._lastAnchorNode.rowNode);
-					this._lastAnchorNode = null;
-				}
+				this._hideTooltip();
 				delete this._delTimer;
 			}), 1000);
+		}
+	},
+	
+	_hideTooltip: function(){
+		if (this._lastAnchorNode) {
+			dijit.hideTooltip(this._lastAnchorNode.rowNode);
+			this._lastAnchorNode = null;
 		}
 	},
 

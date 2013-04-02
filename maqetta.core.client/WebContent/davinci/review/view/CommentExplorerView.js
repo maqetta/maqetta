@@ -420,19 +420,33 @@ var CommentExplorerView = declare(ViewPart, {
 					dijit.showTooltip(dojo.string.substitute(this.infoCardContent, template), node.rowNode);
 					this._lastAnchorNode = node;
 					delete this._showTimer;
+					this._delTimer = setTimeout(dojo.hitch(this, function() {
+						if(this._lastAnchorNode){
+							dijit.hideTooltip(this._lastAnchorNode.rowNode);
+							this._lastAnchorNode = null;
+						}
+						delete this._delTimer;
+					}), 15000);
 				}), 1000);
 			}.bind(this));
 		}
 	},
 
 	_leave: function(node) {
+		if(this._delTimer){
+			clearTimeout(this._delTimer);
+			delete this._delTimer;
+		}
 		if (this._showTimer) {
 			clearTimeout(this._showTimer);
 			delete this._showTimer;
 		}
 		if (this._lastAnchorNode) {
 			this._delTimer = setTimeout(dojo.hitch(this, function() {
-				dijit.hideTooltip(this._lastAnchorNode.rowNode);
+				if (this._lastAnchorNode) {
+					dijit.hideTooltip(this._lastAnchorNode.rowNode);
+					this._lastAnchorNode = null;
+				}
 				delete this._delTimer;
 			}), 1000);
 		}

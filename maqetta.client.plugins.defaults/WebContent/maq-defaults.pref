@@ -1,17 +1,18 @@
 {
-	"/plugins":{
-		"maqetta/app/orionplugin/maqettaPlugin.html": true,
-		"plugins/authenticationPlugin.html": true,
-		"plugins/fileClientPlugin.html":true,
-		"plugins/jslintPlugin.html":true,
-		"git/plugins/gitPlugin.html":true,
-		"profile/userservicePlugin.html":true,
-		"plugins/webEditingPlugin.html":true,
-		"plugins/pageLinksPlugin.html":true,
-		"plugins/preferencesPlugin.html":true,
-		"plugins/taskPlugin.html": true,
-		"plugins/csslintPlugin.html": true,
-		"plugins/site/sitePlugin.html": true,
-		"plugins/esprima/esprimaJsContentAssistPlugin.html":true
-	}
+    "/plugins":{
+        "maqetta/app/orionplugin/maqettaPlugin.html": true,
+        "plugins/authenticationPlugin.html": true,
+        "plugins/fileClientPlugin.html":true,
+        "plugins/jslintPlugin.html":true,
+        "git/plugins/gitPlugin.html":true,
+        "profile/userservicePlugin.html":true,
+        "plugins/webEditingPlugin.html":true,
+        "plugins/pageLinksPlugin.html":true,
+        "plugins/preferencesPlugin.html":true,
+        "plugins/taskPlugin.html": true,
+        "plugins/csslintPlugin.html": true,
+        "plugins/site/sitePlugin.html": true,
+        "plugins/esprima/esprimaJsContentAssistPlugin.html":true,
+        "shell/plugins/shellPagePlugin.html":true
+    }
 }

@@ -37,7 +37,7 @@ PopupMenuBarItemHelper.prototype = {
 		return data;
 	},
 	
-	// Moved this from MenuBarHelper to here, becouse this is the correct place for it. #1636
+	// Moved this from MenuBarHelper to here #1636
 	serializePopup: function(widget, context) {
 		// summary:
 		//		Returns a serialized form of the passed popup, collecting only a minimal set of information about the child widgets.
@@ -46,14 +46,14 @@ PopupMenuBarItemHelper.prototype = {
 			return;
 		}
 
-		var data = {type: widget.declaredClass, properties: {}},
+		var data = {type: widget.declaredClass.replace(/\./g, "/"), properties: {}},
 			pChildNodes = widget.getChildren(), 
 			pData,
 			popupData = [];
 		// search for child widgets
 		array.forEach(pChildNodes, function(n) {
 		// only interested in menus or menu items
-			pData = {type: n.declaredClass, properties: n.label ? {label: n.label} : {}};
+			pData = {type: n.declaredClass.replace(/\./g, "/"), properties: n.label ? {label: n.label} : {}};
 			if (pData) {
 				if (!popupData) {
 					popupData = pData;

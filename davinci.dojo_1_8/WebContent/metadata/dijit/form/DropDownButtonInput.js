@@ -81,7 +81,7 @@ return declare(ContainerInput, {
 	
 	createMenuItemData: function(value) {
 		return { 
-			type: "dijit.MenuItem", 
+			type: "dijit/MenuItem", 
 			properties: { label: value }
 		};
 	},

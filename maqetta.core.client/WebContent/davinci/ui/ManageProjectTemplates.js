@@ -54,11 +54,7 @@ define(["dojo/_base/declare",
 			return uiNLS.unknown;
 		}
 
-		if(Date.now() - date < 12 * 60 * 60 * 1000){
-			selector = "time";
-		}else{
-			selector = "date";
-		}
+		var selector = (Date.now() - date < 12 * 60 * 60 * 1000) ? "time" : "date";
 		return locale.format(date, {selector: selector, formatLength: "medium"});
 	}
 	return declare("davinci.ui.ManageProjectTemplates", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {

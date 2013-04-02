@@ -165,11 +165,14 @@ define({ root:
 		"renameDialogTitle": "Rename To...",
 
 		//Explorer
+		"createProject": "New project",
 		"createProjectMenuItem": "New project...",
 		"deleteProjectMenuItem": "Delete this project...",
 		"renameProjectMenuItem": "Rename this project...",
 		"saveAsProjectTemplateMenuItem": "Save as project template...",
 		"manageProjectTemplatesMenuItem": "Manage project templates...",
+		"modifyLibrariesMenuItem":"Modify libraries...",
+		"modifyLibraries":"Modify libraries",
 		"projectColon":"Project:",
 		"ProjectMenu":"Project menu",
 		

@@ -183,6 +183,7 @@
 }
 .FilesToolbarUploadZip {
 	float:right;
+	margin-right:5px;
 }
 .uploadZipIcon {
 	background-image: url(img/sprite.png);
@@ -190,6 +191,7 @@
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
+	margin-right:5px;
 }
 .FilesToolbarDownloadAll {
 	float:right;
@@ -197,17 +199,6 @@
 .downloadAllIcon {
 	background-image: url(img/sprite.png); /* FIXME: add logic for new_document-disabled.gif? */
 	background-position: -81px -296px;
-	background-repeat: no-repeat;
-	width: 16px;
-	height: 16px;
-}
-#maqBody .FilesToolbarModifyLibraries {
-	float:right;
-	margin-right:5px;
-}
-.userLibIcon {
-	background-image: url(img/sprite.png); /* FIXME: add logic for new_document-disabled.gif? */
-	background-position: -82px -133px;
 	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
@@ -422,7 +413,6 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 
 
 /* Explorer */
-/*#D1D1D1 #989898 #989898 white*/
 .explorerHeaderProjectDiv {
 	padding-top:1px;
 }
@@ -440,9 +430,23 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 }
 .ExplorerToolbar .ExplorerDropDownButton {
 }
+.ExplorerToolbar .ExplorerNewProjectButton {
+	margin:0;
+}
+.ExplorerToolbar .ExplorerNewProjectIcon {
+	background-image: url(img/sprite.png);
+	background-position: -104px -297px;
+	width:16px;
+	height:16px;
+}
+#maqBody .ExplorerToolbar .ExplorerNewProjectButton .dijitButtonNode {
+	border:none;
+	background:none;
+	padding-right:2px;
+}
 .ExplorerToolbar .ExplorerDropDownIcon {
 	background-image: url(img/sprite.png);
-	background-position: 0 -296px;
+	background-position: 0 -295px;
 	width:22px;
 	height:16px;
 }
@@ -457,7 +461,8 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 }
 #maqBody .explorerHeaderProjectCol2 {
 	padding-right: 3px;
-	padding-left: 7px;
+	padding-left: 10px;
+	white-space:nowrap;
 }
 .readOnlyResource .dijitTreeLabel {
 	font-style: italic;

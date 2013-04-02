@@ -46,35 +46,24 @@ define(["dojo/_base/declare",
 	var MPT_DELETE_ROW_CLASS = "mpt_delete_row";
 	var MPT_DUPLICATE_NAME_CLASS = "ManageProjectTemplatesDuplicateNamesVisible";
 	
-	function format(date, fmt){
-		return locale.format( date, {selector:"date", datePattern:fmt } );
-	};
 	function dateOrTime(dateString){
-		var date = null;
+		var date;
 		try{
 			date = new Date(dateString);
 		}catch(e){
-			
-		}
-		if(!date){
 			return uiNLS.unknown;
 		}
-		var today = new Date();
-		if(today.getUTCFullYear() == date.getUTCFullYear() && today.getUTCMonth() == date.getUTCMonth() && today.getUTCDate() == date.getUTCDate()){
-			return format(new Date(date), "h:m:s");
-		}else{
-			return format(new Date(date), "MMM d, yyyy");
-		}
+
+		var selector = (Date.now() - date < 12 * 60 * 60 * 1000) ? "time" : "date";
+		return locale.format(date, {selector: selector, formatLength: "medium"});
 	}
-	return dojo.declare("davinci.ui.ManageProjectTemplates", [_WidgetBase,_TemplatedMixin,_WidgetsInTemplateMixin], {
+	return declare("davinci.ui.ManageProjectTemplates", [_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
 		templateString: templateString,
 		_okButton: null,
 		
 		postMixInProperties: function() {
-			var langObj = uiNLS;
-			var dijitLangObj = commonNLS;
-			dojo.mixin(this, langObj);
-			dojo.mixin(this, dijitLangObj);
+			dojo.mixin(this, uiNLS);
+			dojo.mixin(this, commonNLS);
 			this.inherited(arguments);
 		},
 

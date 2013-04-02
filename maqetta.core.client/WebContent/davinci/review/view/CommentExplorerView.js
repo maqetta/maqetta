@@ -172,10 +172,7 @@ var CommentExplorerView = declare(ViewPart, {
 			dijit._masterTT = new dijit._MasterTooltip();
 		}
 		this.connect(dijit._masterTT.domNode, "mouseover", function() {
-			if (this._delTimer) {
-				clearTimeout(this._delTimer);
-				this._delTimer = null;
-			}
+			this._deleteDelTimer();
 		});
 		this.connect(dijit._masterTT.domNode, "mouseleave", function() {
 			this._lastAnchorNode && this._leave();
@@ -413,36 +410,38 @@ var CommentExplorerView = declare(ViewPart, {
 				item.closed ? template.detail_dueDate_class = "closed" : template.detail_dueDate_class = "notClosed";
 	
 				this._showTimer = setTimeout(dojo.hitch(this, function() {
-					if(this._delTimer){
-						clearTimeout(this._delTimer);
-						delete this._delTimer;
-					}
+					this._deleteDelTimer();
 					dijit.showTooltip(dojo.string.substitute(this.infoCardContent, template), node.rowNode);
 					this._lastAnchorNode = node;
 					delete this._showTimer;
-					this._delTimer = setTimeout(dojo.hitch(this, function() {
-						this._hideTooltip();
-						delete this._delTimer;
-					}), 15000);
+					this._createDelTimer(15000);
 				}), 1000);
 			}.bind(this));
 		}
 	},
 
 	_leave: function(node) {
-		if(this._delTimer){
-			clearTimeout(this._delTimer);
-			delete this._delTimer;
-		}
+		this._deleteDelTimer();
 		if (this._showTimer) {
 			clearTimeout(this._showTimer);
 			delete this._showTimer;
 		}
 		if (this._lastAnchorNode) {
-			this._delTimer = setTimeout(dojo.hitch(this, function() {
-				this._hideTooltip();
-				delete this._delTimer;
-			}), 1000);
+			this._createDelTimer(1000);
+		}
+	},
+	
+	_createDelTimer: function(timeoutMs){
+		this._delTimer = setTimeout(dojo.hitch(this, function() {
+			this._hideTooltip();
+			delete this._delTimer;
+		}), timeoutMs);
+	},
+	
+	_deleteDelTimer: function(){
+		if(this._delTimer){
+			clearTimeout(this._delTimer);
+			delete this._delTimer;
 		}
 	},
 	

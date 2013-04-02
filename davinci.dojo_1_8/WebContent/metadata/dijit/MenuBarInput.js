@@ -127,13 +127,13 @@ return declare(ContainerInput, {
 	
 	createPopupMenuBarItemData: function(value) {
 		return { 
-			type: "dijit.PopupMenuBarItem", 
+			type: "dijit/PopupMenuBarItem", 
 			properties: { label: value }, 
 			children: [
-				{	type: "dijit.Menu",  
+				{	type: "dijit/Menu",  
 					children: [
-						//{type:"dijit.MenuItem", properties:{ label: "Menu Item 1" }},
-						//{type:"dijit.MenuItem", properties:{ label: "Menu Item 2" }}
+						//{type:"dijit/MenuItem", properties:{ label: "Menu Item 1" }},
+						//{type:"dijit/MenuItem", properties:{ label: "Menu Item 2" }}
 					]
 				}
 			]
@@ -142,7 +142,7 @@ return declare(ContainerInput, {
 	
 	createMenuItemData: function(value) {
 		return { 
-			type: "dijit.MenuItem", 
+			type: "dijit/MenuItem", 
 			properties: { label: value }
 		};
 	},

@@ -95,6 +95,8 @@
                class="maqetta.core.server.command.DeleteProjectTemplates" />         
          <command path="modifyProjectTemplates" 
                class="maqetta.core.server.command.ModifyProjectTemplates" />         
+         <command path="getProjectTemplates" 
+               class="maqetta.core.server.command.GetProjectTemplates" />         
                
       </extension>
 	

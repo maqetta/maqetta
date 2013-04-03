@@ -410,37 +410,34 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		return this._selectedSubWidget;
 	},
 
-	saved: function(){
-		this.save();
-	},
-
-	//FIXME
-	getFileEditors: function(){
-		debugger;
-	},
-	
 	save: function (isAutoSave){
 		if(!this.context){	// Sometimes we do lazy initialization of Context
 			return;
 		}
-		var model = this.context.getModel();
+
+		var promises = [],
+			model = this.context.getModel();
 		model.setDirty(true);
 		var visitor = {
 			visit: function(node){
-				if((node.elementType=="HTMLFile" || node.elementType=="CSSFile") && node.isDirty()){
-					node.save(isAutoSave);
+				if((node.elementType == "HTMLFile" || node.elementType == "CSSFile") && node.isDirty()){
+					promises.push(node.save(isAutoSave));
 				}
 				return false;
 			}
 		};
-		
+
 		model.visit(visitor);
-		this.getContext().saveDynamicCssFiles(this.context.cssFiles, isAutoSave);
-		this.isDirty=isAutoSave;
+		promises.concat(this.getContext().saveDynamicCssFiles(this.context.cssFiles, isAutoSave));
+		if (promises.length) {
+			this.savePromise = all(promises);
+		} else {
+			delete this.savePromise;
+		}
+		this.isDirty = isAutoSave;
+		return this.savePromise;
 	},
-	
-	
-	
+
 	removeWorkingCopy: function(){ 
 		/*this.removeWorkingCopyDynamicCssFiles(this.getContext()._getCssFiles());
 		var visitor = {
@@ -459,16 +456,16 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		//this.isDirty=false;
 	},
 	
-	getDefaultContent: function (){
+	getDefaultContent: function() {
 		return this.getTemplate();
 	},
 	
-	previewInBrowser: function(){
+	previewInBrowser: function() {
 		var deviceName = this.deviceName,
 			fileURL = Workbench.getOpenEditor().resourceFile.getURL(),
 			query = [];
 
-		if(deviceName != 'none'){
+		if(deviceName != 'none') {
 			query = [
 			    'preview=1',
 			    'device=' + encodeURIComponent(deviceName),
@@ -487,10 +484,19 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 			fileURL += "?" + query.join("&");
 		}
 
-		var preview = window.open(fileURL, "preview_" + fileURL); // TODO: cache busting needed?
-		// Attach load indicator to window
-		loadIndicator(preview, Runtime.location()
-				+ require.toUrl("dojox/image/resources/images/loading.gif"), "gray");
+		var openPreview = function() {
+			var preview = window.open(fileURL, "preview_" + fileURL); // TODO: cache busting needed?
+			// Attach load indicator to window
+			loadIndicator(preview, Runtime.location()
+					+ require.toUrl("dojox/image/resources/images/loading.gif"), "gray");
+		};
+
+		// Make sure content has been saved to the server so preview is current
+		if (this.savePromise) {
+			this.savePromise.then(openPreview);
+		} else {
+			openPreview();
+		}
 	},
 
 	/**
@@ -616,4 +622,3 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 return VisualEditor;
 
 });
-

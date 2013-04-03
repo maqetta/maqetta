@@ -11,9 +11,7 @@ define([
 
 return declare("davinci.ve.ThemeModifier", null, {
 
-	
 	_getCssFiles: function(){
-		
 		if(this.cssFiles) {
 			return this.cssFiles;
 		}
@@ -98,7 +96,7 @@ return declare("davinci.ve.ThemeModifier", null, {
 		if(selection.length > 1){
 			context.select(widget);
 		}
-		var command = null;
+		var command;
 		
 		if(value.appliesTo=="inline"){
 			var allValues = [];
@@ -112,10 +110,10 @@ return declare("davinci.ve.ThemeModifier", null, {
 						
 						var oldUrl = new Path(URLRewrite.getUrl(value.values[i][name]));
 						if(!oldUrl.isAbsolute){
+							//FIXME: newUrl/newValue never used?
 							var newUrl = oldUrl.relativeTo(filePath).toString();
 							var newValue = URLRewrite.replaceUrl(value.values[i][name], newUrl);
 							allValues.push(a);
-							
 						}else{
 							var a ={};
 							a[name] = value.values[i][name];
@@ -131,7 +129,7 @@ return declare("davinci.ve.ThemeModifier", null, {
 			}
 			command = new StyleCommand(widget, allValues, value.applyToWhichStates);	
 		}else{
-			var rule=null;
+			var rule;
 			
 			// if type=="proposal", the user has chosen a proposed new style rule
 			// that has not yet been added to the given css file (right now, app.css)
@@ -153,43 +151,43 @@ return declare("davinci.ve.ThemeModifier", null, {
 						return;
 					}
 				}
-				var rule = cssFile.addRule(value.appliesTo.ruleString+" {}");
+				rule = cssFile.addRule(value.appliesTo.ruleString+" {}");
 			}else{
 				rule = value.appliesTo.rule;
 			}
 			
 			/* update the rule */
-			var command = new ModifyRuleCommand(rule, value.values, context);
+			command = new ModifyRuleCommand(rule, value.values, context);
 		}
 		return command;
-
 	},
 	
 	saveDynamicCssFiles: function(cssFiles, isAutoSave){
-		var visitor = {
-				visit: function(node){
-					if( node.elementType=="CSSFile" && node.isDirty()){
-						var deferred = node.save(isAutoSave);
-						deferred.then(function(){
-							// only remove the working copy if the save was a success 
-							if (!isAutoSave){
-								systemResource.findResource(node.url).removeWorkingCopy();
-							}
-							node.dirtyResource = isAutoSave;
-						}.bind(this),
-						function(error){
-							alert(dojo.string.substitute(commonNls.errorSavingFile, [node.url, error]));
-						}.bind(this));
-					}
-					return false;
+		var promises = [],
+			visitor = { visit: function(node){
+				if(node.elementType == "CSSFile" && node.isDirty()){
+					promises.push(node.save(isAutoSave).then(function(){
+						// only remove the working copy if the save was a success 
+						if (!isAutoSave){
+							systemResource.findResource(node.url).removeWorkingCopy();
+						}
+						node.dirtyResource = isAutoSave;
+					},
+					function(error){
+						console.error(dojo.string.substitute(commonNls.errorSavingFile, [node.url, error]));
+					}));
 				}
-			};
+				return false;
+			}
+		};
 			
 		if (cssFiles) {
 			cssFiles.forEach(function(file){
 				file.visit(visitor);
-			}.bind(this));
+			});
 		}
+
+		return promises;
 	},
 	
 	dirtyDynamicCssFiles: function(cssFiles){
@@ -197,9 +195,8 @@ return declare("davinci.ve.ThemeModifier", null, {
 		var dirty = false;
 		var visitor = {
 				visit: function(node){
-					if( node.elementType=="CSSFile" && node.isDirty()){
+					if(node.elementType=="CSSFile" && node.isDirty()){
 						dirty = true;
-						
 					}
 					return dirty;
 				}
@@ -211,13 +208,12 @@ return declare("davinci.ve.ThemeModifier", null, {
 					return dirty;
 				}
 				file.visit(visitor);
-			}.bind(this));
+			});
 		}
 		return dirty;
 	},
 	
-	close: function(){
-		
+	close: function() {		
 		if (this.cssFiles) {
 			this.cssFiles.forEach(function(file){
 				file.close();
@@ -227,9 +223,8 @@ return declare("davinci.ve.ThemeModifier", null, {
 		delete this.cssFiles;
 	},
 	
-	destroy : function ()	{
+	destroy: function () {
 		this.close();
-	}
-	
+	}	
 });
 });

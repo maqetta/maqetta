@@ -62,7 +62,11 @@ define(function() {
 		//FIXME: How to do nls? Maybe need to convert callback.js to AMD and leverage AMD's I18N?
 		this.name = 'Dojo Mobile Views'; //FIXME: Needs to be localized
 	};
-	
+
+	var containsClass = function(node, className) {
+		return (" " + node.className + " ").indexOf(" "+ className + " ") != -1;
+	};
+
 	DojoMobileViewSceneManager.prototype = {
 		id: 'DojoMobileViews',
 		category: 'DojoMobileView',
@@ -136,7 +140,6 @@ define(function() {
 					var pnode = node.parentNode;
 					var viewsToUpdate = [];
 					var innerRegistry = win["require"]("dijit/registry"),
-						innerDomClass = win["require"]("dojo/dom-class"),
 						innerTopic = win["require"]("dojo/topic");
 					// See if this View or any ancestor View is not currently visible
 					while (node.tagName != 'BODY'){
@@ -145,7 +148,7 @@ define(function() {
 						}else{
 							for(var i=0;i<pnode.childNodes.length;i++){
 								n=pnode.childNodes[i];
-								if(n.nodeType==1 && innerDomClass.contains(n,"mblView")){	//nodeType==1 is Element
+								if(n.nodeType==1 && containsClass(n, "mblView")){	//nodeType==1 is Element
 									if(n!=node && (n.style.display != "none" || n.getAttribute("selected") == "true")){
 										viewsToUpdate.splice(0, 0, node);
 										break;
@@ -299,9 +302,8 @@ define(function() {
 			if(!win){
 				return false;
 			}
-			var innerDomClass = win["require"]("dojo/dom-class");
 			return dojo.some(node.childNodes, function(child) {
-				return child.nodeType==1 && innerDomClass.contains(child, 'mblView');
+				return child.nodeType==1 && containsClass(child, "mblView");
 			});
 		},
 		getSceneChildren: function(node){
@@ -312,9 +314,8 @@ define(function() {
 			if(!win){
 				return [];
 			}
-			var innerDomClass = win["require"]("dojo/dom-class");
 			return dojo.filter(node.childNodes, function(child) {
-				return child.nodeType==1 && innerDomClass.contains(child, 'mblView');
+				return child.nodeType==1 && containsClass(child, "mblView");
 			});
 		},
 		getSceneContainerForNode: function(node){

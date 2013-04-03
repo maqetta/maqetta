@@ -101,6 +101,14 @@ return declare("davinci.ve._Widget", null, {
 
 		return this._getChildren(attach);
 	},
+	
+	indexOf: function(child) {
+		var helper = this.getHelper();
+		if (helper && helper.indexOf) {
+			return helper.indexOf(this, child); 
+		}
+		return dojo.indexOf(this.getChildren(), child);
+	},
 
 	_getChildren: function(attach) {
 		var containerNode = this.getContainerNode(),
@@ -167,6 +175,10 @@ return declare("davinci.ve._Widget", null, {
 	},
 
 	indexOf: function(child) {
+		var helper = this.getHelper();
+		if (helper && helper.indexOf) {
+			return helper.indexOf(this, child); 
+		}
 		return dojo.indexOf(this.getChildren(), child);
 	},
 

@@ -410,15 +410,6 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		return this._selectedSubWidget;
 	},
 
-	saved: function(){
-		this.save();
-	},
-
-	//FIXME
-	getFileEditors: function(){
-		debugger;
-	},
-	
 	save: function (isAutoSave){
 		if(!this.context){	// Sometimes we do lazy initialization of Context
 			return;

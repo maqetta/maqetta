@@ -207,6 +207,7 @@ define({ root:
 		"ManageProjectTemplateDeletions":"project template deletions",
 		"ManageProjectTemplateModifications":"project template modifications",
 		"ManageProjectTemplateOKToProceed":"OK to proceed?",
+		"ManageProjectTemplatesInitializing":"Initializing...",
 		
 		//UserLibraries
 		"modify": "Modify",

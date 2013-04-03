@@ -68,8 +68,10 @@ public class AddComment extends Command {
 			commentList.add(comment);
 			ReviewCacheManager.$.updateComments(commentList);
 
-			if (version != null && version.isReceiveEmail()) // Send the notification only the designer want receive it.
-				notifyRelatedPersons(user, designer, comment, req);
+			if (version != null && version.isReceiveEmail()) { // Send the notification only the designer want receive it.
+				Boolean zazl = req.getParameter("zazl") != null;
+				notifyRelatedPersons(user, designer, comment, req, zazl);
+			}
 
 			//FIXME: use JSONWriter?
 			SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_PATTERN);
@@ -90,11 +92,11 @@ public class AddComment extends Command {
 	}
 
 	protected void notifyRelatedPersons(IUser reviewer, IUser designer, Comment comment,
-			HttpServletRequest req) throws URISyntaxException, IOException, CoreException {
+			HttpServletRequest req, Boolean zazl) throws URISyntaxException, IOException, CoreException {
 		String to = designer.getPerson().getEmail();
 		if (to != null && !to.trim().equals("")) {
 			String subject = Utils.getTemplates().getProperty(Constants.TEMPLATE_COMMENT_NOTIFICATION_SUBJECT);
-			String htmlContent = getHtmlContent(reviewer, comment, req.getRequestURL().toString());
+			String htmlContent = getHtmlContent(reviewer, comment, req.getRequestURL().toString(), zazl);
 			UserEmailUtil.getUtil().sendEmail(subject, htmlContent, to);
 		}
 	}
@@ -133,7 +135,7 @@ public class AddComment extends Command {
 //		return str;
 //	}
 
-	private String getHtmlContent(IUser reviewer, Comment comment, String requestUrl) {
+	private String getHtmlContent(IUser reviewer, Comment comment, String requestUrl, Boolean zazl) {
 		String commentTitle = comment.getSubject();;
 		String pageName = comment.getPageName();
 		
@@ -145,7 +147,7 @@ public class AddComment extends Command {
 		Map<String, String> props = new HashMap<String, String>();
 		props.put("displayName", reviewer.getPerson().getDisplayName());
 		props.put("pagename", pageName);
-		props.put("url", ReviewManager.getReviewManager().getReviewUrl(comment.getDesignerId(), comment.getPageVersion(),  requestUrl)); 
+		props.put("url", ReviewManager.getReviewManager().getReviewUrl(comment.getDesignerId(), comment.getPageVersion(),  requestUrl, zazl)); 
 		props.put("title", commentTitle);
 		props.put("content", comment.getContent());
 		props.put("pagestate", comment.getPageState());

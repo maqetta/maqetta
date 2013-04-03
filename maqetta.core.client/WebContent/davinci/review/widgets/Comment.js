@@ -63,27 +63,32 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 	postCreate: function() {
 		this._createdPromise = new Deferred();
 		if (!this.existed) {
+			var urlParams = {
+				id: this.commentId,
+				subject: this.subject,
+				content: this.content,
+				ownerId: this.ownerId,
+				email: this.email,
+				previous: this.previous,
+				next: this.next,
+				pageState: this.pageState,
+				pageStateList: this.pageStateList ? dojo.toJson(this.pageStateList) : '',
+				viewScene: this.viewScene,
+				viewSceneList: this.viewSceneList ? dojo.toJson(this.viewSceneList) : '',
+				designerId: this.designerId,
+				pageName: this.pageName,
+				replyTo: this.replyTo || "root",
+				drawingJson: this.drawingJson
+			};
+			if (Runtime.currentEditor && Runtime.currentEditor.getContext().getPreference("zazl")) { // FIXME: preferences should be available without going through Context. #3804
+				urlParms.zazl = true;
+			}
+
 			// Ensure that the comment is created on the server when it is "needed".
 			dojo.xhrGet({
 				url: "cmd/addComment",
 				handleAs: "json",
-				content: {
-					id: this.commentId,
-					subject: this.subject,
-					content: this.content,
-					ownerId: this.ownerId,
-					email: this.email,
-					previous: this.previous,
-					next: this.next,
-					pageState: this.pageState,
-					pageStateList: this.pageStateList ? dojo.toJson(this.pageStateList) : '',
-					viewScene: this.viewScene,
-					viewSceneList: this.viewSceneList ? dojo.toJson(this.viewSceneList) : '',
-					designerId: this.designerId,
-					pageName: this.pageName,
-					replyTo: this.replyTo || "root",
-					drawingJson: this.drawingJson
-				},
+				content: urlParams,
 				error: dojo.hitch(this, function(response) {
 					dojo.publish("/davinci/review/commentAddedError", [this]);
 					var msg = response.responseText;

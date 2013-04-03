@@ -872,6 +872,19 @@ define(["dojo/_base/declare",
 			return false;
 			
 		},
+		
+		_targetIsRootProperty: function() {
+			/*
+			 * Some properties should always be applied to the root element by default
+			 */
+			var rootPropeties = ['left', 'top', 'right', 'bottom'];
+			for(var i = 0;i<this.target.length;i++) {
+				if(rootPropeties.indexOf(this.target[i]) > -1) {
+					return true;
+				}
+			}
+			return false;
+		},
 
 		_updateFieldValue: function(){
 			
@@ -990,7 +1003,12 @@ define(["dojo/_base/declare",
 
 			var meta = this._getThemeMetaDataByWidget(this._widget);
 			if(!meta || !meta.states){
-			//	console.log("error loading metadata:\nwidgetType:" + widgetType + "\nfound:\n" + meta);
+				// no meta data so default is all properties are applied to the root element 
+				return "element.style";
+			}
+			if (this._targetIsRootProperty()){
+				// the target property is one of the properties that should always
+				// default to the root element #3844
 				return "element.style";
 			}
 			if(meta &&  meta.states[state] && meta.states[state].elements ){

@@ -4,6 +4,7 @@ define(["dojo/_base/declare",
         "dojo/dom-class",
         "dojo/dom-construct",
         "dojo/on",
+        "dojo/Deferred",
         "dojo/date/locale",
         "dijit/registry",
         "dijit/_WidgetBase",
@@ -25,7 +26,7 @@ define(["dojo/_base/declare",
         "dijit/form/CheckBox",
         "dojo/store/Memory"
         
-],function(declare, lang, array, domClass, domConstruct, on, locale, registry, 
+],function(declare, lang, array, domClass, domConstruct, on, Deferred, locale, registry, 
 		_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin,
 		Library, Resource, 
 		ProjectTemplates, Preferences, Runtime, Workbench, uiNLS, commonNLS, templateString,
@@ -78,77 +79,113 @@ define(["dojo/_base/declare",
 			}.bind(this));
 			this._myProjectTemplates = [];
 			this._templateTableDiv.innerHTML = uiNLS.ManageProjectTemplatesInitializing;
+			this._showingDeferred = new Deferred();
 		},
 		
 		_updateTable: function(allProjectTemplates){
-			var userEmail = Runtime.getUserEmail();
-			var contentDiv = this._templateTableDiv;
-			contentDiv.innerHTML = '';
-			// Have to clone because we stuff "deleted" property onto objects,
-			// and don't want to have that affect Runtime's version
-			this._myProjectTemplates = array.filter(allProjectTemplates, function(template){
-				return template.authorEmail == userEmail;
-			});
-			var table, tr, td, params;
-			if(this._myProjectTemplates.length > 0){
-				table = domConstruct.create("table", {}, contentDiv);
-				tr  = domConstruct.create("tr", {}, table);
-				domConstruct.create("th", {innerHTML:uiNLS.ManageProjectTemplatesHeaderName}, tr);
-				domConstruct.create("th", {innerHTML:uiNLS.ManageProjectTemplatesHeaderShared}, tr);
-				domConstruct.create("th", {innerHTML:uiNLS.ManageProjectTemplatesHeaderCreatedBy}, tr);
-				domConstruct.create("th", {innerHTML:uiNLS.ManageProjectTemplatesHeaderCreatedOn}, tr);
-				domConstruct.create("th", {innerHTML:uiNLS.ManageProjectTemplatesHeaderLastModified}, tr);
-				domConstruct.create("th", {innerHTML:'&nbsp'}, tr);
-				for(var i=0; i<this._myProjectTemplates.length; i++){
-					var template = this._myProjectTemplates[i];
-					tr  = domConstruct.create("tr", {id:MPT_ROW+i, "class":MPT_ROW}, table);
-					var name = template.name;
-					td = domConstruct.create("td", {id:MPT_NAME+CELL+i, "class":MPT_NAME+CELL}, tr);
-					domConstruct.create("div", {id:MPT_NAME+i, "class":MPT_NAME, innerHTML:name}, td);
-					td = domConstruct.create("td", {id:MPT_SHARINGSIMPLE+CELL+i, "class":MPT_SHARINGSIMPLE+CELL}, tr);
-					params = {type:'checkbox', id:MPT_SHARINGSIMPLE+i, "class":MPT_SHARINGSIMPLE};
-					if(template.sharingSimple=="all"){
-						params.checked = 'checked';
-					}
-					var checkbox = domConstruct.create("input", params, td);
-					on(checkbox, "change", function(i, e){
-						var checkbox = document.getElementById(MPT_SHARINGSIMPLE+i);
-						var cell = document.getElementById(MPT_SHARINGSIMPLE+CELL+i);
-						if(checkbox && cell){
-							var value = checkbox.checked ? "all" : "none";
-							if(value == this._myProjectTemplates[i].sharingSimple){
-								domClass.remove(cell, MPT_HIGHLIGHT_CLASS);
-							}else{
-								domClass.add(cell, MPT_HIGHLIGHT_CLASS);
+			this._showingDeferred.then(function(allProjectTemplates){
+				var userEmail = Runtime.getUserEmail();
+				var contentDiv = this._templateTableDiv;
+				contentDiv.innerHTML = '';
+				// Have to clone because we stuff "deleted" property onto objects,
+				// and don't want to have that affect Runtime's version
+				this._myProjectTemplates = array.filter(allProjectTemplates, function(template){
+					return template.authorEmail == userEmail;
+				});
+				var table, tr, td, params;
+				if(this._myProjectTemplates.length > 0){
+					table = domConstruct.create("table", {}, contentDiv);
+					tr  = domConstruct.create("tr", {}, table);
+					domConstruct.create("th", {innerHTML:uiNLS.ManageProjectTemplatesHeaderName}, tr);
+					domConstruct.create("th", {innerHTML:uiNLS.ManageProjectTemplatesHeaderShared}, tr);
+					domConstruct.create("th", {innerHTML:uiNLS.ManageProjectTemplatesHeaderCreatedBy}, tr);
+					domConstruct.create("th", {innerHTML:uiNLS.ManageProjectTemplatesHeaderCreatedOn}, tr);
+					domConstruct.create("th", {innerHTML:uiNLS.ManageProjectTemplatesHeaderLastModified}, tr);
+					domConstruct.create("th", {innerHTML:'&nbsp'}, tr);
+					for(var i=0; i<this._myProjectTemplates.length; i++){
+						var template = this._myProjectTemplates[i];
+						tr  = domConstruct.create("tr", {id:MPT_ROW+i, "class":MPT_ROW}, table);
+						var name = template.name;
+						td = domConstruct.create("td", {id:MPT_NAME+CELL+i, "class":MPT_NAME+CELL}, tr);
+						domConstruct.create("div", {id:MPT_NAME+i, "class":MPT_NAME, innerHTML:name}, td);
+						td = domConstruct.create("td", {id:MPT_SHARINGSIMPLE+CELL+i, "class":MPT_SHARINGSIMPLE+CELL}, tr);
+						params = {type:'checkbox', id:MPT_SHARINGSIMPLE+i, "class":MPT_SHARINGSIMPLE};
+						if(template.sharingSimple=="all"){
+							params.checked = 'checked';
+						}
+						var checkbox = domConstruct.create("input", params, td);
+						on(checkbox, "change", function(i, e){
+							var checkbox = document.getElementById(MPT_SHARINGSIMPLE+i);
+							var cell = document.getElementById(MPT_SHARINGSIMPLE+CELL+i);
+							if(checkbox && cell){
+								var value = checkbox.checked ? "all" : "none";
+								if(value == this._myProjectTemplates[i].sharingSimple){
+									domClass.remove(cell, MPT_HIGHLIGHT_CLASS);
+								}else{
+									domClass.add(cell, MPT_HIGHLIGHT_CLASS);
+								}
+								this.updateUpdateButton();
 							}
+						}.bind(this, i));
+						domConstruct.create("td", {"class":MPT_READONLY_CLASS, innerHTML:template.authorEmail}, tr);
+						domConstruct.create("td", {"class":MPT_READONLY_CLASS, innerHTML:dateOrTime(template.creationTimestamp)}, tr);
+						domConstruct.create("td", {"class":MPT_READONLY_CLASS, innerHTML:dateOrTime(template.lastModifyTimestamp)}, tr);
+						td = domConstruct.create("td", {id:MPT_DELETE+CELL+i, "class":MPT_DELETE+CELL}, tr);
+						params = {type:'button', id:MPT_DELETE+i, "class":MPT_DELETE, value:uiNLS.DEL};
+						var button = domConstruct.create("input", params, td);
+						on(button, "click", function(i, e){
+							this._myProjectTemplates[i].deleted = !this._myProjectTemplates[i].deleted;
+							var button = document.getElementById(MPT_DELETE+i);
+							var row = document.getElementById(MPT_ROW+i);
+							if(button && row){
+								if(this._myProjectTemplates[i].deleted){
+									domClass.add(row, MPT_DELETE_ROW_CLASS);
+								}else{
+									domClass.remove(row, MPT_DELETE_ROW_CLASS);
+								}
+							}
+							this.updateDuplicateNameError();
 							this.updateUpdateButton();
-						}
-					}.bind(this, i));
-					domConstruct.create("td", {"class":MPT_READONLY_CLASS, innerHTML:template.authorEmail}, tr);
-					domConstruct.create("td", {"class":MPT_READONLY_CLASS, innerHTML:dateOrTime(template.creationTimestamp)}, tr);
-					domConstruct.create("td", {"class":MPT_READONLY_CLASS, innerHTML:dateOrTime(template.lastModifyTimestamp)}, tr);
-					td = domConstruct.create("td", {id:MPT_DELETE+CELL+i, "class":MPT_DELETE+CELL}, tr);
-					params = {type:'button', id:MPT_DELETE+i, "class":MPT_DELETE, value:uiNLS.DEL};
-					var button = domConstruct.create("input", params, td);
-					on(button, "click", function(i, e){
-						this._myProjectTemplates[i].deleted = !this._myProjectTemplates[i].deleted;
-						var button = document.getElementById(MPT_DELETE+i);
-						var row = document.getElementById(MPT_ROW+i);
-						if(button && row){
-							if(this._myProjectTemplates[i].deleted){
-								domClass.add(row, MPT_DELETE_ROW_CLASS);
-							}else{
-								domClass.remove(row, MPT_DELETE_ROW_CLASS);
-							}
-						}
-						this.updateDuplicateNameError();
-						this.updateUpdateButton();
-					}.bind(this, i));
-				}
-				
-			}else{
-				contentDiv.innerHTML = uiNLS.ManageProjectTemplatesNoTemplates;
-			}
+						}.bind(this, i));
+					}
+					// Add inline edit controls on top of all of the name fields
+					// Have to do it in onShow callback because the DOM nodes are only
+					// instantiated once the dialog is posted
+					for(var i=0; i<this._myProjectTemplates.length; i++){
+						var name_id = MPT_NAME+i;
+						new InlineEditBox({
+							editor: TextBox,
+							autoSave: true,
+							onChange:function(i){
+								var ieb_id= MPT_NAME+i;
+								var cell_id = MPT_NAME+CELL+i;
+								var ieb = registry.byId(ieb_id);
+								var cell = document.getElementById(cell_id);
+								if(ieb && cell){
+									var value = ieb.get("value");
+									if(value == this._myProjectTemplates[i].name){
+										domClass.remove(cell, MPT_HIGHLIGHT_CLASS);
+									}else{
+										domClass.add(cell, MPT_HIGHLIGHT_CLASS);
+									}
+								}
+								this.updateDuplicateNameError();
+								this.updateUpdateButton();
+							}.bind(this, i)
+						}, name_id);
+					}
+					// Put initial focus on the Cancel button because default focus will go on
+					// first name cell (because of the InlineEditBox widgets).
+					// Have to use a setTimeout because Dojo has a delay before the dialog
+					// is actually on the screen (and changing focus will actually take effect)
+					setTimeout(function(){
+						this._cancelButton.focus();
+					}.bind(this), 1000);
+					
+				}else{
+					contentDiv.innerHTML = uiNLS.ManageProjectTemplatesNoTemplates;
+				}				
+			}.bind(this, allProjectTemplates));
 		},
 		
 		checkForChanges: function(callback){
@@ -200,39 +237,7 @@ define(["dojo/_base/declare",
 		},
 				
 		onShow: function(parentDialog){
-			// Add inline edit controls on top of all of the name fields
-			// Have to do it in onShow callback because the DOM nodes are only
-			// instantiated once the dialog is posted
-			for(var i=0; i<this._myProjectTemplates.length; i++){
-				var name_id = MPT_NAME+i;
-				new InlineEditBox({
-					editor: TextBox,
-					autoSave: true,
-					onChange:function(i){
-						var ieb_id= MPT_NAME+i;
-						var cell_id = MPT_NAME+CELL+i;
-						var ieb = registry.byId(ieb_id);
-						var cell = document.getElementById(cell_id);
-						if(ieb && cell){
-							var value = ieb.get("value");
-							if(value == this._myProjectTemplates[i].name){
-								domClass.remove(cell, MPT_HIGHLIGHT_CLASS);
-							}else{
-								domClass.add(cell, MPT_HIGHLIGHT_CLASS);
-							}
-						}
-						this.updateDuplicateNameError();
-						this.updateUpdateButton();
-					}.bind(this, i)
-				}, name_id);
-			}
-			// Put initial focus on the Cancel button because default focus will go on
-			// first name cell (because of the InlineEditBox widgets).
-			// Have to use a setTimeout because Dojo has a delay before the dialog
-			// is actually on the screen (and changing focus will actually take effect)
-			setTimeout(function(){
-				this._cancelButton.focus();
-			}.bind(this), 1000);
+			this._showingDeferred.resolve();
 		},
 		
 		updateDuplicateNameError: function(){

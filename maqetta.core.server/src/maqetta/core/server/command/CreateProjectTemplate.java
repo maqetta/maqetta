@@ -38,13 +38,11 @@ public class CreateProjectTemplate extends Command {
 			error = (errorString == null || errorString.equals("")) ? false : true;
 		}
 		JSONObject responseObject = new JSONObject();
-		JSONObject projectTemplatesObject = projectTemplatesManager.getProjectTemplatesIndex(user);
 		try{
 			responseObject.put("success", !error);
 			if(error){
 				responseObject.put("error", errorString);
 			}
-			responseObject.put("projectTemplates", projectTemplatesObject);
 			this.responseString = responseObject.toString(2);
 		} catch (JSONException e) {
 			this.responseString = "{\"success\":false, \"error\":\"cmd/createProjectTemplate json exception\"}";

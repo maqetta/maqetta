@@ -41,7 +41,7 @@ var ProjectTemplates = {
 				error = false;
 			}
 			if(error){
-				console.log("_getProjectTemplatesPartial: unexpected response from server. returnData=");
+				console.error("_getProjectTemplatesPartial: unexpected response from server. returnData=");
 				console.dir(returnData);
 			}
 		}.bind(this, projectTemplateList, callback));
@@ -55,7 +55,7 @@ var ProjectTemplates = {
 		}).then(function(responseData){
 			callback(responseData);
 		}, function(err){
-			console.log("_getProjectTemplatesSendRequest xhr error. err=");
+			console.error("_getProjectTemplatesSendRequest xhr error. err=");
 			console.dir(err);
 		});
 	},
@@ -82,11 +82,7 @@ var ProjectTemplates = {
 			sync:true
 		});
 		if(!data || !data.success){
-			console.log("cmd/createProjectTemplate error:"+data.error);
-		}else{
-			if(data.projectTemplates){
-				Runtime.setSiteConfigData("projectTemplates", data.projectTemplates);
-			}
+			console.error("cmd/createProjectTemplate error:"+data.error);
 		}
 		return data;
 		
@@ -103,11 +99,7 @@ var ProjectTemplates = {
 			sync:true
 		});
 		if(!data || !data.success){
-			console.log("cmd/modifyProjectTemplate error:"+data.error);
-		}else{
-			if(data.projectTemplates){
-				Runtime.setSiteConfigData("projectTemplates", data.projectTemplates);
-			}
+			console.error("cmd/modifyProjectTemplate error:"+data.error);
 		}
 		return data;
 		
@@ -124,11 +116,7 @@ var ProjectTemplates = {
 			sync:true
 		});
 		if(!data || !data.success){
-			console.log("cmd/deleteProjectTemplate error:"+data.error);
-		}else{
-			if(data.projectTemplates){
-				Runtime.setSiteConfigData("projectTemplates", data.projectTemplates);
-			}
+			console.error("cmd/deleteProjectTemplate error:"+data.error);
 		}
 		return data;
 		

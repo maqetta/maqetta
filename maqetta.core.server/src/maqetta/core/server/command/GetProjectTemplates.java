@@ -5,6 +5,13 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.text.Collator;
+
 import org.davinci.server.user.IUser;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,6 +61,19 @@ public class GetProjectTemplates extends Command {
 		JSONObject projectTemplatesObject = projectTemplatesManager.getProjectTemplatesIndex(user);
 		try{
 			JSONArray allUserTemplates = projectTemplatesObject.getJSONArray("templates");
+			
+			int countList = allUserTemplates.length();
+			List<JSONObject> ls=new ArrayList<JSONObject>();
+			for(int i=0; i< countList; i++){
+				JSONObject template = allUserTemplates.getJSONObject(i);
+				ls.add(template);
+			}
+			Collections.sort(ls, new JSONObjectComparable());
+			JSONArray sortedUserTemplates = new JSONArray();
+	        for (JSONObject t : ls) {
+	        	sortedUserTemplates.put(t);
+	        }
+
 			projectTemplatesObject.remove("templates");
 			JSONObject responseObject = new JSONObject();
 			responseObject.put("success", !error);
@@ -61,7 +81,7 @@ public class GetProjectTemplates extends Command {
 				responseObject.put("error", errorString);
 			}else{
 				JSONArray returnTemplates = new JSONArray();
-				int countAll = allUserTemplates.length();
+				int countAll = sortedUserTemplates.length();
 				responseObject.put("searchString", searchString);
 				responseObject.put("offset", offset);
 				responseObject.put("limit", limit);
@@ -69,7 +89,7 @@ public class GetProjectTemplates extends Command {
 				int numFound = 0;
 				int numAdded = 0;
 				for(int i=0; i< countAll; i++){
-					JSONObject template = allUserTemplates.getJSONObject(i);
+					JSONObject template = sortedUserTemplates.getJSONObject(i);
 					Boolean matches;
 					if(searchStringLC.equals("")){
 						matches = true;
@@ -114,6 +134,28 @@ public class GetProjectTemplates extends Command {
 		}
 		// Should never get here
 		return false;
+	}
+	
+	public class JSONObjectComparable extends JSONObject implements Comparator<JSONObject>{
+		 
+		public int compare(JSONObject o1, JSONObject o2) {
+			try{
+				Collator collator = Collator.getInstance();
+				String thisName = o1.getString("name");
+				String compareName = o2.getString("name");
+				if(!thisName.equals(compareName)){
+					int retval = collator.compare(thisName, compareName);
+					return retval;
+				}else{
+					String thisAuthorEmail = o1.getString("authorEmail");
+					String compareAuthorEmail = o2.getString("authorEmail");
+					int retval = collator.compare(thisAuthorEmail, compareAuthorEmail);
+					return retval;
+				}
+			} catch (JSONException e) {
+			}
+		return 0;
+		}
 	}
 
 }

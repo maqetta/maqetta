@@ -7,6 +7,7 @@ define(["dojo/_base/declare",
         "davinci/workbench/Preferences",
         "davinci/Runtime",
         "davinci/Workbench",
+        "davinci/ui/ProjectTemplates",
         "dojo/i18n!davinci/ui/nls/ui",
         "dojo/i18n!dijit/nls/common",
         "dojo/text!./templates/NewProjectTemplate.html",
@@ -16,7 +17,7 @@ define(["dojo/_base/declare",
         "dojo/store/Memory"
         
 ],function(declare, lang, _Templated, _Widget,  Library, Resource, Preferences, 
-		Runtime, Workbench, uiNLS, commonNLS, templateString,
+		Runtime, Workbench, ProjectTemplates, uiNLS, commonNLS, templateString,
 		Button, ValidationTextBox, CheckBox, Memory){
 
 	// Allow any unicode alpha, dijit, period or hyphen
@@ -28,6 +29,7 @@ define(["dojo/_base/declare",
 		templateString: templateString,
 		_okButton: null,
 		_projectTemplateName: null,
+		_projectTemplateList: [],
 		
 		postMixInProperties: function() {
 			var langObj = uiNLS;
@@ -40,20 +42,33 @@ define(["dojo/_base/declare",
 		postCreate: function(){
 			this.inherited(arguments);
 			dojo.connect(this._projectTemplateName, "onChange", this, '_checkValid');
-			var projectTemplates = Runtime.getSiteConfigData("projectTemplates");
+
+			// The 1000 argument says to pull at most 1000 at once (which happens to be server's limit)
+			ProjectTemplates.getIncremental(1000, function(projectTemplateList, returnData, allDone){
+				this._updateStore(projectTemplateList);
+				return false;	// false => continue retrieving data
+			}.bind(this));
 			var data = [];
-			if(projectTemplates && projectTemplates.templates && projectTemplates.templates.length > 0){
-				for(var i=0; i<projectTemplates.templates.length; i++){
-					var template = projectTemplates.templates[i];
-					if(template.folder && template.name){
-						data.push({name:template.name, id:template.folder});
-					}
+			var store = new Memory({ data:data });
+			this._projectTemplateName.set("store", store);
+
+			this._projectTemplateName.set("regExp", regex);
+			this._projectTemplateName.set("intermediateChanges", true);
+			this._projectTemplateName.focus();
+		},
+		
+		_updateStore: function(projectTemplateList){
+			var data = [];
+			this._projectTemplateList = [];
+			for(var i=0; i<projectTemplateList.length; i++){
+				var template = projectTemplateList[i];
+				if(template.folder && template.name){
+					data.push({name:template.name, id:template.folder});
+					this._projectTemplateList.push(template);
 				}
 			}
 			var store = new Memory({ data:data });
 			this._projectTemplateName.set("store", store);
-			this._projectTemplateName.set("regExp", regex);
-			this._projectTemplateName.set("intermediateChanges", true);
 		},
 		
 		_checkValid: function(){
@@ -70,9 +85,9 @@ define(["dojo/_base/declare",
 			var projectTemplates = Runtime.getSiteConfigData("projectTemplates");			
 			var do_it = true;
 			var email = Runtime.getUserEmail();
-			if(projectTemplates && projectTemplates.templates && projectTemplates.templates.length > 0){
-				for(var i=0; i<projectTemplates.templates.length; i++){
-					var template = projectTemplates.templates[i];
+			if(this._projectTemplateList.length > 0){
+				for(var i=0; i<this._projectTemplateList.length; i++){
+					var template = this._projectTemplateList[i];
 					if(template.name == NewProjectTemplateName && template.authorEmail == email){
 						var message = lang.replace(uiNLS.newProjectTemplateOverwrite, [NewProjectTemplateName]);
 						do_it = confirm(message);

@@ -120,7 +120,6 @@ var EventSelection = declare("davinci.ve.widgets.EventSelection", [ViewLite], {
 
 		pageTemplate: [{display:"onclick", target:"onclick",type:"state", hideCascade:true},
 			{display:"ondblclick",target:"ondblclick",type:"state", hideCascade:true},
-			{display:"onmousedown",target:"onmousedown",type:"state", hideCascade:true},
 			{display:"onmouseup",target:"onmouseup",type:"state", hideCascade:true},
 			{display:"onmouseover",target:"onmouseover",type:"state", hideCascade:true},
 			{display:"onmousemove",target:"onmousemove",type:"state", hideCascade:true},
@@ -129,7 +128,8 @@ var EventSelection = declare("davinci.ve.widgets.EventSelection", [ViewLite], {
 			{display:"onkeydown",target:"onkeydown", type:"state", hideCascade:true},
 			{display:"onkeyup",  target:"onkeyup",type:"state", hideCascade:true},
 			{display:"onfocus",  target:"onfocus",type:"state", hideCascade:true},
-			{display:"onblur",  target:"onblur",type:"state", hideCascade:true}],
+			{display:"onblur",  target:"onblur",type:"state", hideCascade:true},
+			{display:"onchange",  target:"onchange",type:"state", hideCascade:true}],
 
 		buildRendering : function(){
 			this.domNode =  dojo.doc.createElement("div");

@@ -2150,12 +2150,22 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 	
 	deselectInvisible: function(){
+		function isHidden(node) {
+			if ((node.nodeType == 1 /*ELEMENT_NODE*/) &&  (domStyle.get(node, "display") == 'none')) {
+				return true;
+			}
+			if (node.parentNode) {
+				return isHidden(node.parentNode);
+			} 
+			return false;
+		}
+		
 		if(this._selection){
 			for(var i=this._selection.length-1; i>=0; i--){
 				var widget = this._selection[i];
 				var domNode = widget.domNode;
-				// Assume that if all offset values are zero, then widget has display:none somewhere in ancestor DOM hierarchy
-				if(domNode.offsetLeft==0 && domNode.offsetTop==0 && domNode.offsetWidth==0 && domNode.offsetHeight==0){
+				// Check for display:none somewhere in ancestor DOM hierarchy
+				if (isHidden(domNode)) {
 					this.deselect(widget);
 				}else{
 					while(domNode && domNode.tagName.toUpperCase() != 'BODY'){

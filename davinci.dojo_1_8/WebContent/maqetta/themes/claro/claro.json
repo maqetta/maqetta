@@ -642,11 +642,7 @@
 							"position", 
 							"opacity",
 							"float",
-							"z-index",
-							"left",
-							"top",
-							"right",
-							"bottom"
+							"z-index"
                  		]
                     },
 					"selectors": {

@@ -438,7 +438,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 	},
 
 
-	updateSubmit : function() {
+	updateSubmit: function() {
 		var valid = this.versionTitle.isValid() && this.dueDate.isValid();
 		var valid2 = this.reviewFiles && this.reviewFiles.length > 0;
 		var valid3 = this.userData.length > 0;
@@ -662,16 +662,20 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 			isUpdate: this.node && !this.isRestart,
 			isRestart: this.isRestart,
 			vTime: this.node ? this.node.timeStamp : null,
-			emails:emails,
-			message:message,
-			versionTitle:versionTitle,
-			resources :resources,
-			desireWidth:desireWidth,
-			desireHeight:desireHeight,
-			savingDraft:isDraft,
-			dueDate:dueDateString,
-			receiveEmail:receiveEmail
+			emails: emails,
+			message: message,
+			versionTitle: versionTitle,
+			resources: resources,
+			desireWidth: desireWidth,
+			desireHeight: desireHeight,
+			savingDraft: isDraft,
+			dueDate: dueDateString,
+			receiveEmail: receiveEmail
 		};
+		if (Runtime.currentEditor && Runtime.currentEditor.getContext().getPreference("zazl")) { // FIXME: preferences should be available without going through Context. #3804
+			urlParms.zazl = true;
+		}
+
 		var urlParmsQueryStr = dojo.objectToQuery(urlParms);
 
 		//Do the POST

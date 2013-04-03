@@ -251,7 +251,7 @@ return declare("davinci.ve.commands.ModifyCommand", [_hierarchyCommand], {
 		if(!parent){
 			return;
 		}
-		var index = dojo.indexOf(parent.getChildren(), widget);
+		var index = parent.indexOf(widget);//dojo.indexOf(parent.getChildren(), widget);
 		if(index < 0){
 			return;
 		}

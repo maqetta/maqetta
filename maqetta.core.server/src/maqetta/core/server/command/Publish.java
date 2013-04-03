@@ -55,6 +55,7 @@ public class Publish extends Command {
 		String dueDate = req.getParameter("dueDate");
 		Boolean receiveEmail = req.getParameter("receiveEmail") != null ? 
 				req.getParameter("receiveEmail").equals("true") : false;
+		Boolean zazl = req.getParameter("zazl") != null;
 
 		String[] emails = emailsStr.split(",");
 		List<Reviewer> reviewers = new ArrayList<Reviewer>();
@@ -157,7 +158,7 @@ public class Publish extends Command {
 			for (Reviewer reviewer : reviewers) {
 				String mail = reviewer.getEmail();
 				if (mail != null && !mail.equals("") && set.add(mail)) {
-					String url = ReviewManager.getReviewManager().getReviewUrl(user.getUserID(), version.getTime(), requestUrl);
+					String url = ReviewManager.getReviewManager().getReviewUrl(user.getUserID(), version.getTime(), requestUrl, zazl);
 					String htmlContent = getHtmlContent(user, message, url);
 					String subject = Utils.getTemplates().getProperty(Constants.TEMPLATE_INVITATION_SUBJECT_PREFIX) + " " + versionTitle;
 					emailResult = notifyRelatedPersons(mail, subject, htmlContent);

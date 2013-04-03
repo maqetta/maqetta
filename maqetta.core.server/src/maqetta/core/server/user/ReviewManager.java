@@ -327,12 +327,16 @@ public class ReviewManager implements IReviewManager {
 		return false;
 	}
 
-	public String getReviewUrl(String designerId, String version, String requestUrl) {
+	public String getReviewUrl(String designerId, String version, String requestUrl, Boolean zazl) {
 		String prefix = requestUrl.substring(0, requestUrl.indexOf("/cmd/"));
-		return prefix + "?"
+		String suffix = "?"
 				+ IDavinciServerConstants.REVIEW_DESIGNER_ATTR + "="
 				+ designerId /* FIXME: encode? */ + "&"
 				+ IDavinciServerConstants.REVIEW_VERSION_ATTR + "=" + version;
+		if (zazl) {
+			suffix += "&zazl=true";
+		}
+		return prefix + suffix;
 	}
 
 	private class VersionFile {

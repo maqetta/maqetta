@@ -69,16 +69,26 @@ define(["dojo/_base/declare",
 
 		postCreate: function(){
 			this.inherited(arguments);
+			// The 1000 argument says to pull at most 1000 at once (which happens to be server's limit)
+			ProjectTemplates.getIncremental(1000, function(projectTemplateList, returnData, allDone){
+				if(allDone){
+					this._updateTable(projectTemplateList);
+				}
+				return false;
+			}.bind(this));
+			this._myProjectTemplates = [];
+			this._templateTableDiv.innerHTML = uiNLS.ManageProjectTemplatesInitializing;
+		},
+		
+		_updateTable: function(allProjectTemplates){
 			var userEmail = Runtime.getUserEmail();
 			var contentDiv = this._templateTableDiv;
-			var projectTemplateObject = Runtime.getSiteConfigData("projectTemplates");
-			var allProjectTemplates = (projectTemplateObject && projectTemplateObject.templates) ? 
-					projectTemplateObject.templates : [];
+			contentDiv.innerHTML = '';
 			// Have to clone because we stuff "deleted" property onto objects,
 			// and don't want to have that affect Runtime's version
-			this._myProjectTemplates = lang.clone(array.filter(allProjectTemplates, function(template){
+			this._myProjectTemplates = array.filter(allProjectTemplates, function(template){
 				return template.authorEmail == userEmail;
-			}));
+			});
 			var table, tr, td, params;
 			if(this._myProjectTemplates.length > 0){
 				table = domConstruct.create("table", {}, contentDiv);
@@ -309,6 +319,7 @@ define(["dojo/_base/declare",
 		},
 
 		onClose: function(){}
+		
 	});
 });
 

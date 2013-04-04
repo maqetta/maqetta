@@ -387,11 +387,12 @@ var Workbench = {
             return metadata.init();
 	    }).then(function(){
 			var perspective = Runtime.initialPerspective || "davinci.ui.main";
-			dojo.query('.loading').orphan();
 			Workbench.showPerspective(perspective);
 			Workbench._updateTitle();
 			initializeWorkbenchState();			
+			dojo.query('.loading').orphan();
 		}).otherwise(function(result){
+			console.error(result);
 			dojo.query('#load_screen').addContent(dojo.string.substitute(webContent.startupError, [result.message]), "only")/*.addClass("error")*/;
 		});
 
@@ -630,20 +631,21 @@ var Workbench = {
 				// browser doesn't show an annoying tooltip while hovering
 				// over an editor.
 				editorContainer.domNode.title = '';
-				if(!Workbench.hideEditorTabs){
-					this.tablist.pane2button[editorContainer.id].attr('label', title);
-				}else{
+				if(!Workbench.hideEditorTabs) {
+					this.tablist.pane2button(editorContainer.id).attr('label', title);
+				} else {
 					var editorId = editorContainer.id;
 					var shadowId = editorIdToShadowId(editorId);
 					var shadowTabContainer = dijit.byId("davinci_file_tabs");
 					var titleWithDirty = title + (editorContainer.isDirty ? '<span class="dirtyFileAsterisk"></span>'  : '');
-					shadowTabContainer.tablist.pane2button[shadowId].attr('label', titleWithDirty);
+					shadowTabContainer.tablist.pane2button(shadowId).attr('label', titleWithDirty);
 				}
 			};
 			
 			dojo.connect(mainBody.tabs.editors, "removeChild", this, Workbench._editorTabClosed);
 		}
 		mainBody.editorsStackContainer.addChild(mainBody.tabs.editors);
+		mainBodyContainer.startup();
 		mainBody.editorsStackContainer.selectChild(mainBody.editorsWelcomePage);
 		dojo.connect(dijit.byId("editors_container"), "selectChild", function(child) {
 			if(!Workbench._processingSelectChild){
@@ -661,7 +663,6 @@ var Workbench = {
 				Workbench._processingSelectChild = false;
 			}
 		});
-		mainBodyContainer.startup();
 
 		// Put the toolbar and the main window in a border container
 		var appBorderContainer = dijit.byId('davinci_app');
@@ -683,11 +684,6 @@ var Workbench = {
 					id: "mainStackContainer",
 					controllerWidget: "dijit.layout.StackController"
 				});
-			var welcomePage = Workbench.welcomePage = 
-				new ContentPane({
-					id: "welcomePage",
-					href: "app/davinci/ve/resources/welcome_to_maqetta.html"
-				});
 
 			var mainBorderContainer = Workbench.mainBorderContainer = new BorderContainer({
 				design: "headline",
@@ -706,7 +702,7 @@ var Workbench = {
 			
 			Workbench.shadowTabs.setTitle = function(tab, title) { 
 				tab.attr('title', title);
-				this.tablist.pane2button[tab.id].attr('label', title);
+				this.tablist.pane2button(tab.id).attr('label', title);
 			};
 			dojo.connect(shadowTabContainer, "selectChild", function(child) {
 				var shadowId = child.id;
@@ -731,20 +727,19 @@ var Workbench = {
 			appBorderContainer.addChild(topBarPane);
 			appBorderContainer.addChild(mainStackContainer);
 			mainStackContainer.addChild(mainBorderContainer);
-			mainStackContainer.selectChild(mainBorderContainer);
-
 			mainBorderContainer.addChild(shadowTabContainer);
 			mainBorderContainer.addChild(toolbarPane);
 			mainBorderContainer.addChild(mainBodyContainer);
-			appBorderContainer.layout();	
+			mainStackContainer.startup();
 			appBorderContainer.startup();
+			mainStackContainer.selectChild(mainBorderContainer);
 			Workbench._originalOnResize = window.onresize;
-			window.onresize = Workbench.onResize; //alert("All done");}
+			window.onresize = Workbench.onResize;
 			dojo.connect(mainBodyContainer, 'onMouseUp', this, 'onResize');
 			
 			var shadowTabMenu = dijit.byId('davinci_file_tabs_tablist_Menu');
 			if(shadowTabMenu){
-				shadowTabMenu.addChild(new dijit.MenuItem({
+				shadowTabMenu.addChild(new MenuItem({
 					label:veNLS.closeAllEditors,
 					onClick:function(a, b, c){
 						this.closeAllEditors();
@@ -815,7 +810,7 @@ var Workbench = {
 			for (var j=0;j<menuTreeItem.menus.length;j++) {
 				var menu = menuTreeItem.menus[j];
 				var menuWidget = Workbench._createMenu(menu);
-				menu.id = menu.id.replace(".", "-"); // kludge to work around the fact that '.' is being used for ids, and that's not compatible with CSS
+				menu.id = menu.id.replace(/\./g, "-"); // kludge to work around the fact that '.' is being used for ids, and that's not compatible with CSS
 				// Set up top banner region. (Top banner is an extensibility point)
 				if(window.maqetta && maqetta.TopBanner && maqetta.TopBanner.attachMenu){
 					maqetta.TopBanner.attachMenu(menu, menuWidget, menuDiv);
@@ -1104,7 +1099,7 @@ var Workbench = {
 			menuWidget.removeChild(child);
 			child.destroy();
 		});
-		menuWidget.focusedChild = null; // TODO: dijit.Menu bug?  Removing a focused child should probably reset focusedChild for us
+		menuWidget.focusedChild = null; // reset as we are removing the focused child
 
 		var addSeparator, menuAdded;
 		menus.forEach(function(menu, i){
@@ -1546,8 +1541,8 @@ var Workbench = {
 		}
 
 		if (editorCreated) {
-			editorsContainer.addChild(editorContainer);
 			shadowTabContainer.addChild(shadowTab);
+			editorsContainer.addChild(editorContainer);
 		}
 
 		// add loading spinner

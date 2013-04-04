@@ -1,24 +1,43 @@
-define(["dojo/_base/declare",
-        "dojo/on",
-        "dojo/aspect",
-        "dojo/Deferred",
-        "dijit/_Templated",
-        "dijit/_Widget",
-        "davinci/library",
-        "system/resource",
-        "davinci/workbench/Preferences",
-        "davinci/Runtime",
-        "davinci/Workbench",
-        "davinci/ui/ProjectTemplates",
-        "dojo/i18n!davinci/ui/nls/ui",
-        "dojo/i18n!dijit/nls/common",
-        "dojo/text!./templates/NewProject.html",
-        "dijit/form/Button",
-        "dijit/form/RadioButton",
-        "dijit/form/ValidationTextBox"
-        
-],function(declare, on, aspect, Deferred, _Templated, _Widget,  Library, Resource, Preferences,  Runtime, Workbench, 
-		ProjectTemplates, uiNLS, commonNLS, templateString){
+define([
+	"dojo/_base/declare",
+	"dojo/_base/lang",
+	"dojo/on",
+	"dojo/aspect",
+	"dojo/Deferred",
+	"dojo/dom-attr",
+	"dijit/_Templated",
+	"dijit/_Widget",
+	"davinci/library",
+	"system/resource",
+	"davinci/workbench/Preferences",
+	"davinci/Runtime",
+	"davinci/Workbench",
+	"davinci/ui/ProjectTemplates",
+	"dojo/i18n!davinci/ui/nls/ui",
+	"dojo/i18n!dijit/nls/common",
+	"dojo/text!./templates/NewProject.html",
+	"dijit/form/Button",
+	"dijit/form/RadioButton",
+	"dijit/form/ValidationTextBox"
+], function(
+	declare,
+	lang,
+	on,
+	aspect,
+	Deferred,
+	domAttr,
+	_Templated,
+	_Widget,
+	Library,
+	Resource,
+	Preferences,
+	Runtime,
+	Workbench,
+	ProjectTemplates,
+	uiNLS,
+	commonNLS,
+	templateString
+) {
 
 	var noProjectTemplate = '_none_';
 
@@ -27,19 +46,19 @@ define(["dojo/_base/declare",
 	// Better internationalized regex would be: "^[\p{L}\d\.\-]+$", but browsers don't support \p
 	var BASE_REGEX = "^[\\w\\-\\.]+$";
 
-	return dojo.declare("davinci.ui.NewProject",   [_Widget,_Templated], {
+	return declare([_Widget,_Templated], {
 		widgetsInTemplate: true,
 		templateString: templateString,
 		_okButton: null,
 		_projectName: null,
 		_eclipseSupport: null,
 		_projectTemplate: noProjectTemplate,
-		_regex:new RegExp(BASE_REGEX),
-		_postCreateDeferred:null,
+		_regex: new RegExp(BASE_REGEX),
+		_postCreateDeferred: null,
 		
 		constructor: function(){
 			this._postCreateDeferred = new Deferred();
-			Resource.listProjects(dojo.hitch(this, function(projects){
+			Resource.listProjects(function(projects) {
 				// Build a really fancy regular expression that prevents
 				// exact match with any existing project names and
 				// disallows the underscore character
@@ -67,32 +86,32 @@ define(["dojo/_base/declare",
 				this._postCreateDeferred.then(function(){
 					this._projectName.set("regExp", regexString);
 				}.bind(this));
-			}.bind(this)));
+			}.bind(this));
 
 		},
 		
 		postMixInProperties: function() {
 			var langObj = uiNLS;
 			var dijitLangObj = commonNLS;
-			dojo.mixin(this, langObj);
-			dojo.mixin(this, dijitLangObj);
-			Resource.listProjects(dojo.hitch(this,this.setProjects));
+			lang.mixin(this, langObj);
+			lang.mixin(this, dijitLangObj);
+			Resource.listProjects(this.setProjects.bind(this));
 			this.inherited(arguments);
 		},
 
 		setProjects: function(projects){
 			this._projects = {};
 
-			projects.forEach(dojo.hitch(this, function(project) {
-					if (project) {
-						this._projects[project.name] = true;
-					}
-			}));
+			projects.forEach(function(project) {
+				if (project) {
+					this._projects[project.name] = true;
+				}
+			}, this);
 		},
 
 		postCreate: function(){
 			this.inherited(arguments);
-			dojo.connect(this._projectName, "onKeyUp", this, '_checkValid');
+			on(this._projectName, 'keyup', this._checkValid.bind(this));
 			var opts = [];
 			this.projectTemplates.addOption(opts);
 			this._useProjectTemplate.disabled = true;
@@ -143,7 +162,9 @@ define(["dojo/_base/declare",
 
 		_checkValid: function(){
 			// make sure the project name is OK.
-			if(!this._projects) return false; // project data hasn't loaded
+			if (!this._projects) {
+				return false; // project data hasn't loaded
+			}
 
 			var valid = this._projectName.isValid();
 
@@ -152,17 +173,17 @@ define(["dojo/_base/declare",
 		
 		okButton: function() {
 			var newProjectName = this._projectName.get("value");
-			var cloneExistingProject = dojo.attr(this._cloneExistingProject, 'checked');
+			var cloneExistingProject = domAttr.get(this._cloneExistingProject, 'checked');
 			var projectToClone = cloneExistingProject ? Workbench.getProject() : '';
-			var isEclipse = dojo.attr(this._eclipseSupport, 'checked');
-			var useProjectTemplate = dojo.attr(this._useProjectTemplate, 'checked');
+			var isEclipse = this._getEclipseProjectAttr();
+			var useProjectTemplate = domAttr.get(this._useProjectTemplate, 'checked');
 			var projectTemplateName = useProjectTemplate ? this.projectTemplates.get("value") : '';
 
 			Resource.createProject({
-				newProjectName:newProjectName, 
-				projectTemplateName:projectTemplateName,
-				projectToClone:projectToClone,
-				isEclipse:isEclipse
+				newProjectName: newProjectName,
+				projectTemplateName: projectTemplateName,
+				projectToClone: projectToClone,
+				eclipseSupport: isEclipse
 			}).then(function() {
 				if (isEclipse) {
 					Preferences.savePreferences(
@@ -181,7 +202,7 @@ define(["dojo/_base/declare",
 		},
 		
 		_getEclipseProjectAttr: function(){
-			 return dojo.attr(this._eclipseSupport, "checked");
+			 return domAttr.get(this._eclipseSupport, "checked");
 		},
 		
 		_getValueAttr: function(){

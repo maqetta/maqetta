@@ -1,0 +1,71 @@
+.sliderDialog .dijitDialogPaneContent {
+	padding:0px;
+}
+
+.sliderInputChildRow {
+	margin:0.3em 0em 1em 1em;
+}
+.sliderInputChildRow > table {
+	width:27em;
+}
+.sliderInputChildRow th {
+	text-align:center;
+	font-style:italic;
+}
+.sliderInputChildRow .dijitSelect {
+	margin:2;
+}
+.sliderInputDiv {
+	background-color:#d8d8d8;
+}
+div.sliderInputDiv, .sliderInputDiv td, .sliderInputDiv.sliderInputUrlSectionLabel {
+	padding:2px 5px;
+}
+.sliderInputCol1 {
+	width:10px;
+}
+.sliderInputPlusMinusButtons {
+	white-space:nowrap;
+	width:50px;
+}
+.sliderInputOptsLabel {
+	text-align:right;
+	padding-right: 6px;
+	white-space:nowrap;
+	width:1.4em
+}
+.sliderTypeSelect .dijitButtonText{
+	width:3em;
+	text-align:left;
+}
+.sliderContainerSelect .dijitButtonText{
+	width:9em;
+	text-align:left;
+}
+.sliderTypeSelect .dijitButtonText{
+	width:3em;
+	text-align:left;
+}
+		
+/*Make a style to facilitate putting a transparent div over the preview to prevent user input */
+.sliderPreviewDisablingDiv {
+	/* Do not display it on entry */
+	display: block;
+
+	/*Display it on the layer with index 1001. */
+	/*Make sure this is the highest z-index value */
+	/*used by layers on that page. */
+	z-index:1001;
+    
+	/*make it cover the whole screen */
+	position: absolute;
+	top: 0%;
+	left: 0%; 
+	width: 100%;
+	height: 100%;
+
+	/*make it white but fully transparent */
+	background-color: white;
+	opacity:.00;
+	filter: alpha(opacity=00); 
+}

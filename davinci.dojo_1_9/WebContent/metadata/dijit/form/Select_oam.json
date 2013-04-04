@@ -1,0 +1,103 @@
+{
+    "id": "http://dojotoolkit.org/dijit/form/Select",
+    "name": "dijit.form.Select",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/Select",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "type": {
+            "datatype": "string",
+            "defaultValue": "button",
+            "hidden": true
+        },
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "alt": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "value": {
+            "datatype": "string",
+            "title": "Value"
+        },
+        "tabIndex": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Tab Index"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "intermediateChanges": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "showLabel": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "hidden": true
+        },
+        "iconClass": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "emptyLabel": {
+            "datatype": "string",
+            "title": "Empty Label"
+        },
+        "required": {
+            "datatype": "boolean",
+            "description": "Can be true or false, default is false.",
+            "hidden": false
+        },
+        "state": {
+            "datatype": "string",
+            "description": "Shows current state (ie, validation result) of input (Normal, Warning, or Error)",
+            "hidden": true
+        },
+        "multiple": {
+            "datatype": "boolean",
+            "description": "Matches the select's \"multiple=\" value",
+            "hidden": false
+        },
+        "scrollOnFocus": {
+            "datatype": "boolean",
+            "description": "On focus, should this widget scroll into view?",
+            "hidden": false
+        },
+        "autoWidth": {
+            "datatype": "boolean",
+            "description": "Set to true to make the drop down at least as wide as this\nwidget.  Set to false if the drop down should just be its\ndefault width",
+            "hidden": false
+        },
+        "maxHeight": {
+            "datatype": "string",
+            "description": "The max height for our dropdown.  Set to 0 for no max height.\nany dropdown taller than this will have scrollbars",
+            "hidden": true
+        }
+    },
+    "content": "<select></select>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>This is a &quot;styleable&quot; select box - it is basically a DropDownButton which\ncan take a <code>&lt;select&gt;</code> as its input.</p>"
+    }
+}

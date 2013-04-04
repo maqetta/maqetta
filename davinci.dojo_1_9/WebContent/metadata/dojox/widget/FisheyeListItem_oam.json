@@ -1,0 +1,40 @@
+{
+    "id": "http://dojotoolkit.org/dojox/widget/FisheyeListItem",
+    "name": "dojox.widget.FisheyeListItem",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "css",
+            "src": "dojox/widget/FisheyeList/FisheyeList.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/widget/FisheyeList",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "iconSrc": {
+            "datatype": "string",
+            "format": "url",
+            "title": "Icon Source"
+        },
+        "label": {
+            "datatype": "string",
+            "title": "Label"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Menu item inside of a FisheyeList.\nSee FisheyeList documentation for details on usage.</p>"
+    }
+}

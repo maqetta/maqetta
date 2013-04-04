@@ -1,0 +1,156 @@
+{
+    "id": "http://dojotoolkit.org/dijit/form/NumberSpinner",
+    "name": "dijit.form.NumberSpinner",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/NumberSpinner",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "alt": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "value": {
+            "datatype": "string",
+            "title": "Value",
+            "defaultValue": "0"
+        },
+        "tabIndex": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Tab Index"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "title": "Read Only"
+        },
+        "intermediateChanges": {
+            "datatype": "boolean",
+            "title": "Intermediate Changes"
+        },
+        "trim": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "uppercase": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "lowercase": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "propercase": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "maxLength": {
+            "datatype": "string",
+            "title": "Max Length"
+        },
+        "required": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Required",
+            "hidden": false
+        },
+        "promptMessage": {
+            "datatype": "string",
+            "title": "Prompt Message",
+            "hidden": true
+        },
+        "invalidMessage": {
+            "datatype": "string",
+            "defaultValue": "The value entered is not valid.",
+            "title": "Invalid Message",
+            "hidden": true
+        },
+        "constraints": {
+            "datatype": "json",
+            "defaultValue": "\"{\\\"locale\\\":\\\"\\\"}\"",
+            "title": "Constraints",
+            "hidden": true
+        },
+        "tooltipPosition": {
+            "datatype": "array",
+            "defaultValue": "[]",
+            "title": "Tooltip Positions",
+            "hidden": true
+        },
+        "rangeMessage": {
+            "datatype": "string",
+            "defaultValue": "This value is out of range.",
+            "title": "Range Message",
+            "hidden": true
+        },
+        "editOptions": {
+            "datatype": "json",
+            "defaultValue": "\"{\\\"pattern\\\":\\\"#.######\\\"}\"",
+            "title": "Edit Options",
+            "hidden": true
+        },
+        "defaultTimeout": {
+            "datatype": "number",
+            "defaultValue": 500,
+            "title": "Default Timeout"
+        },
+        "timeoutChangeRate": {
+            "datatype": "number",
+            "defaultValue": 0.9,
+            "title": "Timeout Change Rate"
+        },
+        "smallDelta": {
+            "datatype": "number",
+            "defaultValue": 1,
+            "title": "Small Delta"
+        },
+        "largeDelta": {
+            "datatype": "number",
+            "defaultValue": 10,
+            "title": "Large Delta"
+        },
+        "scrollOnFocus": {
+            "datatype": "boolean",
+            "description": "On focus, should this widget scroll into view?",
+            "hidden": false,
+            "defaultValue": true
+        },
+        "state": {
+            "datatype": "string",
+            "description": "Shows current state (ie, validation result) of input (Normal, Warning, or Error)",
+            "hidden": true
+        }
+    },
+    "content": "<input type='text'></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Extends NumberTextBox to add up/down arrows and pageup/pagedown for incremental change to the value\n</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>A <code>dijit/form/NumberTextBox</code> extension to provide keyboard accessible value selection\nas well as icons for spinning direction. When using the keyboard, the typematic rules\napply, meaning holding the key will gradually increase or decrease the value and\naccelerate.\n</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>new NumberSpinner({ constraints:{ max:300, min:100 }}, &quot;someInput&quot;);</code></pre>"
+    }
+}

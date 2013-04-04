@@ -1,0 +1,1 @@
+{"className":"claro","name":"claro","version":"1.8","specVersion":"1.0","files":["claro.css"],"meta":["claro.json"],"themeEditorHtmls":["dojo-theme-editor.html"], "conditionalFiles":["document.css"], "helper":"maq-metadata-dojo/dijit/ThemeHelper"}

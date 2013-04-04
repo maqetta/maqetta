@@ -1,0 +1,46 @@
+{
+    "id": "http://dojotoolkit.org/dijit/PopupMenuItem",
+    "name": "dijit.PopupMenuItem",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/PopupMenuItem",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "label": {
+            "datatype": "string",
+            "title": "Label"
+        },
+        "popup": {
+            "datatype": "object",
+            "title": "Popup"
+        },
+        "iconClass": {
+            "datatype": "string",
+            "title": "Icon Class"
+        },
+        "accelKey": {
+            "datatype": "string",
+            "title": "Shortcut Key"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>An item in a Menu that spawn a drop down (usually a drop down menu)</p>"
+    }
+}

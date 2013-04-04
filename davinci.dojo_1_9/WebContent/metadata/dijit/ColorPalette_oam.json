@@ -1,0 +1,67 @@
+{
+    "id": "http://dojotoolkit.org/dijit/ColorPalette",
+    "name": "dijit.ColorPalette",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/ColorPalette",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "defaultTimeout": {
+            "datatype": "number",
+            "defaultValue": 500,
+            "title": "Default Timeout"
+        },
+        "timeoutChangeRate": {
+            "datatype": "number",
+            "defaultValue": 0.9,
+            "title": "Timeout Change Rate"
+        },
+        "palette": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "3x4"
+                },
+                {
+                    "value": "7x10"
+                }
+            ],
+            "defaultValue": "7x10",
+            "title": "Palette Size"
+        },
+        "value": {
+            "datatype": "string",
+            "description": "The value of the selected color.",
+            "hidden": false
+        },
+        "tabIndex": {
+            "datatype": "string",
+            "description": "Widget tab index.",
+            "hidden": false
+        }
+    },
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A keyboard accessible color-picking widget</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>Grid showing various colors, so the user can pick a certain color.\nCan be used standalone, or as a popup.\n</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;div data-dojo-type=&quot;dijit/ColorPalette&quot;&gt;&lt;/div&gt;</code></pre>\n<pre><code>var picker = new dijit.ColorPalette({ },srcNode);\npicker.startup();</code></pre>"
+    }
+}

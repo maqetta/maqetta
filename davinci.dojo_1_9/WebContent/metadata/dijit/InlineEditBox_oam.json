@@ -1,0 +1,80 @@
+{
+    "id": "http://dojotoolkit.org/dijit/InlineEditBox",
+    "name": "dijit.InlineEditBox",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/InlineEditBox",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "autoSave": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Auto Save"
+        },
+        "buttonSave": {
+            "datatype": "string",
+            "title": "Save Button Label"
+        },
+        "buttonCancel": {
+            "datatype": "string",
+            "title": "Cancel Button Label"
+        },
+        "renderAsHtml": {
+            "datatype": "boolean",
+            "title": "Render As HTML"
+        },
+        "editor": {
+            "datatype": "string",
+            "defaultValue": "dijit.form.TextBox",
+            "title": "Editor Class"
+        },
+        "editorParams": {
+            "datatype": "json",
+            "defaultValue": "\"{}\"",
+            "title": "Editor Parameters"
+        },
+        "width": {
+            "datatype": "string",
+            "defaultValue": "100%",
+            "title": "Editor Width"
+        },
+        "value": {
+            "datatype": "string",
+            "title": "Value",
+            "description": "The display value of the widget in read-only mode"
+        },
+        "_children": {
+            "datatype": "string",
+            "title": "Text"
+        },
+        "noValueIndicator": {
+            "datatype": "string",
+            "defaultValue": "<span style='font-family: wingdings; text-decoration: underline;'>&nbsp;&nbsp;&nbsp;&nbsp;&#x270d;&nbsp;&nbsp;&nbsp;&nbsp;</span>",
+            "title": "No Value Indicator"
+        },
+        "editing": {
+            "datatype": "boolean",
+            "description": "Is the node currently in edit mode?"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>An element with in-line edit capabilities\n</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>Behavior for an existing node (<code>&lt;p&gt;</code>, <code>&lt;div&gt;</code>, <code>&lt;span&gt;</code>, etc.) so that\nwhen you click it, an editor shows up in place of the original\ntext.  Optionally, Save and Cancel button are displayed below the edit widget.\nWhen Save is clicked, the text is pulled from the edit\nwidget and redisplayed and the edit widget is again hidden.\nBy default a plain Textarea widget is used as the editor (or for\ninline values a TextBox), but you can specify an editor such as\ndijit.Editor (for editing HTML) or a Slider (for adjusting a number).\nAn edit widget must support the following API to be used:\n\n</p>\n<ul>\n<li>displayedValue or value as initialization parameter,\n  and available through set(&#39;displayedValue&#39;) / set(&#39;value&#39;)</li>\n<li>void focus()</li>\n<li>DOM-node focusNode = node containing editable text</li>\n</ul>"
+    }
+}

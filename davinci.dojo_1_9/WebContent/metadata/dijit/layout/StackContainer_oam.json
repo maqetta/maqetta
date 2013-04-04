@@ -1,0 +1,60 @@
+{
+    "id": "http://dojotoolkit.org/dijit/layout/StackContainer",
+    "name": "dijit.layout.StackContainer",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/layout/StackContainer",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "doLayout": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "hidden": true
+        },
+        "persist": {
+            "datatype": "boolean",
+            "description": "Remembers the selected child across sessions"
+        },
+        "selectedChildWidget": {
+            "datatype": "object",
+            "description": "References the currently selected child widget, if any",
+            "hidden": true
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget descends from dijit._Container",
+            "hidden": true,
+            "defaultValue": true
+        }
+    },
+    "childProperties": {
+        "selected": {
+            "datatype": "boolean",
+            "title": "Selected"
+        },
+        "closable": {
+            "datatype": "boolean",
+            "title": "Closable"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A container that has multiple children, but shows only\none child at a time\n</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>A container for widgets (ContentPanes, for example) That displays\nonly one Widget at a time.\n\n</p>\n<p>Publishes topics [widgetId]-addChild, [widgetId]-removeChild, and [widgetId]-selectChild\n\n</p>\n<p>Can be base class for container, Wizard, Show, etc.\n\n</p>\n<p>See <code>StackContainer.ChildWidgetProperties</code> for details on the properties that can be set on\nchildren of a <code>StackContainer</code>.</p>"
+    }
+}

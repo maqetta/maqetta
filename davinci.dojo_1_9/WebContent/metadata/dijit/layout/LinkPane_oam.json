@@ -1,0 +1,75 @@
+{
+    "id": "http://dojotoolkit.org/dijit/layout/LinkPane",
+    "name": "dijit.layout.LinkPane",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/layout/LinkPane",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "content": {
+            "datatype": "string",
+            "description": "|| DomNode || NodeList || dijit._Widget\nThe innerHTML of the ContentPane.\nNote that the initialization parameter / argument to attr(\"content\", ...)\ncan be a String, DomNode, Nodelist, or _Widget."
+        },
+        "href": {
+            "datatype": "string",
+            "format": "url",
+            "title": "URL"
+        },
+        "extractContent": {
+            "datatype": "boolean",
+            "title": "Extract Content"
+        },
+        "parseOnLoad": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Parse On Load"
+        },
+        "preventCache": {
+            "datatype": "boolean",
+            "title": "Prevent Cache"
+        },
+        "preload": {
+            "datatype": "boolean",
+            "title": "Preload"
+        },
+        "refreshOnShow": {
+            "datatype": "boolean",
+            "title": "Refresh On Show"
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget will call resize() on its children.",
+            "defaultValue": true,
+            "hidden": true
+        },
+        "doLayout": {
+            "datatype": "string",
+            "defaultValue": "auto",
+            "hidden": true
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A ContentPane with an href where (when declared in markup)\nthe title is specified as innerHTML rather than as a title attribute.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>LinkPane is just a ContentPane that is declared in markup similarly\nto an anchor.  The anchor&#39;s body (the words between <code>&lt;a&gt;</code> and <code>&lt;/a&gt;</code>)\nbecome the title of the widget (used for TabContainer, AccordionContainer, etc.)</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;a href=&quot;foo.html&quot;&gt;my title&lt;/a&gt;</code></pre>"
+    }
+}

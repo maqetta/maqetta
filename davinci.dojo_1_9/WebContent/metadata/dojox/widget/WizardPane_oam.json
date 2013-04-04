@@ -1,0 +1,80 @@
+{
+    "id": "http://dojotoolkit.org/dojox/widget/WizardPane",
+    "name": "dojox.widget.WizardPane",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/widget/Wizard",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "href": {
+            "datatype": "string",
+            "format": "url",
+            "title": "URL"
+        },
+        "extractContent": {
+            "datatype": "boolean",
+            "title": "Extract Content"
+        },
+        "parseOnLoad": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Parse On Load"
+        },
+        "preventCache": {
+            "datatype": "boolean",
+            "title": "Prevent Cache"
+        },
+        "preload": {
+            "datatype": "boolean",
+            "title": "Preload"
+        },
+        "refreshOnShow": {
+            "datatype": "boolean",
+            "title": "Refresh On Show"
+        },
+        "doLayout": {
+            "datatype": "string",
+            "defaultValue": "auto",
+            "hidden": true
+        },
+        "canGoBack": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Can Go Back"
+        },
+        "passFunction": {
+            "datatype": "string",
+            "title": "Pass Function"
+        },
+        "doneFunction": {
+            "datatype": "string",
+            "title": "Done Function"
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget will call resize() on\nits children.   _LayoutWidget based widgets check for\n\n\t\tif(!this.getParent || !this.getParent()){\n\nand if getParent() returns false because !parent.isContainer,\nthen they resize themselves on initialization.",
+            "hidden": true,
+            "defaultValue": true
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A panel in a <code>dojox.widget.Wizard</code></p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>An extended ContentPane with additional hooks for passing named\nfunctions to prevent the pane from going either forward or\nbackwards.</p>"
+    }
+}

@@ -1,0 +1,95 @@
+{
+    "id": "http://dojotoolkit.org/dijit/Editor",
+    "name": "dijit.Editor",
+    "spec": "1.0",
+    "version": "1.0",
+    "sandbox": true,
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/Editor",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "inheritWidth": {
+            "datatype": "boolean",
+            "title": "Inherit Width"
+        },
+        "focusOnLoad": {
+            "datatype": "boolean",
+            "title": "Focus On Load"
+        },
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "styleSheets": {
+            "datatype": "string",
+            "title": "Style Sheets"
+        },
+        "height": {
+            "datatype": "string",
+            "defaultValue": "300px",
+            "title": "Height"
+        },
+        "minHeight": {
+            "datatype": "string",
+            "defaultValue": "1em",
+            "title": "Minimum Height"
+        },
+        "plugins": {
+            "datatype": "array",
+            "defaultValue": "[\"undo\",\"redo\",\"|\",\"cut\",\"copy\",\"paste\",\"|\",\"bold\",\"italic\",\"underline\",\"strikethrough\",\"|\",\"insertOrderedList\",\"insertUnorderedList\",\"indent\",\"outdent\",\"|\",\"justifyLeft\",\"justifyRight\",\"justifyCenter\",\"justifyFull\"]",
+            "title": "Plug-ins"
+        },
+        "extraPlugins": {
+            "datatype": "array",
+            "title": "Extra Plug-ins"
+        },
+        "customUndo": {
+            "datatype": "boolean",
+            "description": "Whether we shall use custom undo/redo support instead of the native\nbrowser support. By default, we only enable customUndo for IE, as it\nhas broken native undo/redo support. Note: the implementation does\nsupport other browsers which have W3C DOM2 Range API implemented."
+        },
+        "editActionInterval": {
+            "datatype": "object",
+            "description": "When using customUndo, not every keystroke will be saved as a step.\nInstead typing (including delete) will be grouped together: after\na user stops typing for editActionInterval seconds, a step will be\nsaved; if a user resume typing within editActionInterval seconds,\nthe timeout will be restarted. By default, editActionInterval is 3\nseconds.\nend of custom undo/redo support",
+            "hidden": true
+        },
+        "onLoadDeferred": {
+            "datatype": "object",
+            "description": "Deferred which is fired when the editor finishes loading",
+            "hidden": true
+        },
+        "isTabIndent": {
+            "datatype": "boolean",
+            "description": "Make tab key and shift-tab indent and outdent rather than navigating.\nCaution: sing this makes web pages inaccessible to users unable to use a mouse."
+        },
+        "disableSpellCheck": {
+            "datatype": "boolean",
+            "description": "When true, disables the browser's native spell checking, if supported.\nWorks only in Firefox."
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "description": "The editor is disabled; the text cannot be changed."
+        },
+        "updateInterval": {
+            "datatype": "number"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A rich text Editing widget\n</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>This widget provides basic WYSIWYG editing features, based on the browser&#39;s\nunderlying rich text editing capability, accompanied by a toolbar (<code>dijit.Toolbar</code>).\nA plugin model is available to extend the editor&#39;s capabilities as well as the\nthe options available in the toolbar.  Content generation may vary across\nbrowsers, and clipboard operations may have different results, to name\na few limitations.  Note: this widget should not be used with the HTML\n&lt;TEXTAREA&gt; tag -- see dijit/_editor/RichText for details.</p>"
+    }
+}

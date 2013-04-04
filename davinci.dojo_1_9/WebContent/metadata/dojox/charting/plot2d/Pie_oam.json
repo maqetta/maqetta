@@ -1,0 +1,58 @@
+{
+    "id": "http://dojotoolkit.org/dojox/charting/plot2d/Pie",
+    "name": "dojox.charting.plot2d/Pie",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/charting/plot2d/Pie",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "labels": {
+            "datatype": "boolean",
+            "title": "Labels"
+        },
+        "ticks": {
+            "datatype": "boolean",
+            "title": "Ticks"
+        },
+        "fixed": {
+            "datatype": "boolean",
+            "title": "Fixed"
+        },
+        "precision": {
+            "datatype": "number",
+            "title": "Precision"
+        },
+        "labelOffset": {
+            "datatype": "number",
+            "title": "Label Offset"
+        },
+        "font": {
+            "datatype": "string",
+            "title": "Font"
+        },
+        "fontColor": {
+            "datatype": "string",
+            "title": "Font Color"
+        },
+        "radius": {
+            "datatype": "number",
+            "title": "Radius"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>The plot that represents a typical pie chart.</p>"
+    }
+}

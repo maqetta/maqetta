@@ -1,0 +1,29 @@
+{
+    "id": "http://dojotoolkit.org/dijit/form/DataList",
+    "name": "dijit.form.DataList",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/DataList",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {},
+    "content": "<select></select>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Inefficient but small data store specialized for inlined data via OPTION tags\n</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>Provides a store for inlined data like:\n\n\n</p>\n<pre><code>&lt;datalist&gt;\n    &lt;option value=&quot;AL&quot;&gt;Alabama&lt;/option&gt;\n    ...</code></pre>"
+    }
+}

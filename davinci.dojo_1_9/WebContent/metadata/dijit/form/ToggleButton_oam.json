@@ -1,0 +1,79 @@
+{
+    "id": "http://dojotoolkit.org/dijit/form/ToggleButton",
+    "name": "dijit.form.ToggleButton",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/ToggleButton",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "alt": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "value": {
+            "datatype": "string",
+            "title": "Value"
+        },
+        "tabIndex": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Tab Index"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "intermediateChanges": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "label": {
+            "datatype": "string",
+            "title": "Label"
+        },
+        "showLabel": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Show Label"
+        },
+        "iconClass": {
+            "datatype": "string",
+            "defaultValue": "dijitCheckBoxIcon",
+            "title": "Icon Class"
+        },
+        "checked": {
+            "datatype": "boolean",
+            "title": "Checked"
+        },
+        "scrollOnFocus": {
+            "datatype": "boolean",
+            "description": "On focus, should this widget scroll into view?",
+            "hidden": false,
+            "defaultValue": true
+        }
+    },
+    "content": "<input type='button'></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A templated button widget that can be in two states (checked or not).\nCan be base class for things like tabs or checkbox or radio buttons.</p>"
+    }
+}

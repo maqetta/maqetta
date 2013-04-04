@@ -1,0 +1,57 @@
+{
+    "id": "http://dojotoolkit.org/dijit/form/VerticalRule",
+    "name": "dijit.form.VerticalRule",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/VerticalSlider",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/VerticalRule",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "count": {
+            "datatype": "number",
+            "defaultValue": 3,
+            "title": "Count",
+            "description": "Number of hash marks to generate"
+        },
+        "container": {
+            "datatype": "string",
+            "title": "Container",
+            "description": "This is either \"leftDecoration\" or \"rightDecoration\",\nto indicate whether this rule goes to the left or to the right of the slider.\nNote that on RTL system, \"leftDecoration\" would actually go to the right, and vice-versa.",
+            "option": [
+                {
+                    "value": "leftDecoration"
+                },
+                {
+                    "value": "rightDecoration"
+                }
+            ],
+            "hidden": false
+        },
+        "ruleStyle": {
+            "datatype": "string",
+            "title": "Rule Style",
+            "description": "CSS style to apply to individual hash marks"
+        }
+    },
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Hash marks for the <code>dijit/form/VerticalSlider</code></p>"
+    }
+}

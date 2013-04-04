@@ -1,0 +1,42 @@
+{
+    "id": "http://dojotoolkit.org/dojox/charting/Series",
+    "name": "dojox.charting.Series",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/charting/Series",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "plot": {
+            "datatype": "string",
+            "title": "Plot"
+        },
+        "stroke": {
+            "datatype": "string",
+            "title": "Stroke"
+        },
+        "fill": {
+            "datatype": "string",
+            "title": "Fill"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>An object representing a series of data for plotting on a chart.</p>"
+    }
+}

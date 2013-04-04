@@ -1,0 +1,104 @@
+{
+    "id": "http://dojotoolkit.org/dijit/layout/BorderContainer",
+    "name": "dijit.layout.BorderContainer",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/layout/BorderContainer",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "design": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "headline"
+                },
+                {
+                    "value": "sidebar"
+                }
+            ],
+            "defaultValue": "headline",
+            "title": "Design"
+        },
+        "persist": {
+            "datatype": "boolean",
+            "title": "Persist"
+        },
+        "gutters": {
+            "datatype": "boolean",
+            "description": "Give each pane a border and margin.\nMargin determined by domNode.paddingLeft.\nWhen false, only resizable panes have a gutter (i.e. draggable splitter) for resizing."
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget descends from dijit._Container",
+            "defaultValue": true,
+            "hidden": true
+        }
+    },
+    "childProperties": {
+        "region": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "top"
+                },
+                {
+                    "value": "bottom"
+                },
+                {
+                    "value": "leading"
+                },
+                {
+                    "value": "trailing"
+                },
+                {
+                    "value": "left"
+                },
+                {
+                    "value": "right"
+                },
+                {
+                    "value": "center"
+                }
+            ],
+            "title": "Region"
+        },
+        "splitter": {
+            "datatype": "boolean",
+            "title": "Splitter"
+        },
+        "minSize": {
+            "datatype": "number",
+            "defaultValue": 0,
+            "title": "Minimum Size"
+        },
+        "maxSize": {
+            "datatype": "number",
+            "defaultValue": null,
+            "title": "Maximum Size"
+        }
+    },
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Provides layout in up to 5 regions, a mandatory center with optional borders along its 4 sides.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>A BorderContainer is a box with a specified size, such as style=&quot;width: 500px; height: 500px;&quot;,\nthat contains a child widget marked region=&quot;center&quot; and optionally children widgets marked\nregion equal to &quot;top&quot;, &quot;bottom&quot;, &quot;leading&quot;, &quot;trailing&quot;, &quot;left&quot; or &quot;right&quot;.\nChildren along the edges will be laid out according to width or height dimensions and may\ninclude optional splitters (splitter=&quot;true&quot;) to make them resizable by the user.  The remaining\nspace is designated for the center region.\n\n</p>\n<p>The outer size must be specified on the BorderContainer node.  Width must be specified for the sides\nand height for the top and bottom, respectively.  No dimensions should be specified on the center;\nit will fill the remaining space.  Regions named &quot;leading&quot; and &quot;trailing&quot; may be used just like\n&quot;left&quot; and &quot;right&quot; except that they will be reversed in right-to-left environments.\n\n</p>\n<p>For complex layouts, multiple children can be specified for a single region.   In this case, the\nlayoutPriority flag on the children determines which child is closer to the edge (low layoutPriority)\nand which child is closer to the center (high layoutPriority).   layoutPriority can also be used\ninstead of the design attribute to control layout precedence of horizontal vs. vertical panes.\n\n</p>\n<p>See <code>BorderContainer.ChildWidgetProperties</code> for details on the properties that can be set on\nchildren of a <code>BorderContainer</code>.</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;div data-dojo-type=&quot;dijit/layout/BorderContainer&quot; data-dojo-props=&quot;design: &#39;sidebar&#39;, gutters: false&quot;\n        style=&quot;width: 400px; height: 300px;&quot;&gt;\n    &lt;div data-dojo-type=&quot;dijit/layout/ContentPane&quot; data-dojo-props=&quot;region: &#39;top&#39;&quot;&gt;header text&lt;/div&gt;\n    &lt;div data-dojo-type=&quot;dijit/layout/ContentPane&quot; data-dojo-props=&quot;region: &#39;right&#39;, splitter: true&quot; style=&quot;width: 200px;&quot;&gt;table of contents&lt;/div&gt;\n    &lt;div data-dojo-type=&quot;dijit/layout/ContentPane&quot; data-dojo-props=&quot;region: &#39;center&#39;&quot;&gt;client area&lt;/div&gt;\n&lt;/div&gt;</code></pre>"
+    }
+}

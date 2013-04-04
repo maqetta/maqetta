@@ -1,0 +1,98 @@
+{
+    "id": "http://dojotoolkit.org/dijit/form/SimpleTextarea",
+    "name": "dijit.form.SimpleTextarea",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/SimpleTextarea",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "alt": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "_children": {
+            "datatype": "string",
+            "title": "Text"
+        },
+        "tabIndex": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Tab Index"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "title": "Read Only"
+        },
+        "intermediateChanges": {
+            "datatype": "boolean",
+            "title": "Intermediate Changes"
+        },
+        "rows": {
+            "datatype": "string",
+            "title": "Rows"
+        },
+        "cols": {
+            "datatype": "string",
+            "title": "Columns"
+        },
+        "trim": {
+            "datatype": "boolean",
+            "description": "Removes leading and trailing whitespace if true.  Default is false.",
+            "hidden": false
+        },
+        "uppercase": {
+            "datatype": "boolean",
+            "description": "Converts all characters to uppercase if true.  Default is false.",
+            "hidden": false
+        },
+        "lowercase": {
+            "datatype": "boolean",
+            "description": "Converts all characters to lowercase if true.  Default is false.",
+            "hidden": false
+        },
+        "propercase": {
+            "datatype": "boolean",
+            "description": "Converts the first character of each word to uppercase if true.",
+            "hidden": false
+        },
+        "maxLength": {
+            "datatype": "string",
+            "description": "HTML INPUT tag maxLength declaration.",
+            "hidden": false
+        },
+        "scrollOnFocus": {
+            "datatype": "boolean",
+            "description": "On focus, should this widget scroll into view?",
+            "hidden": false,
+            "defaultValue": true
+        }
+    },
+    "content": "<textarea type='text'></textarea>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A simple textarea that degrades, and responds to\nminimal LayoutContainer usage, and works with dijit/form/Form.\nDoesn&#39;t automatically size according to input, like Textarea.\n</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;textarea data-dojo-type=&quot;dijit/form/SimpleTextarea&quot; name=&quot;foo&quot; value=&quot;bar&quot; rows=30 cols=40&gt;&lt;/textarea&gt;</code></pre>\n<pre><code>new SimpleTextarea({ rows:20, cols:30 }, &quot;foo&quot;);</code></pre>"
+    }
+}

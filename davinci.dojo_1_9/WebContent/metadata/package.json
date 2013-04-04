@@ -1,0 +1,34 @@
+{
+  "name": "dojo",
+  "description": "Dojo core is a powerful, lightweight library that makes common tasks quicker and easier. Animate elements, manipulate the DOM, and query with easy CSS syntax, all without sacrificing performance.",
+  "version": "1.8",
+  "keywords": ["JavaScript", "Dojo", "Toolkit"],
+  "bugs": "http://bugs.dojotoolkit.org/",
+  "licenses": [
+     {
+         "type": "AFLv2.1",
+         "url": "http://trac.dojotoolkit.org/browser/dojo/trunk/LICENSE#L43"
+     },
+     {
+         "type": "BSD",
+         "url": "http://trac.dojotoolkit.org/browser/dojo/trunk/LICENSE#L13"
+     }
+  ],
+  "directories": {
+    "lib": "../dojo"
+  },
+  "homepage": "http://dojotoolkit.org/",
+  "overlays": {
+    "oam": {
+      "directories": {
+        "metadata": "."
+      }
+    },
+    "maqetta": {
+      "scripts": {
+        "widget_metadata": "./widgets.json",
+        "callbacks": "maq-metadata-dojo/callbacks"
+      }
+    }
+  }
+}

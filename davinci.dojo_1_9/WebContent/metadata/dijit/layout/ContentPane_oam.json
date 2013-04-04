@@ -1,0 +1,71 @@
+{
+    "id": "http://dojotoolkit.org/dijit/layout/ContentPane",
+    "name": "dijit.layout.ContentPane",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/layout/ContentPane",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "href": {
+            "datatype": "string",
+            "format": "url",
+            "title": "URL"
+        },
+        "extractContent": {
+            "datatype": "boolean",
+            "title": "Extract Content"
+        },
+        "parseOnLoad": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Parse On Load"
+        },
+        "preventCache": {
+            "datatype": "boolean",
+            "title": "Prevent Cache"
+        },
+        "preload": {
+            "datatype": "boolean",
+            "title": "Preload"
+        },
+        "refreshOnShow": {
+            "datatype": "boolean",
+            "title": "Refresh On Show"
+        },
+        "doLayout": {
+            "datatype": "boolean",
+            "defaultValue": false,
+            "hidden": true
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget will call resize() on\nits children. _LayoutWidget based widgets check for\n\n\t\tif(!this.getParent || !this.getParent()){\n\nand if getParent() returns false because !parent.isContainer,\nthen they resize themselves on initialization.",
+            "defaultValue": true,
+            "hidden": true
+        }
+    },
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A widget containing an HTML fragment, specified inline\nor by uri.  Fragment may include widgets.\n</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>This widget embeds a document fragment in the page, specified\neither by uri, javascript generated markup or DOM reference.\nAny widgets within this content are instantiated and managed,\nbut laid out according to the HTML structure.  Unlike IFRAME,\nContentPane embeds a document fragment as would be found\ninside the BODY tag of a full HTML document.  It should not\ncontain the HTML, HEAD, or BODY tags.\nFor more advanced functionality with scripts and\nstylesheets, see dojox/layout/ContentPane.  This widget may be\nused stand alone or as a base class for other widgets.\nContentPane is useful as a child of other layout containers\nsuch as BorderContainer or TabContainer, but note that those\nwidgets can contain any widget as a child.\n</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<p>Some quick samples:\nTo change the innerHTML:\n\n</p>\n<pre><code>cp.set(&#39;content&#39;, &#39;&lt;b&gt;new content&lt;/b&gt;&#39;)`</code></pre>\n<p>Or you can send it a NodeList:\n\n\n</p>\n<pre><code>cp.set(&#39;content&#39;, dojo.query(&#39;div [class=selected]&#39;, userSelection))</code></pre>\n<p>To do an ajax update:\n\n\n</p>\n<pre><code>cp.set(&#39;href&#39;, url)</code></pre>"
+    }
+}

@@ -1,0 +1,156 @@
+{
+    "id": "http://dojotoolkit.org/dojox/layout/FloatingPane",
+    "name": "dojox.layout.FloatingPane",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "css",
+            "src": "dojox/layout/resources/FloatingPane.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "dojox/layout/resources/ResizeHandle.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/layout/FloatingPane",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "href": {
+            "datatype": "string",
+            "format": "url",
+            "title": "URL"
+        },
+        "extractContent": {
+            "datatype": "boolean",
+            "title": "Extract Content"
+        },
+        "parseOnLoad": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Parse On Load"
+        },
+        "preventCache": {
+            "datatype": "boolean",
+            "title": "Prevent Cache"
+        },
+        "preload": {
+            "datatype": "boolean",
+            "title": "Preload"
+        },
+        "refreshOnShow": {
+            "datatype": "boolean",
+            "title": "Refresh On Show"
+        },
+        "doLayout": {
+            "datatype": "string",
+            "defaultValue": "auto",
+            "hidden": true
+        },
+        "closable": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Closable"
+        },
+        "dockable": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Dockable"
+        },
+        "resizable": {
+            "datatype": "boolean",
+            "title": "Resizable"
+        },
+        "maxable": {
+            "datatype": "boolean",
+            "title": "Maximizable"
+        },
+        "resizeAxis": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "x"
+                },
+                {
+                    "value": "xy"
+                },
+                {
+                    "value": "y"
+                }
+            ],
+            "defaultValue": "xy",
+            "title": "Resize Axis"
+        },
+        "dockTo": {
+            "datatype": "object",
+            "defaultValue": "dojoxGlobalFloatingDock",
+            "title": "Dock To"
+        },
+        "duration": {
+            "datatype": "number",
+            "defaultValue": 400,
+            "title": "Duration"
+        },
+        "contentClass": {
+            "datatype": "string",
+            "description": "The className to give to the inner node which has the content",
+            "hidden": false
+        },
+        "adjustPaths": {
+            "datatype": "boolean",
+            "description": "Adjust relative paths in html string content to point to this page.\nOnly useful if you grab content from a another folder then the current one",
+            "hidden": false
+        },
+        "cleanContent": {
+            "datatype": "boolean",
+            "description": "cleans content to make it less likely to generate DOM/JS errors.",
+            "hidden": false
+        },
+        "renderStyles": {
+            "datatype": "boolean",
+            "description": "trigger/load styles in the content",
+            "hidden": false
+        },
+        "executeScripts": {
+            "datatype": "boolean",
+            "description": "Execute (eval) scripts that is found in the content",
+            "hidden": false
+        },
+        "content": {
+            "datatype": "string",
+            "description": "The innerHTML of the ContentPane.\nNote that the initialization parameter / argument to attr(\"content\", ...)\ncan be a String, DomNode, Nodelist, or _Widget.",
+            "hidden": false
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget will call resize() on\nits children.   _LayoutWidget based widgets check for\n\n\t\tif(!this.getParent || !this.getParent()){\n\nand if getParent() returns false because !parent.isContainer,\nthen they resize themselves on initialization.",
+            "defaultValue": true,
+            "hidden": true
+        },
+        "scriptHasHooks": {
+            "datatype": "boolean",
+            "description": "replace keyword '_container_' in scripts with 'dijit.byId(this.id)'\nNOTE this name might change in the near future",
+            "hidden": false
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A non-modal Floating window.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>Makes a <code>dojox.layout.ContentPane</code> float and draggable by it&#39;s title [similar to TitlePane]\nand over-rides onClick to onDblClick for wipeIn/Out of containerNode\nprovides minimize(dock) / show() and hide() methods, and resize [almost]</p>"
+    }
+}

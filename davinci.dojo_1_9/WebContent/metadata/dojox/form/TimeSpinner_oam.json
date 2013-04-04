@@ -1,0 +1,144 @@
+{
+    "id": "http://dojotoolkit.org/dojox/form/TimeSpinner",
+    "name": "dojox.form.TimeSpinner",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/form/TimeSpinner",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "type": {
+            "datatype": "string",
+            "defaultValue": "text",
+            "hidden": true
+        },
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "alt": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "tabIndex": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Tab Index"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "title": "Read Only"
+        },
+        "intermediateChanges": {
+            "datatype": "boolean",
+            "title": "Intermediate Changes"
+        },
+        "trim": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "uppercase": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "lowercase": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "propercase": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "maxLength": {
+            "datatype": "string",
+            "title": "Max Length"
+        },
+        "required": {
+            "datatype": "boolean",
+            "title": "Required",
+            "hidden": true
+        },
+        "promptMessage": {
+            "datatype": "string",
+            "title": "Prompt Message",
+            "hidden": true
+        },
+        "invalidMessage": {
+            "datatype": "string",
+            "defaultValue": "The value entered is not valid.",
+            "title": "Invalid Message",
+            "hidden": true
+        },
+        "constraints": {
+            "datatype": "json",
+            "defaultValue": "\"{\\\"locale\\\":\\\"\\\"}\"",
+            "title": "Constraints",
+            "hidden": true
+        },
+        "tooltipPosition": {
+            "datatype": "array",
+            "defaultValue": "[]",
+            "title": "Tooltip Positions",
+            "hidden": true
+        },
+        "rangeMessage": {
+            "datatype": "string",
+            "defaultValue": "This value is out of range.",
+            "title": "Range Message",
+            "hidden": true
+        },
+        "smallDelta": {
+            "datatype": "number",
+            "defaultValue": 5,
+            "title": "Small Delta"
+        },
+        "largeDelta": {
+            "datatype": "number",
+            "defaultValue": 30,
+            "title": "Large Delta"
+        },
+        "timeoutChangeRate": {
+            "datatype": "number",
+            "defaultValue": 0.5,
+            "title": "Timeout Change Rate"
+        },
+        "defaultTimeout": {
+            "datatype": "number",
+            "description": "Number of milliseconds before a held arrow key or up/down button becomes typematic",
+            "hidden": false
+        },
+        "state": {
+            "datatype": "string",
+            "description": "Shows current state (ie, validation result) of input (Normal, Warning, or Error)",
+            "hidden": true
+        },
+        "scrollOnFocus": {
+            "datatype": "boolean",
+            "description": "On focus, should this widget scroll into view?",
+            "hidden": false
+        }
+    },
+    "content": "<input></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Time Spinner</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>This widget is the same as a normal NumberSpinner, but for the time component of a date object instead</p>"
+    }
+}

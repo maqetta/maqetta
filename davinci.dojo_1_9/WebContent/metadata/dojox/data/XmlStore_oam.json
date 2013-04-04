@@ -1,0 +1,56 @@
+{
+    "id": "http://dojotoolkit.org/dojox/data/XmlStore",
+    "name": "dojox.data.XmlStore",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/data/XmlStore",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "jsId": {
+            "datatype": "string",
+            "title": "Variable Name"
+        },
+        "url": {
+            "datatype": "string",
+            "format": "url",
+            "title": "URL"
+        },
+        "rootItem": {
+            "datatype": "string",
+            "title": "Root Item Tag Name"
+        },
+        "keyAttribute": {
+            "datatype": "string",
+            "title": "Key or Identifier Attribute"
+        },
+        "label": {
+            "datatype": "string",
+            "title": "Label Attribute"
+        },
+        "sendQuery": {
+            "datatype": "boolean",
+            "defaultValue": false,
+            "title": "Send Additional Query String"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A data store for XML based services or documents</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>A data store for XML based services or documents</p>"
+    }
+}

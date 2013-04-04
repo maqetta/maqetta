@@ -1,0 +1,44 @@
+{
+    "id": "http://dojotoolkit.org/dojox/wire/ml/Service",
+    "name": "dojox.wire.ml.Service",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/wire/ml/Service",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "url": {
+            "datatype": "string",
+            "format": "url",
+            "title": "Description URL"
+        },
+        "serviceUrl": {
+            "datatype": "string",
+            "format": "url",
+            "title": "Service URL"
+        },
+        "serviceType": {
+            "datatype": "string",
+            "title": "Type"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A widget for a service</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>This widget represents a service defined by a service description\nspecified with &#39;url&#39; attribute.\nIf &#39;serviceType&#39; and &#39;serviceUrl&#39; attributes are specified, &#39;url&#39;\nattribute can be omitted.</p>"
+    }
+}

@@ -1,0 +1,9 @@
+{
+	"className":"claro",
+	"name":"Sketch",
+	"version":"1.8",
+	"specVersion":"1.0",
+	"files":["sketch.css"],
+	"meta":["../claro/claro.json"],
+	"themeEditorHtmls":["../claro/dojo-theme-editor.html"]
+}

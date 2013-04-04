@@ -1,0 +1,111 @@
+{
+    "id": "http://dojotoolkit.org/dojox/form/FileInputBlind",
+    "name": "dojox.form.FileInputBlind",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "css",
+            "src": "dojox/form/resources/FileInput.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/form/FileInputAuto",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "type": {
+            "datatype": "string",
+            "defaultValue": "text",
+            "hidden": true
+        },
+        "name": {
+            "datatype": "string",
+            "defaultValue": "uploadFile",
+            "title": "Name"
+        },
+        "alt": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "value": {
+            "datatype": "string",
+            "title": "Value"
+        },
+        "tabIndex": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Tab Index"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "intermediateChanges": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "label": {
+            "datatype": "string",
+            "defaultValue": "Browse ...",
+            "title": "Label"
+        },
+        "cancelText": {
+            "datatype": "string",
+            "defaultValue": "Cancel",
+            "title": "Cancel Text"
+        },
+        "url": {
+            "datatype": "string",
+            "format": "url",
+            "title": "URL"
+        },
+        "blurDelay": {
+            "datatype": "number",
+            "defaultValue": 2000,
+            "title": "Blur Delay"
+        },
+        "duration": {
+            "datatype": "number",
+            "defaultValue": 500,
+            "title": "Duration"
+        },
+        "uploadMessage": {
+            "datatype": "string",
+            "defaultValue": "Uploading ...",
+            "title": "Upload Message"
+        },
+        "triggerEvent": {
+            "datatype": "string",
+            "description": "Event which triggers the upload. Defaults to onblur, sending the file selected\n'blurDelay' milliseconds after losing focus. Set to \"onchange\" with a low blurDelay\nto send files immediately after uploading.",
+            "hidden": false,
+            "defaultValue": "onblur"
+        },
+        "scrollOnFocus": {
+            "datatype": "boolean",
+            "description": "On focus, should this widget scroll into view?",
+            "hidden": false
+        }
+    },
+    "content": "<input></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>An extension on FileInput providing background upload progress\n</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>An extended version of FileInput - when the user focuses away from the input\nthe selected file is posted via ioIframe to the url. example implementation\ncomes with PHP solution for handling upload, and returning required data.\n\n</p>\n<p>notes: the return data from the io.iframe is used to populate the input element with\ndata regarding the results. it will be a JSON object, like:\n\n\n</p>\n<pre><code>results = { size: &quot;1024&quot;, filename: &quot;file.txt&quot; }</code></pre>\n<p>all the parameters allowed to FileInput apply</p>"
+    }
+}

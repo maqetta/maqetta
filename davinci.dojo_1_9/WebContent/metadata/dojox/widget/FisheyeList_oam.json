@@ -1,0 +1,136 @@
+{
+    "id": "http://dojotoolkit.org/dojox/widget/FisheyeList",
+    "name": "dojox.widget.FisheyeList",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "css",
+            "src": "dojox/widget/FisheyeList/FisheyeList.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/widget/FisheyeList",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "itemWidth": {
+            "datatype": "number",
+            "defaultValue": 40,
+            "title": "Item Width"
+        },
+        "itemHeight": {
+            "datatype": "number",
+            "defaultValue": 40,
+            "title": "Item Height"
+        },
+        "itemMaxWidth": {
+            "datatype": "number",
+            "defaultValue": 150,
+            "title": "Item Maximum Width"
+        },
+        "itemMaxHeight": {
+            "datatype": "number",
+            "defaultValue": 150,
+            "title": "Item Maximum Height"
+        },
+        "orientation": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "horizontal"
+                },
+                {
+                    "value": "vertical"
+                }
+            ],
+            "defaultValue": "horizontal",
+            "title": "Show RBG"
+        },
+        "isFixed": {
+            "datatype": "boolean",
+            "title": "Fixed"
+        },
+        "conservativeTrigger": {
+            "datatype": "boolean",
+            "title": "Conservative Trigger"
+        },
+        "effectUnits": {
+            "datatype": "number",
+            "defaultValue": 2,
+            "title": "Effect Units"
+        },
+        "itemPadding": {
+            "datatype": "number",
+            "defaultValue": 10,
+            "title": "Item Padding"
+        },
+        "attachEdge": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "center"
+                },
+                {
+                    "value": "left"
+                },
+                {
+                    "value": "right"
+                },
+                {
+                    "value": "top"
+                },
+                {
+                    "value": "bottom"
+                }
+            ],
+            "defaultValue": "center",
+            "title": "Attach Edge"
+        },
+        "labelEdge": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "center"
+                },
+                {
+                    "value": "left"
+                },
+                {
+                    "value": "right"
+                },
+                {
+                    "value": "top"
+                },
+                {
+                    "value": "bottom"
+                }
+            ],
+            "defaultValue": "bottom",
+            "title": "Label Edge"
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget descends from dijit._Container",
+            "defaultValue": "true",
+            "hidden": true
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Menu similar to the fish eye menu on the Mac OS</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;div dojoType=&quot;dojo.widget.FisheyeList&quot;\n    itemWidth=&quot;40&quot; itemHeight=&quot;40&quot;\n    itemMaxWidth=&quot;150&quot; itemMaxHeight=&quot;150&quot;\n    orientation=&quot;horizontal&quot;\n    effectUnits=&quot;2&quot;\n    itemPadding=&quot;10&quot;\n    attachEdge=&quot;center&quot;\n    labelEdge=&quot;bottom&quot;&gt;\n\n    &lt;div dojoType=&quot;dojox.widget.FisheyeListItem&quot;\n        id=&quot;item1&quot;\n        onclick=&quot;alert(&#39;click on&#39; + this.label + &#39;(from widget id &#39; + this.widgetId + &#39;)!&#39;);&quot;\n        label=&quot;Item 1&quot;\n        iconSrc=&quot;images/fisheye_1.png&quot;&gt;\n    &lt;/div&gt;\n    ...\n&lt;/div&gt;</code></pre>"
+    }
+}

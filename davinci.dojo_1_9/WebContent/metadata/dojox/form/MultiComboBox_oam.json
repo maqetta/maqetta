@@ -1,0 +1,209 @@
+{
+    "id": "http://dojotoolkit.org/dojox/form/MultiComboBox",
+    "name": "dojox.form.MultiComboBox",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/form/MultiComboBox",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "type": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "text"
+                },
+                {
+                    "value": "password"
+                }
+            ],
+            "defaultValue": "text",
+            "title": "Type"
+        },
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "alt": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "value": {
+            "datatype": "string",
+            "title": "Value"
+        },
+        "tabIndex": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Tab Index"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "title": "Read Only"
+        },
+        "intermediateChanges": {
+            "datatype": "boolean",
+            "title": "Intermediate Changes"
+        },
+        "trim": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "uppercase": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "lowercase": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "propercase": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "maxLength": {
+            "datatype": "string",
+            "title": "Max Length"
+        },
+        "required": {
+            "datatype": "boolean",
+            "title": "Required",
+            "hidden": true
+        },
+        "promptMessage": {
+            "datatype": "string",
+            "title": "Prompt Message",
+            "hidden": true
+        },
+        "invalidMessage": {
+            "datatype": "string",
+            "defaultValue": "$_unset_$",
+            "title": "Invalid Message",
+            "hidden": true
+        },
+        "constraints": {
+            "datatype": "json",
+            "defaultValue": "\"{}\"",
+            "title": "Constraints",
+            "hidden": true
+        },
+        "regExp": {
+            "datatype": "string",
+            "defaultValue": ".*",
+            "title": "Regular Expression",
+            "hidden": true
+        },
+        "tooltipPosition": {
+            "datatype": "array",
+            "defaultValue": "[]",
+            "title": "Tooltip Positions",
+            "hidden": true
+        },
+        "pageSize": {
+            "datatype": "number",
+            "defaultValue": null,
+            "title": "Page Size"
+        },
+        "store": {
+            "datatype": "object",
+            "hidden": true
+        },
+        "query": {
+            "datatype": "json",
+            "defaultValue": "\"{}\"",
+            "hidden": true
+        },
+        "autoComplete": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Auto Complete"
+        },
+        "searchDelay": {
+            "datatype": "number",
+            "defaultValue": 100,
+            "title": "Search Delay",
+            "description": "Search delay (ms)"
+        },
+        "searchAttr": {
+            "datatype": "string",
+            "defaultValue": "name",
+            "title": "Search Attribute"
+        },
+        "queryExpr": {
+            "datatype": "string",
+            "defaultValue": "${0}*",
+            "title": "Query Expression"
+        },
+        "ignoreCase": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Ignore Case"
+        },
+        "hasDownArrow": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Show Down Arrow"
+        },
+        "delimiter": {
+            "datatype": "string",
+            "defaultValue": ",",
+            "title": "Delimiter"
+        },
+        "scrollOnFocus": {
+            "datatype": "boolean",
+            "description": "On focus, should this widget scroll into view?",
+            "hidden": false
+        },
+        "fetchProperties": {
+            "datatype": "json",
+            "description": "Mixin to the dojo.data store's fetch.\nFor example, to set the sort order of the ComboBox menu, pass:\n\t{ sort: {attribute:\"name\",descending: true} }\nTo override the default queryOptions so that deep=false, do:\n\t{ queryOptions: {ignoreCase: true, deep: false} }",
+            "hidden": true
+        },
+        "highlightMatch": {
+            "datatype": "string",
+            "description": "One of: \"first\", \"all\" or \"none\".\n\nIf the ComboBox/FilteringSelect opens with the search results and the searched\nstring can be found, it will be highlighted.  If set to \"all\"\nthen will probably want to change queryExpr parameter to '*${0}*'\n\nHighlighting is only performed when labelType is \"text\", so as to not\ninterfere with any HTML markup an HTML label might contain.",
+            "hidden": false,
+            "defaultValue": "first"
+        },
+        "labelAttr": {
+            "datatype": "string",
+            "description": "The entries in the drop down list come from this attribute in the\ndojo.data items.\nIf not specified, the searchAttr attribute is used instead.",
+            "hidden": false
+        },
+        "labelType": {
+            "datatype": "string",
+            "description": "Specifies how to interpret the labelAttr in the data store items.\nCan be \"html\" or \"text\".",
+            "hidden": false,
+            "defaultValue": "text"
+        },
+        "state": {
+            "datatype": "string",
+            "description": "Shows current state (ie, validation result) of input (Normal, Warning, or Error)",
+            "hidden": true
+        },
+        "item": {
+            "datatype": "object",
+            "description": "This is the item returned by the dojo.data.store implementation that\nprovides the data for this cobobox, it's the currently selected item.",
+            "hidden": true
+        }
+    },
+    "content": "<select></select>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A ComboBox that accepts multiple inputs on a single line</p>"
+    }
+}

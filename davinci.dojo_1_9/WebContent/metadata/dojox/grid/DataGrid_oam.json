@@ -1,0 +1,197 @@
+{
+    "id": "http://dojotoolkit.org/dojox/grid/DataGrid",
+    "name": "dojox.grid.DataGrid",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "css",
+            "src": "dojox/grid/resources/Grid.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "css",
+            "src": "dojox/grid/resources/claroGrid.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/io/xhrScriptPlugin",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/grid/DataGrid",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/data/CsvStore",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "store": {
+            "datatype": "object",
+            "hidden": true
+        },
+        "structure": {
+            "datatype": "json",
+            "hidden": true,
+            "defaultValue": [
+                {
+                    "field": "name",
+                    "name": "name",
+                    "width": "auto"
+                },
+                {
+                    "field": "Col1",
+                    "name": "Col1",
+                    "width": "auto"
+                }
+            ]
+        },
+        "query": {
+            "datatype": "json",
+            "hidden": true
+        },
+        "keepRows": {
+            "datatype": "number",
+            "defaultValue": 75,
+            "title": "Keep Rows"
+        },
+        "rowsPerPage": {
+            "datatype": "number",
+            "defaultValue": 25,
+            "title": "Rows Per Page"
+        },
+        "autoWidth": {
+            "datatype": "boolean",
+            "title": "Auto Width"
+        },
+        "autoHeight": {
+            "datatype": "boolean",
+            "title": "Auto Height"
+        },
+        "autoRender": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Auto Render"
+        },
+        "defaultHeight": {
+            "datatype": "string",
+            "defaultValue": "15em",
+            "title": "Row Count"
+        },
+        "elasticView": {
+            "datatype": "number",
+            "defaultValue": -1,
+            "title": "Elastic View"
+        },
+        "singleClickEdit": {
+            "datatype": "boolean",
+            "title": "Single Click Edit"
+        },
+        "columnReordering": {
+            "datatype": "boolean",
+            "title": "User Can Reorder Columns"
+        },
+        "queryOptions": {
+            "datatype": "json",
+            "hidden": false
+        },
+        "fetchText": {
+            "datatype": "string",
+            "hidden": false,
+            "defaultValue": "..."
+        },
+        "sortFields": {
+            "datatype": "array",
+            "hidden": false
+        },
+        "classTag": {
+            "datatype": "string",
+            "description": "CSS class applied to the grid's domNode",
+            "hidden": false,
+            "defaultValue": "dojoxGrid"
+        },
+        "selectionMode": {
+            "datatype": "string",
+            "description": "Set the selection mode of grid's Selection.  Value must be 'single', 'multiple',\nor 'extended'.  Default is 'extended'.",
+            "hidden": false,
+            "defaultValue": "extended"
+        },
+        "rowSelector": {
+            "datatype": "string",
+            "description": "If set to true, will add a row selector view to this grid.  If set to a CSS width, will add\na row selector of that width to this grid.",
+            "hidden": false
+        },
+        "headerMenu": {
+            "datatype": "object",
+            "description": "If set to a dijit.Menu, will use this as a context menu for the grid headers.",
+            "hidden": true
+        },
+        "placeholderLabel": {
+            "datatype": "string",
+            "description": "Label of placeholders to search for in the header menu to replace with column toggling\nmenu items.",
+            "hidden": false,
+            "defaultValue": "GridColumns"
+        },
+        "selectable": {
+            "datatype": "boolean",
+            "description": "Set to true if you want to be able to select the text within the grid.",
+            "hidden": false
+        },
+        "noDataMessage": {
+            "datatype": "string",
+            "description": "Message that shows if the grid has no data - wrap it in a\nspan with class 'dojoxGridNoData' if you want it to be\nstyled similar to the loading and error messages",
+            "hidden": false
+        },
+        "sortInfo": {
+            "datatype": "number",
+            "hidden": false
+        },
+        "themeable": {
+            "datatype": "boolean",
+            "hidden": false,
+            "defaultValue": true
+        },
+        "fastScroll": {
+            "datatype": "boolean",
+            "description": "flag modifies vertical scrolling behavior. Defaults to true but set to false for slower\nscroll performance but more immediate scrolling feedback",
+            "hidden": false,
+            "defaultValue": true
+        },
+        "delayScroll": {
+            "datatype": "boolean",
+            "hidden": false
+        },
+        "scrollRedrawThreshold": {
+            "datatype": "number",
+            "description": "pixel distance a user must scroll vertically to trigger grid scrolling.",
+            "hidden": false,
+            "defaultValue": 50
+        },
+        "cellOverClass": {
+            "datatype": "string",
+            "description": "css class to apply to grid cells over which the cursor is placed.",
+            "hidden": false,
+            "defaultValue": "dojoxGridCellOver"
+        },
+        "escapeHTMLInData": {
+            "datatype": "boolean",
+            "description": "This will escape HTML brackets from the data to prevent HTML from user-inputted data being rendered with may contain JavaScript and result in XSS attacks.",
+            "hidden": false,
+            "defaultValue": true
+        }
+    },
+    "content": "<span></span>"
+}

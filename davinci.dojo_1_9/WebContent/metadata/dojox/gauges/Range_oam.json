@@ -1,0 +1,60 @@
+{
+    "id": "http://dojotoolkit.org/dojox/gauges/Range",
+    "name": "dojox.gauges.Range",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/gauges/_Gauge",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "low": {
+            "datatype": "number",
+            "description": "the low value of the range",
+            "hidden": false
+        },
+        "high": {
+            "datatype": "number",
+            "description": "the high value of the range",
+            "hidden": false
+        },
+        "hover": {
+            "datatype": "string",
+            "description": "the text to put in the tooltip for the gauge",
+            "hidden": false
+        },
+        "color": {
+            "datatype": "json",
+            "description": "the color of the range.  This must be an object of one of two forms:\n{'color': 'color-name'}\nOR\n(for a gradient:)\n{'type': 'linear', 'colors': [{offset: 0, color:'#C0C0C0'}, {offset: 1, color: '#E0E0E0'}] }",
+            "hidden": false,
+            "defaultValue": "{'color': 'red'}"
+        },
+        "size": {
+            "datatype": "number",
+            "description": "for a circular gauge (such as an AnalogGauge), this dictates the size of the arc",
+            "hidden": false
+        }
+    },
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>a range to be used in a _Gauge</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>a range widget, which has given properties.  drawn by a _Gauge.</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;script type=&quot;text/javascript&quot;&gt;\n    require([&quot;dojox/gauges/AnalogGauge&quot;]);\n&lt;/script&gt;\n...\n&lt;div    dojoType=&quot;dojox.gauges.AnalogGauge&quot;\n        id=&quot;testGauge&quot;\n        width=&quot;300&quot;\n        height=&quot;200&quot;\n        cx=150\n        cy=175\n        radius=125\n        image=&quot;gaugeOverlay.png&quot;\n        imageOverlay=&quot;false&quot;\n        imageWidth=&quot;280&quot;\n        imageHeight=&quot;155&quot;\n        imageX=&quot;12&quot;\n        imageY=&quot;38&quot;&gt;\n    &lt;div    dojoType=&quot;dojox.gauges.Range&quot;\n            low=5\n            high=10\n            hover=&quot;5 - 10&quot;\n    &gt;&lt;/div&gt;\n    &lt;div    dojoType=&quot;dojox.gauges.Range&quot;\n            low=10\n            high=20\n            hover=&quot;10 - 20&quot;\n    &gt;&lt;/div&gt;\n&lt;/div&gt;</code></pre>"
+    }
+}

@@ -1,0 +1,1400 @@
+{
+	"html": {
+        "div": {
+            "displayName": "Combobox" ,
+            "rootSelectors":[".mblComboBoxMenu"],
+            "states": {
+                "Normal": {
+                    "selectors": {
+                        ".dijitPopup": [
+                            "margin",
+							"margin-top",
+							"margin-right",
+							"margin-bottom",
+							"margin-left",
+							"padding",
+							"padding-top",
+							"padding-right",
+							"padding-bottom",
+							"padding-left",
+							"position",
+							"border",
+							/*"background-color",*/
+							"-webkit-box-shadow",
+							"-webkit-border-radius",
+							"border-image"
+                        ],
+						".mblComboBoxMenu": [
+							"overflow-y",
+							"position",
+							"overflow",
+							"overflow-x",
+							"border",
+							"border-color",
+							"border-style",
+							"border-width",
+							"border-top-width",
+							"border-right-width",
+							"border-bottom-width",
+							"border-left-width",
+							"border-top-style",
+							"border-right-style",
+							"border-bottom-style",
+							"border-left-style",
+							"border-top-color",
+							"border-right-color",
+							"border-bottom-color",
+							"border-left-color",
+							"-webkit-border-radius",
+							"border-radius",
+							"border-top-left-radius",
+							"border-top-right-radius",
+							"border-bottom-right-radius",
+							"border-bottom-left-radius",
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"color",
+							"border-image"
+                        ] 
+                    },
+                    "query": "" 
+                } 
+            },
+			"subwidgets": {
+				"ComboBoxMenuPrevious/Next": {
+					"displayName": "MenuPrevious/Next",
+					"states": {
+						"Normal": {
+							"selectors": {
+								".mblComboBoxMenuPreviousButton": [
+									"$std_10"
+								]
+							},
+							"query": ".mblComboBoxMenuPreviousButton"
+						}
+					}
+				},
+				"CombBoxMenuItem": {
+					"displayName": "CombBoxMenuItem",
+					"states": {
+						"Normal": {
+							"selectors": {
+								".mblComboBoxMenuItem": [
+									"$std_10"
+								]
+							},
+							"query": ".themeEditorComboBoxItemLocator"
+						},
+						"Selected": {
+							"selectors": {
+								".mblComboBoxMenuItemSelected": [
+									"$std_10"
+								]
+							},
+							"query": ".themeEditorComboBoxItemLocator",
+							"simulate": "mblComboBoxMenuItemSelected" 
+						}
+					}
+				}
+			}
+        } 
+    },
+    "dojox": {
+    	"$allHeadingBackground":{
+			"displayName": "Heading Background", 
+			"states": {
+				"Normal": {
+					"selectors": {
+						".dj_tablet .mblHeading" : [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+                        ],
+                        ".dj_tablet .mblColorDefault" : [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+                        ],
+						".dj_tablet .mblTabPanelHeader" : [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+                        ],
+						".mblEdgeToEdgeCategory" : [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+                        ]
+						
+					},
+					"query": ".mblHeading",
+					/*"simulate": "dijitChecked dijitTabChecked",*/
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#5cb0ff",
+							"background-image": "-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(2.5%, #ffffff), color-stop(2.5%, rgba(255, 255, 255, 0.14)), color-stop(5%, rgba(255, 255, 255, 0.14)), color-stop(5%, rgba(255, 255, 255, 0.52)), color-stop(7.5%, rgba(255, 255, 255, 0.52)), color-stop(7.5%, rgba(255, 255, 255, 0.68)), color-stop(10%, rgba(255, 255, 255, 0.68)), color-stop(1, rgba(255, 255, 255, 0)))"
+							/*"border-color":  "#b5bcc7"*/
+						}
+					}
+			
+				}
+			}
+		},
+
+    	"$allButtonBackground":{
+			"displayName": "Button background", 
+			"states": {
+				"Normal": {
+					"selectors": {
+						".dj_tablet .mblToolBarButton" : [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+                        ],
+						".dj_tablet .mblTabButton" : [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+                        ],
+						".dj_tablet .mblArrowButtonHead" : [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+                        ],
+						".dj_tablet .mblArrowButtonBody" : [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+                        ],
+						".mblToggleButton" : [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+                        ],
+						".mblCheckBox" : [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+                        ],
+						".mblRadioButton" : [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+                        ],
+						".mblSwitchBg" : [
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+                        ],
+						".mblSwitchBgLeft" : [
+							"background-color"
+                        ],
+						".mblSwitchBgRight" : [
+							"background-color"
+	                    ],
+	                    ".mblButton" : [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+                        ]
+					},
+					"query": ".mblHeading",
+					/*"simulate": "dijitChecked dijitTabChecked",*/
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#5cb0ff",
+							"background-image": "-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))"
+							/*"border-color":  "#b5bcc7"*/
+						}
+					}
+			
+				},
+				"Selected": {
+					"selectors": {
+						".dj_tablet .mblTabPanelHeader .mblTabButton.mblTabButtonSelected": [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+							/*"border-color" */
+						],
+						".mblButtonSelected": [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+							/*"border-color" */
+						],
+						".mblToggleButton.mblToggleButtonChecked": [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+							/*"border-color" */
+						],
+						".mblCheckBoxChecked": [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+							/*"border-color" */
+						],
+						".mblRadioButtonChecked": [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+							/*"border-color" */
+						]
+	
+					},
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#0064C2",
+							"background-image": "-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))"
+							/*"border-color":  "#92bce1"*/
+						}
+					}
+				},
+				"Disabled": {
+					"selectors": {
+						".mblButtonDisabled": [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+						],
+						".mblToggleButton:disabled": [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+						] 						
+					},
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#8FC9FF",
+							"background-image": "-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))"
+						}
+					}
+				},
+				"ComboBoxMenuItemSelected": {
+					"selectors": {
+						".mblComboBoxMenuItemSelected": [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+						]  
+					},
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#5CB0FF",
+							"background-image": "-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))"
+						}
+					}
+				},
+				"SwitchBgLeft": {
+					"selectors": {
+						".mblSwitchBgLeft": [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+						]  
+					},
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#007EF5",
+							"background-image": "-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))"
+						}
+					}
+				},
+				"SwitchBgRight": {
+					"selectors": {
+						".mblSwitchBgRight": [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align"
+						]  
+					},
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#8FC9FF",
+							"background-image": "-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))"
+						}
+					}
+				},
+				"SwitchKnob": {
+					"selectors": {
+						".mblSwitchKnob": [
+							"background-color",
+							"background-image",,
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip",
+							"font-family",
+							"font-size",
+							"font-style",
+							"font-weight",
+							"color",
+							"text-align",
+							"border-color"
+						]  
+					},
+					"defaults": {
+						"cssPropery": {
+							"background-color": "#5CB0FF",
+							"background-image": "-webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(3.3333333333333335%, rgba(255, 255, 255, 0.1)), color-stop(0.5, rgba(255, 255, 255, 0.6)), color-stop(1, rgba(255, 255, 255, 0.3)))",
+							"border-color": "#7B879B"
+						}
+					}
+				}
+			}
+		},
+		
+        "Button": {
+            "displayName": "Button",
+            "rootSelectors":[".mblButton"],
+            "states": {
+                "Normal": {
+                    "selectors": {
+                        ".mblButton": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ""
+                },
+                "Disabled": {
+                    "selectors": {
+                        ".mblButtonDisabled": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ".mblButton",
+                    "simulate": "mblButtonDisabled"
+                },
+                "Selected": {
+                    "selectors": {
+                        ".mblButtonSelected": [
+                            "$std_10"
+                        ]
+                    },
+                    "query": ".mblButton",
+                    "simulate": "mblButtonSelected"
+                }
+            }
+        },
+		"CheckBox": {
+			"displayName": "CheckBox",
+			"rootSelectors":[".mblCheckBox"],
+			"states": {
+				"Normal": {
+					"selectors": {
+						".mblCheckBox": [
+							"$std_10"
+						]
+					},
+					"query": ""
+				},
+				"Selected": {
+					"selectors": {
+						".mblCheckBoxChecked": [
+							"$std_10"
+						]
+					},
+					"query": ".mblCheckBox",
+					"simulate": "mblCheckBoxChecked"
+				}
+			}
+		},
+		"EdgeToEdgeCategory": {
+			"displayName": "EdgeToEdgeCategory",
+			"rootSelectors":[".mblEdgeToEdgeCategory"],
+			"states": {
+				"Normal": {
+					"selectors": {
+						".mblEdgeToEdgeCategory": [
+							"$std_10"
+						]
+					},
+					"query": ""
+				}
+			}
+		},
+		"Heading": {
+			"displayName": "Heading",
+			"rootSelectors":[".dj_tablet .mblHeading"],
+			"states": {
+				"Normal": {
+					"selectors": {
+						".dj_tablet .mblHeading": [
+							"$std_10"
+						]
+					},
+					"query": ""
+				}
+			},
+			"subwidgets": {
+				"ArrowButtonHead": {
+					"displayName": "ArrowButtonHead",
+					"states": {
+						"Normal": {
+							"selectors": {
+								".dj_tablet .mblArrowButtonHead": [
+									"position", 
+									"top", 
+									"left", 
+									"width", 
+									"height", 
+									"border", 
+									"border-color",
+									"border-width",
+									"border-style",
+									"border-top-width", 
+									"border-right-width",
+									"border-bottom-width", 
+									"border-left-width", 
+									"border-top-style", 
+									"border-right-style", 
+									"border-bottom-style", 
+									"border-left-style", 
+									"border-top-color", 
+									"border-right-color", 
+									"border-bottom-color", 
+									"border-left-color",
+									"-webkit-transform", 
+									"background-color",
+									"background-image",
+									"background-position",
+									"background-position-x",
+									"background-position-y",
+									"background-repeat",
+									"background-origin",
+									"background-size",
+									"background-clip",
+									"border-image"
+								],
+								".dj_chrome .mblArrowButtonHead": [
+									"border", 
+									"border-color",
+									"border-width",
+									"border-style",
+									"border-top-width", 
+									"border-right-width",
+									"border-bottom-width", 
+									"border-left-width", 
+									"border-top-style", 
+									"border-right-style", 
+									"border-bottom-style", 
+									"border-left-style", 
+									"border-top-color", 
+									"border-right-color", 
+									"border-bottom-color", 
+									"border-left-color",
+									"background-color",
+									"background-image",
+									"background-position",
+									"background-position-x",
+									"background-position-y",
+									"background-repeat",
+									"background-origin",
+									"background-size",
+									"background-clip",
+									"border-image"
+								]
+							},
+							"query": ".mblArrowButtonHead"
+						}
+					}
+				},
+				"ArrowButtonBody": {
+					"displayName": "ArrowButtonBody",
+					"states": {
+						"Normal": {
+							"selectors": {
+								".dj_tablet .mblArrowButtonBody": [
+									"position", 
+									"cursor", 
+									"-webkit-tap-highlight-color", 
+									"top", 
+									"left", 
+									"padding", 
+									"padding-top", 
+									"padding-right",
+									"padding-bottom", 
+									"padding-left", 
+									"height", 
+									"border-width", 
+									"border-top-width", 
+									"border-right-width", 
+									"border-bottom-width", 
+									"border-left-width", 
+									"border-style", 
+									"border-top-style", 
+									"border-right-style", 
+									"border-bottom-style", 
+									"border-left-style", 
+									"border-color", 
+									"border-top-color", 
+									"border-right-color", 
+									"border-bottom-color", 
+									"border-left-color", 
+									"font-family", 
+									"font-size", 
+									"color", 
+									"line-height", 
+									"background-color", 
+									"background-image",
+									"background-position",
+									"background-position-x",
+									"background-position-y",
+									"background-repeat",
+									"background-origin",
+									"background-size",
+									"background-clip"							
+								]
+							},
+							"query": ".mblArrowButtonBody"
+						}
+					}
+				}
+				
+			}
+		},
+		"ToolBarButton": {
+			"displayName": "ToolBarButton",
+			"rootSelectors":[".dj_tablet .mblToolBarButton"],
+			"states": {
+				"Normal": {
+					"selectors": {
+						".mblToolBarButtonText": [
+							"padding", 
+							"padding-top", 
+							"padding-right", 
+							"padding-bottom", 
+							"padding-left"
+
+						],
+						".dj_tablet .mblToolBarButton": [
+							"float", 
+							"position", 
+							"overflow", 
+							"overflow-x", 
+							"overflow-y", 
+							"cursor", 
+							"-webkit-tap-highlight-color",
+							"margin",
+							"margin-top", 
+							"margin-right", 
+							"margin-bottom", 
+							"margin-left", 
+							"height", 
+							"border",
+							"border-top-width", 
+							"border-right-width", 
+							"border-bottom-width", 
+							"border-left-width", 
+							"border-top-style", 
+							"border-right-style", 
+							"border-bottom-style", 
+							"border-left-style", 
+							"border-top-color", 
+							"border-right-color", 
+							"border-bottom-color", 
+							"border-left-color", 
+							"font-family", 
+							"font-size", 
+							"font-weight", 
+							"color", 
+							"line-height", 
+							"text-align", 
+							"border-image"
+						],
+						".dj_tablet .mblColorDefault": [
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip"
+						]
+					},
+					"query": ".mblToolBarButton"
+				}
+			}
+		},
+		"RadioButton": {
+			"displayName": "RadioButton",
+			"rootSelectors":[".mblRadioButton"],
+			"states": {
+				"Normal": {
+					"selectors": {
+						".mblRadioButton": [
+							"$std_10"
+						]
+					},
+					"query": ""
+				},
+				"Selected": {
+					"selectors": {
+						".mblRadioButtonChecked": [
+							"$std_10"
+						]
+					},
+					"query": ".mblRadioButton",
+					"simulate": "mblRadioButtonChecked"
+				}
+			}
+		},
+		"RoundRect": {
+			"displayName": "RoundRect",
+			"rootSelectors":[".dj_tablet .mblRoundRect"],
+			"states": {
+				"Normal": {
+					"selectors": {
+						".dj_tablet .mblRoundRect": [
+							"$std_10"
+						]
+					},
+					"query": ""
+				}
+			}
+		},
+		"RoundRectCategory": {
+			"displayName": "RoundRectCategory",
+			"rootSelectors":[".dj_tablet .mblRoundRectCategory"],
+			"states": {
+				"Normal": {
+					"selectors": {
+						".dj_tablet .mblRoundRectCategory": [
+							"$std_10"
+						]
+					},
+					"query": ""
+				}
+			}
+		},
+        "RoundRectList": {
+            "displayName": "RoundRectList",
+            "rootSelectors":[".dj_tablet .mblRoundRectList"],
+            "states": {
+                "Normal": {
+                    "selectors": {
+                        ".mblEdgeToEdgeList": [
+							"position",
+							"padding",
+							"padding-top",
+							"padding-right",
+							"padding-bottom",
+							"padding-left"
+                        ],
+						".dj_tablet .mblRoundRectList": [
+							"position",
+							"margin",
+							"margin-top",
+							"margin-right",
+							"margin-bottom",
+							"margin-left",
+							"padding",
+							"padding-top",
+							"padding-right",
+							"padding-bottom",
+							"padding-left",
+							"border",
+							"border-width",
+							"border-style",
+							"border-color",
+							"border-radius",
+							"border-top-width",
+							"border-right-width",
+							"border-bottom-width",
+							"border-left-width",
+							"border-top-style",
+							"border-right-style",
+							"border-bottom-style",
+							"border-left-style",
+							"border-top-color",
+							"border-right-color",
+							"border-bottom-color",
+							"border-left-color",
+							"-webkit-border-radius",
+							"border-top-left-radius",
+							"border-top-right-radius",
+							"border-bottom-right-radius",
+							"border-bottom-left-radius",
+							"-moz-border-radius"
+						]
+					},
+                    "query": ""
+                }
+            },
+            "subwidgets": {
+                "ListItem": {
+                    "displayName": "ListItem",
+                    "states": {
+                        "Normal": {
+                            "selectors": {
+                                ".mblListItem": [
+                                    "position",
+                                    "list-style-type",
+                                    "vertical-align",
+                                    "padding",
+                                    "padding-top",
+                                    "padding-right",
+                                    "padding-bottom",
+                                    "padding-left",
+                                    "height",
+                                    "border-bottom",
+                                    "border-bottom-style",
+                                    "border-bottom-width",
+                                    "border-bottom-color",
+                                    "background-color",
+                                    "font-size",
+                                    "color",
+                                    "line-height"
+                                ],
+                                ".mblListItem .mblListItemAnchor": [
+                                    "-webkit-tap-highlight-color",
+									"background-image",
+                                    "background-position",
+                                    "background-position-x",
+                                    "background-position-y",
+									"background-repeat",
+									"background-origin",
+									"background-size",
+									"background-clip",
+                                    "text-decoration",
+                                    "padding-right"
+                                ],
+                                ".mblListItemTextBox": [
+                                    "overflow",
+                                    "white-space",
+                                    "text-overflow"
+                                ]
+                            },
+                            "query": ".mblListItem"
+                        }
+                    }
+				},
+				"MoveTo": {
+					"displayName": "MoveTo",
+					"states": {
+						"Normal": {
+							"selectors": {
+								".mblDomButtonGrayArrow > div": [
+									"border-width",
+									"border-top-width",
+									"border-right-width",
+									"border-bottom-width",
+									"border-left-width",
+									"border-style",
+									"border-color"
+								]
+							},
+							"query": ".mblListItemRightIcon"
+						}
+					}
+				}
+            }
+		},
+		"Switch": {
+			"displayName": "Switch",
+			"rootSelectors":[".mblSwitch"],
+			"states": {
+				"Normal": {
+					"selectors": {
+						".mblSwitch": [
+							"margin",
+							"position",
+							"width",
+							"height",
+							"line-height",
+							"overflow",
+							"text-align",
+							"-webkit-tap-highlight-color"
+						],
+						".mblSwitchOn.mblSwitchInner": [
+							"left"
+						],
+						".mblSwitchBgLeft": [
+							"left",
+							"width",
+							"color",
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip"
+						],
+						".mblSwitchBg": [
+							"border-radius",
+							"position",
+							"top",
+							"height",
+							"border-width",
+							"border-style",
+							"border-color",
+							"font-family",
+							"font-size",
+							"font-weight",
+							"line-height",
+							"-webkit-box-sizing",
+							"box-sizing"
+						],
+						".mblSwitchTextLeft": [
+							"left"
+						],
+						".mblSwitchText": [
+							"position",
+							"top",
+							"width",
+							"height",
+							"padding",
+							"line-height",
+							"text-align"
+						]
+					},
+					"query": ""
+				},
+				"Disabled": {
+					"selectors": {
+						".mblSwitchBgRight": [
+							"left",
+							"width",
+							"color",
+							"background-color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip"
+						],
+						".mblSwitchTextRight": [
+							"left"
+						],
+						".mblSwitchText": [
+							"position",
+							"top",
+							"width",
+							"height",
+							"padding",
+							"line-height",
+							"text-align"
+						]
+					},
+					"query": [
+						".mblSwitchOn",
+						".mblSwitchBgRight"
+					],
+					"simulate": [
+						"mblSwitchOff",
+						":style=''"
+					]
+				}
+			},
+			"subwidgets": {
+				"SwitchKnob": {
+					"displayName": "SwitchKnob",
+					"states": {
+						"Normal": {
+							"selectors": {
+								".mblSwitchKnob": [
+									"background-color",
+									"background-image",
+									"background-position",
+									"background-position-x",
+									"background-position-y",
+									"background-repeat",
+									"background-origin",
+									"background-size",
+									"background-clip",
+									"border-radius",
+									"position",
+									"top",
+									"left",
+									"width",
+									"height",
+									"font-size",
+									"border-width",
+									"border-style",
+									"border-color",
+									"-webkit-box-sizing",
+									"box-sizing"
+								]
+							},
+							"query": ".mblSwitchKnob"
+						}
+					}
+				}
+			}
+		},
+		"TabBar": {
+			"displayName": "TabBar",
+			"rootSelectors":[".dj_tablet .mblTabPanelHeader"],
+			"states": {
+				"Normal": {
+					"selectors": {
+						".dj_tablet .mblTabPanelHeader": [
+							"$std_10"
+						]
+					},
+					"query": ""
+				}
+			},
+			"subwidgets": {
+				"TabBarButton": {
+					"displayName": "TabBarButton",
+					"states": {
+						"Normal": {
+							"selectors": {
+								".dj_tablet .mblTabButton": [
+									"position",
+									"float",
+									"list-style-type",
+									"cursor",
+									"-webkit-tap-highlight-color",
+									"margin-right",
+									"width",
+									"height",
+									"border-width",
+									"border-top-width",
+									"border-right-width",
+									"border-bottom-width",
+									"border-left-width",
+									"border-style",
+									"border-top-style",
+									"border-right-style",
+									"border-bottom-style",
+									"border-left-style",
+									"border-color",
+									"border-top-color",
+									"border-right-color",
+									"border-bottom-color",
+									"border-left-color",
+									"background-color",
+									"background-image",
+									"background-position",
+									"background-position-x",
+									"background-position-y",
+									"background-repeat",
+									"background-origin",
+									"background-size",
+									"background-clip",
+									"font-family",
+									"font-size",
+									"font-style",
+									"font-weight",
+									"color",
+									"text-align"
+								],
+								".mblTabPanelHeader .mblTabButton": [
+									"margin-top",
+								],
+								".mblTabBarButtonAnchor": [
+									"display",
+									"text-decoration"
+								]
+							},
+							"query": ".mblTabButton"
+						},
+						"Selected": {
+							"selectors": {
+								".dj_tablet .mblTabPanelHeader .mblTabButton.mblTabButtonSelected": [
+									"background-color",
+									"background-image"
+								]
+							},
+							"query": ".mblTabButton",
+							"simulate": "mblTabButtonSelected" 
+						},
+					}
+				}
+			}
+		},
+		"TextArea": {
+			"displayName": "TextArea",
+			"rootSelectors":[".mblTextArea"],
+			"states": {
+				"Normal": {
+					"selectors": {
+						".mblTextArea": [
+							"$std_10"
+						]
+					},
+					"query": ""
+				}
+			}
+		},
+		"TextBox": {
+			"displayName": "TextBox",
+			"rootSelectors":[".mblTextBox"],
+			"states": {
+				"Normal": {
+					"selectors": {
+						".mblTextBox": [
+							"$std_10"
+						]
+					},
+					"query": ""
+				}
+			}
+		},
+		"ToggleButton": {
+			"displayName": "ToggleButton",
+			"rootSelectors":[".mblToggleButton"],
+			"states": {
+				"Normal": {
+					"selectors": {
+						".mblToggleButton": [
+							"$std_10"
+						]
+					},
+					"query": ""
+				},
+				"Disabled": {
+					"selectors": {
+						".mblToggleButton:disabled": [
+							"$std_10"
+						]
+					},
+					"query": ".mblToggleButton",
+					"simulate": ":disabled='true'"
+				},
+				"Selected": {
+					"selectors": {
+						".mblToggleButton.mblToggleButtonChecked": [
+							"$std_10"
+						]
+					},
+					"query": ".mblToggleButton",
+					"simulate": "mblToggleButtonChecked"
+				}
+			}
+		},
+		"View": {
+			"displayName": "View",
+			"rootSelectors":[".mblView"],
+			"states": {
+				"Normal": {
+					"selectors": {
+						".mblView": [
+							"position",
+							"left",
+							"width",
+							"color"
+						],
+						".mobile body": [
+							"margin",
+							"padding",
+							"overflow-x",
+							"-webkit-text-size-adjust",
+							"background-color",
+							"font-family",
+							"font-size",
+							"font-weight",
+							"font-style",
+							"color",
+							"background-image",
+							"background-position",
+							"background-position-x",
+							"background-position-y",
+							"background-repeat",
+							"background-origin",
+							"background-size",
+							"background-clip"
+						]
+					},
+					"query": ""
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,44 @@
+{
+    "id": "http://dojotoolkit.org/dijit/Declaration",
+    "name": "dijit.Declaration",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/Declaration",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "widgetClass": {
+            "datatype": "string",
+            "title": "Widget Class"
+        },
+        "replaceVars": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Replace Variables"
+        },
+        "defaults": {
+            "datatype": "json",
+            "title": "Defaults"
+        },
+        "mixins": {
+            "datatype": "array",
+            "defaultValue": "[]",
+            "title": "Mix-ins"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>The Declaration widget allows a developer to declare new widget\nclasses directly from a snippet of markup.</p>"
+    }
+}

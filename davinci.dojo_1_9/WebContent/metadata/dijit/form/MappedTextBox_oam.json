@@ -1,0 +1,137 @@
+{
+    "id": "http://dojotoolkit.org/dijit/form/MappedTextBox",
+    "name": "dijit.form.MappedTextBox",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/ValidationTextBox",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "type": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "text"
+                },
+                {
+                    "value": "password"
+                }
+            ],
+            "defaultValue": "text",
+            "title": "Type"
+        },
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "alt": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "value": {
+            "datatype": "string",
+            "title": "Value"
+        },
+        "tabIndex": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Tab Index"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "title": "Read Only"
+        },
+        "intermediateChanges": {
+            "datatype": "boolean",
+            "title": "Intermediate Changes"
+        },
+        "trim": {
+            "datatype": "boolean",
+            "title": "Trim"
+        },
+        "uppercase": {
+            "datatype": "boolean",
+            "title": "Upper Case"
+        },
+        "lowercase": {
+            "datatype": "boolean",
+            "title": "Lower Case"
+        },
+        "propercase": {
+            "datatype": "boolean",
+            "title": "Proper Case"
+        },
+        "maxLength": {
+            "datatype": "string",
+            "title": "Max Length"
+        },
+        "required": {
+            "datatype": "boolean",
+            "title": "Required",
+            "hidden": true
+        },
+        "promptMessage": {
+            "datatype": "string",
+            "title": "Prompt Message",
+            "hidden": true
+        },
+        "invalidMessage": {
+            "datatype": "string",
+            "defaultValue": "The value entered is not valid.",
+            "title": "Invalid Message",
+            "hidden": true
+        },
+        "constraints": {
+            "datatype": "json",
+            "defaultValue": "\"{\\\"locale\\\":\\\"\\\"}\"",
+            "title": "Constraints",
+            "hidden": true
+        },
+        "regExp": {
+            "datatype": "string",
+            "defaultValue": ".*",
+            "title": "Regular Expression",
+            "hidden": true
+        },
+        "tooltipPosition": {
+            "datatype": "array",
+            "defaultValue": "[]",
+            "title": "Tooltip Positions",
+            "hidden": true
+        },
+        "scrollOnFocus": {
+            "datatype": "boolean",
+            "description": "On focus, should this widget scroll into view?",
+            "hidden": false,
+            "defaultValue": true
+        },
+        "state": {
+            "datatype": "string",
+            "description": "Shows current state (ie, validation result) of input (Normal, Warning, or Error)",
+            "hidden": true
+        }
+    },
+    "content": "<input type='text'></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A dijit/form/ValidationTextBox subclass which provides a base class for widgets that have\na visible formatted display value, and a serializable\nvalue in a hidden input field which is actually sent to the server.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>The visible display may\nbe locale-dependent and interactive.  The value sent to the server is stored in a hidden\ninput field which uses the <code>name</code> attribute declared by the original widget.  That value sent\nto the server is defined by the dijit/form/MappedTextBox.serialize() method and is typically\nlocale-neutral.</p>"
+    }
+}

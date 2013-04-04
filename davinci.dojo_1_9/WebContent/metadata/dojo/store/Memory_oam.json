@@ -1,0 +1,49 @@
+{
+    "id": "http://dojotoolkit.org/dojo/store/Memory",
+    "name": "dojo.store.Memory",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojo/store/Memory",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "jsId": {
+            "datatype": "string",
+            "title": "Store ID"
+        },
+        "data": {
+            "datatype": "json",
+            "title": "Data",
+            "description": "The array of all the objects in the memory store",
+            "hidden": "true"
+        },
+        "idProperty": {
+            "datatype": "string",
+            "description": "Indicates the property to use as the identity property. The values of this property should be unique.",
+            "title": "ID Property",
+            "defaultValue": "id",
+            "hidden": "true"
+        },
+        "index": {
+            "datatype": "string",
+            "description": "An index of data indices into the data array by id",
+            "title": "Index",
+            "hidden": "true"
+        }
+    },
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>This is a basic in-memory object store. It implements dojo/store/api/Store.</p>"
+    }
+}

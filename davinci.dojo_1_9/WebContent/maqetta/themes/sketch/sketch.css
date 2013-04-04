@@ -1,0 +1,252 @@
+@import url("../claro/claro.css");
+.claro .dijitCalendar {
+    border-width : 3px;
+    border-color : black;
+    background-color : white;
+    background-image : none;
+}
+.claro .dijitTabContent {
+    border-width : 3px;
+    border-color : black;
+    background-color : white;
+}
+.claro .dijitButton .dijitButtonNode, .claro .dijitDropDownButton .dijitButtonNode, .claro .dijitComboButton .dijitButtonNode, .claro .dijitToggleButton .dijitButtonNode {
+    border-width : 3px;
+    border-color : black;
+    background-color : white;
+    background-image : none;
+}
+.claro .dijitAccordionInnerContainer {
+    border-width : 3px;
+    border-color : black;
+    background-color : white;
+}
+.claro .dijitAccordionContainer .dijitAccordionContainer-child {
+    border-color : black;
+    background-color : white;
+}
+.dijitTitlePane {
+    border-color : black;
+    background-color : white;
+}
+.claro .dijitTitlePaneTitle {
+    border-width : 3px;
+    border-color : black;
+    background-color : white;
+}
+.claro .dijitTitlePaneContentOuter {
+    border-width : 3px;
+    border-color : black;
+    background-color : white;
+}
+.claro .dijitBorderContainer {
+    border-color : black;
+    background-color : white;
+}
+.claro .dijitSplitContainer-child, .claro .dijitBorderContainer-child {
+    border-width : 3px;
+    border-color : black;
+    background-color : white;
+}
+.claro .dijitMenu {
+    border-width : 3px;
+    border-color : black;
+    background-color : white;
+}
+.claro .dijitMenuSeparatorTop {
+    border-color : black;
+    background-color : white;
+}
+.claro .dijitTooltipContainer {
+    border-width : 3px;
+    border-color : black;
+    background-color : white;
+    background-image : none;
+}
+.claro .dijitDialog {
+    border-width : 3px;
+    border-color : black;
+    background-color : white;
+}
+.claro .dijitDialogTitleBar {
+    border-color : black;
+    background-color : white;
+}
+.claro .dijitDialogPaneContent {
+    border-width : 3px;
+    border-color : black;
+    background-color : white;
+}
+.claro .dijitTabActive .dijitTabInnerDiv {
+    border-color : black;
+    background-color : #d3dbdb;
+}
+.claro .dijitAccordionInnerContainerActive {
+    border-color : black;
+    background-color : white;
+}
+.claro .dijitSplitterHActive, .claro .dijitSplitterVActive {
+    border-color : black;
+    background-color : #d3dbdb;
+}
+.claro .dijitButtonActive .dijitButtonNode, .claro .dijitDropDownButtonActive .dijitButtonNode, .claro .dijitComboButtonActive .dijitButtonNode, .claro .dijitToggleButtonActive .dijitButtonNode, .claro .dijitStackController .dijitToggleButtonChecked .dijitButtonNode {
+    border-color : black;
+    background-color : white;
+}
+.claro .dijitTitlePaneTitleActive {
+    border-color : black;
+    background-color : white;
+}
+.claro .dijitToolbar .dijitButtonActive .dijitButtonNode, .claro .dijitToolbar .dijitDropDownButtonActive .dijitButtonNode, .claro .dijitToolbar .dijitToggleButtonActive .dijitButtonNode {
+    border-width : 3px;
+    border-color : black;
+    background-color : white;
+}
+.claro .dijitTabChecked .dijitTabInnerDiv {
+    border-color : black;
+    background-color : white;
+}
+.claro .dijitTabChecked .dijitTabContent {
+    border-color : black;
+}
+.claro .dijitCalendarHover, .claro .dijitCalendar:hover, .claro .dijitCalendarActive {
+    border-color : black;
+    background-color : white;
+}
+.claro .dijitTabHover .dijitTabInnerDiv {
+    border-color : black;
+    background-color : #f0f0f0;
+}
+.claro .dijitTabHover .dijitTabContent {
+    border-color : black;
+    background-color : #f0f0f0;
+}
+.claro .dijitButtonHover .dijitButtonNode, .claro .dijitDropDownButtonHover .dijitButtonNode, .claro .dijitComboButton .dijitButtonNodeHover, .claro .dijitComboButton .dijitDownArrowButtonHover, .claro .dijitToggleButtonHover .dijitButtonNode {
+    border-color : black;
+    background-color : white;
+}
+.claro .dijitAccordionInnerContainerHover, .claro .dijitAccordionInnerContainerSelectedActive {
+    border-color : black;
+    background-color : white;
+}
+.claro .dijitTitlePaneTitleHover {
+    border-color : black;
+    background-color : #f0f0f0;
+}
+.claro .dijitToolbar .dijitButtonHover .dijitButtonNode, .claro .dijitToolbar .dijitDropDownButtonHover .dijitButtonNode, .claro .dijitToolbar .dijitToggleButtonHover .dijitButtonNode, .claro .dijitToolbar .dijitComboButtonHover .dijitButtonNode {
+    border-color : black;
+    background-color : #f0f0f0;
+}
+.claro .dijitSplitterVHover .dijitSplitterThumb {
+    border-color : black;
+    background-color : #f0f0f0;
+}
+.claro .dijitSplitterHHover .dijitSplitterThumb {
+    border-color : black;
+    background-color : #f0f0f0;
+}
+.claro .dijitMenuPassive .dijitMenuItemHover, .claro .dijitMenuPassive .dijitMenuItemSelected {
+    border-color : black;
+    background-color : #f0f0f0;
+}
+.claro .dijitMenuActive .dijitMenuItemHover, .claro .dijitMenuActive .dijitMenuItemSelected {
+    border-color : black;
+    background-color : white;
+}
+.claro .dijitAccordionInnerContainerSelected {
+    border-width : 3px;
+    border-color : black;
+    background-color : #fbfbfb;
+}
+.claro .dijitTextBox, .claro .dijitInputInner {
+    border-width : 3px;
+    border-color : black;
+    border-radius : 4px;
+    -moz-border-radius : 4px;
+    background-color : #ffffff;
+}
+.claro .dijitTextBoxFocused, .claro .dijitTextBoxFocused .dijitButtonNode {
+    border-color : black;
+    background-color : #ffffff;
+}
+.claro .dijitTextBoxHover, .claro .dijitTextBoxHover .dijitButtonNode {
+    border-color : black;
+    background-color : #ffffff;
+}
+.claro .dijitCalendarPreviousMonth, .claro .dijitCalendarNextMonth {
+    border-color : #241919;
+    background-color : #ffffff;
+    color : #000000;
+}
+.claro .dijitCalendarSelectedDate .dijitCalendarDateLabel {
+    border-color : #150709;
+    background-color : #ffffff;
+}
+
+.claro .dijitCalendarHoveredDate .dijitCalendarDateLabel, .claro .dijitCalendarEnabledDate:hover .dijitCalendarDateLabel {
+    border-color : black;
+    background-color : white;
+}
+.claro .dijitCalendarDayLabelTemplate {
+    border-width : 2px;
+    border-color : black;
+}
+.claro .dijitCalendarDateTemplate {
+    border-color : #1e2020;
+    font-family : Arial,Helvetica,sans-serif;
+}
+.claro {
+    font-family : 'Comic Sans MS',cursive;
+    font-size : 12px;
+}
+.claro .dijitCalendarPreviousMonth .dijitCalendarDateLabel, .claro .dijitCalendarNextMonth .dijitCalendarDateLabel {
+    border-color : #bcbec0;
+    color : black;
+}
+.claro .dijitCalendarMonthLabel {
+}
+.claro .dijitCalendar .dijitDropDownButton .dijitButtonNode {
+    border-width : 2px;
+    border-color : black;
+}
+.claro .dijitCalendarIncrementControl {
+    background-image : url('images/calendarArrows.png');
+}
+.claro .dijitTabPaneWrapper {
+    border-color : black;
+}
+.claro .dijitTabPaneWrapper, .claro .dijitTabContainerTop-tabs, .claro .dijitTabContainerBottom-tabs, .claro .dijitTabContainerLeft-tabs, .claro .dijitTabContainerRight-tabs {
+    border-width : 3px;
+    border-color : black;
+}
+.claro .dijitTabContainerTop-tabs .dijitTab {
+    margin-bottom : -3px;
+}
+.claro .dijitAccordionContainer .dijitAccordionChildWrapper {
+    border-width : 3px;
+    border-color : black;
+}
+.claro .dijitAccordionContainer {
+    border-width : 3px;
+    border-color : black;
+}
+.claro .dijitAccordionTitle {
+    background-image : none;
+}
+.claro .dijitToolbar {
+    border-width : 3px;
+    border-style : solid;
+    border-color : black;
+    border-radius : 4px;
+    -moz-border-radius : 4px;
+    background-image : none;
+    background-color : white;
+}
+.claro .dijitAccordionInnerContainerSelectedHover .dijitAccordionChildWrapper, .claro .dijitAccordionInnerContainerSelectedActive .dijitAccordionChildWrapper {
+    border-color : black !important;
+    border-width : 3px !important;
+    border-style : solid !important;
+}
+.claro .dijitTabActive .dijitTabContent {
+    border-color : black;
+}

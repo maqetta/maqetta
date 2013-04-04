@@ -1,0 +1,75 @@
+{
+    "id": "http://dojotoolkit.org/dijit/layout/SplitContainer",
+    "name": "dijit.layout.SplitContainer",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/layout/SplitContainer",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "activeSizing": {
+            "datatype": "boolean",
+            "title": "Active Sizing"
+        },
+        "sizerWidth": {
+            "datatype": "number",
+            "defaultValue": 7,
+            "title": "Sizer Width"
+        },
+        "orientation": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "horizontal"
+                },
+                {
+                    "value": "vertical"
+                }
+            ],
+            "defaultValue": "horizontal",
+            "title": "Orientation"
+        },
+        "persist": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Persist"
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget descends from dijit._Container",
+            "defaultValue": true,
+            "hidden": true
+        }
+    },
+    "childProperties": {
+        "sizeMin": {
+            "datatype": "number",
+            "defaultValue": 10,
+            "title": "Minimum Size"
+        },
+        "sizeShare": {
+            "datatype": "number",
+            "defaultValue": 10,
+            "title": "Size Share"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Deprecated.  Use <code>dijit/layout/BorderContainer</code> instead.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>A Container widget with sizing handles in-between each child.\nContains multiple children widgets, all of which are displayed side by side\n(either horizontally or vertically); there&#39;s a bar between each of the children,\nand you can adjust the relative size of each child by dragging the bars.\n\n</p>\n<p>You must specify a size (width and height) for the SplitContainer.\n\n</p>\n<p>See <code>SplitContainer.ChildWidgetProperties</code> for details on the properties that can be set on\nchildren of a <code>SplitContainer</code>.</p>"
+    }
+}

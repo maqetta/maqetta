@@ -1,0 +1,39 @@
+{
+    "id": "http://dojotoolkit.org/dojox/data/CsvStore",
+    "name": "dojox.data.CsvStore",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/data/CsvStore",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "jsId": {
+            "datatype": "string",
+            "title": "Variable Name"
+        },
+        "url": {
+            "datatype": "string",
+            "format": "url",
+            "title": "URL"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>The CsvStore implements the dojo/data/api/Read API and reads\ndata from files in CSV (Comma Separated Values) format.\nAll values are simple string values. References to other items\nare not supported as attribute values in this datastore.\n\n</p>\n<p>Example data file:\nname, color, age, tagline\nKermit, green, 12, &quot;Hi, I&#39;m Kermit the Frog.&quot;\nFozzie Bear, orange, 10, &quot;Wakka Wakka Wakka!&quot;\nMiss Piggy, pink, 11, &quot;Kermie!&quot;\n\n</p>\n<p>Note that values containing a comma must be enclosed with quotes (&quot;&quot;)\nAlso note that values containing quotes must be escaped with two consecutive quotes (&quot;&quot;quoted&quot;&quot;)\n</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<p>var csvStore = new dojox.data.CsvStore({url:&quot;movies.csv&quot;);\nvar csvStore = new dojox.data.CsvStore({url:&quot;<a href=\"http://example.com/movies.csv\">http://example.com/movies.csv</a>&quot;);</p>"
+    }
+}

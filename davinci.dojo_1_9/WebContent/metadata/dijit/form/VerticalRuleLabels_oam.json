@@ -1,0 +1,92 @@
+{
+    "id": "http://dojotoolkit.org/dijit/form/VerticalRuleLabels",
+    "name": "dijit.form.VerticalRuleLabels",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/VerticalSlider",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/VerticalRuleLabels",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "count": {
+            "datatype": "number",
+            "defaultValue": 3,
+            "title": "Count",
+            "description": "Number of hash marks to generate (From VerticalRule)"
+        },
+        "container": {
+            "datatype": "string",
+            "title": "Container",
+            "description": "This is either \"leftDecoration\" or \"rightDecoration\",\nto indicate whether this rule goes to the left or to the right of the slider.\nNote that on RTL system, \"leftDecoration\" would actually go to the right, and vice-versa. (From VerticalRule)",
+            "option": [
+                {
+                    "value": "leftDecoration"
+                },
+                {
+                    "value": "rightDecoration"
+                }
+            ],
+            "hidden": false
+        },
+        "ruleStyle": {
+            "datatype": "string",
+            "title": "Rule Style",
+            "description": "CSS style to apply to individual hash marks (From VerticalRule)"
+        },
+        "labelStyle": {
+            "datatype": "string",
+            "title": "Label Style",
+            "description": "CSS style to apply to individual text labels"
+        },
+        "labels": {
+            "datatype": "array",
+            "defaultValue": "[]",
+            "title": "Labels",
+            "description": "Array of text labels to render - evenly spaced from left-to-right or bottom-to-top. Alternately, minimum and maximum can be specified, to get numeric labels."
+        },
+        "numericMargin": {
+            "datatype": "number",
+            "defaultValue": 0,
+            "title": "Numeric Margin",
+            "description": "Number of generated numeric labels that should be rendered as '' on the ends when labels[] are not specified"
+        },
+        "minimum": {
+            "datatype": "number",
+            "defaultValue": 0,
+            "title": "Minimum Value",
+            "description": "Bottom-most label value for generated numeric labels when labels[] are not specified"
+        },
+        "maximum": {
+            "datatype": "number",
+            "defaultValue": 1,
+            "title": "Maximum Value",
+            "description": "Top-most label value for generated numeric labels when labels[] are not specified"
+        },
+        "constraints": {
+            "datatype": "json",
+            "defaultValue": "\"{\\\"pattern\\\":\\\"#%\\\"}\"",
+            "description": "pattern, places, lang, et al (see dojo.number) for generated numeric labels when labels[] are not specified",
+            "hidden": true
+        }
+    },
+    "content": "<ol></ol>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Labels for the <code>dijit/form/VerticalSlider</code></p>"
+    }
+}

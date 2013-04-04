@@ -1,0 +1,101 @@
+{
+    "id": "http://dojotoolkit.org/dijit/form/DropDownButton",
+    "name": "dijit.form.DropDownButton",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/DropDownButton",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/Menu",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/MenuItem",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "alt": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "value": {
+            "datatype": "string",
+            "title": "Value"
+        },
+        "dropDown": {
+            "datatype": "object",
+            "title": "Popup",
+            "isData": true
+        },
+        "tabIndex": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Tab Index"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "intermediateChanges": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "label": {
+            "datatype": "string",
+            "title": "Label"
+        },
+        "showLabel": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Show Label"
+        },
+        "iconClass": {
+            "datatype": "string",
+            "title": "Icon Class"
+        },
+        "scrollOnFocus": {
+            "datatype": "boolean",
+            "description": "On focus, should this widget scroll into view?",
+            "hidden": false,
+            "defaultValue": true
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget descends from dijit._Container",
+            "hidden": false,
+            "defaultValue": true
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A button with a drop down\n</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;button data-dojo-type=&quot;dijit/form/DropDownButton&quot;&gt;\n    Hello world\n    &lt;div data-dojo-type=&quot;dijit/Menu&quot;&gt;...&lt;/div&gt;\n&lt;/button&gt;</code></pre>\n<pre><code>var button1 = new DropDownButton({ label: &quot;hi&quot;, dropDown: new dijit.Menu(...) });\nwin.body().appendChild(button1);</code></pre>"
+    }
+}

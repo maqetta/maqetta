@@ -1,0 +1,96 @@
+{
+    "id": "http://dojotoolkit.org/dojox/gauges/AnalogNeedleIndicator",
+    "name": "dojox.gauges.AnalogNeedleIndicator",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/gauges/AnalogNeedleIndicator",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "value": {
+            "datatype": "number",
+            "description": "The value (on the gauge) that this indicator should be placed at",
+            "defaultValue": 70,
+            "hidden": false
+        },
+        "type": {
+            "datatype": "string",
+            "description": "The type of indicator to draw.  Varies by gauge type.  Some examples include\n\"line\", \"arrow\", and \"bar\"",
+            "hidden": false
+        },
+        "color": {
+            "datatype": "string",
+            "description": "The color of the indicator.",
+            "defaultValue": "red",
+            "hidden": false
+        },
+        "label": {
+            "datatype": "string",
+            "description": "The text label for the indicator.",
+            "hidden": false
+        },
+        "title": {
+            "datatype": "string",
+            "description": "Title to go with textfield below gauge",
+            "defaultValue": "Needle",
+            "hidden": false
+        },
+        "length": {
+            "datatype": "number",
+            "description": "The length of the indicator.  In the above example, the radius of the AnalogGauge\nis 125, but the length of the indicator is 135, meaning it would project beyond\nthe edge of the AnalogGauge",
+            "defaultValue": 65,
+            "hidden": false
+        },
+        "width": {
+            "datatype": "number",
+            "description": "The width of the indicator.",
+            "defaultValue": 5,
+            "hidden": false
+        },
+        "offset": {
+            "datatype": "number",
+            "description": "The offset of the indicator - doesn't seem to be used for NeedleIndicator",
+            "hidden": true
+        },
+        "hover": {
+            "datatype": "string",
+            "description": "The string to put in the tooltip when this indicator is hovered over.",
+            "hidden": false
+        },
+        "front": {
+            "datatype": "boolean",
+            "description": "Keep this indicator at the front",
+            "defaultValue": false,
+            "hidden": true
+        },
+        "duration": {
+            "datatype": "number",
+            "description": "indicates how long an animation of the indicator should take",
+            "hidden": false
+        },
+        "hideValue": {
+            "datatype": "boolean",
+            "hidden": false
+        },
+        "noChange": {
+            "datatype": "boolean",
+            "description": "indicates whether the indicator's value can be changed.  Useful for\na static target indicator.  Default is false (that the value can be changed).",
+            "hidden": false
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>An indicator for the AnalogGauge that draws a needle. The needle is drawn on the angle that corresponds\nto the value of the indicator.</p>"
+    }
+}

@@ -1,0 +1,4012 @@
+@import url("../dojox/mobile/themes/custom/custom.css");
+/* Maqetta modifications */
+.mobile body {
+  -webkit-text-size-adjust: none;
+  -moz-text-size-adjust: none;
+  -o-text-size-adjust: none;
+  -ms-text-size-adjust: none;
+  text-size-adjust: none;
+}
+.mblColorBlue {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#7a9de9), to(#2362dd));
+  background-image: -o-linear-gradient(top, #7a9de9 0%, #2362dd 100%);
+  background-image: -ms-linear-gradient(top, #7a9de9 0%, #2362dd 100%);
+  background-image: -moz-linear-gradient(top, #7a9de9 0%, #2362dd 100%);
+  background-image: linear-gradient(top, #7a9de9 0%, #2362dd 100%);
+}
+.mblColorBlue45 {
+  background-image: -webkit-gradient(linear, left top, right bottom, from(#7a9de9), to(#2362dd));
+  background-image: -moz-linear-gradient(top left, #7a9de9 0%, #2362dd 100%);
+  background-image: -o-linear-gradient(top, #7a9de9 0%, #2362dd 100%);
+  background-image: -ms-linear-gradient(top, #7a9de9 0%, #2362dd 100%);
+  background-image: linear-gradient(top, #7a9de9 0%, #2362dd 100%);
+}
+.mblColorDefault {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#e2e2e2), to(#a4a4a4));
+  background-image: -moz-linear-gradient(top, #e2e2e2 0%, #a4a4a4 100%);
+  background-image: -ms-linear-gradient(top, #e2e2e2 0%, #a4a4a4 100%);
+  background-image: -o-linear-gradient(top, #e2e2e2 0%, #a4a4a4 100%);
+  background-image: linear-gradient(top, #e2e2e2 0%, #a4a4a4 100%);
+}
+.mblColorDefault45 {
+  background-image: -webkit-gradient(linear, left top, right bottom, from(#e2e2e2), to(#a4a4a4));
+  background-image: -moz-linear-gradient(top left, #e2e2e2 0%, #a4a4a4 100%);
+  background-image: -ms-linear-gradient(top left, #e2e2e2 0%, #a4a4a4 100%);
+  background-image: -o-linear-gradient(top left, #e2e2e2 0%, #a4a4a4 100%);
+  background-image: linear-gradient(top left, #e2e2e2 0%, #a4a4a4 100%);
+}
+.mblColorDefaultSel {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#bbbbbb), to(#666666));
+  background-image: -moz-linear-gradient(top, #bbbbbb 0%, #666666 100%);
+  background-image: -ms-linear-gradient(top, #bbbbbb 0%, #666666 100%);
+  background-image: -o-linear-gradient(top, #bbbbbb 0%, #666666 100%);
+  background-image: linear-gradient(top, #bbbbbb 0%, #666666 100%);
+}
+.mblColorDefaultSel45 {
+  background-image: -webkit-gradient(linear, left top, right bottom, from(#bbbbbb), to(#666666));
+  background-image: -moz-linear-gradient(top left, #bbbbbb 0%, #666666 100%);
+  background-image: -ms-linear-gradient(top left, #bbbbbb 0%, #666666 100%);
+  background-image: -o-linear-gradient(top left, #bbbbbb 0%, #666666 100%);
+  background-image: linear-gradient(top left, #bbbbbb 0%, #666666 100%);
+}
+.mblHeading {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#dedede));
+  background-image: -moz-linear-gradient(top, #f6f6f6 0%, #dedede 100%);
+  background-image: -ms-linear-gradient(top, #f6f6f6 0%, #dedede 100%);
+  background-image: -o-linear-gradient(top, #f6f6f6 0%, #dedede 100%);
+  background-image: linear-gradient(top, #f6f6f6 0%, #dedede 100%);
+}
+.mblSlide {
+	-webkit-transition-property: none;
+	-moz-transition-property: none;
+	-o-transition-property: none;
+	-ms-transition-property: none;
+	transition-property: none;
+	-webkit-transition-duration: 0s;
+	-moz-transition-duration: 0s;
+	-o-transition-duration: 0s;
+	-ms-transition-duration: 0s;
+	transition-duration: 0s;
+}
+.mblSlide.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-moz-transition-property: -moz-transform;
+	-o-transition-property: -o-transform;
+	-ms-transition-property: -ms-transform;
+	transition-property: transform;
+	-webkit-transition-duration: .3s;
+	-moz-transition-duration: .3s;
+	-o-transition-duration: .3s;
+	-ms-transition-duration: .3s;
+	transition-duration: .3s;
+}
+.mblSlide.mblOut.mblReverse.mblTransition,
+.mblSlide.mblIn {
+	-webkit-transform: translate3d(100%,0px,0px) !important;
+	-moz-transform: translate3d(100%,0px,0px) !important;
+	-o-transform: translate3d(100%,0px,0px) !important;
+	-ms-transform: translate3d(100%,0px,0px) !important;
+	transform: translate3d(100%,0px,0px) !important;
+}
+.mblSlide.mblOut.mblTransition,
+.mblSlide.mblIn.mblReverse {
+	-webkit-transform: translate3d(-100%,0px,0px) !important;
+	-moz-transform: translate3d(-100%,0px,0px) !important;
+	-o-transform: translate3d(-100%,0px,0px) !important;
+	-ms-transform: translate3d(-100%,0px,0px) !important;
+	transform: translate3d(-100%,0px,0px) !important;
+}
+.mblSlide.mblOut,
+.mblSlide.mblIn.mblTransition {
+	-webkit-transform: translate3d(0%,0px,0px) !important;
+	-moz-transform: translate3d(0%,0px,0px) !important;
+	-o-transform: translate3d(0%,0px,0px) !important;
+	-ms-transform: translate3d(0%,0px,0px) !important;
+	transform: translate3d(0%,0px,0px) !important;
+}
+.dj_android.dj_tablet .mblSlide.mblTransition {
+	-webkit-transition-duration: .6s;
+	-moz-transition-duration: .6s;
+	-o-transition-duration: .6s;
+	-ms-transition-duration: .6s;
+	transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
+	-moz-transition-timing-function: linear;
+	-o-transition-timing-function: linear;
+	-ms-transition-timing-function: linear;
+	transition-timing-function: linear;
+}
+.mblFlip {
+	-webkit-transition-property: none;
+	-moz-transition-property: none;
+	-o-transition-property: none;
+	-ms-transition-property: none;
+	transition-property: none;
+	-webkit-transition-duration: 0s;
+	-moz-transition-duration: 0s;
+	-o-transition-duration: 0s;
+	-ms-transition-duration: 0s;
+	transition-duration: 0s;
+}
+.mblFlip.mblTransition {
+	-webkit-transition-property: all;
+	-moz-transition-property: all;
+	-o-transition-property: all;
+	-ms-transition-property: all;
+	transition-property: all;
+	-webkit-transition-duration: .2s;
+	-moz-transition-duration: .2s;
+	-o-transition-duration: .2s;
+	-ms-transition-duration: .2s;
+	transition-duration: .2s;
+	-webkit-transition-timing-function: linear;
+	-moz-transition-timing-function: linear;
+	-o-transition-timing-function: linear;
+	-ms-transition-timing-function: linear;
+	transition-timing-function: linear;
+}
+.mblFlip.mblOut {
+	-webkit-transform: scale(1,1) skew(0,0) !important;
+	-moz-transform: scale(1,1) skew(0,0) !important;
+	-o-transform: scale(1,1) skew(0,0) !important;
+	-ms-transform: scale(1,1) skew(0,0) !important;
+	transform: scale(1,1) skew(0,0) !important;
+}
+.mblFlip.mblOut.mblTransition {
+	-webkit-transform: scale(0,0.8) skew(0,30deg) !important;
+	-moz-transform: scale(0,0.8) skew(0,30deg) !important;
+	-o-transform: scale(0,0.8) skew(0,30deg) !important;
+	-ms-transform: scale(0,0.8) skew(0,30deg) !important;
+	transform: scale(0,0.8) skew(0,30deg) !important;
+}
+.mblFlip.mblIn {
+	-webkit-transform: scale(0,0.8) skew(0,-30deg) !important;
+	-moz-transform: scale(0,0.8) skew(0,-30deg) !important;
+	-o-transform: scale(0,0.8) skew(0,-30deg) !important;
+	-ms-transform: scale(0,0.8) skew(0,-30deg) !important;
+	transform: scale(0,0.8) skew(0,-30deg) !important;
+}
+.mblFlip.mblIn.mblTransition {
+	-webkit-transition-delay: .2s;
+	-moz-transition-delay: .2s;
+	-o-transition-delay: .2s;
+	-ms-transition-delay: .2s;
+	transition-delay: .2s;
+	-webkit-transform: scale(1,1) skew(0,0) !important;
+	-moz-transform: scale(1,1) skew(0,0) !important;
+	-o-transform: scale(1,1) skew(0,0) !important;
+	-ms-transform: scale(1,1) skew(0,0) !important;
+	transform: scale(1,1) skew(0,0) !important;
+}
+.dj_android.dj_tablet .mblFlip.mblTransition {
+	-webkit-transition-duration: .4s;
+	-moz-transition-duration: .4s;
+	-o-transition-duration: .4s;
+	-ms-transition-duration: .4s;
+	transition-duration: .4s;
+}
+.dj_android.dj_tablet .mblFlip.mblIn.mblTransition {
+	-webkit-transition-delay: .4s;
+	-moz-transition-delay: .4s;
+	-o-transition-delay: .4s;
+	-ms-transition-delay: .4s;
+	transition-delay: .4s;
+}
+.mblFade {
+	-webkit-transition-property: none;
+	-moz-transition-property: none;
+	-o-transition-property: none;
+	-ms-transition-property: none;
+	transition-property: none;
+	-webkit-transition-duration: 0s;
+	-moz-transition-duration: 0s;
+	-o-transition-duration: 0s;
+	-ms-transition-duration: 0s;
+	transition-duration: 0s;
+}
+.mblFade.mblTransition {
+	-webkit-transition-property: opacity;
+	-moz-transition-property: opacity;
+	-o-transition-property: opacity;
+	-ms-transition-property: opacity;
+	transition-property: opacity;
+	-webkit-transition-duration: .6s;
+	-moz-transition-duration: .6s;
+	-o-transition-duration: .6s;
+	-ms-transition-duration: .6s;
+	transition-duration: .6s;
+}
+.mblFade.mblOut.mblTransition {
+	-webkit-transition-timing-function: ease-out;
+	-moz-transition-timing-function: ease-out;
+	-o-transition-timing-function: ease-out;
+	-ms-transition-timing-function: ease-out;
+	transition-timing-function: ease-out;
+}
+.mblFade.mblIn.mblTransition {
+	-webkit-transition-timing-function: ease-in;
+	-moz-transition-timing-function: ease-in;
+	-o-transition-timing-function: ease-in;
+	-ms-transition-timing-function: ease-in;
+	transition-timing-function: ease-in;
+}
+.mblToolBarButton {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -moz-tap-highlight-color: rgba(255, 255, 255, 0);
+  -o-tap-highlight-color: rgba(255, 255, 255, 0);
+  -ms-tap-highlight-color: rgba(255, 255, 255, 0);
+  tap-highlight-color: rgba(255, 255, 255, 0);
+}
+.mblToolBarButtonArrow {
+  -webkit-transform: scale(0.7, 1.05) rotate(45deg);
+  -moz-transform: scale(0.7, 1.05) rotate(45deg);
+  -o-transform: scale(0.7, 1.05) rotate(45deg);
+  -ms-transform: scale(0.7, 1.05) rotate(45deg);
+  transform: scale(0.7, 1.05) rotate(45deg);
+}
+.mblRoundRect.mblShadow {
+  -webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+  -o-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+  -ms-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+}
+.mblEdgeToEdgeCategory {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#dedede));
+  background-image: -moz-linear-gradient(top, #f6f6f6 0%, #dedede 100%);
+  background-image: -ms-linear-gradient(top, #f6f6f6 0%, #dedede 100%);
+  background-image: -o-linear-gradient(top, #f6f6f6 0%, #dedede 100%);
+  background-image: linear-gradient(top, #f6f6f6 0%, #dedede 100%);
+}
+.mblDomButtonGrayArrow > div, .mblDomButtonArrow > div {
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.mblDomButtonDarkBlueCheck > div, .mblDomButtonCheck > div {
+	-webkit-transform: scaleX(0.7) rotate(135deg);
+	-moz-transform: scaleX(0.7) rotate(135deg);
+	-o-transform: scaleX(0.7) rotate(135deg);
+	-ms-transform: scaleX(0.7) rotate(135deg);
+	transform: scaleX(0.7) rotate(135deg);
+}
+.mblListItem {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -moz-tap-highlight-color: rgba(255, 255, 255, 0);
+  -o-tap-highlight-color: rgba(255, 255, 255, 0);
+  -ms-tap-highlight-color: rgba(255, 255, 255, 0);
+  tap-highlight-color: rgba(255, 255, 255, 0);
+}
+.mblListItemSelected {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#bbbbbb), to(#666666));
+  background-image: -moz-linear-gradient(top, #bbbbbb 0%, #666666 100%);
+  background-image: -ms-linear-gradient(top, #bbbbbb 0%, #666666 100%);
+  background-image: -o-linear-gradient(top, #bbbbbb 0%, #666666 100%);
+  background-image: linear-gradient(top, #bbbbbb 0%, #666666 100%);
+}
+.mblListItemFloat {
+  -webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+  -o-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+  -ms-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+  -webkit-border-radius: 0px !important;
+  -moz-border-radius: 0px !important;
+  -o-border-radius: 0px !important;
+  -ms-border-radius: 0px !important;
+  border-radius: 0px !important;
+}
+.mblSwitch {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -moz-tap-highlight-color: rgba(255, 255, 255, 0);
+  -o-tap-highlight-color: rgba(255, 255, 255, 0);
+  -ms-tap-highlight-color: rgba(255, 255, 255, 0);
+  tap-highlight-color: rgba(255, 255, 255, 0);
+}
+.mblSwitchAnimation .mblSwitchInner {
+  -webkit-transition-property: left;
+  -moz-transition-property: left;
+  -o-transition-property: left;
+  -ms-transition-property: left;
+  transition-property: left;
+  -webkit-transition-duration: .1s;
+  -moz-transition-duration: .1s;
+  -o-transition-duration: .1s;
+  -ms-transition-duration: .1s;
+  transition-duration: .1s;
+}
+.mblSwitchBg {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.mblSwitchBgLeft {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#bbbbbb), to(#666666));
+  background-image: -moz-linear-gradient(top, #bbbbbb 0%, #666666 100%);
+  background-image: -ms-linear-gradient(top, #bbbbbb 0%, #666666 100%);
+  background-image: -o-linear-gradient(top, #bbbbbb 0%, #666666 100%);
+  background-image: linear-gradient(top, #bbbbbb 0%, #666666 100%);
+}
+.mblSwitchBgRight {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e2e2e2));
+  background-image: -moz-linear-gradient(top, #ffffff 0%, #e2e2e2 100%);
+  background-image: -ms-linear-gradient(top, #ffffff 0%, #e2e2e2 100%);
+  background-image: -o-linear-gradient(top, #ffffff 0%, #e2e2e2 100%);
+  background-image: linear-gradient(top, #ffffff 0%, #e2e2e2 100%);
+}
+.mblSwitchKnob {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#e2e2e2), to(#a4a4a4));
+  background-image: -moz-linear-gradient(top, #e2e2e2 0%, #a4a4a4 100%);
+  background-image: -ms-linear-gradient(top, #e2e2e2 0%, #a4a4a4 100%);
+  background-image: -o-linear-gradient(top, #e2e2e2 0%, #a4a4a4 100%);
+  background-image: linear-gradient(top, #e2e2e2 0%, #a4a4a4 100%);
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.mblProgressIndicatorCenter .mblProgContainer {
+  -webkit-transform-origin: 50% 0;
+  -moz-transform-origin: 50% 0;
+  -o-transform-origin: 50% 0;
+  -ms-transform-origin: 50% 0;
+  transform-origin: 50% 0;
+}
+.mblProg {
+  -webkit-transform-origin: 0 2px;
+  -moz-transform-origin: 0 2px;
+  -o-transform-origin: 0 2px;
+  -ms-transform-origin: 0 2px;
+  transform-origin: 0 2px;
+}
+.mblProg0 {
+  -webkit-transform: translate(18px, 10px) rotate(-90.1deg);
+  -moz-transform: translate(18px, 10px) rotate(-90.1deg);
+  -o-transform: translate(18px, 10px) rotate(-90.1deg);
+  -ms-transform: translate(18px, 10px) rotate(-90.1deg);
+  transform: translate(18px, 10px) rotate(-90.1deg);
+}
+.mblProg1 {
+  -webkit-transform: translate(22px, 11px) rotate(-60deg);
+  -moz-transform: translate(22px, 11px) rotate(-60deg);
+  -o-transform: translate(22px, 11px) rotate(-60deg);
+  -ms-transform: translate(22px, 11px) rotate(-60deg);
+  transform: translate(22px, 11px) rotate(-60deg);
+}
+.mblProg2 {
+  -webkit-transform: translate(25px, 14px) rotate(-30deg);
+  -moz-transform: translate(25px, 14px) rotate(-30deg);
+  -o-transform: translate(25px, 14px) rotate(-30deg);
+  -ms-transform: translate(25px, 14px) rotate(-30deg);
+  transform: translate(25px, 14px) rotate(-30deg);
+}
+.mblProg3 {
+  -webkit-transform: translate(26px, 18px) rotate(0deg);
+  -moz-transform: translate(26px, 18px) rotate(0deg);
+  -o-transform: translate(26px, 18px) rotate(0deg);
+  -ms-transform: translate(26px, 18px) rotate(0deg);
+  transform: translate(26px, 18px) rotate(0deg);
+}
+.mblProg4 {
+  -webkit-transform: translate(25px, 22px) rotate(30deg);
+  -moz-transform: translate(25px, 22px) rotate(30deg);
+  -o-transform: translate(25px, 22px) rotate(30deg);
+  -ms-transform: translate(25px, 22px) rotate(30deg);
+  transform: translate(25px, 22px) rotate(30deg);
+}
+.mblProg5 {
+  -webkit-transform: translate(22px, 25px) rotate(60deg);
+  -moz-transform: translate(22px, 25px) rotate(60deg);
+  -o-transform: translate(22px, 25px) rotate(60deg);
+  -ms-transform: translate(22px, 25px) rotate(60deg);
+  transform: translate(22px, 25px) rotate(60deg);
+}
+.mblProg6 {
+  -webkit-transform: translate(18px, 26px) rotate(90.1deg);
+  -moz-transform: translate(18px, 26px) rotate(90.1deg);
+  -o-transform: translate(18px, 26px) rotate(90.1deg);
+  -ms-transform: translate(18px, 26px) rotate(90.1deg);
+  transform: translate(18px, 26px) rotate(90.1deg);
+}
+.mblProg7 {
+  -webkit-transform: translate(14px, 25px) rotate(120deg);
+  -moz-transform: translate(14px, 25px) rotate(120deg);
+  -o-transform: translate(14px, 25px) rotate(120deg);
+  -ms-transform: translate(14px, 25px) rotate(120deg);
+  transform: translate(14px, 25px) rotate(120deg);
+}
+.mblProg8 {
+  -webkit-transform: translate(11px, 22px) rotate(150deg);
+  -moz-transform: translate(11px, 22px) rotate(150deg);
+  -o-transform: translate(11px, 22px) rotate(150deg);
+  -ms-transform: translate(11px, 22px) rotate(150deg);
+  transform: translate(11px, 22px) rotate(150deg);
+}
+.mblProg9 {
+  -webkit-transform: translate(10px, 18px) rotate(180deg);
+  -moz-transform: translate(10px, 18px) rotate(180deg);
+  -o-transform: translate(10px, 18px) rotate(180deg);
+  -ms-transform: translate(10px, 18px) rotate(180deg);
+  transform: translate(10px, 18px) rotate(180deg);
+}
+.mblProg10 {
+  -webkit-transform: translate(11px, 14px) rotate(210deg);
+  -moz-transform: translate(11px, 14px) rotate(210deg);
+  -o-transform: translate(11px, 14px) rotate(210deg);
+  -ms-transform: translate(11px, 14px) rotate(210deg);
+  transform: translate(11px, 14px) rotate(210deg);
+}
+.mblProg11 {
+  -webkit-transform: translate(14px, 11px) rotate(240deg);
+  -moz-transform: translate(14px, 11px) rotate(240deg);
+  -o-transform: translate(14px, 11px) rotate(240deg);
+  -ms-transform: translate(14px, 11px) rotate(240deg);
+  transform: translate(14px, 11px) rotate(240deg);
+}
+.mblDomButtonWhiteUpArrow > div > div {
+	-webkit-transform: scaleX(0.6) rotate(45deg);
+	-moz-transform: scaleX(0.6) rotate(45deg);
+	-o-transform: scaleX(0.6) rotate(45deg);
+	-ms-transform: scaleX(0.6) rotate(45deg);
+	transform: scaleX(0.6) rotate(45deg);
+}
+.mblDomButtonWhiteDownArrow > div > div {
+	-webkit-transform: scaleX(0.6) rotate(45deg);
+	-moz-transform: scaleX(0.6) rotate(45deg);
+	-o-transform: scaleX(0.6) rotate(45deg);
+	-ms-transform: scaleX(0.6) rotate(45deg);
+	transform: scaleX(0.6) rotate(45deg);
+}
+.mblDomButtonWhiteSearch > div > div {
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.mblDomButtonBlueMinus > div, .mblDomButtonBluePlus > div {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#7a9de9), to(#2362dd), color-stop(0.5, #366edf), color-stop(0.5, #215fdc));
+	background-image: -webkit-linear-gradient(top,#7a9de9, #366edf 50%, #215fdc 50%, #2362dd);
+	background-image: -moz-linear-gradient(top,#7a9de9, #366edf 50%, #215fdc 50%, #2362dd);
+	background-image: -o-linear-gradient(top,#7a9de9, #366edf 50%, #215fdc 50%, #2362dd);
+	background-image: -ms-linear-gradient(top,#7a9de9, #366edf 50%, #215fdc 50%, #2362dd);
+	background-image: linear-gradient(top,#7a9de9, #366edf 50%, #215fdc 50%, #2362dd);
+}
+.mblDomButtonDarkBlueMinus > div, .mblDomButtonDarkBluePlus > div {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999));
+	background-image: -webkit-linear-gradient(top,#8ea4c1, #5877a2 50%, #476999 50%, #4a6c9b);
+	background-image: -moz-linear-gradient(top,#8ea4c1, #5877a2 50%, #476999 50%, #4a6c9b);
+	background-image: -o-linear-gradient(top,#8ea4c1, #5877a2 50%, #476999 50%, #4a6c9b);
+	background-image: -ms-linear-gradient(top,#8ea4c1, #5877a2 50%, #476999 50%, #4a6c9b);
+	background-image: linear-gradient(top,#8ea4c1, #5877a2 50%, #476999 50%, #4a6c9b);
+}
+.mblDomButtonRedMinus > div, .mblDomButtonRedPlus > div {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#d3656d), to(#bc1320), color-stop(0.5, #c9404b), color-stop(0.5, #bc1421));
+	background-image: -webkit-linear-gradient(top,#d3656d, #c9404b 50%, #bc1421 50%, #bc1320);
+	background-image: -moz-linear-gradient(top,#d3656d, #c9404b 50%, #bc1421 50%, #bc1320);
+	background-image: -o-linear-gradient(top,#d3656d, #c9404b 50%, #bc1421 50%, #bc1320);
+	background-image: -ms-linear-gradient(top,#d3656d, #c9404b 50%, #bc1421 50%, #bc1320);
+	background-image: linear-gradient(top,#d3656d, #c9404b 50%, #bc1421 50%, #bc1320);
+}
+.mblDomButtonCheckboxOn {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#eff3ef), to(#bdbebd));
+	background-image: -webkit-linear-gradient(top,#eff3ef, #bdbebd);
+	background-image: -moz-linear-gradient(top,#eff3ef, #bdbebd);
+	background-image: -o-linear-gradient(top,#eff3ef, #bdbebd);
+	background-image: -ms-linear-gradient(top,#eff3ef, #bdbebd);
+	background-image: linear-gradient(top,#eff3ef, #bdbebd);
+}
+.mblDomButtonCheckboxOn > div {
+	-webkit-transform: rotate(50deg);
+	-moz-transform: rotate(50deg);
+	-o-transform: rotate(50deg);
+	-ms-transform: rotate(50deg);
+	transform: rotate(50deg);
+}
+.mblDomButtonCheckboxOn > div > div {
+	-webkit-transform: rotate(-100deg);
+	-moz-transform: rotate(-100deg);
+	-o-transform: rotate(-100deg);
+	-ms-transform: rotate(-100deg);
+	transform: rotate(-100deg);
+}
+.mblDomButtonCheckboxOff {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#eff3ef), to(#bdbebd));
+	background-image: -webkit-linear-gradient(top,#eff3ef, #bdbebd);
+	background-image: -moz-linear-gradient(top,#eff3ef, #bdbebd);
+	background-image: -o-linear-gradient(top,#eff3ef, #bdbebd);
+	background-image: -ms-linear-gradient(top,#eff3ef, #bdbebd);
+	background-image: linear-gradient(top,#eff3ef, #bdbebd);
+}
+.mblDomButtonCheckboxOff > div {
+	-webkit-transform: rotate(50deg);
+	-moz-transform: rotate(50deg);
+	-o-transform: rotate(50deg);
+	-ms-transform: rotate(50deg);
+	transform: rotate(50deg);
+}
+.mblDomButtonCheckboxOff > div > div {
+	-webkit-transform: rotate(-100deg);
+	-moz-transform: rotate(-100deg);
+	-o-transform: rotate(-100deg);
+	-ms-transform: rotate(-100deg);
+	transform: rotate(-100deg);
+}
+.mblDomButtonBlueCircleMinus > div {
+	-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-o-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-ms-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+}
+.mblDomButtonBlueCircleMinus > div > div {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#6ba2e7), to(#216dd6), color-stop(0.5, #4282de), color-stop(0.5, #216dd6));
+	background-image: -webkit-linear-gradient(top,#6ba2e7, #4282de 50%, #216dd6 50%, #216dd6);
+	background-image: -moz-linear-gradient(top,#6ba2e7, #4282de 50%, #216dd6 50%, #216dd6);
+	background-image: -o-linear-gradient(top,#6ba2e7, #4282de 50%, #216dd6 50%, #216dd6);
+	background-image: -ms-linear-gradient(top,#6ba2e7, #4282de 50%, #216dd6 50%, #216dd6);
+	background-image: linear-gradient(top,#6ba2e7, #4282de 50%, #216dd6 50%, #216dd6);
+}
+.mblDomButtonBlueCirclePlus > div {
+	-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-o-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-ms-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+}
+.mblDomButtonBlueCirclePlus > div > div {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#6ba2e7), to(#216dd6), color-stop(0.5, #4282de), color-stop(0.5, #216dd6));
+	background-image: -webkit-linear-gradient(top,#6ba2e7, #4282de 50%, #216dd6 50%, #216dd6);
+	background-image: -moz-linear-gradient(top,#6ba2e7, #4282de 50%, #216dd6 50%, #216dd6);
+	background-image: -o-linear-gradient(top,#6ba2e7, #4282de 50%, #216dd6 50%, #216dd6);
+	background-image: -ms-linear-gradient(top,#6ba2e7, #4282de 50%, #216dd6 50%, #216dd6);
+	background-image: linear-gradient(top,#6ba2e7, #4282de 50%, #216dd6 50%, #216dd6);
+}
+.mblDomButtonBlueCircleArrow > div {
+	-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-o-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-ms-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+}
+.mblDomButtonBlueCircleArrow > div > div {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#6ba2e7), to(#216dd6), color-stop(0.5, #4282de), color-stop(0.5, #216dd6));
+	background-image: -webkit-linear-gradient(top,#6ba2e7, #4282de 50%, #216dd6 50%, #216dd6);
+	background-image: -moz-linear-gradient(top,#6ba2e7, #4282de 50%, #216dd6 50%, #216dd6);
+	background-image: -o-linear-gradient(top,#6ba2e7, #4282de 50%, #216dd6 50%, #216dd6);
+	background-image: -ms-linear-gradient(top,#6ba2e7, #4282de 50%, #216dd6 50%, #216dd6);
+	background-image: linear-gradient(top,#6ba2e7, #4282de 50%, #216dd6 50%, #216dd6);
+}
+.mblDomButtonBlueCircleArrow > div > div > div {
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.mblDomButtonRedCircleMinus > div {
+	-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-o-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-ms-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+}
+.mblDomButtonRedCircleMinus > div > div {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#d3656d), to(#bc1320), color-stop(0.5, #c9404b), color-stop(0.5, #bc1421));
+	background-image: -webkit-linear-gradient(top,#d3656d, #c9404b 50%, #bc1421 50%, #bc1320);
+	background-image: -moz-linear-gradient(top,#d3656d, #c9404b 50%, #bc1421 50%, #bc1320);
+	background-image: -o-linear-gradient(top,#d3656d, #c9404b 50%, #bc1421 50%, #bc1320);
+	background-image: -ms-linear-gradient(top,#d3656d, #c9404b 50%, #bc1421 50%, #bc1320);
+	background-image: linear-gradient(top,#d3656d, #c9404b 50%, #bc1421 50%, #bc1320);
+}
+.mblDomButtonRedCirclePlus > div {
+	-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-o-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-ms-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+}
+.mblDomButtonRedCirclePlus > div > div {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#d3656d), to(#bc1320), color-stop(0.5, #c9404b), color-stop(0.5, #bc1421));
+	background-image: -webkit-linear-gradient(top,#d3656d, #c9404b 50%, #bc1421 50%, #bc1320);
+	background-image: -moz-linear-gradient(top,#d3656d, #c9404b 50%, #bc1421 50%, #bc1320);
+	background-image: -o-linear-gradient(top,#d3656d, #c9404b 50%, #bc1421 50%, #bc1320);
+	background-image: -ms-linear-gradient(top,#d3656d, #c9404b 50%, #bc1421 50%, #bc1320);
+	background-image: linear-gradient(top,#d3656d, #c9404b 50%, #bc1421 50%, #bc1320);
+}
+.mblDomButtonRedCircleArrow > div {
+	-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-o-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-ms-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+}
+.mblDomButtonRedCircleArrow > div > div {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#d3656d), to(#bc1320), color-stop(0.5, #c9404b), color-stop(0.5, #bc1421));
+	background-image: -webkit-linear-gradient(top,#d3656d, #c9404b 50%, #bc1421 50%, #bc1320);
+	background-image: -moz-linear-gradient(top,#d3656d, #c9404b 50%, #bc1421 50%, #bc1320);
+	background-image: -o-linear-gradient(top,#d3656d, #c9404b 50%, #bc1421 50%, #bc1320);
+	background-image: -ms-linear-gradient(top,#d3656d, #c9404b 50%, #bc1421 50%, #bc1320);
+	background-image: linear-gradient(top,#d3656d, #c9404b 50%, #bc1421 50%, #bc1320);
+}
+.mblDomButtonRedCircleArrow > div > div > div {
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.mblDomButtonGreenCircleMinus > div {
+	-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-o-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-ms-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+}
+.mblDomButtonGreenCircleMinus > div > div {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#7be75a), to(#398c08), color-stop(0.5, #6bc642), color-stop(0.5, #4aad21));
+	background-image: -webkit-linear-gradient(top,#7be75a, #6bc642 50%, #4aad21 50%, #398c08);
+	background-image: -moz-linear-gradient(top,#7be75a, #6bc642 50%, #4aad21 50%, #398c08);
+	background-image: -o-linear-gradient(top,#7be75a, #6bc642 50%, #4aad21 50%, #398c08);
+	background-image: -ms-linear-gradient(top,#7be75a, #6bc642 50%, #4aad21 50%, #398c08);
+	background-image: linear-gradient(top,#7be75a, #6bc642 50%, #4aad21 50%, #398c08);
+}
+.mblDomButtonGreenCirclePlus > div {
+	-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-o-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-ms-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+}
+.mblDomButtonGreenCirclePlus > div > div {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#7be75a), to(#398c08), color-stop(0.5, #6bc642), color-stop(0.5, #4aad21));
+	background-image: -webkit-linear-gradient(top,#7be75a, #6bc642 50%, #4aad21 50%, #398c08);
+	background-image: -moz-linear-gradient(top,#7be75a, #6bc642 50%, #4aad21 50%, #398c08);
+	background-image: -o-linear-gradient(top,#7be75a, #6bc642 50%, #4aad21 50%, #398c08);
+	background-image: -ms-linear-gradient(top,#7be75a, #6bc642 50%, #4aad21 50%, #398c08);
+	background-image: linear-gradient(top,#7be75a, #6bc642 50%, #4aad21 50%, #398c08);
+}
+.mblDomButtonGreenCircleArrow > div {
+	-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-o-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-ms-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+}
+.mblDomButtonGreenCircleArrow > div > div {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#7be75a), to(#398c08), color-stop(0.5, #6bc642), color-stop(0.5, #4aad21));
+	background-image: -webkit-linear-gradient(top,#7be75a, #6bc642 50%, #4aad21 50%, #398c08);
+	background-image: -moz-linear-gradient(top,#7be75a, #6bc642 50%, #4aad21 50%, #398c08);
+	background-image: -o-linear-gradient(top,#7be75a, #6bc642 50%, #4aad21 50%, #398c08);
+	background-image: -ms-linear-gradient(top,#7be75a, #6bc642 50%, #4aad21 50%, #398c08);
+	background-image: linear-gradient(top,#7be75a, #6bc642 50%, #4aad21 50%, #398c08);
+}
+.mblDomButtonGreenCircleArrow > div > div > div {
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.mblDomButtonBlackCircleCross > div {
+	-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-o-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-ms-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+}
+.mblDomButtonBlackCircleCross > div > div > div {
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.mblDomButtonSilverCircleDownArrow > div {
+	-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-o-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-ms-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#c2c2c2));
+	background-image: -webkit-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: -moz-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: -o-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: -ms-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: linear-gradient(top,#efefef, #c2c2c2);
+}
+.mblDomButtonSilverCircleDownArrow > div > div {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#979797), to(#616161));
+	background-image: -webkit-linear-gradient(top,#979797, #616161);
+	background-image: -moz-linear-gradient(top,#979797, #616161);
+	background-image: -o-linear-gradient(top,#979797, #616161);
+	background-image: -ms-linear-gradient(top,#979797, #616161);
+	background-image: linear-gradient(top,#979797, #616161);
+}
+.mblDomButtonSilverCircleDownArrow > div > div > div > div {
+	-webkit-transform: scaleX(0.7) rotate(45deg);
+	-moz-transform: scaleX(0.7) rotate(45deg);
+	-o-transform: scaleX(0.7) rotate(45deg);
+	-ms-transform: scaleX(0.7) rotate(45deg);
+	transform: scaleX(0.7) rotate(45deg);
+}
+.mblDomButtonSilverCircleGreenButton > div {
+	-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-o-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-ms-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#c2c2c2));
+	background-image: -webkit-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: -moz-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: -o-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: -ms-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: linear-gradient(top,#efefef, #c2c2c2);
+}
+.mblDomButtonSilverCircleGreenButton > div > div {
+	background-image: -webkit-gradient(radial, center center, 0, center center, 6, from(#17df25), to(#1ba51c));
+    background-image : -o-radial-gradient(circle 6, #17df25, #1ba51c);
+    background-image : -ms-radial-gradient(circle 6, #17df25, #1ba51c);
+    background-image : -moz-radial-gradient(circle 6, #17df25, #1ba51c);
+    background-image : -webkit-radial-gradient(circle 6, #17df25, #1ba51c);
+    background-image : radial-gradient(circle 6, #17df25, #1ba51c);
+}
+.mblDomButtonSilverCircleGrayButton > div {
+	-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-o-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-ms-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#c2c2c2));
+	background-image: -webkit-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: -moz-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: -o-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: -ms-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: linear-gradient(top,#efefef, #c2c2c2);
+}
+.mblDomButtonSilverCircleGrayButton > div > div {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#d4d4d4), to(#bababa));
+	background-image: -webkit-linear-gradient(top,#d4d4d4, #bababa);
+	background-image: -moz-linear-gradient(top,#d4d4d4, #bababa);
+	background-image: -o-linear-gradient(top,#d4d4d4, #bababa);
+	background-image: -ms-linear-gradient(top,#d4d4d4, #bababa);
+	background-image: linear-gradient(top,#d4d4d4, #bababa);
+}
+.mblDomButtonSilverCircleOrangeButton > div {
+	-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-o-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-ms-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#c2c2c2));
+	background-image: -webkit-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: -moz-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: -o-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: -ms-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: linear-gradient(top,#efefef, #c2c2c2);
+}
+.mblDomButtonSilverCircleOrangeButton > div > div {
+	background-image: -webkit-gradient(radial, center center, 0, center center, 6, from(#ff7a07), to(#e66b03));
+    background-image : -o-radial-gradient(circle 6, #ff7a07, #e66b03);
+    background-image : -ms-radial-gradient(circle 6, #ff7a07, #e66b03);
+    background-image : -moz-radial-gradient(circle 6, #ff7a07, #e66b03);
+    background-image : -webkit-radial-gradient(circle 6, #ff7a07, #e66b03);
+    background-image : radial-gradient(circle 6, #ff7a07, #e66b03);
+}
+.mblDomButtonSilverCircleGreenPlus > div {
+	-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-o-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-ms-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#c2c2c2));
+	background-image: -webkit-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: -moz-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: -o-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: -ms-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: linear-gradient(top,#efefef, #c2c2c2);
+}
+.mblDomButtonSilverCircleRedCross > div {
+	-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-o-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-ms-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#c2c2c2));
+	background-image: -webkit-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: -moz-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: -o-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: -ms-linear-gradient(top,#efefef, #c2c2c2);
+	background-image: linear-gradient(top,#efefef, #c2c2c2);
+}
+.mblDomButtonSilverCircleRedCross > div > div {
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.mblDomButtonBlueBall > div {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#84aff4), to(#2758b3));
+	background-image: -webkit-linear-gradient(top,#84aff4, #2758b3);
+	background-image: -moz-linear-gradient(top,#84aff4, #2758b3);
+	background-image: -o-linear-gradient(top,#84aff4, #2758b3);
+	background-image: -ms-linear-gradient(top,#84aff4, #2758b3);
+	background-image: linear-gradient(top,#84aff4, #2758b3);
+}
+.mblDomButtonGreenBall > div {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#59e738), to(#0aa908));
+	background-image: -webkit-linear-gradient(top,#59e738, #0aa908);
+	background-image: -moz-linear-gradient(top,#59e738, #0aa908);
+	background-image: -o-linear-gradient(top,#59e738, #0aa908);
+	background-image: -ms-linear-gradient(top,#59e738, #0aa908);
+	background-image: linear-gradient(top,#59e738, #0aa908);
+}
+.mblDomButtonOrangeBall > div {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#f9e20a), to(#ff6b0a));
+	background-image: -webkit-linear-gradient(top,#f9e20a, #ff6b0a);
+	background-image: -moz-linear-gradient(top,#f9e20a, #ff6b0a);
+	background-image: -o-linear-gradient(top,#f9e20a, #ff6b0a);
+	background-image: -ms-linear-gradient(top,#f9e20a, #ff6b0a);
+	background-image: linear-gradient(top,#f9e20a, #ff6b0a);
+}
+.mblDomButtonRedBall > div {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#ec9b9d), to(#d73c3f));
+	background-image: -webkit-linear-gradient(top,#ec9b9d, #d73c3f);
+	background-image: -moz-linear-gradient(top,#ec9b9d, #d73c3f);
+	background-image: -o-linear-gradient(top,#ec9b9d, #d73c3f);
+	background-image: -ms-linear-gradient(top,#ec9b9d, #d73c3f);
+	background-image: linear-gradient(top,#ec9b9d, #d73c3f);
+}
+.mblDomButtonYellowStar > div {
+	-webkit-transform: rotate(0deg);
+	-moz-transform: rotate(0deg);
+	-o-transform: rotate(0deg);
+	-ms-transform: rotate(0deg);
+	transform: rotate(0deg);
+}
+.mblDomButtonYellowStar > div > div > div {
+	-webkit-transform: rotate(72deg);
+	-moz-transform: rotate(72deg);
+	-o-transform: rotate(72deg);
+	-ms-transform: rotate(72deg);
+	transform: rotate(72deg);
+}
+.mblDomButtonYellowStar > div > div > div > div {
+	-webkit-transform: rotate(216deg);
+	-moz-transform: rotate(216deg);
+	-o-transform: rotate(216deg);
+	-ms-transform: rotate(216deg);
+	transform: rotate(216deg);
+}
+.mblDomButtonGrayStar > div {
+	-webkit-transform: rotate(0deg);
+	-moz-transform: rotate(0deg);
+	-o-transform: rotate(0deg);
+	-ms-transform: rotate(0deg);
+	transform: rotate(0deg);
+}
+.mblDomButtonGrayStar > div > div > div {
+	-webkit-transform: rotate(72deg);
+	-moz-transform: rotate(72deg);
+	-o-transform: rotate(72deg);
+	-ms-transform: rotate(72deg);
+	transform: rotate(72deg);
+}
+.mblDomButtonGrayStar > div > div > div > div {
+	-webkit-transform: rotate(216deg);
+	-moz-transform: rotate(216deg);
+	-o-transform: rotate(216deg);
+	-ms-transform: rotate(216deg);
+	transform: rotate(216deg);
+}
+.mblDomButtonGrayCross > div {
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.mblDomButtonRedCross > div {
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.mblDomButtonWhiteCross > div {
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.mblDissolve.mblOut {
+	-webkit-animation-duration: 1s;
+	-moz-animation-duration: 1s;
+	-o-animation-duration: 1s;
+	-ms-animation-duration: 1s;
+	animation-duration: 1s;
+	-webkit-animation-name: mblDissolveOut;
+	-moz-animation-name: mblDissolveOut;
+	-o-animation-name: mblDissolveOut;
+	-ms-animation-name: mblDissolveOut;
+	animation-name: mblDissolveOut;
+	-webkit-animation-timing-function: cubic-bezier(.25,1,.75,0);
+	-moz-animation-timing-function: cubic-bezier(.25,1,.75,0);
+	-o-animation-timing-function: cubic-bezier(.25,1,.75,0);
+	-ms-animation-timing-function: cubic-bezier(.25,1,.75,0);
+	animation-timing-function: cubic-bezier(.25,1,.75,0);
+}
+.mblDissolve.mblIn {
+	-webkit-animation-duration: 1s;
+	-moz-animation-duration: 1s;
+	-o-animation-duration: 1s;
+	-ms-animation-duration: 1s;
+	animation-duration: 1s;
+	-webkit-animation-name: mblDissolveIn;
+	-moz-animation-name: mblDissolveIn;
+	-o-animation-name: mblDissolveIn;
+	-ms-animation-name: mblDissolveIn;
+	animation-name: mblDissolveIn;
+	-webkit-animation-timing-function: cubic-bezier(.25,1,.75,0);
+	-moz-animation-timing-function: cubic-bezier(.25,1,.75,0);
+	-o-animation-timing-function: cubic-bezier(.25,1,.75,0);
+	-ms-animation-timing-function: cubic-bezier(.25,1,.75,0);
+	animation-timing-function: cubic-bezier(.25,1,.75,0);
+}
+@keyframes mblDissolveOut {
+	from { opacity: 1; }
+	to { opacity: 0; }
+}
+@-webkit-keyframes mblDissolveOut {
+	from { opacity: 1; }
+	to { opacity: 0; }
+}
+@-moz-keyframes mblDissolveOut {
+	from { opacity: 1; }
+	to { opacity: 0; }
+}
+@-o-keyframes mblDissolveOut {
+	from { opacity: 1; }
+	to { opacity: 0; }
+}
+@keyframes mblDissolveIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+@-webkit-keyframes mblDissolveIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+@-moz-keyframes mblDissolveIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+@-o-keyframes mblDissolveIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+.mblCover {
+	-webkit-transition-property: none;
+	-moz-transition-property: none;
+	-o-transition-property: none;
+	-ms-transition-property: none;
+	transition-property: none;
+	-webkit-transition-duration: 0s;
+	-moz-transition-duration: 0s;
+	-o-transition-duration: 0s;
+	-ms-transition-duration: 0s;
+	transition-duration: 0s;
+}
+.mblCover.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-moz-transition-property: -moz-transform;
+	-o-transition-property: -o-transform;
+	-ms-transition-property: -ms-transform;
+	transition-property: transform;
+	-webkit-transition-duration: .4s;
+	-moz-transition-duration: .4s;
+	-o-transition-duration: .4s;
+	-ms-transition-duration: .4s;
+	transition-duration: .4s;
+}
+.mblCover.mblOut {
+	-webkit-transform: translate3d(0%,0px,-1px) !important;
+	-moz-transform: translate3d(0%,0px,-1px) !important;
+	-o-transform: translate3d(0%,0px,-1px) !important;
+	-ms-transform: translate3d(0%,0px,-1px) !important;
+	transform: translate3d(0%,0px,-1px) !important;
+}
+.mblCover.mblIn {
+	-webkit-transform: translate3d(100%,0px,0px) !important;
+	-moz-transform: translate3d(100%,0px,0px) !important;
+	-o-transform: translate3d(100%,0px,0px) !important;
+	-ms-transform: translate3d(100%,0px,0px) !important;
+	transform: translate3d(100%,0px,0px) !important;
+}
+.mblCover.mblIn.mblReverse {
+	-webkit-transform: translate3d(-100%,0px,0px) !important;
+	-moz-transform: translate3d(-100%,0px,0px) !important;
+	-o-transform: translate3d(-100%,0px,0px) !important;
+	-ms-transform: translate3d(-100%,0px,0px) !important;
+	transform: translate3d(-100%,0px,0px) !important;
+}
+.mblCover.mblOut.mblTransition,
+.mblCover.mblIn.mblTransition {
+	-webkit-transform: translate3d(0%,0px,0px) !important;
+	-moz-transform: translate3d(0%,0px,0px) !important;
+	-o-transform: translate3d(0%,0px,0px) !important;
+	-ms-transform: translate3d(0%,0px,0px) !important;
+	transform: translate3d(0%,0px,0px) !important;
+}
+.dj_android.dj_tablet .mblCover.mblTransition {
+	-webkit-transition-duration: .6s;
+	-moz-transition-duration: .6s;
+	-o-transition-duration: .6s;
+	-ms-transition-duration: .6s;
+	transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
+	-moz-transition-timing-function: linear;
+	-o-transition-timing-function: linear;
+	-ms-transition-timing-function: linear;
+	transition-timing-function: linear;
+}
+.mblCube {
+	-webkit-animation-duration: .8s;
+	-moz-animation-duration: .8s;
+	-o-animation-duration: .8s;
+	-ms-animation-duration: .8s;
+	animation-duration: .8s;
+	-webkit-animation-timing-function: linear;
+	-moz-animation-timing-function: linear;
+	-o-animation-timing-function: linear;
+	-ms-animation-timing-function: linear;
+	animation-timing-function: linear;
+}
+.mblCube.mblOut {
+	-webkit-animation-name: mblCubeOut;
+	-moz-animation-name: mblCubeOut;
+	-o-animation-name: mblCubeOut;
+	-ms-animation-name: mblCubeOut;
+	animation-name: mblCubeOut;
+	-webkit-transform-origin: 0% 50% !important;
+	-moz-transform-origin: 0% 50% !important;
+	-o-transform-origin: 0% 50% !important;
+	-ms-transform-origin: 0% 50% !important;
+	transform-origin: 0% 50% !important;
+}
+.mblCube.mblIn {
+	-webkit-animation-name: mblCubeIn;
+	-moz-animation-name: mblCubeIn;
+	-o-animation-name: mblCubeIn;
+	-ms-animation-name: mblCubeIn;
+	animation-name: mblCubeIn;
+	-webkit-transform-origin: 100% 50% !important;
+	-moz-transform-origin: 100% 50% !important;
+	-o-transform-origin: 100% 50% !important;
+	-ms-transform-origin: 100% 50% !important;
+	transform-origin: 100% 50% !important;
+}
+@keyframes mblCubeOut {
+	0% { -transform: scale(1,1) skew(0deg,0deg); }
+	50% { transform: scale(.5,1) skew(0deg,3deg); }
+	100% { transform: scale(0,1) skew(0deg,0deg); }
+}
+@-webkit-keyframes mblCubeOut {
+	0% { -webkit-transform: scale(1,1) skew(0deg,0deg); }
+	50% { -webkit-transform: scale(.5,1) skew(0deg,3deg); }
+	100% { -webkit-transform: scale(0,1) skew(0deg,0deg); }
+}
+@-moz-keyframes mblCubeOut {
+	0% { -moz-transform: scale(1,1) skew(0deg,0deg); }
+	50% { -moz-transform: scale(.5,1) skew(0deg,3deg); }
+	100% { -moz-transform: scale(0,1) skew(0deg,0deg); }
+}
+@-o-keyframes mblCubeOut {
+	0% { -o-transform: scale(1,1) skew(0deg,0deg); }
+	50% { -o-transform: scale(.5,1) skew(0deg,3deg); }
+	100% { -o-transform: scale(0,1) skew(0deg,0deg); }
+}
+@keyframes mblCubeIn {
+	0% { transform: scale(0,1) skew(0deg,0deg); }
+	50% { transform: scale(.5,1) skew(0deg,-3deg); }
+	100% { transform: scale(1,1) skew(0deg,0deg); }
+}
+@-webkit-keyframes mblCubeIn {
+	0% { -webkit-transform: scale(0,1) skew(0deg,0deg); }
+	50% { -webkit-transform: scale(.5,1) skew(0deg,-3deg); }
+	100% { -webkit-transform: scale(1,1) skew(0deg,0deg); }
+}
+@-moz-keyframes mblCubeIn {
+	0% { -moz-transform: scale(0,1) skew(0deg,0deg); }
+	50% { -moz-transform: scale(.5,1) skew(0deg,-3deg); }
+	100% { -moz-transform: scale(1,1) skew(0deg,0deg); }
+}
+@-o-keyframes mblCubeIn {
+	0% { -o-transform: scale(0,1) skew(0deg,0deg); }
+	50% { -o-transform: scale(.5,1) skew(0deg,-3deg); }
+	100% { -o-transform: scale(1,1) skew(0deg,0deg); }
+}
+.mblCube.mblOut.mblReverse {
+	-webkit-animation-name: mblCubeOutReverse;
+	-moz-animation-name: mblCubeOutReverse;
+	-o-animation-name: mblCubeOutReverse;
+	-ms-animation-name: mblCubeOutReverse;
+	animation-name: mblCubeOutReverse;
+	-webkit-transform-origin: 100% 50% !important;
+	-moz-transform-origin: 100% 50% !important;
+	-o-transform-origin: 100% 50% !important;
+	-ms-transform-origin: 100% 50% !important;
+	transform-origin: 100% 50% !important;
+}
+.mblCube.mblIn.mblReverse {
+	-webkit-animation-name: mblCubeInReverse;
+	-moz-animation-name: mblCubeInReverse;
+	-o-animation-name: mblCubeInReverse;
+	-ms-animation-name: mblCubeInReverse;
+	animation-name: mblCubeInReverse;
+	-webkit-transform-origin: 0% 50% !important;
+	-moz-transform-origin: 0% 50% !important;
+	-o-transform-origin: 0% 50% !important;
+	-ms-transform-origin: 0% 50% !important;
+	transform-origin: 0% 50% !important;
+}
+@keyframes mblCubeOutReverse {
+	0% { transform: scale(1,1) skew(0deg,0deg); }
+	50% { transform: scale(.5,1) skew(0deg,-3deg); }
+	100% { transform: scale(0,1) skew(0deg,0deg); }
+}
+@-webkit-keyframes mblCubeOutReverse {
+	0% { -webkit-transform: scale(1,1) skew(0deg,0deg); }
+	50% { -webkit-transform: scale(.5,1) skew(0deg,-3deg); }
+	100% { -webkit-transform: scale(0,1) skew(0deg,0deg); }
+}
+@-moz-keyframes mblCubeOutReverse {
+	0% { -moz-transform: scale(1,1) skew(0deg,0deg); }
+	50% { -moz-transform: scale(.5,1) skew(0deg,-3deg); }
+	100% { -moz-transform: scale(0,1) skew(0deg,0deg); }
+}
+@-o-keyframes mblCubeOutReverse {
+	0% { -o-transform: scale(1,1) skew(0deg,0deg); }
+	50% { -o-transform: scale(.5,1) skew(0deg,-3deg); }
+	100% { -o-transform: scale(0,1) skew(0deg,0deg); }
+}
+@keyframes mblCubeInReverse {
+	0% { transform: scale(0,1) skew(0deg,0deg); }
+	50% { transform: scale(.5,1) skew(0deg,3deg); }
+	100% { transform: scale(1,1) skew(0deg,0deg); }
+}
+@-webkit-keyframes mblCubeInReverse {
+	0% { -webkit-transform: scale(0,1) skew(0deg,0deg); }
+	50% { -webkit-transform: scale(.5,1) skew(0deg,3deg); }
+	100% { -webkit-transform: scale(1,1) skew(0deg,0deg); }
+}
+@-moz-keyframes mblCubeInReverse {
+	0% { -moz-transform: scale(0,1) skew(0deg,0deg); }
+	50% { -moz-transform: scale(.5,1) skew(0deg,3deg); }
+	100% { -moz-transform: scale(1,1) skew(0deg,0deg); }
+}
+@-o-keyframes mblCubeInReverse {
+	0% { -o-transform: scale(0,1) skew(0deg,0deg); }
+	50% { -o-transform: scale(.5,1) skew(0deg,3deg); }
+	100% { -o-transform: scale(1,1) skew(0deg,0deg); }
+}
+.dj_iphone .mblCube {
+	-webkit-transform-style: preserve-3d !important;
+	-moz-transform-style: preserve-3d !important;
+	-o-transform-style: preserve-3d !important;
+	-ms-transform-style: preserve-3d !important;
+	transform-style: preserve-3d !important;
+}
+.dj_iphone .mblCube.mblOut {
+	-webkit-animation-name: mblCubeOut_iphone;
+	-moz-animation-name: mblCubeOut_iphone;
+	-o-animation-name: mblCubeOut_iphone;
+	-ms-animation-name: mblCubeOut_iphone;
+	animation-name: mblCubeOut_iphone;
+	-webkit-transform-origin: 50% 50% !important;
+	-moz-transform-origin: 50% 50% !important;
+	-o-transform-origin: 50% 50% !important;
+	-ms-transform-origin: 50% 50% !important;
+	transform-origin: 50% 50% !important;
+}
+.dj_iphone .mblCube.mblIn {
+	-webkit-animation-name: mblCubeIn_iphone;
+	-moz-animation-name: mblCubeIn_iphone;
+	-o-animation-name: mblCubeIn_iphone;
+	-ms-animation-name: mblCubeIn_iphone;
+	animation-name: mblCubeIn_iphone;
+	-webkit-transform-origin: 50% 50% !important;
+	-moz-transform-origin: 50% 50% !important;
+	-o-transform-origin: 50% 50% !important;
+	-ms-transform-origin: 50% 50% !important;
+	transform-origin: 50% 50% !important;
+}
+@keyframes mblCubeOut_iphone {
+	from {
+		transform: scale3d(0.835,0.835,0.835) rotateY(0deg) translateZ(160px);
+	}
+	to {
+		transform: scale3d(0.835,0.835,0.835) rotateY(-90deg) translateZ(160px);
+	}
+}
+@-webkit-keyframes mblCubeOut_iphone {
+	from {
+		-webkit-transform: scale3d(0.835,0.835,0.835) rotateY(0deg) translateZ(160px);
+	}
+	to {
+		-webkit-transform: scale3d(0.835,0.835,0.835) rotateY(-90deg) translateZ(160px);
+	}
+}
+@-moz-keyframes mblCubeOut_iphone {
+	from {
+		-moz-transform: scale3d(0.835,0.835,0.835) rotateY(0deg) translateZ(160px);
+	}
+	to {
+		-moz-transform: scale3d(0.835,0.835,0.835) rotateY(-90deg) translateZ(160px);
+	}
+}
+@-o-keyframes mblCubeOut_iphone {
+	from {
+		-o-transform: scale3d(0.835,0.835,0.835) rotateY(0deg) translateZ(160px);
+	}
+	to {
+		-o-transform: scale3d(0.835,0.835,0.835) rotateY(-90deg) translateZ(160px);
+	}
+}
+@keyframes mblCubeIn_iphone {
+	from {
+		transform: scale3d(0.835,0.835,0.835) rotateY(90deg) translateZ(160px);
+	}	
+	to {
+		transform: scale3d(0.835,0.835,0.835) rotateY(0deg) translateZ(160px);
+	}
+}
+@-webkit-keyframes mblCubeIn_iphone {
+	from {
+		-webkit-transform: scale3d(0.835,0.835,0.835) rotateY(90deg) translateZ(160px);
+	}	
+	to {
+		-webkit-transform: scale3d(0.835,0.835,0.835) rotateY(0deg) translateZ(160px);
+	}
+}
+@-moz-keyframes mblCubeIn_iphone {
+	from {
+		-moz-transform: scale3d(0.835,0.835,0.835) rotateY(90deg) translateZ(160px);
+	}	
+	to {
+		-moz-transform: scale3d(0.835,0.835,0.835) rotateY(0deg) translateZ(160px);
+	}
+}
+@-o-keyframes mblCubeIn_iphone {
+	from {
+		-o-transform: scale3d(0.835,0.835,0.835) rotateY(90deg) translateZ(160px);
+	}	
+	to {
+		-o-transform: scale3d(0.835,0.835,0.835) rotateY(0deg) translateZ(160px);
+	}
+}
+.dj_iphone.dj_landscape .mblCube.mblOut {
+	-webkit-animation-name: mblCubeOut_iphone_l;
+	-moz-animation-name: mblCubeOut_iphone_l;
+	-o-animation-name: mblCubeOut_iphone_l;
+	-ms-animation-name: mblCubeOut_iphone_l;
+	animation-name: mblCubeOut_iphone_l;
+	-webkit-transform-origin: 50% 50% !important;
+	-moz-transform-origin: 50% 50% !important;
+	-o-transform-origin: 50% 50% !important;
+	-ms-transform-origin: 50% 50% !important;
+	transform-origin: 50% 50% !important;
+}
+.dj_iphone.dj_landscape .mblCube.mblIn {
+	-webkit-animation-name: mblCubeIn_iphone_l;
+	-moz-animation-name: mblCubeIn_iphone_l;
+	-o-animation-name: mblCubeIn_iphone_l;
+	-ms-animation-name: mblCubeIn_iphone_l;
+	animation-name: mblCubeIn_iphone_l;
+	-webkit-transform-origin: 50% 50% !important;
+	-moz-transform-origin: 50% 50% !important;
+	-o-transform-origin: 50% 50% !important;
+	-ms-transform-origin: 50% 50% !important;
+	transform-origin: 50% 50% !important;
+}
+@keyframes mblCubeOut_iphone_l {
+	from {
+		transform: scale3d(0.77,0.77,0.77) rotateY(0deg) translateZ(240px);
+	}
+	to {
+		transform: scale3d(0.77,0.77,0.77) rotateY(-90deg) translateZ(240px);
+	}
+}
+@-webkit-keyframes mblCubeOut_iphone_l {
+	from {
+		-webkit-transform: scale3d(0.77,0.77,0.77) rotateY(0deg) translateZ(240px);
+	}
+	to {
+		-webkit-transform: scale3d(0.77,0.77,0.77) rotateY(-90deg) translateZ(240px);
+	}
+}
+@-moz-keyframes mblCubeOut_iphone_l {
+	from {
+		-moz-transform: scale3d(0.77,0.77,0.77) rotateY(0deg) translateZ(240px);
+	}
+	to {
+		-moz-transform: scale3d(0.77,0.77,0.77) rotateY(-90deg) translateZ(240px);
+	}
+}
+@-o-keyframes mblCubeOut_iphone_l {
+	from {
+		-o-transform: scale3d(0.77,0.77,0.77) rotateY(0deg) translateZ(240px);
+	}
+	to {
+		-o-transform: scale3d(0.77,0.77,0.77) rotateY(-90deg) translateZ(240px);
+	}
+}
+@keyframes mblCubeIn_iphone_l {
+	from {
+		transform: scale3d(0.77,0.77,0.77) rotateY(90deg) translateZ(240px);
+	}	
+	to {
+		transform: scale3d(0.77,0.77,0.77) rotateY(0deg) translateZ(240px);
+	}
+}
+@-webkit-keyframes mblCubeIn_iphone_l {
+	from {
+		-webkit-transform: scale3d(0.77,0.77,0.77) rotateY(90deg) translateZ(240px);
+	}	
+	to {
+		-webkit-transform: scale3d(0.77,0.77,0.77) rotateY(0deg) translateZ(240px);
+	}
+}
+@-moz-keyframes mblCubeIn_iphone_l {
+	from {
+		-moz-transform: scale3d(0.77,0.77,0.77) rotateY(90deg) translateZ(240px);
+	}	
+	to {
+		-moz-transform: scale3d(0.77,0.77,0.77) rotateY(0deg) translateZ(240px);
+	}
+}
+@-o-keyframes mblCubeIn_iphone_l {
+	from {
+		-o-transform: scale3d(0.77,0.77,0.77) rotateY(90deg) translateZ(240px);
+	}	
+	to {
+		-o-transform: scale3d(0.77,0.77,0.77) rotateY(0deg) translateZ(240px);
+	}
+}
+.dj_iphone .mblCube.mblOut.mblReverse {
+	-webkit-animation-name: mblCubeOutReverse_iphone;
+	-moz-animation-name: mblCubeOutReverse_iphone;
+	-o-animation-name: mblCubeOutReverse_iphone;
+	-ms-animation-name: mblCubeOutReverse_iphone;
+	animation-name: mblCubeOutReverse_iphone;
+	-webkit-transform-origin: 50% 50% !important;
+	-moz-transform-origin: 50% 50% !important;
+	-o-transform-origin: 50% 50% !important;
+	-ms-transform-origin: 50% 50% !important;
+	transform-origin: 50% 50% !important;
+}
+.dj_iphone .mblCube.mblIn.mblReverse {
+	-webkit-animation-name: mblCubeInReverse_iphone;
+	-moz-animation-name: mblCubeInReverse_iphone;
+	-o-animation-name: mblCubeInReverse_iphone;
+	-ms-animation-name: mblCubeInReverse_iphone;
+	animation-name: mblCubeInReverse_iphone;
+	-webkit-transform-origin: 50% 50% !important;
+	-moz-transform-origin: 50% 50% !important;
+	-o-transform-origin: 50% 50% !important;
+	-ms-transform-origin: 50% 50% !important;
+	transform-origin: 50% 50% !important;
+}
+@keyframes mblCubeOutReverse_iphone {
+	from {
+		transform: scale3d(0.835,0.835,0.835) rotateY(0deg) translateZ(160px);
+	}
+	to {
+		transform: scale3d(0.835,0.835,0.835) rotateY(90deg) translateZ(160px);
+	}
+}
+@-webkit-keyframes mblCubeOutReverse_iphone {
+	from {
+		-webkit-transform: scale3d(0.835,0.835,0.835) rotateY(0deg) translateZ(160px);
+	}
+	to {
+		-webkit-transform: scale3d(0.835,0.835,0.835) rotateY(90deg) translateZ(160px);
+	}
+}
+@-moz-keyframes mblCubeOutReverse_iphone {
+	from {
+		-moz-transform: scale3d(0.835,0.835,0.835) rotateY(0deg) translateZ(160px);
+	}
+	to {
+		-moz-transform: scale3d(0.835,0.835,0.835) rotateY(90deg) translateZ(160px);
+	}
+}
+@-o-keyframes mblCubeOutReverse_iphone {
+	from {
+		-o-transform: scale3d(0.835,0.835,0.835) rotateY(0deg) translateZ(160px);
+	}
+	to {
+		-o-transform: scale3d(0.835,0.835,0.835) rotateY(90deg) translateZ(160px);
+	}
+}
+@keyframes mblCubeInReverse_iphone {
+	from {
+		transform: scale3d(0.835,0.835,0.835) rotateY(-90deg) translateZ(160px);
+	}	
+	to {
+		transform: scale3d(0.835,0.835,0.835) rotateY(0deg) translateZ(160px);
+	}
+}
+@-webkit-keyframes mblCubeInReverse_iphone {
+	from {
+		-webkit-transform: scale3d(0.835,0.835,0.835) rotateY(-90deg) translateZ(160px);
+	}	
+	to {
+		-webkit-transform: scale3d(0.835,0.835,0.835) rotateY(0deg) translateZ(160px);
+	}
+}
+@-moz-keyframes mblCubeInReverse_iphone {
+	from {
+		-moz-transform: scale3d(0.835,0.835,0.835) rotateY(-90deg) translateZ(160px);
+	}	
+	to {
+		-moz-transform: scale3d(0.835,0.835,0.835) rotateY(0deg) translateZ(160px);
+	}
+}
+@-o-keyframes mblCubeInReverse_iphone {
+	from {
+		-o-transform: scale3d(0.835,0.835,0.835) rotateY(-90deg) translateZ(160px);
+	}	
+	to {
+		-o-transform: scale3d(0.835,0.835,0.835) rotateY(0deg) translateZ(160px);
+	}
+}
+.dj_iphone.dj_landscape .mblCube.mblOut.mblReverse {
+	-webkit-animation-name: mblCubeOutReverse_iphone_l;
+	-moz-animation-name: mblCubeOutReverse_iphone_l;
+	-o-animation-name: mblCubeOutReverse_iphone_l;
+	-ms-animation-name: mblCubeOutReverse_iphone_l;
+	animation-name: mblCubeOutReverse_iphone_l;
+	-webkit-transform-origin: 50% 50% !important;
+	-moz-transform-origin: 50% 50% !important;
+	-o-transform-origin: 50% 50% !important;
+	-ms-transform-origin: 50% 50% !important;
+	transform-origin: 50% 50% !important;
+}
+.dj_iphone.dj_landscape .mblCube.mblIn.mblReverse {
+	-webkit-animation-name: mblCubeInReverse_iphone_l;
+	-moz-animation-name: mblCubeInReverse_iphone_l;
+	-o-animation-name: mblCubeInReverse_iphone_l;
+	-ms-animation-name: mblCubeInReverse_iphone_l;
+	animation-name: mblCubeInReverse_iphone_l;
+	-webkit-transform-origin: 50% 50% !important;
+	-moz-transform-origin: 50% 50% !important;
+	-o-transform-origin: 50% 50% !important;
+	-ms-transform-origin: 50% 50% !important;
+	transform-origin: 50% 50% !important;
+}
+@keyframes mblCubeOutReverse_iphone_l {
+	from {
+		transform: scale3d(0.77,0.77,0.77) rotateY(0deg) translateZ(240px);
+	}
+	to {
+		transform: scale3d(0.77,0.77,0.77) rotateY(90deg) translateZ(240px);
+	}
+}
+@-webkit-keyframes mblCubeOutReverse_iphone_l {
+	from {
+		-webkit-transform: scale3d(0.77,0.77,0.77) rotateY(0deg) translateZ(240px);
+	}
+	to {
+		-webkit-transform: scale3d(0.77,0.77,0.77) rotateY(90deg) translateZ(240px);
+	}
+}
+@-moz-keyframes mblCubeOutReverse_iphone_l {
+	from {
+		-moz-transform: scale3d(0.77,0.77,0.77) rotateY(0deg) translateZ(240px);
+	}
+	to {
+		-moz-transform: scale3d(0.77,0.77,0.77) rotateY(90deg) translateZ(240px);
+	}
+}
+@-o-keyframes mblCubeOutReverse_iphone_l {
+	from {
+		-o-transform: scale3d(0.77,0.77,0.77) rotateY(0deg) translateZ(240px);
+	}
+	to {
+		-o-transform: scale3d(0.77,0.77,0.77) rotateY(90deg) translateZ(240px);
+	}
+}
+@keyframes mblCubeInReverse_iphone_l {
+	from {
+		transform: scale3d(0.77,0.77,0.77) rotateY(-90deg) translateZ(240px);
+	}	
+	to {
+		transform: scale3d(0.77,0.77,0.77) rotateY(0deg) translateZ(240px);
+	}
+}
+@-webkit-keyframes mblCubeInReverse_iphone_l {
+	from {
+		-webkit-transform: scale3d(0.77,0.77,0.77) rotateY(-90deg) translateZ(240px);
+	}	
+	to {
+		-webkit-transform: scale3d(0.77,0.77,0.77) rotateY(0deg) translateZ(240px);
+	}
+}
+@-moz-keyframes mblCubeInReverse_iphone_l {
+	from {
+		-moz-transform: scale3d(0.77,0.77,0.77) rotateY(-90deg) translateZ(240px);
+	}	
+	to {
+		-moz-transform: scale3d(0.77,0.77,0.77) rotateY(0deg) translateZ(240px);
+	}
+}
+@-o-keyframes mblCubeInReverse_iphone_l {
+	from {
+		-o-transform: scale3d(0.77,0.77,0.77) rotateY(-90deg) translateZ(240px);
+	}	
+	to {
+		-o-transform: scale3d(0.77,0.77,0.77) rotateY(0deg) translateZ(240px);
+	}
+}
+.dj_ipad.dj_iphone .mblCube.mblOut {
+	-webkit-animation-name: mblCubeOut_ipad;
+	-moz-animation-name: mblCubeOut_ipad;
+	-o-animation-name: mblCubeOut_ipad;
+	-ms-animation-name: mblCubeOut_ipad;
+	animation-name: mblCubeOut_ipad;
+	-webkit-transform-origin: 50% 50% !important;
+	-moz-transform-origin: 50% 50% !important;
+	-o-transform-origin: 50% 50% !important;
+	-ms-transform-origin: 50% 50% !important;
+	transform-origin: 50% 50% !important;
+}
+.dj_ipad.dj_iphone .mblCube.mblIn {
+	-webkit-animation-name: mblCubeIn_ipad;
+	-moz-animation-name: mblCubeIn_ipad;
+	-o-animation-name: mblCubeIn_ipad;
+	-ms-animation-name: mblCubeIn_ipad;
+	animation-name: mblCubeIn_ipad;
+	-webkit-transform-origin: 50% 50% !important;
+	-moz-transform-origin: 50% 50% !important;
+	-o-transform-origin: 50% 50% !important;
+	-ms-transform-origin: 50% 50% !important;
+	transform-origin: 50% 50% !important;
+}
+@keyframes mblCubeOut_ipad {
+	from {
+		transform: scale3d(0.806,0.806,0.806) rotateY(0deg) translateZ(384px);
+	}
+	to {
+		transform: scale3d(0.806,0.806,0.806) rotateY(-90deg) translateZ(384px);
+	}
+}
+@-webkit-keyframes mblCubeOut_ipad {
+	from {
+		-webkit-transform: scale3d(0.806,0.806,0.806) rotateY(0deg) translateZ(384px);
+	}
+	to {
+		-webkit-transform: scale3d(0.806,0.806,0.806) rotateY(-90deg) translateZ(384px);
+	}
+}
+@-moz-keyframes mblCubeOut_ipad {
+	from {
+		-moz-transform: scale3d(0.806,0.806,0.806) rotateY(0deg) translateZ(384px);
+	}
+	to {
+		-moz-transform: scale3d(0.806,0.806,0.806) rotateY(-90deg) translateZ(384px);
+	}
+}
+@-o-keyframes mblCubeOut_ipad {
+	from {
+		-o-transform: scale3d(0.806,0.806,0.806) rotateY(0deg) translateZ(384px);
+	}
+	to {
+		-o-transform: scale3d(0.806,0.806,0.806) rotateY(-90deg) translateZ(384px);
+	}
+}
+@keyframes mblCubeIn_ipad {
+	from {
+		transform: scale3d(0.806,0.806,0.806) rotateY(90deg) translateZ(384px);
+	}	
+	to {
+		transform: scale3d(0.806,0.806,0.806) rotateY(0deg) translateZ(384px);
+	}
+}
+@-webkit-keyframes mblCubeIn_ipad {
+	from {
+		-webkit-transform: scale3d(0.806,0.806,0.806) rotateY(90deg) translateZ(384px);
+	}	
+	to {
+		-webkit-transform: scale3d(0.806,0.806,0.806) rotateY(0deg) translateZ(384px);
+	}
+}
+@-moz-keyframes mblCubeIn_ipad {
+	from {
+		-moz-transform: scale3d(0.806,0.806,0.806) rotateY(90deg) translateZ(384px);
+	}	
+	to {
+		-moz-transform: scale3d(0.806,0.806,0.806) rotateY(0deg) translateZ(384px);
+	}
+}
+@-o-keyframes mblCubeIn_ipad {
+	from {
+		-o-transform: scale3d(0.806,0.806,0.806) rotateY(90deg) translateZ(384px);
+	}	
+	to {
+		-o-transform: scale3d(0.806,0.806,0.806) rotateY(0deg) translateZ(384px);
+	}
+}
+.dj_ipad.dj_iphone.dj_landscape .mblCube.mblOut {
+	-webkit-animation-name: mblCubeOut_ipad_l;
+	-moz-animation-name: mblCubeOut_ipad_l;
+	-o-animation-name: mblCubeOut_ipad_l;
+	-ms-animation-name: mblCubeOut_ipad_l;
+	animation-name: mblCubeOut_ipad_l;
+	-webkit-transform-origin: 50% 50% !important;
+	-moz-transform-origin: 50% 50% !important;
+	-o-transform-origin: 50% 50% !important;
+	-ms-transform-origin: 50% 50% !important;
+	transform-origin: 50% 50% !important;
+}
+.dj_ipad.dj_iphone.dj_landscape .mblCube.mblIn {
+	-webkit-animation-name: mblCubeIn_ipad_l;
+	-moz-animation-name: mblCubeIn_ipad_l;
+	-o-animation-name: mblCubeIn_ipad_l;
+	-ms-animation-name: mblCubeIn_ipad_l;
+	animation-name: mblCubeIn_ipad_l;
+	-webkit-transform-origin: 50% 50% !important;
+	-moz-transform-origin: 50% 50% !important;
+	-o-transform-origin: 50% 50% !important;
+	-ms-transform-origin: 50% 50% !important;
+	transform-origin: 50% 50% !important;
+}
+@keyframes mblCubeOut_ipad_l {
+	from {
+		transform: scale3d(0.758,0.758,0.758) rotateY(0deg) translateZ(512px);
+	}
+	to {
+		transform: scale3d(0.758,0.758,0.758) rotateY(-90deg) translateZ(512px);
+	}
+}
+@-webkit-keyframes mblCubeOut_ipad_l {
+	from {
+		-webkit-transform: scale3d(0.758,0.758,0.758) rotateY(0deg) translateZ(512px);
+	}
+	to {
+		-webkit-transform: scale3d(0.758,0.758,0.758) rotateY(-90deg) translateZ(512px);
+	}
+}
+@-moz-keyframes mblCubeOut_ipad_l {
+	from {
+		-moz-transform: scale3d(0.758,0.758,0.758) rotateY(0deg) translateZ(512px);
+	}
+	to {
+		-moz-transform: scale3d(0.758,0.758,0.758) rotateY(-90deg) translateZ(512px);
+	}
+}
+@-o-keyframes mblCubeOut_ipad_l {
+	from {
+		-o-transform: scale3d(0.758,0.758,0.758) rotateY(0deg) translateZ(512px);
+	}
+	to {
+		-o-transform: scale3d(0.758,0.758,0.758) rotateY(-90deg) translateZ(512px);
+	}
+}
+@keyframes mblCubeIn_ipad_l {
+	from {
+		transform: scale3d(0.758,0.758,0.758) rotateY(90deg) translateZ(512px);
+	}	
+	to {
+		transform: scale3d(0.758,0.758,0.758) rotateY(0deg) translateZ(512px);
+	}
+}
+@-webkit-keyframes mblCubeIn_ipad_l {
+	from {
+		-webkit-transform: scale3d(0.758,0.758,0.758) rotateY(90deg) translateZ(512px);
+	}	
+	to {
+		-webkit-transform: scale3d(0.758,0.758,0.758) rotateY(0deg) translateZ(512px);
+	}
+}
+@-moz-keyframes mblCubeIn_ipad_l {
+	from {
+		-moz-transform: scale3d(0.758,0.758,0.758) rotateY(90deg) translateZ(512px);
+	}	
+	to {
+		-moz-transform: scale3d(0.758,0.758,0.758) rotateY(0deg) translateZ(512px);
+	}
+}
+@-o-keyframes mblCubeIn_ipad_l {
+	from {
+		-o-transform: scale3d(0.758,0.758,0.758) rotateY(90deg) translateZ(512px);
+	}	
+	to {
+		-o-transform: scale3d(0.758,0.758,0.758) rotateY(0deg) translateZ(512px);
+	}
+}
+.dj_ipad.dj_iphone .mblCube.mblOut.mblReverse {
+	-webkit-animation-name: mblCubeOutReverse_ipad;
+	-moz-animation-name: mblCubeOutReverse_ipad;
+	-o-animation-name: mblCubeOutReverse_ipad;
+	-ms-animation-name: mblCubeOutReverse_ipad;
+	animation-name: mblCubeOutReverse_ipad;
+	-webkit-transform-origin: 50% 50% !important;
+	-moz-transform-origin: 50% 50% !important;
+	-o-transform-origin: 50% 50% !important;
+	-ms-transform-origin: 50% 50% !important;
+	transform-origin: 50% 50% !important;
+}
+.dj_ipad.dj_iphone .mblCube.mblIn.mblReverse {
+	-webkit-animation-name: mblCubeInReverse_ipad;
+	-moz-animation-name: mblCubeInReverse_ipad;
+	-o-animation-name: mblCubeInReverse_ipad;
+	-ms-animation-name: mblCubeInReverse_ipad;
+	animation-name: mblCubeInReverse_ipad;
+	-webkit-transform-origin: 50% 50% !important;
+	-moz-transform-origin: 50% 50% !important;
+	-o-transform-origin: 50% 50% !important;
+	-ms-transform-origin: 50% 50% !important;
+	transform-origin: 50% 50% !important;
+}
+@keyframes mblCubeOutReverse_ipad {
+	from {
+		transform: scale3d(0.806,0.806,0.806) rotateY(0deg) translateZ(384px);
+	}
+	to {
+		transform: scale3d(0.806,0.806,0.806) rotateY(90deg) translateZ(384px);
+	}
+}
+@-webkit-keyframes mblCubeOutReverse_ipad {
+	from {
+		-webkit-transform: scale3d(0.806,0.806,0.806) rotateY(0deg) translateZ(384px);
+	}
+	to {
+		-webkit-transform: scale3d(0.806,0.806,0.806) rotateY(90deg) translateZ(384px);
+	}
+}
+@-moz-keyframes mblCubeOutReverse_ipad {
+	from {
+		-moz-transform: scale3d(0.806,0.806,0.806) rotateY(0deg) translateZ(384px);
+	}
+	to {
+		-moz-transform: scale3d(0.806,0.806,0.806) rotateY(90deg) translateZ(384px);
+	}
+}
+@-o-keyframes mblCubeOutReverse_ipad {
+	from {
+		-o-transform: scale3d(0.806,0.806,0.806) rotateY(0deg) translateZ(384px);
+	}
+	to {
+		-o-transform: scale3d(0.806,0.806,0.806) rotateY(90deg) translateZ(384px);
+	}
+}
+@keyframes mblCubeInReverse_ipad {
+	from {
+		transform: scale3d(0.806,0.806,0.806) rotateY(-90deg) translateZ(384px);
+	}	
+	to {
+		transform: scale3d(0.806,0.806,0.806) rotateY(0deg) translateZ(384px);
+	}
+}
+@-webkit-keyframes mblCubeInReverse_ipad {
+	from {
+		-webkit-transform: scale3d(0.806,0.806,0.806) rotateY(-90deg) translateZ(384px);
+	}	
+	to {
+		-webkit-transform: scale3d(0.806,0.806,0.806) rotateY(0deg) translateZ(384px);
+	}
+}
+@-moz-keyframes mblCubeInReverse_ipad {
+	from {
+		-noz-transform: scale3d(0.806,0.806,0.806) rotateY(-90deg) translateZ(384px);
+	}	
+	to {
+		-moz-transform: scale3d(0.806,0.806,0.806) rotateY(0deg) translateZ(384px);
+	}
+}
+@-o-keyframes mblCubeInReverse_ipad {
+	from {
+		-o-transform: scale3d(0.806,0.806,0.806) rotateY(-90deg) translateZ(384px);
+	}	
+	to {
+		-o-transform: scale3d(0.806,0.806,0.806) rotateY(0deg) translateZ(384px);
+	}
+}
+.dj_ipad.dj_iphone.dj_landscape .mblCube.mblOut.mblReverse {
+	-webkit-animation-name: mblCubeOutReverse_ipad_l;
+	-moz-animation-name: mblCubeOutReverse_ipad_l;
+	-o-animation-name: mblCubeOutReverse_ipad_l;
+	-ms-animation-name: mblCubeOutReverse_ipad_l;
+	animation-name: mblCubeOutReverse_ipad_l;
+	-webkit-transform-origin: 50% 50% !important;
+	-moz-transform-origin: 50% 50% !important;
+	-o-transform-origin: 50% 50% !important;
+	-ms-transform-origin: 50% 50% !important;
+	transform-origin: 50% 50% !important;
+}
+.dj_ipad.dj_iphone.dj_landscape .mblCube.mblIn.mblReverse {
+	-webkit-animation-name: mblCubeInReverse_ipad_l;
+	-moz-animation-name: mblCubeInReverse_ipad_l;
+	-o-animation-name: mblCubeInReverse_ipad_l;
+	-ms-animation-name: mblCubeInReverse_ipad_l;
+	animation-name: mblCubeInReverse_ipad_l;
+	-webkit-transform-origin: 50% 50% !important;
+	-moz-transform-origin: 50% 50% !important;
+	-o-transform-origin: 50% 50% !important;
+	-ms-transform-origin: 50% 50% !important;
+	transform-origin: 50% 50% !important;
+}
+@keyframes mblCubeOutReverse_ipad_l {
+	from {
+		transform: scale3d(0.758,0.758,0.758) rotateY(0deg) translateZ(512px);
+	}
+	to {
+		transform: scale3d(0.758,0.758,0.758) rotateY(90deg) translateZ(512px);
+	}
+}
+@-webkit-keyframes mblCubeOutReverse_ipad_l {
+	from {
+		-webkit-transform: scale3d(0.758,0.758,0.758) rotateY(0deg) translateZ(512px);
+	}
+	to {
+		-webkit-transform: scale3d(0.758,0.758,0.758) rotateY(90deg) translateZ(512px);
+	}
+}
+@-moz-keyframes mblCubeOutReverse_ipad_l {
+	from {
+		-moz-transform: scale3d(0.758,0.758,0.758) rotateY(0deg) translateZ(512px);
+	}
+	to {
+		-moz-transform: scale3d(0.758,0.758,0.758) rotateY(90deg) translateZ(512px);
+	}
+}
+@-o-keyframes mblCubeOutReverse_ipad_l {
+	from {
+		-o-transform: scale3d(0.758,0.758,0.758) rotateY(0deg) translateZ(512px);
+	}
+	to {
+		-o-transform: scale3d(0.758,0.758,0.758) rotateY(90deg) translateZ(512px);
+	}
+}
+@keyframes mblCubeInReverse_ipad_l {
+	from {
+		transform: scale3d(0.758,0.758,0.758) rotateY(-90deg) translateZ(512px);
+	}	
+	to {
+		transform: scale3d(0.758,0.758,0.758) rotateY(0deg) translateZ(512px);
+	}
+}
+@-webkit-keyframes mblCubeInReverse_ipad_l {
+	from {
+		-webkit-transform: scale3d(0.758,0.758,0.758) rotateY(-90deg) translateZ(512px);
+	}	
+	to {
+		-webkit-transform: scale3d(0.758,0.758,0.758) rotateY(0deg) translateZ(512px);
+	}
+}
+@-moz-keyframes mblCubeInReverse_ipad_l {
+	from {
+		-moz-transform: scale3d(0.758,0.758,0.758) rotateY(-90deg) translateZ(512px);
+	}	
+	to {
+		-moz-transform: scale3d(0.758,0.758,0.758) rotateY(0deg) translateZ(512px);
+	}
+}
+@-o-keyframes mblCubeInReverse_ipad_l {
+	from {
+		-o-transform: scale3d(0.758,0.758,0.758) rotateY(-90deg) translateZ(512px);
+	}	
+	to {
+		-o-transform: scale3d(0.758,0.758,0.758) rotateY(0deg) translateZ(512px);
+	}
+}
+.mblReveal {
+	-webkit-transition-property: none;
+	-moz-transition-property: none;
+	-o-transition-property: none;
+	-ms-transition-property: none;
+	transition-property: none;
+	-webkit-transition-duration: 0s;
+	-moz-transition-duration: 0s;
+	-o-transition-duration: 0s;
+	-ms-transition-duration: 0s;
+	transition-duration: 0s;
+}
+.mblReveal.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-moz-transition-property: -moz-transform;
+	-o-transition-property: -o-transform;
+	-ms-transition-property: -ms-transform;
+	transition-property: transform;
+	-webkit-transition-duration: .4s;
+	-moz-transition-duration: .4s;
+	-o-transition-duration: .4s;
+	-ms-transition-duration: .4s;
+	transition-duration: .4s;
+}
+.mblReveal.mblOut {
+	-webkit-transform: translate3d(0%,0px,0px) !important;
+	-moz-transform: translate3d(0%,0px,0px) !important;
+	-o-transform: translate3d(0%,0px,0px) !important;
+	-ms-transform: translate3d(0%,0px,0px) !important;
+	transform: translate3d(0%,0px,0px) !important;
+}
+.mblReveal.mblOut.mblTransition {
+	-webkit-transform: translate3d(-100%,0px,0px) !important;
+	-moz-transform: translate3d(-100%,0px,0px) !important;
+	-o-transform: translate3d(-100%,0px,0px) !important;
+	-ms-transform: translate3d(-100%,0px,0px) !important;
+	transform: translate3d(-100%,0px,0px) !important;
+}
+.mblReveal.mblOut.mblReverse.mblTransition {
+	-webkit-transform: translate3d(100%,0px,0px) !important;
+	-moz-transform: translate3d(100%,0px,0px) !important;
+	-o-transform: translate3d(100%,0px,0px) !important;
+	-ms-transform: translate3d(100%,0px,0px) !important;
+	transform: translate3d(100%,0px,0px) !important;
+}
+.mblReveal.mblIn {
+	-webkit-transform: translate3d(0%,0px,-1px) !important;
+	-moz-transform: translate3d(0%,0px,-1px) !important;
+	-o-transform: translate3d(0%,0px,-1px) !important;
+	-ms-transform: translate3d(0%,0px,-1px) !important;
+	transform: translate3d(0%,0px,-1px) !important;
+}
+.mblReveal.mblIn.mblTransition {
+	-webkit-transform: translate3d(0%,0px,0px) !important;
+	-moz-transform: translate3d(0%,0px,0px) !important;
+	-o-transform: translate3d(0%,0px,0px) !important;
+	-ms-transform: translate3d(0%,0px,0px) !important;
+	transform: translate3d(0%,0px,0px) !important;
+}
+.dj_android.dj_tablet .mblReveal.mblTransition {
+	-webkit-transition-duration: .6s;
+	-moz-transition-duration: .6s;
+	-o-transition-duration: .6s;
+	-ms-transition-duration: .6s;
+	transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
+	-moz-transition-timing-function: linear;
+	-o-transition-timing-function: linear;
+	-ms-transition-timing-function: linear;
+	transition-timing-function: linear;
+}
+.mblSlidev {
+	-webkit-transition-property: none;
+	-moz-transition-property: none;
+	-o-transition-property: none;
+	-ms-transition-property: none;
+	transition-property: none;
+	-webkit-transition-duration: 0s;
+	-moz-transition-duration: 0s;
+	-o-transition-duration: 0s;
+	-ms-transition-duration: 0s;
+	transition-duration: 0s;
+}
+.mblSlidev.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-moz-transition-property: -moz-transform;
+	-o-transition-property: -o-transform;
+	-ms-transition-property: -ms-transform;
+	transition-property: transform;
+	-webkit-transition-duration: .3s;
+	-moz-transition-duration: .3s;
+	-o-transition-duration: .3s;
+	-ms-transition-duration: .3s;
+	transition-duration: .3s;
+}
+.mblSlidev.mblOut.mblReverse.mblTransition,
+.mblSlidev.mblIn {
+	-webkit-transform: translate3d(0px,100%,0px) !important;
+	-moz-transform: translate3d(0px,100%,0px) !important;
+	-o-transform: translate3d(0px,100%,0px) !important;
+	-ms-transform: translate3d(0px,100%,0px) !important;
+	transform: translate3d(0px,100%,0px) !important;
+}
+.mblSlidev.mblOut.mblTransition,
+.mblSlidev.mblIn.mblReverse {
+	-webkit-transform: translate3d(0px,-100%,0px) !important;
+	-moz-transform: translate3d(0px,-100%,0px) !important;
+	-o-transform: translate3d(0px,-100%,0px) !important;
+	-ms-transform: translate3d(0px,-100%,0px) !important;
+	transform: translate3d(0px,-100%,0px) !important;
+}
+.mblSlidev.mblOut,
+.mblSlidev.mblIn.mblTransition {
+	-webkit-transform: translate3d(0px,0%,0px) !important;
+	-moz-transform: translate3d(0px,0%,0px) !important;
+	-o-transform: translate3d(0px,0%,0px) !important;
+	-ms-transform: translate3d(0px,0%,0px) !important;
+	transform: translate3d(0px,0%,0px) !important;
+}
+.dj_android.dj_tablet .mblSlidev.mblTransition {
+	-webkit-transition-duration: .6s;
+	-moz-transition-duration: .6s;
+	-o-transition-duration: .6s;
+	-ms-transition-duration: .6s;
+	transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
+	-moz-transition-timing-function: linear;
+	-o-transition-timing-function: linear;
+	-ms-transition-timing-function: linear;
+	transition-timing-function: linear;
+}
+.mblCoverv {
+	-webkit-transition-property: none;
+	-moz-transition-property: none;
+	-o-transition-property: none;
+	-ms-transition-property: none;
+	transition-property: none;
+	-webkit-transition-duration: 0s;
+	-moz-transition-duration: 0s;
+	-o-transition-duration: 0s;
+	-ms-transition-duration: 0s;
+	transition-duration: 0s;
+}
+.mblCoverv.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-moz-transition-property: -moz-transform;
+	-o-transition-property: -o-transform;
+	-ms-transition-property: -ms-transform;
+	transition-property: transform;
+	-webkit-transition-duration: .4s;
+	-moz-transition-duration: .4s;
+	-o-transition-duration: .4s;
+	-ms-transition-duration: .4s;
+	transition-duration: .4s;
+}
+.mblCoverv.mblOut {
+	-webkit-transform: translate3d(0px,0%,-1px) !important;
+	-moz-transform: translate3d(0px,0%,-1px) !important;
+	-o-transform: translate3d(0px,0%,-1px) !important;
+	-ms-transform: translate3d(0px,0%,-1px) !important;
+	transform: translate3d(0px,0%,-1px) !important;
+}
+.mblCoverv.mblIn {
+	-webkit-transform: translate3d(0px,100%,0px) !important;
+	-moz-transform: translate3d(0px,100%,0px) !important;
+	-o-transform: translate3d(0px,100%,0px) !important;
+	-ms-transform: translate3d(0px,100%,0px) !important;
+	transform: translate3d(0px,100%,0px) !important;
+}
+.mblCoverv.mblIn.mblReverse {
+	-webkit-transform: translate3d(0px,-100%,0px) !important;
+	-moz-transform: translate3d(0px,-100%,0px) !important;
+	-o-transform: translate3d(0px,-100%,0px) !important;
+	-ms-transform: translate3d(0px,-100%,0px) !important;
+	transform: translate3d(0px,-100%,0px) !important;
+}
+.mblCoverv.mblOut.mblTransition,
+.mblCoverv.mblIn.mblTransition {
+	-webkit-transform: translate3d(0px,0%,0px) !important;
+	-moz-transform: translate3d(0px,0%,0px) !important;
+	-o-transform: translate3d(0px,0%,0px) !important;
+	-ms-transform: translate3d(0px,0%,0px) !important;
+	transform: translate3d(0px,0%,0px) !important;
+}
+.dj_android.dj_tablet .mblCoverv.mblTransition {
+	-webkit-transition-duration: .6s;
+	-moz-transition-duration: .6s;
+	-o-transition-duration: .6s;
+	-ms-transition-duration: .6s;
+	transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
+	-moz-transition-timing-function: linear;
+	-o-transition-timing-function: linear;
+	-ms-transition-timing-function: linear;
+	transition-timing-function: linear;
+}
+.mblRevealv {
+	-webkit-transition-property: none;
+	-moz-transition-property: none;
+	-o-transition-property: none;
+	-ms-transition-property: none;
+	transition-property: none;
+	-webkit-transition-duration: 0s;
+	-moz-transition-duration: 0s;
+	-o-transition-duration: 0s;
+	-ms-transition-duration: 0s;
+	transition-duration: 0s;
+}
+.mblRevealv.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-moz-transition-property: -moz-transform;
+	-o-transition-property: -o-transform;
+	-ms-transition-property: -ms-transform;
+	transition-property: transform;
+	-webkit-transition-duration: .4s;
+	-moz-transition-duration: .4s;
+	-o-transition-duration: .4s;
+	-ms-transition-duration: .4s;
+	transition-duration: .4s;
+}
+.mblRevealv.mblOut {
+	-webkit-transform: translate3d(0px,0%,0px) !important;
+	-moz-transform: translate3d(0px,0%,0px) !important;
+	-o-transform: translate3d(0px,0%,0px) !important;
+	-ms-transform: translate3d(0px,0%,0px) !important;
+	transform: translate3d(0px,0%,0px) !important;
+}
+.mblRevealv.mblOut.mblTransition {
+	-webkit-transform: translate3d(0px,-100%,0px) !important;
+	-moz-transform: translate3d(0px,-100%,0px) !important;
+	-o-transform: translate3d(0px,-100%,0px) !important;
+	-ms-transform: translate3d(0px,-100%,0px) !important;
+	transform: translate3d(0px,-100%,0px) !important;
+}
+.mblRevealv.mblOut.mblReverse.mblTransition {
+	-webkit-transform: translate3d(0px,100%,0px) !important;
+	-moz-transform: translate3d(0px,100%,0px) !important;
+	-o-transform: translate3d(0px,100%,0px) !important;
+	-ms-transform: translate3d(0px,100%,0px) !important;
+	transform: translate3d(0px,100%,0px) !important;
+}
+.mblRevealv.mblIn {
+	-webkit-transform: translate3d(0px,0%,-1px) !important;
+	-moz-transform: translate3d(0px,0%,-1px) !important;
+	-o-transform: translate3d(0px,0%,-1px) !important;
+	-ms-transform: translate3d(0px,0%,-1px) !important;
+	transform: translate3d(0px,0%,-1px) !important;
+}
+.mblRevealv.mblIn.mblTransition {
+	-webkit-transform: translate3d(0px,0%,0px) !important;
+	-moz-transform: translate3d(0px,0%,0px) !important;
+	-o-transform: translate3d(0px,0%,0px) !important;
+	-ms-transform: translate3d(0px,0%,0px) !important;
+	transform: translate3d(0px,0%,0px) !important;
+}
+.dj_android.dj_tablet .mblRevealv.mblTransition {
+	-webkit-transition-duration: .6s;
+	-moz-transition-duration: .6s;
+	-o-transition-duration: .6s;
+	-ms-transition-duration: .6s;
+	transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
+	-moz-transition-timing-function: linear;
+	-o-transition-timing-function: linear;
+	-ms-transition-timing-function: linear;
+	transition-timing-function: linear;
+}
+.mblSwirl.mblOut {
+	-webkit-animation-duration: .5s;
+	-moz-animation-duration: .5s;
+	-o-animation-duration: .5s;
+	-ms-animation-duration: .5s;
+	animation-duration: .5s;
+	-webkit-animation-name: mblSwirlOut;
+	-moz-animation-name: mblSwirlOut;
+	-o-animation-name: mblSwirlOut;
+	-ms-animation-name: mblSwirlOut;
+	animation-name: mblSwirlOut;
+	-webkit-animation-timing-function: ease-in;
+	-moz-animation-timing-function: ease-in;
+	-o-animation-timing-function: ease-in;
+	-ms-animation-timing-function: ease-in;
+	animation-timing-function: ease-in;
+}
+.mblSwirl.mblIn {
+	-webkit-animation-duration: .5s;
+	-moz-animation-duration: .5s;
+	-o-animation-duration: .5s;
+	-ms-animation-duration: .5s;
+	animation-duration: .5s;
+	-webkit-animation-name: mblSwirlIn;
+	-moz-animation-name: mblSwirlIn;
+	-o-animation-name: mblSwirlIn;
+	-ms-animation-name: mblSwirlIn;
+	animation-name: mblSwirlIn;
+	-webkit-animation-timing-function: ease-in;
+	-moz-animation-timing-function: ease-in;
+	-o-animation-timing-function: ease-in;
+	-ms-animation-timing-function: ease-in;
+	animation-timing-function: ease-in;
+}
+.mblSwirl.mblOut.mblReverse {
+	-webkit-animation-name: mblSwirlOutReverse;
+	-moz-animation-name: mblSwirlOutReverse;
+	-o-animation-name: mblSwirlOutReverse;
+	-ms-animation-name: mblSwirlOutReverse;
+	animation-name: mblSwirlOutReverse;
+}
+@keyframes mblSwirlOut {
+	from { transform: rotate(0deg) scale(1.0); }
+	to { transform: rotate(-360deg) scale(0.0); }
+}
+@-webkit-keyframes mblSwirlOut {
+	from { -webkit-transform: rotate(0deg) scale(1.0); }
+	to { -webkit-transform: rotate(-360deg) scale(0.0); }
+}
+@-moz-keyframes mblSwirlOut {
+	from { -moz-transform: rotate(0deg) scale(1.0); }
+	to { -moz-transform: rotate(-360deg) scale(0.0); }
+}
+@-o-keyframes mblSwirlOut {
+	from { -o-transform: rotate(0deg) scale(1.0); }
+	to { -o-transform: rotate(-360deg) scale(0.0); }
+}
+@keyframes mblSwirlOutReverse {
+	from { transform: rotate(0deg) scale(1.0); }
+	to { transform: rotate(360deg) scale(0.0); }
+}
+@-webkit-keyframes mblSwirlOutReverse {
+	from { -webkit-transform: rotate(0deg) scale(1.0); }
+	to { -webkit-transform: rotate(360deg) scale(0.0); }
+}
+@-moz-keyframes mblSwirlOutReverse {
+	from { -moz-transform: rotate(0deg) scale(1.0); }
+	to { -moz-transform: rotate(360deg) scale(0.0); }
+}
+@-o-keyframes mblSwirlOutReverse {
+	from { -o-transform: rotate(0deg) scale(1.0); }
+	to { -o-transform: rotate(360deg) scale(0.0); }
+}
+@keyframes mblSwirlIn {
+	from { transform: scale(1.0); }
+	to { transform: scale(1.0); }
+}
+@-webkit-keyframes mblSwirlIn {
+	from { -webkit-transform: scale(1.0); }
+	to { -webkit-transform: scale(1.0); }
+}
+@-moz-keyframes mblSwirlIn {
+	from { -moz-transform: scale(1.0); }
+	to { -moz-transform: scale(1.0); }
+}
+@-o-keyframes mblSwirlIn {
+	from { -o-transform: scale(1.0); }
+	to { -o-transform: scale(1.0); }
+}
+.mblScaleOut.mblOut {
+	-webkit-animation-duration: .5s;
+	-moz-animation-duration: .5s;
+	-o-animation-duration: .5s;
+	-ms-animation-duration: .5s;
+	animation-duration: .5s;
+	-webkit-animation-name: mblScaleOutOut;
+	-moz-animation-name: mblScaleOutOut;
+	-o-animation-name: mblScaleOutOut;
+	-ms-animation-name: mblScaleOutOut;
+	animation-name: mblScaleOutOut;
+	-webkit-animation-timing-function: ease-in;
+	-moz-animation-timing-function: ease-in;
+	-o-animation-timing-function: ease-in;
+	-ms-animation-timing-function: ease-in;
+	animation-timing-function: ease-in;
+}
+.dj_android .mblScaleOut.mblOut {
+	-webkit-animation-name: mblScaleOutOutAndroid;
+	-moz-animation-name: mblScaleOutOutAndroid;
+	-o-animation-name: mblScaleOutOutAndroid;
+	-ms-animation-name: mblScaleOutOutAndroid;
+	animation-name: mblScaleOutOutAndroid;
+}
+.mblScaleOut.mblIn {
+	-webkit-animation-duration: .5s;
+	-moz-animation-duration: .5s;
+	-o-animation-duration: .5s;
+	-ms-animation-duration: .5s;
+	animation-duration: .5s;
+	-webkit-animation-name: mblScaleOutIn;
+	-moz-animation-name: mblScaleOutIn;
+	-o-animation-name: mblScaleOutIn;
+	-ms-animation-name: mblScaleOutIn;
+	animation-name: mblScaleOutIn;
+	-webkit-animation-timing-function: ease-in;
+	-moz-animation-timing-function: ease-in;
+	-o-animation-timing-function: ease-in;
+	-ms-animation-timing-function: ease-in;
+	animation-timing-function: ease-in;
+}
+@keyframes mblScaleOutOut {
+	from {
+		transform: scale(1.0);
+		opacity: 1;
+	}
+	to {
+		transform: scale(0.0);
+		opacity: 0;
+	}
+}
+@-webkit-keyframes mblScaleOutOut {
+	from {
+		-webkit-transform: scale(1.0);
+		opacity: 1;
+	}
+	to {
+		-webkit-transform: scale(0.0);
+		opacity: 0;
+	}
+}
+@-moz-keyframes mblScaleOutOut {
+	from {
+		-moz-transform: scale(1.0);
+		opacity: 1;
+	}
+	to {
+		-moz-transform: scale(0.0);
+		opacity: 0;
+	}
+}
+@-o-keyframes mblScaleOutOut {
+	from {
+		-o-transform: scale(1.0);
+		opacity: 1;
+	}
+	to {
+		-o-transform: scale(0.0);
+		opacity: 0;
+	}
+}
+@keyframes mblScaleOutOutAndroid {
+	from { transform: scale(1.0); }
+	to { transform: scale(0.0); }
+}
+@-webkit-keyframes mblScaleOutOutAndroid {
+	from { -webkit-transform: scale(1.0); }
+	to { -webkit-transform: scale(0.0); }
+}
+@-moz-keyframes mblScaleOutOutAndroid {
+	from { -moz-transform: scale(1.0); }
+	to { -moz-transform: scale(0.0); }
+}
+@-o-keyframes mblScaleOutOutAndroid {
+	from { -o-transform: scale(1.0); }
+	to { -o-transform: scale(0.0); }
+}
+@keyframes mblScaleOutIn {
+	from { transform: scale(1.0); }
+	to { transform: scale(1.0); }
+}
+@-webkit-keyframes mblScaleOutIn {
+	from { -webkit-transform: scale(1.0); }
+	to { -webkit-transform: scale(1.0); }
+}
+@-moz-keyframes mblScaleOutIn {
+	from { -moz-transform: scale(1.0); }
+	to { -moz-transform: scale(1.0); }
+}
+@-o-keyframes mblScaleOutIn {
+	from { -o-transform: scale(1.0); }
+	to { -o-transform: scale(1.0); }
+}
+.mblScaleIn.mblOut {
+	-webkit-animation-duration: .5s;
+	-moz-animation-duration: .5s;
+	-o-animation-duration: .5s;
+	-ms-animation-duration: .5s;
+	animation-duration: .5s;
+	-webkit-animation-name: mblScaleInOut;
+	-moz-animation-name: mblScaleInOut;
+	-o-animation-name: mblScaleInOut;
+	-ms-animation-name: mblScaleInOut;
+	animation-name: mblScaleInOut;
+	-webkit-animation-timing-function: ease-out;
+	-moz-animation-timing-function: ease-out;
+	-o-animation-timing-function: ease-out;
+	-ms-animation-timing-function: ease-out;
+	animation-timing-function: ease-out;
+}
+.mblScaleIn.mblIn {
+	-webkit-animation-duration: .5s;
+	-moz-animation-duration: .5s;
+	-o-animation-duration: .5s;
+	-ms-animation-duration: .5s;
+	animation-duration: .5s;
+	-webkit-animation-name: mblScaleInIn;
+	-moz-animation-name: mblScaleInIn;
+	-o-animation-name: mblScaleInIn;
+	-ms-animation-name: mblScaleInIn;
+	animation-name: mblScaleInIn;
+	-webkit-animation-timing-function: ease-out;
+	-moz-animation-timing-function: ease-out;
+	-o-animation-timing-function: ease-out;
+	-ms-animation-timing-function: ease-out;
+	animation-timing-function: ease-out;
+}
+.dj_android .mblScaleIn.mblIn {
+	-webkit-animation-name: mblScaleInInAndroid;
+	-moz-animation-name: mblScaleInInAndroid;
+	-o-animation-name: mblScaleInInAndroid;
+	-ms-animation-name: mblScaleInInAndroid;
+	animation-name: mblScaleInInAndroid;
+}
+@keyframes mblScaleInOut {
+	from { transform: scale(1.0); }
+	to { transform: scale(1.0); }
+}
+@-webkit-keyframes mblScaleInOut {
+	from { -webkit-transform: scale(1.0); }
+	to { -webkit-transform: scale(1.0); }
+}
+@-moz-keyframes mblScaleInOut {
+	from { -moz-transform: scale(1.0); }
+	to { -moz-transform: scale(1.0); }
+}
+@-o-keyframes mblScaleInOut {
+	from { -o-transform: scale(1.0); }
+	to { -o-transform: scale(1.0); }
+}
+@keyframes mblScaleInIn {
+	from {
+		transform: scale(0.0);
+		opacity: 0;
+	}
+	to {
+		transform: scale(1.0);
+		opacity: 1;
+	}
+}
+@-webkit-keyframes mblScaleInIn {
+	from {
+		-webkit-transform: scale(0.0);
+		opacity: 0;
+	}
+	to {
+		-webkit-transform: scale(1.0);
+		opacity: 1;
+	}
+}
+@-moz-keyframes mblScaleInIn {
+	from {
+		-moz-transform: scale(0.0);
+		opacity: 0;
+	}
+	to {
+		-moz-transform: scale(1.0);
+		opacity: 1;
+	}
+}
+@-o-keyframes mblScaleInIn {
+	from {
+		-o-transform: scale(0.0);
+		opacity: 0;
+	}
+	to {
+		-o-transform: scale(1.0);
+		opacity: 1;
+	}
+}
+@keyframes mblScaleInInAndroid {
+	from { transform: scale(0.0); }
+	to { transform: scale(1.0); }
+}
+@-webkit-keyframes mblScaleInInAndroid {
+	from { -webkit-transform: scale(0.0); }
+	to { -webkit-transform: scale(1.0); }
+}
+@-moz-keyframes mblScaleInInAndroid {
+	from { -moz-transform: scale(0.0); }
+	to { -moz-transform: scale(1.0); }
+}
+@-o-keyframes mblScaleInInAndroid {
+	from { -o-transform: scale(0.0); }
+	to { -o-transform: scale(1.0); }
+}
+.mblSwap {
+	-webkit-animation-duration: .6s;
+	-moz-animation-duration: .6s;
+	-o-animation-duration: .6s;
+	-ms-animation-duration: .6s;
+	animation-duration: .6s;
+	-webkit-animation-timing-function: linear;
+	-moz-animation-timing-function: linear;
+	-o-animation-timing-function: linear;
+	-ms-animation-timing-function: linear;
+	animation-timing-function: linear;
+}
+.mblSwap.mblOut {
+	-webkit-animation-name: mblSwapOut;
+	-moz-animation-name: mblSwapOut;
+	-o-animation-name: mblSwapOut;
+	-ms-animation-name: mblSwapOut;
+	animation-name: mblSwapOut;
+}
+.mblSwap.mblIn {
+	-webkit-animation-name: mblSwapIn;
+	-moz-animation-name: mblSwapIn;
+	-o-animation-name: mblSwapIn;
+	-ms-animation-name: mblSwapIn;
+	animation-name: mblSwapIn;
+}
+.mblSwap.mblOut.mblReverse {
+	-webkit-animation-name: mblSwapOutReverse;
+	-moz-animation-name: mblSwapOutReverse;
+	-o-animation-name: mblSwapOutReverse;
+	-ms-animation-name: mblSwapOutReverse;
+	animation-name: mblSwapOutReverse;
+}
+.mblSwap.mblIn.mblReverse {
+	-webkit-animation-name: mblSwapInReverse;
+	-moz-animation-name: mblSwapInReverse;
+	-o-animation-name: mblSwapInReverse;
+	-ms-animation-name: mblSwapInReverse;
+	animation-name: mblSwapInReverse;
+}
+@keyframes mblSwapOut {
+	0% {
+		transform: translate3d(0%,0%,0px) scale(1.0);
+		opacity: 1;
+	}
+	50% {
+		z-index: -60;
+		transform: translate3d(-45%,5%,0px) scale(.6);
+		opacity: .4;
+	}
+	100% {
+		z-index: -100;
+		transform: translate3d(-20%,10%,0px) scale(.4);
+		opacity: 0;
+	}
+}
+@-webkit-keyframes mblSwapOut {
+	0% {
+		-webkit-transform: translate3d(0%,0%,0px) scale(1.0);
+		opacity: 1;
+	}
+	50% {
+		z-index: -60;
+		-webkit-transform: translate3d(-45%,5%,0px) scale(.6);
+		opacity: .4;
+	}
+	100% {
+		z-index: -100;
+		-webkit-transform: translate3d(-20%,10%,0px) scale(.4);
+		opacity: 0;
+	}
+}
+@-moz-keyframes mblSwapOut {
+	0% {
+		-moz-transform: translate3d(0%,0%,0px) scale(1.0);
+		opacity: 1;
+	}
+	50% {
+		z-index: -60;
+		-moz-transform: translate3d(-45%,5%,0px) scale(.6);
+		opacity: .4;
+	}
+	100% {
+		z-index: -100;
+		-moz-transform: translate3d(-20%,10%,0px) scale(.4);
+		opacity: 0;
+	}
+}
+@-o-keyframes mblSwapOut {
+	0% {
+		-o-transform: translate3d(0%,0%,0px) scale(1.0);
+		opacity: 1;
+	}
+	50% {
+		z-index: -60;
+		-o-transform: translate3d(-45%,5%,0px) scale(.6);
+		opacity: .4;
+	}
+	100% {
+		z-index: -100;
+		-o-transform: translate3d(-20%,10%,0px) scale(.4);
+		opacity: 0;
+	}
+}
+@keyframes mblSwapIn {
+	0% {
+		z-index: -100;
+		transform: translate3d(-20%,0%,0px) scale(.5);
+		opacity: .4;
+	}
+	50% {
+		z-index: -40;
+		transform: translate3d(45%,0%,0px) scale(.7);
+		opacity: 1;
+	}
+	100% {
+		transform: translate3d(0%,0%,0px) scale(1.0);
+		opacity: 1;
+	}
+}
+@-webkit-keyframes mblSwapIn {
+	0% {
+		z-index: -100;
+		-webkit-transform: translate3d(-20%,0%,0px) scale(.5);
+		opacity: .4;
+	}
+	50% {
+		z-index: -40;
+		-webkit-transform: translate3d(45%,0%,0px) scale(.7);
+		opacity: 1;
+	}
+	100% {
+		-webkit-transform: translate3d(0%,0%,0px) scale(1.0);
+		opacity: 1;
+	}
+}
+@-moz-keyframes mblSwapIn {
+	0% {
+		z-index: -100;
+		-moz-transform: translate3d(-20%,0%,0px) scale(.5);
+		opacity: .4;
+	}
+	50% {
+		z-index: -40;
+		-moz-transform: translate3d(45%,0%,0px) scale(.7);
+		opacity: 1;
+	}
+	100% {
+		-moz-transform: translate3d(0%,0%,0px) scale(1.0);
+		opacity: 1;
+	}
+}
+@-o-keyframes mblSwapIn {
+	0% {
+		z-index: -100;
+		-o-transform: translate3d(-20%,0%,0px) scale(.5);
+		opacity: .4;
+	}
+	50% {
+		z-index: -40;
+		-o-transform: translate3d(45%,0%,0px) scale(.7);
+		opacity: 1;
+	}
+	100% {
+		-o-transform: translate3d(0%,0%,0px) scale(1.0);
+		opacity: 1;
+	}
+}
+@keyframes mblSwapOutReverse {
+	0% {
+		transform: translate3d(0%,0%,0px) scale(1.0);
+		opacity: 1;
+	}
+	50% {
+		z-index: -60;
+		transform: translate3d(45%,5%,0px) scale(.6);
+		opacity: .4;
+	}
+	100% {
+		z-index: -100;
+		transform: translate3d(20%,10%,0px) scale(.4);
+		opacity: 0;
+	}
+}
+@-webkit-keyframes mblSwapOutReverse {
+	0% {
+		-webkit-transform: translate3d(0%,0%,0px) scale(1.0);
+		opacity: 1;
+	}
+	50% {
+		z-index: -60;
+		-webkit-transform: translate3d(45%,5%,0px) scale(.6);
+		opacity: .4;
+	}
+	100% {
+		z-index: -100;
+		-webkit-transform: translate3d(20%,10%,0px) scale(.4);
+		opacity: 0;
+	}
+}
+@-moz-keyframes mblSwapOutReverse {
+	0% {
+		-moz-transform: translate3d(0%,0%,0px) scale(1.0);
+		opacity: 1;
+	}
+	50% {
+		z-index: -60;
+		-moz-transform: translate3d(45%,5%,0px) scale(.6);
+		opacity: .4;
+	}
+	100% {
+		z-index: -100;
+		-moz-transform: translate3d(20%,10%,0px) scale(.4);
+		opacity: 0;
+	}
+}
+@-o-keyframes mblSwapOutReverse {
+	0% {
+		-o-transform: translate3d(0%,0%,0px) scale(1.0);
+		opacity: 1;
+	}
+	50% {
+		z-index: -60;
+		-o-transform: translate3d(45%,5%,0px) scale(.6);
+		opacity: .4;
+	}
+	100% {
+		z-index: -100;
+		-o-transform: translate3d(20%,10%,0px) scale(.4);
+		opacity: 0;
+	}
+}
+@keyframes mblSwapInReverse {
+	0% {
+		z-index: -100;
+		transform: translate3d(20%,0%,0px) scale(.5);
+		opacity: .4;
+	}
+	50% {
+		z-index: -40;
+		transform: translate3d(-45%,0%,0px) scale(.7);
+		opacity: 1;
+	}
+	100% {
+		transform: translate3d(0%,0%,0px) scale(1.0);
+		opacity: 1;
+	}
+}
+@-webkit-keyframes mblSwapInReverse {
+	0% {
+		z-index: -100;
+		-webkit-transform: translate3d(20%,0%,0px) scale(.5);
+		opacity: .4;
+	}
+	50% {
+		z-index: -40;
+		-webkit-transform: translate3d(-45%,0%,0px) scale(.7);
+		opacity: 1;
+	}
+	100% {
+		-webkit-transform: translate3d(0%,0%,0px) scale(1.0);
+		opacity: 1;
+	}
+}
+@-moz-keyframes mblSwapInReverse {
+	0% {
+		z-index: -100;
+		-moz-transform: translate3d(20%,0%,0px) scale(.5);
+		opacity: .4;
+	}
+	50% {
+		z-index: -40;
+		-moz-transform: translate3d(-45%,0%,0px) scale(.7);
+		opacity: 1;
+	}
+	100% {
+		-moz-transform: translate3d(0%,0%,0px) scale(1.0);
+		opacity: 1;
+	}
+}
+@-o-keyframes mblSwapInReverse {
+	0% {
+		z-index: -100;
+		-o-transform: translate3d(20%,0%,0px) scale(.5);
+		opacity: .4;
+	}
+	50% {
+		z-index: -40;
+		-o-transform: translate3d(-45%,0%,0px) scale(.7);
+		opacity: 1;
+	}
+	100% {
+		-o-transform: translate3d(0%,0%,0px) scale(1.0);
+		opacity: 1;
+	}
+}
+.mblZoomOut.mblOut {
+	-webkit-animation-duration: .5s;
+	-moz-animation-duration: .5s;
+	-o-animation-duration: .5s;
+	-ms-animation-duration: .5s;
+	animation-duration: .5s;
+	-webkit-animation-name: mblZoomOutOut;
+	-moz-animation-name: mblZoomOutOut;
+	-o-animation-name: mblZoomOutOut;
+	-ms-animation-name: mblZoomOutOut;
+	animation-name: mblZoomOutOut;
+	-webkit-animation-timing-function: ease-in;
+	-moz-animation-timing-function: ease-in;
+	-o-animation-timing-function: ease-in;
+	-ms-animation-timing-function: ease-in;
+	animation-timing-function: ease-in;
+}
+.dj_android .mblZoomOut.mblOut {
+	-webkit-animation-name: mblZoomOutOutAndroid;
+	-moz-animation-name: mblZoomOutOutAndroid;
+	-o-animation-name: mblZoomOutOutAndroid;
+	-ms-animation-name: mblZoomOutOutAndroid;
+	animation-name: mblZoomOutOutAndroid;
+}
+.mblZoomOut.mblIn {
+	-webkit-animation-duration: .5s;
+	-moz-animation-duration: .5s;
+	-o-animation-duration: .5s;
+	-ms-animation-duration: .5s;
+	animation-duration: .5s;
+	-webkit-animation-name: mblZoomOutIn;
+	-moz-animation-name: mblZoomOutIn;
+	-o-animation-name: mblZoomOutIn;
+	-ms-animation-name: mblZoomOutIn;
+	animation-name: mblZoomOutIn;
+	-webkit-animation-timing-function: ease-in;
+	-moz-animation-timing-function: ease-in;
+	-o-animation-timing-function: ease-in;
+	-ms-animation-timing-function: ease-in;
+	animation-timing-function: ease-in;
+}
+@keyframes mblZoomOutOut {
+	from {
+		transform: scale(1.0);
+		opacity: 1;
+	}
+	to {
+		transform: scale(0.0);
+		opacity: 0;
+	}
+}
+@-webkit-keyframes mblZoomOutOut {
+	from {
+		-webkit-transform: scale(1.0);
+		opacity: 1;
+	}
+	to {
+		-webkit-transform: scale(0.0);
+		opacity: 0;
+	}
+}
+@-moz-keyframes mblZoomOutOut {
+	from {
+		-moz-transform: scale(1.0);
+		opacity: 1;
+	}
+	to {
+		-moz-transform: scale(0.0);
+		opacity: 0;
+	}
+}
+@-o-keyframes mblZoomOutOut {
+	from {
+		-o-transform: scale(1.0);
+		opacity: 1;
+	}
+	to {
+		-o-transform: scale(0.0);
+		opacity: 0;
+	}
+}
+@keyframes mblZoomOutOutAndroid {
+	from { transform: scale(1.0); }
+	to { transform: scale(0.0); }
+}
+@-webkit-keyframes mblZoomOutOutAndroid {
+	from { -webkit-transform: scale(1.0); }
+	to { -webkit-transform: scale(0.0); }
+}
+@-moz-keyframes mblZoomOutOutAndroid {
+	from { -moz-transform: scale(1.0); }
+	to { -moz-transform: scale(0.0); }
+}
+@-o-keyframes mblZoomOutOutAndroid {
+	from { -o-transform: scale(1.0); }
+	to { -o-transform: scale(0.0); }
+}
+@keyframes mblZoomOutIn {
+	from { transform: scale(1.0); }
+	to { transform: scale(1.0); }
+}
+@-webkit-keyframes mblZoomOutIn {
+	from { -webkit-transform: scale(1.0); }
+	to { -webkit-transform: scale(1.0); }
+}
+@-moz-keyframes mblZoomOutIn {
+	from { -moz-transform: scale(1.0); }
+	to { -moz-transform: scale(1.0); }
+}
+@-o-keyframes mblZoomOutIn {
+	from { -o-transform: scale(1.0); }
+	to { -o-transform: scale(1.0); }
+}
+.mblZoomIn.mblOut {
+	-webkit-animation-duration: .5s;
+	-moz-animation-duration: .5s;
+	-o-animation-duration: .5s;
+	-ms-animation-duration: .5s;
+	animation-duration: .5s;
+	-webkit-animation-name: mblZoomInOut;
+	-moz-animation-name: mblZoomInOut;
+	-o-animation-name: mblZoomInOut;
+	-ms-animation-name: mblZoomInOut;
+	animation-name: mblZoomInOut;
+	-webkit-animation-timing-function: ease-out;
+	-moz-animation-timing-function: ease-out;
+	-o-animation-timing-function: ease-out;
+	-ms-animation-timing-function: ease-out;
+	animation-timing-function: ease-out;
+}
+.mblZoomIn.mblIn {
+	-webkit-animation-duration: .5s;
+	-moz-animation-duration: .5s;
+	-o-animation-duration: .5s;
+	-ms-animation-duration: .5s;
+	animation-duration: .5s;
+	-webkit-animation-name: mblZoomInIn;
+	-moz-animation-name: mblZoomInIn;
+	-o-animation-name: mblZoomInIn;
+	-ms-animation-name: mblZoomInIn;
+	animation-name: mblZoomInIn;
+	-webkit-animation-timing-function: ease-out;
+	-moz-animation-timing-function: ease-out;
+	-o-animation-timing-function: ease-out;
+	-ms-animation-timing-function: ease-out;
+	animation-timing-function: ease-out;
+}
+.dj_android .mblZoomIn.mblIn {
+	-webkit-animation-name: mblZoomInInAndroid;
+	-moz-animation-name: mblZoomInInAndroid;
+	-o-animation-name: mblZoomInInAndroid;
+	-ms-animation-name: mblZoomInInAndroid;
+	animation-name: mblZoomInInAndroid;
+}
+@keyframes mblZoomInOut {
+	from { transform: scale(1.0); }
+	to { transform: scale(1.0); }
+}
+@-webkit-keyframes mblZoomInOut {
+	from { -webkit-transform: scale(1.0); }
+	to { -webkit-transform: scale(1.0); }
+}
+@-moz-keyframes mblZoomInOut {
+	from { -moz-transform: scale(1.0); }
+	to { -moz-transform: scale(1.0); }
+}
+@-o-keyframes mblZoomInOut {
+	from { -o-transform: scale(1.0); }
+	to { -o-transform: scale(1.0); }
+}
+@keyframes mblZoomInIn {
+	from {
+		transform: scale(0.0);
+		opacity: 0;
+	}
+	to {
+		transform: scale(1.0);
+		opacity: 1;
+	}
+}
+@-webkit-keyframes mblZoomInIn {
+	from {
+		-webkit-transform: scale(0.0);
+		opacity: 0;
+	}
+	to {
+		-webkit-transform: scale(1.0);
+		opacity: 1;
+	}
+}
+@-moz-keyframes mblZoomInIn {
+	from {
+		-moz-transform: scale(0.0);
+		opacity: 0;
+	}
+	to {
+		-moz-transform: scale(1.0);
+		opacity: 1;
+	}
+}
+@-o-keyframes mblZoomInIn {
+	from {
+		-o-transform: scale(0.0);
+		opacity: 0;
+	}
+	to {
+		-o-transform: scale(1.0);
+		opacity: 1;
+	}
+}
+@keyframes mblZoomInInAndroid {
+	from { transform: scale(0.0); }
+	to { transform: scale(1.0); }
+}
+@-webkit-keyframes mblZoomInInAndroid {
+	from { -webkit-transform: scale(0.0); }
+	to { -webkit-transform: scale(1.0); }
+}
+@-moz-keyframes mblZoomInInAndroid {
+	from { -moz-transform: scale(0.0); }
+	to { -moz-transform: scale(1.0); }
+}
+@-o-keyframes mblZoomInInAndroid {
+	from { -o-transform: scale(0.0); }
+	to { -o-transform: scale(1.0); }
+}
+.mblAccordionTitleSelected {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e2e2e2));
+  background-image: -webkit-linear-gradient(top, #ffffff), #e2e2e2);
+  background-image: -moz-linear-gradient(top, #ffffff), #e2e2e2);
+  background-image: -o-linear-gradient(top, #ffffff), #e2e2e2);
+  background-image: -ms-linear-gradient(top, #ffffff), #e2e2e2);
+  background-image: -linear-gradient(top, #ffffff), #e2e2e2);
+}
+.mblButton {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e2e2e2));
+  background-image: -webkit-linear-gradient(top, #ffffff), #e2e2e2);
+  background-image: -moz-linear-gradient(top, #ffffff), #e2e2e2);
+  background-image: -o-linear-gradient(top, #ffffff), #e2e2e2);
+  background-image: -ms-linear-gradient(top, #ffffff), #e2e2e2);
+  background-image: -linear-gradient(top, #ffffff), #e2e2e2);
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -moz-tap-highlight-color: rgba(255, 255, 255, 0);
+  -o-tap-highlight-color: rgba(255, 255, 255, 0);
+  -ms-tap-highlight-color: rgba(255, 255, 255, 0);
+  tap-highlight-color: rgba(255, 255, 255, 0);
+}
+.mblButtonSelected {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#bbbbbb), to(#666666));
+  background-image: -webkit-linear-gradient(top, #bbbbbb), #666666);
+  background-image: -moz-linear-gradient(top, #bbbbbb), #666666);
+  background-image: -o-linear-gradient(top, #bbbbbb), #666666);
+  background-image: -ms-linear-gradient(top, #bbbbbb), #666666);
+  background-image: -linear-gradient(top, #bbbbbb), #666666);
+}
+.mblBlueButton {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#7a9de9), to(#2362dd));
+  background-image: -webkit-linear-gradient(top, #7a9de9), #2362dd);
+  background-image: -moz-linear-gradient(top, #7a9de9), #2362dd);
+  background-image: -o-linear-gradient(top, #7a9de9), #2362dd);
+  background-image: -ms-linear-gradient(top, #7a9de9), #2362dd);
+  background-image: -linear-gradient(top, #7a9de9), #2362dd);
+}
+.mblBlueButtonSelected {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#bbbbbb), to(#666666));
+  background-image: -webkit-linear-gradient(top, #bbbbbb), #666666);
+  background-image: -moz-linear-gradient(top, #bbbbbb), #666666);
+  background-image: -o-linear-gradient(top, #bbbbbb), #666666);
+  background-image: -ms-linear-gradient(top, #bbbbbb), #666666);
+  background-image: -linear-gradient(top, #bbbbbb), #666666);
+}
+.mblRedButton {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fa9d58), to(#ee4115));
+  background-image: -webkit-linear-gradient(top, #fa9d58), #ee4115);
+  background-image: -moz-linear-gradient(top, #fa9d58), #ee4115);
+  background-image: -o-linear-gradient(top, #fa9d58), #ee4115);
+  background-image: -ms-linear-gradient(top, #fa9d58), #ee4115);
+  background-image: -linear-gradient(top, #fa9d58), #ee4115);
+}
+.mblRedButtonSelected {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#bbbbbb), to(#666666));
+  background-image: -webkit-linear-gradient(top, #bbbbbb), #666666);
+  background-image: -moz-linear-gradient(top, #bbbbbb), #666666);
+  background-image: -o-linear-gradient(top, #bbbbbb), #666666);
+  background-image: -ms-linear-gradient(top, #bbbbbb), #666666);
+  background-image: -linear-gradient(top, #bbbbbb), #666666);
+}
+.mblCarouselItemImage {
+  -webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+  -o-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+  -ms-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
+}
+.mblCarouselSlotSelected .mblCarouselItemImage {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  -o-box-shadow: none;
+  -ms-box-shadow: none;
+  box-shadow: none;
+}
+.mblCheckBox {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e2e2e2));
+  background-image: -webkit-linear-gradient(top,#ffffff, #e2e2e2);
+  background-image: -moz-linear-gradient(top,#ffffff, #e2e2e2);
+  background-image: -o-linear-gradient(top,#ffffff, #e2e2e2);
+  background-image: -ms-linear-gradient(top,#ffffff, #e2e2e2);
+  background-image: linear-gradient(top,#ffffff, #e2e2e2);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -o-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -moz-tap-highlight-color: rgba(255, 255, 255, 0);
+  -o-tap-highlight-color: rgba(255, 255, 255, 0);
+  -ms-tap-highlight-color: rgba(255, 255, 255, 0);
+  tap-highlight-color: rgba(255, 255, 255, 0);
+  -webkit-transform: translatey(0.45em);
+  -moz-transform: translatey(0.45em);
+  -o-transform: translatey(0.45em);
+  -ms-transform: translatey(0.45em);
+  transform: translatey(0.45em);
+}
+.mblCheckBoxSelected {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#bbbbbb), to(#666666));
+  background-image: -webkit-linear-gradient(top,#bbbbbb, #666666);
+  background-image: -moz-linear-gradient(top,#bbbbbb, #666666);
+  background-image: -o-linear-gradient(top,#bbbbbb, #666666);
+  background-image: -ms-linear-gradient(top,#bbbbbb, #666666);
+  background-image: linear-gradient(top,#bbbbbb, #666666);
+}
+.mblCheckBoxChecked, .mblCheckBox:checked {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e2e2e2));
+  background-image: -webkit-linear-gradient(top,#ffffff, #e2e2e2);
+  background-image: -moz-linear-gradient(top,#ffffff, #e2e2e2);
+  background-image: -o-linear-gradient(top,#ffffff, #e2e2e2);
+  background-image: -ms-linear-gradient(top,#ffffff, #e2e2e2);
+  background-image: linear-gradient(top,#ffffff, #e2e2e2);
+}
+.mblCheckBoxChecked::after, .mblCheckBox:checked::after {
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  -webkit-transform-origin: 50% 50%;
+  -moz-transform-origin: 50% 50%;
+  -o-transform-origin: 50% 50%;
+  -ms-transform-origin: 50% 50%;
+  transform-origin: 50% 50%;
+}
+.mblCheckBoxChecked.mblCheckBoxSelected, .mblCheckBox:checked.mblCheckBoxSelected {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#bbbbbb), to(#666666));
+  background-image: -webkit-linear-gradient(top,#bbbbbb, #666666);
+  background-image:-moz-linear-gradient(top,#bbbbbb, #666666);
+  background-image: -o-linear-gradient(top,#bbbbbb, #666666);
+  background-image: -ms-linear-gradient(top,#bbbbbb, #666666);
+  background-image: linear-gradient(top,#bbbbbb, #666666);
+}
+.dijitPopup {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  -o-box-shadow: none;
+  -ms-box-shadow: none;
+  box-shadow: none;
+}
+.mblComboBoxMenuItemSelected {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#bbbbbb), to(#666666));
+  background-image: -webkit-linear-gradient(top,#bbbbbb, #666666);
+  background-image: -moz-linear-gradient(top,#bbbbbb, #666666);
+  background-image: -o-linear-gradient(top,#bbbbbb, #666666);
+  background-image: -ms-linear-gradient(top,#bbbbbb, #666666);
+  background-image: linear-gradient(top,#bbbbbb, #666666);
+}
+.mblDomButtonBlueMinus > div, .mblDomButtonBluePlus > div {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#7a9de9), to(#2362dd), color-stop(0.5, #366edf), color-stop(0.5, #215fdc));
+	background-image: -webkit-linear-gradient(top,#7a9de9, #366edf 50%, #215fdc 50%, #2362dd);
+	background-image: -moz-linear-gradient(top,#7a9de9, #366edf 50%, #215fdc 50%, #2362dd);
+	background-image: -o-linear-gradient(top,#7a9de9, #366edf 50%, #215fdc 50%, #2362dd);
+	background-image: -ms-linear-gradient(top,#7a9de9, #366edf 50%, #215fdc 50%, #2362dd);
+	background-image: linear-gradient(top,#7a9de9, #366edf 50%, #215fdc 50%, #2362dd);
+}
+.mblDomButtonDarkBlueMinus > div, .mblDomButtonDarkBluePlus > div {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#8ea4c1), to(#4a6c9b), color-stop(0.5, #5877a2), color-stop(0.5, #476999));
+	background-image: -webkit-linear-gradient(top,#8ea4c1, #5877a2 50%, #476999 50%, #4a6c9b);
+	background-image: -moz-linear-gradient(top,#8ea4c1, #5877a2 50%, #476999 50%, #4a6c9b);
+	background-image: -o-linear-gradient(top,#8ea4c1, #5877a2 50%, #476999 50%, #4a6c9b);
+	background-image: -ms-linear-gradient(top,#8ea4c1, #5877a2 50%, #476999 50%, #4a6c9b);
+	background-image: linear-gradient(top,#8ea4c1, #5877a2 50%, #476999 50%, #4a6c9b);
+}
+.mblDomButtonRedMinus > div, .mblDomButtonRedPlus > div {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#d3656d), to(#bc1320), color-stop(0.5, #c9404b), color-stop(0.5, #bc1421));
+	background-image: -webkit-linear-gradient(top,#d3656d, #c9404b 50%, #c9404b 50%, #bc1320);
+	background-image: -moz-linear-gradient(top,#d3656d, #c9404b 50%, #c9404b 50%, #bc1320);
+	background-image: -o-linear-gradient(top,#d3656d, #c9404b 50%, #c9404b 50%, #bc1320);
+	background-image: -ms-linear-gradient(top,#d3656d, #c9404b 50%, #c9404b 50%, #bc1320);
+	background-image: linear-gradient(top,#d3656d, #c9404b 50%, #c9404b 50%, #bc1320);
+}
+.mblDomButtonBlackCircleCross > div {
+	-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-o-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	-ms-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+	box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
+}
+.mblDomButtonBlackCircleCross > div > div > div {
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+@keyframes mblVibrate{
+	0%{
+		transform: rotate(-2deg);
+		bottom: -1px;
+		left: -1px;
+	}
+	25% {
+		transform: rotate(1deg);
+		bottom: 2px;
+		left: 1px;
+	}
+	50% {
+		transform: rotate(-1deg);
+		bottom: -2px;
+		left: -1px;
+	}
+	75% {
+		transform: rotate(2deg);
+		bottom: 2px;
+		left: 1px;
+	}
+	100% {
+		transform: rotate(-2deg);
+		bottom: -1px;
+		left: -1px;
+	}
+}
+@-webkit-keyframes mblVibrate{
+	0%{
+		-webkit-transform: rotate(-2deg);
+		bottom: -1px;
+		left: -1px;
+	}
+	25% {
+		-webkit-transform: rotate(1deg);
+		bottom: 2px;
+		left: 1px;
+	}
+	50% {
+		-webkit-transform: rotate(-1deg);
+		bottom: -2px;
+		left: -1px;
+	}
+	75% {
+		-webkit-transform: rotate(2deg);
+		bottom: 2px;
+		left: 1px;
+	}
+	100% {
+		-webkit-transform: rotate(-2deg);
+		bottom: -1px;
+		left: -1px;
+	}
+}
+@-moz-keyframes mblVibrate{
+	0%{
+		-moz-transform: rotate(-2deg);
+		bottom: -1px;
+		left: -1px;
+	}
+	25% {
+		-moz-transform: rotate(1deg);
+		bottom: 2px;
+		left: 1px;
+	}
+	50% {
+		-moz-transform: rotate(-1deg);
+		bottom: -2px;
+		left: -1px;
+	}
+	75% {
+		-moz-transform: rotate(2deg);
+		bottom: 2px;
+		left: 1px;
+	}
+	100% {
+		-moz-transform: rotate(-2deg);
+		bottom: -1px;
+		left: -1px;
+	}
+}
+@-o-keyframes mblVibrate{
+	0%{
+		-o-transform: rotate(-2deg);
+		bottom: -1px;
+		left: -1px;
+	}
+	25% {
+		-o-transform: rotate(1deg);
+		bottom: 2px;
+		left: 1px;
+	}
+	50% {
+		-o-transform: rotate(-1deg);
+		bottom: -2px;
+		left: -1px;
+	}
+	75% {
+		-o-transform: rotate(2deg);
+		bottom: 2px;
+		left: 1px;
+	}
+	100% {
+		-o-transform: rotate(-2deg);
+		bottom: -1px;
+		left: -1px;
+	}
+}
+@keyframes mblShrink{
+	from { transform: scale(1); }
+	to { transform: scale(0.01); }
+}
+@-webkit-keyframes mblShrink{
+	from { -webkit-transform: scale(1); }
+	to { -webkit-transform: scale(0.01); }
+}
+@-moz-keyframes mblShrink{
+	from { -moz-transform: scale(1); }
+	to { -moz-transform: scale(0.01); }
+}
+@-o-keyframes mblShrink{
+	from { -o-transform: scale(1); }
+	to { -o-transform: scale(0.01); }
+}
+@keyframes mblShrink0{
+	from { transform: scale(1); }
+	to { transform: translate(-40%,-70%) scale(0.01); }
+}
+@-webkit-keyframes mblShrink0{
+	from { -webkit-transform: scale(1); }
+	to { -webkit-transform: translate(-40%,-70%) scale(0.01); }
+}
+@-moz-keyframes mblShrink0{
+	from { -moz-transform: scale(1); }
+	to { -moz-transform: translate(-40%,-70%) scale(0.01); }
+}
+@-o-keyframes mblShrink0{
+	from { -o-transform: scale(1); }
+	to { -o-transform: translate(-40%,-70%) scale(0.01); }
+}
+@keyframes mblShrink1{
+	from { transform: scale(1); }
+	to { transform: translate(-14%,-70%) scale(0.01); }
+}
+@-webkit-keyframes mblShrink1{
+	from { -webkit-transform: scale(1); }
+	to { -webkit-transform: translate(-14%,-70%) scale(0.01); }
+}
+@-moz-keyframes mblShrink1{
+	from { -moz-transform: scale(1); }
+	to { -moz-transform: translate(-14%,-70%) scale(0.01); }
+}
+@-o-keyframes mblShrink1{
+	from { -o-transform: scale(1); }
+	to { -o-transform: translate(-14%,-70%) scale(0.01); }
+}
+@keyframes mblShrink2{
+	from { transform: scale(1); }
+	to { transform: translate(14%,-70%) scale(0.01); }
+}
+@-webkit-keyframes mblShrink2{
+	from { -webkit-transform: scale(1); }
+	to { -webkit-transform: translate(14%,-70%) scale(0.01); }
+}
+@-moz-keyframes mblShrink2{
+	from { -moz-transform: scale(1); }
+	to { -moz-transform: translate(14%,-70%) scale(0.01); }
+}
+@-o-keyframes mblShrink2{
+	from { -o-transform: scale(1); }
+	to { -o-transform: translate(14%,-70%) scale(0.01); }
+}
+@keyframes mblShrink3{
+	from { transform: scale(1); }
+	to { transform: translate(40%,-70%) scale(0.01); }
+}
+@-webkit-keyframes mblShrink3{
+	from { -webkit-transform: scale(1); }
+	to { -webkit-transform: translate(40%,-70%) scale(0.01); }
+}
+@-moz-keyframes mblShrink3{
+	from { -moz-transform: scale(1); }
+	to { -moz-transform: translate(40%,-70%) scale(0.01); }
+}
+@-o-keyframes mblShrink3{
+	from { -o-transform: scale(1); }
+	to { -o-transform: translate(40%,-70%) scale(0.01); }
+}
+.mblIconItem {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -moz-tap-highlight-color: rgba(255, 255, 255, 0);
+  -o-tap-highlight-color: rgba(255, 255, 255, 0);
+  -ms-tap-highlight-color: rgba(255, 255, 255, 0);
+  tap-highlight-color: rgba(255, 255, 255, 0);
+}
+.mblVibrate {
+  -webkit-animation-duration: .5s;
+  -moz-animation-duration: .5s;
+  -o-animation-duration: .5s;
+  -ms-animation-duration: .5s;
+  animation-duration: .5s;
+  -webkit-animation-timing-function: ease-in-out;
+  -moz-animation-timing-function: ease-in-out;
+  -o-animation-timing-function: ease-in-out;
+  -ms-animation-timing-function: ease-in-out;
+  animation-timing-function: ease-in-out;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -o-animation-iteration-count: infinite;
+  -ms-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-name: mblVibrate;
+  -moz-animation-name: mblVibrate;
+  -o-animation-name: mblVibrate;
+  -ms-animation-name: mblVibrate;
+  animation-name: mblVibrate;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
+.mblCloseContent {
+  -webkit-animation-duration: .3s;
+  -moz-animation-duration: .3s;
+  -o-animation-duration: .3s;
+  -ms-animation-duration: .3s;
+  animation-duration: .3s;
+  -webkit-animation-timing-function: ease-in-out;
+  -moz-animation-timing-function: ease-in-out;
+  -o-animation-timing-function: ease-in-out;
+  -ms-animation-timing-function: ease-in-out;
+  animation-timing-function: ease-in-out;
+  -webkit-animation-name: mblShrink;
+  -moz-animation-name: mblShrink;
+  -o-animation-name: mblShrink;
+  -ms-animation-name: mblShrink;
+  animation-name: mblShrink;
+  -webkit-transform: scale(0.01);
+  -moz-transform: scale(0.01);
+  -o-transform: scale(0.01);
+  -ms-transform: scale(0.01);
+  transform: scale(0.01);
+}
+.mblCloseContent.mblShrink0 {
+  -webkit-animation-name: mblShrink0;
+  -moz-animation-name: mblShrink0;
+  -o-animation-name: mblShrink0;
+  -ms-animation-name: mblShrink0;
+  animation-name: mblShrink0;
+}
+.mblCloseContent.mblShrink1 {
+  -webkit-animation-name: mblShrink1;
+  -moz-animation-name: mblShrink1;
+  -o-animation-name: mblShrink1;
+  -ms-animation-name: mblShrink1;
+  animation-name: mblShrink1;
+}
+.mblCloseContent.mblShrink2 {
+  -webkit-animation-name: mblShrink2;
+  -moz-animation-name: mblShrink2;
+  -o-animation-name: mblShrink2;
+  -ms-animation-name: mblShrink2;
+  animation-name: mblShrink2;
+}
+.mblCloseContent.mblShrink3 {
+  -webkit-animation-name: mblShrink3;
+  -moz-animation-name: mblShrink3;
+  -o-animation-name: mblShrink3;
+  -ms-animation-name: mblShrink3;
+  animation-name: mblShrink3;
+}
+.mblIconItemPaneHeading {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#e0e4e7), to(#b4bec6), color-stop(0.5, #c4ccd2), color-stop(0.5, #bfc8ce));
+  background-image: -webkit-linear-gradient(top,#e0e4e7, #c4ccd2 50%, #bfc8ce 50%, #b4bec6);
+  background-image: -moz-linear-gradient(top,#e0e4e7, #c4ccd2 50%, #bfc8ce 50%, #b4bec6);
+  background-image: -o-linear-gradient(top,#e0e4e7, #c4ccd2 50%, #bfc8ce 50%, #b4bec6);
+  background-image: -ms-linear-gradient(top,#e0e4e7, #c4ccd2 50%, #bfc8ce 50%, #b4bec6);
+  background-image: linear-gradient(top,#e0e4e7, #c4ccd2 50%, #bfc8ce 50%, #b4bec6);
+}
+.mblIconMenu {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -moz-tap-highlight-color: rgba(255, 255, 255, 0);
+  -o-tap-highlight-color: rgba(255, 255, 255, 0);
+  -ms-tap-highlight-color: rgba(255, 255, 255, 0);
+  tap-highlight-color: rgba(255, 255, 255, 0);
+}
+.mblIconMenuItem {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.mblIconMenuItemSel {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#bbbbbb), to(#666666));
+  background-image: -webkit-linear-gradient(top,#bbbbbb, #666666);
+  background-image: -moz-linear-gradient(top,#bbbbbb, #666666);
+  background-image: -o-linear-gradient(top,#bbbbbb, #666666);
+  background-image: -ms-linear-gradient(top,#bbbbbb, #666666);
+  background-image: linear-gradient(top,#bbbbbb, #666666);
+}
+.mblCoverv {
+	-webkit-transition-property: none;
+	-moz-transition-property: none;
+	-o-transition-property: none;
+	-ms-transition-property: none;
+	transition-property: none;
+	-webkit-transition-duration: 0s;
+	-moz-transition-duration: 0s;
+	-o-transition-duration: 0s;
+	-ms-transition-duration: 0s;
+	transition-duration: 0s;
+}
+.mblCoverv.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-moz-transition-property: -moz-transform;
+	-o-transition-property: -o-transform;
+	-ms-transition-property: -ms-transform;
+	transition-property: transform;
+	-webkit-transition-duration: .4s;
+	-moz-transition-duration: .4s;
+	-o-transition-duration: .4s;
+	-ms-transition-duration: .4s;
+	transition-duration: .4s;
+}
+.mblCoverv.mblOut {
+	-webkit-transform: translate3d(0px,0%,-1px) !important;
+	-moz-transform: translate3d(0px,0%,-1px) !important;
+	-o-transform: translate3d(0px,0%,-1px) !important;
+	-ms-transform: translate3d(0px,0%,-1px) !important;
+	transform: translate3d(0px,0%,-1px) !important;
+}
+.mblCoverv.mblIn {
+	-webkit-transform: translate3d(0px,100%,0px) !important;
+	-moz-transform: translate3d(0px,100%,0px) !important;
+	-o-transform: translate3d(0px,100%,0px) !important;
+	-ms-transform: translate3d(0px,100%,0px) !important;
+	transform: translate3d(0px,100%,0px) !important;
+}
+.mblCoverv.mblIn.mblReverse {
+	-webkit-transform: translate3d(0px,-100%,0px) !important;
+	-moz-transform: translate3d(0px,-100%,0px) !important;
+	-o-transform: translate3d(0px,-100%,0px) !important;
+	-ms-transform: translate3d(0px,-100%,0px) !important;
+	transform: translate3d(0px,-100%,0px) !important;
+}
+.mblCoverv.mblOut.mblTransition,
+.mblCoverv.mblIn.mblTransition {
+	-webkit-transform: translate3d(0px,0%,0px) !important;
+	-moz-transform: translate3d(0px,0%,0px) !important;
+	-o-transform: translate3d(0px,0%,0px) !important;
+	-ms-transform: translate3d(0px,0%,0px) !important;
+	transform: translate3d(0px,0%,0px) !important;
+}
+.dj_android.dj_tablet .mblCoverv.mblTransition {
+	-webkit-transition-duration: .6s;
+	-moz-transition-duration: .6s;
+	-o-transition-duration: .6s;
+	-ms-transition-duration: .6s;
+	transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
+	-moz-transition-timing-function: linear;
+	-o-transition-timing-function: linear;
+	-ms-transition-timing-function: linear;
+	transition-timing-function: linear;
+}
+.mblRevealv {
+	-webkit-transition-property: none;
+	-moz-transition-property: none;
+	-o-transition-property: none;
+	-ms-transition-property: none;
+	transition-property: none;
+	-webkit-transition-duration: 0s;
+	-moz-transition-duration: 0s;
+	-o-transition-duration: 0s;
+	-ms-transition-duration: 0s;
+	transition-duration: 0s;
+}
+.mblRevealv.mblTransition {
+	-webkit-transition-property: -webkit-transform;
+	-moz-transition-property: -moz-transform;
+	-o-transition-property: -o-transform;
+	-ms-transition-property: -ms-transform;
+	transition-property: transform;
+	-webkit-transition-duration: .4s;
+	-moz-transition-duration: .4s;
+	-o-transition-duration: .4s;
+	-ms-transition-duration: .4s;
+	transition-duration: .4s;
+}
+.mblRevealv.mblOut {
+	-webkit-transform: translate3d(0px,0%,0px) !important;
+	-moz-transform: translate3d(0px,0%,0px) !important;
+	-o-transform: translate3d(0px,0%,0px) !important;
+	-ms-transform: translate3d(0px,0%,0px) !important;
+	transform: translate3d(0px,0%,0px) !important;
+}
+.mblRevealv.mblOut.mblTransition {
+	-webkit-transform: translate3d(0px,-100%,0px) !important;
+	-moz-transform: translate3d(0px,-100%,0px) !important;
+	-o-transform: translate3d(0px,-100%,0px) !important;
+	-ms-transform: translate3d(0px,-100%,0px) !important;
+	transform: translate3d(0px,-100%,0px) !important;
+}
+.mblRevealv.mblOut.mblReverse.mblTransition {
+	-webkit-transform: translate3d(0px,100%,0px) !important;
+	-moz-transform: translate3d(0px,100%,0px) !important;
+	-o-transform: translate3d(0px,100%,0px) !important;
+	-ms-transform: translate3d(0px,100%,0px) !important;
+	transform: translate3d(0px,100%,0px) !important;
+}
+.mblRevealv.mblIn {
+	-webkit-transform: translate3d(0px,0%,-1px) !important;
+	-moz-transform: translate3d(0px,0%,-1px) !important;
+	-o-transform: translate3d(0px,0%,-1px) !important;
+	-ms-transform: translate3d(0px,0%,-1px) !important;
+	transform: translate3d(0px,0%,-1px) !important;
+}
+.mblRevealv.mblIn.mblTransition {
+	-webkit-transform: translate3d(0px,0%,0px) !important;
+	-moz-transform: translate3d(0px,0%,0px) !important;
+	-o-transform: translate3d(0px,0%,0px) !important;
+	-ms-transform: translate3d(0px,0%,0px) !important;
+	transform: translate3d(0px,0%,0px) !important;
+}
+.dj_android.dj_tablet .mblRevealv.mblTransition {
+	-webkit-transition-duration: .6s;
+	-moz-transition-duration: .6s;
+	-o-transition-duration: .6s;
+	-ms-transition-duration: .6s;
+	transition-duration: .6s;
+	-webkit-transition-timing-function: linear;
+	-moz-transition-timing-function: linear;
+	-o-transition-timing-function: linear;
+	-ms-transition-timing-function: linear;
+	transition-timing-function: linear;
+}
+.mblOverlay {
+  text-align: -webkit-center;
+  text-align: -moz-center;
+  text-align: -o-center;
+  text-align: -ms-center;
+  text-align: center;
+}
+.mblOpenerUnderlay {
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+	-moz-tap-highlight-color: rgba(255, 255, 255, 0);
+	-o-tap-highlight-color: rgba(255, 255, 255, 0);
+	-ms-tap-highlight-color: rgba(255, 255, 255, 0);
+	tap-highlight-color: rgba(255, 255, 255, 0);
+}
+.mblPageIndicator {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -moz-tap-highlight-color: rgba(255, 255, 255, 0);
+  -o-tap-highlight-color: rgba(255, 255, 255, 0);
+  -ms-tap-highlight-color: rgba(255, 255, 255, 0);
+  tap-highlight-color: rgba(255, 255, 255, 0);
+}
+.mblProgressBarProgress {
+  -webkit-transition-property: width;
+  -moz-transition-property: width;
+  -o-transition-property: width;
+  -ms-transition-property: width;
+  transition-property: width;
+  -webkit-transition-duration: 0.25s;
+  -moz-transition-duration: 0.25s;
+  -o-transition-duration: 0.25s;
+  -ms-transition-duration: 0.25s;
+  transition-duration: 0.25s;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#e7f7ff), to(#add7ff), color-stop(0.5, #cee7ff));
+  background-image: -webkit-linear-gradient(top,#e7f7ff, #cee7ff 50%, #add7ff);
+  background-image: -moz-linear-gradient(top,#e7f7ff, #cee7ff 50%, #add7ff);
+  background-image: -o-linear-gradient(top,#e7f7ff, #cee7ff 50%, #add7ff);
+  background-image: -ms-linear-gradient(top,#e7f7ff, #cee7ff 50%, #add7ff);
+  background-image: linear-gradient(top,#e7f7ff, #cee7ff 50%, #add7ff);  
+ }
+.mblRadioButton {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e2e2e2));
+  background-image: -webkit-linear-gradient(top,#ffffff, #e2e2e2);
+  background-image: -moz-linear-gradient(top,#ffffff, #e2e2e2);
+  background-image: -o-linear-gradient(top,#ffffff, #e2e2e2);
+  background-image: -ms-linear-gradient(top,#ffffff, #e2e2e2);
+  background-image: linear-gradient(top,#ffffff, #e2e2e2);  
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -o-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -moz-tap-highlight-color: rgba(255, 255, 255, 0);
+  -o-tap-highlight-color: rgba(255, 255, 255, 0);
+  -ms-tap-highlight-color: rgba(255, 255, 255, 0);
+  tap-highlight-color: rgba(255, 255, 255, 0);
+  -webkit-transform: translatey(0.45em);
+  -moz-transform: translatey(0.45em);
+  -o-transform: translatey(0.45em);
+  -ms-transform: translatey(0.45em);
+  transform: translatey(0.45em);
+}
+.mblRadioButtonChecked, .mblRadioButton:checked {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e2e2e2));
+  background-image: -webkit-linear-gradient(top,#ffffff, #e2e2e2);
+  background-image: -moz-linear-gradient(top,#ffffff, #e2e2e2);
+  background-image: -o-linear-gradient(top,#ffffff, #e2e2e2);
+  background-image: -ms-linear-gradient(top,#ffffff, #e2e2e2);
+  background-image: linear-gradient(top,#ffffff, #e2e2e2);  
+}
+.mblRadioButtonChecked::after, .mblRadioButton:checked::after {
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  -webkit-transform-origin: 50% 50%;
+  -moz-transform-origin: 50% 50%;
+  -o-transform-origin: 50% 50%;
+  -ms-transform-origin: 50% 50%;
+  transform-origin: 50% 50%;
+}
+.mblRadioButtonChecked.mblRadioButtonSelected, .mblRadioButton:checked.mblRadioButtonSelected {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#bbbbbb), to(#666666));
+  background-image: -webkit-linear-gradient(top,#bbbbbb, #666666);
+  background-image: -moz-linear-gradient(top,#bbbbbb, #666666);
+  background-image: -o-linear-gradient(top,#bbbbbb, #666666);
+  background-image: -ms-linear-gradient(top,#bbbbbb, #666666);
+  background-image: linear-gradient(top,#bbbbbb, #666666);  
+}
+.mblSlider {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e2e2e2));
+  background-image: -webkit-linear-gradient(top,#ffffff, #e2e2e2);
+  background-image: -moz-linear-gradient(top,#ffffff, #e2e2e2);
+  background-image: -o-linear-gradient(top,#ffffff, #e2e2e2);
+  background-image: -ms-linear-gradient(top,#ffffff, #e2e2e2);
+  background-image: linear-gradient(top,#ffffff, #e2e2e2);  
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  -o-box-sizing: content-box;
+  -ms-box-sizing: content-box;
+  box-sizing: content-box;
+}
+.mblSliderProgressBar {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#bbbbbb), to(#666666));
+ background-image: -webkit-linear-gradient(top,#bbbbbb, #666666);
+  background-image: -moz-linear-gradient(top,#bbbbbb, #666666);
+  background-image: -o-linear-gradient(top,#bbbbbb, #666666);
+  background-image: -ms-linear-gradient(top,#bbbbbb, #666666);
+  background-image: linear-gradient(top,#bbbbbb, #666666);  
+}
+.mblSliderHandle {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#e2e2e2), to(#a4a4a4));
+  background-image: -webkit-linear-gradient(top,#e2e2e2, #a4a4a4);
+  background-image: -moz-linear-gradient(top,#e2e2e2, #a4a4a4);
+  background-image: -o-linear-gradient(top,#e2e2e2, #a4a4a4);
+  background-image: -ms-linear-gradient(top,#e2e2e2, #a4a4a4);
+  background-image: linear-gradient(top,#e2e2e2, #a4a4a4);  
+}
+.mblSliderTransition {
+  -webkit-transition-duration: 400ms;
+  -moz-transition-duration: 400ms;
+  -o-transition-duration: 400ms;
+  -ms-transition-duration: 400ms;
+  transition-duration: 400ms;
+}
+.mblSliderTouchBox {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -moz-tap-highlight-color: rgba(255, 255, 255, 0);
+  -o-tap-highlight-color: rgba(255, 255, 255, 0);
+  -ms-tap-highlight-color: rgba(255, 255, 255, 0);
+  tap-highlight-color: rgba(255, 255, 255, 0);
+}
+.mblSpinWheel {
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #313137), color-stop(0.05, #73747d), color-stop(0.07, #92939b), color-stop(0.09, #ababb5), color-stop(0.12, #c5c6ce), color-stop(0.16, #dfe0e4), color-stop(0.22, #f4f5f6), color-stop(0.35, #fbfcfc), color-stop(0.5, #fbfcfc), color-stop(0.61, #fbfcfc), color-stop(0.61, #b4c1c7), color-stop(0.65, #fbfcfc), color-stop(0.78, #f4f5f6), color-stop(0.84, #dfe0e4), color-stop(0.88, #c5c6ce), color-stop(0.91, #ababb5), color-stop(0.93, #92939b), color-stop(0.95, #73747d), color-stop(1, #313137));
+  background-image: -webkit-linear-gradient(top, #313137, #73747d 5%, #92939b 7%,  #ababb5 9%, #c5c6ce 12%, #dfe0e4 16%, #f4f5f6 22%, #fbfcfc 35%, #fbfcfc 50%, #fbfcfc 61%, #b4c1c7 61%, #fbfcfc 65%, #f4f5f6 78%, #dfe0e4 84%, #c5c6ce 88%, #ababb5 91%, #92939b 93%, #73747d 95%, #313137);
+  background-image: -moz-linear-gradient(top,#313137, #73747d 5%, #92939b 7%,  #ababb5 9%, #c5c6ce 12%, #dfe0e4 16%, #f4f5f6 22%, #fbfcfc 35%, #fbfcfc 50%, #fbfcfc 61%, #b4c1c7 61%, #fbfcfc 65%, #f4f5f6 78%, #dfe0e4 84%, #c5c6ce 88%, #ababb5 91%, #92939b 93%, #73747d 95%, #313137);
+  background-image: -o-linear-gradient(top,#313137, #73747d 5%, #92939b 7%,  #ababb5 9%, #c5c6ce 12%, #dfe0e4 16%, #f4f5f6 22%, #fbfcfc 35%, #fbfcfc 50%, #fbfcfc 61%, #b4c1c7 61%, #fbfcfc 65%, #f4f5f6 78%, #dfe0e4 84%, #c5c6ce 88%, #ababb5 91%, #92939b 93%, #73747d 95%, #313137);
+  background-image: -ms-linear-gradient(top,#313137, #73747d 5%, #92939b 7%,  #ababb5 9%, #c5c6ce 12%, #dfe0e4 16%, #f4f5f6 22%, #fbfcfc 35%, #fbfcfc 50%, #fbfcfc 61%, #b4c1c7 61%, #fbfcfc 65%, #f4f5f6 78%, #dfe0e4 84%, #c5c6ce 88%, #ababb5 91%, #92939b 93%, #73747d 95%, #313137);
+  background-image: linear-gradient(top,#313137, #73747d 5%, #92939b 7%,  #ababb5 9%, #c5c6ce 12%, #dfe0e4 16%, #f4f5f6 22%, #fbfcfc 35%, #fbfcfc 50%, #fbfcfc 61%, #b4c1c7 61%, #fbfcfc 65%, #f4f5f6 78%, #dfe0e4 84%, #c5c6ce 88%, #ababb5 91%, #92939b 93%, #73747d 95%, #313137);  
+}
+.mblSpinWheelBar {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#edeef2), to(#a7adca), color-stop(0, #edeef2), color-stop(0.25, #c8cadd), color-stop(0.49, #bbbfd4), color-stop(0.51, #9fa8c6), color-stop(0.81, #a2a9c7), color-stop(0.82, #a6abc9), color-stop(1, #a7adca));
+  background-image: -webkit-linear-gradient(top, #edeef2, #c8cadd 25%, #bbbfd4 49%, #9fa8c6 51%, #a2a9c7 81%, #a6abc9 82%, #a7adca);
+  background-image: -moz-linear-gradient(top, #edeef2, #c8cadd 25%, #bbbfd4 49%, #9fa8c6 51%, #a2a9c7 81%, #a6abc9 82%, #a7adca);
+  background-image: -o-linear-gradient(top,#edeef2, #c8cadd 25%, #bbbfd4 49%, #9fa8c6 51%, #a2a9c7 81%, #a6abc9 82%, #a7adca);
+  background-image: -ms-linear-gradient(top,#edeef2, #c8cadd 25%, #bbbfd4 49%, #9fa8c6 51%, #a2a9c7 81%, #a6abc9 82%, #a7adca);
+  background-image: linear-gradient(top,#edeef2, #c8cadd 25%, #bbbfd4 49%, #9fa8c6 51%, #a2a9c7 81%, #a6abc9 82%, #a7adca);
+}
+.mblSpinWheelSlot {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -moz-tap-highlight-color: rgba(255, 255, 255, 0);
+  -o-tap-highlight-color: rgba(255, 255, 255, 0);
+  -ms-tap-highlight-color: rgba(255, 255, 255, 0);
+  tap-highlight-color: rgba(255, 255, 255, 0);
+}
+.mblDomButtonWhiteCross > div {
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.mblTabBarButton {
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -moz-tap-highlight-color: rgba(255, 255, 255, 0);
+  -o-tap-highlight-color: rgba(255, 255, 255, 0);
+  -ms-tap-highlight-color: rgba(255, 255, 255, 0);
+  tap-highlight-color: rgba(255, 255, 255, 0);
+}
+.mblTabBarTabBar {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#2d2d2d), to(#000000));
+  background-image: -webkit-linear-gradient(top, #2d2d2d, #000000);
+  background-image: -moz-linear-gradient(top, #2d2d2d, #000000);
+  background-image: -o-linear-gradient(top, #2d2d2d, #000000);
+  background-image: -ms-linear-gradient(top, #2d2d2d, #000000);
+  background-image: linear-gradient(top, #2d2d2d, #000000);
+}
+.mblTabBarTabBar .mblTabBarButtonSelected {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#484848), to(#242424));
+  background-image: -webkit-linear-gradient(top, #484848, #242424);
+  background-image: -moz-linear-gradient(top, #484848, #242424);
+  background-image: -o-linear-gradient(top, #484848, #242424);
+  background-image: -ms-linear-gradient(top, #484848, #242424);
+  background-image: linear-gradient(top, #484848, #242424);
+}
+.mblTabBarSegmentedControl {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#dedede));
+  background-image: -webkit-linear-gradient(top, #f6f6f6, #dedede);
+  background-image: -moz-linear-gradient(top, #f6f6f6, #dedede);
+  background-image: -o-linear-gradient(top, #f6f6f6, #dedede);
+  background-image: -ms-linear-gradient(top, #f6f6f6, #dedede);
+  background-image: linear-gradient(top, #f6f6f6, #dedede);
+}
+.mblTabBarSegmentedControl .mblTabBarButton {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e2e2e2));
+  background-image: -webkit-linear-gradient(top, #ffffff, #e2e2e2);
+  background-image: -moz-linear-gradient(top, #ffffff, #e2e2e2);
+  background-image: -o-linear-gradient(top, #ffffff, #e2e2e2);
+  background-image: -ms-linear-gradient(top, #ffffff, #e2e2e2);
+  background-image: linear-gradient(top, #ffffff, #e2e2e2);
+}
+.mblTabBarSegmentedControl .mblTabBarButtonSelected {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#e2e2e2), to(#a4a4a4));
+  background-image: -webkit-linear-gradient(top, #e2e2e2, #a4a4a4);
+  background-image: -moz-linear-gradient(top, #e2e2e2, #a4a4a4);
+  background-image: -o-linear-gradient(top, #e2e2e2, #a4a4a4);
+  background-image: -ms-linear-gradient(top, #e2e2e2, #a4a4a4);
+  background-image: linear-gradient(top, #e2e2e2, #a4a4a4);
+}
+.mblTabBarStandardTab {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#dedede));
+  background-image: -webkit-linear-gradient(top, #f6f6f6, #dedede);
+  background-image: -moz-linear-gradient(top, #f6f6f6, #dedede);
+  background-image: -o-linear-gradient(top, #f6f6f6, #dedede);
+  background-image: -ms-linear-gradient(top, #f6f6f6, #dedede);
+  background-image: linear-gradient(top, #f6f6f6, #dedede);
+}
+.mblTabBarStandardTab .mblTabBarButton {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f6f6f6), to(#dedede));
+   background-image: -webkit-linear-gradient(top, #f6f6f6, #dedede);
+  background-image: -moz-linear-gradient(top, #f6f6f6, #dedede);
+  background-image: -o-linear-gradient(top, #f6f6f6, #dedede);
+  background-image: -ms-linear-gradient(top, #f6f6f6, #dedede);
+  background-image: linear-gradient(top, #f6f6f6, #dedede);
+}
+.mblTabBarStandardTab .mblTabBarButtonSelected {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#e2e2e2), to(#a4a4a4));
+  background-image: -webkit-linear-gradient(top, #e2e2e2, #a4a4a4);
+  background-image: -moz-linear-gradient(top, #e2e2e2, #a4a4a4);
+  background-image: -o-linear-gradient(top, #e2e2e2, #a4a4a4);
+  background-image: -ms-linear-gradient(top, #e2e2e2, #a4a4a4);
+  background-image: linear-gradient(top, #e2e2e2, #a4a4a4);
+}
+.mblTabBarSlimTab {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#2d2d2d), to(#000000), color-stop(0.5, #141414), color-stop(0.5, #000000));
+  background-image: -webkit-linear-gradient(top, #2d2d2d, #141414 50%, #000000 50%, #000000);
+  background-image: -moz-linear-gradient(top,  #2d2d2d, #141414 50%, #000000 50%, #000000);
+  background-image: -o-linear-gradient(top,  #2d2d2d, #141414 50%, #000000 50%, #000000);
+  background-image: -ms-linear-gradient(top,  #2d2d2d, #141414 50%, #000000 50%, #000000);
+  background-image: linear-gradient(top,  #2d2d2d, #141414 50%, #000000 50%, #000000);
+}
+.mblTabBarSlimTab .mblTabBarButton {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#2d2d2d), to(#000000), color-stop(0.5, #141414), color-stop(0.5, #000000));
+  background-image: -webkit-linear-gradient(top, #2d2d2d, #141414 50%, #000000 50%, #000000);
+  background-image: -moz-linear-gradient(top,  #2d2d2d, #141414 50%, #000000 50%, #000000);
+  background-image: -o-linear-gradient(top,  #2d2d2d, #141414 50%, #000000 50%, #000000);
+  background-image: -ms-linear-gradient(top,  #2d2d2d, #141414 50%, #000000 50%, #000000);
+  background-image: linear-gradient(top,  #2d2d2d, #141414 50%, #000000 50%, #000000);
+}
+.mblTabBarSlimTab .mblTabBarButtonSelected {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#313031), to(#959595), color-stop(0.5, #5a555a), color-stop(0.5, #616161));
+  background-image: -webkit-linear-gradient(top, #313031, #5a555a 50%, #616161 50%, #959595);
+  background-image: -moz-linear-gradient(top,  #313031, #5a555a 50%, #616161 50%, #959595);
+  background-image: -o-linear-gradient(top, #313031, #5a555a 50%, #616161 50%, #959595);
+  background-image: -ms-linear-gradient(top,  #313031, #5a555a 50%, #616161 50%, #959595);
+  background-image: linear-gradient(top,  #313031, #5a555a 50%, #616161 50%, #959595);
+}
+.mblTabBarTallTab {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#2d2d2d), to(#000000));
+  background-image: -webkit-linear-gradient(top, #2d2d2d, #000000);
+  background-image: -moz-linear-gradient(top, #2d2d2d, #000000);
+  background-image: -o-linear-gradient(top, #2d2d2d, #000000);
+  background-image: -ms-linear-gradient(top, #2d2d2d, #000000);
+  background-image: linear-gradient(top, #2d2d2d, #000000);
+}
+.mblTabBarTallTab .mblTabBarButton {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#181818), to(#100c10), color-stop(0.1, #313031));
+  background-image: -webkit-linear-gradient(top, #181818, #313031 10%, #100c10);
+  background-image: -moz-linear-gradient(top, #181818, #313031 10%, #100c10);
+  background-image: -o-linear-gradient(top, #181818, #313031 10%, #100c10);
+  background-image: -ms-linear-gradient(top, #181818, #313031 10%, #100c10);
+  background-image: linear-gradient(top, #181818, #313031 10%, #100c10);
+}
+.mblTabBarTallTab .mblTabBarButtonSelected {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#a59ea5), to(#848284));
+  background-image: -webkit-linear-gradient(top, #a59ea5, #848284);
+  background-image: -moz-linear-gradient(top, #a59ea5, #848284);
+  background-image: -o-linear-gradient(top, #a59ea5, #848284);
+  background-image: -ms-linear-gradient(top, #a59ea5, #848284);
+  background-image: linear-gradient(top, #a59ea5, #848284);
+}
+.mblSearchBox::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -o-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  background-image: -webkit-gradient(linear, left top, right bottom, from(transparent), color-stop(0.46, transparent), color-stop(0.46, white), color-stop(0.54, white), color-stop(0.54, transparent), to(transparent)), -webkit-gradient(linear, right top, left bottom, from(transparent), color-stop(0.46, transparent), color-stop(0.46, white), color-stop(0.54, white), color-stop(0.54, transparent), to(transparent)) !important;
+  background-image: -webkit-linear-gradient(top, transparent, transparent 46%, white 46%, white 54%, transparent, 54%, transparent) !important;
+  background-image: -moz-linear-gradient(top, transparent, transparent 46%, white 46%, white 54%, transparent, 54%, transparent) !important;
+  background-image: -o-linear-gradient(top, transparent, transparent 46%, white 46%, white 54%, transparent, 54%, transparent) !important;
+  background-image: -ms-linear-gradient(top, transparent, transparent 46%, white 46%, white 54%, transparent, 54%, transparent) !important;
+  background-image: linear-gradient(top, transparent, transparent 46%, white 46%, white 54%, transparent, 54%, transparent) !important;
+}
+.mblToggleButton {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e2e2e2));
+  background-image: -webkit-linear-gradient(top, #ffffff, #e2e2e2);
+  background-image: -moz-linear-gradient(top, #ffffff, #e2e2e2);
+  background-image: -o-linear-gradient(top, #ffffff, #e2e2e2);
+  background-image: -ms-linear-gradient(top, #ffffff, #e2e2e2);
+  background-image: linear-gradient(top, #ffffff, #e2e2e2);
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -moz-tap-highlight-color: rgba(255, 255, 255, 0);
+  -o-tap-highlight-color: rgba(255, 255, 255, 0);
+  -ms-tap-highlight-color: rgba(255, 255, 255, 0);
+  tap-highlight-color: rgba(255, 255, 255, 0);
+}
+.mblToggleButtonSelected {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#bbbbbb), to(#666666));
+ background-image: -webkit-linear-gradient(top, #bbbbbb, #666666);
+  background-image: -moz-linear-gradient(top, #bbbbbb, #666666);
+  background-image: -o-linear-gradient(top, #bbbbbb, #666666);
+  background-image: -ms-linear-gradient(top, #bbbbbb, #666666);
+  background-image: linear-gradient(top, #bbbbbb, #666666);
+}
+.mblToggleButtonChecked {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e2e2e2));
+ background-image: -webkit-linear-gradient(top, #ffffff, #e2e2e2);
+  background-image: -moz-linear-gradient(top, #ffffff, #e2e2e2);
+  background-image: -o-linear-gradient(top, #ffffff, #e2e2e2);
+  background-image: -ms-linear-gradient(top, #ffffff, #e2e2e2);
+  background-image: linear-gradient(top, #ffffff, #e2e2e2);
+}
+.mblToggleButtonChecked:after {
+  -webkit-transform: rotate(45deg) skew(10deg);
+  -moz-transform: rotate(45deg) skew(10deg);
+  -o-transform: rotate(45deg) skew(10deg);
+  -ms-transform: rotate(45deg) skew(10deg);
+  transform: rotate(45deg) skew(10deg);
+  -webkit-transform-origin: 50% 50%;
+  -moz-transform-origin: 50% 50%;
+  -o-transform-origin: 50% 50%;
+  -ms-transform-origin: 50% 50%;
+  transform-origin: 50% 50%;
+}
+.mblToggleButtonChecked.mblToggleButtonSelected {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#bbbbbb), to(#666666));
+ background-image: -webkit-linear-gradient(top, #bbbbbb, #666666);
+  background-image: -moz-linear-gradient(top, #bbbbbb, #666666);
+  background-image: -o-linear-gradient(top, #bbbbbb, #666666);
+  background-image: -ms-linear-gradient(top, #bbbbbb, #666666);
+  background-image: linear-gradient(top, #bbbbbb, #666666);
+}
+.mblValuePickerSlotButton {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#f7f7f7), to(#d6d7d6), color-stop(0.5, #d6d3d6), color-stop(0.9, #bdbebd));
+ background-image: -webkit-linear-gradient(top, #f7f7f7,  #d6d3d6 50%, #bdbebd 90%, #d6d7d6);
+  background-image: -moz-linear-gradient(top, #f7f7f7,  #d6d3d6 50%, #bdbebd 90%, #d6d7d6);
+  background-image: -o-linear-gradient(top, #f7f7f7,  #d6d3d6 50%, #bdbebd 90%, #d6d7d6);
+  background-image: -ms-linear-gradient(top, #f7f7f7,  #d6d3d6 50%, #bdbebd 90%, #d6d7d6);
+  background-image: linear-gradient(top, #f7f7f7,  #d6d3d6 50%, #bdbebd 90%, #d6d7d6);
+}
+.mblValuePickerSlotButtonSelected {
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#bbbbbb), to(#666666));
+ background-image: -webkit-linear-gradient(top, #bbbbbb, #666666);
+  background-image: -moz-linear-gradient(top, #bbbbbb, #666666);
+  background-image: -o-linear-gradient(top, #bbbbbb, #666666);
+  background-image: -ms-linear-gradient(top, #bbbbbb, #666666);
+  background-image: linear-gradient(top, #bbbbbb, #666666);
+}
+.mblValuePickerSlotInputArea {
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.1, #fafafa), color-stop(0.2, #fafafa), color-stop(0.5, #ffffff), color-stop(0.9, #ffffff));
+ background-image: -webkit-linear-gradient(top, #fafafa 10%,  #fafafa 20%, #ffffff 50%, #ffffff 90%);
+  background-image: -moz-linear-gradient(top, #fafafa 10%,  #fafafa 20%, #ffffff 50%, #ffffff 90%);
+  background-image: -o-linear-gradient(top, #fafafa 10%,  #fafafa 20%, #ffffff 50%, #ffffff 90%);
+  background-image: -ms-linear-gradient(top, #fafafa 10%,  #fafafa 20%, #ffffff 50%, #ffffff 90%);
+  background-image: linear-gradient(top, #fafafa 10%,  #fafafa 20%, #ffffff 50%, #ffffff 90%);
+}

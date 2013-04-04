@@ -1,0 +1,20 @@
+@import url("../dijit/themes/claro/claro.css");
+/* Maqetta modifications */
+.claro {	
+}
+.claro .globalWidget .dijitTabContainerDefault {
+}
+.claro .globalWidget .dijitTabContent {
+}
+.claro .globalWidget .dijitTabPaneWrapper {
+}
+.claro .globalWidget .dijitTabActive {
+}
+.claro .globalWidget .dijitTabChecked {
+}
+.claro .globalWidget .dijitTabHover {
+}
+.claro button {
+}
+.claro button:hover {
+}

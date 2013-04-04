@@ -1,0 +1,38 @@
+{
+    "id": "http://dojotoolkit.org/dojox/wire/ml/Action",
+    "name": "dojox.wire.ml.Action",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/wire/ml/Action",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "trigger": {
+            "datatype": "string",
+            "title": "Trigger"
+        },
+        "triggerEvent": {
+            "datatype": "string",
+            "title": "Event"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A base widget to &quot;run&quot; a task on an event or a topic</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>This widget represents a controller task to be run when an event\n(a function) or a topic is issued.\nSub-classes must implement _run() method to implement their tasks.\n&#39;trigger&#39; specifies an event scope, an ID of a widget or an DOM\nelement, or its property with the optional dotted notation.\nIf this widget has child ActionFilter widgets, their filter()\nmethods are called with the arguments to the event or the topic.\nIf one of filter() methods returns false, run() won&#39;t be invoked.\nThis widget also can serve as a composite task to run child\nActions on an event or a topic specified to this widget.</p>"
+    }
+}

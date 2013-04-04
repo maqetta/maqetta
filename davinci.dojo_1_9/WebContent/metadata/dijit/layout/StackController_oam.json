@@ -1,0 +1,44 @@
+{
+    "id": "http://dojotoolkit.org/dijit/layout/StackController",
+    "name": "dijit.layout.StackController",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/layout/StackController",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "containerId": {
+            "datatype": "string",
+            "title": "Container ID"
+        },
+        "buttonWidget": {
+            "datatype": "string",
+            "description": "The name of the button widget to create to correspond to each page"
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget descends from dijit._Container",
+            "hidden": true,
+            "defaultValue": true
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Set of buttons to select a page in a <code>dijit/layout/StackContainer</code></p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>Monitors the specified StackContainer, and whenever a page is\nadded, deleted, or selected, updates itself accordingly.</p>"
+    }
+}

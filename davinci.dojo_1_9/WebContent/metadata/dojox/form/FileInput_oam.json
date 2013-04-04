@@ -1,0 +1,85 @@
+{
+    "id": "http://dojotoolkit.org/dojox/form/FileInput",
+    "name": "dojox.form.FileInput",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "css",
+            "src": "dojox/form/resources/FileInput.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/form/FileInput",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "type": {
+            "datatype": "string",
+            "defaultValue": "text",
+            "hidden": true
+        },
+        "name": {
+            "datatype": "string",
+            "defaultValue": "uploadFile",
+            "title": "Name"
+        },
+        "alt": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "value": {
+            "datatype": "string",
+            "title": "Value"
+        },
+        "tabIndex": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Tab Index"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "intermediateChanges": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "label": {
+            "datatype": "string",
+            "defaultValue": "Browse ...",
+            "title": "Label"
+        },
+        "cancelText": {
+            "datatype": "string",
+            "defaultValue": "Cancel",
+            "title": "Cancel Text"
+        },
+        "scrollOnFocus": {
+            "datatype": "boolean",
+            "description": "On focus, should this widget scroll into view?",
+            "hidden": false
+        }
+    },
+    "content": "<input></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A styled input type=&quot;file&quot;\n</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>A input type=&quot;file&quot; form widget, with a button for uploading to be styled via css,\na cancel button to clear selection, and FormWidget mixin to provide standard dijit.form.Form\nsupport (FIXME: maybe not fully implemented)</p>"
+    }
+}

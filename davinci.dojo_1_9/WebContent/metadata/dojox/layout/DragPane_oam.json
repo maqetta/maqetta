@@ -1,0 +1,35 @@
+{
+    "id": "http://dojotoolkit.org/dojox/layout/DragPane",
+    "name": "dojox.layout.DragPane",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/layout/DragPane",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "invert": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Invert"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Makes a pane&#39;s content draggable by/within it&#39;s surface</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>A small widget which takes a node with overflow:auto and\nallows dragging to position the content. Useful with images,\nor for just adding &quot;something&quot; to a overflow-able div.</p>"
+    }
+}

@@ -1,0 +1,69 @@
+{
+    "id": "http://dojotoolkit.org/dojox/layout/RadioGroupFace",
+    "name": "dojox.layout.RadioGroupFace",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "css",
+            "src": "dojox/layout/resources/RadioGroup.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/layout/RadioGroup",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "doLayout": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "hidden": true
+        },
+        "duration": {
+            "datatype": "number",
+            "defaultValue": 750,
+            "title": "Duration"
+        },
+        "hasButtons": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Has Buttons"
+        },
+        "persist": {
+            "datatype": "boolean",
+            "description": "Remembers the selected child across sessions\n\n\nBoolean",
+            "hidden": false
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget descends from dijit._Container",
+            "hidden": true,
+            "defaultValue": true
+        },
+        "buttonClass": {
+            "datatype": "string",
+            "description": "The full declared className of the Button widget to use for hasButtons",
+            "defaultValue": "dojox.layout._RadioButton",
+            "hidden": false
+        }
+    },
+    "childProperties": {
+        "selected": {
+            "datatype": "boolean",
+            "title": "Selected"
+        },
+        "closable": {
+            "datatype": "boolean",
+            "title": "Closable"
+        }
+    },
+    "content": "<span></span>"
+}

@@ -1,0 +1,18 @@
+<div class="iconContainerInputRow" style="display: table-row; width: 100%;">
+  <div style="display: table-cell;">
+    <div style="padding-bottom: 5px;">${labelLabel}</div>
+    <input data-dojo-type="dijit.form.TextBox" data-dojo-attach-point="labelTextBox"/>
+  </div>
+  <div style="display: table-cell;">
+    <div style="padding-bottom: 5px;">${iconLabel}</div>
+    <div>
+    	<img src="" data-dojo-attach-point="iconImg" style="float: left"/>
+    	<input data-dojo-type="dijit.form.Button" data-dojo-attach-point="iconButton" label="${chooseLabel}" data-dojo-attach-event="onClick:_onFileSelect"/>
+    	<div style="clear: both; padding-bottom: 10px;"></div>
+    </div>
+  </div>
+  <div style="display: table-cell; vertical-align: middle; text-align: center;">
+  	<input data-dojo-type="dijit.form.Button" data-dojo-attach-point="iconButton" label="+" data-dojo-attach-event="onClick:_onAddRow"/>
+  	<input data-dojo-type="dijit.form.Button" data-dojo-attach-point="iconButton" label="-" data-dojo-attach-event="onClick:_onRemoveRow"/>
+  </div>
+</div>

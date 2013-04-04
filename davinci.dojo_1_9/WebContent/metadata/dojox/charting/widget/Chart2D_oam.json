@@ -1,0 +1,129 @@
+{
+    "id": "http://dojotoolkit.org/dojox/charting/widget/Chart2D",
+    "name": "dojox.charting.widget.Chart2D",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/charting/widget/Chart2D",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "theme": {
+            "datatype": "string",
+            "defaultValue": "dojox.charting.themes.PlotKit.orange",
+            "title": "Theme",
+            "option": [
+                {
+                    "value": "dojox.charting.themes.PlotKit.orange"
+                },
+                {
+                    "value": "dojox.charting.themes.Ireland"
+                },
+                {
+                    "value": "dojox.charting.themes.Adobebricks"
+                },
+                {
+                    "value": "dojox.charting.themes.Algae"
+                },
+                {
+                    "value": "dojox.charting.themes.Bahamation"
+                },
+                {
+                    "value": "dojox.charting.themes.BlueDusk"
+                },
+                {
+                    "value": "dojox.charting.themes.CubanShirts"
+                },
+                {
+                    "value": "dojox.charting.themes.Desert"
+                },
+                {
+                    "value": "dojox.charting.themes.Dollar"
+                },
+                {
+                    "value": "dojox.charting.themes.Grasshopper"
+                },
+                {
+                    "value": "dojox.charting.themes.Grasslands"
+                },
+                {
+                    "value": "dojox.charting.themes.GreySkies"
+                },
+                {
+                    "value": "dojox.charting.themes.IndigoNation"
+                },
+                {
+                    "value": "dojox.charting.themes.MiamiNice"
+                },
+                {
+                    "value": "dojox.charting.themes.Midwest"
+                },
+                {
+                    "value": "dojox.charting.themes.Minty"
+                },
+                {
+                    "value": "dojox.charting.themes.PurpleRain"
+                },
+                {
+                    "value": "dojox.charting.themes.RoyalPurples"
+                },
+                {
+                    "value": "dojox.charting.themes.SageToLime"
+                },
+                {
+                    "value": "dojox.charting.themes.Shrooms"
+                },
+                {
+                    "value": "dojox.charting.themes.Tufte"
+                },
+                {
+                    "value": "dojox.charting.themes.WatersEdge"
+                },
+                {
+                    "value": "dojox.charting.themes.Wetland"
+                },
+                {
+                    "value": "dojox.charting.themes.PlotKit.blue"
+                },
+                {
+                    "value": "dojox.charting.themes.PlotKit.cyan"
+                },
+                {
+                    "value": "dojox.charting.themes.PlotKit.green"
+                },
+                {
+                    "value": "dojox.charting.themes.PlotKit.purple"
+                },
+                {
+                    "value": "dojox.charting.themes.PlotKit.red"
+                }
+            ]
+        },
+        "margins": {
+            "datatype": "json",
+            "title": "Margins"
+        },
+        "stroke": {
+            "datatype": "string",
+            "title": "Stroke"
+        },
+        "fill": {
+            "datatype": "string",
+            "title": "Fill"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A chart widget.  This is leveraging dojox/charting/Chart as a Dijit widget.</p>"
+    }
+}

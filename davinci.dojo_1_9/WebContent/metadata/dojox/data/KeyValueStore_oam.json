@@ -1,0 +1,39 @@
+{
+    "id": "http://dojotoolkit.org/dojox/data/KeyValueStore",
+    "name": "dojox.data.KeyValueStore",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/data/KeyValueStore",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "jsId": {
+            "datatype": "string",
+            "title": "Variable Name"
+        },
+        "url": {
+            "datatype": "string",
+            "format": "url",
+            "title": "URL"
+        },
+        "data": {
+            "datatype": "string",
+            "title": "Data"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>This is a dojo.data store implementation.  It can take in either a Javascript\narray, JSON string, or URL as the data source.  Data is expected to be in the\nfollowing format:\n\n</p>\n<pre><code>[\n    { &quot;key1&quot;: &quot;value1&quot; },\n    { &quot;key2&quot;: &quot;value2&quot; }\n]</code></pre>\n<p>This is to mimic the Java Properties file format.  Each &#39;item&#39; from this store\n\n</p>\n<p>is a JS object representing a key-value pair.  If an item in the above array has\nmore than one key/value pair, only the first will be used/accessed.</p>"
+    }
+}

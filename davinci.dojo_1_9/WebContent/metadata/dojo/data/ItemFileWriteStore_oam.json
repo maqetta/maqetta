@@ -1,0 +1,39 @@
+{
+    "id": "http://dojotoolkit.org/dojo/data/ItemFileWriteStore",
+    "name": "dojo.data.ItemFileWriteStore",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojo/data/ItemFileWriteStore",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "jsId": {
+            "datatype": "string",
+            "title": "Store ID"
+        },
+        "data": {
+            "datatype": "json",
+            "title": "Data"
+        },
+        "url": {
+            "datatype": "string",
+            "format": "url",
+            "title": "URL"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>TODOC</p>"
+    }
+}

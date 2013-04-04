@@ -1,0 +1,82 @@
+{
+    "id": "http://www.ibm.com/dojox/form/TriStateCheckBox",
+    "name": "dojox.form.TriStateCheckBox",
+    "spec": "1.0",
+    "version": "1.8",
+    "require": [
+        {
+            "type": "css",
+            "src": "dojox/form/resources/TriStateCheckBox.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/form/TriStateCheckBox",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "tabIndex": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Tab Index"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "title": "Read Only"
+        },
+        "state": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": ""
+                },
+                {
+                    "value": "Error"
+                }
+            ],
+            "defaultValue": "",
+            "title": "State"
+        },
+        "checked": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "true"
+                },
+                {
+                    "value": "mixed"
+                },
+                {
+                    "value": "false"
+                }
+            ],
+            "defaultValue": "false",
+            "title": "Checked"
+        },
+        "states": {
+            "datatype": "string",
+            "defaultValue": "false, mixed, true",
+            "title": "States"
+        }
+    },
+    "content": "<input></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Checkbox with three states</p>"
+    }
+}

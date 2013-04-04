@@ -1,0 +1,74 @@
+{
+    "id": "http://dojotoolkit.org/dijit/form/RadioButton",
+    "name": "dijit.form.RadioButton",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/RadioButton",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "alt": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "value": {
+            "datatype": "string",
+            "defaultValue": "on",
+            "title": "Value"
+        },
+        "tabIndex": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Tab Index"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "title": "Read Only"
+        },
+        "intermediateChanges": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "label": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "iconClass": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "checked": {
+            "datatype": "boolean",
+            "title": "Checked"
+        },
+        "scrollOnFocus": {
+            "datatype": "boolean",
+            "description": "On focus, should this widget scroll into view?",
+            "hidden": false,
+            "defaultValue": true
+        }
+    },
+    "content": "<input type='radio' showLabel='true'></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Same as an HTML radio, but with fancy styling.</p>"
+    }
+}

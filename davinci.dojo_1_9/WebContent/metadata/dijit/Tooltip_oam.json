@@ -1,0 +1,52 @@
+{
+    "id": "http://dojotoolkit.org/dijit/Tooltip",
+    "name": "dijit.Tooltip",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/Tooltip",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "label": {
+            "datatype": "string",
+            "title": "Label"
+        },
+        "_children": {
+            "datatype": "string",
+            "title": "Text"
+        },
+        "connectId": {
+            "datatype": "array",
+            "defaultValue": "[]",
+            "title": "Connect IDs"
+        },
+        "showDelay": {
+            "datatype": "number",
+            "defaultValue": 400,
+            "title": "Show Delay"
+        },
+        "position": {
+            "datatype": "array",
+            "defaultValue": "[]",
+            "title": "Positions"
+        },
+        "defaultPosition": {
+            "datatype": "array"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Pops up a tooltip (a help message) when you hover over a node.\nAlso provides static show() and hide() methods that can be used without instantiating a dijit/Tooltip.</p>"
+    }
+}

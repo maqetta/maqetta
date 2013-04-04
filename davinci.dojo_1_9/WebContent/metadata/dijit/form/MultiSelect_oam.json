@@ -1,0 +1,67 @@
+{
+    "id": "http://dojotoolkit.org/dijit/form/MultiSelect",
+    "name": "dijit.form.MultiSelect",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/MultiSelect",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "type": {
+            "datatype": "string",
+            "defaultValue": "text",
+            "hidden": true
+        },
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "alt": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "tabIndex": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Tab Index"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "title": "Read Only"
+        },
+        "intermediateChanges": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "size": {
+            "datatype": "number",
+            "defaultValue": 7,
+            "title": "Size"
+        },
+        "scrollOnFocus": {
+            "datatype": "boolean",
+            "description": "On focus, should this widget scroll into view?",
+            "hidden": false,
+            "defaultValue": true
+        }
+    },
+    "content": "<select multiple='true'></select>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Widget version of a <code>&lt;select multiple=true&gt;</code> element,\nfor selecting multiple options.</p>"
+    }
+}

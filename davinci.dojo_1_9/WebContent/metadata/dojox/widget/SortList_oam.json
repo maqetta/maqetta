@@ -1,0 +1,62 @@
+{
+    "id": "http://dojotoolkit.org/dojox/widget/SortList",
+    "name": "dojox.widget.SortList",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "css",
+            "src": "dojox/widget/SortList/SortList.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/widget/SortList",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "heading": {
+            "datatype": "string",
+            "title": "Heading"
+        },
+        "descending": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Descending"
+        },
+        "sortable": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Sortable"
+        },
+        "store": {
+            "datatype": "string",
+            "title": "Data Store",
+            "hidden": true
+        },
+        "key": {
+            "datatype": "string",
+            "defaultValue": "name",
+            "title": "Key",
+            "hidden": true
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget descends from dijit._Container",
+            "hidden": true,
+            "defaultValue": true
+        }
+    },
+    "content": "<ul></ul>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A sortable unordered-list with a fixed header for use in dijit.demos.chat\nfor demonstration purposes only for now. feel free to make API suggestions\nor fixes.\n</p>"
+    }
+}

@@ -1,0 +1,92 @@
+@import url("../iphone/iphone.css");
+@import url("../dojox/mobile/themes/iphone/ipad.css");
+/* Maqetta modifications */
+.dj_tablet .mblHeading {
+	background: -webkit-gradient(linear, left top, left bottom, from(#f3f4f6), to(#a7abb8));
+	background-image: -webkit-linear-gradient(top, #f3f4f6, #a7abb8);
+	background-image: -moz-linear-gradient(top, #f3f4f6, #a7abb8);
+	background-image: -o-linear-gradient(top, #f3f4f6, #a7abb8);
+	background-image: -ms-linear-gradient(top, #f3f4f6, #a7abb8);
+	background-image: linear-gradient(top, #f3f4f6, #a7abb8);
+}
+.dj_tablet .mblTabBarTabBar {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#2d2d2d), to(#000000), color-stop(0.5, #141414), color-stop(0.5, #000000));
+	background-image: -webkit-linear-gradient(top, #2d2d2d, #141414 50% , #000000 50% , #000000);
+	background-image: -moz-linear-gradient(top, #2d2d2d, #141414 50% , #000000 50% , #000000);
+	background-image: -o-linear-gradient(top, #2d2d2d, #141414 50% , #000000 50% , #000000);
+	background-image: -ms-linear-gradient(top, #2d2d2d, #141414 50% , #000000 50% , #000000);
+	background-image: linear-gradient(top, #2d2d2d, #141414 50% , #000000 50% , #000000);
+}
+.dj_tablet .mblTabBarSegmentedControl,
+.dj_tablet .mblTabBarStandardTab {
+	background: -webkit-gradient(linear, left top, left bottom, from(#f3f4f6), to(#a7abb8));
+	background-image: -webkit-linear-gradient(top, #f3f4f6, #a7abb8);
+	background-image: -moz-linear-gradient(top, #f3f4f6, #a7abb8);
+	background-image: -o-linear-gradient(top, #f3f4f6, #a7abb8);
+	background-image: -ms-linear-gradient(top, #f3f4f6, #a7abb8);
+	background-image: linear-gradient(top, #f3f4f6, #a7abb8);
+}
+.dj_tablet .mblTabBarSegmentedControl .mblTabBarButton {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#f3f4f6), to(#a7abb8));
+	background-image: -webkit-linear-gradient(top, #f3f4f6, #a7abb8);
+	background-image: -moz-linear-gradient(top, #f3f4f6, #a7abb8);
+	background-image: -o-linear-gradient(top, #f3f4f6, #a7abb8);
+	background-image: -ms-linear-gradient(top, #f3f4f6, #a7abb8);
+	background-image: linear-gradient(top, #f3f4f6, #a7abb8);
+}
+.dj_tablet .mblTabBarSegmentedControl .mblTabBarButtonSelected {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#b1b5bb), to(#6a727d));
+	background-image: -webkit-linear-gradient(top, #b1b5bb, #6a727d);
+	background-image: -moz-linear-gradient(top, #b1b5bb, #6a727d);
+	background-image: -o-linear-gradient(top, #b1b5bb, #6a727d);
+	background-image: -ms-linear-gradient(top, #b1b5bb, #6a727d);
+	background-image: linear-gradient(top, #b1b5bb, #6a727d);
+}
+.dj_tablet .mblTabBarStandardTab .mblTabBarButton {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#f0f0f2), to(#959da0));
+	background-image: -webkit-linear-gradient(top, #f0f0f2, #959da0);
+	background-image: -moz-linear-gradient(top, #f0f0f2, #959da0);
+	background-image: -o-linear-gradient(top, #f0f0f2, #959da0);
+	background-image: -ms-linear-gradient(top, #f0f0f2, #959da0);
+	background-image: linear-gradient(top, #f0f0f2, #959da0);
+}
+.dj_tablet .mblTabBarStandardTab .mblTabBarButtonSelected {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#f3f4f6), to(#f2f3f7));
+	background-image: -webkit-linear-gradient(top, #f3f4f6, #f2f3f7);
+	background-image: -moz-linear-gradient(top, #f3f4f6, #f2f3f7);
+	background-image: -o-linear-gradient(top, #f3f4f6, #f2f3f7);
+	background-image: -ms-linear-gradient(top, #f3f4f6, #f2f3f7);
+	background-image: linear-gradient(top, #f3f4f6, #f2f3f7);
+}
+.dj_tablet .mblColorDefault {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#b1b5bb), to(#6a727d));
+	background-image: -webkit-linear-gradient(top, #b1b5bb, #6a727d);
+	background-image: -moz-linear-gradient(top, #b1b5bb, #6a727d);
+	background-image: -o-linear-gradient(top, #b1b5bb, #6a727d);
+	background-image: -ms-linear-gradient(top, #b1b5bb, #6a727d);
+	background-image: linear-gradient(top, #b1b5bb, #6a727d);
+}
+.dj_tablet .mblColorDefault45 {
+	background-image: -webkit-gradient(linear, left top, right bottom, from(#b1b5bb), to(#6a727d));
+	background-image: -webkit-linear-gradient(top, #b1b5bb, #6a727d);
+	background-image: -moz-linear-gradient(top, #b1b5bb, #6a727d);
+	background-image: -o-linear-gradient(top, #b1b5bb, #6a727d);
+	background-image: -ms-linear-gradient(top, #b1b5bb, #6a727d);
+	background-image: linear-gradient(top, #b1b5bb, #6a727d);
+}
+.dj_tablet .mblColorDefaultSel {
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#7a7e85), to(#303845));
+	background-image: -webkit-linear-gradient(top, #7a7e85, #303845);
+	background-image: -moz-linear-gradient(top, #7a7e85, #303845);
+	background-image: -o-linear-gradient(top, #7a7e85, #303845);
+	background-image: -ms-linear-gradient(top, #7a7e85, #303845);
+	background-image: linear-gradient(top, #7a7e85, #303845);
+}
+.dj_tablet .mblColorDefaultSel45 {
+	background-image: -webkit-gradient(linear, left top, right bottom, from(#7a7e85), to(#303845));
+	background-image: -webkit-linear-gradient(top, #7a7e85, #303845);
+	background-image: -moz-linear-gradient(top, #7a7e85, #303845);
+	background-image: -o-linear-gradient(top, #7a7e85, #303845);
+	background-image: -ms-linear-gradient(top, #7a7e85, #303845);
+	background-image: linear-gradient(top, #7a7e85, #303845);
+}

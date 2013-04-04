@@ -1,0 +1,35 @@
+{
+    "id": "http://dojotoolkit.org/dojox/layout/Dock",
+    "name": "dojox.layout.Dock",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "css",
+            "src": "dojox/layout/resources/FloatingPane.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/layout/FloatingPane",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "autoPosition": {
+            "datatype": "boolean",
+            "title": "Auto Position"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A widget that attaches to a node and keeps track of incoming / outgoing FloatingPanes\nand handles layout</p>"
+    }
+}

@@ -1,0 +1,48 @@
+{
+    "id": "http://dojotoolkit.org/dojox/charting/plot2d/Grid",
+    "name": "dojox.charting.plot2d/Grid",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/charting/plot2d/Grid",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "hAxis": {
+            "datatype": "string"
+        },
+        "vAxis": {
+            "datatype": "string"
+        },
+        "hMajorLines": {
+            "datatype": "boolean",
+            "defaultValue": "true"
+        },
+        "hMinorLines": {
+            "datatype": "boolean",
+            "defaultValue": "false"
+        },
+        "vMajorLines": {
+            "datatype": "boolean",
+            "defaultValue": "true"
+        },
+        "vMinorLines": {
+            "datatype": "boolean",
+            "defaultValue": "false"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A &quot;faux&quot; plot that can be placed behind other plots to represent\na grid against which other plots can be easily measured.</p>"
+    }
+}

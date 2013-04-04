@@ -1,0 +1,139 @@
+{
+    "id": "http://dojotoolkit.org/dijit/form/RangeBoundTextBox",
+    "name": "dijit.form.RangeBoundTextBox",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/ValidationTextBox",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "type": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "text"
+                },
+                {
+                    "value": "password"
+                }
+            ],
+            "defaultValue": "text",
+            "title": "Type"
+        },
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "alt": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "value": {
+            "datatype": "string",
+            "title": "Value"
+        },
+        "tabIndex": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Tab Index"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "title": "Read Only"
+        },
+        "intermediateChanges": {
+            "datatype": "boolean",
+            "title": "Intermediate Changes"
+        },
+        "trim": {
+            "datatype": "boolean",
+            "title": "Trim"
+        },
+        "uppercase": {
+            "datatype": "boolean",
+            "title": "Upper Case"
+        },
+        "lowercase": {
+            "datatype": "boolean",
+            "title": "Lower Case"
+        },
+        "propercase": {
+            "datatype": "boolean",
+            "title": "Proper Case"
+        },
+        "maxLength": {
+            "datatype": "string",
+            "title": "Max Length"
+        },
+        "required": {
+            "datatype": "boolean",
+            "title": "Required",
+            "hidden": true
+        },
+        "promptMessage": {
+            "datatype": "string",
+            "title": "Prompt Message",
+            "hidden": true
+        },
+        "invalidMessage": {
+            "datatype": "string",
+            "defaultValue": "The value entered is not valid.",
+            "title": "Invalid Message",
+            "hidden": true
+        },
+        "constraints": {
+            "datatype": "json",
+            "defaultValue": "\"{\\\"locale\\\":\\\"\\\"}\"",
+            "title": "Constraints",
+            "hidden": true
+        },
+        "regExp": {
+            "datatype": "string",
+            "defaultValue": ".*",
+            "title": "Regular Expression",
+            "hidden": true
+        },
+        "tooltipPosition": {
+            "datatype": "array",
+            "defaultValue": "[]",
+            "title": "Tooltip Positions",
+            "hidden": true
+        },
+        "rangeMessage": {
+            "datatype": "string",
+            "defaultValue": "This value is out of range.",
+            "title": "Range Message",
+            "hidden": true
+        },
+        "scrollOnFocus": {
+            "datatype": "boolean",
+            "description": "On focus, should this widget scroll into view?",
+            "hidden": false,
+            "defaultValue": true
+        },
+        "state": {
+            "datatype": "string",
+            "description": "Shows current state (ie, validation result) of input (Normal, Warning, or Error)",
+            "hidden": false
+        }
+    },
+    "content": "<input type='text'></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Base class for textbox form widgets which defines a range of valid values.</p>"
+    }
+}

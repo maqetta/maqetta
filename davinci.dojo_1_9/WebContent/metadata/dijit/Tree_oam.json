@@ -1,0 +1,90 @@
+{
+    "id": "http://dojotoolkit.org/dijit/Tree",
+    "name": "dijit.Tree",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/Tree",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "store": {
+            "datatype": "object",
+            "hidden": true,
+            "isData": true
+        },
+        "model": {
+            "datatype": "object",
+            "hidden": true,
+            "isData": true
+        },
+        "query": {
+            "datatype": "json",
+            "hidden": true
+        },
+        "label": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "autoExpand": {
+            "datatype": "boolean",
+            "defaultValue": false,
+            "title": "Auto Expand"
+        },
+        "showRoot": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Show Root"
+        },
+        "childrenAttr": {
+            "datatype": "array",
+            "defaultValue": "[\"children\"]",
+            "hidden": true
+        },
+        "openOnClick": {
+            "datatype": "boolean"
+        },
+        "openOnDblClick": {
+            "datatype": "boolean",
+            "description": "If true, double-clicking a folder node's label will open it, rather than calling onDblClick()"
+        },
+        "persist": {
+            "datatype": "boolean",
+            "description": "Enables/disables use of cookies for state saving."
+        },
+        "dndController": {
+            "datatype": "string",
+            "description": "Class name to use as as the dnd controller.  Specifying this class enables DnD.\nGenerally you should specify this as \"dijit.tree.dndSource\".",
+            "defaultValue": "dijit.tree.dndSource",
+            "hidden": true
+        },
+        "dndParams": {
+            "datatype": "array",
+            "hidden": true
+        },
+        "dragThreshold": {
+            "datatype": "number",
+            "description": "Number of pixels mouse moves before it's considered the start of a drag operation",
+            "hidden": true
+        },
+        "betweenThreshold": {
+            "datatype": "number",
+            "description": "Set to a positive value to allow drag and drop \"between\" nodes.\n\nIf during DnD mouse is over a (target) node but less than betweenThreshold\npixels from the bottom edge, dropping the the dragged node will make it\nthe next sibling of the target node, rather than the child.\n\nSimilarly, if mouse is over a target node but less that betweenThreshold\npixels from the top edge, dropping the dragged node will make it\nthe target node's previous sibling rather than the target node's child.",
+            "hidden": true
+        }
+    },
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>This widget displays hierarchical data from a store.</p>"
+    }
+}

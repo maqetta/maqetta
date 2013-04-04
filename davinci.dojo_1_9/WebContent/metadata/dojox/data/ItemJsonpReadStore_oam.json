@@ -1,0 +1,35 @@
+{
+    "id": "http://dojotoolkit.org/dojox/data/ItemJsonpReadStore",
+    "name": "dojo.data.ItemJsonpReadStore",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/data/ItemJsonpReadStore",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "jsId": {
+            "datatype": "string",
+            "title": "Store ID"
+        },
+        "data": {
+            "datatype": "json",
+            "title": "Data"
+        },
+        "url": {
+            "datatype": "string",
+            "format": "url",
+            "title": "URL"
+        }
+    },
+    "content": "<span></span>"
+}

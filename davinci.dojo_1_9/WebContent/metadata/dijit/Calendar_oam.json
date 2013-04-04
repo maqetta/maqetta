@@ -1,0 +1,60 @@
+{
+    "id": "http://dojotoolkit.org/dijit/Calendar",
+    "name": "dijit.Calendar",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/Calendar",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "value": {
+            "datatype": "string",
+            "format": "date",
+            "title": "Value"
+        },
+        "dayWidth": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "narrow"
+                },
+                {
+                    "value": "wide"
+                },
+                {
+                    "value": "abbr"
+                }
+            ],
+            "defaultValue": "narrow",
+            "title": "Day Width"
+        },
+        "datePackage": {
+            "datatype": "string",
+            "description": "JavaScript namespace to find Calendar routines.  Uses Gregorian Calendar routines\nat dojo.date by default.",
+            "hidden": false
+        }
+    },
+    "content": "<input></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A simple GUI for choosing a date in the context of a monthly calendar.\n</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>See CalendarLite for general description.   Calendar extends CalendarLite, adding:\n\n</p>\n<ul>\n<li>month drop down list</li>\n<li>keyboard navigation</li>\n<li>CSS classes for hover/mousepress on date, month, and year nodes</li>\n<li>support of deprecated methods (will be removed in 2.0)</li>\n</ul>"
+    }
+}

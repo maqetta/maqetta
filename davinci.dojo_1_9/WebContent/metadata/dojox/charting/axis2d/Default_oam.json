@@ -1,0 +1,103 @@
+{
+    "id": "http://dojotoolkit.org/dojox/charting/axis2d/Default",
+    "name": "dojox.charting.axis2d/Default",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/charting/axis2d/Default",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "vertical": {
+            "datatype": "boolean",
+            "title": "Vertical"
+        },
+        "fixUpper": {
+            "datatype": "string"
+        },
+        "fixLower": {
+            "datatype": "string"
+        },
+        "natural": {
+            "datatype": "boolean"
+        },
+        "leftBottom": {
+            "datatype": "boolean"
+        },
+        "includeZero": {
+            "datatype": "boolean"
+        },
+        "fixed": {
+            "datatype": "boolean"
+        },
+        "majorLabels": {
+            "datatype": "boolean"
+        },
+        "minorTicks": {
+            "datatype": "boolean"
+        },
+        "minorLabels": {
+            "datatype": "boolean"
+        },
+        "microTicks": {
+            "datatype": "boolean"
+        },
+        "htmlLabels": {
+            "datatype": "boolean"
+        },
+        "min": {
+            "datatype": "number",
+            "defaultValue": 0
+        },
+        "max": {
+            "datatype": "number",
+            "defaultValue": 1
+        },
+        "from": {
+            "datatype": "number",
+            "defaultValue": 0
+        },
+        "to": {
+            "datatype": "number",
+            "defaultValue": 1
+        },
+        "majorTickStep": {
+            "datatype": "number",
+            "defaultValue": 4
+        },
+        "minorTickStep": {
+            "datatype": "number",
+            "defaultValue": 2
+        },
+        "microTickStep": {
+            "datatype": "number",
+            "defaultValue": 1
+        },
+        "stroke": {
+            "datatype": "string",
+            "title": "Stroke"
+        },
+        "font": {
+            "datatype": "string",
+            "title": "Font"
+        },
+        "fontColor": {
+            "datatype": "string",
+            "title": "Font Color"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>The default axis object used in dojox.charting.  See dojox.charting.Chart.addAxis for details.</p>"
+    }
+}

@@ -1,0 +1,43 @@
+{
+    "id": "http://dojotoolkit.org/dojox/data/OpmlStore",
+    "name": "dojox.data.OpmlStore",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/data/OpmlStore",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "jsId": {
+            "datatype": "string",
+            "title": "Variable Name"
+        },
+        "url": {
+            "datatype": "string",
+            "format": "url",
+            "title": "URL"
+        },
+        "label": {
+            "datatype": "string",
+            "title": "Label Attribute"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>The OpmlStore implements the dojo/data/api/Read API.</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>var opmlStore = new dojo.data.OpmlStore({url:&quot;geography.xml&quot;});\nvar opmlStore = new dojo.data.OpmlStore({url:&quot;http://example.com/geography.xml&quot;});</code></pre>"
+    }
+}

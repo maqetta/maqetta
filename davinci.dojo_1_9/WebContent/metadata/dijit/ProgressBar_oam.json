@@ -1,0 +1,49 @@
+{
+    "id": "http://dojotoolkit.org/dijit/ProgressBar",
+    "name": "dijit.ProgressBar",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/ProgressBar",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "progress": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Progress Value"
+        },
+        "maximum": {
+            "datatype": "number",
+            "defaultValue": 100,
+            "title": "Maximum Value"
+        },
+        "places": {
+            "datatype": "number",
+            "defaultValue": 0,
+            "title": "Places"
+        },
+        "indeterminate": {
+            "datatype": "boolean",
+            "title": "Indeterminate"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A progress indication widget, showing the amount completed\n(often the percentage completed) of a task.\n</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;div data-dojo-type=&quot;ProgressBar&quot;\n     places=&quot;0&quot;\n     value=&quot;...&quot; maximum=&quot;...&quot;&gt;\n&lt;/div&gt;</code></pre>"
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "id": "http://dojotoolkit.org/dojox/charting/plot2d/Bars",
+    "name": "dojox.charting.plot2d/Bars",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/charting/plot2d/Bars",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "hAxis": {
+            "datatype": "string"
+        },
+        "vAxis": {
+            "datatype": "string"
+        },
+        "gap": {
+            "datatype": "string",
+            "title": "Gap"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>The plot object representing a bar chart (horizontal bars).</p>"
+    }
+}

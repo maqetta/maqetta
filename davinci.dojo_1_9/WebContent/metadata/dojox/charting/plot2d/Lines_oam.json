@@ -1,0 +1,49 @@
+{
+    "id": "http://dojotoolkit.org/dojox/charting/plot2d/Lines",
+    "name": "dojox.charting.plot2d/Lines",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/charting/plot2d/Lines",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "hAxis": {
+            "datatype": "string"
+        },
+        "vAxis": {
+            "datatype": "string"
+        },
+        "markers": {
+            "datatype": "boolean",
+            "title": "Markers"
+        },
+        "areas": {
+            "datatype": "boolean",
+            "title": "Areas"
+        },
+        "tension": {
+            "datatype": "number",
+            "title": "Tension"
+        },
+        "shadows": {
+            "datatype": "array",
+            "title": "Shadow",
+            "description": "Draws shadow. Provide dx, dy, dw separated by commas."
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A convenience constructor to create a typical line chart.</p>"
+    }
+}

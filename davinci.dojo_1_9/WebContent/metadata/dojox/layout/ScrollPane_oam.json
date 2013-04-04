@@ -1,0 +1,97 @@
+{
+    "id": "http://dojotoolkit.org/dojox/layout/ScrollPane",
+    "name": "dojox.layout.ScrollPane",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "css",
+            "src": "dojox/layout/resources/ScrollPane.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/layout/ScrollPane",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "orientation": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "horizontal"
+                },
+                {
+                    "value": "vertical"
+                }
+            ],
+            "defaultValue": "vertical",
+            "title": "Orientation"
+        },
+        "autoHide": {
+            "datatype": "boolean",
+            "hidden": false
+        },
+        "href": {
+            "datatype": "string",
+            "description": "The href of the content that displays now.\nSet this at construction if you want to load data externally when the\npane is shown.\t(Set preload=true to load it immediately.)\nChanging href after creation doesn't have any effect; use attr('href', ...);",
+            "hidden": false
+        },
+        "extractContent": {
+            "datatype": "boolean",
+            "description": "Extract visible content from inside of <body> .... </body>.\nI.e., strip <html> and <head> (and it's contents) from the href",
+            "hidden": false
+        },
+        "parseOnLoad": {
+            "datatype": "boolean",
+            "description": "Parse content and create the widgets, if any.",
+            "hidden": false
+        },
+        "preventCache": {
+            "datatype": "boolean",
+            "description": "Prevent caching of data from href's by appending a timestamp to the href.",
+            "hidden": false
+        },
+        "preload": {
+            "datatype": "boolean",
+            "description": "Force load of data on initialization even if pane is hidden.",
+            "hidden": false
+        },
+        "refreshOnShow": {
+            "datatype": "boolean",
+            "description": "Refresh (re-download) content when pane goes from hidden to shown",
+            "hidden": false
+        },
+        "doLayout": {
+            "datatype": "boolean",
+            "description": "- false - don't adjust size of children\n- true - if there is a single visible child widget, set it's size to\nhowever big the ContentPane is",
+            "hidden": false
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget will call resize() on\nits children.   _LayoutWidget based widgets check for\n\n\t\tif(!this.getParent || !this.getParent()){\n\nand if getParent() returns false because !parent.isContainer,\nthen they resize themselves on initialization.",
+            "hidden": true,
+            "defaultValue": true
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A pane that &quot;scrolls&quot; its content based on the mouse poisition inside</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>A sizable container that takes it&#39;s content&#39;s natural size and creates\na scroll effect based on the relative mouse position. It is an interesting\nway to display lists of data, or blocks of content, within a confined\nspace.\n\n</p>\n<p>Horizontal scrolling is supported. Combination scrolling is not.</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;div dojoType=&quot;dojox.layout.ScrollPane&quot; style=&quot;width:150px height:300px;&quot;&gt;\n    &lt;!-- any height content --&gt;\n&lt;/div&gt;</code></pre>"
+    }
+}

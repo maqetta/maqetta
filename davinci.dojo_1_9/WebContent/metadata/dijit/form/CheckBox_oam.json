@@ -1,0 +1,89 @@
+{
+    "id": "http://dojotoolkit.org/dijit/form/CheckBox",
+    "name": "dijit.form.CheckBox",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/CheckBox",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "type": {
+            "datatype": "string",
+            "defaultValue": "checkbox",
+            "hidden": true
+        },
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "alt": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "value": {
+            "datatype": "string",
+            "defaultValue": "on",
+            "hidden": true,
+            "title": "Value"
+        },
+        "tabIndex": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Tab Index"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "title": "Read Only"
+        },
+        "intermediateChanges": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "label": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "showLabel": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "hidden": true
+        },
+        "iconClass": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "checked": {
+            "datatype": "boolean",
+            "title": "Checked"
+        },
+        "scrollOnFocus": {
+            "datatype": "boolean",
+            "description": "On focus, should this widget scroll into view?",
+            "hidden": false,
+            "defaultValue": true
+        }
+    },
+    "content": "<input type='checkbox'></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Same as an HTML checkbox, but with fancy styling.\n</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>User interacts with real html inputs.\nOn onclick (which occurs by mouse click, space-bar, or\nusing the arrow keys to switch the selected radio button),\nwe update the state of the checkbox/radio.\n\n</p>\n<p>There are two modes:\n\n</p>\n<ol>\n<li>High contrast mode</li>\n<li>Normal mode</li>\n</ol>\n<p>In case 1, the regular html inputs are shown and used by the user.\nIn case 2, the regular html inputs are invisible but still used by\nthe user. They are turned quasi-invisible and overlay the background-image.</p>"
+    }
+}

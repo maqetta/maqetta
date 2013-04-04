@@ -1,0 +1,45 @@
+{
+    "id": "http://dojotoolkit.org/dijit/tree/ObjectStoreModel",
+    "name": "dijit.tree.ObjectStoreModel",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/tree/ObjectStoreModel",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "jsId": {
+            "datatype": "string",
+            "title": "Model ID"
+        },
+        "store": {
+            "datatype": "object",
+            "title": "Data Store",
+            "description": "Underlying store"
+        },
+        "query": {
+            "datatype": "json",
+            "title": "Query",
+            "description": "Specifies datastore query to return the root item for the tree. Must only return a single item. Alternately, can just pass in pointer to root item."
+        },
+        "labelAttr": {
+            "datatype": "string",
+            "description": "If specified, get label for tree node from this attribute, rather than by calling store.getLabel()",
+            "hidden": true
+        }
+    },
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Implements dijit/tree/model connecting dijit/Tree to a dojo/store/api/Store that implements\ngetChildren().\n\n</p>\n<p>If getChildren() returns an array with an observe() method, then it will be leveraged to reflect\nstore updates to the tree.   So, this class will work best when:\n\n</p>\n<pre><code>1. the store implements dojo/store/Observable\n2. getChildren() is implemented as a query to the server (i.e. it calls store.query())</code></pre>\n<p>Drag and Drop: To support drag and drop, besides implementing getChildren()\nand dojo/store/Observable, the store must support the parent option to put().\nAnd in order to have child elements ordered according to how the user dropped them,\nput() must support the before option.</p>"
+    }
+}

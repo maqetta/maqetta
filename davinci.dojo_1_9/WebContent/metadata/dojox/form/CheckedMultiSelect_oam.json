@@ -1,0 +1,71 @@
+{
+    "id": "http://dojotoolkit.org/dojox/form/CheckedMultiSelect",
+    "name": "dojox.form.CheckedMultiSelect",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "css",
+            "src": "dojox/form/resources/CheckedMultiSelect.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/form/CheckedMultiSelect",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "type": {
+            "datatype": "string",
+            "defaultValue": "text",
+            "hidden": true
+        },
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "alt": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "tabIndex": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Tab Index"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "title": "Read Only"
+        },
+        "intermediateChanges": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "size": {
+            "datatype": "number",
+            "defaultValue": 7,
+            "title": "Size"
+        },
+        "scrollOnFocus": {
+            "datatype": "boolean",
+            "description": "On focus, should this widget scroll into view?",
+            "hidden": false
+        }
+    },
+    "content": "<select multiple='true'></select>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Extends the core dijit MultiSelect to provide a &quot;checkbox&quot; selector</p>"
+    }
+}

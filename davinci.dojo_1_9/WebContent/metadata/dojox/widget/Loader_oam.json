@@ -1,0 +1,51 @@
+{
+    "id": "http://dojotoolkit.org/dojox/widget/Loader",
+    "name": "dojox.widget.Loader",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "css",
+            "src": "dojox/widget/Loader/Loader.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/widget/Loader",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "loadMessage": {
+            "datatype": "string",
+            "defaultValue": "Loading ...",
+            "title": "Load Message"
+        },
+        "hasVisuals": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Has Visuals"
+        },
+        "attachToPointer": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Attach To Pointer"
+        },
+        "duration": {
+            "datatype": "number",
+            "defaultValue": 125,
+            "title": "Duration"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>a configurable global xhr-listener to display\na loading message during running xhr&#39;s or to simply provide\nbase-level topic to subscribe to for custom loading messages</p>"
+    }
+}

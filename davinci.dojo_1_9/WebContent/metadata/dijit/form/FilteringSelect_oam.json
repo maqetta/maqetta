@@ -1,0 +1,227 @@
+{
+    "id": "http://dojotoolkit.org/dijit/form/FilteringSelect",
+    "name": "dijit.form.FilteringSelect",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/FilteringSelect",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "type": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "text"
+                },
+                {
+                    "value": "password"
+                }
+            ],
+            "defaultValue": "text",
+            "title": "Type"
+        },
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "alt": {
+            "datatype": "string",
+            "hidden": true
+        },
+        "value": {
+            "datatype": "string",
+            "title": "Value"
+        },
+        "tabIndex": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Tab Index"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        },
+        "readOnly": {
+            "datatype": "boolean",
+            "title": "Read Only"
+        },
+        "intermediateChanges": {
+            "datatype": "boolean",
+            "title": "Intermediate Changes"
+        },
+        "trim": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "uppercase": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "lowercase": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "propercase": {
+            "datatype": "boolean",
+            "hidden": true
+        },
+        "maxLength": {
+            "datatype": "string",
+            "title": "Max Length"
+        },
+        "required": {
+            "datatype": "boolean",
+            "title": "Required",
+            "hidden": true
+        },
+        "promptMessage": {
+            "datatype": "string",
+            "title": "Prompt Message",
+            "hidden": true
+        },
+        "invalidMessage": {
+            "datatype": "string",
+            "defaultValue": "The value entered is not valid.",
+            "title": "Invalid Message",
+            "hidden": true
+        },
+        "constraints": {
+            "datatype": "json",
+            "defaultValue": "\"{\\\"locale\\\":\\\"\\\"}\"",
+            "title": "Constraints",
+            "hidden": true
+        },
+        "regExp": {
+            "datatype": "string",
+            "defaultValue": ".*",
+            "title": "Regular Expression",
+            "hidden": true
+        },
+        "tooltipPosition": {
+            "datatype": "array",
+            "defaultValue": "[]",
+            "title": "Tooltip Positions",
+            "hidden": true
+        },
+        "pageSize": {
+            "datatype": "number",
+            "defaultValue": null,
+            "title": "Page Size"
+        },
+        "store": {
+            "datatype": "object",
+            "hidden": true
+        },
+        "query": {
+            "datatype": "json",
+            "defaultValue": "\"{}\"",
+            "hidden": true
+        },
+        "autoComplete": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Auto Complete"
+        },
+        "searchDelay": {
+            "datatype": "number",
+            "defaultValue": 100,
+            "title": "Search Delay",
+            "description": "Search delay (ms)"
+        },
+        "searchAttr": {
+            "datatype": "string",
+            "defaultValue": "name",
+            "title": "Search Attribute"
+        },
+        "queryExpr": {
+            "datatype": "string",
+            "defaultValue": "${0}*",
+            "title": "Query Expression"
+        },
+        "ignoreCase": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Ignore Case"
+        },
+        "hasDownArrow": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Show Down Arrow"
+        },
+        "labelAttr": {
+            "datatype": "string",
+            "title": "Label Attribute"
+        },
+        "labelType": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "text"
+                },
+                {
+                    "value": "html"
+                }
+            ],
+            "description": "Specifies how to interpret the labelAttr in the data store items.\nCan be \"html\" or \"text\".",
+            "defaultValue": "text",
+            "title": "Label Type"
+        },
+        "scrollOnFocus": {
+            "datatype": "boolean",
+            "description": "On focus, should this widget scroll into view?",
+            "hidden": false,
+            "defaultValue": true
+        },
+        "fetchProperties": {
+            "datatype": "json",
+            "description": "Mixin to the dojo.data store's fetch.\nFor example, to set the sort order of the ComboBox menu, pass:\n\t{ sort: {attribute:\"name\",descending: true} }\nTo override the default queryOptions so that deep=false, do:\n\t{ queryOptions: {ignoreCase: true, deep: false} }",
+            "hidden": false
+        },
+        "highlightMatch": {
+            "datatype": "string",
+            "defaultValue": "first",
+            "option": [
+                {
+                    "value": "first"
+                },
+                {
+                    "value": "all"
+                },
+                {
+                    "value": "none"
+                }
+            ],
+            "description": "One of: \"first\", \"all\" or \"none\".\n\nIf the ComboBox/FilteringSelect opens with the search results and the searched\nstring can be found, it will be highlighted.  If set to \"all\"\nthen will probably want to change queryExpr parameter to '*${0}*'\n\nHighlighting is only performed when labelType is \"text\", so as to not\ninterfere with any HTML markup an HTML label might contain.",
+            "hidden": false
+        },
+        "item": {
+            "datatype": "object",
+            "description": "This is the item returned by the dojo.data.store implementation that\nprovides the data for this cobobox, it's the currently selected item.",
+            "hidden": true
+        },
+        "state": {
+            "datatype": "string",
+            "description": "Shows current state (ie, validation result) of input (Normal, Warning, or Error)",
+            "hidden": true
+        }
+    },
+    "content": "<select></select>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>An enhanced version of the HTML SELECT tag, populated dynamically\n</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>An enhanced version of the HTML SELECT tag, populated dynamically. It works\nvery nicely with very large data sets because it can load and page data as needed.\nIt also resembles ComboBox, but does not allow values outside of the provided ones.\nIf OPTION tags are used as the data provider via markup, then the\nOPTION tag&#39;s child text node is used as the displayed value when selected\nwhile the OPTION tag&#39;s value attribute is used as the widget value on form submit.\nTo set the default value when using OPTION tags, specify the selected\nattribute on 1 of the child OPTION tags.\n\n</p>\n<p>Similar features:\n\n</p>\n<ul>\n<li>There is a drop down list of possible values.</li>\n<li>You can only enter a value from the drop down list.  (You can&#39;t\n  enter an arbitrary value.)</li>\n<li>The value submitted with the form is the hidden value (ex: CA),\n  not the displayed value a.k.a. label (ex: California)</li>\n</ul>\n<p>Enhancements over plain HTML version:\n\n</p>\n<ul>\n<li>If you type in some text then it will filter down the list of\n  possible values in the drop down list.</li>\n<li>List can be specified either as a static list or via a javascript\n  function (that can get the list from a server)</li>\n</ul>"
+    }
+}

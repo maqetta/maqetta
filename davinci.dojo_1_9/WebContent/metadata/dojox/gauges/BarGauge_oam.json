@@ -1,0 +1,115 @@
+{
+    "id": "http://dojotoolkit.org/dojox/gauges/BarGauge",
+    "name": "dojox.gauges.BarGauge",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "css",
+            "src": "dojox/gauges/_Gauge.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/gauges/BarGauge",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/Tooltip",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "dataX": {
+            "datatype": "number",
+            "description": "x position of data area (default 5)",
+            "hidden": false
+        },
+        "dataY": {
+            "datatype": "number",
+            "description": "y position of data area (default 5)",
+            "hidden": false
+        },
+        "dataWidth": {
+            "datatype": "number",
+            "description": "width of data area (default is bar graph width - 10)",
+            "hidden": false
+        },
+        "dataHeight": {
+            "datatype": "number",
+            "description": "height of data area (default is bar graph width - 10)",
+            "hidden": false
+        },
+        "width": {
+            "datatype": "number",
+            "description": "width of the mark\nlength: The length of the mark\ninterval: The interval the ticks should be added on\ncolor: The color of the mark and text\nfont: an object with any/all of the following parameters:\n{family: \"Helvetica\", style: \"italic\", variant: 'small-caps', weight: 'bold', size: \"18pt\"}",
+            "defaultValue": 200,
+            "hidden": false
+        },
+        "height": {
+            "datatype": "number",
+            "description": "the height of the gauge (default is 200)",
+            "defaultValue": 200,
+            "hidden": false
+        },
+        "image": {
+            "datatype": "json",
+            "description": "background image for gauge (default is no image)",
+            "hidden": false
+        },
+        "useRangeStyles": {
+            "datatype": "number",
+            "description": "indicates whether to use given css classes (dojoxGaugeRangeXX)\nto determine the color (and other style attributes?) of the ranges\nthis value should be the number of dojoxGaugeRange classes that are\ndefined, starting at dojoxGaugeRange1 (0 indicates falling to default\nhardcoded colors)",
+            "hidden": false
+        },
+        "useTooltip": {
+            "datatype": "boolean",
+            "description": "indicates whether tooltips should be displayed for ranges, indicators, etc.",
+            "hidden": false
+        },
+        "majorTicks": {
+            "datatype": "json",
+            "description": "An object representing the tick marks that should be added to the gauge. Major tick marks have a text label\nindicating the value.  The object can have the following attributes (required are marked with a *):\noffset: the distance from the 'center' of the gauge.  Used differently for Analog vs. Bar",
+            "defaultValue": "{\"offset\":85,\"length\":10,\"interval\":20,\"color\":\"gray\"}",
+            "hidden": true
+        },
+        "minorTicks": {
+            "datatype": "json",
+            "description": "An object of the same format as majorTicks, indicating where the minor (label-less) marks should be placed\nThe font parameter is ignored if provided since minor tick marks have no text label.",
+            "defaultValue": "{\"offset\":85,\"length\":5,\"interval\":5,\"color\":\"gray\"}",
+            "hidden": true
+        },
+        "hideValues": {
+            "datatype": "boolean",
+            "description": "indicates whether the text boxes showing the value of the indicator (as text\ncontent) should be hidden or shown.  Default is not hidden, aka shown.",
+            "hidden": false
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget descends from dijit._Container",
+            "defaultValue": true,
+            "hidden": true
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>a bar graph built using the dojox.gfx package.\n</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>using dojo.gfx (and thus either SVG or VML based on what is supported), this widget\nbuilds a bar graph component, used to display numerical data in a familiar format.\n</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;script type=&quot;text/javascript&quot;&gt;\n    require([&quot;dojox/gauges/BarGauge&quot;]);\n&lt;/script&gt;\n...\n&lt;div    dojoType=&quot;dojox.gauges.BarGauge&quot;\n    id=&quot;testBarGauge&quot;\n    barGaugeHeight=&quot;55&quot;\n    dataY=&quot;25&quot;\n    dataHeight=&quot;25&quot;\n    dataWidth=&quot;225&quot;&gt;\n&lt;/div&gt;</code></pre>"
+    }
+}

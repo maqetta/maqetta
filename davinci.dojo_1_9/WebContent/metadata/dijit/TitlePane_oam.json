@@ -1,0 +1,80 @@
+{
+    "id": "http://dojotoolkit.org/dijit/TitlePane",
+    "name": "dijit.TitlePane",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/TitlePane",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "href": {
+            "datatype": "string",
+            "format": "url",
+            "title": "URL"
+        },
+        "extractContent": {
+            "datatype": "boolean",
+            "title": "Extract Content"
+        },
+        "parseOnLoad": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Parse On Load"
+        },
+        "preventCache": {
+            "datatype": "boolean",
+            "title": "Prevent Cache"
+        },
+        "preload": {
+            "datatype": "boolean",
+            "title": "Preload"
+        },
+        "refreshOnShow": {
+            "datatype": "boolean",
+            "title": "Refresh On Show"
+        },
+        "doLayout": {
+            "datatype": "string",
+            "defaultValue": "auto",
+            "hidden": true
+        },
+        "duration": {
+            "datatype": "number",
+            "defaultValue": 250,
+            "title": "Duration"
+        },
+        "open": {
+            "datatype": "boolean",
+            "description": "Whether pane is opened or closed."
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget will call resize() on\nits children.",
+            "defaultValue": true,
+            "hidden": true
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A pane with a title on top, that can be expanded or collapsed.\n</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>An accessible container with a title Heading, and a content\nsection that slides open and closed. TitlePane is an extension to\n<code>dijit/layout/ContentPane</code>, providing all the useful content-control aspects from it.\n</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>// load a TitlePane from remote file:\nvar foo = new dijit.TitlePane({ href: &quot;foobar.html&quot;, title:&quot;Title&quot; });\nfoo.startup();</code></pre>\n<pre><code>&lt;!-- markup href example: --&gt;\n&lt;div data-dojo-type=&quot;dijit/TitlePane&quot; data-dojo-props=&quot;href: &#39;foobar.html&#39;, title: &#39;Title&#39;&quot;&gt;&lt;/div&gt;</code></pre>\n<pre><code>&lt;!-- markup with inline data --&gt;\n&lt;div data-dojo-type=&quot;dijit/TitlePane&quot; title=&quot;Title&quot;&gt;\n    &lt;p&gt;I am content&lt;/p&gt;\n&lt;/div&gt;</code></pre>"
+    }
+}

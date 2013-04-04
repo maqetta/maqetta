@@ -1,0 +1,54 @@
+{
+    "id": "http://dojotoolkit.org/dojox/widget/FisheyeLite",
+    "name": "dojox.widget.FisheyeLite",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/widget/FisheyeLite",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "durationIn": {
+            "datatype": "number",
+            "defaultValue": 350,
+            "title": "Duration In"
+        },
+        "durationOut": {
+            "datatype": "number",
+            "defaultValue": 1420,
+            "title": "Duration Out"
+        },
+        "properties": {
+            "datatype": "json",
+            "defaultValue": "\"{\\\"fontSize\\\":2.75}\"",
+            "title": "Properties"
+        },
+        "units": {
+            "datatype": "string",
+            "defaultValue": "px",
+            "title": "Unit"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A Light-weight Fisheye Component, or an exhanced version\nof dojo/fx/Toggler ...</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>A Simple FisheyeList-like widget which (in the interest of\nperformance) relies on well-styled content for positioning,\nand natural page layout for rendering.\n\n</p>\n<p>use position:absolute/relative nodes to prevent layout\nchanges, and use caution when seleting properties to\nscale. Negative scaling works, but some properties\nreact poorly to being set to negative values, IE being\nparticularly annoying in that regard.\n\n</p>\n<p>quirk: uses the domNode as the target of the animation\nunless it finds a node class=&quot;fisheyeTarget&quot; in the container\nbeing turned into a FisheyeLite instance\n</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>// make all the LI&#39;s in a node Fisheye&#39;s:\nrequire([&quot;dojo/query&quot;, &quot;dojox/widget/FisheyeLite&quot;],\n    function(query, FisheyeLite){\n    query(&quot;#node li&quot;).forEach(function(n){\n        new FisheyeLite({},n);\n    });\n});</code></pre>\n<pre><code>require([&quot;dojox/widget/FisheyeLite&quot;], function(FisheyeLite){\n    new FisheyeLite({\n        properties:{\n            // height is literal, width is multiplied\n            height:{ end: 200 }, width:2.3\n        }\n    }, &quot;someNode&quot;);\n});</code></pre>"
+    }
+}

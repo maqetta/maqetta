@@ -1,0 +1,61 @@
+{
+    "id": "http://dojotoolkit.org/dojox/wire/ml/Invocation",
+    "name": "dojox.wire.ml.Invocation",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/wire/ml/Invocation",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "trigger": {
+            "datatype": "string",
+            "title": "Trigger"
+        },
+        "triggerEvent": {
+            "datatype": "string",
+            "title": "Event"
+        },
+        "object": {
+            "datatype": "string",
+            "title": "Object"
+        },
+        "method": {
+            "datatype": "string",
+            "title": "Method"
+        },
+        "parameters": {
+            "datatype": "string",
+            "title": "Parameters"
+        },
+        "result": {
+            "datatype": "string",
+            "title": "Result"
+        },
+        "error": {
+            "datatype": "string",
+            "title": "Error"
+        },
+        "onRun": {
+            "datatype": "object"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A widget to invoke a method or publish a topic</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>This widget represents a controller task to invoke a method or\npublish a topic when an event (a function) or a topic is issued.</p>"
+    }
+}

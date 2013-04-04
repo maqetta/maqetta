@@ -1,0 +1,44 @@
+{
+    "id": "http://dojotoolkit.org/dojox/grid/data/DojoData",
+    "name": "dojox.grid.data/DojoData",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/grid/_data/model",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "jsId": {
+            "datatype": "string",
+            "title": "Model ID"
+        },
+        "rowsPerPage": {
+            "datatype": "number",
+            "defaultValue": 100,
+            "title": "Rows Per Page"
+        },
+        "store": {
+            "datatype": "object",
+            "title": "Data Store"
+        },
+        "query": {
+            "datatype": "json",
+            "defaultValue": "\"{\\\"name\\\":\\\"*\\\"}\"",
+            "title": "Query"
+        },
+        "queryOptions": {
+            "datatype": "json",
+            "title": "Query Options"
+        }
+    },
+    "content": "<span></span>"
+}

@@ -1,0 +1,41 @@
+{
+    "id": "http://dojotoolkit.org/dojox/charting/plot2d/Columns",
+    "name": "dojox.charting.plot2d/Columns",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/charting/plot2d/Columns",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "hAxis": {
+            "datatype": "string"
+        },
+        "vAxis": {
+            "datatype": "string"
+        },
+        "gap": {
+            "datatype": "number",
+            "title": "Gap"
+        },
+        "shadows": {
+            "datatype": "array",
+            "title": "Shadows",
+            "defaultValue": "[0,0,0]"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>The plot object representing a column chart (vertical bars).</p>"
+    }
+}

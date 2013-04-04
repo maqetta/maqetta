@@ -1,0 +1,67 @@
+{
+    "id": "http://dojotoolkit.org/dijit/layout/LayoutContainer",
+    "name": "dijit.layout.LayoutContainer",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/layout/LayoutContainer",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget descends from dijit._Container",
+            "defaultValue": true,
+            "hidden": true
+        }
+    },
+    "childProperties": {
+        "layoutAlign": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "none"
+                },
+                {
+                    "value": "left"
+                },
+                {
+                    "value": "right"
+                },
+                {
+                    "value": "top"
+                },
+                {
+                    "value": "bottom"
+                },
+                {
+                    "value": "client"
+                }
+            ],
+            "defaultValue": "none",
+            "title": "Layout Align"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Deprecated.  Use <code>dijit/layout/BorderContainer</code> instead.</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>Provides Delphi-style panel layout semantics.\n\n</p>\n<p>A LayoutContainer is a box with a specified size (like style=&quot;width: 500px; height: 500px;&quot;),\nthat contains children widgets marked with &quot;layoutAlign&quot; of &quot;left&quot;, &quot;right&quot;, &quot;bottom&quot;, &quot;top&quot;, and &quot;client&quot;.\nIt takes it&#39;s children marked as left/top/bottom/right, and lays them out along the edges of the box,\nand then it takes the child marked &quot;client&quot; and puts it into the remaining space in the middle.\n\n</p>\n<p>Left/right positioning is similar to CSS&#39;s &quot;float: left&quot; and &quot;float: right&quot;,\nand top/bottom positioning would be similar to &quot;float: top&quot; and &quot;float: bottom&quot;, if there were such\nCSS.\n\n</p>\n<p>Note that there can only be one client element, but there can be multiple left, right, top,\nor bottom elements.\n\n</p>\n<p>See <code>LayoutContainer.ChildWidgetProperties</code> for details on the properties that can be set on\nchildren of a <code>LayoutContainer</code>.\n</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;style&gt;\n    html, body{ height: 100%; width: 100%; }\n&lt;/style&gt;\n&lt;div data-dojo-type=&quot;dijit/layout/LayoutContainer&quot; style=&quot;width: 100%; height: 100%&quot;&gt;\n    &lt;div data-dojo-type=&quot;dijit/layout/ContentPane&quot; data-dojo-props=&quot;layoutAlign: &#39;top&#39;&quot;&gt;header text&lt;/div&gt;\n    &lt;div data-dojo-type=&quot;dijit/layout/ContentPane&quot; data-dojo-props=&quot;layoutAlign: &#39;left&#39;&quot; style=&quot;width: 200px;&quot;&gt;table of contents&lt;/div&gt;\n    &lt;div data-dojo-type=&quot;dijit/layout/ContentPane&quot; data-dojo-props=&quot;layoutAlign: &#39;client&#39;&quot;&gt;client area&lt;/div&gt;\n&lt;/div&gt;\n\n Lays out each child in the natural order the children occur in.\n Basically each child is laid out into the &quot;remaining space&quot;, where &quot;remaining space&quot; is initially\n the content area of this widget, but is reduced to a smaller rectangle each time a child is added.</code></pre>"
+    }
+}

@@ -1,0 +1,60 @@
+{
+    "id": "http://dojotoolkit.org/dojox/widget/Calendar",
+    "name": "dojox.widget.Calendar",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "css",
+            "src": "dojox/widget/Calendar/Calendar.css",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/widget/Calendar",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "value": {
+            "datatype": "string",
+            "title": "Value"
+        },
+        "dayWidth": {
+            "datatype": "string",
+            "option": [
+                {
+                    "value": "narrow"
+                },
+                {
+                    "value": "wide"
+                },
+                {
+                    "value": "abbr"
+                }
+            ],
+            "defaultValue": "narrow",
+            "title": "Day Width"
+        },
+        "datePackage": {
+            "datatype": "string",
+            "description": "JavaScript namespace to find Calendar routines.  Uses Gregorian Calendar routines\nat dojo.date by default.",
+            "hidden": false
+        }
+    },
+    "content": "<input></input>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>The standard Calendar. It includes day and month/year views.\nNo visual effects are included.</p>"
+    }
+}

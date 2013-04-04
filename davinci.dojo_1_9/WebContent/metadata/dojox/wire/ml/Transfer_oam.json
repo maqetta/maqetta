@@ -1,0 +1,46 @@
+{
+    "id": "http://dojotoolkit.org/dojox/wire/ml/Transfer",
+    "name": "dojox.wire.ml.Transfer",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/wire/ml/Transfer",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "trigger": {
+            "datatype": "string",
+            "title": "Trigger"
+        },
+        "triggerEvent": {
+            "datatype": "string",
+            "title": "Event"
+        },
+        "source": {
+            "datatype": "string",
+            "title": "Source"
+        },
+        "target": {
+            "datatype": "string",
+            "title": "Target"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A widget to transfer values through source and target Wires</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>This widget represents a controller task to transfer a value from\na source to a target, through a source and a target Wires, when\nan event (a function) or a topic is issued.\nIf this widget has child ChildWire widgets, their _addWire()\nmethods are called to add Wire arguments to a source or a target\nWire.</p>"
+    }
+}

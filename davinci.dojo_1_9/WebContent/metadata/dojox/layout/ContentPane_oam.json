@@ -1,0 +1,89 @@
+{
+    "id": "http://dojotoolkit.org/dojox/layout/ContentPane",
+    "name": "dojox.layout.ContentPane",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/layout/ContentPane",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "href": {
+            "datatype": "string",
+            "format": "url",
+            "title": "URL"
+        },
+        "extractContent": {
+            "datatype": "boolean",
+            "title": "Extract Content"
+        },
+        "parseOnLoad": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Parse On Load"
+        },
+        "preventCache": {
+            "datatype": "boolean",
+            "title": "Prevent Cache"
+        },
+        "preload": {
+            "datatype": "boolean",
+            "title": "Preload"
+        },
+        "refreshOnShow": {
+            "datatype": "boolean",
+            "title": "Refresh On Show"
+        },
+        "doLayout": {
+            "datatype": "string",
+            "defaultValue": "auto",
+            "hidden": true
+        },
+        "adjustPaths": {
+            "datatype": "boolean",
+            "title": "Adjust Paths"
+        },
+        "cleanContent": {
+            "datatype": "boolean",
+            "title": "Clean Content"
+        },
+        "renderStyles": {
+            "datatype": "boolean",
+            "title": "Render Styles"
+        },
+        "executeScripts": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "title": "Execute Scripts"
+        },
+        "scriptHasHooks": {
+            "datatype": "boolean",
+            "title": "Script Has Hooks"
+        },
+        "content": {
+            "datatype": "string",
+            "description": "The innerHTML of the ContentPane.\nNote that the initialization parameter / argument to attr(\"content\", ...)\ncan be a String, DomNode, Nodelist, or _Widget.",
+            "hidden": false
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget will call resize() on\nits children.   _LayoutWidget based widgets check for\n\n\t\tif(!this.getParent || !this.getParent()){\n\nand if getParent() returns false because !parent.isContainer,\nthen they resize themselves on initialization.",
+            "defaultValue": true,
+            "hidden": true
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>An extended version of dijit.layout.ContentPane.\nSupports infile scripts and external ones declared by <code>&lt;script src=&#39;&#39;...&gt;</code>\nrelative path adjustments (content fetched from a different folder)\n<code>&lt;style&gt;</code> and <code>&lt;link rel=&#39;stylesheet&#39; href=&#39;..&#39;&gt;</code> tags,\ncss paths inside cssText is adjusted (if you set adjustPaths = true)\n\n</p>\n<p>NOTE that dojo.require in script in the fetched file isn&#39;t recommended\nMany widgets need to be required at page load to work properly</p>"
+    }
+}

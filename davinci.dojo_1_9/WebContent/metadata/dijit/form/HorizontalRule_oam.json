@@ -1,0 +1,57 @@
+{
+    "id": "http://dojotoolkit.org/dijit/form/HorizontalRule",
+    "name": "dijit.form.HorizontalRule",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/HorizontalSlider",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/HorizontalRule",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "count": {
+            "datatype": "number",
+            "defaultValue": 3,
+            "title": "Count",
+            "description": "Number of hash marks to generate"
+        },
+        "container": {
+            "datatype": "string",
+            "title": "Container",
+            "description": "For HorizontalSlider, this is either \"topDecoration\" or \"bottomDecoration\",\nand indicates whether this rule goes above or below the slider.",
+            "option": [
+                {
+                    "value": "bottomDecoration"
+                },
+                {
+                    "value": "topDecoration"
+                }
+            ],
+            "hidden": false
+        },
+        "ruleStyle": {
+            "datatype": "string",
+            "title": "Rule Style",
+            "description": "CSS style to apply to individual hash marks"
+        }
+    },
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Hash marks for <code>dijit/form/HorizontalSlider</code></p>"
+    }
+}

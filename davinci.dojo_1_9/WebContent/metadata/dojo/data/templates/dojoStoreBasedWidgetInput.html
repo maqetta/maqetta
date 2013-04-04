@@ -1,0 +1,63 @@
+<div id="davinciDataGridSmartInputFolderDiv" class="smartInputDataGridFolderDiv"> 
+  <table id="davinci.ve.input.DataGridInput_table"> 
+    <tbody> 
+      <tr>
+        <td></td> 
+        <td>
+          <select id="davinci.ve.input.DataGridInput.dataStoreType" name="davinci.ve.input.DataGridInput.dataStoreType" dojoType="dojox.form.DropDownSelect" style="width:15em;"> 
+            <option value="dummyData">{commaSeparatedData}</option> 
+            <option value="file">{dataFromWorkspace}</option> 
+            <option value="url">{dataFromJsonpURL}</option> 
+          </select>
+        </td>
+        <td></td> 
+      </tr>	
+    </tbody> 
+  </table> 
+</div>
+<div id="iedResizeDiv"  class="iedResizeDiv"> 
+  <textarea  dojoType="dijit.form.SimpleTextarea" name="davinciIleb"  trim="true" id="davinciIleb" class="smartInputTextAreaMulti"></textarea>
+  <div id="smartInputSim" class="smartInputSim" style="display:none;"></div>
+  <span id="davinci.ve.input.DataGridInput_img_folder"  title="Folder" class="inlineEditFolder"> </span>
+  <div id="iedResizeHandle" dojoType="dojox.layout.ResizeHandle" targetId="iedResizeDiv" constrainMin="true" maxWidth="200" maxHeight="600" minWidth="240" minHeight="40"  activeResize="true" intermediateChanges="true"></div>
+</div>
+<div id="davinci.ve.input.SmartInput_div"  class="davinciVeInputSmartInputDiv"> 
+  <div id="davinci.ve.input.SmartInput_radio_div" class="smartInputRadioDiv"> 
+    <table id="davinci.ve.input.SmartInput_table"> 
+      <tbody> 
+        <tr> 
+          <td class="smartInputTd1"> 
+            <input id="davinci.ve.input.SmartInput_radio_text" showlabel="true" type="radio" dojoType="dijit.form.RadioButton" disabled="false" readOnly="false" intermediateChanges="false" checked="true"> </input> 
+          </td> 
+          <td class="smartInputTd2"> 
+            <div id="davinci.ve.input.SmartInput_radio_text_width_div" class="smartInputRadioTextDiv"></div>
+          </td> 
+        </tr>
+        <tr> 
+          <td class="smartInputTd1"> <input id="davinci.ve.input.SmartInput_radio_html" showlabel="true" type="radio" dojoType="dijit.form.RadioButton"> </input>  </td> 
+          <td class="smartInputTd2">
+            <div id="davinci.ve.input.SmartInput_radio_html_width_div" class="smartInputRadioTextDiv">
+            </div>
+          </td> 
+        </tr> 
+        <tr id="davinci.ve.input.SmartInput_callback"> 
+          <td class="smartInputTd1">{callbackParameter}</td> 
+          <td class="smartInputTd2">
+            <input type="text" name="davinci.ve.input.SmartInput_callback_editbox" value="callback" data-dojo-type="dijit.form.TextBox" data-dojo-props="trim:true" id="davinci.ve.input.SmartInput_callback_editbox">
+          </td> 
+        </tr> 
+      </tbody> 
+    </table> 
+    <div class="smartInputHelpDiv"> 
+      <span id="davinci.ve.input.SmartInput_img_help"  title="Help" class="inlineEditHelp"> </span>
+      <span class="smartInputSpacerSpan">
+      <button id="davinci.ve.input.SmartInput_ok"  dojoType="dijit.form.Button" type="submit" class="inlineEditHelpOk">{buttonOk}</button> <button id=davinci.ve.input.SmartInput_cancel dojoType="dijit.form.Button" class="inlineEditHelpCancel">{buttonCancel}</button>  
+      </span>   
+    </div> 
+    <div id="davinci.ve.input.SmartInput_div_help" style="display:none;" class="smartInputHelpTextDiv"> 
+      <div dojoType="dijit.layout.ContentPane" class="smartInputHelpTextDivContentPane" style="padding:0;">{helpText}</div> 
+      <div style="text-align: left; padding:0; height:2px;"></div> 
+    </div> 
+  </div> 
+</div> 
+

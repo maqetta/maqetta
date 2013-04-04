@@ -1,0 +1,43 @@
+<div>
+	<div dojoType="dijit.layout.BorderContainer" class="dijitDialogPaneContentArea" design="headline" gutters="false"	style="width:100%; height:100%" liveSplitters="false" dojoAttachPoint="borderContainer">
+		<!--Center region -->
+		<div dojoType="dijit.layout.ContentPane" region="center">
+			<table width="100%">
+				<tr class="sliderInputDiv sliderInputChildrenLabel">
+					<td colspan="5">${langObj.ruleAndLabelsHeader}</td>
+				</tr>
+				<tr class="sliderInputChildRow">
+					<th></th>
+					<th></th>
+					<th>${langObj.typeColHeader}</th>
+					<th>${langObj.containerColHeader}</th>
+					<th></th>
+				</tr>
+				<!--  child rows for rules and rule labels added dynamically -->
+				<tr class="sliderInputBeforeOptionsLabel sliderInputOptionsLabelRow"></tr>
+			</table>
+        </div>
+		
+        <!--Preview area -- "trailing" region -->
+		<div dojoType="dijit.layout.ContentPane" style="width: 40%;" region="trailing" >
+			<table width="100%">
+				<tr class="sliderInputDiv sliderInputChildrenLabel">
+					<td>${langObj.preview}</td>
+				</tr>
+				<!--  child rows for rules and rule labels added dynamically -->
+				<tr>
+					<td>
+						<div class="sliderPreviewDisablingDiv" ></div>
+						<div dojoType="dijit.layout.ContentPane" dojoAttachPoint="previewArea"> 
+						</div>
+					</td>
+				</tr>
+			</table>
+    </div>
+  </div>
+
+  <div class="dijitDialogPaneActionBar">
+		<button dojoType="dijit.form.Button" label="${dijitLangObj.buttonOk}" class="maqPrimaryButton" type="submit"></button>
+		<button dojoType="dijit.form.Button" label="${dijitLangObj.buttonCancel}" dojoAttachPoint="cancelButton" dojoAttachEvent='onClick:_onCancel' class="maqSecondaryButton"></button>
+	</div>
+</div>

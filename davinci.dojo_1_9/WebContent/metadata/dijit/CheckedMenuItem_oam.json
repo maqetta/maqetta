@@ -1,0 +1,46 @@
+{
+    "id": "http://dojotoolkit.org/dijit/CheckedMenuItem",
+    "name": "dijit.CheckedMenuItem",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/CheckedMenuItem",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "label": {
+            "datatype": "string",
+            "title": "Label"
+        },
+        "iconClass": {
+            "datatype": "string",
+            "title": "Icon Class"
+        },
+        "accelKey": {
+            "datatype": "string",
+            "title": "Shortcut Key"
+        },
+        "checked": {
+            "datatype": "boolean",
+            "title": "Checked"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A checkbox-like menu item for toggling on and off</p>"
+    }
+}

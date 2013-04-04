@@ -1,0 +1,40 @@
+{
+    "id": "http://dojotoolkit.org/dijit/Toolbar",
+    "name": "dijit.Toolbar",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/Toolbar",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "tabIndex": {
+            "datatype": "string",
+            "defaultValue": "0",
+            "title": "Tab Index"
+        },
+        "focusedChild": {
+            "datatype": "object",
+            "description": "The currently focused child widget, or null if there isn't one",
+            "hidden": true
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget descends from dijit._Container"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A Toolbar widget, used to hold things like <code>dijit.Editor</code> buttons</p>"
+    }
+}

@@ -1,0 +1,45 @@
+{
+    "id": "http://dojotoolkit.org/dojo/data/ItemFileReadStore",
+    "name": "dojo.data.ItemFileReadStore",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/io/xhrScriptPlugin",
+            "$library": "dojo"
+        },
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojo/data/ItemFileReadStore",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "jsId": {
+            "datatype": "string",
+            "title": "Store ID"
+        },
+        "data": {
+            "datatype": "json",
+            "title": "Data"
+        },
+        "url": {
+            "datatype": "string",
+            "format": "url",
+            "title": "URL"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>The ItemFileReadStore implements the dojo/data/api/Read API and reads\ndata from JSON files that have contents in this format --\n\n</p>\n<pre><code>{ items: [\n    { name:&#39;Kermit&#39;, color:&#39;green&#39;, age:12, friends:[&#39;Gonzo&#39;, {_reference:{name:&#39;Fozzie Bear&#39;}}]},\n    { name:&#39;Fozzie Bear&#39;, wears:[&#39;hat&#39;, &#39;tie&#39;]},\n    { name:&#39;Miss Piggy&#39;, pets:&#39;Foo-Foo&#39;}\n]}</code></pre>\n<p>Note that it can also contain an &#39;identifier&#39; property that specified which attribute on the items\n\n</p>\n<p>in the array of items that acts as the unique identifier for that item.</p>"
+    }
+}

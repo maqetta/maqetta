@@ -1,0 +1,66 @@
+{
+    "id": "http://dojotoolkit.org/dijit/layout/AccordionContainer",
+    "name": "dijit.layout.AccordionContainer",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/layout/AccordionContainer",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "doLayout": {
+            "datatype": "boolean",
+            "defaultValue": true,
+            "hidden": true
+        },
+        "duration": {
+            "datatype": "number",
+            "defaultValue": 250,
+            "title": "Duration"
+        },
+        "persist": {
+            "datatype": "boolean",
+            "description": "Remembers the selected child across sessions\n\n\nBoolean",
+            "hidden": false
+        },
+        "selectedChildWidget": {
+            "datatype": "object",
+            "description": "References the currently selected child widget, if any",
+            "hidden": true
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget descends from dijit._Container",
+            "defaultValue": true,
+            "hidden": true
+        }
+    },
+    "childProperties": {
+        "selected": {
+            "datatype": "boolean",
+            "title": "Selected"
+        },
+        "closable": {
+            "datatype": "boolean",
+            "title": "Closable"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Holds a set of panes where every pane&#39;s title is visible, but only one pane&#39;s content is visible at a time,\nand switching between panes is visualized by sliding the other panes up/down.</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;div data-dojo-type=&quot;dijit/layout/AccordionContainer&quot;&gt;\n    &lt;div data-dojo-type=&quot;dijit/layout/ContentPane&quot; title=&quot;pane 1&quot;&gt;\n    &lt;/div&gt;\n    &lt;div data-dojo-type=&quot;dijit/layout/ContentPane&quot; title=&quot;pane 2&quot;&gt;\n        &lt;p&gt;This is some text&lt;/p&gt;\n    &lt;/div&gt;\n&lt;/div&gt;</code></pre>"
+    }
+}

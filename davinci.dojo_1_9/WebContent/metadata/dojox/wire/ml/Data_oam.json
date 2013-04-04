@@ -1,0 +1,28 @@
+{
+    "id": "http://dojotoolkit.org/dojox/wire/ml/Data",
+    "name": "dojox.wire.ml.Data",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dojox/wire/ml/Data",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../../dojo/dojo.js"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A widget for a data object</p>"
+    },
+    "description": {
+        "type": "text/html",
+        "value": "<p>This widget represents an object with &#39;_properties&#39; property.\nIf child &#39;DataProperty&#39; widgets exist, they are used to initialize\npropertiy values of &#39;_properties&#39; object.</p>"
+    }
+}

@@ -1,0 +1,93 @@
+{
+    "id": "http://dojotoolkit.org/dijit/form/Form",
+    "name": "dijit.form.Form",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/form/Form",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "name": {
+            "datatype": "string",
+            "title": "Name"
+        },
+        "action": {
+            "datatype": "string",
+            "description": "Server-side form handler.",
+            "title": "Action"
+        },
+        "method": {
+            "datatype": "string",
+            "description": "HTTP method used to submit the form, either 'GET' or 'POST'.",
+            "option": [
+                {
+                    "value": "POST"
+                },
+                {
+                    "value": "GET"
+                }
+            ],
+            "title": "Method"
+        },
+        "encType": {
+            "datatype": "string",
+            "description": "Encoding type for the form, ex: application/x-www-form-urlencoded.",
+            "option": [
+                {
+                    "value": "multipart/form-data"
+                }
+            ],
+            "title": "Encoding Type"
+        },
+        "accept-charset": {
+            "datatype": "string",
+            "description": "List of supported charsets. - not used in test files",
+            "title": "Accept Charset",
+            "hidden": true
+        },
+        "accept": {
+            "datatype": "string",
+            "description": "List of MIME types for file upload. - not used in test files",
+            "title": "Accept",
+            "hidden": true
+        },
+        "target": {
+            "datatype": "string",
+            "description": "Target frame for the document to be opened in.",
+            "option": [
+                {
+                    "value": "_blank"
+                },
+                {
+                    "value": "self"
+                },
+                {
+                    "value": "_top"
+                },
+                {
+                    "value": "_parent"
+                }
+            ],
+            "title": "Target"
+        }
+    },
+    "content": "<div></div>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Widget corresponding to HTML form tag, for validation and serialization\n</p>"
+    },
+    "examples": {
+        "type": "text/html",
+        "value": "<pre><code>&lt;form data-dojo-type=&quot;dijit/form/Form&quot; id=&quot;myForm&quot;&gt;\n    Name: &lt;input type=&quot;text&quot; name=&quot;name&quot; /&gt;\n&lt;/form&gt;\nmyObj = {name: &quot;John Doe&quot;};\ndijit.byId(&#39;myForm&#39;).set(&#39;value&#39;, myObj);\n\nmyObj=dijit.byId(&#39;myForm&#39;).get(&#39;value&#39;);</code></pre>"
+    }
+}

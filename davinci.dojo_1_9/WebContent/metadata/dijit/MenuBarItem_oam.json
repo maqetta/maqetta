@@ -1,0 +1,43 @@
+{
+    "id": "http://dojotoolkit.org/dijit/MenuBarItem",
+    "name": "dijit.MenuBarItem",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/MenuBarItem",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "label": {
+            "datatype": "string",
+            "title": "Label"
+        },
+        "iconClass": {
+            "datatype": "string",
+            "title": "Icon Class"
+        },
+        "accelKey": {
+            "datatype": "string",
+            "title": "Shortcut Key",
+            "defaultValue": ""
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>Item in a MenuBar that&#39;s clickable, and doesn&#39;t spawn a submenu when pressed (or hovered)</p>"
+    }
+}

@@ -1,0 +1,42 @@
+{
+    "id": "http://dojotoolkit.org/dijit/MenuItem",
+    "name": "dijit.MenuItem",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/MenuItem",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "label": {
+            "datatype": "string",
+            "title": "Label"
+        },
+        "iconClass": {
+            "datatype": "string",
+            "title": "Icon Class"
+        },
+        "accelKey": {
+            "datatype": "string",
+            "title": "Shortcut Key"
+        },
+        "disabled": {
+            "datatype": "boolean",
+            "title": "Disabled"
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A line item in a Menu Widget</p>"
+    }
+}

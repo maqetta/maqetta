@@ -1,0 +1,65 @@
+{
+    "id": "http://dojotoolkit.org/dijit/Menu",
+    "name": "dijit.Menu",
+    "spec": "1.0",
+    "version": "1.0",
+    "require": [
+        {
+            "type": "javascript-module",
+            "format": "amd",
+            "src": "dijit/Menu",
+            "$library": "dojo"
+        }
+    ],
+    "library": {
+        "dojo": {
+            "src": "../../dojo/dojo.js"
+        }
+    },
+    "property": {
+        "targetNodeIds": {
+            "datatype": "array",
+            "defaultValue": "[]",
+            "title": "Target Node IDs"
+        },
+        "contextMenuForWindow": {
+            "datatype": "boolean",
+            "title": "Context Menu For Window"
+        },
+        "leftClickToOpen": {
+            "datatype": "boolean",
+            "title": "Left Click To Open"
+        },
+        "popupDelay": {
+            "datatype": "number",
+            "defaultValue": 500,
+            "title": "Popup Delay"
+        },
+        "parentMenu": {
+            "datatype": "object",
+            "description": "pointer to menu that displayed me",
+            "hidden": true
+        },
+        "focusedChild": {
+            "datatype": "object",
+            "description": "The currently focused child widget, or null if there isn't one",
+            "hidden": true
+        },
+        "tabIndex": {
+            "datatype": "number",
+            "description": "Tab index of the container; same as HTML tabindex attribute.\nNote then when user tabs into the container, focus is immediately\nmoved to the first item in the container.",
+            "hidden": false
+        },
+        "isContainer": {
+            "datatype": "boolean",
+            "description": "Just a flag indicating that this widget descends from dijit._Container",
+            "defaultValue": true,
+            "hidden": true
+        }
+    },
+    "content": "<span></span>",
+    "title": {
+        "type": "text/html",
+        "value": "<p>A context menu you can assign to multiple elements</p>"
+    }
+}

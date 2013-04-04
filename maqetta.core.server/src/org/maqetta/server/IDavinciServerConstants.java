@@ -108,6 +108,8 @@ public interface IDavinciServerConstants {
     public static final String THEMES_DIRECTORY_NAME = "themes";
 	public static final String DEFAULT_PROJECT = "project1";
 	public static final String INWAR_PROPERTY = "inWar";
+	public static final String USERNAME_TYPEAHEAD_ENABLED = "maqetta.username.typeahead.enabled";
+
 	public static final int SESSION_TIMEOUT = 60 * 60; // time in seconds 
 
 

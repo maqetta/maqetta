@@ -5,7 +5,9 @@ define([
 	"davinci/ve/metadata",
 	"davinci/commands/CompoundCommand",
 	"davinci/ve/commands/ModifyCommand",
-	"./HTMLStringUtil"
+	"./HTMLStringUtil",
+	"dijit/form/DateTextBox",
+	"dijit/form/TimeTextBox",
 ], function(
 	declare,
 	connect,
@@ -13,7 +15,9 @@ define([
 	Metadata,
 	CompoundCommand,
 	ModifyCommand,
-	HTMLStringUtil
+	HTMLStringUtil,
+	DateTextBox,
+	TimeTextBox
 ) {
 
 	return declare("davinci.ve.widgets.WidgetProperties", [ViewLite], {
@@ -219,8 +223,12 @@ define([
 			
 			if (widget) {
 				value = widget.get('value');
-				if (value && value.toISOString) { // Date
-					value = value.toISOString().substring(0, 10);
+				if (value && (value instanceof Date)) { // Date
+					if (widget instanceof DateTextBox ) {
+							value = value.toISOString().substring(0, 10);
+					} else if (widget instanceof TimeTextBox ) {
+							value = "T" + value.toTimeString().substring(0, 8);
+					}
 				}
 			} else {
 				var box = dojo.byId(row.id);
@@ -285,8 +293,15 @@ define([
 				} else {
 					propValue = widget.getPropertyValue(targetProp);
 				}
-				if (propValue && propValue.toISOString) { // Date
-					propValue = propValue.toISOString().substring(0, 10);
+				if (propValue && (propValue.toISOString)) { // Date
+					var format = widget.metadata.property[targetProp].format;
+					if (format) {
+						if (format == "date") {
+							propValue = propValue.toISOString().substring(0, 10);
+						} else if (format == "time" ) {
+							propValue = "T" + propValue.toTimeString().substring(0, 8);
+						}
+					}
 				}
 				if (row.value != propValue) { // keep '!=', we want type coercion from strings
 					row.value = propValue;

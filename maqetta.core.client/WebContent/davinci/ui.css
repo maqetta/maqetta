@@ -722,6 +722,15 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 .mpt_sharingSimple_cell, .mpt_delete_cell {
 	text-align:center;
 }
+.mpt_delete {
+	width:16px;
+	height:16px;
+	background-color:white;
+	background-image:url('img/sprite.png');
+	background-position: 0px -650px;
+	border:none;
+	cursor:pointer;
+}
 .ManageProjectTemplatesDuplicateNames {
 	visibility:hidden;
 	color:red;
@@ -736,11 +745,11 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	color:gray;
 }
 .mpt_highlight {
-	background:#ddffff;
+	background-color:#ddffff;
 }
 .mpt_row.mpt_delete_row,
 .mpt_row.mpt_delete_row .mpt_delete {
-	background:#ffdddd;
+	background-color:#ffdddd;
 	text-decoration:line-through;
 }
 .nhfo_dv {

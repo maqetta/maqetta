@@ -131,7 +131,7 @@ define(["dojo/_base/declare",
 						domConstruct.create("td", {"class":MPT_READONLY_CLASS, innerHTML:dateOrTime(template.creationTimestamp)}, tr);
 						domConstruct.create("td", {"class":MPT_READONLY_CLASS, innerHTML:dateOrTime(template.lastModifyTimestamp)}, tr);
 						td = domConstruct.create("td", {id:MPT_DELETE+CELL+i, "class":MPT_DELETE+CELL}, tr);
-						params = {type:'button', id:MPT_DELETE+i, "class":MPT_DELETE, value:uiNLS.DEL};
+						params = {type:'button', id:MPT_DELETE+i, "class":MPT_DELETE};
 						var button = domConstruct.create("input", params, td);
 						on(button, "click", function(i, e){
 							this._myProjectTemplates[i].deleted = !this._myProjectTemplates[i].deleted;

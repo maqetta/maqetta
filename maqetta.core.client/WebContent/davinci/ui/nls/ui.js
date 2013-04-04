@@ -201,7 +201,6 @@ define({ root:
 		"ManageProjectTemplatesHeaderCreatedOn":"Created on",
 		"ManageProjectTemplatesHeaderLastModified":"Last updated",
 		"ManageProjectTemplatesNoTemplates":"You have no project templates.",
-		"DEL":"DEL",
 		"ManageProjectTemplatesDuplicateNames":"Invalid entries - two project templates have the same name",
 		"ManageProjectTemplateAboutToOccur":"The following actions are about to occur:",
 		"ManageProjectTemplateDeletions":"project template deletions",

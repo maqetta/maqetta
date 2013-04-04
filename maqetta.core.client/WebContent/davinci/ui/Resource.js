@@ -17,9 +17,7 @@ define(['dojo/_base/declare',
        './Dialog',
        'dojo/i18n!./nls/ui',
        'davinci/Theme',
-       'dijit/form/Button',
-       'dojox/form/uploader/plugins/HTML5',      
-       
+       'dijit/form/Button'
 ],function(declare, Resource, Path, Runtime,Workbench, Preferences, RebuildPage, Rename, NewHTMLFileOption, OpenFile, NewFolder, NewFile, AddFiles, AddFilesZip, NewProject, Dialog, uiNLS, Theme){
 
 var createNewDialog = function(fileNameLabel, createLabel, type, dialogSpecificClass, dialogSpecificClassOptions, fileName, existingResource, optionalMessage) {

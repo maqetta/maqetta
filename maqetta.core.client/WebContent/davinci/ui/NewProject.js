@@ -154,15 +154,15 @@ define(["dojo/_base/declare",
 			var newProjectName = this._projectName.get("value");
 			var cloneExistingProject = dojo.attr(this._cloneExistingProject, 'checked');
 			var projectToClone = cloneExistingProject ? Workbench.getProject() : '';
-			var isEclipse = dojo.attr(this._eclipseSupport, 'checked');
+			var isEclipse = this._getEclipseProjectAttr();
 			var useProjectTemplate = dojo.attr(this._useProjectTemplate, 'checked');
 			var projectTemplateName = useProjectTemplate ? this.projectTemplates.get("value") : '';
 
 			Resource.createProject({
-				newProjectName:newProjectName, 
-				projectTemplateName:projectTemplateName,
-				projectToClone:projectToClone,
-				isEclipse:isEclipse
+				newProjectName: newProjectName,
+				projectTemplateName: projectTemplateName,
+				projectToClone: projectToClone,
+				eclipseSupport: isEclipse
 			}).then(function() {
 				if (isEclipse) {
 					Preferences.savePreferences(

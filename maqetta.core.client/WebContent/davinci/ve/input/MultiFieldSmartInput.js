@@ -116,16 +116,7 @@ var MultiFieldSmartInput = declare(SmartInput, {
 		this.property.forEach (function(p) {
 			var prop = p.property || p.child.property;
 			var value = this._getStringValueOfTextBox(prop);
-			//var targetEditBoxDijit = dijit.byId('MultiFieldSmartInput_SmartInput_'+prop);
 			var checkbox = dijit.byId('MultiFieldSmartInput_SmartInput_checkbox_'+prop);
-			/*var value = targetEditBoxDijit.getValue();
-			if (value && (value instanceof Date)) { // Date
-				if (targetEditBoxDijit instanceof DateTextBox ) {
-						value = value.toISOString().substring(0, 10);
-				} else if (targetEditBoxDijit instanceof TimeTextBox ) {
-						value = "T" + value.toTimeString().substring(0, 8);
-				}
-			} else*/ 	
 			if (!p.supportsHTML || !checkbox.checked) { // encode if plan text
 				value = entities.encode(value);
 			}
@@ -340,8 +331,6 @@ var MultiFieldSmartInput = declare(SmartInput, {
 	
 	updateFormats: function(prop) {
 
-/*		var editBox = dijit.byId('MultiFieldSmartInput_SmartInput_'+prop);
-		var value = editBox.getValue();*/
 		var value = this._getStringValueOfTextBox(prop);
 		var disabled = true;
 		
@@ -366,7 +355,6 @@ var MultiFieldSmartInput = declare(SmartInput, {
 	serializeChildren: function(data) {
 		
 		var result = [];
-	//	childData = this._widget.getChildrenData();
 		data.children.forEach(function(child){
 			var text = child.properties.value;
 			text = entities.decode(text);

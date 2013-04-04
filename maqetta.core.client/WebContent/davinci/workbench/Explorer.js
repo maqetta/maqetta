@@ -7,6 +7,7 @@ define([
 	"davinci/Runtime",
 	
 	"dijit/registry",
+	"dijit/form/Button",
 	"dijit/form/DropDownButton",
 	"dijit/DropDownMenu",
 	"dijit/MenuItem",
@@ -29,7 +30,7 @@ define([
 	"dojo/i18n!davinci/ve/nls/common",
     "dojo/i18n!davinci/ui/nls/ui"
 	
-], function(declare, domClass, domConstruct, ViewPart, Workbench, Runtime, registry, DropDownButton, DropDownMenu, MenuItem, MenuSeparator,
+], function(declare, domClass, domConstruct, ViewPart, Workbench, Runtime, registry, Button, DropDownButton, DropDownMenu, MenuItem, MenuSeparator,
 		Tree, mouse, systemResource, DragSource, Resource, TransformTreeMixin, ProjectToolbar, 
 		NewProjectTemplate, ManageProjectTemplates, Rename, Download, DownloadSelected, UserLibraries, commonNls, uiNLS) {
 	
@@ -199,6 +200,18 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 			Workbench.loadProject(this.value);
 		});
 		
+		var button = new Button({
+			"class":"ExplorerNewProjectButton",
+			iconClass:"ExplorerNewProjectIcon",
+			title:uiNLS.createProject,
+		    showLabel: false,
+			onClick: function(){
+				require(['davinci/ui/Resource'], function(r) {
+					r.newProject();
+				});
+		    }.bind(this)
+		});
+		td2.appendChild(button.domNode);
 		var menu = new DropDownMenu({ style: "display: none;"});
 		menu.addChild(new MenuItem({
 			id: 'ExplorerCreateProject',
@@ -249,6 +262,19 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 						ManageProjectTemplatesDialog.onShow.call(ManageProjectTemplatesDialog);
 					}
 				);
+		    }.bind(this)
+		}));
+		menu.addChild(new MenuSeparator());
+		menu.addChild(new MenuItem({
+			id: 'userlibs',
+			label: uiNLS.modifyLibrariesMenuItem,
+			iconClass: "userLibIcon",
+			onClick: function(){
+                require(['davinci/Workbench', 'davinci/ui/UserLibraries'],
+                        function(workbench, UserLibraries) {
+                            workbench.showModal(new UserLibraries(), uiNLS.modifyLibraries, "width: 400px");
+                        }
+                    );
 		    }.bind(this)
 		}));
 		var button = new DropDownButton({

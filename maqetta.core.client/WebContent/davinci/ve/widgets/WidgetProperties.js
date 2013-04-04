@@ -5,8 +5,6 @@ define([
 	"davinci/ve/metadata",
 	"davinci/commands/CompoundCommand",
 	"davinci/ve/commands/ModifyCommand",
-	"dojo/i18n!davinci/ve/nls/ve",
-	"dojo/i18n!dijit/nls/common",
 	"./HTMLStringUtil"
 ], function(
 	declare,
@@ -15,8 +13,6 @@ define([
 	Metadata,
 	CompoundCommand,
 	ModifyCommand,
-	veNLS,
-	commonNLS,
 	HTMLStringUtil
 ) {
 
@@ -110,10 +106,11 @@ define([
 				}
 
 				var prop = {display:(property.title || name),
-									   type: property.datatype,
-									   target:name,
-									   hideCascade:true
-										};
+						type: property.datatype,
+						format: property.format,
+						target:name,
+						hideCascade:true
+				};
 
 				if (property.dropdownQueryValues && property.dropdownQueryAttribute) {
 					var values = [];
@@ -122,7 +119,7 @@ define([
 						var results = dojo.query(query, this.context.rootNode);
 						dojo.forEach(results, function(node) {
 								values.push(node.getAttribute(property.dropdownQueryAttribute));
-						})
+						});
 					}));
 
 					// store the values into the prop
@@ -213,28 +210,29 @@ define([
 		_onChange: function(a) {
 			var index = a.target,
 				row = this._pageLayout[index],
-				box = dojo.byId(row.id),
+				widget = dijit.byId(row.id),
 				value;
 			
 			if (this.context) {
 				this.context.blockChange(false);
 			}
 			
-			if (box) {
+			if (widget) {
+				value = widget.get('value');
+				if (value && value.toISOString) { // Date
+					value = value.toISOString().substring(0, 10);
+				}
+			} else {
+				var box = dojo.byId(row.id);
 				var attr = box.type === 'checkbox' ? 'checked' : 'value';
 				value = dojo.attr(box, attr);
-			} else {
-				box = dijit.byId(row.id);
-				if (box) {
-					value = box.get('value');
-				}
 			}
 	
-			if (row.value != value) { // keep '!=', we want type coersion from strings
+			if (row.value != value) { // keep '!=', we want type coercion from strings
 				row.value = value;
 				var valuesObject = {};
 				valuesObject[row.target] = value;
-				var compoundCommand = new CompoundCommand();;
+				var compoundCommand = new CompoundCommand();
 				var command = new ModifyCommand(this._widget, valuesObject, null);
 				compoundCommand.add(command);
 				var helper = this._widget.getHelper();
@@ -287,7 +285,10 @@ define([
 				} else {
 					propValue = widget.getPropertyValue(targetProp);
 				}
-				if (row.value != propValue) { // keep '!=', we want type coersion from strings
+				if (propValue && propValue.toISOString) { // Date
+					propValue = propValue.toISOString().substring(0, 10);
+				}
+				if (row.value != propValue) { // keep '!=', we want type coercion from strings
 					row.value = propValue;
 					var attr = row.type === 'boolean' ? 'checked' : 'value';
 

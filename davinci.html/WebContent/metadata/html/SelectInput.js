@@ -148,11 +148,12 @@ return declare(SmartInput, {
 	},
 	
 	_createOption: function(value, text, selected) {
+		
 		return {
 			type: "html.option",
 			properties: {
 				value: value,
-				selected: selected
+				selected: selected ? true : null
 			},
 			children: text || value
 		};

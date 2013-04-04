@@ -54,18 +54,6 @@ var Runtime = {
 		return this._initializationInfo[name];
 	},
 
-	/**
-	 * Setter for site-specific data for "name"
-	 * @param name {string}  Site-specific data index (e.g., "defaultThemeSet")
-	 * @param value {any} The new data
-	 * @returns
-	 */
-	setSiteConfigData: function(name, value){
-		if(name){
-			this._initializationInfo[name] = value;
-		}
-	},
-
 	getDefaultThemeSet: function() {
 		return this.getSiteConfigData("defaultThemeSet");
 	},

@@ -7,6 +7,7 @@ define(["dojo/_base/declare",
         "davinci/workbench/Preferences",
         "davinci/Runtime",
         "davinci/Workbench",
+        "davinci/ui/ProjectTemplates",
         "dojo/i18n!davinci/ui/nls/ui",
         "dojo/i18n!dijit/nls/common",
         "dojo/text!./templates/NewProject.html",
@@ -14,7 +15,8 @@ define(["dojo/_base/declare",
         "dijit/form/RadioButton",
         "dijit/form/ValidationTextBox"
         
-],function(declare, on, _Templated, _Widget,  Library, Resource, Preferences,  Runtime, Workbench, uiNLS, commonNLS, templateString){
+],function(declare, on, _Templated, _Widget,  Library, Resource, Preferences,  Runtime, Workbench, 
+		ProjectTemplates, uiNLS, commonNLS, templateString){
 
 	var noProjectTemplate = '_none_';
 
@@ -52,11 +54,29 @@ define(["dojo/_base/declare",
 		postCreate: function(){
 			this.inherited(arguments);
 			dojo.connect(this._projectName, "onKeyUp", this, '_checkValid');
-			var projectTemplates = Runtime.getSiteConfigData("projectTemplates");
 			var opts = [];
-			if(projectTemplates && projectTemplates.templates && projectTemplates.templates.length > 0){
-				for(var i=0; i<projectTemplates.templates.length; i++){
-					var template = projectTemplates.templates[i];
+			this.projectTemplates.addOption(opts);
+			this._useProjectTemplate.disabled = true;
+
+			// The 1000 argument says to pull at most 1000 at once (which happens to be server's limit)
+			ProjectTemplates.getIncremental(1000, function(projectTemplateList, returnData, allDone){
+				this._updateTemplates(projectTemplateList);
+				return false;	// false => continue retrieving data
+			}.bind(this));
+			
+			this.projectTemplates.set('maxHeight', 200);
+			this._projectName.set("regExp", regex);
+			on(this._useProjectTemplate, "change", function(){
+				this.projectTemplates.set("disabled", !this._useProjectTemplate.checked);
+			}.bind(this));
+			this.projectTemplates.set("disabled", !this._useProjectTemplate.checked);
+		},
+
+		_updateTemplates: function(projectTemplateList){
+			var opts = [];
+			if(projectTemplateList.length > 0){
+				for(var i=0; i<projectTemplateList.length; i++){
+					var template = projectTemplateList[i];
 					if(template.folder && template.name){
 						var authorSpan = template.authorEmail ? 
 								'<span class="NewProjectTemplateAuthor">&nbsp;&nbsp;(Author: '+template.authorEmail+')</span>' :
@@ -65,18 +85,14 @@ define(["dojo/_base/declare",
 						opts.push({value:template.folder, label:label});
 					}
 				}
+				this._useProjectTemplate.disabled = false;
 			}else{
 				this._useProjectTemplate.disabled = true;
 			}
 			this.projectTemplates.addOption(opts);
-			this.projectTemplates.set('maxHeight', 200);
-			this._projectName.set("regExp", regex);
-			on(this._useProjectTemplate, "change", function(){
-				this.projectTemplates.set("disabled", !this._useProjectTemplate.checked);
-			}.bind(this));
 			this.projectTemplates.set("disabled", !this._useProjectTemplate.checked);
 		},
-		
+
 		_checkValid: function(){
 			// make sure the project name is OK.
 			if(!this._projects) return false; // project data hasn't loaded

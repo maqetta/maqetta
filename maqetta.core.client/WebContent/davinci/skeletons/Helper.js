@@ -693,7 +693,16 @@ define(function() {
 		 * [tearDown description]
 		 * @param  {davinci/ve/_Widget} widget [description]
 		 */
-		tearDown: function(widget) {}
+		tearDown: function(widget) {},
+		/**
+		 * Some widget may have childern that are gerenated when the widget is constructed,
+		 * in rare cases where what is in the Childern array does not match the source, use this 
+		 * helper method to return the correct child index.
+		 * @param  {davinci/ve/_Widget} widget [description]
+		 * @param  {davinci/ve/_Widget} child find the index of
+		 * @return {int} the index of the child
+		 */
+		indexOf: function(widget, child) {}
 	};
 
 	return Helper;

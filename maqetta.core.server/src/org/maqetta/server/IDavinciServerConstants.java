@@ -41,6 +41,7 @@ public interface IDavinciServerConstants {
 	
 	public static final String PROJECT_TEMPLATES_DIRECTORY_NAME = ".project-templates";
 	public static final String PROJECT_TEMPLATES_INDEX_FILE = "__index.json";
+	public static final int PROJECT_TEMPLATES_MAX = 1000;	// max# of returned project templates from cmd/getProjectTemplates
 
 	// Extension point definitions
 	public static final String EXTENSION_POINT_COMMAND = "command";

@@ -51,8 +51,6 @@ public class GetInitializationInfo extends Command {
 				MaqettaOrionServerConstants.WORKBENCH_PREF, "{}");
 		try {
 			String c = this.getSiteJson();
-			JSONObject projectTemplatesObject = this.getProjectTemplatesObject(user);
-			String projectTemplates = projectTemplatesObject.toString();
 			String temp = "{\n" + "\t\"workbenchState\":"
 					+ workbenchSettings + ",\n" + "\t\"userInfo\":{\"userId\": \""
 					+ user.getUserID() + "\"," + "\t\t\"isLocalInstall\": \""
@@ -60,8 +58,7 @@ public class GetInitializationInfo extends Command {
 					+ "\t\t\"userDisplayName\": \""
 					+ String.valueOf(user.getPerson().getDisplayName()) + "\","
 					+ "\t\t\"email\": \"" + user.getPerson().getEmail() + "\"\n"
-					+ "\t}" + "\t" + c + ",\n"
-					+ "\t\"projectTemplates\":" + projectTemplates + "\n"
+					+ "\t}" + "\t" + c + "\n"
 					+ "}";
 			try{
 				JSONObject responseObject = new JSONObject(temp);

@@ -114,7 +114,7 @@ return {
                    path: "new",
                    id: "davinci.new",
                    separator: [
-                       "newApp", true, "newSketch", true, "newFolder", true, "newTheme", true, "additions", true
+                       "newApp", true, "newSketch", true, "newFolder", true, "newTheme", true, "newProject", true, "additions", true
                    ]
                },
                {
@@ -222,6 +222,17 @@ return {
                    iconClass: "newOpenMenuItem newThemeMenuItem",
                    label: "Theme...",
                    menubarPath: "davinci.new/newTheme"
+               },
+               {
+                   id: "newProject",
+                   run: function() {
+                   	require(['./ui/Resource'], function(r) {
+                   		r.newProject();
+                   	});
+                   },
+                   iconClass: "newOpenMenuItem newProjectMenuItem",
+                   label: "Project...",
+                   menubarPath: "davinci.new/newProject"
                },
                {
                    id: "openFile",
@@ -532,20 +543,6 @@ return {
 	                    },
                         toolbarPath: "download"
 	                },
-                    {
-                        id: "userlibs",
-                        iconClass: 'userLibIcon',
-	                    className: "FilesToolbarModifyLibraries",
-                        run: function() {
-                            require(['./Workbench', './ui/UserLibraries'],
-                                function(workbench, UserLibraries) {
-                                    workbench.showModal(new UserLibraries(), "User Libraries", "width: 400px");
-                                }
-                            );
-                        },
-                        label: "Modify Libraries",
-                        toolbarPath: "download"
-                    },
                     {
                         id: "davinci.ui.addFiles",
                         label: "Upload and Extract ZIP file...",

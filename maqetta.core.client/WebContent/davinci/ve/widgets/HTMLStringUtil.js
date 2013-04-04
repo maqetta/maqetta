@@ -5,6 +5,7 @@ define([
 	"./MultiInputDropDown",
 	"dijit/form/ComboBox",
 	"dijit/form/DateTextBox",
+	"dijit/form/TimeTextBox",
 	"./MetaDataStore",
 	"./ColorPicker",
 	"./Background"
@@ -127,7 +128,9 @@ define([
 				case "string":
 					if (jsonString.format == "date") {
 						return "<div class='propertyPaneEditablevalue' dojoType='dijit.form.DateTextBox' id='"+ id + "'></input>";
-					}
+					} else if (jsonString.format == "time") {
+						return "<div class='propertyPaneEditablevalue' dojoType='dijit.form.TimeTextBox' id='"+ id + "'></input>";
+					} 
 					// else fallthrough...
 				default:
 					var text = "<input type='text' class='propertyPaneEditablevalue' style='display:inline-block; width:100%;' id='"+ id + "'></input>";

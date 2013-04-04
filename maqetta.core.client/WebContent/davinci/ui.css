@@ -709,15 +709,21 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 .ManageProjectTemplatesOuterDiv table {
 	border-spacing:0;
 	border-collapse:collapse;
+	border:1px solid lightgray;
+	font-size:13px;
 }
 .ManageProjectTemplatesOuterDiv table th {
 	white-space:nowrap;
 	padding:3px 5px;
 	text-align:center;
+	vertical-align:middle;
+	height:30px;
+	border-right:1px solid lightgray;
 }
 .ManageProjectTemplatesOuterDiv table td {
-	border:1px solid black;
-	padding:4px;
+	border:none;
+	padding:4px 6px;
+	border-right:1px solid lightgray;
 }
 .mpt_sharingSimple_cell, .mpt_delete_cell {
 	text-align:center;
@@ -745,7 +751,21 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 	color:gray;
 }
 .mpt_highlight {
-	background-color:#ddffff;
+	background-color:#ffffcc;
+}
+.mpt_row_head {
+	background-color:#f3f3f3;
+	background-image:-webkit-linear-gradient(white 40%, #f3f3f3 40%, #f3f3f3 75%, #ededed 75%);
+	background-image:-moz-linear-gradient(white 40%, #f3f3f3 40%, #f3f3f3 75%, #ededed 75%);
+	background-image:-ms-linear-gradient(white 40%, #f3f3f3 40%, #f3f3f3 75%, #ededed 75%);
+	background-image:-o-linear-gradient(white 40%, #f3f3f3 40%, #f3f3f3 75%, #ededed 75%);
+	background-image:linear-gradient(white 40%, #f3f3f3 40%, #f3f3f3 75%, #ededed 75%);
+}
+.mpt_row_even {
+	background-color:white;
+}
+.mpt_row_odd {
+	background-color:#f3f3f3;
 }
 .mpt_row.mpt_delete_row,
 .mpt_row.mpt_delete_row .mpt_delete {

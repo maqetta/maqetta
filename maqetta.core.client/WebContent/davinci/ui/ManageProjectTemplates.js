@@ -38,6 +38,9 @@ define(["dojo/_base/declare",
 	
 	// These string constants have to match same names in CSS files
 	var MPT_ROW = "mpt_row";
+	var MPT_ROW_HEAD = "mpt_row_head";
+	var MPT_ROW_EVEN = "mpt_row_even";
+	var MPT_ROW_ODD = "mpt_row_odd";
 	var MPT_NAME = "mpt_name";
 	var MPT_DELETE = "mpt_delete";
 	var MPT_SHARINGSIMPLE = "mpt_sharingSimple";
@@ -95,7 +98,7 @@ define(["dojo/_base/declare",
 				var table, tr, td, params;
 				if(this._myProjectTemplates.length > 0){
 					table = domConstruct.create("table", {}, contentDiv);
-					tr  = domConstruct.create("tr", {}, table);
+					tr  = domConstruct.create("tr", {"class":MPT_ROW_HEAD}, table);
 					domConstruct.create("th", {innerHTML:uiNLS.ManageProjectTemplatesHeaderName}, tr);
 					domConstruct.create("th", {innerHTML:uiNLS.ManageProjectTemplatesHeaderShared}, tr);
 					domConstruct.create("th", {innerHTML:uiNLS.ManageProjectTemplatesHeaderCreatedBy}, tr);
@@ -103,8 +106,9 @@ define(["dojo/_base/declare",
 					domConstruct.create("th", {innerHTML:uiNLS.ManageProjectTemplatesHeaderLastModified}, tr);
 					domConstruct.create("th", {innerHTML:'&nbsp'}, tr);
 					for(var i=0; i<this._myProjectTemplates.length; i++){
+						var evenOddClassName = (i % 2 == 0) ? MPT_ROW_EVEN : MPT_ROW_ODD;
 						var template = this._myProjectTemplates[i];
-						tr  = domConstruct.create("tr", {id:MPT_ROW+i, "class":MPT_ROW}, table);
+						tr  = domConstruct.create("tr", {id:MPT_ROW+i, "class":MPT_ROW+" "+evenOddClassName}, table);
 						var name = template.name;
 						td = domConstruct.create("td", {id:MPT_NAME+CELL+i, "class":MPT_NAME+CELL}, tr);
 						domConstruct.create("div", {id:MPT_NAME+i, "class":MPT_NAME, innerHTML:name}, td);

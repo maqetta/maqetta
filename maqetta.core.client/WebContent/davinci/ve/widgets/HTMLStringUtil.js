@@ -4,6 +4,7 @@ define([
 	"./FontComboBox",
 	"./MultiInputDropDown",
 	"dijit/form/ComboBox",
+	"dijit/form/DateTextBox",
 	"./MetaDataStore",
 	"./ColorPicker",
 	"./Background"
@@ -124,6 +125,10 @@ define([
 				case "text":
 				case "array":
 				case "string":
+					if (jsonString.format == "date") {
+						return "<div class='propertyPaneEditablevalue' dojoType='dijit.form.DateTextBox' id='"+ id + "'></input>";
+					}
+					// else fallthrough...
 				default:
 					var text = "<input type='text' class='propertyPaneEditablevalue' style='display:inline-block; width:100%;' id='"+ id + "'></input>";
 					return text;

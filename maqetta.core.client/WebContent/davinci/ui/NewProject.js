@@ -81,7 +81,7 @@ define(["dojo/_base/declare",
 						var authorSpan = template.authorEmail ? 
 								'<span class="NewProjectTemplateAuthor">&nbsp;&nbsp;(Author: '+template.authorEmail+')</span>' :
 								'';
-						var label = '<span class="NewProjectTemplateName">'+template.name+'</span>'+authorSpan;
+						var label = authorSpan+'<span class="NewProjectTemplateName">'+template.name+'</span>';
 						opts.push({value:template.folder, label:label});
 					}
 				}

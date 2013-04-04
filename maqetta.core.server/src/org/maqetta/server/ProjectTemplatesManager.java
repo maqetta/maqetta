@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 import org.davinci.server.user.IPerson;
 import org.davinci.server.user.IUser;
+import org.maqetta.server.IDavinciServerConstants;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -23,9 +24,14 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 	private IStorage projectTemplatesIndexIStorage = null;
 	private JSONObject projectTemplatesIndex = null;
 	static final private Logger theLogger = Logger.getLogger(ServerManager.class.getName());
+	private Boolean enableProjectSharingAll = true;
 	
 	// Manage project templates folder here
 	public ProjectTemplatesManager() {
+		String enableProjectSharingAllString = ServerManager.getServerManager().
+				getDavinciProperty(IDavinciServerConstants.PROJECT_TEMPLATES_SHARING_ALL_ENABLED);
+		// if not specified, enableProjectSharingAll default to true 
+		this.enableProjectSharingAll = enableProjectSharingAllString==null || enableProjectSharingAllString.equals("true");
 	}
 	
 	// Local routine that sees if the index file for project templates
@@ -80,7 +86,7 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 				JSONObject template = allTemplates.getJSONObject(i);
 				String authorEmail = template.getString("authorEmail");
 				String sharing = template.getString("sharingSimple");
-				if(userEmail.equals(authorEmail) || sharing.equals("all")){
+				if(userEmail.equals(authorEmail) || (this.enableProjectSharingAll && sharing.equals("all"))){
 					userTemplates.put(template);
 				}
 			}
@@ -106,6 +112,11 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 			throw new Error(desc, e);
 		}
 		return this.projectTemplatesIndexIStorage;
+	}
+
+	// If no user specified, then return the full list of templates
+	public Boolean getEnableProjectSharingAll() {
+		return this.enableProjectSharingAll;
 	}
 	
 	public String addProjectTemplate(IUser user, JSONObject params){

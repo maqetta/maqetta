@@ -38,13 +38,20 @@ define(["dojo/_base/declare",
 	
 	// These string constants have to match same names in CSS files
 	var MPT_ROW = "mpt_row";
-	var MPT_ROW_HEAD = "mpt_row_head";
-	var MPT_ROW_EVEN = "mpt_row_even";
-	var MPT_ROW_ODD = "mpt_row_odd";
 	var MPT_NAME = "mpt_name";
 	var MPT_DELETE = "mpt_delete";
 	var MPT_SHARINGSIMPLE = "mpt_sharingSimple";
 	var CELL = "_cell";
+	var MPT_ROW_CLASS = MPT_ROW;
+	var MPT_ROW_HEAD_CLASS = "mpt_row_head";
+	var MPT_ROW_EVEN_CLASS = "mpt_row_even";
+	var MPT_ROW_ODD_CLASS = "mpt_row_odd";
+	var MPT_COL_SHARING_CLASS = "mpt_col_sharing";
+	var MPT_COL_SHARING_HIDE_CLASS = "mpt_col_sharing_hide";
+	var MPT_NAME_CLASS = MPT_NAME;
+	var MPT_DELETE_CLASS = MPT_DELETE;
+	var MPT_SHARINGSIMPLE_CLASS = MPT_SHARINGSIMPLE;
+	var CELL_CLASS = CELL;
 	var MPT_READONLY_CLASS = "mpt_readonly";
 	var MPT_HIGHLIGHT_CLASS = "mpt_highlight";
 	var MPT_DELETE_ROW_CLASS = "mpt_delete_row";
@@ -76,7 +83,7 @@ define(["dojo/_base/declare",
 			// The 1000 argument says to pull at most 1000 at once (which happens to be server's limit)
 			ProjectTemplates.getIncremental(1000, function(projectTemplateList, returnData, allDone){
 				if(allDone){
-					this._updateTable(projectTemplateList);
+					this._updateTable(projectTemplateList, returnData);
 				}
 				return false;
 			}.bind(this));
@@ -85,7 +92,7 @@ define(["dojo/_base/declare",
 			this._showingDeferred = new Deferred();
 		},
 		
-		_updateTable: function(allProjectTemplates){
+		_updateTable: function(allProjectTemplates, returnData){
 			this._showingDeferred.then(function(allProjectTemplates){
 				var userEmail = Runtime.getUserEmail();
 				var contentDiv = this._templateTableDiv;
@@ -98,22 +105,26 @@ define(["dojo/_base/declare",
 				var table, tr, td, params;
 				if(this._myProjectTemplates.length > 0){
 					table = domConstruct.create("table", {}, contentDiv);
-					tr  = domConstruct.create("tr", {"class":MPT_ROW_HEAD}, table);
+					if(!returnData.enableProjectSharingAll){
+						// Hide sharing row if maqetta.conf says don't all project template sharing
+						domClass.add(table, MPT_COL_SHARING_HIDE_CLASS);
+					}
+					tr  = domConstruct.create("tr", {"class":MPT_ROW_HEAD_CLASS}, table);
 					domConstruct.create("th", {innerHTML:uiNLS.ManageProjectTemplatesHeaderName}, tr);
-					domConstruct.create("th", {innerHTML:uiNLS.ManageProjectTemplatesHeaderShared}, tr);
+					domConstruct.create("th", {innerHTML:uiNLS.ManageProjectTemplatesHeaderShared, "class":MPT_COL_SHARING_CLASS}, tr);
 					domConstruct.create("th", {innerHTML:uiNLS.ManageProjectTemplatesHeaderCreatedBy}, tr);
 					domConstruct.create("th", {innerHTML:uiNLS.ManageProjectTemplatesHeaderCreatedOn}, tr);
 					domConstruct.create("th", {innerHTML:uiNLS.ManageProjectTemplatesHeaderLastModified}, tr);
 					domConstruct.create("th", {innerHTML:'&nbsp'}, tr);
 					for(var i=0; i<this._myProjectTemplates.length; i++){
-						var evenOddClassName = (i % 2 == 0) ? MPT_ROW_EVEN : MPT_ROW_ODD;
+						var evenOddClassName = (i % 2 == 0) ? MPT_ROW_EVEN_CLASS : MPT_ROW_ODD_CLASS;
 						var template = this._myProjectTemplates[i];
-						tr  = domConstruct.create("tr", {id:MPT_ROW+i, "class":MPT_ROW+" "+evenOddClassName}, table);
+						tr  = domConstruct.create("tr", {id:MPT_ROW+i, "class":MPT_ROW_CLASS+" "+evenOddClassName}, table);
 						var name = template.name;
-						td = domConstruct.create("td", {id:MPT_NAME+CELL+i, "class":MPT_NAME+CELL}, tr);
-						domConstruct.create("div", {id:MPT_NAME+i, "class":MPT_NAME, innerHTML:name}, td);
-						td = domConstruct.create("td", {id:MPT_SHARINGSIMPLE+CELL+i, "class":MPT_SHARINGSIMPLE+CELL}, tr);
-						params = {type:'checkbox', id:MPT_SHARINGSIMPLE+i, "class":MPT_SHARINGSIMPLE};
+						td = domConstruct.create("td", {id:MPT_NAME+CELL+i, "class":MPT_NAME_CLASS+CELL_CLASS}, tr);
+						domConstruct.create("div", {id:MPT_NAME+i, "class":MPT_NAME_CLASS, innerHTML:name}, td);
+						td = domConstruct.create("td", {id:MPT_SHARINGSIMPLE+CELL+i, "class":MPT_SHARINGSIMPLE_CLASS+CELL_CLASS+" "+MPT_COL_SHARING_CLASS}, tr);
+						params = {type:'checkbox', id:MPT_SHARINGSIMPLE+i, "class":MPT_SHARINGSIMPLE_CLASS};
 						if(template.sharingSimple=="all"){
 							params.checked = 'checked';
 						}
@@ -134,8 +145,8 @@ define(["dojo/_base/declare",
 						domConstruct.create("td", {"class":MPT_READONLY_CLASS, innerHTML:template.authorEmail}, tr);
 						domConstruct.create("td", {"class":MPT_READONLY_CLASS, innerHTML:dateOrTime(template.creationTimestamp)}, tr);
 						domConstruct.create("td", {"class":MPT_READONLY_CLASS, innerHTML:dateOrTime(template.lastModifyTimestamp)}, tr);
-						td = domConstruct.create("td", {id:MPT_DELETE+CELL+i, "class":MPT_DELETE+CELL}, tr);
-						params = {type:'button', id:MPT_DELETE+i, "class":MPT_DELETE};
+						td = domConstruct.create("td", {id:MPT_DELETE+CELL+i, "class":MPT_DELETE_CLASS+CELL_CLASS}, tr);
+						params = {type:'button', id:MPT_DELETE+i, "class":MPT_DELETE_CLASS};
 						var button = domConstruct.create("input", params, td);
 						on(button, "click", function(i, e){
 							this._myProjectTemplates[i].deleted = !this._myProjectTemplates[i].deleted;

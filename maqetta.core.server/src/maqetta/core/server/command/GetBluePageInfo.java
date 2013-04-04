@@ -9,6 +9,7 @@ import org.davinci.server.user.IUser;
 import org.davinci.server.user.IPerson;
 import org.davinci.server.user.IPersonManager;
 import org.maqetta.server.Command;
+import org.maqetta.server.IDavinciServerConstants;
 import org.maqetta.server.ServerManager;
 
 public class GetBluePageInfo extends Command {
@@ -20,6 +21,10 @@ public class GetBluePageInfo extends Command {
 	public void handleCommand(HttpServletRequest req, HttpServletResponse resp,
 			IUser user) throws IOException {
 		try {
+			String usernameTypeaheadEnabledString = ServerManager.getServerManager().
+					getDavinciProperty(IDavinciServerConstants.USERNAME_TYPEAHEAD_ENABLED);
+			Boolean usernameTypeaheadEnabled = usernameTypeaheadEnabledString==null || usernameTypeaheadEnabledString.equals("true");
+
 			String name = req.getParameter("searchname");
 			String count = req.getParameter("count");
 			String startString = req.getParameter("start");
@@ -32,7 +37,12 @@ public class GetBluePageInfo extends Command {
 			}else{
 				int resultNumber = Integer.parseInt(count);
 				int start = Integer.parseInt(startString);
-				IPerson[] persons = personManager.getPersons(name, resultNumber, start);
+				IPerson[] persons;
+				if(usernameTypeaheadEnabled){
+					persons = personManager.getPersons(name, resultNumber, start);
+				}else{
+					persons = new IPerson[0];
+				}
 				responseString = arrayToJson(persons);
 			}
 		} catch (Exception e) {

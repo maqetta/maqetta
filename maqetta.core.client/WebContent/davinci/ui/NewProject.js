@@ -1,5 +1,7 @@
 define(["dojo/_base/declare",
         "dojo/on",
+        "dojo/aspect",
+        "dojo/Deferred",
         "dijit/_Templated",
         "dijit/_Widget",
         "davinci/library",
@@ -15,14 +17,15 @@ define(["dojo/_base/declare",
         "dijit/form/RadioButton",
         "dijit/form/ValidationTextBox"
         
-],function(declare, on, _Templated, _Widget,  Library, Resource, Preferences,  Runtime, Workbench, 
+],function(declare, on, aspect, Deferred, _Templated, _Widget,  Library, Resource, Preferences,  Runtime, Workbench, 
 		ProjectTemplates, uiNLS, commonNLS, templateString){
 
 	var noProjectTemplate = '_none_';
 
-	// Allow any unicode alpha, dijit, period or hyphen
-	// Better regex would be: "^[\p{L}\d\.\-]+$", but browsers don't support \p
-	var regex = "^[A-Za-z0-9\.\-]+$";
+	// Allow any word char, period or hyphen
+	// Subsequent logic will disallow underscore (which is included in \w)
+	// Better internationalized regex would be: "^[\p{L}\d\.\-]+$", but browsers don't support \p
+	var BASE_REGEX = "^[\\w\\-\\.]+$";
 
 	return dojo.declare("davinci.ui.NewProject",   [_Widget,_Templated], {
 		widgetsInTemplate: true,
@@ -31,6 +34,42 @@ define(["dojo/_base/declare",
 		_projectName: null,
 		_eclipseSupport: null,
 		_projectTemplate: noProjectTemplate,
+		_regex:new RegExp(BASE_REGEX),
+		_postCreateDeferred:null,
+		
+		constructor: function(){
+			this._postCreateDeferred = new Deferred();
+			Resource.listProjects(dojo.hitch(this, function(projects){
+				// Build a really fancy regular expression that prevents
+				// exact match with any existing project names and
+				// disallows the underscore character
+				function to4bitHex(i){
+					var result = "0000";
+					if(i >= 0 && i <= 15){ result = "000" + i.toString(16); }
+					else if (i >= 16 && i <= 255) { result = "00"  + i.toString(16); }
+					else if (i >= 256 && i <= 4095) { result = "0"   + i.toString(16); }
+					else if (i >= 4096 && i <= 65535) { result = i.toString(16); }
+					return result;
+				}
+				this._allCurrentProjectNames = [];
+				var regexString = '(?!^.*_.*$)';	// Don't allow underscore
+				for(var i=0; i<projects.length; i++){
+					var projectName = projects[i].name;
+					regexString += '(?!^';
+					for(var j=0; j<projectName.length; j++){
+						var ch = projectName.charCodeAt(j);
+						regexString += '\\u'+to4bitHex(ch);	// Use 4-bit hex code for each char in project name
+					}
+					regexString += '$)';
+				}
+				regexString += BASE_REGEX;
+				this._regex = new RegExp(regexString);
+				this._postCreateDeferred.then(function(){
+					this._projectName.set("regExp", regexString);
+				}.bind(this));
+			}.bind(this)));
+
+		},
 		
 		postMixInProperties: function() {
 			var langObj = uiNLS;
@@ -65,11 +104,20 @@ define(["dojo/_base/declare",
 			}.bind(this));
 			
 			this.projectTemplates.set('maxHeight', 200);
-			this._projectName.set("regExp", regex);
+			this._projectName.set("regExp", BASE_REGEX);
 			on(this._useProjectTemplate, "change", function(){
 				this.projectTemplates.set("disabled", !this._useProjectTemplate.checked);
 			}.bind(this));
 			this.projectTemplates.set("disabled", !this._useProjectTemplate.checked);
+			aspect.around(this._projectName, "_isValidSubset", function(originalIsValidSubset){
+				// Override the base _isValidSubset() function because base widget logic
+				// allows invalid string at start because user might be only partly done.
+				// We need to override that logic.
+				return function(){
+					return false;
+				};
+			});
+			this._postCreateDeferred.resolve();
 		},
 
 		_updateTemplates: function(projectTemplateList){

@@ -56,6 +56,10 @@
             "datatype": "boolean",
             "hidden": true
         },
+        "placeHolder": {
+            "datatype": "string",
+            "description": "hint text that the widget displays inside the input area of empty form fields, such as 'Select date'. "
+        },
         "propercase": {
             "datatype": "boolean",
             "hidden": true

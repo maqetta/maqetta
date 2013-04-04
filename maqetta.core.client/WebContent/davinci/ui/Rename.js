@@ -12,7 +12,6 @@ define(["dojo/_base/declare",
 		templateString: templateString,
 		_okButton: null,
 		_newName : null,
-		_eclipseSupport: null,
 		
 		postMixInProperties : function() {
 			var langObj = uiNLS;

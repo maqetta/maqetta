@@ -28,7 +28,8 @@
         "value": {
             "datatype": "string",
             "format": "time",
-            "title": "Value"
+            "title": "Value",
+            "description": "Enter time in format THH:MM:SS"
         },
         "tabIndex": {
             "datatype": "string",
@@ -58,6 +59,10 @@
         "lowercase": {
             "datatype": "boolean",
             "hidden": true
+        },
+    	"placeHolder": {
+            "datatype": "string",
+            "description": "hint text that the widget displays inside the input area of empty form fields, such as 'Select time'. "
         },
         "propercase": {
             "datatype": "boolean",

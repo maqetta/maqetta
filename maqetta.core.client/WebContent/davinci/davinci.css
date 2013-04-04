@@ -71,7 +71,8 @@ BODY{
 #davinci_app .dijitSplitterV {
 	width:4px;
 }
-.claro #editors_container {
+.claro #editors_container,
+.claro #editorsStackContainer .dijitStackContainerChildWrapper {
 	z-index:-4;	/* For some reason, need negative z-index when using StackContainer */
 }
 .claro #editors_container .dijitBorderContainer {
@@ -1851,9 +1852,7 @@ background-position: -75px -745px;
 
 .inlineEditHelpOk .dijitButtonNode, .inlineEditHelpCancel .dijitButtonNode{
 	width:40px;
-
 }
-
 
 .davinciIleb {
 	width: 200px; 
@@ -1970,8 +1969,6 @@ background-position: -75px -745px;
 .EditorContainer .dijitBorderContainer {
 	z-index: -3;
 }
-
-
 
 .EditorContainer IFRAME {
 		 border: 0;
@@ -2318,7 +2315,7 @@ td.welcome_section_cell {
 	display: inline-block;
 }
 .ReviewToolBarText {
-	background-color: ##ffffe0;
+	background-color: #ffffe0;
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#f8f8e8), to(#ffffcc)); 
 	background-image: -o-linear-gradient(#f8f8e8, #ffffcc); 
 	background-image: -ms-linear-gradient(#f8f8e8, #ffffcc); 

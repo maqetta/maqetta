@@ -8,6 +8,8 @@ define([
 	"davinci/ve/widget",
 	"davinci/ve/commands/ModifyCommand",
 	"dojox/html/entities",
+	"dijit/form/DateTextBox",
+	"dijit/form/TimeTextBox",
 	"dojo/i18n!dijit/nls/common",
 	//"dojo/i18n!./nls/webContent",
 	"dojo/text!./templates/MultiFieldSmartInput.html",
@@ -25,6 +27,8 @@ define([
 	Widget,
 	ModifyCommand,
 	entities,
+	DateTextBox,
+	TimeTextBox,
 	commonNls,
 //	webContent,
 	mainTemplateString,
@@ -111,9 +115,17 @@ var MultiFieldSmartInput = declare(SmartInput, {
 		var children = null;
 		this.property.forEach (function(p) {
 			var prop = p.property || p.child.property;
-			var targetEditBoxDijit = dijit.byId('MultiFieldSmartInput_SmartInput_'+prop);
+			var value = this._getStringValueOfTextBox(prop);
+			//var targetEditBoxDijit = dijit.byId('MultiFieldSmartInput_SmartInput_'+prop);
 			var checkbox = dijit.byId('MultiFieldSmartInput_SmartInput_checkbox_'+prop);
-			var value = targetEditBoxDijit.getValue();
+			/*var value = targetEditBoxDijit.getValue();
+			if (value && (value instanceof Date)) { // Date
+				if (targetEditBoxDijit instanceof DateTextBox ) {
+						value = value.toISOString().substring(0, 10);
+				} else if (targetEditBoxDijit instanceof TimeTextBox ) {
+						value = "T" + value.toTimeString().substring(0, 8);
+				}
+			} else*/ 	
 			if (!p.supportsHTML || !checkbox.checked) { // encode if plan text
 				value = entities.encode(value);
 			}
@@ -328,8 +340,9 @@ var MultiFieldSmartInput = declare(SmartInput, {
 	
 	updateFormats: function(prop) {
 
-		var editBox = dijit.byId('MultiFieldSmartInput_SmartInput_'+prop);
-		var value = editBox.getValue();
+/*		var editBox = dijit.byId('MultiFieldSmartInput_SmartInput_'+prop);
+		var value = editBox.getValue();*/
+		var value = this._getStringValueOfTextBox(prop);
 		var disabled = true;
 		
 		if (this.getPropertyObject(prop).supportsHTML && this.containsHtmlMarkUp(value)) {
@@ -472,9 +485,19 @@ var MultiFieldSmartInput = declare(SmartInput, {
 							checked: checked
 					});
 			} else {
+				var format = this._widget.metadata.property[p.property].format;
+				var textboxType = "dijit/form/TextBox";
+				if (format) {
+					if (format == 'date'){
+						textboxType = "dijit/form/DateTextBox";
+					} else if (format == 'time'){
+						textboxType = "dijit/form/TimeTextBox";
+					}
+				}
 				tableContent +=
 				dojo.replace(trTemplateString, {
 						label: this.getTitle(p.property),
+						textboxType: textboxType,
 						textboxId: 'MultiFieldSmartInput_SmartInput_'+p.property,
 						textboxValue: value,
 						checkboxDivId: 'MultiFieldSmartInput_SmartInput_checkbox_div_'+p.property,
@@ -498,6 +521,19 @@ var MultiFieldSmartInput = declare(SmartInput, {
 				break;
 			} 
 		}
+		return value;
+	},
+	
+	_getStringValueOfTextBox: function(prop) {
+		var targetEditBoxDijit = dijit.byId('MultiFieldSmartInput_SmartInput_'+prop);
+		var value = targetEditBoxDijit.getValue();
+		if (value && (value instanceof Date)) { // Date
+			if (targetEditBoxDijit instanceof DateTextBox ) {
+					value = value.toISOString().substring(0, 10);
+			} else if (targetEditBoxDijit instanceof TimeTextBox ) {
+					value = "T" + value.toTimeString().substring(0, 8);
+			}
+		} 
 		return value;
 	},
 	

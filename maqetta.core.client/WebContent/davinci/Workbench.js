@@ -745,10 +745,8 @@ var Workbench = {
 			var shadowTabMenu = dijit.byId('davinci_file_tabs_tablist_Menu');
 			if(shadowTabMenu){
 				shadowTabMenu.addChild(new dijit.MenuItem({
-					label:veNLS.closeAllEditors,
-					onClick:function(a, b, c){
-						this.closeAllEditors();
-					}.bind(this)
+					label: veNLS.closeAllEditors,
+					onClick: this.closeAllEditors
 				}));
 			}
 		}

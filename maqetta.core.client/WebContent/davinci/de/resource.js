@@ -7,13 +7,10 @@ define(["davinci/de/widgets/NewDijit",
         "davinci/library",
         "davinci/ui/Dialog",
         "davinci/ve/actions/ReplaceAction",
-        "dojo/json",
-        "dojo/Deferred",
-        "dojo/DeferredList"
+        "dojo/json"
         
        
-],function(NewDijit, Workbench, Preferences, Resource, Runtime, DijitTemplatedGenerator, 
-		dLibrary, Dialog, ReplaceAction, json, Deferred, DeferredList){
+],function(NewDijit, Workbench, Preferences, Resource, Runtime, DijitTemplatedGenerator, dLibrary, Dialog, ReplaceAction, json){
 
 	// For developer notes on how custom widgets work in Maqetta, see:
 	// https://github.com/maqetta/maqetta/wiki/Custom-widgets	
@@ -42,22 +39,19 @@ define(["davinci/de/widgets/NewDijit",
 			Workbench.showModal(projectDialog, "Dijit Widget...", {height:60, width: 250}, function(){
 		    	if (!projectDialog.cancel) {
 		    		var widgetData = projectDialog.attr('value');
-		    		var deferredList =
-		    			dt.createDijit(widgetData, model, oldResource, context, selection);
-		    		deferredList.then(function(){
-			    		if(widgetData.replaceSelection){
-			    			var ra = new ReplaceAction();
-			    			ra.run(context, widgetData.group + "." + widgetData.name);
-			    		}
-				    	//FIXME: Force a browser refresh. This is the atom bomb approach.
-				    	//Reason for doing this is that the custom palette list in widget palette
-				    	//and all of the require/packages logic happens during application initialization.
-				    	//It might be possible to prevent the reload without too much work, but for now we
-				    	//do a browser refresh.
-				    	window.location.reload(false);
-		    		});
-					return true;
+		    		dt.createDijit(widgetData, model, oldResource, context, selection);
+		    		if(widgetData.replaceSelection){
+		    			var ra = new ReplaceAction();
+		    			ra.run(context, widgetData.group + "." + widgetData.name);
+		    		}
 		    	}
+		    	//FIXME: Force a browser refresh. This is the atom bomb approach.
+		    	//Reason for doing this is that the custom palette list in widget palette
+		    	//and all of the require/packages logic happens during application initialization.
+		    	//It might be possible to prevent the reload without too much work, but for now we
+		    	//do a browser refresh.
+		    	window.location.reload(false);
+				return true;
 			});
 			
 		},
@@ -167,13 +161,8 @@ define(["davinci/de/widgets/NewDijit",
 					widgetsObj.properties[att.name] = att.value;
 				}
 			}
-			var deferredWidgetsJson = new Deferred();
-			var deferredHtml = new Deferred();
-			var deferredJs = new Deferred();
-			var deferredOam = new Deferred();
-			var deferredList = new DeferredList([deferredWidgetsJson, deferredHtml, deferredJs, deferredOam]);
-			customWidgetsJson.widgets.push(widgetsObj);
-			customWidgets.setContents(json.stringify(customWidgetsJson, undefined, '\t'), undefined, deferredWidgetsJson);
+			customWidgetsJson.widgets.push(widgetsObj)
+			customWidgets.setContents(json.stringify(customWidgetsJson, undefined, '\t'));
 	
 			
 			var widgetFolder = parent;
@@ -188,21 +177,21 @@ define(["davinci/de/widgets/NewDijit",
 						break;
 					case 'html':
 						var html = widgetNamespace.createResource(widgetData.name + ".html");
-						html.setContents(content.html, undefined, deferredHtml);
+						html.setContents(content.html);
 						break;
 					case 'js':
 						var widgetResource = widgetNamespace.createResource(widgetData.name + ".js");
-						widgetResource.setContents(content.js, undefined, deferredJs);
+						widgetResource.setContents(content.js);
 						break;
 					case 'metadata':
 						var metaResource = widgetNamespace.createResource(widgetData.name + "_oam.json");
-						metaResource.setContents(content.metadata, undefined, deferredOam);
+						metaResource.setContents(content.metadata);
 						dLibrary.addCustomWidgets(base, customWidgets, widgetNamespace.getPath(), customWidgetsJson);
 						break;
 				}
 			
 			}
-			return deferredList;
+			
 			
 		}
 	

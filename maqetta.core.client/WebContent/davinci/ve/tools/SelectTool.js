@@ -153,95 +153,89 @@ return declare("davinci.ve.tools.SelectTool", tool, {
 			}
 		}
 		if(moverWidget){
-			var position_prop;
-			var userdoc = context.getDocument();	// inner document = user's document
-			var userDojo = userdoc.defaultView && userdoc.defaultView.dojo;
-			if(userDojo){
-				position_prop = userDojo.style(moverWidget.domNode, 'position');
-				this._moverAbsolute = (position_prop == 'absolute');
-				var parent = moverWidget.getParent();
-				var helper = moverWidget.getHelper();
-				if(!(helper && helper.disableDragging && helper.disableDragging(moverWidget)) &&
-						(!parent || !parent.isLayout || !parent.isLayout())){
-					this._moverWidget = moverWidget;
-					this._moverWidgets = [moverWidget];
-					this._moverLastEventTarget = null;
-					var cp = context._chooseParent;
-					cp.setProposedParentWidget(null);
-					selection = context.getSelection();	// selection might have changed since start of this function
-					this._moverStartLocations = [];
-					this._moverStartLocationsRel = [];
-					for(var i=0; i<selection.length; i++){
-						if(selection[i] != moverWidget){
-							this._moverWidgets.push(selection[i]);
-						}
-						var marginBoxPageCoords = null;
-						var selectionHelper = selection[i].getHelper();
-						if(selectionHelper && selectionHelper.getMarginBoxPageCoords){
-							marginBoxPageCoords = selectionHelper.getMarginBoxPageCoords(selection[i]);
-						} else {
-							marginBoxPageCoords = GeomUtils.getMarginBoxPageCoordsCached(selection[i].domNode);
-						}
-						this._moverStartLocations.push(marginBoxPageCoords);
-						var relativeLeft, relativeTop;
-						var offsetParent = selection[i].domNode.offsetParent;
-						if(offsetParent && offsetParent.tagName != 'BODY'){
-							var parentBorderBoxPageCoordinates = GeomUtils.getBorderBoxPageCoordsCached(offsetParent);
-							var parentBorderExtents = domGeom.getBorderExtents(offsetParent);
-							relativeLeft = marginBoxPageCoords.l - (parentBorderBoxPageCoordinates.l + parentBorderExtents.l);
-							relativeTop = marginBoxPageCoords.t - (parentBorderBoxPageCoordinates.t + parentBorderExtents.t);
-						}else{
-							relativeLeft = marginBoxPageCoords.l;
-							relativeTop = marginBoxPageCoords.t;
-						}
-						this._moverStartLocationsRel.push({l:relativeLeft, t:relativeTop});
+			var position_prop = moverWidget.domNode.style.position;
+			this._moverAbsolute = (position_prop == 'absolute');
+			var parent = moverWidget.getParent();
+			var helper = moverWidget.getHelper();
+			if(!(helper && helper.disableDragging && helper.disableDragging(moverWidget)) &&
+					(!parent || !parent.isLayout || !parent.isLayout())){
+				this._moverWidget = moverWidget;
+				this._moverWidgets = [moverWidget];
+				this._moverLastEventTarget = null;
+				context._chooseParent.setProposedParentWidget(null);
+				selection = context.getSelection();	// selection might have changed since start of this function
+				this._moverStartLocations = [];
+				this._moverStartLocationsRel = [];
+				for(var i=0; i<selection.length; i++){
+					if(selection[i] != moverWidget){
+						this._moverWidgets.push(selection[i]);
 					}
-					var n = moverWidget.domNode;
-					var offsetWidth = n.offsetWidth;
-					var offsetHeight = n.offsetHeight;
-					var moverWidgetMarginBoxPageCoords = null;
-					if(helper && helper.getMarginBoxPageCoords){
-						moverWidgetMarginBoxPageCoords = helper.getMarginBoxPageCoords(moverWidget);
-						offsetWidth = moverWidgetMarginBoxPageCoords.w;
-						offsetHeight = moverWidgetMarginBoxPageCoords.h;
+					var marginBoxPageCoords = null;
+					var selectionHelper = selection[i].getHelper();
+					if(selectionHelper && selectionHelper.getMarginBoxPageCoords){
+						marginBoxPageCoords = selectionHelper.getMarginBoxPageCoords(selection[i]);
 					} else {
-						moverWidgetMarginBoxPageCoords = GeomUtils.getMarginBoxPageCoordsCached(n);
+						marginBoxPageCoords = GeomUtils.getMarginBoxPageCoordsCached(selection[i].domNode);
 					}
-					var l = moverWidgetMarginBoxPageCoords.l;
-					var t = moverWidgetMarginBoxPageCoords.t;
-					var w = moverWidgetMarginBoxPageCoords.w;
-					var h = moverWidgetMarginBoxPageCoords.h;
-					if(this._moverAbsolute){
-						this._moverDragDiv = dojo.create('div', 
-								{className:'selectToolDragDiv',
-								style:'left:'+l+'px;top:'+t+'px;width:'+w+'px;height:'+h+'px'},
-								context.rootNode);
-						this._mover = new Mover(this._moverDragDiv, event, this);
+					this._moverStartLocations.push(marginBoxPageCoords);
+					var relativeLeft, relativeTop;
+					var offsetParent = selection[i].domNode.offsetParent;
+					if(offsetParent && offsetParent.tagName != 'BODY'){
+						var parentBorderBoxPageCoordinates = GeomUtils.getBorderBoxPageCoordsCached(offsetParent);
+						var parentBorderExtents = domGeom.getBorderExtents(offsetParent);
+						relativeLeft = marginBoxPageCoords.l - (parentBorderBoxPageCoordinates.l + parentBorderExtents.l);
+						relativeTop = marginBoxPageCoords.t - (parentBorderBoxPageCoordinates.t + parentBorderExtents.t);
 					}else{
-						// width/height adjustment factors, using inside knowledge of CSS classes
-						var adjust1 = 10;
-						var adjust2 = 8;
-						l -= adjust1/2;
-						t -= adjust1/2;
-						var w1 = offsetWidth + adjust1;
-						var h1 = offsetHeight + adjust1;
-						var w2 = w1 - adjust2;
-						var h2 = h1 - adjust2;
-						this._moverDragDiv = dojo.create('div', {className:'flowDragOuter', 
-								style:'left:'+l+'px;top:'+t+'px;width:'+w1+'px;height:'+h1+'px'},
-								context.rootNode);
-						dojo.create('div', {className:'flowDragInner', 
-								'style':'width:'+w2+'px;height:'+h2+'px'},
-								this._moverDragDiv);
-						this._mover = new Mover(this._moverDragDiv, event, this);
+						relativeLeft = marginBoxPageCoords.l;
+						relativeTop = marginBoxPageCoords.t;
 					}
-					this._altKey = event.altKey;
-					this._updateMoveCursor();
-
-					// Chrome doesn't blur active focus node when switching frames, so focus on something else focusable first to cause the blur
-					document.getElementById("maqetta_project_select").focus();
-					userdoc.defaultView.focus();	// Make sure the userdoc is the focus object for keyboard events
+					this._moverStartLocationsRel.push({l:relativeLeft, t:relativeTop});
 				}
+				var n = moverWidget.domNode;
+				var offsetWidth = n.offsetWidth;
+				var offsetHeight = n.offsetHeight;
+				var moverWidgetMarginBoxPageCoords = null;
+				if(helper && helper.getMarginBoxPageCoords){
+					moverWidgetMarginBoxPageCoords = helper.getMarginBoxPageCoords(moverWidget);
+					offsetWidth = moverWidgetMarginBoxPageCoords.w;
+					offsetHeight = moverWidgetMarginBoxPageCoords.h;
+				} else {
+					moverWidgetMarginBoxPageCoords = GeomUtils.getMarginBoxPageCoordsCached(n);
+				}
+				var l = moverWidgetMarginBoxPageCoords.l;
+				var t = moverWidgetMarginBoxPageCoords.t;
+				var w = moverWidgetMarginBoxPageCoords.w;
+				var h = moverWidgetMarginBoxPageCoords.h;
+				if(this._moverAbsolute){
+					this._moverDragDiv = dojo.create('div', 
+							{className:'selectToolDragDiv',
+							style:'left:'+l+'px;top:'+t+'px;width:'+w+'px;height:'+h+'px'},
+							context.rootNode);
+					this._mover = new Mover(this._moverDragDiv, event, this);
+				}else{
+					// width/height adjustment factors, using inside knowledge of CSS classes
+					var adjust1 = 10;
+					var adjust2 = 8;
+					l -= adjust1/2;
+					t -= adjust1/2;
+					var w1 = offsetWidth + adjust1;
+					var h1 = offsetHeight + adjust1;
+					var w2 = w1 - adjust2;
+					var h2 = h1 - adjust2;
+					this._moverDragDiv = dojo.create('div', {className:'flowDragOuter', 
+							style:'left:'+l+'px;top:'+t+'px;width:'+w1+'px;height:'+h1+'px'},
+							context.rootNode);
+					dojo.create('div', {className:'flowDragInner', 
+							'style':'width:'+w2+'px;height:'+h2+'px'},
+							this._moverDragDiv);
+					this._mover = new Mover(this._moverDragDiv, event, this);
+				}
+				this._altKey = event.altKey;
+				this._updateMoveCursor();
+
+				// Chrome doesn't blur active focus node when switching frames, so focus on something else focusable first to cause the blur
+				document.getElementById("maqetta_project_select").focus();
+				context.getDocument().defaultView.focus();	// Make sure the user's document is the focus object for keyboard events
 			}
 		}
 	},

@@ -542,14 +542,16 @@ createWidget: function(widgetData) {
         data =  helper.preProcessData(data);
 	}
 
-	// Strip out event attributes. We want them in the model
+	// Strip out event attributes and a[href] attributes. We want them in the model
 	// but not in the DOM within page canvas.
+	// FIXME: should make the check for a[href] into a helper so other
+	// widgets can register similar attributes
 	var canvasAndModelProps = {};
 	var modelOnlyProps = {};
 	for (var p in data.properties) {
 		var propval = data.properties[p];
 		if (propval != null){ /*"!=" checks for null/undefined some properties may be false like Tree showRoot */  
-			if(p.substr(0,2).toLowerCase()!="on") { 
+			if(p.substr(0,2).toLowerCase()!="on" && !(srcElement.tag.toLowerCase()=='a' && p.toLowerCase()=='href')) { 
 				canvasAndModelProps[p] = propval;
 			}else{
 				modelOnlyProps[p] = propval;

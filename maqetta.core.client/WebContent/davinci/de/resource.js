@@ -2,20 +2,16 @@ define(["davinci/de/widgets/NewDijit",
         "davinci/Workbench",
         "davinci/workbench/Preferences",
         "system/resource",
-        "davinci/Runtime",
         "davinci/de/DijitTemplatedGenerator",
         "davinci/library",
         "davinci/ui/Dialog",
-        "davinci/ve/actions/ReplaceAction",
-        "dojo/json"
-        
-       
-],function(NewDijit, Workbench, Preferences, Resource, Runtime, DijitTemplatedGenerator, dLibrary, Dialog, ReplaceAction, json){
+        "davinci/ve/actions/ReplaceAction"
+],function(NewDijit, Workbench, Preferences, Resource, DijitTemplatedGenerator, dLibrary, Dialog, ReplaceAction){
 
 	// For developer notes on how custom widgets work in Maqetta, see:
 	// https://github.com/maqetta/maqetta/wiki/Custom-widgets	
 	
-	var dt= {
+	return {
 		/* base packages.json metadata */
 		WIDGETS_JSON : {version:"1.0", localPath:true, customWidgetSpec:1,
 						"categories":{"custom":{name:"Custom widget", description:"Custom widget", widgetClass:"dijit"}}, widgets:[]},
@@ -32,7 +28,7 @@ define(["davinci/de/widgets/NewDijit",
     		var context = openEditor.getContext();
     		var selection = context.getSelection();
     		if(!dt.validWidget(selection)){
-    			Dialog.showModal("Invalid Selection.  Please select a single container widget to create a new Widget", "Error creating Widget...")
+    			Dialog.showModal("Invalid Selection.  Please select a single container widget to create a new Widget", "Error creating Widget...");
     			return;
     		}
     		
@@ -119,13 +115,13 @@ define(["davinci/de/widgets/NewDijit",
 			
 			var base = Workbench.getProject();
 			var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
-			if(!prefs['widgetFolder']){
-				prefs.widgetFolder = "./WebContent/custom";
+			if(!prefs.widgetFolder){
+				prefs.widgetFolder = "WebContent/custom";
 				Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
 			}
 			
 			
-			var parent = dt._createFolder(prefs['widgetFolder']);
+			var parent = dt._createFolder(prefs.widgetFolder);
 			
 			var widgetNamespace = dt._createNameSpace(qualifiedWidgetDot, parent);
 			/*
@@ -136,7 +132,6 @@ define(["davinci/de/widgets/NewDijit",
 			var customWidgets = widgetNamespace.getChildSync(widgetData.name + "_widgets.json");
 			if(customWidgets==null){
 				customWidgets = widgetNamespace.createResource(widgetData.name +"_widgets.json");
-				
 			}
 			
 			/* packages.json metadata */
@@ -144,7 +139,8 @@ define(["davinci/de/widgets/NewDijit",
 			customWidgetsJson.name = widgetData.name;
 			customWidgetsJson.longName = widgetData.name;
 			
-			var widgetsObj = {name:widgetData.name, 
+			var widgetsObj = {
+				name:widgetData.name, 
 				description: widgetData.name, 
 				type:qualifiedWidgetSlash, 
 				category:"custom", 
@@ -161,8 +157,8 @@ define(["davinci/de/widgets/NewDijit",
 					widgetsObj.properties[att.name] = att.value;
 				}
 			}
-			customWidgetsJson.widgets.push(widgetsObj)
-			customWidgets.setContents(json.stringify(customWidgetsJson, undefined, '\t'));
+			customWidgetsJson.widgets.push(widgetsObj);
+			customWidgets.setContents(JSON.stringify(customWidgetsJson, undefined, '\t'));
 	
 			
 			var widgetFolder = parent;
@@ -171,7 +167,6 @@ define(["davinci/de/widgets/NewDijit",
 			var content = generator.buildSource(model,qualifiedWidgetSlash,widgetData.name, false, context, selection);
 			
 			for(var type in content){
-				
 				switch(type){
 					case 'amd':
 						break;
@@ -189,12 +184,7 @@ define(["davinci/de/widgets/NewDijit",
 						dLibrary.addCustomWidgets(base, customWidgets, widgetNamespace.getPath(), customWidgetsJson);
 						break;
 				}
-			
 			}
-			
-			
 		}
-	
-	}
-	return dt;
+	};
 });

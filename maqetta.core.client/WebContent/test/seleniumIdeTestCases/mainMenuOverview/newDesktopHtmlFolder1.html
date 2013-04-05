@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8081/" />
+<title>New Test</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">New Test</td></tr>
+</thead><tbody>
+<!--Create desktop html claro theme in folder1-->
+<!--Verify each change in preview and designer-->
+<!--Add Dojo button plain text and then HTML using smart input-->
+<!--Add Dojo Calander-->
+<!--Add Dojo TextBox-->
+<tr>
+	<td>setSpeed</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>xpath=(//input[@value=''])[4]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>xpath=(//input[@value=''])[4]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=newHTMLDesktop_text</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//span[@dojoattachpoint=&quot;fileDialogDetailsArrow&quot;]/span</td>
+	<td></td>
+</tr>
+<!--For Tree you need a mouseOver before the clickAt-->
+<tr>
+	<td>mouseOver</td>
+	<td>//div[@class=&quot;folderContainer&quot;]/div/div/div/div/div/div/span/span[@role=&quot;treeitem&quot; and .=&quot;folder1&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//div[@class=&quot;folderContainer&quot;]/div/div/div/div/div/div/span/span[@role=&quot;treeitem&quot; and .=&quot;folder1&quot;]/../../..</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//tr[@class='fileNameRow']/td[2]/div/div/input</td>
+	<td>desktopFolder1TestCase.html</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//span[@class='fileDialogStdButtons']/span/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementNotPresent</td>
+	<td>//div[@class='loading']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_folder1_desktopFolder1TestCase.html']/span[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@selType='PaletteFolder__desktop__Controls']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@selType='PaletteFolder__desktop__Controls__Buttons']</td>
+	<td></td>
+</tr>
+<!--Drag and Drop button Start-->
+<tr>
+	<td>mouseDownAt</td>
+	<td>//div[@selType=&quot;dijit/form/Button__desktop__Controls__Buttons&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//body[@id='myapp']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseMoveAt</td>
+	<td>//body[@id='myapp']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseUpAt</td>
+	<td>//body[@id='myapp']</td>
+	<td></td>
+</tr>
+<!--Drag and Drop Stop-->
+<tr>
+	<td>waitForElementPresent</td>
+	<td>id=davinciIleb</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=davinciIleb</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyNotVisible</td>
+	<td>id=davinci.ve.input.SmartInput_table</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>id=davinciIleb</td>
+	<td>label&lt;b&gt;bold&lt;/b&gt;test</td>
+</tr>
+<!--Make the HTML table show by keyDown then keyUp-->
+<tr>
+	<td>keyDown</td>
+	<td>id=davinciIleb</td>
+	<td>w</td>
+</tr>
+<tr>
+	<td>keyUp</td>
+	<td>id=davinciIleb</td>
+	<td>w</td>
+</tr>
+<tr>
+	<td>verifyVisible</td>
+	<td>id=davinci.ve.input.SmartInput_table</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=davinci.ve.input.SmartInput_ok_label</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=palette-tabcontainer-right-top_tablist_davinci.ve.style</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForText</td>
+	<td>//div[@class='propertiesWidgetDescription']/span/span[@class=&quot;propertiesTitleWidgetName&quot;]</td>
+	<td>dijit/form/Button</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//div[@class='propertiesTitleBarPropertiesContainer']/table/tbody/tr[2]/td[@class='propertyInputField']/div/div[2]/input</td>
+	<td>label_testcase1</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@class='propertiesTitleBarPropertiesContainer']/table/tbody/tr[2]/td[1]</td>
+	<td>label_testcase1</td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//span[@id='label_testcase1']/span[3]</td>
+	<td>label&lt;b&gt;bold&lt;/b&gt;test</td>
+</tr>
+<!--Drag and Drop calendar Start-->
+<tr>
+	<td>click</td>
+	<td>//div[@selType=&quot;PaletteFolder__desktop__Other&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDownAt</td>
+	<td>//div[@selType=&quot;dijit/Calendar__desktop__Other&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//body[@id='myapp']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseMoveAt</td>
+	<td>//body[@id='myapp']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseUpAt</td>
+	<td>//body[@id='myapp']</td>
+	<td></td>
+</tr>
+<!--Drag and Drop Stop-->
+<tr>
+	<td>waitForText</td>
+	<td>//div[@class='propertiesWidgetDescription']/span/span[@class=&quot;propertiesTitleWidgetName&quot;]</td>
+	<td>dijit/Calendar</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//div[@class='propertiesTitleBarPropertiesContainer']/table/tbody/tr[2]/td[@class='propertyInputField']/div/div[2]/input</td>
+	<td>calendar_testcase1</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@class='propertiesTitleBarPropertiesContainer']/table/tbody/tr[2]/td[1]</td>
+	<td>calendar_testcase1</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//table[@id='calendar_testcase1']</td>
+	<td></td>
+</tr>
+<!--Drag and Drop textBox Start-->
+<tr>
+	<td>click</td>
+	<td>//div[@selType='PaletteFolder__desktop__Controls']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@selType='PaletteFolder__desktop__Controls__TextBox']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseDownAt</td>
+	<td>//div[@selType='dijit/form/TextBox__desktop__Controls__TextBox']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//body[@id='myapp']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseMoveAt</td>
+	<td>//body[@id='myapp']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseUpAt</td>
+	<td>//body[@id='myapp']</td>
+	<td></td>
+</tr>
+<!--Drag and Drop Stop-->
+<tr>
+	<td>waitForText</td>
+	<td>//div[@class='propertiesWidgetDescription']/span/span[@class=&quot;propertiesTitleWidgetName&quot;]</td>
+	<td>dijit/form/TextBox</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>//div[@class='propertiesTitleBarPropertiesContainer']/table/tbody/tr[2]/td[@class='propertyInputField']/div/div[2]/input</td>
+	<td>textbox_testcase1</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@class='propertiesTitleBarPropertiesContainer']/table/tbody/tr[2]/td[1]</td>
+	<td>textbox_testcase1</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//input[@id='textbox_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//input[@id='textbox_testcase1']</td>
+	<td></td>
+</tr>
+<!-- Save file and reopen -->
+<tr>
+	<td>clickAt</td>
+	<td>//div[@id=&quot;davinci_toolbar_container&quot;]/div/table/tbody/tr/td</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_folder1_desktopFolder1TestCase.html']/span[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='palette-tabcontainer-left-bottom_tablist']/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>doubleClick</td>
+	<td>//span[@class='dijitTreeContent']/span[. ='desktopFolder1TestCase.html']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_folder1_desktopFolder1TestCase.html']/span[2]</td>
+	<td></td>
+</tr>
+<!-- Save file and reopen -->
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//span[@id='label_testcase1']/span[3]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//span[@id='label_testcase1']/span[3]</td>
+	<td>label&lt;b&gt;bold&lt;/b&gt;test</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//table[@id='calendar_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//input[@id='textbox_testcase1']</td>
+	<td></td>
+</tr>
+<!--Open Preview-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitReset dijitInline dijitIcon openBrowserIcon']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectPopUp</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//span[@id='label_testcase1']/span[3]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//span[@id='label_testcase1']/span[3]</td>
+	<td>label&lt;b&gt;bold&lt;/b&gt;test</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//table[@id='calendar_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//input[@id='textbox_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>close</td>
+	<td></td>
+	<td></td>
+</tr>
+<!-- now make HTML-->
+<tr>
+	<td>selectWindow</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_folder1_desktopFolder1TestCase.html']/span[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//span[@id='label_testcase1']</td>
+	<td></td>
+</tr>
+<!--doubleClick does not work with smartInput-->
+<!--So speedup and click twice-->
+<tr>
+	<td>setSpeed</td>
+	<td>1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//span[@id='label_testcase1']/span[3]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//span[@id='label_testcase1']/span[3]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>setSpeed</td>
+	<td>1000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=davinciIleb</td>
+	<td></td>
+</tr>
+<!--Make the HTML table show by keyDown then keyUp-->
+<tr>
+	<td>verifyVisible</td>
+	<td>id=davinci.ve.input.SmartInput_table</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=davinci.ve.input.SmartInput_radio_html</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>id=davinci.ve.input.SmartInput_ok_label</td>
+	<td></td>
+</tr>
+<!--verify the html bold is correct-->
+<tr>
+	<td>verifyText</td>
+	<td>//span[@id='label_testcase1']/span[3]/b</td>
+	<td>bold</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//table[@id='calendar_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//input[@id='textbox_testcase1']</td>
+	<td></td>
+</tr>
+<!-- Save file and reopen -->
+<tr>
+	<td>clickAt</td>
+	<td>//div[@id=&quot;davinci_toolbar_container&quot;]/div/table/tbody/tr/td</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_folder1_desktopFolder1TestCase.html']/span[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='palette-tabcontainer-left-bottom_tablist']/div</td>
+	<td></td>
+</tr>
+<tr>
+	<td>doubleClick</td>
+	<td>//span[@class='dijitTreeContent']/span[. ='desktopFolder1TestCase.html']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_folder1_desktopFolder1TestCase.html']/span[2]</td>
+	<td></td>
+</tr>
+<!-- Save file and reopen -->
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//span[@id='label_testcase1']/span[3]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//span[@id='label_testcase1']/span[3]/b</td>
+	<td>bold</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//table[@id='calendar_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//input[@id='textbox_testcase1']</td>
+	<td></td>
+</tr>
+<!--Open Preview-->
+<tr>
+	<td>clickAt</td>
+	<td>//span[@class='dijitReset dijitInline dijitIcon openBrowserIcon']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectPopUp</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//span[@id='label_testcase1']/span[3]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyText</td>
+	<td>//span[@id='label_testcase1']/span[3]/b</td>
+	<td>bold</td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//table[@id='calendar_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyElementPresent</td>
+	<td>//input[@id='textbox_testcase1']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>close</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>selectWindow</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_folder1_desktopFolder1TestCase.html']/span[2]</td>
+	<td></td>
+</tr>
+</tbody></table>
+</body>
+</html>

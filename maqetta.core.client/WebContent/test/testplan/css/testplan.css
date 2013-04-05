@@ -51,3 +51,9 @@ pre {
 .toc a {
 	text-decoration: none;
 }
+
+.automatedTestCase {
+	font-weight:bold;
+	color: red;
+	font-style:italic;
+}

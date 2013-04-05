@@ -15,9 +15,16 @@
    <license url="http://www.example.com/license">
       [Enter License Description here.]
    </license>
-
+<!--
    <plugin
          id="davinci.dojo_1_8"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+-->
+   <plugin
+         id="davinci.dojo_1_9"
          download-size="0"
          install-size="0"
          version="0.0.0"

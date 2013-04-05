@@ -58,7 +58,7 @@ return declare("davinci.model.resource.File", Resource, {
 		return result;
 	},
 
-	setContents: function(content, isWorkingCopy){
+	setContents: function(content, isWorkingCopy, deferred /*optional*/){
 		var workingCopy = isWorkingCopy ? "true" : "false";
 		if (this.isNew && !isWorkingCopy) {
 			this.isNew = false;
@@ -70,13 +70,19 @@ return declare("davinci.model.resource.File", Resource, {
 			putData: content,
 			handleAs: "text",
 			contentType: "text/html"
-		}).then(function(res){
+		}).then(function(deferred, res){
 			this.dirtyResource = isWorkingCopy;
 			dojo.publish("/davinci/resource/resourceChanged", ["modified", this]);
-		}.bind(this), function(err){ 
+			if(deferred){
+				deferred.resolve(this);
+			}
+		}.bind(this, deferred), function(deferred, err){ 
 			// more meaningful error message should be reported to user higher up the food chain...
 			console.error("An error occurred: davinci.model.resource.File.prototype.setContents " + err + " : " + path);
-		});
+			if(deferred){
+				deferred.reject(this, err);
+			}
+		}.bind(this, deferred));
 	},
 
 	// deprecated.  Use getContent instead.

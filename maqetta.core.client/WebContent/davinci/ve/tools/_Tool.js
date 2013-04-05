@@ -1,8 +1,9 @@
 define(["dojo/_base/declare",
+        "dojo/dom-style",
         "davinci/ve/widget",
         "davinci/ve/metadata",
 		"davinci/ve/utils/GeomUtils"],
-function(declare, widget, metadata, GeomUtils){
+function(declare, style, widget, metadata, GeomUtils){
 
 return declare("davinci.ve.tools._Tool", null, {
 

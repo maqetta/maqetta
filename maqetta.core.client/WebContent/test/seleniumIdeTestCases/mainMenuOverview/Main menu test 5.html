@@ -29,12 +29,12 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>//span[@role='button']/span[. ='Create']</td>
+	<td>//span[@class='fileDialogStdButtons']/span/span</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@id='editors_container_tablist_editor-._project1_file1.css']</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_file1.css']/span[2]</td>
 	<td></td>
 </tr>
 <tr>
@@ -152,20 +152,15 @@
 	<td>//div[@class='textviewContent']</td>
 	<td>}</td>
 </tr>
+<!--Save-->
 <tr>
 	<td>clickAt</td>
-	<td>//span[@class='dijitReset dijitInline dijitIcon saveIcon']</td>
-	<td></td>
-</tr>
-<!-- For some reason we have to do two saves -->
-<tr>
-	<td>clickAt</td>
-	<td>//span[@class='dijitReset dijitInline dijitIcon saveIcon']</td>
+	<td>//div[@id=&quot;davinci_toolbar_container&quot;]/div/table/tbody/tr/td</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='editors_container_tablist_editor-._project1_file1.css']/span[2]</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_file1.css']/span[2]</td>
 	<td></td>
 </tr>
 <tr>
@@ -175,12 +170,12 @@
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>//div[@id='editors_container_tablist_editor-._project1_file1.css']/span[2]</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_file1.css']/span[2]</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='editors_container_tablist_editor-._project1_file1.css']/span[2]</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_file1.css']/span[2]</td>
 	<td></td>
 </tr>
 </tbody></table>

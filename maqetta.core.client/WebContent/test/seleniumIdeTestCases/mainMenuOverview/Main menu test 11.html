@@ -18,18 +18,18 @@
 	<td></td>
 </tr>
 <tr>
-	<td>clickAt</td>
-	<td>//span[@id='davinci_main_menu']/span[4]/span/span</td>
-	<td></td>
-</tr>
-<tr>
 	<td>click</td>
 	<td>id=showHelp</td>
 	<td></td>
 </tr>
 <tr>
 	<td>selectWindow</td>
-	<td>MaqettaDocumentation</td>
+	<td>Maqetta Documentation</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//title[.='Maqetta Documentation']</td>
 	<td></td>
 </tr>
 <tr>
@@ -40,16 +40,6 @@
 <tr>
 	<td>selectWindow</td>
 	<td></td>
-	<td></td>
-</tr>
-<tr>
-	<td>windowFocus</td>
-	<td></td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//span[@id='davinci_main_menu']/span[4]/span/span</td>
 	<td></td>
 </tr>
 <tr>
@@ -59,7 +49,12 @@
 </tr>
 <tr>
 	<td>selectWindow</td>
-	<td>MaqettaTutotials</td>
+	<td>Maqetta Documentation</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForElementPresent</td>
+	<td>//title[.='Maqetta Tutorials']</td>
 	<td></td>
 </tr>
 <tr>
@@ -73,28 +68,18 @@
 	<td></td>
 </tr>
 <tr>
-	<td>windowFocus</td>
-	<td></td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAt</td>
-	<td>//span[@id='davinci_main_menu']/span[4]/span/span</td>
-	<td></td>
-</tr>
-<tr>
 	<td>click</td>
 	<td>id=about</td>
 	<td></td>
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>id=aboutMaqetta</td>
+	<td>//span[@class='dijitDialogTitle' and .='About Maqetta']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@id='aboutMaqetta']/div/span[@title='Cancel']</td>
+	<td>//span[.='OK']</td>
 	<td></td>
 </tr>
 </tbody></table>

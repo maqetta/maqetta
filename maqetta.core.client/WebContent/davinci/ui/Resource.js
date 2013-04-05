@@ -464,7 +464,9 @@ var uiResource = {
 			var selection = uiResource.getSelectedResources(),
 			    paths = selection.map(function(resource){ return resource.getPath(); }).join("\n\t");
 
-			if(!confirm(dojo.string.substitute(uiNLS.areYouSureDelete, [paths]))){
+			var confirmString = dojo.string.substitute(uiNLS.areYouSureDelete, [paths]);
+			confirmString += "\n\n" + uiNLS.NoteOperationNotUndoable + "\n";
+			if(!confirm(confirmString)){
 		    	return;
 		    }
 	

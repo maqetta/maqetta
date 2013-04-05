@@ -353,7 +353,9 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 		}
 		
 		//Make the user confirm
-		if(!confirm(dojo.string.substitute(uiNLS.areYouSureDeleteProject, [project]))){
+		var confirmString = dojo.string.substitute(uiNLS.areYouSureDeleteProject, [project]);
+		confirmString += "\n\n" + uiNLS.NoteOperationNotUndoable + "\n";
+		if(!confirm(confirmString)){
 	    	return;
 	    }
 		

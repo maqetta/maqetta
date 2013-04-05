@@ -88,7 +88,6 @@ define(["dojo/_base/declare",
 		
 		okButton: function() {
 			var NewProjectTemplateName = this._projectTemplateName.get("value");
-			var projectTemplates = Runtime.getSiteConfigData("projectTemplates");			
 			var do_it = true;
 			var email = Runtime.getUserEmail();
 			if(this._projectTemplateList.length > 0){

@@ -2,23 +2,17 @@ define(["davinci/de/widgets/NewDijit",
         "davinci/Workbench",
         "davinci/workbench/Preferences",
         "system/resource",
-        "davinci/Runtime",
         "davinci/de/DijitTemplatedGenerator",
         "davinci/library",
         "davinci/ui/Dialog",
         "davinci/ve/actions/ReplaceAction",
-        "dojo/json",
-        "dojo/Deferred",
-        "dojo/DeferredList"
-        
-       
-],function(NewDijit, Workbench, Preferences, Resource, Runtime, DijitTemplatedGenerator, 
-		dLibrary, Dialog, ReplaceAction, json, Deferred, DeferredList){
+        "dojo/promise/all"
+],function(NewDijit, Workbench, Preferences, Resource, DijitTemplatedGenerator, dLibrary, Dialog, ReplaceAction, all){
 
 	// For developer notes on how custom widgets work in Maqetta, see:
 	// https://github.com/maqetta/maqetta/wiki/Custom-widgets	
 	
-	var dt= {
+	var dt = {
 		/* base packages.json metadata */
 		WIDGETS_JSON : {version:"1.0", localPath:true, customWidgetSpec:1,
 						"categories":{"custom":{name:"Custom widget", description:"Custom widget", widgetClass:"dijit"}}, widgets:[]},
@@ -35,31 +29,28 @@ define(["davinci/de/widgets/NewDijit",
     		var context = openEditor.getContext();
     		var selection = context.getSelection();
     		if(!dt.validWidget(selection)){
-    			Dialog.showModal("Invalid Selection.  Please select a single container widget to create a new Widget", "Error creating Widget...")
+    			Dialog.showModal("Invalid Selection.  Please select a single container widget to create a new Widget", "Error creating Widget...");
     			return;
     		}
     		
 			Workbench.showModal(projectDialog, "Dijit Widget...", {height:60, width: 250}, function(){
 		    	if (!projectDialog.cancel) {
 		    		var widgetData = projectDialog.attr('value');
-		    		var deferredList =
-		    			dt.createDijit(widgetData, model, oldResource, context, selection);
-		    		deferredList.then(function(){
+		    		dt.createDijit(widgetData, model, oldResource, context, selection).then(function(){
 			    		if(widgetData.replaceSelection){
-			    			var ra = new ReplaceAction();
-			    			ra.run(context, widgetData.group + "." + widgetData.name);
+			    			new ReplaceAction().run(context, widgetData.group + "." + widgetData.name);
 			    		}
-				    	//FIXME: Force a browser refresh. This is the atom bomb approach.
-				    	//Reason for doing this is that the custom palette list in widget palette
-				    	//and all of the require/packages logic happens during application initialization.
-				    	//It might be possible to prevent the reload without too much work, but for now we
-				    	//do a browser refresh.
-				    	window.location.reload(false);
 		    		});
-					return true;
+
+		    		//FIXME: Force a browser refresh. This is the atom bomb approach.
+			    	//Reason for doing this is that the custom palette list in widget palette
+			    	//and all of the require/packages logic happens during application initialization.
+			    	//It might be possible to prevent the reload without too much work, but for now we
+			    	//do a browser refresh.
+			    	window.location.reload(false);
 		    	}
+				return true;
 			});
-			
 		},
 		
 		/* 
@@ -125,13 +116,13 @@ define(["davinci/de/widgets/NewDijit",
 			
 			var base = Workbench.getProject();
 			var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
-			if(!prefs['widgetFolder']){
-				prefs.widgetFolder = "./WebContent/custom";
+			if(!prefs.widgetFolder){
+				prefs.widgetFolder = "WebContent/custom";
 				Preferences.savePreferences('davinci.ui.ProjectPrefs',base, prefs);
 			}
 			
 			
-			var parent = dt._createFolder(prefs['widgetFolder']);
+			var parent = dt._createFolder(prefs.widgetFolder);
 			
 			var widgetNamespace = dt._createNameSpace(qualifiedWidgetDot, parent);
 			/*
@@ -142,7 +133,6 @@ define(["davinci/de/widgets/NewDijit",
 			var customWidgets = widgetNamespace.getChildSync(widgetData.name + "_widgets.json");
 			if(customWidgets==null){
 				customWidgets = widgetNamespace.createResource(widgetData.name +"_widgets.json");
-				
 			}
 			
 			/* packages.json metadata */
@@ -150,7 +140,8 @@ define(["davinci/de/widgets/NewDijit",
 			customWidgetsJson.name = widgetData.name;
 			customWidgetsJson.longName = widgetData.name;
 			
-			var widgetsObj = {name:widgetData.name, 
+			var widgetsObj = {
+				name:widgetData.name, 
 				description: widgetData.name, 
 				type:qualifiedWidgetSlash, 
 				category:"custom", 
@@ -167,45 +158,33 @@ define(["davinci/de/widgets/NewDijit",
 					widgetsObj.properties[att.name] = att.value;
 				}
 			}
-			var deferredWidgetsJson = new Deferred();
-			var deferredHtml = new Deferred();
-			var deferredJs = new Deferred();
-			var deferredOam = new Deferred();
-			var deferredList = new DeferredList([deferredWidgetsJson, deferredHtml, deferredJs, deferredOam]);
 			customWidgetsJson.widgets.push(widgetsObj);
-			customWidgets.setContents(json.stringify(customWidgetsJson, undefined, '\t'), undefined, deferredWidgetsJson);
-	
-			
-			var widgetFolder = parent;
-			
-			var generator = new DijitTemplatedGenerator({});
-			var content = generator.buildSource(model,qualifiedWidgetSlash,widgetData.name, false, context, selection);
+			var promises = [customWidgets.setContents(JSON.stringify(customWidgetsJson, undefined, '\t'))];
+			var content = new DijitTemplatedGenerator({}).buildSource(model, qualifiedWidgetSlash, widgetData.name, false, context, selection);
 			
 			for(var type in content){
-				
 				switch(type){
 					case 'amd':
 						break;
 					case 'html':
 						var html = widgetNamespace.createResource(widgetData.name + ".html");
-						html.setContents(content.html, undefined, deferredHtml);
+						promises.push(html.setContents(content.html));
 						break;
 					case 'js':
 						var widgetResource = widgetNamespace.createResource(widgetData.name + ".js");
-						widgetResource.setContents(content.js, undefined, deferredJs);
+						promises.push(widgetResource.setContents(content.js));
 						break;
 					case 'metadata':
 						var metaResource = widgetNamespace.createResource(widgetData.name + "_oam.json");
-						metaResource.setContents(content.metadata, undefined, deferredOam);
+						promises.push(metaResource.setContents(content.metadata));
 						dLibrary.addCustomWidgets(base, customWidgets, widgetNamespace.getPath(), customWidgetsJson);
 						break;
 				}
-			
 			}
-			return deferredList;
-			
+
+			return all(promises);
 		}
-	
-	}
+	};
+
 	return dt;
 });

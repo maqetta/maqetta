@@ -216,6 +216,9 @@ define({ root:
 
 		//SelectProjectDialog.js
 		"currentProject": "Current Project:",
-		"selectProject": "Select a Project:"
+		"selectProject": "Select a Project:",
+		
+		//General
+		"NoteOperationNotUndoable":"Note: this operation is not undoable."
 }
 });

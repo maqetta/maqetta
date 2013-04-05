@@ -2,31 +2,31 @@
 	<div class="dijitDialogPaneContentArea">
 		<table class="NewProjectDialogTable">
 		<tr>
-			<td class="NewProjectDialogLabel">${newProjectName}</td>
+			<td class="NewProjectDialogLabel"><label for="new-project-name">${newProjectName}</label></td>
 			<td>
-				<input class='templateInput' data-dojo-type="dijit.form.ValidationTextBox" type='text' dojoAttachPoint="_projectName"></input>
+				<input class='templateInput' id="new-project-name" data-dojo-type="dijit.form.ValidationTextBox" type='text' dojoAttachPoint="_projectName">
 			</td>
 			<td><div dojoAttachPoint='_error4'></div></td>
 		</tr>
 		<tr>
 			<td colspan="2" class="NewProjectUseTemplateCell">
-				<input type='checkbox' dojoAttachPoint="_useProjectTemplate"></input>
-				<span class="NewProjectDialogLabel NewProjectUseTemplateLabel">${newProjectUseProjectTemplate}</span>
+				<input type="checkbox" dojoAttachPoint="_useProjectTemplate" id="new-project-template">
+				<label class="NewProjectDialogLabel NewProjectUseTemplateLabel" for="new-project-template">${newProjectUseProjectTemplate}</label>
 				<select class="NewProjectTemplateSelect" dojoType="dijit.form.Select" dojoAttachPoint="projectTemplates" dojoAttachEvent="onChange: _onChangeTemplate">
 					<!-- Menu created dynamically -->
 				</select>
-			</div></td>
+			</td>
 		</tr>
 		<tr>
 			<td colspan="2" class="NewProjectCloneExistingCell">
-				<input type='checkbox' dojoAttachPoint="_cloneExistingProject"></input>
-				<span class="NewProjectDialogLabel">${newProjectCloneExistingProject}</span>
+				<input type="checkbox" dojoAttachPoint="_cloneExistingProject" id="new-project-clone">
+				<label class="NewProjectDialogLabel" for="new-project-clone">${newProjectCloneExistingProject}</label>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2" class="NewProjectEclipseSupportCell">
-				<input type='checkbox' dojoAttachPoint="_eclipseSupport"></input>
-				<span class="NewProjectDialogLabel">${newProjectEclipseSupport}</span>
+				<input type="checkbox" dojoAttachPoint="_eclipseSupport" id="new-project-eclipse">
+				<label class="NewProjectDialogLabel" for="new-project-eclipse">${newProjectEclipseSupport}</label>
 			</td>
 		</tr>
 		</table>
@@ -36,5 +36,4 @@
 		<button dojoType='dijit.form.Button' dojoAttachPoint="_okButton" dojoAttachEvent='onClick:okButton' label='${create}' class="maqPrimaryButton" type="submit" disabled></button>
 		<button dojoType='dijit.form.Button' dojoAttachEvent='onClick:cancelButton' label='${buttonCancel}' class="maqSecondaryButton"></button>
 	</div>
-		
 </div>

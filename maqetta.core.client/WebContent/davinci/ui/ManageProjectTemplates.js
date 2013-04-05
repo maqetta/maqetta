@@ -320,6 +320,7 @@ define(["dojo/_base/declare",
 				if(mods.length>0){
 					confirmString += mods.length + " " + uiNLS.ManageProjectTemplateModifications + "\n";
 				}
+				confirmString += "\n" + uiNLS.NoteOperationNotUndoable + "\n";
 				confirmString += "\n" + uiNLS.ManageProjectTemplateOKToProceed;
 				okToProceed = confirm(confirmString);
 			}

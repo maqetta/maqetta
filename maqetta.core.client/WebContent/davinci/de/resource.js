@@ -5,13 +5,14 @@ define(["davinci/de/widgets/NewDijit",
         "davinci/de/DijitTemplatedGenerator",
         "davinci/library",
         "davinci/ui/Dialog",
-        "davinci/ve/actions/ReplaceAction"
-],function(NewDijit, Workbench, Preferences, Resource, DijitTemplatedGenerator, dLibrary, Dialog, ReplaceAction){
+        "davinci/ve/actions/ReplaceAction",
+        "dojo/promise/all"
+],function(NewDijit, Workbench, Preferences, Resource, DijitTemplatedGenerator, dLibrary, Dialog, ReplaceAction, all){
 
 	// For developer notes on how custom widgets work in Maqetta, see:
 	// https://github.com/maqetta/maqetta/wiki/Custom-widgets	
 	
-	return {
+	var dt = {
 		/* base packages.json metadata */
 		WIDGETS_JSON : {version:"1.0", localPath:true, customWidgetSpec:1,
 						"categories":{"custom":{name:"Custom widget", description:"Custom widget", widgetClass:"dijit"}}, widgets:[]},
@@ -35,21 +36,21 @@ define(["davinci/de/widgets/NewDijit",
 			Workbench.showModal(projectDialog, "Dijit Widget...", {height:60, width: 250}, function(){
 		    	if (!projectDialog.cancel) {
 		    		var widgetData = projectDialog.attr('value');
-		    		dt.createDijit(widgetData, model, oldResource, context, selection);
-		    		if(widgetData.replaceSelection){
-		    			var ra = new ReplaceAction();
-		    			ra.run(context, widgetData.group + "." + widgetData.name);
-		    		}
+		    		dt.createDijit(widgetData, model, oldResource, context, selection).then(function(){
+			    		if(widgetData.replaceSelection){
+			    			new ReplaceAction().run(context, widgetData.group + "." + widgetData.name);
+			    		}
+		    		});
+
+		    		//FIXME: Force a browser refresh. This is the atom bomb approach.
+			    	//Reason for doing this is that the custom palette list in widget palette
+			    	//and all of the require/packages logic happens during application initialization.
+			    	//It might be possible to prevent the reload without too much work, but for now we
+			    	//do a browser refresh.
+			    	window.location.reload(false);
 		    	}
-		    	//FIXME: Force a browser refresh. This is the atom bomb approach.
-		    	//Reason for doing this is that the custom palette list in widget palette
-		    	//and all of the require/packages logic happens during application initialization.
-		    	//It might be possible to prevent the reload without too much work, but for now we
-		    	//do a browser refresh.
-		    	window.location.reload(false);
 				return true;
 			});
-			
 		},
 		
 		/* 
@@ -158,13 +159,8 @@ define(["davinci/de/widgets/NewDijit",
 				}
 			}
 			customWidgetsJson.widgets.push(widgetsObj);
-			customWidgets.setContents(JSON.stringify(customWidgetsJson, undefined, '\t'));
-	
-			
-			var widgetFolder = parent;
-			
-			var generator = new DijitTemplatedGenerator({});
-			var content = generator.buildSource(model,qualifiedWidgetSlash,widgetData.name, false, context, selection);
+			var promises = [customWidgets.setContents(JSON.stringify(customWidgetsJson, undefined, '\t'))];
+			var content = new DijitTemplatedGenerator({}).buildSource(model, qualifiedWidgetSlash, widgetData.name, false, context, selection);
 			
 			for(var type in content){
 				switch(type){
@@ -172,19 +168,23 @@ define(["davinci/de/widgets/NewDijit",
 						break;
 					case 'html':
 						var html = widgetNamespace.createResource(widgetData.name + ".html");
-						html.setContents(content.html);
+						promises.push(html.setContents(content.html));
 						break;
 					case 'js':
 						var widgetResource = widgetNamespace.createResource(widgetData.name + ".js");
-						widgetResource.setContents(content.js);
+						promises.push(widgetResource.setContents(content.js));
 						break;
 					case 'metadata':
 						var metaResource = widgetNamespace.createResource(widgetData.name + "_oam.json");
-						metaResource.setContents(content.metadata);
+						promises.push(metaResource.setContents(content.metadata));
 						dLibrary.addCustomWidgets(base, customWidgets, widgetNamespace.getPath(), customWidgetsJson);
 						break;
 				}
 			}
+
+			return all(promises);
 		}
 	};
+
+	return dt;
 });

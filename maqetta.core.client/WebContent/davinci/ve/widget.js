@@ -445,7 +445,7 @@ createWidget: function(widgetData) {
 	// XXX eventually replace with dojo.place()?
 	// XXX Technically, there can be more than one 'content'
     var content = md.content.trim().replace(/\s+/g, ' ');
-	var node = dojoWindow.get(dojo.doc).dojo._toDom(content);
+	var node = dojoWindow.get(dojo.doc)["require"]("dojo/dom-construct").toDom(content);
 	// XXX Used to create node like this, which added attributes from metadata, is there still a way to do this?
 	//	var node = dojo.create(md.tagName || "div", md.attributes);
 

@@ -1,7 +1,8 @@
 define(["dojo/_base/declare",
         "davinci/ve/widget",
         "davinci/ve/metadata",
-		"davinci/ve/utils/GeomUtils"], function(declare, widget, metadata, GeomUtils){
+		"davinci/ve/utils/GeomUtils"],
+function(declare, widget, metadata, GeomUtils){
 
 return declare("davinci.ve.tools._Tool", null, {
 
@@ -193,21 +194,20 @@ return declare("davinci.ve.tools._Tool", null, {
 	},
 	
 	_getNewTargetOverlay: function(domNode, x, y, width, height, zIndex) {
-		var overlay = this._context.getDojo().create("div", {
-			className: "editFeedback",
-			style: {
-				position: "absolute",
-				opacity: 0.1,
-				left: x + "px",
-				top: y + "px",
-				width: width + "px",
-				height: height + "px",
-				zIndex: zIndex
-			}
+		var overlay = this._context.getDocument().createElement("div");
+		overlay.className = "editFeedback";
+		style.set(overlay, {
+			position: "absolute",
+			opacity: 0.1,
+			left: x + "px",
+			top: y + "px",
+			width: width + "px",
+			height: height + "px",
+			zIndex: zIndex
 		});
 		return overlay;
 	},
-	
+
 	_insertTargetOverlays: function() {
 		if (this._targetOverlays && this._target) {
 			var domNode = this._target.domNode;
@@ -233,7 +233,7 @@ return declare("davinci.ve.tools._Tool", null, {
 	_matchesTargetOverlay: function(target) {
 		return dojo.some(this._targetOverlays, function(entry) {
 			return target == entry;
-		}, this);
+		});
 	}
 });
 });

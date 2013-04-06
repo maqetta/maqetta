@@ -114,7 +114,6 @@ getThemes: function(base, workspaceOnly, flushCache){
 	var allThemes = Runtime.serverJSONRequest({
 			url: "cmd/getThemes",
 			handleAs: "json",
-			content:{},
 			content:{
 				path: "*.theme",
 				ignoreCase: true,
@@ -331,8 +330,7 @@ getLibRoot: function(id, version, base) {
 	
     var cache = _libRootCache;
     if (cache[base] && cache[base][id] && cache[base][id][version] !== undefined) {
-        d.resolve(cache[base][id][version] || "");
-        return d;
+        return d.resolve(cache[base][id][version] || "");
     }
     
     if(!cache[base]) {
@@ -359,8 +357,7 @@ getLibRoot: function(id, version, base) {
             cache[id] = {};
         }
         cache[base][id][version] = value;  
-        d.resolve(value || "");
-        return d;
+        return d.resolve(value || "");
     });
 },
 

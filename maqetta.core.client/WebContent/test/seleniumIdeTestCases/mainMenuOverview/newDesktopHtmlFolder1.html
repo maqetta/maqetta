@@ -11,7 +11,7 @@
 <thead>
 <tr><td rowspan="1" colspan="3">New Test</td></tr>
 </thead><tbody>
-<!--Create desktop html claro theme-->
+<!--Create desktop html claro theme in folder1-->
 <!--Verify each change in preview and designer-->
 <!--Add Dojo button plain text and then HTML using smart input-->
 <!--Add Dojo Calander-->
@@ -28,13 +28,34 @@
 </tr>
 <tr>
 	<td>click</td>
+	<td>xpath=(//input[@value=''])[4]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>id=newHTMLDesktop_text</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//span[@dojoattachpoint=&quot;fileDialogDetailsArrow&quot;]/span</td>
+	<td></td>
+</tr>
+<!--For Tree you need a mouseOver before the clickAt-->
+<tr>
+	<td>mouseOver</td>
+	<td>//div[@class=&quot;folderContainer&quot;]/div/div/div/div/div/div/span/span[@role=&quot;treeitem&quot; and .=&quot;folder1&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAt</td>
+	<td>//div[@class=&quot;folderContainer&quot;]/div/div/div/div/div/div/span/span[@role=&quot;treeitem&quot; and .=&quot;folder1&quot;]/../../..</td>
 	<td></td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>//tr[@class='fileNameRow']/td[2]/div/div/input</td>
-	<td>desktop1TestCase.html</td>
+	<td>desktopFolder1TestCase.html</td>
 </tr>
 <tr>
 	<td>click</td>
@@ -48,7 +69,7 @@
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_desktop1TestCase.html']/span[2]</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_folder1_desktopFolder1TestCase.html']/span[2]</td>
 	<td></td>
 </tr>
 <tr>
@@ -261,7 +282,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_desktop1TestCase.html']/span[2]</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_folder1_desktopFolder1TestCase.html']/span[2]</td>
 	<td></td>
 </tr>
 <tr>
@@ -271,12 +292,12 @@
 </tr>
 <tr>
 	<td>doubleClick</td>
-	<td>//span[@class='dijitTreeContent']/span[. ='desktop1TestCase.html']</td>
+	<td>//span[@class='dijitTreeContent']/span[. ='desktopFolder1TestCase.html']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_desktop1TestCase.html']/span[2]</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_folder1_desktopFolder1TestCase.html']/span[2]</td>
 	<td></td>
 </tr>
 <!-- Save file and reopen -->
@@ -344,7 +365,7 @@
 </tr>
 <tr>
 	<td>verifyElementPresent</td>
-	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_desktop1TestCase.html']/span[2]</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_folder1_desktopFolder1TestCase.html']/span[2]</td>
 	<td></td>
 </tr>
 <tr>
@@ -419,7 +440,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_desktop1TestCase.html']/span[2]</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_folder1_desktopFolder1TestCase.html']/span[2]</td>
 	<td></td>
 </tr>
 <tr>
@@ -429,12 +450,12 @@
 </tr>
 <tr>
 	<td>doubleClick</td>
-	<td>//span[@class='dijitTreeContent']/span[. ='desktop1TestCase.html']</td>
+	<td>//span[@class='dijitTreeContent']/span[. ='desktopFolder1TestCase.html']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>waitForElementPresent</td>
-	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_desktop1TestCase.html']/span[2]</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_folder1_desktopFolder1TestCase.html']/span[2]</td>
 	<td></td>
 </tr>
 <!-- Save file and reopen -->
@@ -501,7 +522,7 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_desktop1TestCase.html']/span[2]</td>
+	<td>//div[@widgetid='davinci_file_tabs_tablist_shadow-._project1_folder1_desktopFolder1TestCase.html']/span[2]</td>
 	<td></td>
 </tr>
 </tbody></table>

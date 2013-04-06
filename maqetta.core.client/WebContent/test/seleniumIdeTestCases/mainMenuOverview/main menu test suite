@@ -10,15 +10,16 @@
 <tr><td><b>Test Suite</b></td></tr>
 <tr><td><a href="newDesktopHtmlNoSave.html">newDesktopHtmlNoSave</a></td></tr>
 <tr><td><a href="newDesktopHtml.html">newDesktopHtml</a></td></tr>
-<tr><td><a href="Main menu test 3.html">Main menu test 3</a></td></tr>
-<tr><td><a href="Main menu test 4.html">Main menu test 4</a></td></tr>
-<tr><td><a href="Main menu test 5.html">Main menu test 5</a></td></tr>
-<tr><td><a href="Main menu test 6.html">Main menu test 6</a></td></tr>
-<tr><td><a href="Main menu test 7.html">Main menu test 7</a></td></tr>
-<tr><td><a href="Main menu test 8.html">Main menu test 8</a></td></tr>
-<tr><td><a href="Main menu test 9.html">Main menu test 9</a></td></tr>
-<tr><td><a href="Main menu test 10.html">Main menu test 10</a></td></tr>
-<tr><td><a href="Main menu test 11.html">Main menu test 11</a></td></tr>
+<tr><td><a href="createFolder1.html">createFolder1</a></td></tr>
+<tr><td><a href="closeClaro1.html">closeClaro1</a></td></tr>
+<tr><td><a href="newDesktopHtmlFolder1.html">newDesktopHtmlFolder1</a></td></tr>
+<tr><td><a href="Main menu test 5.html">newCssFile</a></td></tr>
+<tr><td><a href="Main menu test 6.html">newJavaScriptFile</a></td></tr>
+<tr><td><a href="newThemeClaro1.html">newThemeClaro1</a></td></tr>
+<tr><td><a href="Main menu test 8.html">openSample1Html</a></td></tr>
+<tr><td><a href="Main menu test 9.html">openClaro1Theme</a></td></tr>
+<tr><td><a href="Main menu test 10.html">peferences</a></td></tr>
+<tr><td><a href="Main menu test 11.html">help</a></td></tr>
 </tbody></table>
 </body>
 </html>

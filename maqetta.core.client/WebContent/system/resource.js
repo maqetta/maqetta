@@ -112,14 +112,15 @@ var Resource = {
 	},
 	
 	createProject: function(params) {
-		var projectName = params.newProjectName;
-		var projectToClone = params.projectToClone;
-		var projectTemplateName = params.projectTemplateName;
-		var eclipseSupport = params.eclipseSupport ? true : false;
 		return xhr.get({
 			url: "cmd/createProject",
 			handleAs: "text",
-			content: {name: projectName, projectToClone: projectToClone, eclipseSupport: eclipseSupport, projectTemplate:projectTemplateName}
+			content: {
+				name: params.newProjectName,
+				projectToClone: params.projectToClone,
+				eclipseSupport: !!params.eclipseSupport, // force boolean, in case of null/undef
+				projectTemplate: params.projectTemplateName
+			}
 		});
 	},
 	

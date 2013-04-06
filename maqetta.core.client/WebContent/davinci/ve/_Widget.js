@@ -484,9 +484,9 @@ return declare("davinci.ve._Widget", null, {
 			}
 		}
 		
-		// Find "on*" event attributes that are in the model and
+		// Find "on*" event attributes and a[href] attributes that are in the model and
 		// place on the data object. Note that Maqetta strips
-		// on* event attributes from the DOM that appears on visual canvas.
+		// on* event attributes and href attributes from the DOM that appears on visual canvas.
 		// Upon creating new widgets, the calling logic needs to 
 		// put these attributes in model but not in visual canvas.
 		var srcElement = this._srcElement;
@@ -495,6 +495,8 @@ return declare("davinci.ve._Widget", null, {
 		for(var i=0; i<attributes.length; i++) {
 			var attribute = attributes[i];
 			if(attribute.name.substr(0,2).toLowerCase()=="on" ) {
+				data.properties[attribute.name] = attribute.value;
+			}else if(srcElement.tag.toLowerCase() == 'a' && attribute.name.toLowerCase()=='href'){
 				data.properties[attribute.name] = attribute.value;
 			}
 		}

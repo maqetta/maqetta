@@ -8,6 +8,7 @@ define([
         "dojo/_base/connect",
     	"dojo/query",
     	"dojo/dom-class",
+    	"dojo/dom-style",
     	"dojo/_base/window",
     	"dijit/registry",
     	"davinci/Runtime",
@@ -19,7 +20,7 @@ define([
     	"davinci/ve/utils/StyleArray",
     	"davinci/workbench/Preferences",
         "dojo/i18n!davinci/ve/nls/ve"
-], function(declare, connect, query, domClass, dojoWin, registry, Runtime, Workbench, 
+], function(declare, connect, query, domClass, domStyle, dojoWin, registry, Runtime, Workbench, 
 		maqettaStates, GeomUtils, EventCommand, StyleCommand, StyleArray, Preferences, veNls){
 
 // Some of the logic in this file is invoked via commandStack processing,

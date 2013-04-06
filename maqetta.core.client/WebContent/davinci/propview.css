@@ -434,6 +434,9 @@ button.showCss::-moz-focus-inner {
 }
 .propertyInputField,.propertyDisplayName{
 		font-size:10px; 
+}
+.propertyInputField .dijitTimeTextBox, .propertyInputField .dijitDateTextBox {
+		width: 100%; 
 } 
 .property_table_stretchable .propertyDisplayName{
 	width:60px;

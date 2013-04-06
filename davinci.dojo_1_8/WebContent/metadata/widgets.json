@@ -617,6 +617,24 @@
             "category": "controls",
             "collection": "dijit",
             "tags": "DateTextBox",
+            "helper": "./dijit/form/DateTextBoxHelper",
+            "inlineEdit": {
+            	"property": [
+            		{
+            			"property":"placeHolder", 
+            			"multiLine": false, 
+            			"supportsHTML": false            			
+        			},
+
+					{
+						"property":"value", 
+						"multiLine": false,
+						"supportsHTML": false
+					}
+				],
+                "displayOnCreate": false,
+ 
+            },
             "icon": "resources/images/date-text-box.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQANUAADdXkDZYkTZYkDdYkDlck2eAq3WNtHuRtrG/1vP2+zxhmD1imFN1pneRt6i50rHA1tbe6vL2/D9mnUBonkFpn0JqoEFonlJ1pnqWu5CoyKK20Ke50rLC2OLr90ZzqERvpEVvpWyOuHyawIahw9fg6+Tt+Obu+Eh2q0h3q0t7r0l2qk19sYCgxOXu+Iapzdfi7VCFt1CEtrnO4laOv8/t++j4+PD4+P+oAP///////wAAAAAAAAAAAAAAAAAAAAAAACH5BAEAADkALAAAAAAQABAAAAaVwJxwSCwKZ8ikMjmM0Z7QKA02PNFKrU5pa+qaVEMJLUFORCLms2Q4EAwAg7ggIKgPKqsh5XBg8P0HFwcFKUMwODgyiIo4LohUQh4hGQ4OGw4ZISMhIRVDKIgvNzcviCyIKEMfNjYkoySsIqwgQxYYHBC5EBwYGhgYE0MLNTUIxA/EDcQKQwTEBs/RNQRscdbX1kbaQ0EAOw==",
             "resizable": "width",
@@ -1011,10 +1029,22 @@
             "icon": "resources/images/text-box.png",
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAM1JREFUeNpi/P//PwMlgImBQkCxASzIHIvIif/lzfQZHp66yHBieT4jUSaAwgAZm0dM+I8uhg+DXRDefwAckqGWCmBD15x48H/18QcELV9Z6MAINuDPz98MtWmODBKcTAw9QL6NvhyDipoMXs0ts/chwuD39+9gDjfDfzgtyvAXe6hDQ+bXtx8IA94+eArmsLMywml+Bmbc4cbAyPD24VOEAX9//WLIyJ7KkBJiARZctPE0w5w1JxjoEgtM2NIBiCY2ITEO/bxAsQEAAQYAGVGarS2fPq4AAAAASUVORK5CYII=",
             "resizable": "width",
-            "inlineEdit": {
-                "property": "value",
+           	"inlineEdit": {
+            	"property": [
+            		{
+            			"property":"placeHolder", 
+            			"multiLine": false, 
+            			"supportsHTML": false            			
+        			},
+
+					{
+						"property":"value", 
+						"multiLine": false,
+						"supportsHTML": false
+					}
+				],
                 "displayOnCreate": false,
-                "disableEncode": true
+ 
             },
             "iconLarge": "resources/imagesLarge/TextBox.png",
             "iconLargeBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAArlJREFUeNrsmL2LE0EYxndmZ2Y3uwkGRAycNmJjYyliYRMPQTzFSiz8A6xFCIeFXq+1hXZXHWjhYbDw2vNawcrGKuAVkpyJ+dovn9m5ZDHx4gnObop5mcC7k8D+eD+edybk3YeP1vIZw+dG/fJSMTV39qi1lGawDJbBMlgG678NnxkLw/Bm43Wn9e3EyumD1n51pfZmY00IQVMrDCuO481Gvdvt3lt/++rxNdd1e71epVJxHKfgJBJChsMhnHa7DabBYIAQAjfXJCZJEk9MJRHJApnysRlFEZzRaARHY4QmdoiFF4/H47Vnu9NfXPC+X714Ds7+SGy9//QlOmtZX3MI0vbDKyjiDAuZgtNYPck4t22bWGcG/b4MZPDz+qXzdzy/5HlagRIrebrdAka1Ws2wkCA4nucJxwEZIsmE/KpcKXu+L5fna8VK66cFDFVIWW3BQa+5pRIXgtmMWrK2QORJKAmnFSuMQgUHmFmBEII7QkARqG1HUSB3HIRPOC429apDHLEjdcumlDOG2mKMwcEOCo3b0lePGqO1QE4p+W2lAibX9FGjOpB/wZp5LAaLpKo/XdbcY27TZhZLansS313fUqP6wUYTo/rFozr6AJVHtI1qsjCJRA4dQjaf3D7odLrdH/1+H2IWBSEGEHqBEqItieRorDRgUI8EozAMoWZUxi6WfhhajOk72NC/diKT2WLlss85w4SGWEBmuVQOqq/wj9WJkClKSq4joLnIqVIyrf24CEtVPYLC9Ovn/HuPpVt53ykW69Z05Wx/iBaqR7XY/ZefC76HTU7Fh1g4Ez6/dQrXiiAICgHinOMWA4wMC4y+79dqNZwM87xHzMQJgwQY2Vke/Q9lQveBV53C8jdVSHZqWRJZeswq/DJNJiOIzW+Z/yAMlsEyWAbLYOk1OXyaO3vLhvVLgAEAYznmoTvpx04AAAAASUVORK5CYII="
@@ -1301,6 +1331,24 @@
             "category": "untested",
             "collection": "dijit",
             "tags": "TimeTextBox",
+            "helper": "./dijit/form/DateTextBoxHelper",
+          	"inlineEdit": {
+            	"property": [
+            		{
+            			"property":"placeHolder", 
+            			"multiLine": false, 
+            			"supportsHTML": false            			
+        			},
+
+					{
+						"property":"value", 
+						"multiLine": false,
+						"supportsHTML": false
+					}
+				],
+                "displayOnCreate": false,
+ 
+            },
             "icon": "resources/images/time-text-box.gif",
             "iconBase64": "data:image/gif;base64,R0lGODlhEAAQAOYAAO7w9S5KhW2BqjJSjPP2+/f5/BhHhRlEgBpFgR1JhCNVmCZYmiBKgiNNhDlnpD9sp+zy+hZFgCRXmCJSjyNUkCdamiRSijxqpUJsouTt+DBdkUt6rhZUkRdSjxdSjhhQi1GGuHKgzHSjzXOizHelznyo0VaOvwJWlwNXlwVXl+vy93SfuXiiu87k8H+pv9bs99fs993x+9vv+d7x+8/t+9Xs993y/Nru997x+o62xoy1xarM2LLR3eb4/5C5x67O2Mrh59Tp7tDm6tLn6+v8/+z8/9js78jf4tDl583i4uHx8fD///H//8Xc29zt7PH9/P///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAFAALAAAAAAQABAAAAeOgFCCg4SFhoeIhD4UCBQ+iU0KIUpPTiMKTYImmyYqEklMS6JLPymaNDQ2LiRErQytRRcuUCA0GRAUSD27Cbs9Rh5QGzQEBQdCMskNyTI3EVAYxAUTRy3WFtYtQB9QA9IrIjUv4xovMA8sUAHrAgAVPDHxMTM7KIdNCyVBOEMOJ5mIdHAw0CFHooMIEyYKBAA7",
             "resizable": "width",

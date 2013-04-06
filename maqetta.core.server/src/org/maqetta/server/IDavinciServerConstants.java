@@ -42,6 +42,7 @@ public interface IDavinciServerConstants {
 	public static final String PROJECT_TEMPLATES_DIRECTORY_NAME = ".project-templates";
 	public static final String PROJECT_TEMPLATES_INDEX_FILE = "__index.json";
 	public static final int PROJECT_TEMPLATES_MAX = 1000;	// max# of returned project templates from cmd/getProjectTemplates
+	public static final String PROJECT_TEMPLATES_SHARING_ALL_ENABLED = "maqetta.projecttemplates.sharing.all.enabled";
 
 	// Extension point definitions
 	public static final String EXTENSION_POINT_COMMAND = "command";
@@ -107,6 +108,8 @@ public interface IDavinciServerConstants {
     public static final String THEMES_DIRECTORY_NAME = "themes";
 	public static final String DEFAULT_PROJECT = "project1";
 	public static final String INWAR_PROPERTY = "inWar";
+	public static final String USERNAME_TYPEAHEAD_ENABLED = "maqetta.username.typeahead.enabled";
+
 	public static final int SESSION_TIMEOUT = 60 * 60; // time in seconds 
 
 

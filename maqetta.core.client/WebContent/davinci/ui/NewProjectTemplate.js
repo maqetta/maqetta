@@ -45,7 +45,7 @@ define(["dojo/_base/declare",
 
 			// The 1000 argument says to pull at most 1000 at once (which happens to be server's limit)
 			ProjectTemplates.getIncremental(1000, function(projectTemplateList, returnData, allDone){
-				this._updateStore(projectTemplateList);
+				this._updateStore(projectTemplateList, returnData);
 				return false;	// false => continue retrieving data
 			}.bind(this));
 			var data = [];
@@ -57,7 +57,7 @@ define(["dojo/_base/declare",
 			this._projectTemplateName.focus();
 		},
 		
-		_updateStore: function(projectTemplateList){
+		_updateStore: function(projectTemplateList, returnData){
 			var data = [];
 			this._projectTemplateList = [];
 			for(var i=0; i<projectTemplateList.length; i++){
@@ -69,6 +69,12 @@ define(["dojo/_base/declare",
 			}
 			var store = new Memory({ data:data });
 			this._projectTemplateName.set("store", store);
+			if(!returnData.enableProjectSharingAll){
+				var NewProjectTemplateShareRow = document.querySelector('.NewProjectTemplateShareRow');
+				if(NewProjectTemplateShareRow){
+					NewProjectTemplateShareRow.style.display = 'none';
+				}
+			}
 		},
 		
 		_checkValid: function(){
@@ -82,7 +88,6 @@ define(["dojo/_base/declare",
 		
 		okButton: function() {
 			var NewProjectTemplateName = this._projectTemplateName.get("value");
-			var projectTemplates = Runtime.getSiteConfigData("projectTemplates");			
 			var do_it = true;
 			var email = Runtime.getUserEmail();
 			if(this._projectTemplateList.length > 0){

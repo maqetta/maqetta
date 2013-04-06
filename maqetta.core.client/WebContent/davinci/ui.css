@@ -675,6 +675,9 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 .NewProjectDialogTable {
 	width:100%;
 }
+.claro .NewProjectDialogTable .dijitSelectLabel {
+	white-space:nowrap;
+}
 .NewProjectTemplateSelect .dijitButtonContents {
 	min-width:8em;
 }
@@ -771,6 +774,9 @@ img.readOnlyResource + img.treeReadOnlyLabelNode{
 .mpt_row.mpt_delete_row .mpt_delete {
 	background-color:#ffdddd;
 	text-decoration:line-through;
+}
+.mpt_col_sharing_hide .mpt_col_sharing {
+	display:none;
 }
 .nhfo_dv {
 	white-space:nowrap;

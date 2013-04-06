@@ -59,6 +59,7 @@ public class GetProjectTemplates extends Command {
 
 		IProjectTemplatesManager projectTemplatesManager = ServerManager.getServerManager().getProjectTemplatesManager();
 		JSONObject projectTemplatesObject = projectTemplatesManager.getProjectTemplatesIndex(user);
+		Boolean enableProjectSharingAll = projectTemplatesManager.getEnableProjectSharingAll();
 		try{
 			JSONArray allUserTemplates = projectTemplatesObject.getJSONArray("templates");
 			
@@ -86,6 +87,7 @@ public class GetProjectTemplates extends Command {
 				responseObject.put("offset", offset);
 				responseObject.put("limit", limit);
 				responseObject.put("totalNumProjectTemplates", countAll);
+				responseObject.put("enableProjectSharingAll", enableProjectSharingAll);
 				int numFound = 0;
 				int numAdded = 0;
 				for(int i=0; i< countAll; i++){

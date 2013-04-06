@@ -59,24 +59,25 @@ return declare("davinci.model.resource.File", Resource, {
 	},
 
 	setContents: function(content, isWorkingCopy){
-		var workingCopy = isWorkingCopy ? "true" : "false";
 		if (this.isNew && !isWorkingCopy) {
 			this.isNew = false;
 		}
 		var workingCopyExtension = isWorkingCopy ? ".workingcopy" : "";
 		var path = encodeURI(this.getPath() + workingCopyExtension);
-		return xhr.put({
+		var promise = xhr.put({
 			url: path,
 			putData: content,
 			handleAs: "text",
 			contentType: "text/html"
-		}).then(function(res){
+		});
+		promise.then(function(res){
 			this.dirtyResource = isWorkingCopy;
 			dojo.publish("/davinci/resource/resourceChanged", ["modified", this]);
 		}.bind(this), function(err){ 
 			// more meaningful error message should be reported to user higher up the food chain...
 			console.error("An error occurred: davinci.model.resource.File.prototype.setContents " + err + " : " + path);
 		});
+		return promise;
 	},
 
 	// deprecated.  Use getContent instead.

@@ -47,7 +47,8 @@ dependencies = {
 		{
 			name: "../davinci/davinci.js",
 			layerDependencies: [
-				"../dijit/dijit.js"
+				"../dijit/dijit.js",
+				"../orion/editor/built-editor-amd.min.js"
 			],
 			dependencies: [
 				"davinci.davinci"

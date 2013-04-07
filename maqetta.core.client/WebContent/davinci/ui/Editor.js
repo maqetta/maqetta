@@ -4,7 +4,7 @@ define([
 	"dojo/_base/declare",
 	"../actions/Action",
 	"../UserActivityMonitor",
-	"orion/editor/built-editor-amd"
+	"orion/editor/built-editor-amd.min"
 ], function(CommandStack, doLater, declare, Action, UserActivityMonitor, orionEditor) {
 
 	declare("davinci.ui._EditorCutAction", Action, {

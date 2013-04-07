@@ -7,6 +7,7 @@ define([
 	"orion/editor/built-editor-amd.min"
 ], function(CommandStack, doLater, declare, Action, UserActivityMonitor, orionEditor) {
 
+/*
 	declare("davinci.ui._EditorCutAction", Action, {
 		constructor: function (editor) {
 			this._editor=editor;
@@ -37,8 +38,114 @@ define([
 			this._editor.getTextView()._doPaste();
 		}
 	});
+*/
 
-	var onTextChanged = function(textChangeEvent) {
+return declare(null, {
+	
+	constructor: function(element, fileName, existWhenVisible) {
+		this.contentDiv = element;
+		this.commandStack = new CommandStack(); //TODO: integrate with orion.editor.UndoFactory
+		this._existWhenVisible = existWhenVisible;
+		this._isVisible = !existWhenVisible;
+
+		// Cache bound listener refs, since uniqueness is necessary to remove them
+		this._selectionListener = this.onSelectionChanged.bind(this);
+		this._changedListener = this.onTextChanged.bind(this);
+	},
+
+	setContent: function(filename, content) {
+		if (!this.editor && (!this._existWhenVisible || this._isVisible)) {
+			this._createEditor();
+		}
+		this.fileName=filename;
+		this.setValue(content, true);
+	},
+
+	setVisible: function(visible) {
+		if (visible != this._isVisible && this._existWhenVisible) {
+			if (visible && this._existWhenVisible) {
+				this._dontNotifyChange = true;
+				this._createEditor();
+			} else {
+	            this.editor.getTextView().removeEventListener("Selection", this._selectionListener);
+	            this.editor.getModel().removeEventListener("Changed", this._changedListener);
+	            this.editor.destroy();
+				delete this.editor;
+			}
+		}
+		this._isVisible = visible;
+	},
+
+	setValue: function(content, dontNotify) {
+		this._dontNotifyChange = dontNotify;
+		if (this.editor) {
+			this.editor.setText(content);
+		} else {
+			this._content = content;
+		}
+	},
+
+	_createEditor: function() {
+		this.editor = orionEditor({
+			parent: this.contentDiv,
+			contents: this._content,
+			lang: this.fileName.substr(this.fileName.lastIndexOf('.') + 1)
+		});
+		delete this._content;
+
+		// add the user activity monitoring to the document and save the connects to be 
+		// disconnected later
+		this._activityConnections = UserActivityMonitor.addInActivityMonitor(this.contentDiv.ownerDocument);
+		this.editor.getTextView().focus();
+
+//		dojo.style(this.contentDiv, "overflow", "hidden");
+
+		if (this.selectionChange) {
+            this.editor.getTextView().addEventListener("Selection", this._selectionListener);
+		}
+		this.editor.getModel().addEventListener("Changed", this._changedListener);
+//		this.cutAction=new davinci.ui._EditorCutAction(this.editor);
+//		this.copyAction=new davinci.ui._EditorCopyAction(this.editor);
+//		this.pasteAction=new davinci.ui._EditorPasteAction(this.editor);
+	},
+
+	selectionChange: function(selection) {
+	},
+
+	destroy: function() {
+		this._activityConnections.forEach(dojo.disconnect);
+	},
+
+	select: function(selectionInfo) {
+		if (this.editor) {
+			try {
+				this._progSelect = true;
+				// reverse arguments so that insertion caret (and the scroll) happens at the beginning of the selection
+				this.editor.setSelection(selectionInfo.endOffset,selectionInfo.startOffset/*, true*/);
+			} finally {
+				delete this._progSelect;				
+			}
+		}
+	},
+
+	getText: function() {
+		return this.editor.getText();
+	},
+	
+	/* Gets called before browser page is unloaded to give 
+	 * editor a chance to warn the user they may lose data if
+	 * they continue. Should return a message to display to the user
+	 * if a warning is needed or null if there is no need to warn the
+	 * user of anything. In browsers such as FF 4, the message shown
+	 * will be the browser default rather than the returned value.
+	 * 
+	 * NOTE: With auto-save, _not_ typically needed by most editors.
+	 */
+	getOnUnloadWarningMessage: function() {
+		return null;
+	},
+
+	onTextChanged: function(textChangeEvent) {
 		if (this._dontNotifyChange) { 
 			// clear out the notify skipping
 			this._dontNotifyChange = false;
@@ -66,9 +173,9 @@ define([
 				})(this);
 			} catch (e){console.error(e);}
 		}
-	};
+	},
 
-	var onSelectionChanged = function(selectionEvent) {
+	onSelectionChanged: function(selectionEvent) {
 		if (this._progSelect) {
 			return;
 		}
@@ -78,109 +185,6 @@ define([
         	startOffset: selectionEvent.newValue.start,
         	endOffset: selectionEvent.newValue.end
         });
-	};
-
-return declare(null, {
-	
-	constructor: function (element, fileName, existWhenVisible) {
-		this.contentDiv = element;
-		this.commandStack = new CommandStack(); //TODO: integrate with orion.editor.UndoFactory
-		this._existWhenVisible = existWhenVisible;
-		this._isVisible = !existWhenVisible;
-	},
-
-	setContent: function (filename, content) {
-		if (!this.editor && (!this._existWhenVisible || this._isVisible)) {
-			this._createEditor();
-		}
-		this.fileName=filename;
-
-		this.setValue(content, true);
-	},
-
-	setVisible: function (visible) {
-
-//console.log("setVisible="+visible + " "+s)
-		if (visible!=this._isVisible && this._existWhenVisible) {
-			if (visible && this._existWhenVisible) {
-				this._dontNotifyChange = true;
-				this._createEditor();
-			} else {
-	            this.editor.getTextView().removeEventListener("Selection", dojo.hitch(this, onSelectionChanged));
-//	            try {
-//					this.editor.destroy();
-//	            } catch (e){ console.error(e); }
-				delete this.editor;
-			}
-		}
-		this._isVisible=visible;
-	},
-
-	setValue: function (content, dontNotify) {
-		this._dontNotifyChange = dontNotify;
-		if (this.editor) {
-			this.editor.setText(content);
-		} else {
-			this._content = content;
-		}
-	},
-
-	_createEditor: function () {
-		this.editor = orionEditor({
-			parent: this.contentDiv,
-			contents: this._content,
-			lang: this.fileName.substr(this.fileName.lastIndexOf('.')+1)
-		});
-		// add the user activity monitoring to the document and save the connects to be 
-		// disconnected latter
-		this._activityConnections = UserActivityMonitor.addInActivityMonitor(this.contentDiv.ownerDocument);
-		this.editor.getTextView().focus();
-
-		dojo.style(this.contentDiv, "overflow", "hidden");
-
-		if (this.selectionChange) {
-            this.editor.getTextView().addEventListener("Selection", onSelectionChanged.bind(this));
-		}
-		this.editor.getModel().addEventListener("Changed", onTextChanged.bind(this));
-		this.cutAction=new davinci.ui._EditorCutAction(this.editor);
-		this.copyAction=new davinci.ui._EditorCopyAction(this.editor);
-		this.pasteAction=new davinci.ui._EditorPasteAction(this.editor);
-	},
-
-	selectionChange: function (selection) {
-	},
-
-	destroy: function () {
-		dojo.forEach(this._activityConnections, dojo.disconnect);
-	},
-
-	select: function (selectionInfo) {
-		if (this.editor) {
-			try {
-				this._progSelect = true;
-				// reverse arguments so that insertion caret (and the scroll) happens at the beginning of the selection
-				this.editor.setSelection(selectionInfo.endOffset,selectionInfo.startOffset/*, true*/);
-			} finally {
-				delete this._progSelect;				
-			}
-		}
-	},
-
-	getText: function() {
-		return this.editor.getText();
-	},
-	
-	/* Gets called before browser page is unloaded to give 
-	 * editor a chance to warn the user they may lose data if
-	 * they continue. Should return a message to display to the user
-	 * if a warning is needed or null if there is no need to warn the
-	 * user of anything. In browsers such as FF 4, the message shown
-	 * will be the browser default rather than the returned value.
-	 * 
-	 * NOTE: With auto-save, _not_ typically needed by most editors.
-	 */
-	getOnUnloadWarningMessage: function() {
-		return null;
 	}
 });
 });

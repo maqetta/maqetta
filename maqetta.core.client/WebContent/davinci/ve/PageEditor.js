@@ -222,6 +222,7 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 
 		if (newMode!="design") {
 			this._bc.addChild(this._srcCP);
+			this.htmlEditor.setValue(this.model.getText(), true);
 			this.htmlEditor.setVisible(true);
 		}
 

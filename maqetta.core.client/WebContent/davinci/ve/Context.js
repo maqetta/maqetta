@@ -2266,7 +2266,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var containerNode = this.getFocusContainer();
 		if(this._focuses){
 			for(var i = startIndex; i < this._focuses.length; i++){
-				focus = this._focuses[i];
+				var focus = this._focuses[i];
 				if(focus.domNode.parentNode == containerNode){
 					focus.hide();
 					containerNode.removeChild(focus.domNode);

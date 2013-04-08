@@ -7,6 +7,9 @@ body {
 	font-size:90%;
 	text-align:center;
 }
+.intro {
+	margin-top: 1em;
+}
 .test_title {
 	color:#003;
 	text-align:center;

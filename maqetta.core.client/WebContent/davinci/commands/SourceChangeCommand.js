@@ -33,6 +33,11 @@ return declare("davinci.commands.SourceChangeCommand", null, {
 				PageEditor.prototype._srcChanged.call(editor, this._newText);
 			}.bind(this));
 		}
+
+		if (!this.established) {
+			this.established = false;
+			return true; // do not trigger events to redraw on initial user action			
+		}
 	},
 
 	undo: function(){

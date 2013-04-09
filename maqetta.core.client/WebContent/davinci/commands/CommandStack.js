@@ -19,16 +19,19 @@ return declare("davinci.commands.CommandStack", null, {
 			return;
 		}
 
+		var quietExecute;
 		if (this._context && this._context.declaredClass != 'davinci.ve.themeEditor.Context') {
 			// changing doc root causes problems with Style palette  
-			dojo.withDoc(this._context.getDocument(), "execute", command, [this._context]);
+			quietExecute = dojo.withDoc(this._context.getDocument(), "execute", command, [this._context]);
 		} else {
-		  command.execute();
+			quietExecute = command.execute();
 		}
 		this._undoStack.push(command);
 		this._redoStack = [];
 
-		this.onExecute(command, "execute");
+		if (!quietExecute) {
+			this.onExecute(command, "execute");			
+		}
 	},
 
 	undo: function(){

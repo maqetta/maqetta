@@ -3,8 +3,9 @@ define(["dojo/_base/declare",
         "../../model/Path",
         "system/resource",
 //        "dojox/form/uploader/FileList",
+        "dijit/ProgressBar",
         "dojo/i18n!../nls/ui"
-],function(declare, AddFiles, Path, Resource, uiNLS){
+],function(declare, AddFiles, Path, Resource, ProgressBar, uiNLS){
 	return declare(AddFiles, {
 		_getCommand: function() {
 			return this.inherited(arguments) + "&explodeZip=1";
@@ -38,8 +39,10 @@ define(["dojo/_base/declare",
 				if (uploadHandler) {
 					dojo.disconnect(uploadHandler);
 				}
-				uploadHandler = dojo.connect(uploadBtn, "onClick", null, function(){
+				uploadHandler = dojo.connect(uploadBtn, "onClick", this, function(){
 					uploader.set("disabled", true);
+					this.progress = new ProgressBar({
+					}, this.zipWarning);
 					uploader.upload();
 				});
 				if (uploadBtn.oldText) {
@@ -47,7 +50,7 @@ define(["dojo/_base/declare",
 				}
 				var filename = files[0].name,
 					isZip = /\.zip$/i.test(filename);
-				this.filelist.innerText = isZip ? filename : "";
+				this.filelist.innerText = isZip ? dojo.replace("Selected: {0}", [filename]) : ""; // FIXME: i18n
 				uploadBtn.set("disabled", !isZip);
 			}.bind(this));
 
@@ -56,6 +59,9 @@ define(["dojo/_base/declare",
 				this.onClose();
 			}.bind(this);
 
+			dojo.connect(this.uploader, "onProgress", this, function(obj){
+				this.progress.set("value", obj.percent);
+			});
 			dojo.connect(this.uploader, "onComplete", function(dataArray){
 				dataArray.forEach(function(data){
 					// need to add to the client side without a server call, mimic the results of a server call

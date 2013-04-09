@@ -36,8 +36,8 @@ dojo.subscribe("/davinci/ui/libraryChanged/start", this, function() {
     _userLibsCache = {};
 });
 
-/* if resources are deleted, we need to check if they are themes.  if so dummp the theme cache so its resynced */
-dojo.subscribe("/davinci/resource/resourceChanged",this, function(type,changedResource){
+/* if resources are deleted, we need to check if they are themes.  if so dump the theme cache so its resynced */
+dojo.subscribe("/davinci/resource/resourceChanged",this, function(type, changedResource){
 	
 	var Workbench = require("davinci/Workbench");
 	var base = Workbench.getProject();
@@ -56,14 +56,13 @@ dojo.subscribe("/davinci/resource/resourceChanged",this, function(type,changedRe
 	if (changedResource.elementType == 'File' && changedResource.extension =="theme"){
 		// creates we don't do anything with the file is not baked yet
 		if (type == 'modified'){
-			var d = changedResource.getContent();
-			d.then(function(content) {
+			changedResource.getContent().then(function(content) {
 				var t = JSON.parse(content);
 				t.path = [changedResource.getPath()];
 				t.getFile = function(){
-					var f = system.resource.findResource(this.path[0]);
-					return f;
+					return system.resource.findResource(this.path[0]);
 				}.bind(t);
+
 				for (var i=0; i < _themesCache[base].length; i++){
 					if ( _themesCache[base][i].name == t.name) {
 						// found theme so replace it
@@ -71,11 +70,10 @@ dojo.subscribe("/davinci/resource/resourceChanged",this, function(type,changedRe
 						return;
 					}
 				}
+
 				// theme not found so add it.
 				_themesCache[base].push(t);
-				
 			}.bind(this));
-			
 		}
 	}
 });
@@ -277,7 +275,11 @@ getCustomWidgets: function(base) {
 				for(var j=0; j<metadata.widgets.length; j++){
 					var widgetType = metadata.widgets[j].type;
 					if(widgetType){
-						this._customWidgetDescriptors[widgetType] = {'name':customModuleId,'location':metadataUrl,'descriptor':metadata};
+						this._customWidgetDescriptors[widgetType] = {
+								name: customModuleId,
+								location: metadataUrl,
+								descriptor: metadata
+						};
 					}
 				}
 			}
@@ -370,7 +372,7 @@ modifyLib: function(libChanges) {
 	return Runtime.serverJSONRequest({
 		url: "cmd/modifyLib",
 		handleAs: "text",
-		content: {libChanges: dojo.toJson(libChanges)},
+		content: {libChanges: JSON.stringify(libChanges)},
 		sync:true
 	});
 },

@@ -35,7 +35,7 @@ return declare("davinci.commands.SourceChangeCommand", null, {
 		}
 
 		if (!this.established) {
-			this.established = false;
+			this.established = true;
 			return true; // do not trigger events to redraw on initial user action			
 		}
 	},

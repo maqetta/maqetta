@@ -320,7 +320,8 @@ define([
 			handleAs: 'json'
 		}).then(function(response) {	// success
 			if (response.HttpCode === 201) {
-				showErrorMessage(fixLogin(response.Message, email));
+				var message = "User created. Confirmation email sent to "+email+".";
+				showErrorMessage(message);
 				hideRegistration();
 				return;
 			}

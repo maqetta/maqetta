@@ -95,7 +95,16 @@ var removeEventAttributes = function(node) {
 		dojo.filter(node.attributes, function(attribute) {
 			return attribute.nodeName.substr(0,2).toLowerCase() == "on";
 		}).forEach(function(attribute) {
-			node.removeAttribute(attribute.nodeName);
+			/*
+			 * FIXME #3876 Need to leave the onload event for the iframe that gets 
+			 * added my dojox.io.scriptFrame when we are using dojox/io/xhrScriptPlugin
+			 * for cross domain JSONP. This should really be part of a toolkit helper but it 
+			 * is not added by a widget as we know them but a require of dojox/io/xhrScriptPlugin
+			 *  
+			 */
+			if (attribute.nodeValue.indexOf('dojox.io.scriptFrame._loaded') < 0) {
+				node.removeAttribute(attribute.nodeName);
+			}
 		});
 	}
 };

@@ -4,12 +4,12 @@
 define([
     "dojo/_base/xhr",
     "dojo/Deferred",
-    "davinci/Runtime",
-    "davinci/model/Path",
-	"davinci/ve/themeEditor/metadata/CSSThemeProvider",
-	"davinci/ve/themeEditor/metadata/query",
-	"davinci/workbench/Preferences",
-//	"davinci/ve/metadata" // FIXME: circular ref?
+    "./Runtime",
+    "./model/Path",
+	"./ve/themeEditor/metadata/CSSThemeProvider",
+	"./ve/themeEditor/metadata/query",
+	"./workbench/Preferences",
+//	"./ve/metadata" // FIXME: circular ref?
 ],
 function(xhr, Deferred, Runtime, Path, CSSThemeProvider, Query/*, Metadata*/, Preferences) {
 
@@ -122,13 +122,12 @@ getThemes: function(base, workspaceOnly, flushCache){
 		});
 
 	allThemes.forEach(function(theme){
-			theme.getFile = function(){
-					var f = system.resource.findResource(this.path[0]);
-					return f;
-				}.bind(theme);
-		}.bind(this));
+		theme.getFile = function(){
+			return system.resource.findResource(this.path[0]);
+		}.bind(theme);
+	}.bind(this));
 	
-		_themesCache[base] = allThemes; 
+	_themesCache[base] = allThemes; 
 
 	return result();
 },
@@ -228,9 +227,9 @@ getCustomWidgets: function(base) {
 				var maq_name = 'maq-lib-custom-' + childResource.name;
 				var url = childResource.getURL();
 				require({
-					packages: [{'name':maq_name,'location':url}]
+					packages: [{name: maq_name, location: url}]
 				});
-				this._customWidgetPackages.push({'name':childResource.name,'location':url});
+				this._customWidgetPackages.push({name: childResource.name, location: url});
 			}
 		}
 		

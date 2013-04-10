@@ -1,6 +1,9 @@
 package org.maqetta.server;
 
 import java.io.File;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
 import java.io.FileInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -121,9 +124,6 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 	
 	public String addProjectTemplate(IUser user, JSONObject params){
 
-		Boolean error = false;
-		String errorString = null;
-		
 		String projectTemplateName = null;
 		String projectToClone = null;
 		String sharingSimple = null;
@@ -183,12 +183,35 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 				
 			IStorage[] files = projectDir.listFiles();
 			for (int i = 0; i < files.length; i++) {
-				if (files[i].isFile()) {
-					IStorage destination = templateDir.newInstance(templateDir, files[i].getName());
-					copyFile(files[i], destination);
-				} else if (files[i].isDirectory()) {
-					IStorage destination = templateDir.newInstance(templateDir, files[i].getName());
-					copyDirectory(files[i], destination);
+				IStorage file = files[i];
+				String path = file.getPath();
+				String splits[] = path.split("/");
+				if(file.isFile() && splits.length > 0 && splits[1].equals(IDavinciServerConstants.DOT_PROJECT)){
+					// Eclipse projects have a .project file. Don't copy that into the template
+					// because non-Eclipse projects shouldn't have that file.
+					// When a new Eclipse project is created using the template, a .project file
+					// will be added then.
+					continue;
+				}else if(file.isDirectory() && splits.length > 1 && splits[1].equals(IDavinciServerConstants.DOT_SETTINGS)){
+					// For .settings folder, only copy the libs.settings file.
+					// For Eclipse projects, there are several other files, but we don't want them in the template.
+					// When a new Eclipse project is created using the template, those extra files
+					// in .settings will be created at that time.
+					IStorage destinationDir = templateDir.newInstance(templateDir, IDavinciServerConstants.DOT_SETTINGS);
+					destinationDir.mkdirs();
+					IStorage libsSettingsSource = file.newInstance(file, IDavinciServerConstants.LIBS_SETTINGS);
+					IStorage libsSettingsDestination = destinationDir.newInstance(destinationDir, IDavinciServerConstants.LIBS_SETTINGS);
+					// Strip out the "WebContent/" string from the library paths in libs.settings before writing out to the template.
+					copyFileStripWebContent(libsSettingsSource, libsSettingsDestination);
+				}else if(file.isDirectory() && splits.length > 1 && splits[1].equals(IDavinciServerConstants.WEBCONTENT)){
+					// Copy the contents of WebContent/* into the base folder for the template
+					copyDirectory(file, templateDir);
+				}else if (file.isFile()) {
+					IStorage destination = templateDir.newInstance(templateDir, file.getName());
+					copyFile(file, destination);
+				} else if (file.isDirectory()) {
+					IStorage destination = templateDir.newInstance(templateDir, file.getName());
+					copyDirectory(file, destination);
 				}
 			}
 			
@@ -508,6 +531,39 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 			if (out != null) {
 				out.close();
 			}
+		}
+	}
+
+	private void copyFileStripWebContent(IStorage source, IStorage destination) throws IOException {
+		InputStream in = null;
+		OutputStream out = null;
+		BufferedReader br;
+		String line;
+		try{
+			try {
+				destination.getParentFile().mkdirs();
+				in = source.getInputStream();
+				out = destination.getOutputStream();
+				br = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
+				while ((line = br.readLine()) != null) {
+					String adjustedLine = line.replace("virtualRoot=\"WebContent/", "virtualRoot=\"");
+					int len = adjustedLine.length();
+					ByteBuffer bb = ByteBuffer.wrap(adjustedLine.getBytes());
+					out.write(bb.array(), 0, len);
+					out.write(10);
+				}
+			} finally {
+				if (in != null) {
+					in.close();
+				}
+				if (out != null) {
+					out.close();
+				}
+			}
+		} catch (IOException e) {
+			String desc = "IOException with createProjectTemplate";
+			theLogger.log(Level.SEVERE, desc, e);
+			throw new Error(desc, e);
 		}
 	}
 	

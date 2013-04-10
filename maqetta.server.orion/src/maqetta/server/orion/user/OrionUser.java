@@ -1,10 +1,18 @@
 package maqetta.server.orion.user;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.URI;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import maqetta.core.server.user.User;
 import maqetta.core.server.util.VResourceUtils;
@@ -49,6 +57,7 @@ public class OrionUser extends User {
 	protected static final IScopeContext scope = new OrionScope();	// XXX used?
 	protected IEclipsePreferences store;							// XXX used?
 	private static String DEFAULT_WORKSPACE = "MyWorkspace"; //$NON-NLS-1$
+	static final private Logger theLogger = Logger.getLogger(ServerManager.class.getName());
 	
 	public OrionUser(IPerson person) throws CoreException {
 		super(person);
@@ -150,15 +159,37 @@ public class OrionUser extends User {
 				IProjectTemplatesManager projectTemplatesManager = ServerManager.getServerManager().getProjectTemplatesManager();
 				IStorage projectTemplatesDirectory = projectTemplatesManager.getProjectTemplatesDirectory();
 				IStorage templateDir = projectTemplatesDirectory.newInstance(projectTemplatesDirectory, projectTemplateDirectoryName);
+				IStorage basePathDir;
+				if(basePath!=null && !basePath.equals("")){
+					basePathDir = projectDir.newInstance(projectDir, basePath);
+				}else{
+					basePathDir = projectDir;
+				}
 				if(templateDir.exists()) {
 					IStorage[] files = templateDir.listFiles();
 					for (int i = 0; i < files.length; i++) {
-						if (files[i].isFile()) {
-							IStorage destination = projectDir.newInstance(projectDir, files[i].getName());
-							copyFile(files[i], destination);
-						} else if (files[i].isDirectory()) {
-							IStorage destination = projectDir.newInstance(projectDir, files[i].getName());
-							copyDirectory(files[i], destination);
+						IStorage file = files[i];
+						if(file.isDirectory() && file.getName().equals(IDavinciServerConstants.DOT_SETTINGS)){
+							IStorage destinationDir = projectDir.newInstance(projectDir, IDavinciServerConstants.DOT_SETTINGS);
+							destinationDir.mkdirs();
+							IStorage[] dotSettingsFiles = file.listFiles();
+							for(int j = 0; j < dotSettingsFiles.length; j++){
+								IStorage settingsFile = dotSettingsFiles[j];
+								IStorage destination = file.newInstance(file, settingsFile.getName());
+								if(settingsFile.getName().equals(IDavinciServerConstants.LIBS_SETTINGS) &&
+										basePath!=null && !basePath.equals("")){
+									// If creating an Eclipse project, add "WebContent/" into library paths in libs.settings before writing out to the template.
+									copyFileAddWebContent(settingsFile, destination);
+								}else{
+									copyFile(settingsFile, destination);
+								}
+							}
+						}else if (file.isFile()) {
+							IStorage destination = basePathDir.newInstance(basePathDir, file.getName());
+							copyFile(file, destination);
+						} else if (file.isDirectory()) {
+							IStorage destination = basePathDir.newInstance(basePathDir, file.getName());
+							copyDirectory(file, destination);
 						}
 					}
 				}
@@ -368,4 +399,38 @@ public class OrionUser extends User {
 //			}
 //		}
 //	}
+	
+	private void copyFileAddWebContent(IStorage source, IStorage destination) throws IOException {
+		InputStream in = null;
+		OutputStream out = null;
+		BufferedReader br;
+		String line;
+		try{
+			try {
+				destination.getParentFile().mkdirs();
+				in = source.getInputStream();
+				out = destination.getOutputStream();
+				br = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
+				while ((line = br.readLine()) != null) {
+					String adjustedLine = line.replace("virtualRoot=\"", "virtualRoot=\"WebContent/");
+					int len = adjustedLine.length();
+					ByteBuffer bb = ByteBuffer.wrap(adjustedLine.getBytes());
+					out.write(bb.array(), 0, len);
+					out.write(10);
+				}
+			} finally {
+				if (in != null) {
+					in.close();
+				}
+				if (out != null) {
+					out.close();
+				}
+			}
+		} catch (IOException e) {
+			String desc = "IOException with createProjectTemplate";
+			theLogger.log(Level.SEVERE, desc, e);
+			throw new Error(desc, e);
+		}
+	}
+
 }

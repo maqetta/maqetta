@@ -830,28 +830,29 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 		this._srcDocument=source;
 		
-		// if it's NOT the theme editor loading
-		if (!source.themeCssFiles) { // css files need to be added to doc before body content
-			// ensure the top level body deps are met (ie. maqetta.js, states.js and app.css)
-			if(newHtmlParams){
-				var modelBodyElement = source.getDocumentElement().getChildElement("body");
-				modelBodyElement.setAttribute(MOBILE_DEV_ATTR, newHtmlParams.device);
-				modelBodyElement.setAttribute(PREF_LAYOUT_ATTR, newHtmlParams.flowlayout);
-				modelBodyElement.setAttribute(COMPTYPE_ATTR, newHtmlParams.comptype);
-			}
-			this.loadRequires(
-					"html.body",
-					true /*updateSrc*/,
-					false /*doUpdateModelDojoRequires*/,
-					true /*skipDomUpdate*/
-			).then(function(){
-					// make sure this file has a valid/good theme
-				this.loadTheme(newHtmlParams);
-				this._setSourcePostLoadRequires(source, callback, scope, newHtmlParams);
-			}.bind(this));
-		} else {
-			this._setSourcePostLoadRequires(source, callback, scope, newHtmlParams);
+
+		// css files need to be added to doc before body content
+		// ensure the top level body deps are met (ie. maqetta.js, states.js and app.css)
+		if(newHtmlParams){
+			// theme editor does not pass newHtmlParms
+			var modelBodyElement = source.getDocumentElement().getChildElement("body");
+			modelBodyElement.setAttribute(MOBILE_DEV_ATTR, newHtmlParams.device);
+			modelBodyElement.setAttribute(PREF_LAYOUT_ATTR, newHtmlParams.flowlayout);
+			modelBodyElement.setAttribute(COMPTYPE_ATTR, newHtmlParams.comptype);
 		}
+		this.loadRequires(
+				"html.body",
+				true /*updateSrc*/,
+				false /*doUpdateModelDojoRequires*/,
+				true /*skipDomUpdate*/
+		).then(function(){
+				// make sure this file has a valid/good theme
+			if(newHtmlParams){
+				// theme editor loads themes in themeEditor/context
+				this.loadTheme(newHtmlParams);
+			}
+			this._setSourcePostLoadRequires(source, callback, scope, newHtmlParams);
+		}.bind(this));
 
 
 	},
@@ -910,12 +911,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			 */
 			var resourceBase = this.getBase();
 			if (!dojoUrl) {
+				// #3839 Theme editor uses dojo from installed lib
 				// pull Dojo path from installed libs, if available
+				var context  = this;
 				dojo.some(Library.getUserLibs(resourceBase.toString()), function(lib) {
 					if (lib.id === "dojo") {
 						var fullDojoPath = new Path(this.getBase()).append(lib.root).append("dojo/dojo.js");
 						dojoUrl = fullDojoPath.relativeTo(this.getPath(),true).toString();
 						//dojoUrl = new Path(this.relativePrefix).append(lib.root).append("dojo/dojo.js").toString();
+						context.addJavaScriptSrc(dojoUrl, true, "", false);
 						return true;
 					}
 					return false;

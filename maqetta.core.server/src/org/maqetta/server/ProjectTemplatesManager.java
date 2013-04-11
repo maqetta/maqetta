@@ -17,6 +17,8 @@ import java.util.logging.Logger;
 
 import org.davinci.server.user.IPerson;
 import org.davinci.server.user.IUser;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.maqetta.server.IDavinciServerConstants;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -184,15 +186,15 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 			IStorage[] files = projectDir.listFiles();
 			for (int i = 0; i < files.length; i++) {
 				IStorage file = files[i];
-				String path = file.getPath();
-				String splits[] = path.split("/");
-				if(file.isFile() && splits.length > 0 && splits[1].equals(IDavinciServerConstants.DOT_PROJECT)){
+				String filename = file.getPath();
+				IPath path = new Path(filename);
+				if(file.isFile() && path.segmentCount() > 0 && path.segment(1).equals(IDavinciServerConstants.DOT_PROJECT)){
 					// Eclipse projects have a .project file. Don't copy that into the template
 					// because non-Eclipse projects shouldn't have that file.
 					// When a new Eclipse project is created using the template, a .project file
 					// will be added then.
 					continue;
-				}else if(file.isDirectory() && splits.length > 1 && splits[1].equals(IDavinciServerConstants.DOT_SETTINGS)){
+				}else if(file.isDirectory() && path.segmentCount() > 1 && path.segment(1).equals(IDavinciServerConstants.DOT_SETTINGS)){
 					// For .settings folder, only copy the libs.settings file.
 					// For Eclipse projects, there are several other files, but we don't want them in the template.
 					// When a new Eclipse project is created using the template, those extra files
@@ -203,7 +205,7 @@ public class ProjectTemplatesManager implements IProjectTemplatesManager {
 					IStorage libsSettingsDestination = destinationDir.newInstance(destinationDir, IDavinciServerConstants.LIBS_SETTINGS);
 					// Strip out the "WebContent/" string from the library paths in libs.settings before writing out to the template.
 					copyFileStripWebContent(libsSettingsSource, libsSettingsDestination);
-				}else if(file.isDirectory() && splits.length > 1 && splits[1].equals(IDavinciServerConstants.WEBCONTENT)){
+				}else if(file.isDirectory() && path.segmentCount() > 1 && path.segment(1).equals(IDavinciServerConstants.WEBCONTENT)){
 					// Copy the contents of WebContent/* into the base folder for the template
 					copyDirectory(file, templateDir);
 				}else if (file.isFile()) {

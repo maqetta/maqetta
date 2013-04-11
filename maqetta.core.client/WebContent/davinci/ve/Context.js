@@ -91,18 +91,35 @@ var MOBILE_DEV_ATTR = 'data-maq-device',
 var contextCount = 0;
 
 var removeEventAttributes = function(node) {
+	var libraries = metadata.getLibrary();	// No argument => return all libraries
+	
+
 	if(node){
 		dojo.filter(node.attributes, function(attribute) {
 			return attribute.nodeName.substr(0,2).toLowerCase() == "on";
 		}).forEach(function(attribute) {
-			/*
-			 * FIXME #3876 Need to leave the onload event for the iframe that gets 
-			 * added my dojox.io.scriptFrame when we are using dojox/io/xhrScriptPlugin
-			 * for cross domain JSONP. This should really be part of a toolkit helper but it 
-			 * is not added by a widget as we know them but a require of dojox/io/xhrScriptPlugin
-			 *  
-			 */
-			if (attribute.nodeValue.indexOf('dojox.io.scriptFrame._loaded') < 0) {
+			var requiredAttribute = false;
+			for(var libId in libraries){
+				/*
+				 * Loop through each library to check if the event attribute is required by that library
+				 * in page designer
+				 * 
+				 */
+				var library = metadata.getLibrary(libId);
+				var requiredAttribute = metadata.invokeCallback(library, 'requiredEventAttribute', [attribute]);
+				if (requiredAttribute) {
+					/*
+					 * If the attribute is required by a library then we stop checking 
+					 * it only needs to be required by one library for us to leave it on the node
+					 */
+							
+					break;
+				}
+			}
+			if (!requiredAttribute) {
+				/*
+				 * No library requires this event attribute in page designer so we will remove it.
+				 */
 				node.removeAttribute(attribute.nodeName);
 			}
 		});
@@ -3334,6 +3351,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	registerSceneManager: function(sceneManager){
+	
 		if(!sceneManager || !sceneManager.id){
 			return;
 		}

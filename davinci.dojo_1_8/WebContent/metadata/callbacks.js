@@ -330,12 +330,35 @@ define(function() {
 //        init: function(args) {
 //        },
 		onDocInit: function(context){
+	
 			var sm = new DojoMobileViewSceneManager(context);
 			context.registerSceneManager(sm);
 			dojo.subscribe('/davinci/ui/context/statesLoaded', function(docContext){
 				sm._reviewEditorSceneChange(docContext);
 			});
-//		},
+		},
+		/**
+		 * Checks if the event attribute is required for  widget to display poperly in the visual 
+		 * designer.
+		 * 
+		 * For example, to support cross domain JSONP dojox/io/xhrScriptPlugin adds a hidden iframe
+		 * to the document with a onload event handler that invokes the javascript to achive the 
+		 * cross domain invocation of the service. If we remove the onload handler from the iframe 
+		 * any widget that uses a data store that accesses a cross doain service will not display
+		 * with the data in the desiger.
+		 * 
+		 * @param {DOM Node attribute object} 
+		 * 
+		 * @return {boolean}  true if the event is required for the node, false if not.
+		 */
+		requiredEventAttribute: function(attribute){
+
+				if (attribute.nodeValue.indexOf('dojox.io.scriptFrame._loaded') > -1) {
+					return true;
+				} else {
+					return false;
+				}
+		}
         
 //        onFirstAdd: function(type, context) {
 //        },
@@ -347,7 +370,7 @@ define(function() {
 //        },
 //        
 //        onRemove: function(type, context) {
-        }
+//        }
     };
 
 });

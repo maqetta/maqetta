@@ -145,8 +145,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 	},
 	
 	setOrientation: function(orientation) {
-		if (this.deviceName!='none') {
-			// set orientation
+		if (this.deviceName != 'none' && this._orientation != orientation) {
 			this._orientation = orientation;
 
 			var editor = Workbench.getOpenEditor();
@@ -164,7 +163,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 			setTimeout(function() {
 				context.clearCachedWidgetBounds();
 				context.updateFocusAll(); 
-			}.bind(this), 100); 
+			}, 100); 
 		}
 	},
 

@@ -261,6 +261,8 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 				var id = htmlElement.getAttribute("id");
 				if (id && this._displayMode!="source") {
 					var widget = widgetUtils.byId(id, this.visualEditor.context.getDocument());
+					var box = GeomUtils.getMarginBoxPageCoords(widget.domNode);
+					this.getContext().getGlobal().scroll(box.l, box.t);
 					this.visualEditor.context.select(widget);
 				}
 			}

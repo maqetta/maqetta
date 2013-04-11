@@ -2,10 +2,16 @@ define([
 	"dojo/_base/declare",
 	"davinci/ve/tools/CreateTool",
 	"davinci/model/Path",
+	'davinci/Workbench',
+	'system/resource',
+	'davinci/workbench/Preferences'
 ], function (
 	declare,
 	CreateTool,
-	Path
+	Path,
+	Workbench,
+	Resource,
+	Preferences
 ) {
 
 return declare(CreateTool, {
@@ -15,10 +21,18 @@ return declare(CreateTool, {
 
 		// make the icons realtive to the file we are editing
 		dojo.forEach(this._data.children, dojo.hitch(this, function(child) {
-				var icon1 = new Path(child.properties.icon1)
-				var icon2 = new Path(child.properties.icon2)
-				child.properties.icon1 = icon1.relativeTo(srcDocPath.getParentPath(), true).toString();
-				child.properties.icon2 = icon2.relativeTo(srcDocPath.getParentPath(), true).toString();
+		
+			var base = Workbench.getProject();
+			// need the prefs bit to handle if we are eclipse project
+			var prefs = Preferences.getPreferences('davinci.ui.ProjectPrefs',base);
+			if(prefs.webContentFolder!=null && prefs.webContentFolder!=""){
+				var fullPath = new Path(base).append(prefs.webContentFolder);
+				base = fullPath.toString();
+			}
+			var icon1 = new Path(base + '/' + child.properties.icon1);
+			var icon2 = new Path(base + '/' + child.properties.icon2);
+			child.properties.icon1 = icon1.relativeTo(srcDocPath.getParentPath(), true).toString();
+			child.properties.icon2 = icon2.relativeTo(srcDocPath.getParentPath(), true).toString();
 		}));
 
 		var parent = args.target, parentNode, child;

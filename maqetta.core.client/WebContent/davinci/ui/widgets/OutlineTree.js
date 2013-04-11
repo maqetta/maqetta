@@ -8,8 +8,9 @@ define([
 	"dojo/dnd/Manager",
 	"dijit/Tree",
 	"../../Workbench",
+	"../../ve/utils/GeomUtils",
 	"./_ToggleTreeNode",
-], function(declare, connect, Topic, array, touch, mouse, DndManager, Tree, Workbench, ToggleTreeNode) {
+], function(declare, connect, Topic, array, touch, mouse, DndManager, Tree, Workbench, GeomUtils, ToggleTreeNode) {
 
 return declare(Tree, {
 	postCreate: function() {
@@ -99,6 +100,8 @@ return declare(Tree, {
 			if (oldSelection.indexOf(item) == -1) {
 				// don't select root
 				if (item.id != "myapp") {
+					var box = GeomUtils.getMarginBoxPageCoords(item.domNode);
+					this.context.getGlobal().scroll(box.l, box.t);
 					this.context.select(item, true);
 				}
 			}

@@ -4,12 +4,12 @@
 define([
     "dojo/_base/xhr",
     "dojo/Deferred",
-    "davinci/Runtime",
-    "davinci/model/Path",
-	"davinci/ve/themeEditor/metadata/CSSThemeProvider",
-	"davinci/ve/themeEditor/metadata/query",
-	"davinci/workbench/Preferences",
-//	"davinci/ve/metadata" // FIXME: circular ref?
+    "./Runtime",
+    "./model/Path",
+	"./ve/themeEditor/metadata/CSSThemeProvider",
+	"./ve/themeEditor/metadata/query",
+	"./workbench/Preferences",
+//	"./ve/metadata" // FIXME: circular ref?
 ],
 function(xhr, Deferred, Runtime, Path, CSSThemeProvider, Query/*, Metadata*/, Preferences) {
 
@@ -36,8 +36,8 @@ dojo.subscribe("/davinci/ui/libraryChanged/start", this, function() {
     _userLibsCache = {};
 });
 
-/* if resources are deleted, we need to check if they are themes.  if so dummp the theme cache so its resynced */
-dojo.subscribe("/davinci/resource/resourceChanged",this, function(type,changedResource){
+/* if resources are deleted, we need to check if they are themes.  if so dump the theme cache so its resynced */
+dojo.subscribe("/davinci/resource/resourceChanged",this, function(type, changedResource){
 	
 	var Workbench = require("davinci/Workbench");
 	var base = Workbench.getProject();
@@ -56,14 +56,13 @@ dojo.subscribe("/davinci/resource/resourceChanged",this, function(type,changedRe
 	if (changedResource.elementType == 'File' && changedResource.extension =="theme"){
 		// creates we don't do anything with the file is not baked yet
 		if (type == 'modified'){
-			var d = changedResource.getContent();
-			d.then(function(content) {
+			changedResource.getContent().then(function(content) {
 				var t = JSON.parse(content);
 				t.path = [changedResource.getPath()];
 				t.getFile = function(){
-					var f = system.resource.findResource(this.path[0]);
-					return f;
+					return system.resource.findResource(this.path[0]);
 				}.bind(t);
+
 				for (var i=0; i < _themesCache[base].length; i++){
 					if ( _themesCache[base][i].name == t.name) {
 						// found theme so replace it
@@ -71,11 +70,10 @@ dojo.subscribe("/davinci/resource/resourceChanged",this, function(type,changedRe
 						return;
 					}
 				}
+
 				// theme not found so add it.
 				_themesCache[base].push(t);
-				
 			}.bind(this));
-			
 		}
 	}
 });
@@ -114,7 +112,6 @@ getThemes: function(base, workspaceOnly, flushCache){
 	var allThemes = Runtime.serverJSONRequest({
 			url: "cmd/getThemes",
 			handleAs: "json",
-			content:{},
 			content:{
 				path: "*.theme",
 				ignoreCase: true,
@@ -125,13 +122,12 @@ getThemes: function(base, workspaceOnly, flushCache){
 		});
 
 	allThemes.forEach(function(theme){
-			theme.getFile = function(){
-					var f = system.resource.findResource(this.path[0]);
-					return f;
-				}.bind(theme);
-		}.bind(this));
+		theme.getFile = function(){
+			return system.resource.findResource(this.path[0]);
+		}.bind(theme);
+	}.bind(this));
 	
-		_themesCache[base] = allThemes; 
+	_themesCache[base] = allThemes; 
 
 	return result();
 },
@@ -231,9 +227,9 @@ getCustomWidgets: function(base) {
 				var maq_name = 'maq-lib-custom-' + childResource.name;
 				var url = childResource.getURL();
 				require({
-					packages: [{'name':maq_name,'location':url}]
+					packages: [{name: maq_name, location: url}]
 				});
-				this._customWidgetPackages.push({'name':childResource.name,'location':url});
+				this._customWidgetPackages.push({name: childResource.name, location: url});
 			}
 		}
 		
@@ -278,7 +274,11 @@ getCustomWidgets: function(base) {
 				for(var j=0; j<metadata.widgets.length; j++){
 					var widgetType = metadata.widgets[j].type;
 					if(widgetType){
-						this._customWidgetDescriptors[widgetType] = {'name':customModuleId,'location':metadataUrl,'descriptor':metadata};
+						this._customWidgetDescriptors[widgetType] = {
+								name: customModuleId,
+								location: metadataUrl,
+								descriptor: metadata
+						};
 					}
 				}
 			}
@@ -331,8 +331,7 @@ getLibRoot: function(id, version, base) {
 	
     var cache = _libRootCache;
     if (cache[base] && cache[base][id] && cache[base][id][version] !== undefined) {
-        d.resolve(cache[base][id][version] || "");
-        return d;
+        return d.resolve(cache[base][id][version] || "");
     }
     
     if(!cache[base]) {
@@ -359,8 +358,7 @@ getLibRoot: function(id, version, base) {
             cache[id] = {};
         }
         cache[base][id][version] = value;  
-        d.resolve(value || "");
-        return d;
+        return d.resolve(value || "");
     });
 },
 
@@ -373,7 +371,7 @@ modifyLib: function(libChanges) {
 	return Runtime.serverJSONRequest({
 		url: "cmd/modifyLib",
 		handleAs: "text",
-		content: {libChanges: dojo.toJson(libChanges)},
+		content: {libChanges: JSON.stringify(libChanges)},
 		sync:true
 	});
 },

@@ -164,7 +164,7 @@ define(function() {
 						if(viewNode && viewNode.id){
 							var newView = innerRegistry.byId(viewNode.id);
 							if(newView){
-								if(newView.declaredClass == 'dojox.mobile.SwapView'){
+								if(newView.declaredClass.replace(/\./g, "/") == 'dojox/mobile/SwapView'){
 									// For SwapView, we have to slide one-by-one from current SwapView
 									// to the newly select SwapView
 									var showingView = newView.getShowingView();
@@ -173,7 +173,7 @@ define(function() {
 									var allSwapViews = true;
 									for(var j = 0; j < nodes.length; j++){
 										n = nodes[j];
-										if(n.nodeType == 1 && n.getAttribute('data-dojo-type') != 'dojox.mobile.SwapView'){
+										if(n.nodeType == 1 && n.getAttribute('data-dojo-type').replace(/\./g, "/") != 'dojox/mobile/SwapView'){
 											allSwapViews = false;
 										}
 										if(n.id == showingView.id){

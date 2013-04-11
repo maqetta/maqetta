@@ -48,10 +48,9 @@ define([
 	});
 
 	var onTextChanged = function(textChangeEvent) {
-		// 'this' === Editor._textModel
 		if (this._dontNotifyChange) { 
 			// clear out the notify skipping
-			this._dontNotifyChange = false;
+			delete this._dontNotifyChange;
 			return;
 		}
 		this.lastChangeStamp = Date.now();
@@ -122,11 +121,8 @@ return declare(null, {
 	},
 
 	setVisible: function (visible) {
-
-//console.log("setVisible="+visible + " "+s)
 		if (visible!=this._isVisible && this._existWhenVisible) {
 			if (visible && this._existWhenVisible) {
-				this._dontNotifyChange = true;
 				this._createEditor();
 				this._updateStyler();
 			} else {

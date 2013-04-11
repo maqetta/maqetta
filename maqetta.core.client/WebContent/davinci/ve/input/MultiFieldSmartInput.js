@@ -120,7 +120,7 @@ var MultiFieldSmartInput = declare(SmartInput, {
 			if (!p.supportsHTML || !checkbox.checked) { // encode if plan text
 				value = entities.encode(value);
 			}
-			if (p.multiLine) {
+		//	if (p.multiLine) {
 				if (p.child) {
 					children = this.parseChildren(p, value);
 					if (p.property) {
@@ -132,9 +132,9 @@ var MultiFieldSmartInput = declare(SmartInput, {
 					props[p.property] = value;
 				}
 				
-			} else {
+			/*} else {
 				props[p.property] = value;
-			}
+			}*/
 		}.bind(this));
 		var command =  new ModifyCommand(this._widget, props, children, context);
 		context.getCommandStack().execute(command);
@@ -356,7 +356,7 @@ var MultiFieldSmartInput = declare(SmartInput, {
 		
 		var result = [];
 		data.children.forEach(function(child){
-			var text = child.properties.value;
+			var text = child.properties.value ? child.properties.value : child.children;
 			text = entities.decode(text);
 			var selected = (child.properties.selected || data.properties.value == text) ? "+" : "";
 			result.push(selected + text);
@@ -458,11 +458,11 @@ var MultiFieldSmartInput = declare(SmartInput, {
 		this.property.forEach(function(p){
 			var value = data.properties[p.property]  ||  ""; 
 			var checked = this.containsHtmlMarkUp(value) ? "checked" : "";
+			var prop = p.property || p.child.property;
+			if (p.child) {
+				value = this.serializeChildren(data);
+			}
 			if (p.multiLine) {
-				var prop = p.property || p.child.property;
-				if (p.child) {
-					value = this.serializeChildren(data);
-				}
 				tableContent +=
 					dojo.replace(trMultiLineTemplateString, {
 							label: this.getTitle(prop),
@@ -473,7 +473,7 @@ var MultiFieldSmartInput = declare(SmartInput, {
 							checked: checked
 					});
 			} else {
-				var format = this._widget.metadata.property[p.property].format;
+				var format = this._widget.metadata.property[prop] ? this._widget.metadata.property[prop].format : null;
 				var textboxType = "dijit/form/TextBox";
 				if (format) {
 					if (format == 'date'){
@@ -484,12 +484,12 @@ var MultiFieldSmartInput = declare(SmartInput, {
 				}
 				tableContent +=
 				dojo.replace(trTemplateString, {
-						label: this.getTitle(p.property),
+						label: this.getTitle(prop),
 						textboxType: textboxType,
-						textboxId: 'MultiFieldSmartInput_SmartInput_'+p.property,
+						textboxId: 'MultiFieldSmartInput_SmartInput_'+prop,
 						textboxValue: value,
-						checkboxDivId: 'MultiFieldSmartInput_SmartInput_checkbox_div_'+p.property,
-						checkboxId: 'MultiFieldSmartInput_SmartInput_checkbox_'+p.property,
+						checkboxDivId: 'MultiFieldSmartInput_SmartInput_checkbox_div_'+prop,
+						checkboxId: 'MultiFieldSmartInput_SmartInput_checkbox_'+prop,
 						checked: checked
 				});
 			}

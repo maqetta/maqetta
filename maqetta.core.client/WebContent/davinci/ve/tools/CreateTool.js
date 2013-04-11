@@ -857,7 +857,7 @@ return declare("davinci.ve.tools.CreateTool", _Tool, {
 	
 	_isTypeContainer: function(type) {
 		return  type && 
-			(type == 'dijit.layout.ContentPane' ||
+			(type == 'dijit/layout/ContentPane' ||
 			type == 'html.div' ||
 			type == 'html.form' ||
 			type == 'html.fieldset');

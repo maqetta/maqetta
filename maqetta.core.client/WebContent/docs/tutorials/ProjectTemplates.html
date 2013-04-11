@@ -1,0 +1,153 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Tutorial 17 - Project Templates</title>
+</head>
+<body class="maqettadocs">
+
+<style type="text/css">
+table.CompTypeTable {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+table.CompTypeTable td, table.CompTypeTable th {
+	padding:3px;
+	border:1px solid black;
+}
+table.CompTypeTable th {
+	font-style:italic;
+	font-weight:bold;
+	background:#888;
+}
+table td.CompTypeOption {
+	font-weight:bold;
+}
+tr.desktop {
+	background-color:#ddf;
+}
+tr.mobile {
+	background-color:#dfd;
+}
+</style>
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td> &nbsp; </td>
+    <td class="prevnext">
+	<a href="tutorials/Review_Commenting.html">Previous</a> / <a href="tutorials/tutorials.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Tutorial 17 - Project Templates</h1>
+
+<h2>UNDER CONSTRUCITON</h2>
+
+<div class='note'>
+	When going through Maqetta's tutorials, it is suggested that you have two side-by-side
+	browser windows open, one showing the tutorial, and the other where you run the application
+	and perform the steps listed in the tutorial.<br/>
+	<img src='img/SideBySideTutorialsApp.png' class='side_by_side'/>
+</div>
+
+<p>This tutorial introduces Maqetta's project templates states feature. This tutorial covers these topics:</p>
+<ul>
+	<li>Tutorial preparation</li>
+	<li>blah blah blah</li>
+	<li>blah blah blah</li>
+</ul>
+
+<a name="tutorial_preparation"><h2>Tutorial preparation</h2></a>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Issue a <b>Create Sketch (high-fidelity)...</b> command. In the Create Sketch dialog,
+	click the <b>Create</b> button to create a new file with the default filename.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Palette</b>, click on the <b>Controls</b> section to open that section, then
+	click on the the subsection labelled <b>Buttons</b>.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Drag a Button widget and drop somewhere near the top/left corner of the canvas.
+	In the data entry popup, enter the text "Show dialog", then click OK.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Palette</b>, click on the <b>Drawing Tools</b> section to open that section.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the Rectangle widget in the <b>Palette</b>, then move the mouse
+	over the canvas. Then drag out a rectangle about 400px by 400px, with the top of 
+	the rectangle just under the Button.</li>
+<div class="image">
+<a href="img/sketching_states_button_rect.png" target="_blank"><img alt="image" src="img/sketching_states_button_rect.png" style="margin: 1em 1em 0pt 0pt; height:300px; width:auto;" /></a>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	From the Drawing Tools section of the <b>Palette</b>, drag a Line widget into the Rectangle.
+	Go into the Outline palette and verify that the Line widget is a child of the Rectangle
+	If it is not a child, then undo the operation to remove the Line, and perform the drag
+	operation again to make sure that the Line is dropped inside of the Rectangle 
+	so that it will be a child of the Rectangle.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Drag the left-side nob of the Line widget until it snaps to the left side of the Rectangle,
+	about 50px under the Rectangle's top border.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Now, while holding down the shift key (to constrain dragging to horizontal or vertical)
+	drag the right-side nob vertically so that has approximately the same y-axis value as the left-side of the Line,
+	and horizontally until it snaps to the right side of the Rectangle. If you perform a mouse-up
+	while the shift key is pressed, you will have a horizontal line. The snapping should ensure
+	that the left and right edges of the Line are coincident with the left and right edges of the Rectangle.</li>
+<div class="image">
+<a href="img/sketching_states_horiz_line.png" target="_blank"><img alt="image" src="img/sketching_states_horiz_line.png" style="margin: 1em 1em 0pt 0pt; height:300px; width:auto;" /></a>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	From the Drawing Tools section of the <b>Palette</b>, drag a Text widget into the top/left corner of the Rectangle.
+	When the data entry popup appears, enter the text "My dialog".
+	Go into the Outline palette and verify that the Text widget is a child of the Rectangle
+	If it is not a child, then undo the operation to remove the Text, and perform the drag
+	operation again to make sure that the Text is dropped inside of the Rectangle 
+	so that it will be a child of the Rectangle.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Drag the Text widget ("My dialog") a few pixels to left, top, right, bottom until it is in a proper location for a dialog title string.
+	Then use the arrow keys to do one-pixel position adjustments.</li>
+<div class="image">
+<a href="img/sketching_states_dialog_title.png" target="_blank"><img alt="image" src="img/sketching_states_dialog_title.png" style="margin: 1em 1em 0pt 0pt; height:300px; width:auto;" /></a>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	From the Controls / Checkboxes, RadioButtons, Switches section of <b>Palette</b>, 
+	drag two RadioButton widgets inside the Rectangle, under the title,
+	and close to the left-side, stacked vertically.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	From the HTML / Common section of the <b>Palette</b>,
+	drag two &lt;label&gt; widgets just to the right of each of the RadioButtons.
+	In the data entry popups for the two  &lt;label&gt; widgets, enter the values
+	"Show image" and "Show map". Drag the RadioButtons and &lt;label&gt; around
+	until the canvas looks something like this:</li>
+<div class="image">
+<a href="img/sketching_states_radios_labels.png" target="_blank"><img alt="image" src="img/sketching_states_radios_labels.png" style="margin: 1em 1em 0pt 0pt; height:300px; width:auto;" /></a>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	From the Clip Art / User Interface Icons section of <b>Palette</b>, 
+	drag a Close widget inside the title part of the Rectangle, close to the right edge of the title region.
+	Drag the Close widget, and/or use the arrow keys on the keyboard, to position the Cloes widget
+	at a suitable place in the right corner
+	until the canvas looks something like this:</li>
+<div class="image">
+<a href="img/sketching_states_close_button.png" target="_blank"><img alt="image" src="img/sketching_states_close_button.png" style="margin: 1em 1em 0pt 0pt; height:300px; width:auto;" /></a>
+</div>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Go into the Outline palette and verify that all of the following widgets
+	are children of the Rectangle: Line, Text, RadioButtons, &lt;label&gt;'s and Close.</li>
+</ol>
+	
+<a name="defining_states"><h2>Defining custom application states</h2></a>
+
+<p>Now we have most of the graphics added for our sketch, but we would like to
+	make the sketch "live" by adding some interactivity:</p>
+
+
+<br />
+<p class="prevnext"><a href="tutorials/Review_Commenting.html">Previous</a> / <a href="tutorials/tutorials.html">Next</a></p>
+
+</div> <!-- pagebody -->
+
+</body>
+</html>

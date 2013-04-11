@@ -889,11 +889,12 @@ return declare(_WidgetBase, {
     
     
     _updateSubwidgetListForState: function() {
+ 
     	if (this._context.editor != Runtime.currentEditor){
             // not for us
             return;
         }
-        if (this._context._selectedWidget && this._displayedWidget === this._context._selectedWidget) {
+        if (this._context._selectedWidget && this._displayedWidget === this._context._selectedWidget && this._cm) {
             var editor = Runtime.currentEditor,
                 themeMetadata = editor._theme;
             this._cm.getChildren().forEach(function(child) {
@@ -920,6 +921,7 @@ return declare(_WidgetBase, {
     },
     
     _clearList: function() {
+  
         if (this._cm){
             this._cm.destroyRecursive(false);
             delete this._cm;

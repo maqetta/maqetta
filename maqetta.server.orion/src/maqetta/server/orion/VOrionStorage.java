@@ -72,22 +72,6 @@ public class VOrionStorage implements IStorage {
 		return this.getPath();
 	}
 
-	public boolean mkdirs() {
-		// TODO Auto-generated method stub
-		try {
-			IStorage parent = this.getParentFile();
-			if (parent != null && !parent.exists() && !(parent instanceof VOrionWorkspaceStorage)) {
-				parent.mkdirs();
-			}
-			// if(this.store.fetchInfo().isDirectory())
-			this.store.mkdir(EFS.NONE, null);
-		} catch (CoreException e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-	}
-
 	public IStorage[] listFiles() {
 		Vector<VOrionStorage> results = new Vector<VOrionStorage>();
 		try {
@@ -146,6 +130,21 @@ public class VOrionStorage implements IStorage {
 		}
 	}
 
+	public boolean mkdirs() {
+		try {
+			IStorage parent = this.getParentFile();
+			if (parent != null && !parent.exists()) {
+				parent.mkdirs();
+			}
+			// if(this.store.fetchInfo().isDirectory())
+			this.store.mkdir(EFS.NONE, null);
+		} catch (CoreException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
 	public void renameTo(IStorage file) throws IOException {
 		try {
 			this.store.move(((VOrionStorage) file).store, EFS.NONE, null);
@@ -171,29 +170,25 @@ public class VOrionStorage implements IStorage {
 		return parent;
 	}
 
-	private VOrionStorage get(String segment) {
-		return new VOrionStorage(segment, this.store.getChild(segment), this);
-	}
-
 	public IStorage newInstance(IStorage parent, String name) {
 		return ((VOrionStorage) parent).create(name);
 	}
 
-	public IStorage create(String name) {
-
-		IPath path = new Path(name);
-		VOrionStorage parent = this;
-		for (int i = 0; i < path.segmentCount(); i++) {
-			IFileStore parentStore = parent.store;
-			IFileStore childStore = parentStore.getChild(path.segment(i));
-			parent = new VOrionStorage(path.segment(i), childStore, parent);
-		}
-		return parent;
-	}
-
 	public IStorage newInstance(URI uri) {
 		// not used
-		return null;
+		throw new RuntimeException("Unimplemented method");
+	}
+
+	public IStorage create(String name) {
+		IPath path = new Path(name);
+		VOrionStorage result = this;
+		for (int i = 0, len = path.segmentCount(); i < len; i++) {
+			// getChild() is a handle-only method; a child is provided regardless of whether this
+			// store or the child store exists, or whether this store represents a directory or not.
+			IFileStore childStore = result.store.getChild(path.segment(i));
+			result = new VOrionStorage(path.segment(i), childStore, result);
+		}
+		return result;
 	}
 
 	public Collection<IStorage> findFiles(IStorage parentFolder, String pathStr, boolean ignoreCase) {

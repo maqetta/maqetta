@@ -2,7 +2,10 @@ package maqetta.server.orion;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.Collection;
@@ -28,7 +31,6 @@ import javax.servlet.http.Part;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.orion.internal.server.servlets.workspace.WebProject;
 import org.eclipse.orion.internal.server.servlets.workspace.WebWorkspace;
 import org.eclipse.orion.internal.server.servlets.workspace.WorkspaceResourceHandler;
@@ -36,6 +38,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.maqetta.server.IStorage;
+
+/**
+ * Represents an Orion user workspace.
+ * A user always has a workspace; for that reason, <code>exists()</code> always returns <code>true</code>.
+ */
 
 @SuppressWarnings("restriction")
 public class VOrionWorkspaceStorage extends VOrionProjectStorage{
@@ -48,30 +55,133 @@ public class VOrionWorkspaceStorage extends VOrionProjectStorage{
 		super(".", null, null);
 		this.webWorkspace = webWorkspace;
 	}
-	
+
+	public IStorage newInstance(String name) {
+		IPath path = new Path(name);
+		String seg1 = path.segment(0);
+		WebProject project = webWorkspace.getProjectByName(seg1);
+		if (project == null) {
+			// Trying to create a new instance of a project which doesn't currently exist.  However,
+			// since all projects are first created through direct calls to `create()`, a null
+			// value here most likely means that we have an invalid URL.
+
+			// Return a dummy storage object which will always return `false` for `exists()`. 
+			return new IStorage() {
+				public boolean exists() {
+					return false;
+				}
+				public String getAbsolutePath() {
+					return null;
+				}
+				public boolean mkdirs() {
+					return false;
+				}
+				public IStorage[] listFiles() {
+					return null;
+				}
+				public boolean isDirectory() {
+					return true;
+				}
+				public URI toURI() {
+					return null;
+				}
+				public IStorage getParentFile() {
+					return null;
+				}
+				public OutputStream getOutputStream() throws IOException {
+					return null;
+				}
+				public InputStream getInputStream() throws IOException {
+					return null;
+				}
+				public boolean delete() {
+					return false;
+				}
+				public void createNewFile() throws IOException {
+				}
+				public String getPath() {
+					return null;
+				}
+				public String getName() {
+					return null;
+				}
+				public void mkdir() throws IOException {
+				}
+				public void renameTo(IStorage file) throws IOException {
+				}
+				public IStorage newInstance(String name) {
+					return null;
+				}
+				public IStorage newInstance(IStorage parent, String name) {
+					return null;
+				}
+				public IStorage newInstance(URI uri) {
+					return null;
+				}
+				public Collection<?> findFiles(IStorage parentFolder, String pathStr, boolean ignoreCase) {
+					return null;
+				}
+				public boolean isFile() {
+					return false;
+				}
+				public String[] list() {
+					return null;
+				}
+			};
+		}
+
+		return super.newInstance(name);
+	}
+
+	public IStorage newInstance(IStorage parent, String name) {
+		if (parent instanceof VOrionWorkspaceStorage) {
+			return parent.newInstance(name);
+		}
+		return super.newInstance(parent, name);
+	}
+
 	public String getPath(){
 		return this.name;
 	}
 
-	public IStorage create(String name){
-		
+	/**
+	 * NOTE: Differs from <code>VOrionStorage.create()</code> in that this method will actually
+	 * create the underlying project on the filesystem.  That means that we have to be careful
+	 * when this is called, since passing in a random path will create a random project, which
+	 * probably wasn't intended.
+	 */
+	public IStorage create(String name) {
 		IStorage existing = this.get(name);
-		
-		if(existing!=null)
+		if (existing != null) {
 			return existing;
-		
-			IPath path = new Path(name);
-			VOrionStorage parent = (VOrionStorage)this.createProj(path.segment(0));
-			if(path.segmentCount() > 1)
-				return parent.create(path.removeFirstSegments(1).toString());
-			
-			return parent;
+		}
+
+		IPath path = new Path(name);
+		VOrionStorage parent = (VOrionStorage) this.createProject(path.segment(0));
+		if (path.segmentCount() > 1) {
+			return parent.create(path.removeFirstSegments(1).toString());
+		}
+
+		return parent;
 	}
+
+	public void mkdir() throws IOException {
+		// no-op
+		// The user workspace directory always exists.
+		return; // XXX remove me
+	}
+
+	public boolean mkdirs() {
+		// no-op
+		// The user workspace directory always exists.
+		return true;
+	}
+
 	public boolean exists() {
 		return true;
 	}
 
-	public IStorage createProj(String name){
+	public IStorage createProject(String name){
 		IStorage existing = this.get(name);
 		if(existing!=null)
 			return existing;
@@ -109,7 +219,6 @@ public class VOrionWorkspaceStorage extends VOrionProjectStorage{
 		return null;
 	}
 
-
 	public IStorage get(String name){
 		IStorage[] projects = this.listFiles();
 		for(int i=0;i<projects.length;i++){
@@ -118,6 +227,7 @@ public class VOrionWorkspaceStorage extends VOrionProjectStorage{
 		}
 		return null;
 	}
+
 	public void removeProject(WebProject webProject){
 		webWorkspace.removeProject(webProject);
 		try {
@@ -128,7 +238,6 @@ public class VOrionWorkspaceStorage extends VOrionProjectStorage{
 	}
 	
 	public IStorage[] listFiles(){
-		
 		JSONArray allProjects;
 		Vector<VOrionProjectStorage> projects = new Vector<VOrionProjectStorage>();
 		try {

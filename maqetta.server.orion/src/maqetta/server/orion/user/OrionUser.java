@@ -264,27 +264,23 @@ public class OrionUser extends User {
         	path=path.substring(1);
 
         IPath a = new Path(this.userDirectory.getAbsolutePath()).append(path);
+
         /*
          * security check, dont want to return a resource BELOW the workspace
          * root
          */
         IStorage parentStorage = this.userDirectory.newInstance(a.toString());
-        
-        
         if (!parentStorage.exists()) {
-        	
             IPath a2 = new Path(this.userDirectory.getAbsolutePath()).append(path + IDavinciServerConstants.WORKING_COPY_EXTENSION);
             IStorage workingCopy = this.userDirectory.newInstance(a2.toString());
             if (!workingCopy.exists()) {
                 return null;
             }
-        	
         }
-     
-       
+
         IVResource parent = this.workspace;
         IPath halfPath = new Path("");
-        for (int i = 1; i < a.segmentCount(); i++) {
+        for (int i = 1, len = a.segmentCount(); i < len; i++) {
         	halfPath = halfPath.append(a.segment(i));
         	IStorage f = this.userDirectory.newInstance(halfPath.toString());
             parent = new VOrionResource(f, parent,a.segment(i));

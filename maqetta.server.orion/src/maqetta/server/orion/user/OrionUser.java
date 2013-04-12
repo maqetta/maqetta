@@ -110,12 +110,14 @@ public class OrionUser extends User {
 		// remove servlet context, if any
 		orionPath = orionPath.removeFirstSegments(orionPath.matchingFirstSegments(contextPath));
 
-		String projectId = orionPath.segment(1);  // [0]: "file", [1]: project id, [2] sub-folder, ...
-		WebProject proj = WebProject.fromId(projectId);
-		String path = proj.getName();
-		
+		String workspaceId = orionPath.segment(1);  // [0]: "file", [1]: workspace id, [2]: project name, [3] sub-folder, ...
+		String projectName = orionPath.segment(2);
+
+		WebProject proj = WebWorkspace.fromId(workspaceId).getProjectByName(projectName);
+
+		String path = projectName;
 		IFileStore child = null;
-		for (int i = 2; i < orionPath.segmentCount(); i++) {
+		for (int i = 3; i < orionPath.segmentCount(); i++) {
 			child = proj.getProjectStore().getChild(orionPath.segment(i));
 			path += "/" + child.getName();
 		}
@@ -295,27 +297,23 @@ public class OrionUser extends User {
         	path=path.substring(1);
 
         IPath a = new Path(this.userDirectory.getAbsolutePath()).append(path);
+
         /*
          * security check, dont want to return a resource BELOW the workspace
          * root
          */
         IStorage parentStorage = this.userDirectory.newInstance(a.toString());
-        
-        
         if (!parentStorage.exists()) {
-        	
             IPath a2 = new Path(this.userDirectory.getAbsolutePath()).append(path + IDavinciServerConstants.WORKING_COPY_EXTENSION);
             IStorage workingCopy = this.userDirectory.newInstance(a2.toString());
             if (!workingCopy.exists()) {
                 return null;
             }
-        	
         }
-     
-       
+
         IVResource parent = this.workspace;
         IPath halfPath = new Path("");
-        for (int i = 1; i < a.segmentCount(); i++) {
+        for (int i = 1, len = a.segmentCount(); i < len; i++) {
         	halfPath = halfPath.append(a.segment(i));
         	IStorage f = this.userDirectory.newInstance(halfPath.toString());
             parent = new VOrionResource(f, parent,a.segment(i));

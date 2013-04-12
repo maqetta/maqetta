@@ -14,18 +14,11 @@ import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.IScopeContext;
-import org.eclipse.orion.server.core.users.OrionScope;
 import org.maqetta.server.IStorage;
 
 public class VOrionStorage implements IStorage {
 	IFileStore store;
-	protected static final IScopeContext scope = new OrionScope();
-	protected IEclipsePreferences prefStore;
-
 	String name;
-	IFileStore root;
 	VOrionStorage parent;
 
 	public VOrionStorage(String name, IFileStore store, VOrionStorage parent) {
@@ -70,22 +63,6 @@ public class VOrionStorage implements IStorage {
 
 	public String getAbsolutePath() {
 		return this.getPath();
-	}
-
-	public boolean mkdirs() {
-		// TODO Auto-generated method stub
-		try {
-			IStorage parent = this.getParentFile();
-			if (parent != null && !parent.exists() && !(parent instanceof VOrionWorkspaceStorage)) {
-				parent.mkdirs();
-			}
-			// if(this.store.fetchInfo().isDirectory())
-			this.store.mkdir(EFS.NONE, null);
-		} catch (CoreException e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
 	}
 
 	public IStorage[] listFiles() {
@@ -146,6 +123,21 @@ public class VOrionStorage implements IStorage {
 		}
 	}
 
+	public boolean mkdirs() {
+		try {
+			IStorage parent = this.getParentFile();
+			if (parent != null && !parent.exists()) {
+				parent.mkdirs();
+			}
+			// if(this.store.fetchInfo().isDirectory())
+			this.store.mkdir(EFS.NONE, null);
+		} catch (CoreException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
 	public void renameTo(IStorage file) throws IOException {
 		try {
 			this.store.move(((VOrionStorage) file).store, EFS.NONE, null);
@@ -171,29 +163,25 @@ public class VOrionStorage implements IStorage {
 		return parent;
 	}
 
-	private VOrionStorage get(String segment) {
-		return new VOrionStorage(segment, this.store.getChild(segment), this);
-	}
-
 	public IStorage newInstance(IStorage parent, String name) {
 		return ((VOrionStorage) parent).create(name);
 	}
 
-	public IStorage create(String name) {
-
-		IPath path = new Path(name);
-		VOrionStorage parent = this;
-		for (int i = 0; i < path.segmentCount(); i++) {
-			IFileStore parentStore = parent.store;
-			IFileStore childStore = parentStore.getChild(path.segment(i));
-			parent = new VOrionStorage(path.segment(i), childStore, parent);
-		}
-		return parent;
-	}
-
 	public IStorage newInstance(URI uri) {
 		// not used
-		return null;
+		throw new RuntimeException("Unimplemented method");
+	}
+
+	public IStorage create(String name) {
+		IPath path = new Path(name);
+		VOrionStorage result = this;
+		for (int i = 0, len = path.segmentCount(); i < len; i++) {
+			// getChild() is a handle-only method; a child is provided regardless of whether this
+			// store or the child store exists, or whether this store represents a directory or not.
+			IFileStore childStore = result.store.getChild(path.segment(i));
+			result = new VOrionStorage(path.segment(i), childStore, result);
+		}
+		return result;
 	}
 
 	public Collection<IStorage> findFiles(IStorage parentFolder, String pathStr, boolean ignoreCase) {

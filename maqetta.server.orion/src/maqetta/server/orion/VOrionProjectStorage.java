@@ -1,5 +1,7 @@
 package maqetta.server.orion;
 
+import java.io.IOException;
+
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.runtime.CoreException;
@@ -12,19 +14,14 @@ public class VOrionProjectStorage extends VOrionStorage {
 	public VOrionProjectStorage(String name, IFileStore store,WebProject proj, VOrionProjectStorage parent) {
 		super(name, store, parent);
 		this.proj = proj;
-		if(store!=null){
-			try {
-				this.store.mkdir(EFS.NONE, null);
-			} catch (CoreException e) {
-				e.printStackTrace();
-			}
-		}
 	}
-	
+
+	protected VOrionProjectStorage(String name, IFileStore store,VOrionProjectStorage parent) {
+		this(name, store,null,parent);
+	}
+
 	 public boolean delete() {
-	        // TODO Auto-generated method stub
-		 try {
-			 
+		try {
 			this.store.delete(EFS.NONE, null);
 			((VOrionWorkspaceStorage)this.parent).removeProject(this.proj);
 			proj.remove();
@@ -34,19 +31,32 @@ public class VOrionProjectStorage extends VOrionStorage {
 		}
 		 return true;
 	 }
-
-	 
 	
 	public boolean isDirectory() {
 		return true;
 	}
-	protected VOrionProjectStorage(String name, IFileStore store,VOrionProjectStorage parent) {
-		this(name, store,null,parent);
-	}
 	
 	public VOrionStorage getParentFile() {
-		
 		return this.parent;
+	}
+
+	public void createNewFile() throws IOException {
+		throw new IOException("Cannot create file representing directory -- operation not allowed.");
+	}
+
+	public void mkdir() throws IOException {
+		((VOrionWorkspaceStorage)this.parent).createProject(this.name);
+	}
+
+	public boolean mkdirs() {
+		try {
+			this.mkdir();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 }

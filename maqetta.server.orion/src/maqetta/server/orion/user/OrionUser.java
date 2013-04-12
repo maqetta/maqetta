@@ -110,12 +110,14 @@ public class OrionUser extends User {
 		// remove servlet context, if any
 		orionPath = orionPath.removeFirstSegments(orionPath.matchingFirstSegments(contextPath));
 
-		String projectId = orionPath.segment(1);  // [0]: "file", [1]: project id, [2] sub-folder, ...
-		WebProject proj = WebProject.fromId(projectId);
-		String path = proj.getName();
-		
+		String workspaceId = orionPath.segment(1);  // [0]: "file", [1]: workspace id, [2]: project name, [3] sub-folder, ...
+		String projectName = orionPath.segment(2);
+
+		WebProject proj = WebWorkspace.fromId(workspaceId).getProjectByName(projectName);
+
+		String path = projectName;
 		IFileStore child = null;
-		for (int i = 2; i < orionPath.segmentCount(); i++) {
+		for (int i = 3; i < orionPath.segmentCount(); i++) {
 			child = proj.getProjectStore().getChild(orionPath.segment(i));
 			path += "/" + child.getName();
 		}

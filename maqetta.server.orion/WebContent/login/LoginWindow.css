@@ -172,9 +172,14 @@
 #orionLogin #loginButton, 
 #orionBody #sendResetButton, 
 #orionBody #createButton, 
+#orionBody #registerButton, 
 #orionBody #signupUserButton,
 #orionBody #resetConfirmButton {
 	font-weight:bold;
+}
+#orionBody #registerButton {
+	height:30px;
+	width:100px;
 }
 #orionLogin .orion-login-forgot-holder {
 	display:block !important;

@@ -40,7 +40,9 @@
         },
         "value": {
             "datatype": "string",
-            "title": "Value"
+            "title": "Value",
+            "description": "Number that the widget displays inside the input area of empty form fields, if set the placeHolder is hidden "
+            
         },
         "tabIndex": {
             "datatype": "string",
@@ -74,6 +76,10 @@
         "propercase": {
             "datatype": "boolean",
             "hidden": true
+        },
+        "placeHolder": {
+            "datatype": "string",
+            "description": "hint text that the widget displays inside the input area of empty form fields, such as 'Integer between -20000 to +20000:'. "
         },
         "maxLength": {
             "datatype": "string",

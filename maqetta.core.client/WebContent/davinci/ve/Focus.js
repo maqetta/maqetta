@@ -46,7 +46,6 @@ return declare(_WidgetBase, {
 		dojo.addClass(this._frames[BOTTOM], "editFocusFrameBOTTOM");
 		
 		this._nobs = [];
-		var border = (dojo.isIE ? 0 : 2);
 		for(var i = 0; i < 8; i++){
 			var nob = dojo.create("div", {"class": "editFocusNob"}, this._stdChrome);
 			this._nobs.push(nob);
@@ -365,7 +364,7 @@ return declare(_WidgetBase, {
 		this.domNode.style.opacity = .95;
 		setTimeout(function(){
 			this.domNode.style.opacity = 1;
-		}.bind(this),1)
+		}.bind(this), 1);
 	},
 
 	onMouseDown: function(event){
@@ -618,8 +617,7 @@ return declare(_WidgetBase, {
 		this._moverMouseUpEvent = null;
 		
 		if(event && event.target){
-			var clickInteral = 750;	// .75seconds: allow for leisurely click action
-			var dblClickInteral = 750;	// .75seconds: big time slot for tablets
+			var dblClickInterval = 750;	// .75seconds: big time slot for tablets
 			var clickDistance = 10;	// within 10px: inexact for tablets
 			var dateValue = Date.now();
 
@@ -632,7 +630,7 @@ return declare(_WidgetBase, {
 			if(this._lastMouseUp){
 				if(Math.abs(event.pageX - this._lastMouseUp.pageX) <= clickDistance &&
 						Math.abs(event.pageY - this._lastMouseUp.pageY) <= clickDistance &&
-						(dateValue - this._lastMouseUp.dateValue) <= dblClickInteral){
+						(dateValue - this._lastMouseUp.dateValue) <= dblClickInterval){
 					this.onDblClick(event);
 				}
 			}
@@ -891,11 +889,12 @@ return declare(_WidgetBase, {
     
     
     _updateSubwidgetListForState: function() {
+ 
     	if (this._context.editor != Runtime.currentEditor){
             // not for us
             return;
         }
-        if (this._context._selectedWidget && this._displayedWidget === this._context._selectedWidget) {
+        if (this._context._selectedWidget && this._displayedWidget === this._context._selectedWidget && this._cm) {
             var editor = Runtime.currentEditor,
                 themeMetadata = editor._theme;
             this._cm.getChildren().forEach(function(child) {
@@ -922,6 +921,7 @@ return declare(_WidgetBase, {
     },
     
     _clearList: function() {
+  
         if (this._cm){
             this._cm.destroyRecursive(false);
             delete this._cm;

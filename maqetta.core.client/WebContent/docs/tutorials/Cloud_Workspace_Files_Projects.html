@@ -56,8 +56,8 @@ with your cloud workspace. Topics covered:</p>
 	<li>The Files palette</li>
 	<li>Creating Files</li>
 	<li>Opening Files from the Files Palette</li>
-	<li>Files Palette Context Menu</li>
 	<li>Files Palette Toolbar</li>
+	<li>Files Palette Context Menu</li>
 	<li>Creating and Switching Projects</li>
 	<li>Orion Navigator</li>
 </ul>
@@ -79,7 +79,8 @@ with your cloud workspace. Topics covered:</p>
 </div>
 </ol>
 
-<p>What you are seeing is your personal cloud workspace.
+<p>Under the <strong>Files</strong> palette toolbar,
+	what you are seeing is your personal cloud workspace.
 	Maqetta creates a default project (<em>project1</em>) for each new user,
 	and puts a set of default files in the newly created project:</p>
 <ul>
@@ -235,11 +236,65 @@ with your cloud workspace. Topics covered:</p>
 	- to close all of the editors. </li>
 </ol>
 
-<a id='File_palette_context_menu'></a>
-<h2>Files Palette Context Menu</h2>
+<a id='File_palette_toolbar'></a>
+<h2>Files Palette Toolbar</h2>
 
 <p>In the <strong>Files</strong> palette, you can create folders, delete files, rename files, 
 	upload files, and download files.</p>
+
+The <strong>Files</strong> palette toolbar contains several important features.
+
+<div class='overview_snapshots_outer'>
+	<span class='overview_snapshots_inner'>
+		<img src="img/Files_palette_toolbar.png" style='width:300px;'/> 
+	</span>
+</div>
+
+<ul>
+	<li><span class='minortopic'>Toolbar row 1: project and project template actions</span> -
+		The first row in the Files palette toolbar contains project-related actions.
+		<ul>
+			<li><strong>Project selection control</strong> - 
+				At the left of the first row is the project selection control.
+				It displays the currently active project ("project1" in the picture above)
+				and provides a dropdown menu that shows all of your projects.
+				To change projects, choose a different project name from the dropdown menu.</li>
+			<li><strong>New project icon</strong> - Allows you to create a new project.</li>
+			<li><strong>Project menu</strong> - 
+			The icon at the right side of the first row brings up the project menu, which includes these commands:
+				<ul>
+					<li><strong>Delete this project...</strong> - Allows you to delete
+						the currently open project.</li>
+					<li><strong>Rename this project...</strong> - Allows you to rename
+						the currently open project.</li>
+					<li><strong>Save as project template...</strong> - 
+						Takes a snapshot of your current project
+						and saves it as a re-usable "project template".</li>
+					<li><strong>Manage project templates...</strong> - 
+						Brings up a dialog that lists the project templates
+						you have created and allows you to delete or modify (rename the template or
+						modify whether the template is shared) the project templates that you created.</li>
+					<li><strong>Modify libraries</strong> - allows you to change properties on the JavaScript libraries that included in your project, such as the location of those libraries</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li><span class='minortopic'>Toolbar row 2: file actions</span> -
+		The second row in the Files palette toolbar contains icons for various file-related actions.
+		<ul>
+			<li><strong>New folder</strong> - Creates a sub-folder inside the currently selected folder</li>
+			<li><strong>Rename selected file</strong></li>
+			<li><strong>Delete selected files</strong></li>
+			<li><strong>Download entire project</strong> - creates a ZIP containing your entire project</li>
+			<li><strong>Download selected files</strong> - creates a ZIP containing the currently selected files</li>
+			<li><strong>Upload files</strong> - allows you to upload files from your local file system into the currently selected folder</li>
+			<li><strong>Upload ZIP</strong> - allows you to upload a ZIP file from your local file system and optionally expand the contents of the ZIP into the currently selected folder</li>
+		</ul>
+	</li>
+</ul>
+
+<a id='File_palette_context_menu'></a>
+<h2>Files Palette Context Menu</h2>
 
 <ol>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
@@ -247,20 +302,18 @@ with your cloud workspace. Topics covered:</p>
 	<strong>app.css</strong> file, and bring up the context menu
 	(e.g., using right-mouse-button or Ctrl-click on a Mac). You should see the following
 	commands in the popup menu.</li>
+</ol>
 
 <ul>
-	<li><strong>New folder...</strong> - Adds a new folder to your cloud workspace.</li>
-	<li><strong>Upload files...</strong> - Allows you to upload files from your computer
-		to your cloud workspace.</li>
 	<li><strong>Rename...</strong> - Allows you to rename files.</li>
 	<li><strong>Delete</strong> - Allows you to delete files.</li>
 	<li><strong>Download</strong> - Allows you to download selected files.</li>
 </ul>
 
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Go to the <strong>Files</strong> palette, put the mouse over the
-	<strong>app.css</strong> file, bring up the context menu, and choose
-	"New Folder...".</li>
+	Go to the <strong>Files</strong> palette, click-select the
+	<strong>app.css</strong> file. Click on the "New Folder" icon on the <strong>Files</strong>
+	palette toolbar.</li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	The Create New Folder dialog will appear. Accept the default values and click on the "Create button".
 	A new folder with an automatically generated name (e.g., "folder1") will appear in the Files palette.</li>
@@ -272,9 +325,9 @@ with your cloud workspace. Topics covered:</p>
 	Notice in the <strong>Files</strong> palette that the folder has been renamed
 	to "images".</li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	In the <strong>Files</strong> palette, put the mouse over the "images"
-	folder, bring up the context menu,
-	and once again choose the "New Folder..." command. In the Create New Folder
+	In the <strong>Files</strong> palette, click-select the "images"
+	folder. Click on the "New Folder" icon on the <strong>Files</strong>
+	palette toolbar. In the Create New Folder
 	dialog, type "abc" into the folder name textbox, then click on the Create button.
 	Note that new folder "abc" is now a child of folder "images".</li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
@@ -283,12 +336,8 @@ with your cloud workspace. Topics covered:</p>
 	dialog will appear. Click OK. Notice that folder "abc" has been removed from the Files palette.</li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
 	Outside of Maqetta, find one or more image files on your computer (preferably, not massive).
-	Back in Maqetta, put the mouse over the "images" folder, bring up the context menu,
-	and choose the "Upload..." command. The Upload Files dialog will apepar.</li>
-<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Outside of Maqetta, find one or more image files on your computer (preferably, not massive).
-	Back in Maqetta, put the mouse over the "images" folder, bring up the context menu,
-	and choose the "Upload..." command. The Upload Files dialog will appear.</li>
+	Back in Maqetta, click-select the "images" folder. Then click on the "Upload files..." icon on the
+	<strong>Files</strong> palette toolbar. The Upload Files dialog will apepar.</li>
 <div class='overview_snapshots_outer'>
 	<span class='overview_snapshots_inner'>
 		<img src="img/Upload_files.png" style='height:130px; width:auto;'/> 
@@ -309,8 +358,9 @@ with your cloud workspace. Topics covered:</p>
 	Click on the close box at the top/right of the dialog or click on "Cancel"
 	to close the Upload Files dialog.</li>
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	In the <strong>Files</strong> palette, put the mouse over the "images" folder,
-	bring up the context menu, and choose the "Download" command.
+	In the <strong>Files</strong> palette, click-select the "images" folder. 
+	Then click on the "Download selected files..." icon on the
+	<strong>Files</strong> palette toolbar.
 	The Download dialog will appear.</li>
 <div class='overview_snapshots_outer'>
 	<span class='overview_snapshots_inner'>
@@ -330,37 +380,6 @@ with your cloud workspace. Topics covered:</p>
 	bring up the context menu, and choose the "Delete..." command. An "Are you sure"
 	dialog will appear. Click OK. Notice that folder "images" has been removed from the Files palette.</li>
 </ol>
-
-<a id='File_palette_toolbar'></a>
-<h2>Files Palette Toolbar</h2>
-
-<p>The <strong>Files</strong> palette has a toolbar with 3 icons:
-	<img src='img/Files_palette_toolbar.png' class='exact_size_inline_icon'/>.
-	The three icons are:
-</p>
-<ul>
-	<li><strong>Download entire project</strong> -
-		This command will download the full contents of your current project within a ZIP file.
-		<div class='note'>
-		You can take the contents of the ZIP file for your project and unzip into the 
-		<em>htdocs</em>, <em>public_html</em> or <em>www</em> folder within a web server,
-		and you will have deployed your Maqetta-created sketch or prototype on that web server.
-		Assuming you accept the default download options,
-		the ZIP file will contain all of the files needed to successfully view your
-		creation, including necessary JavaScript libraries and CSS themes.</div></li>
-	<li><strong>Download selected files</strong> -
-		This icon will create a ZIP file that only contains the files that
-		are currently selected in the Files palette. 
-		This icon is equivalent to the Download command on the Files palette context menu.</li>
-	<li><strong>Modify libraries</strong> -
-		This icon allows you to move your JavaScript libraries to different locations within
-		your current project. By default, JavaScript libraries are located in your <code>libs</code>
-		folder. The typical reason for moving your JavaScript libraries is if your development team
-		requests that you send them prototypes where the JavaScript libaries are in a particular location.
-		Note that Maqetta will do its best to update all references to JavaScript libaries
-		in your HTML files so that the HTML files will continue to work properly after 
-		the JavaScript libraries have been moved.</li>
-</ul>
 
 
 <a id='Projects'></a>
@@ -396,28 +415,16 @@ with your cloud workspace. Topics covered:</p>
 </div>
 
 <li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Let's now delete the "temp1" project. At the top of the <strong>Files</strong> palette,
-	click on the Delete Project icon
-	<img src="img/remove.gif"  class='exact_size_inline_icon'/>.
-	After deleting this project, Maqetta will switch back to one of your other existing
-	projects (e.g., "project1").
-	The Maqetta browser window will now redraw, and the <strong>Files</strong> palette
-	will show the contents of the "project1" project.
-</li>
-
-<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
-	Using the drop-down menu at the top of the <strong>Files</strong> palette,
-	switch back to the "temp1" project. 
-	Let's now delete the "temp1" project. At the top of the <strong>Files</strong> palette,
-	click on the Delete Project icon
-	<img src="img/remove.gif"  class='exact_size_inline_icon'/>.
+	Let's now delete the "temp1" project. Bring up the project menu
+	by pressing and holding the project menu icon at the top/right of the <strong>Files</strong> palette.
+	On the menu, choose the "Delete this project..." command.
 	After deleting this project, Maqetta will switch back to one of your other existing
 	projects (e.g., "project1").
 </li>
 
 <div class='note'>
-	The current release of the Maqetta application does not provide a quick and easy way
-	to transfer or copy files from one project to another. One possible strategy
+	Depending on your particular sequence of operations, you may find it difficult to transfer
+	files from one project to another project. One possible strategy
 	to transfer files is to switch to the project that has your old files,
 	download selected files as a ZIP onto your local file system, expand the ZIP into a folder on your local file system,
  	switch to your new project in Maqetta, and then upload files into your new project.

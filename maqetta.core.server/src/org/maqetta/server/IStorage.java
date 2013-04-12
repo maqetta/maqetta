@@ -40,8 +40,6 @@ public interface IStorage {
 	 * 
 	 * This is useful for propogating the storage system without any
 	 * dependancies besides IStorage.
-	 * 
-
 	 */
 	public IStorage newInstance(String name);
 	public IStorage newInstance(IStorage parent, String name);

@@ -42,7 +42,9 @@
             "datatype": "string"
         },
         "value": {
-            "datatype": "string"
+            "datatype": "string",
+            "description": "text that the widget displays inside the input, note the placeHolder will not be displayed if a value is specified."
+
         },
         "tabIndex": {
             "datatype": "number",
@@ -88,7 +90,8 @@
             "defaultValue": false
         },
         "placeHolder": {
-            "datatype": "string"
+            "datatype": "string",
+            "description": "hint text that the widget displays inside the input area of empty form fields, such as 'Your Name'. "
         },
         "baseClass": {
             "datatype": "string",

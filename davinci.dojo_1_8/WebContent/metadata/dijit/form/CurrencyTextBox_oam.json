@@ -41,7 +41,7 @@
         "value": {
             "datatype": "string",
             "title": "Value",
-            "description": "Vale to be displayed for example: 12345.67"
+            "description": "Value to be displayed for example: 12345.67"
         },
         "tabIndex": {
             "datatype": "string",

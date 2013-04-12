@@ -40,7 +40,9 @@
         },
         "value": {
             "datatype": "string",
-            "title": "Value"
+            "title": "Value",
+            "description": "text that the widget displays inside the input, note the placeHolder will not be displayed if a value is specified."
+            
         },
         "tabIndex": {
             "datatype": "string",
@@ -82,6 +84,10 @@
         "required": {
             "datatype": "boolean",
             "title": "Required"
+        },
+     	"placeHolder": {
+            "datatype": "string",
+            "description": "hint text that the widget displays inside the input area of empty form fields, such as 'Your Name'. "
         },
         "promptMessage": {
             "datatype": "string",

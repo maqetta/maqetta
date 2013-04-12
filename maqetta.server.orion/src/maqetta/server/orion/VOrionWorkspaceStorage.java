@@ -151,17 +151,11 @@ public class VOrionWorkspaceStorage extends VOrionProjectStorage{
 	 * probably wasn't intended.
 	 */
 	public IStorage create(String name) {
-		IStorage existing = this.get(name);
-		if (existing != null) {
-			return existing;
-		}
-
 		IPath path = new Path(name);
 		VOrionStorage parent = (VOrionStorage) this.createProject(path.segment(0));
 		if (path.segmentCount() > 1) {
 			return parent.create(path.removeFirstSegments(1).toString());
 		}
-
 		return parent;
 	}
 
@@ -183,10 +177,11 @@ public class VOrionWorkspaceStorage extends VOrionProjectStorage{
 
 	public IStorage createProject(String name){
 		IStorage existing = this.get(name);
-		if(existing!=null)
+		if (existing != null) {
 			return existing;
+		}
 		
-		String	id = WebProject.nextProjectId();
+		String id = WebProject.nextProjectId();
 		WebProject project = WebProject.fromId(id);
 		
 		project.setName(name);

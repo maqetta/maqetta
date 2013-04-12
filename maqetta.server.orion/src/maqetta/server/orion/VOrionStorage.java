@@ -14,18 +14,11 @@ import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.IScopeContext;
-import org.eclipse.orion.server.core.users.OrionScope;
 import org.maqetta.server.IStorage;
 
 public class VOrionStorage implements IStorage {
 	IFileStore store;
-	protected static final IScopeContext scope = new OrionScope();
-	protected IEclipsePreferences prefStore;
-
 	String name;
-	IFileStore root;
 	VOrionStorage parent;
 
 	public VOrionStorage(String name, IFileStore store, VOrionStorage parent) {

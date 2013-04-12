@@ -245,10 +245,7 @@ public class VOrionWorkspaceStorage extends VOrionProjectStorage{
 			for(int i=0;i<allProjects.length();i++){
 				JSONObject projObj = (JSONObject)allProjects.opt(i);
 				String id = projObj.getString("Id");
-				IEclipsePreferences ep = (IEclipsePreferences) scope.getNode(PROJECT_NODE_NAME).node(id);
-				
 				WebProject result = WebProject.fromId(id);
-			
 				String name = result.getName();
 				try {
 					projects.add(new VOrionProjectStorage(name, result.getProjectStore(), result, this));
@@ -256,7 +253,6 @@ public class VOrionWorkspaceStorage extends VOrionProjectStorage{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
 			}
 		} catch (JSONException e) {
 			//someone messed with the backing store and inserted something invalid- just wipe it out

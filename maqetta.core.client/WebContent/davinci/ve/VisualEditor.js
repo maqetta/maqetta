@@ -126,24 +126,18 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		dojo.publish('/davinci/ui/repositionFocusContainer', []);
 
 	},
-	
-	toggleOrientation: function() {
-		if(this.deviceName!='none'){
-			if(this._orientation == 'landscape'){
-				this._orientation = 'portrait';
-			}else{
-				this._orientation = 'landscape';			
-			}
 
-			this.setOrientation(this._orientation);
+	toggleOrientation: function() {
+		if(this.deviceName != 'none'){
+			this.setOrientation(this._orientation == "landscape" ? "portrait" : "landscape");
 		}
 		this.getContext().clearCachedWidgetBounds();
 	},
-	
+
 	getOrientation: function(orientation) {
 		return this._orientation;
 	},
-	
+
 	setOrientation: function(orientation) {
 		if (this.deviceName != 'none' && this._orientation != orientation) {
 			this._orientation = orientation;

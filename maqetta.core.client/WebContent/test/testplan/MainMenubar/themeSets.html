@@ -244,7 +244,7 @@
 				<li ><i>'themeMap':[['Android','',['themes/android/android.css']],['BlackBerry','',['themes/custom/custom.css']],['iPad','',['themes/ipad/ipad.css']],['iPhone','',['themes/iphone/iphone.css']],['.*','',['themes/iphone/iphone.css']]],'mblThemeFiles':[]</i></li>
    			</ol>
    		</li>
-   		</ol>
+  	</ol>
    		
   <h2 class="test_section">Restore dojo default theme to HTML</h2>
   <h3 class="steps_subsection">Steps</h3>	
@@ -279,8 +279,12 @@
 	
   	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
-		<li >Click on the <b>Display source</b> icon from the designer toolbar, examine the source you should see that the <i>themeMap</i> and <i>mblThemeFiles</i> objects of the <i>data-dojo-config</i> parameter added from the test cases above have been removed from  the dojo.js script link:
-		</li>
+		<li >Click on the <b>Display source</b> icon from the designer toolbar, examine the source you should see the following in the <i>data-dojo-config</i> parameter of the dojo.js script link:
+			<ol type="a">
+				<li ><i>
+				'themeMap':[['Android','',['themes/android/android.css']],['BlackBerry','',['themes/blackberry/blackberry.css']],['iPad','',['themes/ipad/ipad.css']],['iPhone','',['themes/iphone/iphone.css']],['.*','',['themes/iphone/iphone.css']]],'mblThemeFiles':[], 'mblLoadCompatPattern': ''
+  			</ol>
+   		</li>
 	</ol>
   </body>
 </html>

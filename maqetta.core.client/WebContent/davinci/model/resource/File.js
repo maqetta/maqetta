@@ -73,9 +73,11 @@ return declare("davinci.model.resource.File", Resource, {
 		promise.then(function(res){
 			this.dirtyResource = isWorkingCopy;
 			dojo.publish("/davinci/resource/resourceChanged", ["modified", this]);
+			return this;
 		}.bind(this), function(err){ 
 			// more meaningful error message should be reported to user higher up the food chain...
 			console.error("An error occurred: davinci.model.resource.File.prototype.setContents " + err + " : " + path);
+			return err;
 		});
 		return promise;
 	},

@@ -133,9 +133,7 @@ public class DavinciPageServlet extends HttpServlet {
 		} catch (RuntimeException re) {
 			log(req);
 			throw re;
-		} finally {
-			resp.getOutputStream().close();
-		}
+		} 
 	}
 
 	public String getPathInfo(HttpServletRequest req){
@@ -181,9 +179,7 @@ public class DavinciPageServlet extends HttpServlet {
 		} catch (RuntimeException re) {
 			log(req);
 			throw re;
-		} finally {
-			resp.getOutputStream().close();
-		}
+		} 
 	}
 	
 	/*

@@ -14,6 +14,7 @@ define([
 	"system/resource",
 	"../../model/Path",
 	"../../Theme",
+	"dojo/promise/all",
 	], function(
 			declare,
 			ModelEditor,
@@ -29,7 +30,8 @@ define([
 			ThemeColor,
 			systemResource,
 			Path,
-			Theme
+			Theme,
+			all
 	){
 
 return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifier*/], {
@@ -715,14 +717,27 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 		
 	},
 	save : function (isWorkingCopy){
-
-		this.getContext().saveDynamicCssFiles(this.getContext()._getCssFiles(), isWorkingCopy);
-		if(!isWorkingCopy) {
-			this.isDirty=false;
-		}
-		if (this.editorContainer && !isWorkingCopy) {
-			this.editorContainer.setDirty(false);
-		}
+		var workingCopy = isWorkingCopy;
+		var  promises = this.getContext().saveDynamicCssFiles(this.getContext()._getCssFiles(), workingCopy);
+		
+		 all(promises).then(function(results){
+			 	for (var i = 0; i < results.length; i++) {
+			 		if (results[i] instanceof Error) {
+			 			// error saving a resource mostt likly a CSS file 
+			 			// bail out and don't clear the dirty bit
+			 			alert('error saving resources' + results[0]);
+			 			console.error('error saving resources' + results[0]);
+			 			return ;
+			 		}
+			 	}
+			 	if(!workingCopy) {
+					this.isDirty=false;
+				}
+				if (this.editorContainer && !workingCopy) {
+					this.editorContainer.setDirty(false);
+				}
+			  }.bind(this));
+		
 
 	},
 	removeWorkingCopy: function(){

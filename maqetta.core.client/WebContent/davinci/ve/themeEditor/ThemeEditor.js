@@ -717,23 +717,23 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 		
 	},
 	save : function (isWorkingCopy){
-		var workingCopy = isWorkingCopy;
-		var  promises = this.getContext().saveDynamicCssFiles(this.getContext()._getCssFiles(), workingCopy);
+
+		var  promises = this.getContext().saveDynamicCssFiles(this.getContext()._getCssFiles(), isWorkingCopy);
 		
 		 all(promises).then(function(results){
 			 	for (var i = 0; i < results.length; i++) {
 			 		if (results[i] instanceof Error) {
-			 			// error saving a resource mostt likly a CSS file 
+			 			// error saving a resource most likely a CSS file 
 			 			// bail out and don't clear the dirty bit
-			 			alert('error saving resources' + results[0]);
-			 			console.error('error saving resources' + results[0]);
+			 			alert('error saving resource' + results[i]);
+			 			console.error('error saving resource' + results[i]);
 			 			return ;
 			 		}
 			 	}
-			 	if(!workingCopy) {
+			 	if(!isWorkingCopy) {
 					this.isDirty=false;
 				}
-				if (this.editorContainer && !workingCopy) {
+				if (this.editorContainer && !isWorkingCopy) {
 					this.editorContainer.setDirty(false);
 				}
 			  }.bind(this));

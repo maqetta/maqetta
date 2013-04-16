@@ -220,8 +220,10 @@ public class DavinciPageServlet extends HttpServlet {
 			boolean validDesigner;
 			try {
 				validDesigner = ServerManager.getServerManager().getUserManager().isValidUser(designerName);
+			} catch (IOException e) {
+				throw new RuntimeException(e); //FIXME
 			} catch (UserException e) {
-				throw new RuntimeException(e);
+				throw new RuntimeException(e); //FIXME
 			}
 			if (validDesigner) {
 				returnVal = Validator.isValidISOTimeStamp(reviewVersion);

@@ -122,12 +122,12 @@ public class VResourceUtils {
         }
     }
 
-	public static void deleteDir(IStorage directory) {
+	public static void deleteDir(IStorage directory) throws IOException {
         deleteContents(directory);
         directory.delete();
     }
 
-    public static void deleteContents(IStorage directory) {
+    public static void deleteContents(IStorage directory) throws IOException {
         IStorage[] theFiles = directory.listFiles();
         for (int i = 0; i < theFiles.length; i++) {
             if (theFiles[i].isDirectory()) {

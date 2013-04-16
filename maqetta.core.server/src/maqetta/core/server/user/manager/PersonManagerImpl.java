@@ -1,6 +1,7 @@
 package maqetta.core.server.user.manager;
 
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -129,7 +130,7 @@ public class PersonManagerImpl implements IPersonManager {
      * @see org.davinci.server.user.impl.UserManager#addUser(java.lang.String,
      * java.lang.String, java.lang.String)
      */
-    public IPerson addPerson(String userName, String password, String email) throws UserException {
+    public IPerson addPerson(String userName, String password, String email) throws UserException, IOException {
         IPerson person = (IPerson) persons.get(userName);
         if (person != null) {
             throw new UserException(UserException.ALREADY_EXISTS);
@@ -185,7 +186,7 @@ public class PersonManagerImpl implements IPersonManager {
         }
     }
 
-    protected void savePersons() {
+    protected void savePersons() throws IOException {
     	IStorage baseDirectory = getBaseDirectory();
         IStorage userFile = baseDirectory.newInstance(baseDirectory, IDavinciServerConstants.USER_LIST_FILE);
         new UsersFile().save(userFile, this.persons.values());

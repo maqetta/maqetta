@@ -1,5 +1,6 @@
 package maqetta.core.server.user;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,7 +109,7 @@ public class DesignerUser implements IDesignerUser {
 	 * maqetta.core.server.user.IDesignerUser#deleteVersion(java.
 	 * lang.String)
 	 */
-	public void deleteVersion(String versionTime) {
+	public void deleteVersion(String versionTime) throws IOException {
 		Version version = this.getVersion(versionTime);
 		versions.remove(version);
 		IStorage versionDir = this.userDirectory.newInstance(
@@ -118,7 +119,7 @@ public class DesignerUser implements IDesignerUser {
 		}
 	}
 
-	private static boolean deleteDir(IStorage dir) {
+	private static boolean deleteDir(IStorage dir) throws IOException {
 		if (dir.isDirectory()) {
 			String[] children = dir.list();
 			for (int i = 0; i < children.length; i++) {

@@ -19,7 +19,7 @@ public interface IStorage {
 	char separatorChar = 0;
 	public boolean exists();
 	public String getAbsolutePath();
-	public boolean mkdirs();
+	public boolean mkdirs() throws IOException;
 	public IStorage[] listFiles();
 	public boolean isDirectory();
 	public URI toURI();
@@ -28,7 +28,7 @@ public interface IStorage {
 	
 	
 	public InputStream getInputStream() throws IOException;
-	public boolean delete();
+	public boolean delete() throws IOException;
 	public void createNewFile() throws IOException;
 	public String getPath();
 	public String getName();

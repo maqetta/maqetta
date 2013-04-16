@@ -110,9 +110,7 @@ public class Download extends Command {
 
         } catch (IOException e) {
             responseString = "Error creating download file : " + e;
-        } finally {
-        	resp.getOutputStream().close();
-        }
+        } 
     }
 
 	private URL getBuildURL(IUser user, String requestURLString) throws IOException {

@@ -66,27 +66,16 @@ public abstract class XMLFile extends XMLElement {
         return objects;
     }
 
-    public void save(IStorage file, Collection values) { //FIXME should throw?
+    public void save(IStorage file, Collection values) throws IOException {
         OutputStream out = null;
         try {
             if (!file.exists()) {
                 file.mkdirs();
                 file.delete();
-                try {
-					file.createNewFile();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
+                file.createNewFile();
             }
             String rootName = this.getRootTag();
-            try {
-				out = new BufferedOutputStream(file.getOutputStream());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+            out = new BufferedOutputStream(file.getOutputStream());
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.newDocument();
@@ -118,13 +107,8 @@ public abstract class XMLFile extends XMLElement {
             // TODO Auto-generated catch block
             e.printStackTrace();
         } finally {
-            try {
-                if (out != null) {
-                    out.close();
-                }
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            if (out != null) {
+                out.close();
             }
         }
     }

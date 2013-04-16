@@ -29,7 +29,7 @@ public interface IVResource {
 
     public void createNewInstance() throws IOException;
 
-    public boolean delete();
+    public boolean delete() throws IOException;
 
     public IVResource create(String path) throws IOException;
 
@@ -46,7 +46,7 @@ public interface IVResource {
     /* only working copy no actual saved file */
     public boolean isNew();
 
-    public void removeWorkingCopy();
+    public void removeWorkingCopy() throws IOException;
 
     public void flushWorkingCopy() throws IOException;
 
@@ -54,7 +54,7 @@ public interface IVResource {
 
     public IVResource[] find(String path);
 
-    public boolean mkdir();
+    public boolean mkdir() throws IOException;
 
     public boolean isDirty();
 

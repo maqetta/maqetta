@@ -101,7 +101,7 @@ public class OrionUserManager extends UserManagerImpl {
      	return user;
     }
 
-    public IUser addUser(String userName, String password, String email) throws UserException {
+    public IUser addUser(String userName, String password, String email) throws UserException, IOException {
 		assertValidUserId(userName);
 
 		if (checkUserExists(userName)) {
@@ -119,13 +119,7 @@ public class OrionUserManager extends UserManagerImpl {
             //userDir.mkdir();
             //File settingsDir = user.getSettingsDirectory();
            // settingsDir.mkdir();
-            try {
-				user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
-			} catch (IOException e) {
-				e.printStackTrace();
-				return null; //TODO: should throw?
-			}
-            
+            user.createProject(IDavinciServerConstants.DEFAULT_PROJECT);
             this.usersCount++;
             return user;
         }

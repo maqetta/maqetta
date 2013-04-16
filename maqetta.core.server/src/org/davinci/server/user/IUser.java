@@ -26,17 +26,17 @@ public interface IUser {
 	 * 
 	 * used to map configurations to sub folders
 	 */
-	public void addBaseSettings(String base);
+	public void addBaseSettings(String base) throws IOException;
 
 	public void deleteBaseSettings(String base);
 
 	public IStorage getUserDirectory();
 
 	public void modifyLibrary(String id, String version, String base,
-			boolean installed, boolean required);
+			boolean installed, boolean required) throws IOException;
 
 	public void modifyLibrary(String id, String version, String virtualRoot,
-			String base, boolean required);
+			String base, boolean required) throws IOException;
 
 	public IVResource[] listFiles(String path);
 
@@ -44,9 +44,9 @@ public interface IUser {
 
 	public IVResource createResource(String path, boolean isFolder) throws IOException;
 
-	public IStorage getWorkbenchSettings();
+	public IStorage getWorkbenchSettings() throws IOException;
 
-	public IStorage getWorkbenchSettings(String base);
+	public IStorage getWorkbenchSettings(String base) throws IOException;
 
 	//public ILinks getLinks();
 

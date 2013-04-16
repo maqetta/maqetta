@@ -1,12 +1,11 @@
 package org.davinci.server.review.user;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.davinci.server.review.Version;
 import org.davinci.server.user.IUser;
-import org.eclipse.core.runtime.IPath;
 import org.maqetta.server.IStorage;
-import org.maqetta.server.IVResource;
 
 public interface IDesignerUser {
 
@@ -22,7 +21,7 @@ public interface IDesignerUser {
 
     public abstract List<Version> getVersions();
 
-    public abstract void deleteVersion(String versionTime);
+    public abstract void deleteVersion(String versionTime) throws IOException;
 
     public abstract IStorage getCommentingDirectory();
 

@@ -72,11 +72,11 @@ public class UserManagerImpl implements IUserManager {
      * @see org.davinci.server.user.impl.UserManager#getUser(java.lang.String)
      * 
      */
-    public IUser newUser(IPerson person, IStorage baseDirectory) throws UserException {
+    public IUser newUser(IPerson person, IStorage baseDirectory) throws UserException, IOException {
     	 return new User(person, baseDirectory);
     }
     
-    public IUser getUser(String userName) throws UserException {
+    public IUser getUser(String userName) throws UserException, IOException {
 
        // IUser user = (IUser) users.get(userName);
         if (ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equals(userName)) {
@@ -95,7 +95,7 @@ public class UserManagerImpl implements IUserManager {
      * @see org.davinci.server.user.impl.UserManager#addUser(java.lang.String,
      * java.lang.String, java.lang.String)
      */
-    public IUser addUser(String userName, String password, String email) throws UserException {
+    public IUser addUser(String userName, String password, String email) throws UserException, IOException {
 
         if (checkUserExists(userName)) {
             throw new UserException(UserException.ALREADY_EXISTS);
@@ -130,7 +130,7 @@ public class UserManagerImpl implements IUserManager {
      * @see
      * org.davinci.server.user.impl.UserManager#removeUser(java.lang.String)
      */
-    public void removeUser(String userName) throws UserException {
+    public void removeUser(String userName) throws UserException, IOException {
 
         if (!checkUserExists(userName)) {
             return;
@@ -151,7 +151,7 @@ public class UserManagerImpl implements IUserManager {
      * @see org.davinci.server.user.impl.UserManager#login(java.lang.String,
      * java.lang.String)
      */
-    public IUser login(String userName, String password) throws UserException {
+    public IUser login(String userName, String password) throws UserException, IOException {
         if (!checkUserExists(userName)) {
             return null;
         }
@@ -173,7 +173,7 @@ public class UserManagerImpl implements IUserManager {
      * @see
      * org.davinci.server.user.impl.UserManager#isValidUser(java.lang.String)
      */
-    public boolean isValidUser(String userName) throws UserException {
+    public boolean isValidUser(String userName) throws UserException, IOException {
         if (ServerManager.LOCAL_INSTALL && IDavinciServerConstants.LOCAL_INSTALL_USER.equals(userName)) {
             return true;
         }

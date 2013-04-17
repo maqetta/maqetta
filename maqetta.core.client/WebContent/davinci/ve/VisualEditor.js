@@ -421,8 +421,7 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		};
 
 		model.visit(visitor);
-		var p = this.getContext().saveDynamicCssFiles(this.context.cssFiles, isAutoSave);
-		promises = promises.concat(p/*this.getContext().saveDynamicCssFiles(this.context.cssFiles, isAutoSave)*/);
+		promises = promises.concat(this.getContext().saveDynamicCssFiles(this.context.cssFiles, isAutoSave));
 		if (promises.length) {
 			this.savePromise = all(promises);
 		} else {

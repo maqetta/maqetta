@@ -40,8 +40,8 @@ import org.json.JSONObject;
 import org.maqetta.server.IStorage;
 
 /**
- * Represents an Orion user workspace.
- * A user always has a workspace; for that reason, <code>exists()</code> always returns <code>true</code>.
+ * Represents the Orion workspace, where all user projects are stored.
+ * There is always a workspace; for that reason, <code>exists()</code> always returns <code>true</code>.
  */
 
 @SuppressWarnings("restriction")
@@ -116,6 +116,9 @@ public class VOrionWorkspaceStorage extends VOrionProjectStorage{
 					return null;
 				}
 				public IStorage newInstance(URI uri) {
+					return null;
+				}
+				public IStorage create(String path) {
 					return null;
 				}
 				public Collection<?> findFiles(IStorage parentFolder, String pathStr, boolean ignoreCase) {

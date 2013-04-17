@@ -102,6 +102,9 @@ public class StorageFileSystem implements IStorage {
 	public IStorage newInstance(URI uri) {
 		return new StorageFileSystem(new File(uri));
 	}
+	public IStorage create(String path) {
+		throw new RuntimeException("Not implemented");
+	}
 	public Collection findFiles(IStorage f1, String pathStr, boolean ignoreCase) {
 		IOFileFilter filter;
 		IPath path = new Path(pathStr);

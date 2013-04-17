@@ -143,7 +143,10 @@ public class DesignerUser implements IDesignerUser {
 	 */
 	public IStorage getCommentingDirectory() {
 		if (this.commentingDirectory == null) {
-			this.commentingDirectory = this.userDirectory.newInstance(this.userDirectory, Constants.REVIEW_DIRECTORY_NAME);
+			// this.userDirectory is of type VOrionWorkspaceStorage. Because of that, we cannot use
+			// `newInstance()`, since that will return `null` if the underlying path doesn't already
+			// exist.  Instead, we call `create()`, to create an Orion project for this dir.
+			this.commentingDirectory = this.userDirectory.create(Constants.REVIEW_DIRECTORY_NAME);
 		}
 		return this.commentingDirectory;
 	}

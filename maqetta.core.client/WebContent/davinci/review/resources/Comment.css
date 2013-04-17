@@ -820,6 +820,7 @@
 	width: 600px;
 	height: 200px;
 	scroll: auto;
+	white-space: pre-wrap;
 }
 
 .mailFailureButton {

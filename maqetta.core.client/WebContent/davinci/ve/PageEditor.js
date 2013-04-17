@@ -477,18 +477,20 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 
 		this.savePoint=this._commandStack.getUndoCount();
 		var promises = this.visualEditor.save(isAutoSave);
-		promises.then(
-			function(results){
-				this.isDirty=  isAutoSave;
-				if (this.editorContainer) {
-					this.editorContainer.setDirty(isAutoSave);
+		if (promises && promises.then){
+			promises.then(
+				function(results){
+					this.isDirty=  isAutoSave;
+					if (this.editorContainer) {
+						this.editorContainer.setDirty(isAutoSave);
+					}
+				}.bind(this),
+				function(error){
+					alert('error saving resource' + error);
+		 			console.error('error saving resource' + error);
 				}
-			}.bind(this),
-			function(error){
-				alert('error saving resource' + error);
-	 			console.error('error saving resource' + error);
-			}
-		);
+			);
+		}
 		
 		
 	},

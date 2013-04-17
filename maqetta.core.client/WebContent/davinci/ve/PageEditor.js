@@ -476,12 +476,21 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		}
 
 		this.savePoint=this._commandStack.getUndoCount();
-		this.visualEditor.save(isAutoSave);
+		var promises = this.visualEditor.save(isAutoSave);
+		promises.then(
+			function(results){
+				this.isDirty=  isAutoSave;
+				if (this.editorContainer) {
+					this.editorContainer.setDirty(isAutoSave);
+				}
+			}.bind(this),
+			function(error){
+				alert('error saving resource' + error);
+	 			console.error('error saving resource' + error);
+			}
+		);
 		
-		this.isDirty= this.isDirty && isAutoSave;
-		if (this.editorContainer) {
-			this.editorContainer.setDirty(isAutoSave);
-		}
+		
 	},
 	
 	removeWorkingCopy: function(){ //wdr

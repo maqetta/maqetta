@@ -421,13 +421,13 @@ var VisualEditor = declare("davinci.ve.VisualEditor",  null,  {
 		};
 
 		model.visit(visitor);
-		promises.concat(this.getContext().saveDynamicCssFiles(this.context.cssFiles, isAutoSave));
+		var p = this.getContext().saveDynamicCssFiles(this.context.cssFiles, isAutoSave);
+		promises = promises.concat(p/*this.getContext().saveDynamicCssFiles(this.context.cssFiles, isAutoSave)*/);
 		if (promises.length) {
 			this.savePromise = all(promises);
 		} else {
 			delete this.savePromise;
 		}
-		this.isDirty = isAutoSave;
 		return this.savePromise;
 	},
 

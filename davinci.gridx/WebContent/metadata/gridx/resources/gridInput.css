@@ -178,6 +178,7 @@
 	padding:0px;
 	height: 14px;
 	white-space: nowrap;
+	overflow: hidden;
 }
 
 .gridWizard .previewPanelPreviewNote {

@@ -163,7 +163,7 @@ public class VOrionStorage implements IStorage {
 	}
 
 	public IStorage newInstance(IStorage parent, String name) {
-		return ((VOrionStorage) parent).create(name);
+		return parent.create(name);
 	}
 
 	public IStorage newInstance(URI uri) {

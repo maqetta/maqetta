@@ -702,10 +702,12 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 							if (resultEntry.emailResult == "OK") {
 								dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls.inviteSuccessful, type:"message"}, "create", this.node]);
 							} else {
+								// Server failed to send an email notification (server is either
+								// unreachable or not configured). Display message to user.
 								var dialogContent = dojostring.substitute(warningString, {
 										htmlContent: resultEntry.emailResult, 
 										inviteNotSent: widgetsNls.inviteNotSent, 
-										mailFailureMsg: widgetsNls.mailFailureMsg,
+										mailFailureMsg: widgetsNls.mailFailureMsg
 								});
 								dojo.publish("/davinci/review/resourceChanged", [{message:widgetsNls.inviteFailed, type:"warning"}, "create", this.node]);
 				

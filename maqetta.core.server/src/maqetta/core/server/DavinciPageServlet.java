@@ -375,66 +375,73 @@ public class DavinciPageServlet extends HttpServlet {
 		}
 		
 		URLConnection connection = resourceURL.openConnection();
-		long lastModified = connection.getLastModified();
-		int contentLength = connection.getContentLength();
-
-		String etag = null;
-		if ( lastModified != -1 && contentLength != -1 ) {
-			etag = "W/\"" + contentLength + "-" + lastModified + "\"";
-		}
-
-		// Check for cache revalidation.
-		// We should prefer ETag validation as the guarantees are stronger and
-		// all HTTP 1.1 clients should be using it
-		String ifNoneMatch = req.getHeader(DavinciPageServlet.IF_NONE_MATCH);
-		if (ifNoneMatch != null && etag != null && ifNoneMatch.compareTo(etag) == 0) {
-			resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-			return;
-		}
-
-		long ifModifiedSince = req.getDateHeader(DavinciPageServlet.IF_MODIFIED_SINCE);
-		// for purposes of comparison we add 999 to ifModifiedSince since the fidelity
-		// of the IMS header generally doesn't include milli-seconds
-		if ( ifModifiedSince > -1 && lastModified > 0 && lastModified <= (ifModifiedSince + 999)) {
-			resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-			return;
-		}
-
-		// return the full contents regularly
-		if ( contentLength != -1 ) {
-			resp.setContentLength(contentLength);
-		}
-
-		String path = resourceURL.getPath();
-		String contentType = req.getSession().getServletContext().getMimeType(path);
-		if ( contentType != null ) {
-			resp.setContentType(contentType);
-		}
-
-		if ( lastModified > 0 ) {
-			resp.setDateHeader(DavinciPageServlet.LAST_MODIFIED, lastModified);
-		}
-
-		resp.setCharacterEncoding("UTF-8");
-
-		if ( etag != null ) {
-			resp.setHeader(DavinciPageServlet.ETAG, etag);
-		}
-
-		// Cache Headers
-		if (doCache != CacheHeaders.NO_CACHE) {
-			resp.setDateHeader(EXPIRES, System.currentTimeMillis() + maxAge * 1000);
-			resp.setHeader(CACHE_CONTROL, "public, max-age=" + maxAge + ", must-revalidate"); //$NON-NLS-1$ //$NON-NLS-2$
-		} else {
-			resp.setDateHeader(EXPIRES, 0);
-			resp.setHeader(CACHE_CONTROL, "no-cache"); // HTTP 1.1
-			resp.setHeader(PRAGMA, "no-cache"); // HTTP 1.0
-		}
-	
-		// open the input stream
-		InputStream is = null;
+		InputStream is  = null;
 		try {
-			is = connection.getInputStream();
+			/*
+			 * #3897
+			 * Open the input stream here, if we open a URLConnection
+			 * and do not close a steam, some times we are unable to 
+			 * delete the file latter. So by opening a stream and then 
+			 * closing the stream we are able to process the file later.
+			 */
+			is  = connection.getInputStream();
+			long lastModified = connection.getLastModified();
+			int contentLength = connection.getContentLength();
+	
+			String etag = null;
+			if ( lastModified != -1 && contentLength != -1 ) {
+				etag = "W/\"" + contentLength + "-" + lastModified + "\"";
+			}
+	
+			// Check for cache revalidation.
+			// We should prefer ETag validation as the guarantees are stronger and
+			// all HTTP 1.1 clients should be using it
+			String ifNoneMatch = req.getHeader(DavinciPageServlet.IF_NONE_MATCH);
+			if (ifNoneMatch != null && etag != null && ifNoneMatch.compareTo(etag) == 0) {
+				resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+				return; //#3897 free's up the file pointer/io stream in the finally
+			}
+	
+			long ifModifiedSince = req.getDateHeader(DavinciPageServlet.IF_MODIFIED_SINCE);
+			// for purposes of comparison we add 999 to ifModifiedSince since the fidelity
+			// of the IMS header generally doesn't include milli-seconds
+			if ( ifModifiedSince > -1 && lastModified > 0 && lastModified <= (ifModifiedSince + 999)) {
+				resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+				return; //#3897 free's up the file pointer/io stream in the finally
+			}
+	
+			// return the full contents regularly
+			if ( contentLength != -1 ) {
+				resp.setContentLength(contentLength);
+			}
+	
+			String path = resourceURL.getPath();
+			String contentType = req.getSession().getServletContext().getMimeType(path);
+			if ( contentType != null ) {
+				resp.setContentType(contentType);
+			}
+	
+			if ( lastModified > 0 ) {
+				resp.setDateHeader(DavinciPageServlet.LAST_MODIFIED, lastModified);
+			}
+	
+			resp.setCharacterEncoding("UTF-8");
+	
+			if ( etag != null ) {
+				resp.setHeader(DavinciPageServlet.ETAG, etag);
+			}
+	
+			// Cache Headers
+			if (doCache != CacheHeaders.NO_CACHE) {
+				resp.setDateHeader(EXPIRES, System.currentTimeMillis() + maxAge * 1000);
+				resp.setHeader(CACHE_CONTROL, "public, max-age=" + maxAge + ", must-revalidate"); //$NON-NLS-1$ //$NON-NLS-2$
+			} else {
+				resp.setDateHeader(EXPIRES, 0);
+				resp.setHeader(CACHE_CONTROL, "no-cache"); // HTTP 1.1
+				resp.setHeader(PRAGMA, "no-cache"); // HTTP 1.0
+			}
+	
+		
 			// write the resource
 			try {
 				OutputStream os = resp.getOutputStream();
@@ -465,9 +472,10 @@ public class DavinciPageServlet extends HttpServlet {
 			resp.reset();
 			resp.sendError(HttpServletResponse.SC_FORBIDDEN);
 		} finally {
-			if ( is != null ) {
-				is.close();
+			if (is != null ) {
+				is.close(); //#3897 free up the file pointer
 			}
+
 		}
 		
 	}

@@ -399,8 +399,7 @@ public class DavinciPageServlet extends HttpServlet {
 			String ifNoneMatch = req.getHeader(DavinciPageServlet.IF_NONE_MATCH);
 			if (ifNoneMatch != null && etag != null && ifNoneMatch.compareTo(etag) == 0) {
 				resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-				is.close(); //#3897 free up the file pointer
-				return;
+				return; //#3897 free's up the file pointer/io stream in the finally
 			}
 	
 			long ifModifiedSince = req.getDateHeader(DavinciPageServlet.IF_MODIFIED_SINCE);
@@ -408,8 +407,7 @@ public class DavinciPageServlet extends HttpServlet {
 			// of the IMS header generally doesn't include milli-seconds
 			if ( ifModifiedSince > -1 && lastModified > 0 && lastModified <= (ifModifiedSince + 999)) {
 				resp.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-				is.close(); //#3897 free up the file pointer
-				return;
+				return; //#3897 free's up the file pointer/io stream in the finally
 			}
 	
 			// return the full contents regularly

@@ -28,7 +28,7 @@ return declare(SmartInput, {
 		
 		//var data = widget.getData();
 		//console.log(widget, data); // no children in the data!
-		//debugger;
+	
 		var data = widget.getData();
 		var children = data.children;// this.getChildren(widget);
 		var result = [];
@@ -60,21 +60,23 @@ return declare(SmartInput, {
 	},
 	
 	update: function(widget, values) {
+	
 		var data = widget.getData();
 		var children = data.children;// this.getChildren(widget);
 		
 		for (var i = 0; i < values.length; i++) {
 			var value = values[i];
 			var text = value.text;
+			var selected = value.selected ?  true : null;
 			if (i < children.length) {
 				var child = children[i];
 				//this.updateChild(child, text);
 				child.children = text;
 				child.properties.value = text;
-				child.properties.selected = value.selected;
+				child.properties.selected = selected
 			} else {
 				//this.addChild(children, text);
-				children.push(this.createChildData(text, text, value.selected));
+				children.push(this.createChildData(text, text, selected));
 			}
 			if (!this.isHtmlSupported()){
 				// dojo expects the text to be decoded for widgets that do not support HTML ie.ComboBox - wdr

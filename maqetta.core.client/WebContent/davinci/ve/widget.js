@@ -221,12 +221,14 @@ getUniqueObjectId: function(type, node) {
 _remove_prefix: function(str){
 	var returnstr = str;
 	var prefixes_to_remove=[
-	                	    'dijit.form.',
-	                	    'dijit.layout.',
-	                	    'dijit.',
-	                	    'dojox.mobile.',
+	                	    'dijit/form/',
+	                	    'dijit/layout/',
+	                	    'dijit/',
+	                	    'dojox/mobile/',
 	                	    'html.',
-	                	    'OpenAjax.'];
+	                	    'html/',
+	                	    'OpenAjax.',
+	                	    'OpenAjax/'];
 	for(var i=0; i<prefixes_to_remove.length; i++){
 		if(str.indexOf(prefixes_to_remove[i])==0){ // use ===?
 			returnstr=str.substr(prefixes_to_remove[i].length);

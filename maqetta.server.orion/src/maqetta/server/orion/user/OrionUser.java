@@ -1,10 +1,18 @@
 package maqetta.server.orion.user;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.URI;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import maqetta.core.server.user.User;
 import maqetta.core.server.util.VResourceUtils;
@@ -49,6 +57,7 @@ public class OrionUser extends User {
 	protected static final IScopeContext scope = new OrionScope();	// XXX used?
 	protected IEclipsePreferences store;							// XXX used?
 	private static String DEFAULT_WORKSPACE = "MyWorkspace"; //$NON-NLS-1$
+	static final private Logger theLogger = Logger.getLogger(ServerManager.class.getName());
 	
 	public OrionUser(IPerson person) throws CoreException {
 		super(person);
@@ -101,12 +110,14 @@ public class OrionUser extends User {
 		// remove servlet context, if any
 		orionPath = orionPath.removeFirstSegments(orionPath.matchingFirstSegments(contextPath));
 
-		String projectId = orionPath.segment(1);  // [0]: "file", [1]: project id, [2] sub-folder, ...
-		WebProject proj = WebProject.fromId(projectId);
-		String path = proj.getName();
-		
+		String workspaceId = orionPath.segment(1);  // [0]: "file", [1]: workspace id, [2]: project name, [3] sub-folder, ...
+		String projectName = orionPath.segment(2);
+
+		WebProject proj = WebWorkspace.fromId(workspaceId).getProjectByName(projectName);
+
+		String path = projectName;
 		IFileStore child = null;
-		for (int i = 2; i < orionPath.segmentCount(); i++) {
+		for (int i = 3; i < orionPath.segmentCount(); i++) {
 			child = proj.getProjectStore().getChild(orionPath.segment(i));
 			path += "/" + child.getName();
 		}
@@ -146,6 +157,13 @@ public class OrionUser extends User {
 				VResourceUtils.copyDirectory(file, path, bundle);
 			}
 
+			IStorage basePathDir;
+			if(basePath!=null && !basePath.equals("")){
+				basePathDir = projectDir.newInstance(projectDir, basePath);
+			}else{
+				basePathDir = projectDir;
+			}
+
 			if(projectTemplateDirectoryName!=null && !projectTemplateDirectoryName.equals("")){
 				IProjectTemplatesManager projectTemplatesManager = ServerManager.getServerManager().getProjectTemplatesManager();
 				IStorage projectTemplatesDirectory = projectTemplatesManager.getProjectTemplatesDirectory();
@@ -153,12 +171,28 @@ public class OrionUser extends User {
 				if(templateDir.exists()) {
 					IStorage[] files = templateDir.listFiles();
 					for (int i = 0; i < files.length; i++) {
-						if (files[i].isFile()) {
-							IStorage destination = projectDir.newInstance(projectDir, files[i].getName());
-							copyFile(files[i], destination);
-						} else if (files[i].isDirectory()) {
-							IStorage destination = projectDir.newInstance(projectDir, files[i].getName());
-							copyDirectory(files[i], destination);
+						IStorage file = files[i];
+						if(file.isDirectory() && file.getName().equals(IDavinciServerConstants.DOT_SETTINGS)){
+							IStorage destinationDir = projectDir.newInstance(projectDir, IDavinciServerConstants.DOT_SETTINGS);
+							destinationDir.mkdirs();
+							IStorage[] dotSettingsFiles = file.listFiles();
+							for(int j = 0; j < dotSettingsFiles.length; j++){
+								IStorage settingsFile = dotSettingsFiles[j];
+								IStorage destination = file.newInstance(file, settingsFile.getName());
+								if(settingsFile.getName().equals(IDavinciServerConstants.LIBS_SETTINGS) &&
+										basePath!=null && !basePath.equals("")){
+									// If creating an Eclipse project, add "WebContent/" into library paths in libs.settings before writing out to the template.
+									copyFileAddWebContent(settingsFile, destination);
+								}else{
+									copyFile(settingsFile, destination);
+								}
+							}
+						}else if (file.isFile()) {
+							IStorage destination = basePathDir.newInstance(basePathDir, file.getName());
+							copyFile(file, destination);
+						} else if (file.isDirectory()) {
+							IStorage destination = basePathDir.newInstance(basePathDir, file.getName());
+							copyDirectory(file, destination);
 						}
 					}
 				}
@@ -166,15 +200,45 @@ public class OrionUser extends User {
 
 			if(projectToClone!=null && !projectToClone.equals("")){
 				IStorage projectToCloneDir = userDir.newInstance(projectToClone);
+				IStorage webContentDir = projectToCloneDir.newInstance(projectToCloneDir, IDavinciServerConstants.WEBCONTENT);
+				Boolean oldProjectIsEclipse = webContentDir.exists();
+				Boolean newProjectIsEclipse = (basePath!=null && !basePath.equals(""));
 				if(projectToCloneDir.exists()) {
 					IStorage[] files = projectToCloneDir.listFiles();
 					for (int i = 0; i < files.length; i++) {
-						if (files[i].isFile()) {
-							IStorage destination = projectDir.newInstance(projectDir, files[i].getName());
-							copyFile(files[i], destination);
-						} else if (files[i].isDirectory()) {
-							IStorage destination = projectDir.newInstance(projectDir, files[i].getName());
-							copyDirectory(files[i], destination);
+						IStorage file = files[i];
+						String filename = file.getPath();
+						IPath path = new Path(filename);
+						if(file.isFile() && path.segmentCount() > 0 && path.segment(1).equals(IDavinciServerConstants.DOT_PROJECT)){
+							// Eclipse projects have a .project file. Don't copy the cloned project's .project file
+							// into the new project - if the new project is an Eclipse project, other code adds the .project file.
+							continue;
+						}else if(file.isDirectory() && file.getName().equals(IDavinciServerConstants.DOT_SETTINGS)){
+							IStorage destinationDir = projectDir.newInstance(projectDir, IDavinciServerConstants.DOT_SETTINGS);
+							destinationDir.mkdirs();
+							IStorage[] dotSettingsFiles = file.listFiles();
+							for(int j = 0; j < dotSettingsFiles.length; j++){
+								IStorage settingsFile = dotSettingsFiles[j];
+								if(settingsFile.getName().equals(IDavinciServerConstants.LIBS_SETTINGS)){
+									IStorage destination = destinationDir.newInstance(destinationDir, settingsFile.getName());
+									if(!oldProjectIsEclipse && newProjectIsEclipse){
+										copyFileAddWebContent(settingsFile, destination);
+									}else if(oldProjectIsEclipse && !newProjectIsEclipse){
+										copyFileStripWebContent(settingsFile, destination);
+									}else{
+										copyFile(settingsFile, destination);
+									}
+								}
+							}
+						}else if(file.isDirectory() && path.segmentCount() > 1 && path.segment(1).equals(IDavinciServerConstants.WEBCONTENT)){
+							// Copy the contents of WebContent/* into the base folder for the new project
+							copyDirectory(file, basePathDir);
+						}else if (file.isFile()) {
+							IStorage destination = basePathDir.newInstance(basePathDir, file.getName());
+							copyFile(file, destination);
+						} else if (file.isDirectory()) {
+							IStorage destination = basePathDir.newInstance(basePathDir, file.getName());
+							copyDirectory(file, destination);
 						}
 					}
 				}
@@ -233,27 +297,23 @@ public class OrionUser extends User {
         	path=path.substring(1);
 
         IPath a = new Path(this.userDirectory.getAbsolutePath()).append(path);
+
         /*
          * security check, dont want to return a resource BELOW the workspace
          * root
          */
         IStorage parentStorage = this.userDirectory.newInstance(a.toString());
-        
-        
         if (!parentStorage.exists()) {
-        	
             IPath a2 = new Path(this.userDirectory.getAbsolutePath()).append(path + IDavinciServerConstants.WORKING_COPY_EXTENSION);
             IStorage workingCopy = this.userDirectory.newInstance(a2.toString());
             if (!workingCopy.exists()) {
                 return null;
             }
-        	
         }
-     
-       
+
         IVResource parent = this.workspace;
         IPath halfPath = new Path("");
-        for (int i = 1; i < a.segmentCount(); i++) {
+        for (int i = 1, len = a.segmentCount(); i < len; i++) {
         	halfPath = halfPath.append(a.segment(i));
         	IStorage f = this.userDirectory.newInstance(halfPath.toString());
             parent = new VOrionResource(f, parent,a.segment(i));
@@ -368,4 +428,53 @@ public class OrionUser extends User {
 //			}
 //		}
 //	}
+	
+	private void copyFileAddWebContent(IStorage source, IStorage destination) throws IOException {
+		copyFileAddStripWebContent(source, destination, "add");
+	}
+	
+	private void copyFileStripWebContent(IStorage source, IStorage destination) throws IOException {
+		copyFileAddStripWebContent(source, destination, "strip");
+	}
+
+	private void copyFileAddStripWebContent(IStorage source, IStorage destination, String action) throws IOException {
+		InputStream in = null;
+		OutputStream out = null;
+		BufferedReader br;
+		String line;
+		try{
+			try {
+				destination.getParentFile().mkdirs();
+				in = source.getInputStream();
+				out = destination.getOutputStream();
+				br = new BufferedReader(new InputStreamReader(in, Charset.forName("UTF-8")));
+				while ((line = br.readLine()) != null) {
+					String adjustedLine;
+					if(action.equals("add")){
+						adjustedLine = line.replace("virtualRoot=\"", "virtualRoot=\"WebContent/");
+					}else if(action.equals("strip")){
+						adjustedLine = line.replace("virtualRoot=\"WebContent/", "virtualRoot=\"");
+					}else{
+						adjustedLine = line;
+					}
+					int len = adjustedLine.length();
+					ByteBuffer bb = ByteBuffer.wrap(adjustedLine.getBytes());
+					out.write(bb.array(), 0, len);
+					out.write(10);
+				}
+			} finally {
+				if (in != null) {
+					in.close();
+				}
+				if (out != null) {
+					out.close();
+				}
+			}
+		} catch (IOException e) {
+			String desc = "IOException with createProjectTemplate";
+			theLogger.log(Level.SEVERE, desc, e);
+			throw new Error(desc, e);
+		}
+	}
+
 }

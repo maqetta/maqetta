@@ -40,7 +40,8 @@
         },
         "value": {
             "datatype": "string",
-            "title": "Value"
+            "title": "Value",
+            "description": "Value to be displayed for example: 12345.67"
         },
         "tabIndex": {
             "datatype": "string",
@@ -89,6 +90,10 @@
             "title": "Prompt Message",
             "hidden": false
         },
+        "placeHolder": {
+            "datatype": "string",
+            "description": "User hint to be displayed in edit box if value is not set, example: dddd.cc"
+        },
         "invalidMessage": {
             "datatype": "string",
             "defaultValue": "The value entered is not valid.",
@@ -136,7 +141,8 @@
         "currency": {
             "datatype": "string",
             "title": "Currency",
-            "defaultValue": "USD"
+            "defaultValue": "USD",
+            "description": "type of currency, example: USD"
         },
         "regExp": {
             "datatype": "string",

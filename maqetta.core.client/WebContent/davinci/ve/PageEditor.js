@@ -261,6 +261,8 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 				var id = htmlElement.getAttribute("id");
 				if (id && this._displayMode!="source") {
 					var widget = widgetUtils.byId(id, this.visualEditor.context.getDocument());
+					var box = GeomUtils.getMarginBoxPageCoords(widget.domNode);
+					this.getContext().getGlobal().scroll(box.l, box.t);
 					this.visualEditor.context.select(widget);
 				}
 			}
@@ -474,12 +476,23 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		}
 
 		this.savePoint=this._commandStack.getUndoCount();
-		this.visualEditor.save(isAutoSave);
-		
-		this.isDirty= this.isDirty && isAutoSave;
-		if (this.editorContainer) {
-			this.editorContainer.setDirty(isAutoSave);
+		var promises = this.visualEditor.save(isAutoSave);
+		if (promises && promises.then){
+			promises.then(
+				function(results){
+					this.isDirty=  isAutoSave;
+					if (this.editorContainer) {
+						this.editorContainer.setDirty(isAutoSave);
+					}
+				}.bind(this),
+				function(error){
+					alert('error saving resource' + error);
+		 			console.error('error saving resource' + error);
+				}
+			);
 		}
+		
+		
 	},
 	
 	removeWorkingCopy: function(){ //wdr

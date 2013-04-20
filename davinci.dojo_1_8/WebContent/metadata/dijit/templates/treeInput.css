@@ -21,6 +21,7 @@
 	white-space: nowrap;
 	background-color:#d8d8d8;
 	min-width:300px;
+	overflow: hidden;
 }
 
 .treeInput .previewPanelPreviewNote {

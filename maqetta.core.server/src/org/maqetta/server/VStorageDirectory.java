@@ -1,5 +1,6 @@
 package org.maqetta.server;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Vector;
@@ -30,7 +31,7 @@ public class VStorageDirectory extends VDirectory {
     public boolean isVirtual() {
 		return false;
 	}
-    public boolean delete() {
+    public boolean delete() throws IOException {
   		return this.resource.delete();
   	}
     

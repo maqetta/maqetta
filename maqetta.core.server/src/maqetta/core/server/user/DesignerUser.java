@@ -1,5 +1,6 @@
 package maqetta.core.server.user;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,7 +109,7 @@ public class DesignerUser implements IDesignerUser {
 	 * maqetta.core.server.user.IDesignerUser#deleteVersion(java.
 	 * lang.String)
 	 */
-	public void deleteVersion(String versionTime) {
+	public void deleteVersion(String versionTime) throws IOException {
 		Version version = this.getVersion(versionTime);
 		versions.remove(version);
 		IStorage versionDir = this.userDirectory.newInstance(
@@ -118,7 +119,7 @@ public class DesignerUser implements IDesignerUser {
 		}
 	}
 
-	private static boolean deleteDir(IStorage dir) {
+	private static boolean deleteDir(IStorage dir) throws IOException {
 		if (dir.isDirectory()) {
 			String[] children = dir.list();
 			for (int i = 0; i < children.length; i++) {
@@ -142,7 +143,10 @@ public class DesignerUser implements IDesignerUser {
 	 */
 	public IStorage getCommentingDirectory() {
 		if (this.commentingDirectory == null) {
-			this.commentingDirectory = this.userDirectory.newInstance(this.userDirectory, Constants.REVIEW_DIRECTORY_NAME);
+			// this.userDirectory is of type VOrionWorkspaceStorage. Because of that, we cannot use
+			// `newInstance()`, since that will return `null` if the underlying path doesn't already
+			// exist.  Instead, we call `create()`, to create an Orion project for this dir.
+			this.commentingDirectory = this.userDirectory.create(Constants.REVIEW_DIRECTORY_NAME);
 		}
 		return this.commentingDirectory;
 	}

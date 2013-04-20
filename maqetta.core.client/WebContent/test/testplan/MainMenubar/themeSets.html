@@ -59,9 +59,9 @@
   <ol>
     <li>Continuing from the test case above, with the <b>Manage theme sets</b> dialog displayed.</li>
     <li>Select <i>site_dojo_default_2</i> in the <b>Theme sets:</b> selection list.</li>
-    <li>Click on the <b>"-"</b> below the <b>Theme set:</b> selection list, <i>site_dojo_default_2</i> should be removed from the list.</li>
+    <li>Click on the <b>"x"</b> below the <b>Theme set:</b> selection list, <i>site_dojo_default_2</i> should be removed from the list.</li>
     <li>Select <i>site_dojo_default_2_1</i> in the <b>Theme sets:</b> selection list.</li>
-    <li>Click on the <b>"-"</b> below    the <b>Theme set:</b> selection list,    <i>site_dojo_default_2_1 </i>should be removed from the    list.</li>
+    <li>Click on the <b>"x"</b> below    the <b>Theme set:</b> selection list,    <i>site_dojo_default_2_1 </i>should be removed from the    list.</li>
     <li>Click <b>Cancel</b>    button.</li>
     <li>Reopen Manage theme sets <b>Settings -&gt;    Theme sets</b> </li>
   </ol>
@@ -84,9 +84,9 @@
   <ol>
     <li >Continuing from the test case above, with the <b>Manage theme sets </b> dialog displayed.</li>
     <li> Select <i>site_dojo_default_1</i>in the <b>Theme sets:</b> selection list.</li>
-    <li >Click on the<b> &quot;-&quot;</b> below the <b>Theme set:</b> selection list, <i>site_dojo_default_1</i> should be removed from the    list.</li>
+    <li >Click on the<b> &quot;x&quot;</b> below the <b>Theme set:</b> selection list, <i>site_dojo_default_1</i> should be removed from the    list.</li>
     <li >Select <i>site_dojo_default_2_1</i> in the Theme    sets: selection list.</li>
-    <li >Click on the <b>&quot;-&quot; </b>below    the <b>Theme set:</b> selection list,    <i>site_dojo_default_2_1</i>should be removed from the    list.</li>
+    <li >Click on the <b>&quot;x&quot; </b>below    the <b>Theme set:</b> selection list,    <i>site_dojo_default_2_1</i>should be removed from the    list.</li>
     <li >Click <b>Save</b>    button.</li>
     <li >Reopen Manage theme sets <b>Settings -&gt;    Theme sets</b></li>
   </ol>
@@ -109,6 +109,7 @@
 	<li >Click on the <b>Rename</b>   button.</li>
     <li >The <b>Rename theme set </b>dialog should be displayed, enter <i>my_theme_set </i>in the text box.</li>
 	<li >Click <b>Rename</b></li>
+	<li >Click <b>Save</b> to commit the rename and close the dialog.</li>
 	<li >Reopen Manage theme sets <b>Settings -&gt; Theme sets</b></li>
   </ol>
   
@@ -154,18 +155,18 @@
 				<li ><i>my_theme_set</i></li>
 				<li ><i>dojo_theme_set</i></li>
 			</ol>
-		<li >Select <i>site_dojo_default</i> in the <b>Theme sets</b> selection list
+		<li >Select site_dojo_default in the Theme sets selection list
 			<ol type="a">
-		    	<li ><b>Name</b> text box should contain <i>site_dojo_default.</i></li>
-				<li ><i>claro</i> should be selected in the <b>Dojo desktop</b> drop down.</li>
-				<li ><i>custom</i> should be selected in the <b>Dojo mobile</b> drop  down.</li>
-		    	<li ><i>custom</i> should be displayed but disabled in the <b>Android </b>drop  down.</li>
-		    	<li ><i>custom</i> should be displayed but disabled in the <b>Blackberry</b> drop    down.</li>
-		    	<li ><i>custom</i>  should be displayed but disabled in the<b> iPad </b>drop    down.</li>
-		    	<li ><i>custom</i> should be displayed but disabled in the <b>iPhone</b> drop   down.</li>
-		    	<li ><i>custom</i> should be displayed but disabled in the <b>Other</b> drop    down.</li>
-	   		</ol>
-   		</li>
+				<li ><b>Name</b> text box should contain dojo_theme_set .</li>
+				<li ><i>claro</i> should be selected in the <b>Dojo desktop</b> drop  down.</li>
+				<li ><i>(device-specific)</i> should be selected in the <b>Dojo mobile</b> drop  down.</li>
+				<li ><i>android</i> should be displayed in the <b>Android </b>drop  down.</li>
+				<li ><i>blackberry</i> should be displayed in the <b>Blackberry</b> drop   down.</li>
+				<li ><i>ipad</i> should be displayed in the <b>iPad</b> drop down.</li>
+				<li ><i>iphone</i> should be displayed in the <b>iPhone</b> drop down.</li>
+				<li ><i>iphone</i> be displayed in the <b>Other</b> drop down.</li>
+			</ol>
+		</li>
 		<li>Select <i>my_theme_set</i> in the <b>Theme sets</b> selection list
 			<ol type="a">
     			<li><b>Name</b> text box should contain <i>my_theme_set.</i></li>
@@ -243,7 +244,7 @@
 				<li ><i>'themeMap':[['Android','',['themes/android/android.css']],['BlackBerry','',['themes/custom/custom.css']],['iPad','',['themes/ipad/ipad.css']],['iPhone','',['themes/iphone/iphone.css']],['.*','',['themes/iphone/iphone.css']]],'mblThemeFiles':[]</i></li>
    			</ol>
    		</li>
-   		</ol>
+  	</ol>
    		
   <h2 class="test_section">Restore dojo default theme to HTML</h2>
   <h3 class="steps_subsection">Steps</h3>	
@@ -278,8 +279,12 @@
 	
   	<h3 class="expectedResults_subsection">Expected results</h3>
 	<ol class="expectedResults">
-		<li >Click on the <b>Display source</b> icon from the designer toolbar, examine the source you should see that the <i>themeMap</i> and <i>mblThemeFiles</i> objects of the <i>data-dojo-config</i> parameter added from the test cases above have been removed from  the dojo.js script link:
-		</li>
+		<li >Click on the <b>Display source</b> icon from the designer toolbar, examine the source you should see the following in the <i>data-dojo-config</i> parameter of the dojo.js script link:
+			<ol type="a">
+				<li ><i>
+				'themeMap':[['Android','',['themes/android/android.css']],['BlackBerry','',['themes/blackberry/blackberry.css']],['iPad','',['themes/ipad/ipad.css']],['iPhone','',['themes/iphone/iphone.css']],['.*','',['themes/iphone/iphone.css']]],'mblThemeFiles':[], 'mblLoadCompatPattern': ''
+  			</ol>
+   		</li>
 	</ol>
   </body>
 </html>

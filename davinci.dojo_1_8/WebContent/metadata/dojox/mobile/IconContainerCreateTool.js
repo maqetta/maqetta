@@ -37,6 +37,7 @@ define([
 return declare(CreateTool, {
 
     _create: function(args) {
+
         var iconContainerData = this._data[0],
             childrenData = iconContainerData.children,
             context = this._context;
@@ -49,14 +50,9 @@ return declare(CreateTool, {
             return context.loadRequires(obj.type, true);
         }, this)).then(function() {
 	        iconContainerData.context = context;
-	        var iconContainer,
-	            children = [];
+	        var iconContainer;
 	        Window.withDoc(context.getDocument(), function() {
 	            iconContainer = Widget.createWidget(iconContainerData);
-	            childrenData.forEach(function(child) {
-	                child.context = context;
-	                children.push(Widget.createWidget(child));
-	            });
 	        });
 	        if (! iconContainer) {
 	            return;
@@ -73,10 +69,11 @@ return declare(CreateTool, {
 			CreateTool.prototype.checkAddToCurrentState(command, iconContainer);	
 
 			// ... followed by its children
-	        children.forEach(function(child, idx) {
-	            command.add(new AddCommand(child, iconContainer,
+	        childrenData.forEach(function(child, idx) {
+                child.context = context;
+                command.add(new AddCommand(child, iconContainer,
 	                    idx));
-	        });
+            });
 	
 	        if (args.position) {
 				var absoluteWidgetsZindex = context.getPreference('absoluteWidgetsZindex');

@@ -132,7 +132,7 @@ public class VFile implements IVResource {
 
     }
 
-    private boolean deleteDirectory(IStorage path) {
+    private boolean deleteDirectory(IStorage path) throws IOException {
         if (path.exists()) {
             IStorage[] files = path.listFiles();
             for (int i = 0; i < files.length; i++) {
@@ -143,11 +143,10 @@ public class VFile implements IVResource {
                 }
             }
         }
-        return (path.delete());
-
+        return path.delete();
     }
 
-    public boolean delete() {
+    public boolean delete() throws IOException {
         IStorage target = null;
 
         if (this.workingCopy.exists()) {
@@ -221,10 +220,10 @@ public class VFile implements IVResource {
         return this.file.toURI();
     }
 
-    public boolean mkdir() {
+    public boolean mkdir() throws IOException {
         return this.file.mkdirs();
-
     }
+
     protected static boolean wildCardMatch(String text, String pattern){
         // Create the cards by splitting using a RegEx. If more speed 
         // is desired, a simpler character based splitting can be done.
@@ -314,7 +313,7 @@ public class VFile implements IVResource {
         // this.workingCopy.delete();
     }
 
-    public void removeWorkingCopy() {
+    public void removeWorkingCopy() throws IOException {
         this.workingCopy.delete();
     }
 

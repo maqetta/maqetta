@@ -1,5 +1,6 @@
 package org.maqetta.server;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ILinks {
@@ -12,10 +13,10 @@ public interface ILinks {
 
 	public ILink hasLink(String path);
 
-	public boolean addLink(String path, String location, int type);
+	public boolean addLink(String path, String location, int type) throws IOException;
 
 	public ILink[] allLinks();
 
-	public boolean removeLink(String path);
+	public boolean removeLink(String path) throws IOException;
 
 }

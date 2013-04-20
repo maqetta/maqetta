@@ -80,7 +80,13 @@ return declare("davinci.ve.palette.Palette", [WidgetBase, _KeyNavContainer], {
 		// Disable dijit's automatic key handlers until there is time to do it right
 		// As currently implemented, causes hidden palette folders from other presets to appear
 		//this.connectKeyNavHandlers([dojo.keys.UP_ARROW], [dojo.keys.DOWN_ARROW]);
+		
+		/* Removing "refresh" logic because currently Palette.js only works
+		 * at program initialization. Bad things happen if we try to recreate
+		 * the palette in middle of a session. Of course, would be good to make
+		 * the palette such that it could be reconstructed in middle of session.
 		connect.subscribe("/davinci/ui/libraryChanged", this, "refresh");
+		*/
 		connect.subscribe("/davinci/ui/addedCustomWidget", this, "addCustomWidget");
 		connect.subscribe("/davinci/preferencesChanged", this, "preferencesChanged");
 	},

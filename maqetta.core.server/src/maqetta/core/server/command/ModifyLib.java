@@ -39,11 +39,11 @@ public class ModifyLib extends Command {
         responseString = "OK";
     }
 
-    public void changeLibraryRoot(IUser user, String id, String version, String path, String base, String required) {
+    public void changeLibraryRoot(IUser user, String id, String version, String path, String base, String required) throws IOException {
         user.modifyLibrary(id, version, path, base, required==null?false:Boolean.parseBoolean(required));
     }
 
-    public void updateLib(IUser user, String id, String version, boolean installed, String base, String required) {
+    public void updateLib(IUser user, String id, String version, boolean installed, String base, String required) throws IOException {
         user.modifyLibrary(id, version, base, installed,required==null?false:Boolean.parseBoolean(required));
     }
 

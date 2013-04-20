@@ -75,24 +75,5 @@
 		<li>The right side of the toolbar should have your login name and, further to the right, by a logout hyperlink.</li>
 	</ol>
 
-	<h2 class="test_section">Verify Shared Launch Scripts</h2>
-	<p>This section verifies that the shared launch scripts are working properly, and the different run configurations work.
-	<h3 class="steps_subsection">Steps</h3>
-	<ol class="steps">
-		<li>Clear your browser cache.</li>
-		<li>Launch the Maqetta server using shared launch script <b>maqetta single user</b></li>
-		<li>Browse to the Maqetta root URL <em>without the user name</em> 
-				(e.g., <a href="http://localhost:8080/maqetta">http://localhost:8080/maqetta</a>, not http://localhost:8080/maqetta/JohnSmith).</li>
-		<li>Launch the Maqetta server using shared launch script <b>maqetta multi user</b></li>
-		<li>Browse to the Maqetta root URL  
-				(e.g., <a href="http://localhost:8080/maqetta">http://localhost:8080/maqetta</a>, not http://localhost:8080/maqetta/JohnSmith).</li>
-
-	</ol>
-	<h3 class="expectedResults_subsection">Expected results</h3>
-	<ol class="expectedResults">
-		<li>No login screen for single user, but full login screen for multi user.</li>
-		<li>For single user, the right side of the toolbar should say "localhost user".</li>
-	</ol>
-
 </body>
 </html>

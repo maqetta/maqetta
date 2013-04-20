@@ -116,6 +116,8 @@ return declare("davinci.ve.commands.AppStateCommand", null, {
 		}else if(action == 'modify'){
 			if(this._params.newState){
 				this._traverseRenameState(this._params.state, this._params.newState);
+				topic.publish("/davinci/states/state/renamed", 
+						{node:stateContainerNode, oldName:this._params.state, newName:this._params.newState, stateContainerNode:stateContainerNode });
 			}
 			if(typeof this._params.initialState == 'string'){
 				this._oldInitialState = States.getInitial(stateContainerNode);

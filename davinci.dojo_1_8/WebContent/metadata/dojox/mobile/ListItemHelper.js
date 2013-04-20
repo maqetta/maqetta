@@ -1,13 +1,15 @@
 define([
 	"dojo/dom-construct",
 	"dojo/_base/array",
-	"davinci/ve/widget"
-], function(domConstruct, arr, Widget) {
+	"davinci/ve/widget",
+	"dojo/aspect"
+], function(domConstruct, arr, Widget, aspect) {
                          
 var ListItemHelper = function() {};
 ListItemHelper.prototype = {
 
 	create: function(widget, srcElement) {
+
 		var dijitWidget = widget.dijitWidget;
 		// Fix for #705.
 		// The ListItem widget's startup logic registers an onclick
@@ -27,9 +29,55 @@ ListItemHelper.prototype = {
 				return false;
 			}
 		}
+		/*
+		 * dojox.mobile.ListItem expects the widget to have run
+		 * startup (set _onLine true) before setting the checkbpx.
+		 * This works fine out side of maqetta, but maqetta modify command
+		 * sets the check attribute first then runs start up latter.
+		 * the aspect.after ensures the mblDomButtonCheck will get set correctly
+		 */
+		aspect.after(dijitWidget, "startup", function(){
+		    this._setCheckedAttr(this.checked);
+		}.bind(dijitWidget));
+
+	},
+	
+	getData: function(/*Widget*/ widget, /*Object*/ options) {
+		
+		var data = widget._getData(options);
+		if (data.properties.rightIcon == 'mblDomButtonCheck') {
+			// dojo adds this class if the listItem is checked
+			// we do not want to preserve it.
+			delete data.properties.rightIcon;
+		}
+		return data;
+	},
+	
+	/**
+	 * Override the default implementation, which simply gets the value of the named attribute
+	 * from the widget's DOM node.
+	 * 
+	 * @param  {davinci/ve/_Widget} widget  the widget instance
+	 * @param  {String} name  the property whose value we are querying
+	 * 
+	 * @return {*}
+	 */
+	getPropertyValue: function(widget, name) {
+		/*
+		 * Note: Should always use the base implementations for names that 
+		 * are not overridden
+		 */
+		 var value = widget._getPropertyValue(name);
+		 if (name == 'rightIcon' && value == 'mblDomButtonCheck') {
+			 // dojo adds this class if the listItem is checked
+			// we do not want to display it.
+			value = null;
+		}
+		return value;
 	},
 
 	getChildrenData: function(/*Widget*/ widget, /*Object*/ options) {
+	
 		var data = [];
 
 		// always add the text first
@@ -44,6 +92,7 @@ ListItemHelper.prototype = {
 	},
 
 	getChildren: function(widget, attach) {
+
 		var dijitWidget = widget.dijitWidget;
 		var children = [];
 

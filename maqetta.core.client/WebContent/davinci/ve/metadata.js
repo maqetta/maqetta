@@ -892,7 +892,7 @@ define([
             if (library && library.$callbacks) {
                 fn = library.$callbacks[fnName];
                 if (fn) {
-                    fn.apply(library.$callbacks, args);
+                    return fn.apply(library.$callbacks, args);
                 }
             }
             // XXX handle/report errors?

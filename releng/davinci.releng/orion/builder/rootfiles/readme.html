@@ -48,22 +48,38 @@ or other web sites might offer cloud-hosted versions of Maqetta.</p>
 	as review and commenting.</p>
 <p>Here are the instructions for installing and running Maqetta locally (i.e. http://localhost:50000).</p>
 
-<h3 id="local_install_java">Step 1: Verify you have Java Version 5 installed on your machine.</h3>
+<h3 id="local_install_java">Step 1: Verify you have Java Version 6 or greater installed on your machine.</h3>
 
-<p>Maqetta requires Java Version 5 (i.e. JRE Version 1.5), installed on your machine in order to run Maqetta locally.<br />
-Follow these steps to check your Java version:</p>
+<p>Maqetta requires Java Version 6 or greater installed on your machine in order to run Maqetta locally.
+(NOTE: It is best to install the latest version of Java so that you have
+all of the latest security updates.)</p>
+
+To see if Java is installed, and if so which version, follow these steps:</p>
 
 <ol><li> Open a Command Prompt window
 <ul><li>On Windows: Click <b>Start > Run</b>, type in <code style="letter-spacing:1px;">cmd</code> and click OK</li>
     <li>On Mac: Open <b>Finder > Applications > Utilites > Terminal</b></li></ul>
 <li>Type in <code>java -version</code></li>
-<li>If the version number 1.5.0 or higher, no further action is required.</li>
-<li>If the version number is lower than 1.5.0, or you don't have Java on your machine, then you'll need to install
-	Java 1.5 (or later) onto your machine.
+<li>If the version number 1.6.0 or higher, no further action is required.</li>
+<li>If the version number is lower than 1.6.0, or you don't have Java on your machine, then you'll need to install
+	Java 1.6 (or later) onto your machine.
 </li>
 </ol>
 
+<p>NOTE: If you need to download and install Java onto your system, we strongly recommend installing the Java JDK
+(Java Development Kit) instead of the JRE (Java Runtime Environment), particularly on Windows. On Windows, the JDK
+makes the "java" command available to command line tools, whereas with the JRE, you'll need to manually
+update the PATH environment variable to point to the <code>bin</code> folder for your Java installation.</p>
+
 <h3 id="local_install_launch_server">Step 2: Launch the Maqetta server</h3>
+
+<p>NOTE: On some Windows systems, you need to expand the Maqetta download ZIP file into a folder for which
+you have full read/write permissions. The recommended approach is to expand the Maqetta ZIP file
+somewhere inside your user file area at <code>\Users\&lt;mylogin&gt;</code>.</p>
+
+<p>NOTE: On some MacOS systems, you will need to make sure your Security and Privacy settings allow
+applications to run that are downloaded from anywhere. See instructions at: 
+<a href="http://support.apple.com/kb/ht5290">OS X: About Gatekeeper</a>.</p>
 
 <ol><li> With the Explorer (Windows) or Finder (Mac), navigate to the directory into which you unzipped the Maqetta files.
 </li><li> Launch the Maqetta server process.
@@ -106,8 +122,10 @@ and change 50000 to something else (any number in the 50000's is OK).
 <ul><li> <a href="http://localhost:50000/maqetta" rel="external" title="http://localhost:50000/maqetta">http://localhost:50000/maqetta</a>
 </li></ul>
 
-<p>You will now see a Maqetta login screen. The first time run bring up your locally installed version in the browser, 
-	you will need create a new user account by clicking on the Register button, which will take you to the account creation screen.
+<p>You will now see a Maqetta login screen.</p>
+<p>The first time you bring up a locally installed version of Maqetta in the browser, 
+	<span style='font-weight:bold; color:brown;'>you will need create a new user account by clicking on the Register button</span>, 
+	which will take you to the account creation screen.
 	For a local installation of Maqetta, the login name can be an email address or any string (e.g., your name). 
 	(Note: Local installations do not require that new accounts get verified via activation emails.)
 	After clicking Register,
@@ -189,18 +207,19 @@ and change 50000 to something else (any number in the 50000's is OK).
 			</li>
 			<li>Safari
 				<ul>
-				 	<li>(Mac only) Clear both the browser cache and the application cache: Under the "Safari" menu, invoke the "Empty cache..." command,
-				 		and then click "Empty" on the dialog that appears.</li>
+				 	<li>(Mac only) Clear both the browser cache and the application cache: Under the "Safari" menu, invoke the "Reset Safari..." command,
+				 		make sure the "Remove all website data" checkbox is set, and then click on the "Reset"" button.</li>
 					<li>(Mac only) Clear cookies: Under the "Safari" menu, invoke the "Preferences..." command to bring up the Preferences dialog.
-						Click on the "Security" tab, then click on "Show Cookies" button.
-						This brings up a "Cookies" dialog. In the search text entry box at the top, 
+						Click on the "Security" tab, then click on the "Details" button
+						under the "Remove all website data" button.
+						This brings up a dialog. In the search text entry box at the top, 
 						type in the URL for the web server where you are running Maqetta.
 						For example:
 						<ul>
 							<li>If you run Maqetta at Maqetta.org, then type "maqetta.org" into the search box.</li>
 							<li>If run run locally on http://localhost, then type "localhost" into the search box.</li>
 						</ul>
-						Select all cookies listed and then click the "Remove" button.
+						Click-select the entry(ies) that correspond to your server and then click the "Remove" button.
 					</li>
 				</ul>
 			</li>

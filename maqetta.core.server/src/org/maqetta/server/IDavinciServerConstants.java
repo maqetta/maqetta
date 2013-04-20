@@ -43,6 +43,10 @@ public interface IDavinciServerConstants {
 	public static final String PROJECT_TEMPLATES_INDEX_FILE = "__index.json";
 	public static final int PROJECT_TEMPLATES_MAX = 1000;	// max# of returned project templates from cmd/getProjectTemplates
 	public static final String PROJECT_TEMPLATES_SHARING_ALL_ENABLED = "maqetta.projecttemplates.sharing.all.enabled";
+	public static final String DOT_PROJECT = ".project";
+	public static final String DOT_SETTINGS = ".settings";
+	public static final String LIBS_SETTINGS = "libs.settings";
+	public static final String WEBCONTENT = "WebContent";
 
 	// Extension point definitions
 	public static final String EXTENSION_POINT_COMMAND = "command";

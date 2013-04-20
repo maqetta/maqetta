@@ -9,7 +9,7 @@ define([
 ) {
 
 return declare(IconContainerInput, {
-	childType: "dojox.mobile.IconMenuItem",
+	childType: "dojox/mobile/IconMenuItem",
 	dialogTitle: dojoxNLS.iconMenuTitle
 });
 });

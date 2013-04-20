@@ -91,11 +91,37 @@ var MOBILE_DEV_ATTR = 'data-maq-device',
 var contextCount = 0;
 
 var removeEventAttributes = function(node) {
+	var libraries = metadata.getLibrary();	// No argument => return all libraries
+	
+
 	if(node){
 		dojo.filter(node.attributes, function(attribute) {
 			return attribute.nodeName.substr(0,2).toLowerCase() == "on";
 		}).forEach(function(attribute) {
-			node.removeAttribute(attribute.nodeName);
+			var requiredAttribute = false;
+			for(var libId in libraries){
+				/*
+				 * Loop through each library to check if the event attribute is required by that library
+				 * in page designer
+				 * 
+				 */
+				var library = metadata.getLibrary(libId);
+				var requiredAttribute = metadata.invokeCallback(library, 'requiredEventAttribute', [attribute]);
+				if (requiredAttribute) {
+					/*
+					 * If the attribute is required by a library then we stop checking 
+					 * it only needs to be required by one library for us to leave it on the node
+					 */
+							
+					break;
+				}
+			}
+			if (!requiredAttribute) {
+				/*
+				 * No library requires this event attribute in page designer so we will remove it.
+				 */
+				node.removeAttribute(attribute.nodeName);
+			}
 		});
 	}
 };
@@ -821,28 +847,29 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 
 		this._srcDocument=source;
 		
-		// if it's NOT the theme editor loading
-		if (!source.themeCssFiles) { // css files need to be added to doc before body content
-			// ensure the top level body deps are met (ie. maqetta.js, states.js and app.css)
-			if(newHtmlParams){
-				var modelBodyElement = source.getDocumentElement().getChildElement("body");
-				modelBodyElement.setAttribute(MOBILE_DEV_ATTR, newHtmlParams.device);
-				modelBodyElement.setAttribute(PREF_LAYOUT_ATTR, newHtmlParams.flowlayout);
-				modelBodyElement.setAttribute(COMPTYPE_ATTR, newHtmlParams.comptype);
-			}
-			this.loadRequires(
-					"html.body",
-					true /*updateSrc*/,
-					false /*doUpdateModelDojoRequires*/,
-					true /*skipDomUpdate*/
-			).then(function(){
-					// make sure this file has a valid/good theme
-				this.loadTheme(newHtmlParams);
-				this._setSourcePostLoadRequires(source, callback, scope, newHtmlParams);
-			}.bind(this));
-		} else {
-			this._setSourcePostLoadRequires(source, callback, scope, newHtmlParams);
+
+		// css files need to be added to doc before body content
+		// ensure the top level body deps are met (ie. maqetta.js, states.js and app.css)
+		if(newHtmlParams){
+			// theme editor does not pass newHtmlParms
+			var modelBodyElement = source.getDocumentElement().getChildElement("body");
+			modelBodyElement.setAttribute(MOBILE_DEV_ATTR, newHtmlParams.device);
+			modelBodyElement.setAttribute(PREF_LAYOUT_ATTR, newHtmlParams.flowlayout);
+			modelBodyElement.setAttribute(COMPTYPE_ATTR, newHtmlParams.comptype);
 		}
+		this.loadRequires(
+				"html.body",
+				true /*updateSrc*/,
+				false /*doUpdateModelDojoRequires*/,
+				true /*skipDomUpdate*/
+		).then(function(){
+				// make sure this file has a valid/good theme
+			if(newHtmlParams){
+				// theme editor loads themes in themeEditor/context
+				this.loadTheme(newHtmlParams);
+			}
+			this._setSourcePostLoadRequires(source, callback, scope, newHtmlParams);
+		}.bind(this));
 
 
 	},
@@ -901,12 +928,15 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 			 */
 			var resourceBase = this.getBase();
 			if (!dojoUrl) {
+				// #3839 Theme editor uses dojo from installed lib
 				// pull Dojo path from installed libs, if available
+				var context  = this;
 				dojo.some(Library.getUserLibs(resourceBase.toString()), function(lib) {
 					if (lib.id === "dojo") {
 						var fullDojoPath = new Path(this.getBase()).append(lib.root).append("dojo/dojo.js");
 						dojoUrl = fullDojoPath.relativeTo(this.getPath(),true).toString();
 						//dojoUrl = new Path(this.relativePrefix).append(lib.root).append("dojo/dojo.js").toString();
+						context.addJavaScriptSrc(dojoUrl, true, "", false);
 						return true;
 					}
 					return false;
@@ -2266,7 +2296,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		var containerNode = this.getFocusContainer();
 		if(this._focuses){
 			for(var i = startIndex; i < this._focuses.length; i++){
-				focus = this._focuses[i];
+				var focus = this._focuses[i];
 				if(focus.domNode.parentNode == containerNode){
 					focus.hide();
 					containerNode.removeChild(focus.domNode);
@@ -3321,6 +3351,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 	},
 
 	registerSceneManager: function(sceneManager){
+	
 		if(!sceneManager || !sceneManager.id){
 			return;
 		}

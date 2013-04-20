@@ -114,7 +114,7 @@ return declare("davinci.review.widgets.CommentForm", [_Widget, _Templated], {
 
 	_submit: function() {
 		var subject = this.subject.get("value"),
-		content = this.content.get("value").replace(/\n/g, "<br/>"),
+		content = this.content.get("value"),
 		func = this._update ? "onUpdate" : "onSubmit";
 
 		this[func]({

@@ -262,7 +262,15 @@ define([
 	        if(mobileTheme[i].theme != this.none_theme && mobileTheme[i].theme != this.default_theme){
 	            var theme = this.getTheme(mobileTheme[i].theme);
 	            if (theme){ // user may have deleted theme
-	                var ssPath = new Path(theme.getFile().parent.getPath()).append(theme.files[0]);
+	            	var ssPath;
+	            	if (theme.path && theme.path[0]) {
+	            		var n=theme.path[0].lastIndexOf("/");
+	            		ssPath = new Path(theme.path[0].substring(0, n+1) + theme.files[0]);
+	            		
+	            	} else {
+	            		ssPath = new Path(theme.getFile().parent.getPath()).append(theme.files[0]);
+	            	}
+	                
 	                var resourcePath = context.getFullResourcePath();
 	                var filename = ssPath.relativeTo(resourcePath, true).toString();
 	                if (mobileTheme[i].device === this.other_device){

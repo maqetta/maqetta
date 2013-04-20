@@ -1,5 +1,6 @@
 package org.davinci.server.user;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -79,7 +80,7 @@ public class LibrarySettings extends XMLFile {
         return "library";
     }
 
-    public boolean addLibrary(String name, String version, String id, String virtualRoot, String required) {
+    public boolean addLibrary(String name, String version, String id, String virtualRoot, String required) throws IOException {
 
         LibInfo link = new LibInfo(id, name, version, virtualRoot, required);
 
@@ -91,7 +92,7 @@ public class LibrarySettings extends XMLFile {
         return true;
     }
 
-    public boolean removeLibrary(String id, String version, String base) {
+    public boolean removeLibrary(String id, String version, String base) throws IOException {
         for (int i = 0; i < this.libs.length; i++) {
             if (this.libs[i].getId().equals(id) && this.libs[i].getVersion().equals(version)) {
                 LibInfo[] newLinks = new LibInfo[libs.length - 1];
@@ -106,7 +107,7 @@ public class LibrarySettings extends XMLFile {
 
     }
 
-    public void modifyLibrary(String id, String version, String virtualRoot, String base, String required) {
+    public void modifyLibrary(String id, String version, String virtualRoot, String base, String required) throws IOException {
         this.removeLibrary(id, version, base);
         this.addLibrary(id, version, id, virtualRoot, required);
     }
@@ -139,7 +140,7 @@ public class LibrarySettings extends XMLFile {
         return link;
     }
 
-    public void save() {
+    public void save() throws IOException {
         this.save(libFile, Arrays.asList(this.libs));
     }
 }

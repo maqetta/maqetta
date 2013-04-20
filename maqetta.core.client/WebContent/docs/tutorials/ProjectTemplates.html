@@ -1,0 +1,281 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="maqettadocs.css" />
+<title>Tutorial 17 - Project Templates</title>
+</head>
+<body class="maqettadocs">
+
+<style type="text/css">
+table.CompTypeTable {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+table.CompTypeTable td, table.CompTypeTable th {
+	padding:3px;
+	border:1px solid black;
+}
+table.CompTypeTable th {
+	font-style:italic;
+	font-weight:bold;
+	background:#888;
+}
+table td.CompTypeOption {
+	font-weight:bold;
+}
+tr.desktop {
+	background-color:#ddf;
+}
+tr.mobile {
+	background-color:#dfd;
+}
+</style>
+
+<div id="pagebody">
+
+<table class="breadcrumbs noprint"><tr>
+	<td> &nbsp; </td>
+    <td class="prevnext">
+	<a href="tutorials/Review_Commenting.html">Previous</a> / <a href="tutorials/tutorials.html">Next</a>
+    </td></tr>
+</table>
+
+<h1>Tutorial 17 - Project Templates</h1>
+
+<div class='note'>
+	When going through Maqetta's tutorials, it is suggested that you have two side-by-side
+	browser windows open, one showing the tutorial, and the other where you run the application
+	and perform the steps listed in the tutorial.<br/>
+	<img src='img/SideBySideTutorialsApp.png' class='side_by_side'/>
+</div>
+
+<p>This tutorial introduces Maqetta's project templates states feature.</p>
+
+<p>The project templates feature allows you to set up a standard set of initial files
+(HTML, CSS, JavaScript, images, etc) that you want to be available whenever you
+or a colleague composes new HTML pages. </p>
+
+<p>The typical way that project templates are used:</p>
+<ul>
+	<li>User A runs Maqetta and uses its various features (e.g., upload files, create new files)
+		to set up his current Maqetta project to have a set of files that he or other users
+		will want to use in other projects.</li>
+	<li>User A then issues a "Save as project template" command to persist his current project
+		on the Maqetta server. If the server allows sharing of project templates, then User A
+		can choose to share his project template with other users.</li>
+	<li>User A (or, if the project template was shared, some other user) then can create
+		new Maqetta projects and specify that the new project should be initialized
+		with the previously saved project template.</li>
+</ul>
+
+<p>The tutorial below walks through the steps needed to create a project template
+	and how to subsequently use a project template.</p>
+
+<a name="tutorial_preparation"><h2>Set up a project for subsequent reuse</h2></a>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Using the <b>Create</b> menu at the top of the application,
+	issue a <b>Create Project...</b> command. In the Create Project dialog,
+	enter "tutorialproject1" as the name of the new project and leave all
+	of the checkboxes unchecked.
+	Then, click the <b>Create</b> button to create a new default project
+	named "tutorialproject1". 
+	<div class="image">
+	<a href="img/projecttemplatetutorial_newproject_1.png" target="_blank"><img alt="image" src="img/projecttemplatetutorial_newproject_1.png" style="margin: 1em 1em 0pt 0pt; height:180px; width:auto;" /></a>
+	</div>
+	<div class="note">After creating or switching projects, Maqetta will refresh the browser page.</div>
+	</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Open the <b>Files</b> palette. (If it's not open, click on the "Files" button)
+	on the left side of the application to open the palette.)
+	The project name at the top of the <b>Files</b> palette should be "tutorialproject1".
+	<div class="image">
+	<a href="img/projecttemplatetutorial_filespalette_1.png" target="_blank"><img alt="image" src="img/projecttemplatetutorial_filespalette_1.png" style="margin: 1em 1em 0pt 0pt; height:160px; width:auto;" /></a>
+	</div>
+	</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the "New Folder" icon 
+	<img alt="image" src="img/newfolder.gif" style='height:14px; vertical-align:middle;'/>
+	at the bottom left of the <b>Files</b> palette toolbar.
+	In the New Folder dialog that appears, enter the name "standard_pages", then click Create.
+	You should now see folder "standard_pages" in the Files palette.
+	<div class="image">
+	<a href="img/projecttemplatetutorial_filespalette_2.png" target="_blank"><img alt="image" src="img/projecttemplatetutorial_filespalette_2.png" style="margin: 1em 1em 0pt 0pt; height:160px; width:auto;" /></a>
+	</div>
+	</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	If "standard_pages" is not selected already, click on "standard_pages" in the
+	<b>Files</b> palette to select it. Then using the <b>Create</b> menu
+	at the top of the application, issue a <b>Create-&gt;Desktop Application...</b>
+	command. When the "Create Desktop Application" dialog comes up, enter
+	"standard_page_1.html" as the file name and click "Create".</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Palette</b>, go into the <b>Containers</b> section and then the
+	<b>Dojo</b> sub-section. Drag/drop a BorderContainer widget onto the page canvas.
+	In the dialog that appears, set the following options:
+	<ul>
+		<li>headline</li>
+		<li>top and left checked</li>
+		<li>bottom and right unchecked</li>
+	</ul>
+	The dialog should look like this:
+	<div class="image">
+	<a href="img/projecttemplatetutorial_bc_dialog.png" target="_blank"><img alt="image" src="img/projecttemplatetutorial_bc_dialog.png" style="margin: 1em 1em 0pt 0pt; height:240px; width:auto;" /></a>
+	</div>
+	Click OK and then your canvas should look like this:
+	<div class="image">
+	<a href="img/projecttemplatetutorial_bc_added.png" target="_blank"><img alt="image" src="img/projecttemplatetutorial_bc_added.png" style="margin: 1em 1em 0pt 0pt; height:300px; width:auto;" /></a>
+	</div>
+	</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the inside of the topmost section of the BorderContainer to select
+	the top <b>ContentPane</b>. Open up the <b>Padding</b> palette
+	(by clicking on its tab name) and verify that the correct widget is selected
+	by verifying that the text at the top of the Layout palette
+	says "for: dijit/layout/ContentPane [region=top]".
+	Enter the value "0px" for the "padding" property and hit the Enter or Return key
+	to commit that value.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the inside of the leftmost section of the BorderContainer to select
+	the left <b>ContentPane</b>. Open up the <b>Layout</b> palette
+	(by clicking on its tab name) and verify that the correct widget is selected
+	by verifying that the text at the top of the Layout palette
+	says "for: dijit/layout/ContentPane [region=left]".
+	In the type-in box for "width", enter "150px" and hit the Enter or Return key
+	to commit that value.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Go to the <b>Files</b> palette and click on the "+" icon next to "samples"
+	to open up the "samples" folder.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Put the mouse over "SampleBanner.jpg", mouse down, and then drag all the
+	way to the top of the canvas, and drop into the top section of the BorderContainer.</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	With SampleBanner.jpg still selected, go to the <b>Layout</b> palette.
+	Using the dropdown menu for the "width" and "height" properties, set both
+	width and height to 100%. Your canvas should look like this:
+	<div class="image">
+	<a href="img/projecttemplatetutorial_image_added.png" target="_blank"><img alt="image" src="img/projecttemplatetutorial_image_added.png" style="margin: 1em 1em 0pt 0pt; height:300px; width:auto;" /></a>
+	</div>
+	</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Palette</b>, go into the <b>Other</b> section. 
+	Drag/drop a Tree widget onto the page canvas and drop
+	into the left section of the BorderContainer. In the dialog
+	that appears, click OK to accept the default set of tree nodes.
+	Your canvas should look like this
+	<div class="image">
+	<a href="img/projecttemplatetutorial_tree_added.png" target="_blank"><img alt="image" src="img/projecttemplatetutorial_tree_added.png" style="margin: 1em 1em 0pt 0pt; height:300px; width:auto;" /></a>
+	</div>
+	</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	In the <b>Palette</b>, go into the <b>Controls</b> section and then the
+	<b>Toolbars, ButtonBars</b> sub-section. Drag/drop a Toolbar widget into the
+	BorderContainer's larger "center" region.
+	After dropping the Toolbar widget onto the canvas,
+	in the dialog that appears, set the following options:
+	<pre>
+		New, Edit, View, Help
+	</pre>
+	Then click OK to create a Toolbar with four buttons.
+	</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click-select the "Help" button on the canvas.
+	Go to the <b>Layout</b> palette and use the dropdown menu next to
+	the "float" property to choose the value "right" for the "float" property.
+	Your canvas should look like this:
+	<div class="image">
+	<a href="img/projecttemplatetutorial_toolbar_added.png" target="_blank"><img alt="image" src="img/projecttemplatetutorial_toolbar_added.png" style="margin: 1em 1em 0pt 0pt; height:300px; width:auto;" /></a>
+	</div>
+	</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Click on the "Save" icon 
+	<img alt="image" src="img/save_icon.png" style='height:20px; vertical-align:middle;'/>
+	found on the page editor's toolbar to save your current file.
+	In the top/left of the application, just above the page editor toolbar, 
+	find the editor tab for "standard_page_1.html".
+	Click on the close icon
+	<img alt="image" src="img/close_sel.gif" style='vertical-align:middle;'/>
+	to close the editor for "standard_page_1.html".
+	</li>
+	
+</ol>
+	
+<a name="tutorial_preparation"><h2>Save your current project as a project template</h2></a>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	On the toolbar for the <b>Files</b>, press and hold on the "Project menu" icon"
+	<img alt="image" src="img/projectmenu.png" style='height:20px; vertical-align:middle;'/>
+	to show the Project menu, and choose the command "Save as project template...".
+	The "Save as project template" dialog will appear. 
+	Enter the name of "tutorialtemplate" as the name of the template
+	and leave any other options with their default values. 
+	<div class="image">
+	<a href="img/projecttemplatetutorial_newprojecttemplate.png" target="_blank"><img alt="image" src="img/projecttemplatetutorial_newprojecttemplate.png" style="margin: 1em 1em 0pt 0pt; height:180px; width:auto;" /></a>
+	</div>
+	Click Save
+	to save your current project as a reusable project template.
+	After clicking Save, you should see an alert confirming that
+	the project template was saved.
+	</li>
+</ol>
+
+<div class="note">
+	<div>In the picture above, there is a "Share with everyone" checkbox. Turning the
+	checkbox on allows all other users on that same Maqetta server to use
+	the project template that you created.</div>
+	<div>Note that, on some installations of Maqetta (e.g., Maqetta.org), the
+	sharing option is not available for security reasons.</div>
+</div>
+
+	
+<a name="tutorial_preparation"><h2>Using the project template</h2></a>
+
+<ol>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	First off, we will create a default new project.
+	Issue a <b>Create-&gt;Project</b> command. Enter the name "tutorialproject2"
+	and leave all checkboxes unchecked. 
+	<div class="image">
+	<a href="img/projecttemplatetutorial_newprojectdialog_2.png" target="_blank"><img alt="image" src="img/projecttemplatetutorial_newprojectdialog_2.png" style="margin: 1em 1em 0pt 0pt; height:180px; width:auto;" /></a>
+	</div>
+	Click on the Create button
+	to create a new project with default content. After the Maqetta
+	browser page refreshes, the <b>Files</b> palette should show the following
+	set of default files:
+	<div class="image">
+	<a href="img/projecttemplatetutorial_newproject_2.png" target="_blank"><img alt="image" src="img/projecttemplatetutorial_newproject_2.png" style="margin: 1em 1em 0pt 0pt; height:180px; width:auto;" /></a>
+	</div>
+	</li>
+<li class='tutorial_step_div'><span class='tutorial_checkmark'>&#8658;</span>
+	Now, we will create a new project using the project template we created earlier.
+	Issue a <b>Create-&gt;Project</b> command. Enter the name "tutorialproject3".
+	Check the "Use project template" checkbox, and then choose "tutorialtemplate" from
+	the list of project templates.
+	Leave the other checkboxes unchecked. 
+	<div class="image">
+	<a href="img/projecttemplatetutorial_newprojectdialog_3.png" target="_blank"><img alt="image" src="img/projecttemplatetutorial_newprojectdialog_3.png" style="margin: 1em 1em 0pt 0pt; height:180px; width:auto;" /></a>
+	</div>
+	Click on the Create button
+	to create a new project with default content. After the Maqetta
+	browser page refreshes, the <b>Files</b> palette should initialize
+	the new project to have all of the same files that were present
+	when the project template was saved:
+	<div class="image">
+	<a href="img/projecttemplatetutorial_newproject_3.png" target="_blank"><img alt="image" src="img/projecttemplatetutorial_newproject_3.png" style="margin: 1em 1em 0pt 0pt; height:180px; width:auto;" /></a>
+	</div>
+	<div class="note">In particular, notice the difference between
+	the picture of tutorialproject2 and tutorialproject3: tutorialproject3
+	includes the "standard_pages" folder.</div>
+	</li>
+</ol>
+
+<br />
+<p class="prevnext"><a href="tutorials/Review_Commenting.html">Previous</a> / <a href="tutorials/tutorials.html">Next</a></p>
+
+</div> <!-- pagebody -->
+
+</body>
+</html>

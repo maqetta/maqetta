@@ -278,7 +278,10 @@ return declare("davinci.ve.commands.AppStateCommand", null, {
 				}
 			})});
 			if(anyAttributeChanges){
-				editor._visualChanged();
+				var editor = (this._params && this._params.context && this._params.context.editor);
+				if(editor){
+					editor._visualChanged();
+				}
 			}
 		}
 	}

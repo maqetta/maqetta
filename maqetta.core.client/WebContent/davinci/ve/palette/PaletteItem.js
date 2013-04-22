@@ -430,6 +430,10 @@ return declare("davinci.ve.palette.PaletteItem", _WidgetBase,{
 									}
 								}
 								newPaletteItem.sunken(newPaletteItem.domNode);
+								Metadata.getHelper(newPaletteItem.type, 'tool').then(function(ToolCtor) {
+									var tool = new (ToolCtor || CreateTool)(dojo.clone(this.data));
+									this.palette._context.setActiveTool(tool);
+								}.bind(newPaletteItem));
 							}
 							this.paletteItemMoreCloseCleanup();
 						}.bind(this, collectionName)));

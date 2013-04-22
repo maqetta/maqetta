@@ -486,8 +486,8 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 					}
 				}.bind(this),
 				function(error){
-					alert('error saving resource' + error);
-		 			console.error('error saving resource' + error);
+					alert('error saving resource\n' + error); // FIXME: use toaster
+		 			console.error('error saving resource\n' + error);
 				}
 			);
 		}

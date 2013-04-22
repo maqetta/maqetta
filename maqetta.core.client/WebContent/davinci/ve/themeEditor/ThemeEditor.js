@@ -725,8 +725,8 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 			 		if (results[i] instanceof Error) {
 			 			// error saving a resource most likely a CSS file 
 			 			// bail out and don't clear the dirty bit
-			 			alert('error saving resource' + results[i]);
-			 			console.error('error saving resource' + results[i]);
+			 			alert('error saving resource\n' + results[i]); // FIXME: use toaster
+			 			console.error('error saving resource\n' + results[i]);
 			 			return ;
 			 		}
 			 	}

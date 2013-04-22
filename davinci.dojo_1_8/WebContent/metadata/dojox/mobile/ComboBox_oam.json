@@ -19,12 +19,6 @@
         {
             "type": "javascript-module",
             "format": "amd",
-            "src": "dojox/mobile/compat",
-            "$library": "dojo"
-        },
-        {
-            "type": "javascript-module",
-            "format": "amd",
             "src": "dojox/mobile/ComboBox",
             "$library": "dojo"
         }

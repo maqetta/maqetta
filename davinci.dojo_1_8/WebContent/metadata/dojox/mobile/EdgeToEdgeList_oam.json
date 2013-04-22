@@ -15,12 +15,6 @@
             "format": "amd",
             "src": "dojox/mobile/deviceTheme",
             "$library": "dojo"
-        },
-        {
-            "type": "javascript-module",
-            "format": "amd",
-            "src": "dojox/mobile/compat",
-            "$library": "dojo"
         }
     ],
     "library": {

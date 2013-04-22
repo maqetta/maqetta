@@ -44,7 +44,7 @@ define([
 	// Allow any word char, period or hyphen
 	// Subsequent logic will disallow underscore (which is included in \w)
 	// Better internationalized regex would be: "^[\p{L}\d\.\-]+$", but browsers don't support \p
-	var BASE_REGEX = "^[\\w\\-\\.]+$";
+	var BASE_REGEX = "^[\\w\\-\\.\\_]+$";
 
 	return declare([_Widget,_Templated], {
 		widgetsInTemplate: true,
@@ -71,7 +71,7 @@ define([
 					return result;
 				}
 				this._allCurrentProjectNames = [];
-				var regexString = '(?!^.*_.*$)';	// Don't allow underscore
+				var regexString = ''
 				for(var i=0; i<projects.length; i++){
 					var projectName = projects[i].name;
 					regexString += '(?!^';

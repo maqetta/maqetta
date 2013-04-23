@@ -263,6 +263,7 @@ define([
 		}, function(err) {			// error
 			if (err.response.status === 403) {
 				setResetMessage(false, "Invalid username or password");
+				return;
 			}
 			showErrorMessage(err.response.data.error);
 		});

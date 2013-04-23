@@ -20,7 +20,7 @@ return declare("davinci.actions.RedoAction", Action, {
 		var context = e && e.getContext && e.getContext();
 		if (e && context) {
 			var canRedo = context.getCommandStack().canRedo();
-			if(e.declaredClass == 'davinci.ve.PageEditor'){
+			if(e.declaredClass == 'davinci.ve.PageEditor' || e.declaredClass == 'davinci.ve.themeEditor.ThemeEditor'){
 				return canRedo;
 			}
 		} else {

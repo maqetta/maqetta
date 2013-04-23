@@ -223,7 +223,7 @@ var MultiFieldSmartInput = declare(SmartInput, {
 	
 	
 	show: function(widgetId) {
-
+		this._lastKeyCode = 0;
 		this._widget = Widget.byId(widgetId);
 		var data = this._widget.getData();
 		
@@ -315,8 +315,17 @@ var MultiFieldSmartInput = declare(SmartInput, {
 
 	
 	handleEvent: function(event){
+		var multiLine = false;
+		for (var i = 0; i < this.property.length; i++) {
+			var p = this.property[i];
+			var prop = p.property || p.child.property;
+			if (event.currentTarget.id.indexOf('MultiFieldSmartInput_SmartInput_'+prop) > -1) {
+				multiLine = p.multiLine;
+				break;
+			}
+		}
+		
 		if (event.keyCode == 13) {
-			var multiLine = this.multiLine;
 			if (!multiLine || multiLine == "false" || this._lastKeyCode == 13){ // back to back CR
 				this.onOk();
 			}

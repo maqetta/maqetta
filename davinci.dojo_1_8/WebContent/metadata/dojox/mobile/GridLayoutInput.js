@@ -67,7 +67,7 @@ return declare(SmartInput, {
 		var children = [];
 
 		for (var i = 0; i < Math.ceil(rows*cols); i++) {
-			children.push({type: "dojox.mobile.Pane", properties: {}});
+			children.push({type: "dojox/mobile/Pane", properties: {}});
 		}
 
 		var command = new ModifyCommand(this._widget, props, children, this._widget._edit_context);

@@ -98,7 +98,7 @@ return declare(CreateTool, {
     
 	addPasteCreateCommand: function(command, args) {
 		this._context = this._data.context;
-		this._data = [{type: 'dijit.layout.StackController'}, this._data];
+		this._data = [{type: 'dijit/layout/StackController'}, this._data];
 
 		var deferred = new Deferred();
 
@@ -122,7 +122,7 @@ return declare(CreateTool, {
 
 		promises.push(this._context.loadRequires(this._data[0].type, true));
 		promises.push(this._context.loadRequires(this._data[1].type, true));
-		promises.push(this._context.loadRequires("dijit.layout.ContentPane", true));
+		promises.push(this._context.loadRequires("dijit/layout/ContentPane", true));
 
 		return all(promises);
 	}

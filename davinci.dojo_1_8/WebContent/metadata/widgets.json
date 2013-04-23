@@ -557,17 +557,16 @@
             },
             "inlineEdit": {
             	"property": [
-            		{
-            			"property":"placeHolder", 
-            			"multiLine": false, 
-            			"supportsHTML": false            			
-        			},
-
 					{
 						"property":"value", 
 						"multiLine": false,
 						"supportsHTML": false
-					}
+					},
+            		{
+            			"property":"placeHolder", 
+            			"multiLine": false, 
+            			"supportsHTML": false            			
+        			}
 				],
                 "displayOnCreate": false,
  
@@ -637,17 +636,16 @@
             "helper": "./dijit/form/DateTextBoxHelper",
             "inlineEdit": {
             	"property": [
-            		{
-            			"property":"placeHolder", 
-            			"multiLine": false, 
-            			"supportsHTML": false            			
-        			},
-
 					{
 						"property":"value", 
 						"multiLine": false,
 						"supportsHTML": false
-					}
+					},
+            		{
+            			"property":"placeHolder", 
+            			"multiLine": false, 
+            			"supportsHTML": false            			
+        			}
 				],
                 "displayOnCreate": false,
  
@@ -969,17 +967,16 @@
             "tags": "NumberTextBox",
             "inlineEdit": {
             	"property": [
-            		{
-            			"property":"placeHolder", 
-            			"multiLine": false, 
-            			"supportsHTML": false            			
-        			},
-
 					{
 						"property":"value", 
 						"multiLine": false,
 						"supportsHTML": false
-					}
+					},
+            		{
+            			"property":"placeHolder", 
+            			"multiLine": false, 
+            			"supportsHTML": false            			
+        			}
 				],
                 "displayOnCreate": false,
  
@@ -1065,17 +1062,16 @@
             "resizable": "width",
            	"inlineEdit": {
             	"property": [
-            		{
-            			"property":"placeHolder", 
-            			"multiLine": false, 
-            			"supportsHTML": false            			
-        			},
-
 					{
 						"property":"value", 
 						"multiLine": false,
 						"supportsHTML": false
-					}
+					},
+            		{
+            			"property":"placeHolder", 
+            			"multiLine": false, 
+            			"supportsHTML": false            			
+        			}
 				],
                 "displayOnCreate": false,
  
@@ -1354,17 +1350,16 @@
             "tags": "ValidationTextBox",
             "inlineEdit": {
             	"property": [
-            		{
-            			"property":"placeHolder", 
-            			"multiLine": false, 
-            			"supportsHTML": false            			
-        			},
-
 					{
 						"property":"value", 
 						"multiLine": false,
 						"supportsHTML": false
-					}
+					},
+            		{
+            			"property":"placeHolder", 
+            			"multiLine": false, 
+            			"supportsHTML": false            			
+        			}
 				],
                 "displayOnCreate": false,
  
@@ -1385,17 +1380,16 @@
             "helper": "./dijit/form/DateTextBoxHelper",
           	"inlineEdit": {
             	"property": [
-            		{
-            			"property":"placeHolder", 
-            			"multiLine": false, 
-            			"supportsHTML": false            			
-        			},
-
 					{
 						"property":"value", 
 						"multiLine": false,
 						"supportsHTML": false
-					}
+					},
+            		{
+            			"property":"placeHolder", 
+            			"multiLine": false, 
+            			"supportsHTML": false            			
+        			}
 				],
                 "displayOnCreate": false,
  
@@ -2871,17 +2865,16 @@
             "iconBase64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAM1JREFUeNpi/P//PwMlgImBQkCxASzIHIvIif/lzfQZHp66yHBieT4jUSaAwgAZm0dM+I8uhg+DXRDefwAckqGWCmBD15x48H/18QcELV9Z6MAINuDPz98MtWmODBKcTAw9QL6NvhyDipoMXs0ts/chwuD39+9gDjfDfzgtyvAXe6hDQ+bXtx8IA94+eArmsLMywml+Bmbc4cbAyPD24VOEAX9//WLIyJ7KkBJiARZctPE0w5w1JxjoEgtM2NIBiCY2ITEO/bxAsQEAAQYAGVGarS2fPq4AAAAASUVORK5CYII=",
 			"inlineEdit": {
             	"property": [
-            		{
-            			"property":"placeHolder", 
-            			"multiLine": false, 
-            			"supportsHTML": false            			
-        			},
-
 					{
 						"property":"value", 
 						"multiLine": false,
 						"supportsHTML": false
-					}
+					},
+            		{
+            			"property":"placeHolder", 
+            			"multiLine": false, 
+            			"supportsHTML": false            			
+        			}
 				],
                 "displayOnCreate": false,
  

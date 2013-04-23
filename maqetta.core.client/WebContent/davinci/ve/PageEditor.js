@@ -497,7 +497,6 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 				function(error){
 					var message = veNls.vteErrorSavingResourceMessage + error;
 					dojo.publish("/davinci/resource/saveError", [{message:message, type:"error"}]);
-					//alert('error saving resource\n' + error); // FIXME: use toaster
 		 			console.error(message);
 				}
 			);

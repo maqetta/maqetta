@@ -40,8 +40,8 @@ import org.json.JSONObject;
 import org.maqetta.server.IStorage;
 
 /**
- * Represents the Orion workspace, where all user projects are stored.
- * There is always a workspace; for that reason, <code>exists()</code> always returns <code>true</code>.
+ * Represents an Orion user workspace.
+ * A user always has a workspace; for that reason, <code>exists()</code> always returns <code>true</code>.
  */
 
 @SuppressWarnings("restriction")

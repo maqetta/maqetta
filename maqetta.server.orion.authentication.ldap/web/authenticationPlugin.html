@@ -2,74 +2,16 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<script type="text/javascript" src="/org.dojotoolkit/dojo/dojo.js.uncompressed.js"></script>
-	<script type="text/javascript" src="/orion/plugin.js"></script>
+	<script src="../requirejs/require.js"></script>
 	<script>
-		window.onload = function() {
-			var provider = new eclipse.PluginProvider();
-			function qualifyURL(url){
-			    var a = document.createElement('a');
-			    a.href = url; // set string url
-			    return a.href;
-			}
-			var serviceImpl = {
-				getUser : function() {
-					
-					return dojo.xhrPost({
-						url : "login",
-						headers : {
-							"Orion-Version" : "1"
-						},
-						handleAs : "json",
-						timeout : 15000,
-						load : function(jsonData, ioArgs) {
-							return jsonData;
-						},
-						error : function(response, ioArgs) {
-							return response;
-						}
-					});
-					
-				},
-			
-				logout : function() {
-				/* don't wait for the login response, notify anyway */
-				notify = true;
-				return dojo.xhrPost({
-					url : "logout",
-					headers : {
-						"Orion-Version" : "1"
-					},
-					handleAs : "json",
-					timeout : 15000,
-					load : function(jsonData, ioArgs) {
-						return jsonData;
-					},
-					error : function(response, ioArgs) {
-						return response;
-					}
-				});
-			},
-			
-			getAuthForm : function(notify){
-				return qualifyURL(notify ? ('/ldaplogin/LoginWindow.html?redirect='+notify+'?key=ldapUser') : '/ldaplogin/LoginWindow.html');
-			},
-			
-			getKey : function(){
-				return "ldapUser";
-			},
-			
-			getLabel : function(){
-				return "Maqetta server";
-			}
-			
-			};
-			var serviceProps = {
-				name : "ldaplogin",
-			};
-			provider.registerServiceProvider("orion.core.auth", serviceImpl, serviceProps);
-			provider.connect();
-		};
+		/*global require eclipse*/
+		require({
+		  baseUrl: '..',
+		  paths: {
+			  domReady: 'requirejs/domReady'
+		  }
+		});
+		require(['authenticationPlugin.js']);
 	</script>
 </head>
 <body>

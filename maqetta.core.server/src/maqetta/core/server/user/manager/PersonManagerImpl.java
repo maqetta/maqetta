@@ -17,7 +17,7 @@ import org.w3c.dom.Element;
 
 public class PersonManagerImpl implements IPersonManager {
 
-    protected HashMap             persons      = new HashMap();
+    protected HashMap<String, IPerson> persons = new HashMap<String, IPerson>();
 
     protected static final String USERS_TAG    = "users";
     protected static final String USER_TAG     = "user";
@@ -201,7 +201,7 @@ public class PersonManagerImpl implements IPersonManager {
     
     public IPerson getPersonByEmail(String email) {
     	IPerson match = null;
-        Iterator peopleIterator = persons.values().iterator();
+        Iterator<IPerson> peopleIterator = persons.values().iterator();
         while (peopleIterator.hasNext() && match == null) {
         	IPerson person = (IPerson)peopleIterator.next();
         	if (person.getEmail().equals(email)) {

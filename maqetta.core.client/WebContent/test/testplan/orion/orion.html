@@ -41,11 +41,7 @@
 		<li>Click on <strong>Create User</strong> and create a dummy user.
 			<ul>
 				<li>For <em>login</em>, Orion requires a <strong>unique, alphanumeric value</strong> (no spaces, not email). Make sure to enter the user's email as well. Click <strong>Create</strong>.</li>
-				<li>Load the new user's profile page to edit the <em>Name</em> (optional; defaults to <em>login</em>) and to <strong>confirm the email address</strong> (a user will not get an confirmation email if their account is created this way).
-					<ul>
-						<li><em>Note: The user list in Orion is paginated, so you may not see the newly created user on the first page.  The easiest way to search for a user is to load a URL like <code>.../profile/user-list.html#?start=0&rows=100000</code> (basically says to display first 100000 users) and then search using the <code>login</code> value.</em></li>
-					</ul>
-				</li>
+				<li>If the <code>orion.auth.user.creation.force.email</code> property in <strong>maqetta.conf</strong> is set to <code>true</code>, then you will have to wait for a confirmation email on that user's email address and click the link to confirm.</li>
 			</ul>
 		</li>
 		<li>Try to login as that user.

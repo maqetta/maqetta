@@ -36,9 +36,14 @@
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
 		<li>Log out of Maqetta.</li> 
-		<li>Load the URL <em>http(s)://maqetta_base:port/profile/user-list.html</em> (include "/context" if testing WAR build).</li>
-		<li>Login as user "admin".  You should see a list of all registered users.</li>
-		<li>Click on <strong>Create User</strong> and create a dummy user.</li>
+		<li>Load the URL <em>http(s)://{maqetta_base}:{port}/profile/user-list.html</em> (include <em>/{context}</em> if testing WAR build).</li>
+		<li>Login as user "admin".  You should see a list of registered users.</li>
+		<li>Click on <strong>Create User</strong> and create a dummy user.
+			<ul>
+				<li>For <em>login</em>, Orion requires a <strong>unique, alphanumeric value</strong> (no spaces, not email). Make sure to enter the user's email as well. Click <strong>Create</strong>.</li>
+				<li>If the <code>orion.auth.user.creation.force.email</code> property in <strong>maqetta.conf</strong> is set to <code>true</code>, then you will have to wait for a confirmation email on that user's email address and click the link to confirm.</li>
+			</ul>
+		</li>
 		<li>Try to login as that user.
 			<ul>
 				<li><em>NOTE: You may want to use a different browser for the dummy user, so you don't have to log out of "admin" account.</em></li>

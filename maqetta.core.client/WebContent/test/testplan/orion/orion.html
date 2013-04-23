@@ -36,9 +36,18 @@
 	<h3 class="steps_subsection">Steps</h3>
 	<ol class="steps">
 		<li>Log out of Maqetta.</li> 
-		<li>Load the URL <em>http(s)://maqetta_base:port/profile/user-list.html</em> (include "/context" if testing WAR build).</li>
-		<li>Login as user "admin".  You should see a list of all registered users.</li>
-		<li>Click on <strong>Create User</strong> and create a dummy user.</li>
+		<li>Load the URL <em>http(s)://{maqetta_base}:{port}/profile/user-list.html</em> (include <em>/{context}</em> if testing WAR build).</li>
+		<li>Login as user "admin".  You should see a list of registered users.</li>
+		<li>Click on <strong>Create User</strong> and create a dummy user.
+			<ul>
+				<li>For <em>login</em>, Orion requires a <strong>unique, alphanumeric value</strong> (no spaces, not email). Make sure to enter the user's email as well. Click <strong>Create</strong>.</li>
+				<li>Load the new user's profile page to edit the <em>Name</em> (optional; defaults to <em>login</em>) and to <strong>confirm the email address</strong> (a user will not get an confirmation email if their account is created this way).
+					<ul>
+						<li><em>Note: The user list in Orion is paginated, so you may not see the newly created user on the first page.  The easiest way to search for a user is to load a URL like <code>.../profile/user-list.html#?start=0&rows=100000</code> (basically says to display first 100000 users) and then search using the <code>login</code> value.</em></li>
+					</ul>
+				</li>
+			</ul>
+		</li>
 		<li>Try to login as that user.
 			<ul>
 				<li><em>NOTE: You may want to use a different browser for the dummy user, so you don't have to log out of "admin" account.</em></li>

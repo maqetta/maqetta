@@ -489,8 +489,8 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 		if (promises && promises.then){
 			promises.then(
 				function(results){
-					this.isDirty=  isAutoSave;
-					if (this.editorContainer) {
+					this.isDirty = isAutoSave;
+					if (this.editorContainer && this.editorContainer.domNode) {
 						this.editorContainer.setDirty(isAutoSave);
 					}
 				}.bind(this),

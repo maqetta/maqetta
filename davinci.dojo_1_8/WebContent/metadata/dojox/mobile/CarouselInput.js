@@ -62,12 +62,12 @@ return declare(ContainerInput, {
 		for (var i = 0; i < value.length; i++) {
 			if (i % numVisible == 0) {
 				// build new SwapView
-				swapView = {type: "dojox.mobile.SwapView", properties: {}, children: [], context: this._getContext()};
+				swapView = {type: "dojox/mobile/SwapView", properties: {}, children: [], context: this._getContext()};
 				views.push(swapView);
 			}
 
 			var parsed = this.parse(value[i].text);
-			swapView.children.push({type: "dojox.mobile.CarouselItem", properties: {value: parsed[0].text, headerText: parsed[1].text, src: parsed[2].text}});
+			swapView.children.push({type: "dojox/mobile/CarouselItem", properties: {value: parsed[0].text, headerText: parsed[1].text, src: parsed[2].text}});
 		}
 
 		dojo.forEach(views, dojo.hitch(this, function(view) {

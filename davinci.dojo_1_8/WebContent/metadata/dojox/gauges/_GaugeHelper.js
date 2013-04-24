@@ -54,7 +54,7 @@ _GaugeHelper.prototype = {
 		}
 		// indicators, ranges are represented as children in markup
 		var ranges = dojo.map(this.getPropertyValue(widget,"ranges"), function(r){
-			var range={type: "dojox.gauges.Range", properties: r};
+			var range={type: "dojox/gauges/Range", properties: r};
 			if(options.serialize){
 				// TODO: make sure colors aren't converted into {0:{}, 1:{}, ...
 				r.color=dojo.toJson(r.color);

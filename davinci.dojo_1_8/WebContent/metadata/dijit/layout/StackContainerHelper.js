@@ -33,7 +33,7 @@ return declare(LayoutContainerHelper, {
 		var siblings = widget.getParent().getChildrenData();
 
 		dojo.forEach(siblings, function(w) {
-			if (w.type == "dijit.layout.StackController" && w.properties.containerId == widgetId) {
+			if (w.type == "dijit/layout/StackController" && w.properties.containerId == widgetId) {
 				command.add(new RemoveCommand(Widget.byId(w.properties.id)));
 			}
 		})

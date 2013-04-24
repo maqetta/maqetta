@@ -16,8 +16,9 @@ define([
 	"../XPathUtils",
 	"../html/HtmlFileXPathAdapter",
 	"./utils/GeomUtils",
-	"dojo/i18n!./nls/ve"
-], function(require, declare, ModelEditor, BorderContainer, ContentPane, Runtime, Moveable, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, States, XPathUtils, HtmlFileXPathAdapter, GeomUtils, veNls){
+	"dojo/i18n!./nls/ve",
+	"dojox/widget/Toaster",
+], function(require, declare, ModelEditor, BorderContainer, ContentPane, Runtime, Moveable, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, States, XPathUtils, HtmlFileXPathAdapter, GeomUtils, veNls, Toaster){
 
 return declare("davinci.ve.PageEditor", ModelEditor, {
 
@@ -474,7 +475,15 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 				return;
 			}
 		}
-
+		if (typeof hasToaster == "undefined") {
+			new Toaster({
+				position: "br-left",
+				duration: 4000,
+				messageTopic: "/davinci/resource/saveError"
+			});
+			hasToaster = true;
+		}
+		
 		this.savePoint=this._commandStack.getUndoCount();
 		var promises = this.visualEditor.save(isAutoSave);
 		if (promises && promises.then){
@@ -486,8 +495,9 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 					}
 				}.bind(this),
 				function(error){
-					alert('error saving resource\n' + error); // FIXME: use toaster
-		 			console.error('error saving resource\n' + error);
+					var message = veNls.vteErrorSavingResourceMessage + error;
+					dojo.publish("/davinci/resource/saveError", [{message:message, type:"error"}]);
+		 			console.error(message);
 				}
 			);
 		}

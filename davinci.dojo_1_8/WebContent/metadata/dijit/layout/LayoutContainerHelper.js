@@ -38,7 +38,7 @@ return declare(null, {
 							h: this._fillBodyAsOnlyChild ? '100%' : "300px"
 						};
 					}
-				} else if (parentWidgetType == 'dijit.layout.ContentPane' ||
+				} else if (parentWidgetType == 'dijit/layout/ContentPane' ||
 						parentWidgetType == 'html.div' ||
 						parentWidgetType == 'html.form' ||
 						parentWidgetType == 'html.fieldset') {

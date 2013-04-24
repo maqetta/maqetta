@@ -2492,8 +2492,11 @@
                     "moveTo": {
                         "dropdownQueryValues": [
                             "[data-dojo-type='dojox/mobile/View']",
+                            "[data-dojo-type='dojox.mobile.View']",
                             "[data-dojo-type='dojox/mobile/SwapView']",
-                            "[data-dojo-type='dojox/mobile/ScrollableView']"
+                            "[data-dojo-type='dojox.mobile.SwapView']",
+                            "[data-dojo-type='dojox/mobile/ScrollableView']",
+                            "[data-dojo-type='dojox.mobile.ScrollableView']"
                         ],
                         "dropdownQueryAttribute": "id"
                     }
@@ -2530,8 +2533,11 @@
                     "moveTo": {
                         "dropdownQueryValues": [
                             "[data-dojo-type='dojox/mobile/View']",
+                            "[data-dojo-type='dojox.mobile.View']",
                             "[data-dojo-type='dojox/mobile/SwapView']",
-                            "[data-dojo-type='dojox/mobile/ScrollableView']"
+                            "[data-dojo-type='dojox.mobile.SwapView']",
+                            "[data-dojo-type='dojox/mobile/ScrollableView']",
+                            "[data-dojo-type='dojox.mobile.ScrollableView']"
                         ],
                         "dropdownQueryAttribute": "id"
                     }
@@ -2765,8 +2771,11 @@
                     "moveTo": {
                         "dropdownQueryValues": [
                             "[data-dojo-type='dojox/mobile/View']",
+                            "[data-dojo-type='dojox.mobile.View']",
                             "[data-dojo-type='dojox/mobile/SwapView']",
-                            "[data-dojo-type='dojox/mobile/ScrollableView']"
+                            "[data-dojo-type='dojox.mobile.SwapView']",
+                            "[data-dojo-type='dojox/mobile/ScrollableView']",
+                            "[data-dojo-type='dojox.mobile.ScrollableView']"
                         ],
                         "dropdownQueryAttribute": "id"
                     }
@@ -3031,8 +3040,11 @@
                     "moveTo": {
                         "dropdownQueryValues": [
                             "[data-dojo-type='dojox/mobile/View']",
+                            "[data-dojo-type='dojox.mobile.View']",
                             "[data-dojo-type='dojox/mobile/SwapView']",
-                            "[data-dojo-type='dojox/mobile/ScrollableView']"
+                            "[data-dojo-type='dojox.mobile.SwapView']",
+                            "[data-dojo-type='dojox/mobile/ScrollableView']",
+                            "[data-dojo-type='dojox.mobile.ScrollableView']"
                         ],
                         "dropdownQueryAttribute": "id"
                     }
@@ -3115,8 +3127,11 @@
                     "moveTo": {
                         "dropdownQueryValues": [
                             "[data-dojo-type='dojox/mobile/View']",
+                            "[data-dojo-type='dojox.mobile.View']",
                             "[data-dojo-type='dojox/mobile/SwapView']",
-                            "[data-dojo-type='dojox/mobile/ScrollableView']"
+                            "[data-dojo-type='dojox.mobile.SwapView']",
+                            "[data-dojo-type='dojox/mobile/ScrollableView']",
+                            "[data-dojo-type='dojox.mobile.ScrollableView']"
                         ],
                         "dropdownQueryAttribute": "id"
                     }

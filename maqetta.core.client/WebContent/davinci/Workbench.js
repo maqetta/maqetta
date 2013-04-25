@@ -2124,7 +2124,12 @@ var Workbench = {
 			Workbench.saveState = true;
 		}
 	},
-	
+
+	clearWorkbenchState: function() {
+		Workbench._state = {};
+		return Workbench.updateWorkbenchState();
+	},
+
 	updateWorkbenchState: function(){
 		delete Workbench.saveState;
 		return xhr.put({

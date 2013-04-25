@@ -122,6 +122,7 @@ var EventSelection = declare("davinci.ve.widgets.EventSelection", [ViewLite], {
 
 		pageTemplate: [{display:"onclick", target:"onclick",type:"state", hideCascade:true},
 			{display:"ondblclick",target:"ondblclick",type:"state", hideCascade:true},
+			{display:"onmousedown",target:"onmousedown",type:"state", hideCascade:true},
 			{display:"onmouseup",target:"onmouseup",type:"state", hideCascade:true},
 			{display:"onmouseover",target:"onmouseover",type:"state", hideCascade:true},
 			{display:"onmousemove",target:"onmousemove",type:"state", hideCascade:true},

@@ -672,7 +672,7 @@ return declare("davinci.review.widgets.PublishWizard", [_WidgetBase, _TemplatedM
 			dueDate: dueDateString,
 			receiveEmail: receiveEmail
 		};
-		if (Runtime.currentEditor && Runtime.currentEditor.getContext().getPreference("zazl")) { // FIXME: preferences should be available without going through Context. #3804
+		if (Runtime.currentEditor && Runtime.currentEditor.getContext && Runtime.currentEditor.getContext().getPreference("zazl")) { // FIXME: preferences should be available without going through Context. #3804
 			urlParms.zazl = true;
 		}
 

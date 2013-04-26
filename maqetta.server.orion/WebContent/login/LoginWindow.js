@@ -22,7 +22,7 @@ define([
 	ready
 ) {
 
-	 ready(function(){
+	ready(function(){
 			var ua = window.navigator.userAgent;
 			var ieIndex = ua.indexOf('MSIE');
 			var isIE = (ieIndex>=0) ? parseInt(ua.substr(ieIndex+4), 10) : false;
@@ -35,7 +35,11 @@ define([
 				return;
 			}
 			
-	  });
+	});
+	
+	/*
+	 *  Globals
+	 */
 	var userCreationEnabled;
 	var registrationURI;
 

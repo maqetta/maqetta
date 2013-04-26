@@ -34,15 +34,19 @@ define([
 			browser_not_supported.style.padding = "20px 15px";
 			return;
 		}
-		var userCreationEnabled;
-		var registrationURI;
-	
-		var GENERIC_SERVER_MSG = 'A unexpected error prevented the operation from completing.  ' +
-				'Please try again.  If the problem persists, please contact the server administrator.';
-		var ADMIN_USERID = 'admin';
-		var ID_PREFIX = '00MaqTempId00'; // keep in sync w/ LoginFixUpFilter.java
 	 });
+	
+	/*
+	 *  Globals
+	 */
+	var userCreationEnabled;
+	var registrationURI;
 
+	var GENERIC_SERVER_MSG = 'A unexpected error prevented the operation from completing.  ' +
+			'Please try again.  If the problem persists, please contact the server administrator.';
+	var ADMIN_USERID = 'admin';
+	var ID_PREFIX = '00MaqTempId00'; // keep in sync w/ LoginFixUpFilter.java
+	
 	function injectPlaceholderShims() {
 		function textFocus(e) {
 			var input = e.target;

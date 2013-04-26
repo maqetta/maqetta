@@ -14,22 +14,28 @@
 
 define([
 	'dojo/request/xhr',
-	'orion/PageUtil'
+	'orion/PageUtil',
+	"dojo/ready"
 ], function(
 	xhr,
-	PageUtil
+	PageUtil,
+	ready
 ) {
-	var ua = window.navigator.userAgent;
-	var ieIndex = ua.indexOf('MSIE');
-	var isIE = (ieIndex>=0) ? parseInt(ua.substr(ieIndex+4), 10) : false;
-	if(isIE){
-		var browser_not_supported = document.getElementById("browser_not_supported");
-		browser_not_supported.style.display = "";
-		browser_not_supported.style.color = "red";
-		browser_not_supported.style.fontSize = "16px";
-		browser_not_supported.style.padding = "20px 15px";
-		return;
-	}
+
+	 ready(function(){
+			var ua = window.navigator.userAgent;
+			var ieIndex = ua.indexOf('MSIE');
+			var isIE = (ieIndex>=0) ? parseInt(ua.substr(ieIndex+4), 10) : false;
+			if(isIE){
+				var browser_not_supported = document.getElementById("browser_not_supported");
+				browser_not_supported.style.display = "";
+				browser_not_supported.style.color = "red";
+				browser_not_supported.style.fontSize = "16px";
+				browser_not_supported.style.padding = "20px 15px";
+				return;
+			}
+			
+	  });
 	var userCreationEnabled;
 	var registrationURI;
 

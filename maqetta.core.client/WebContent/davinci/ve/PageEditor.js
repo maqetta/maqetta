@@ -310,20 +310,23 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	},
 	
 	_srcChanged: function() {
-		var wasTyping = this.htmlEditor.isTyping;
-		if(wasTyping) {
-			this.visualEditor.skipSave = true;
-		}
-		var context = this.visualEditor.context,
-			statesScenes = context && this._getStatesScenes(context);
-		this.visualEditor.setContent(this.fileName, this.htmlEditor.model);
-		this.editorContainer.updateToolbars();
-		dojo.publish('/davinci/ui/context/pagerebuilt', [context]);
-		if(statesScenes){
-			this._setStatesScenes(context, statesScenes);
-		}
-		delete this.visualEditor.skipSave;
-		this._setDirty();
+		// Because this can be called from SourceChangeCommand, make sure dojo.doc is bound to the Workbench
+		dojo.withDoc(window.document, function(){
+			var wasTyping = this.htmlEditor.isTyping;
+			if(wasTyping) {
+				this.visualEditor.skipSave = true;
+			}
+			var context = this.visualEditor.context,
+				statesScenes = context && this._getStatesScenes(context);
+			this.visualEditor.setContent(this.fileName, this.htmlEditor.model);
+			this.editorContainer.updateToolbars();
+			dojo.publish('/davinci/ui/context/pagerebuilt', [context]);
+			if(statesScenes){
+				this._setStatesScenes(context, statesScenes);
+			}
+			delete this.visualEditor.skipSave;
+			this._setDirty();
+		}, this);
 	},
 
 	/**

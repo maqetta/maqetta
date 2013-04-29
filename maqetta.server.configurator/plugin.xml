@@ -60,6 +60,11 @@
                value="0">
          </init-param>
       </filter>
+      <!-- override Orion's email templates -->
+      <filter
+            alias="/useremailconfirmation"
+            class="maqetta.server.orion.EmailOverrideFilter">
+      </filter>
    </extension>
    <extension
          point="org.eclipse.equinox.http.registry.httpcontexts">

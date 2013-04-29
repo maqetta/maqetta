@@ -1,4 +1,4 @@
-package maqetta.server.orion.internal;
+package maqetta.server.orion;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,6 +15,8 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+
+import maqetta.server.orion.internal.Activator;
 
 import org.eclipse.orion.server.useradmin.UserEmailUtil;
 

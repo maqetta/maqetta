@@ -65,19 +65,20 @@ public class DavinciPageServlet extends HttpServlet {
 	}
 
 	private void log(HttpServletRequest req) {
-		theLogger.info("RequestURL: " + req.getRequestURL().toString());
+		String log = "RequestURL: " + req.getRequestURL().toString();
 		String query = req.getQueryString();
 		if (query != null) {
-			theLogger.info("Query: " + query);
+			log += "\nQuery: " + query;
 		}
 		Enumeration<String> names = req.getHeaderNames();
 		while (names.hasMoreElements()) {
 			String name = names.nextElement();
 			String header = req.getHeader(name);
 			if (header != null) {
-				theLogger.info(name + ": " + header);
+				log += "\n" + name + ": " + header;
 			}
 		}
+		theLogger.info(log);
 	}
 
 	/*

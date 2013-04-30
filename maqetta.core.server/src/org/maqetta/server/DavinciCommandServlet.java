@@ -33,19 +33,20 @@ public class DavinciCommandServlet extends HttpServlet {
 
 	private void log(HttpServletRequest req, String method, Throwable t) {
 		theLogger.logp(Level.SEVERE, DavinciCommandServlet.class.getName(), method, "Unhandled Exception", t);
-		theLogger.log(Level.INFO, "RequestURL: " + req.getRequestURL().toString());
+		String log = "RequestURL: " + req.getRequestURL().toString();
 		String query = req.getQueryString();
 		if (query != null) {
-			theLogger.log(Level.INFO, "Query: " + query);
+			log += "\nQuery: " + query;
 		}
 		Enumeration<String> names = req.getHeaderNames();
 		while (names.hasMoreElements()) {
 			String name = names.nextElement();
 			String header = req.getHeader(name);
 			if (header != null) {
-				theLogger.log(Level.INFO, name + ": " + header);
+				log += "\n" + name + ": " + header;
 			}
 		}
+		theLogger.info(log);
 	}
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {

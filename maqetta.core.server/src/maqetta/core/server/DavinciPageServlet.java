@@ -64,12 +64,21 @@ public class DavinciPageServlet extends HttpServlet {
 		libraryManager = serverManager.getLibraryManager();
 	}
 
-	private void log(HttpServletRequest req) {
+	private void log(HttpServletRequest req, IUser user) {
 		String log = "RequestURL: " + req.getRequestURL().toString();
+		if (user != null) {
+			log += "\nUser: uid=" + user.getUserID();
+			String email = user.getPerson().getEmail();
+			if (email != null) {
+				log += " email=" + email;
+			}
+		}
+
 		String query = req.getQueryString();
 		if (query != null) {
 			log += "\nQuery: " + query;
 		}
+
 		Enumeration<String> names = req.getHeaderNames();
 		while (names.hasMoreElements()) {
 			String name = names.nextElement();
@@ -90,8 +99,9 @@ public class DavinciPageServlet extends HttpServlet {
 	 */
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		IUser user = null;
 		try {
-			IUser user = ServerManager.getServerManager().getUserManager().getUser(req);
+			user = ServerManager.getServerManager().getUserManager().getUser(req);
 			if(user==null){
 				resp.sendError(HttpServletResponse.SC_FORBIDDEN);
 				return;
@@ -132,7 +142,7 @@ public class DavinciPageServlet extends HttpServlet {
 				resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 			}
 		} catch (RuntimeException re) {
-			log(req);
+			log(req, user);
 			throw re;
 		} 
 	}
@@ -143,13 +153,14 @@ public class DavinciPageServlet extends HttpServlet {
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		IUser user = null;
 		try {
 			if ( serverManager == null ) {
 				initialize();
 			}
 			String previewParam = req.getParameter(IDavinciServerConstants.PREVIEW_PARAM);
 	
-			IUser user = ServerManager.getServerManager().getUserManager().getUser(req);
+			user = ServerManager.getServerManager().getUserManager().getUser(req);
 			String pathInfo = getPathInfo(req);
 			theLogger.finest("Page Servlet request: " + pathInfo + ", logged in=" + (user != null));
 
@@ -178,7 +189,7 @@ public class DavinciPageServlet extends HttpServlet {
 				resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 			}
 		} catch (RuntimeException re) {
-			log(req);
+			log(req, user);
 			throw re;
 		} 
 	}

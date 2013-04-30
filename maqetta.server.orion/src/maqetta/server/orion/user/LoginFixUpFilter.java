@@ -15,6 +15,8 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import javax.servlet.Filter;
@@ -27,11 +29,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.orion.internal.server.servlets.ProtocolConstants;
-import org.eclipse.orion.internal.server.servlets.workspace.WebUser;
-import org.eclipse.orion.server.core.resources.Base64Counter;
 import org.eclipse.orion.server.useradmin.IOrionCredentialsService;
 import org.eclipse.orion.server.useradmin.User;
 import org.eclipse.orion.server.useradmin.UserConstants;
@@ -60,18 +59,12 @@ import org.eclipse.orion.server.useradmin.UserServiceHelper;
 // Also, if the 'name' parameter is not specified, we default to using the value of 'email'.  This
 // differs from Orion, which sets the former to the value of 'login'.  In our case, that would
 // result in 'name' containing a seemingly random alphanumeric sequence, which isn't very useful.
-//
-// NOTE: This class works in conjunction with LoginFixUpDecorator.  Keep the two in sync.
 
 @SuppressWarnings("restriction")
 public class LoginFixUpFilter implements Filter {
 
-	private static final Base64Counter userCounter = new Base64Counter();
-
 	public static final String USERS_SERVLET_ALIAS = "/users";
 	public static final String LOGIN_SERVLET_ALIAS = "/login";
-
-	public static final String ID_PREFIX = "00MaqTempId00";
 
 	static final private Logger theLogger = Logger.getLogger(LoginFixUpFilter.class.getName());
 
@@ -110,15 +103,16 @@ public class LoginFixUpFilter implements Filter {
 			return false;
 		}
 
+		String email = request.getParameter(UserConstants.KEY_EMAIL);
+		String name = request.getParameter(ProtocolConstants.KEY_NAME);
+
 		IOrionCredentialsService userAdmin = getUserAdmin();
 
 		// modify request with generated `login` parameter
 		RequestWrapper modifiedRequest = new RequestWrapper(request);
-		modifiedRequest.setParameter(UserConstants.KEY_LOGIN, nextUserId(userAdmin));
+		modifiedRequest.setParameter(UserConstants.KEY_LOGIN, generateUserId(userAdmin, email));
 
 		// check if 'name' parameter is set
-		String email = request.getParameter(UserConstants.KEY_EMAIL);
-		String name = request.getParameter(ProtocolConstants.KEY_NAME);
 		if (name == null || name.length() == 0) {
 			// If 'name' isn't set, default to 'email'. This differs from Orion, which defaults
 			// to using 'login'.
@@ -127,31 +121,6 @@ public class LoginFixUpFilter implements Filter {
 
 		// continue with filter chain
 		chain.doFilter(modifiedRequest, response);
-
-		// reset `login` to be the same as the UID
-		User user = userAdmin.getUser(UserConstants.KEY_EMAIL, email);
-		if (user != null) {
-			String value = user.getLogin();
-			if (value.startsWith(ID_PREFIX)) {
-				String uid = user.getUid();
-
-				// update credentials service
-				user.setLogin(uid);
-				userAdmin.updateUser(uid, user);  // errors logged by Orion
-
-				// update user object for workspace service
-				WebUser webUser = WebUser.fromUserId(uid);
-				webUser.setUserName(uid);
-				try {
-					webUser.save();
-				} catch (CoreException e) {
-					throw new ServletException("Could not save WebUser", e);
-				}
-			}
-		} else {
-			theLogger.warning("Could not re-acquire user object using email [" + email + "], during registration. Will not be able to correctly reset user name.");
-		}
-
 		return true;
 	}
 
@@ -192,15 +161,31 @@ public class LoginFixUpFilter implements Filter {
 		return UserServiceHelper.getDefault().getUserStore();
 	}
 
-	public static String nextUserId(IOrionCredentialsService userAdmin) {
-		synchronized (userCounter) {
-			String candidate;
-			do {
-				candidate = ID_PREFIX + userCounter.toString();
-				userCounter.increment();
-			} while (userAdmin.getUser(UserConstants.KEY_LOGIN, candidate) != null);
+	public static String generateUserId(IOrionCredentialsService userAdmin, String email) {
+		// Try to use the first part of user's email address, removing common non-alphanumeric
+		// characters.
+		String login = email.split("@", 2)[0];
+		login = login.replaceAll("[.\\-_+]", "");
+		if (login.length() > USERNAME_MAX_LENGTH) {
+			login = login.substring(0, USERNAME_MAX_LENGTH);
+		}
+
+		// if it's still a valid login, then return one that doesn't collide with existing one
+		if (validateLogin(login)) {
+			int counter = 0;
+			String candidate = login;
+			while (userAdmin.getUser(UserConstants.KEY_LOGIN, candidate) != null) {
+				candidate = login + ++counter;
+			}
 			return candidate;
 		}
+
+		// login still has some validation issues; just create a "random" login name
+		int randlen = new Random().nextInt(USERNAME_MAX_LENGTH - USERNAME_MIN_LENGTH + 1) + USERNAME_MIN_LENGTH;
+		do {
+			login = UUID.randomUUID().toString().replaceAll("-","").substring(0, randlen);
+		} while (userAdmin.getUser(UserConstants.KEY_LOGIN, login) != null);
+		return login;
 	}
 
 	public User fixOldUser(IOrionCredentialsService userAdmin, User user) {
@@ -224,6 +209,40 @@ public class LoginFixUpFilter implements Filter {
 		}
 
 		return user;
+	}
+
+	//============================================================================================//
+	//  The following are copied from Orion's UserHandlerV1.java
+	//============================================================================================//
+	/**
+	 * The minimum length of a username.
+	 */
+	private static final int USERNAME_MIN_LENGTH = 3;
+	/**
+	 * The maximum length of a username.
+	 */
+	private static final int USERNAME_MAX_LENGTH = 20;
+	/**
+	 * Validates that the provided login is valid. Login must consistent of alphanumeric characters only for now.
+	 * @return <code>null</code> if the login is valid, and otherwise a string message stating the reason
+	 * why it is not valid.
+	 */
+	private static boolean /*String*/ validateLogin(String login) {
+		if (login == null || login.length() == 0)
+			return false /*"User login not specified"*/;
+		int length = login.length();
+		if (length < USERNAME_MIN_LENGTH)
+			return false /*NLS.bind("Username must contain at least {0} characters", USERNAME_MIN_LENGTH)*/;
+		if (length > USERNAME_MAX_LENGTH)
+			return false /*NLS.bind("Username must contain no more than {0} characters", USERNAME_MAX_LENGTH)*/;
+		if (login.equals("ultramegatron"))
+			return false /*"Nice try, Mark"*/;
+
+		for (int i = 0; i < length; i++) {
+			if (!Character.isLetterOrDigit(login.charAt(i)))
+				return false /*NLS.bind("Username {0} contains invalid character ''{1}''", login, login.charAt(i))*/;
+		}
+		return true /*null*/;
 	}
 
 	//============================================================================================//

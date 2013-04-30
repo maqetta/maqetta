@@ -9,10 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.servlet.Filter;
-
 import maqetta.server.orion.MaqettaProjectDecorator;
-import maqetta.server.orion.user.LoginFixUpDecorator;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
@@ -66,7 +63,6 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer,
 	private URI rootStoreURI;
 
 	private ServiceRegistration<IWebResourceDecorator> maqProjectDecoratorRegistration;
-	private ServiceRegistration<IWebResourceDecorator> loginFixUpDecoratorRegistration;
 
 	public static Activator getDefault() {
 		return singleton;
@@ -224,8 +220,6 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer,
 	private void registerDecorators() {
 		//adds the import/export locations to representations
 		maqProjectDecoratorRegistration = bundleContext.registerService(IWebResourceDecorator.class, new MaqettaProjectDecorator(), null);
-		//adds parent links to representations
-		loginFixUpDecoratorRegistration = bundleContext.registerService(IWebResourceDecorator.class, new LoginFixUpDecorator(), null);
 	}
 
 	public void start(BundleContext context) throws Exception {
@@ -257,10 +251,6 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer,
 		if (maqProjectDecoratorRegistration != null) {
 			maqProjectDecoratorRegistration.unregister();
 			maqProjectDecoratorRegistration = null;
-		}
-		if (loginFixUpDecoratorRegistration != null) {
-			loginFixUpDecoratorRegistration.unregister();
-			loginFixUpDecoratorRegistration = null;
 		}
 	}
 }

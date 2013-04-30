@@ -29,7 +29,6 @@ define([
 	var GENERIC_SERVER_MSG = 'A unexpected error prevented the operation from completing.  ' +
 			'Please try again.  If the problem persists, please contact the server administrator.';
 	var ADMIN_USERID = 'admin';
-	var ID_PREFIX = '00MaqTempId00'; // keep in sync w/ LoginFixUpFilter.java
 
 	function injectPlaceholderShims() {
 		function textFocus(e) {
@@ -277,11 +276,6 @@ define([
 		return true;
 	}
 
-	function fixLogin(msg, replacement) {
-		var regex = new RegExp(ID_PREFIX + '\\w+', 'g');
-		return msg.replace(regex, replacement);
-	}
-
 	function confirmCreateUser() {
 		var email = document.getElementById("create_login").value;
 		if (!validateEmail(email)){
@@ -322,7 +316,7 @@ define([
 		}, function(err) {			// error
 			try {
 				var response = err.response.data;
-				showErrorMessage(fixLogin(response.Message, email));
+				showErrorMessage(response.Message);
 				return;
 			} catch (e) {
 				// not json

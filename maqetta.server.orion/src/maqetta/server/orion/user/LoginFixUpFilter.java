@@ -148,6 +148,8 @@ public class LoginFixUpFilter implements Filter {
 					throw new ServletException("Could not save WebUser", e);
 				}
 			}
+		} else {
+			theLogger.warning("Could not re-acquire user object using email [" + email + "], during registration. Will not be able to correctly reset user name.");
 		}
 
 		return true;

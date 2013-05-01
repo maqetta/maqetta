@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.logging.Logger;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -36,6 +37,8 @@ public class EmailOverrideFilter implements Filter {
 	private static final String EMAIL_CONFIRMATION_FILE = "/emails/EmailConfirmation.txt"; //$NON-NLS-1$
 	private static final String EMAIL_CONFIRMATION_RESET_PASS_FILE = "/emails/EmailConfirmationPasswordReset.txt"; //$NON-NLS-1$
 	private static final String EMAIL_PASSWORD_RESET = "/emails/PasswordReset.txt"; //$NON-NLS-1$
+
+	static final private Logger theLogger = Logger.getLogger(EmailOverrideFilter.class.getName());
 
 	// copied from Orion's UserEmailUtil; changed to load emails from our bundle instead
 	private class EmailContent {
@@ -71,7 +74,9 @@ public class EmailOverrideFilter implements Filter {
 		}
 	};
 
-	public void init(FilterConfig arg0) throws ServletException {}
+	public void init(FilterConfig arg0) throws ServletException {
+		theLogger.info("Initializing...");
+	}
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
@@ -90,6 +95,8 @@ public class EmailOverrideFilter implements Filter {
 	}
 
 	private void overrideEmailContents() throws IOException, ServletException {
+		theLogger.info("Overriding Orion email templates");
+
 		UserEmailUtil util = UserEmailUtil.getUtil();
 
 		try {

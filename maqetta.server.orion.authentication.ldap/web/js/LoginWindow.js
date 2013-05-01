@@ -260,6 +260,8 @@ define([
 			}
 			showErrorMessage(err.response.data.error);
 		});
+
+		setResetMessage(false, "Logging in...");
 	}
 
 	function validateUserId(value) {
@@ -321,6 +323,8 @@ define([
 			}
 			showErrorMessage(GENERIC_SERVER_MSG);
 		});
+
+		setResetMessage(false, "Registering account...");
 	}
 
 	function revealRegistration() {

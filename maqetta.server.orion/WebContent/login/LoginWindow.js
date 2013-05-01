@@ -255,6 +255,8 @@ define([
 		}, function(err) {			// error
 			showErrorMessage(err.response.data.error);
 		});
+
+		setResetMessage(false, "Logging in...");
 	}
 
 	function validateEmail(value) {
@@ -323,6 +325,8 @@ define([
 			}
 			showErrorMessage(GENERIC_SERVER_MSG);
 		});
+
+		setResetMessage(false, "Registering account...");
 	}
 
 	function revealRegistration() {

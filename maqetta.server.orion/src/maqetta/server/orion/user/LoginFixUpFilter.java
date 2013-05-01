@@ -259,7 +259,7 @@ public class LoginFixUpFilter implements Filter {
 		String uid = user.getUid();
 
 		// set new values
-		user.setLogin(uid);
+		user.setLogin(generateUserId(userAdmin, email));
 		user.setEmail(email);
 		if (name.length() == 0) {
 			// default 'name' to same value as 'email'

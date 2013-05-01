@@ -10,19 +10,25 @@
  *******************************************************************************/
 package maqetta.server.orion.user;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletInputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -31,13 +37,17 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.orion.internal.server.servlets.ProtocolConstants;
+import org.eclipse.orion.server.servlets.OrionServlet;
 import org.eclipse.orion.server.useradmin.IOrionCredentialsService;
 import org.eclipse.orion.server.useradmin.User;
 import org.eclipse.orion.server.useradmin.UserConstants;
 import org.eclipse.orion.server.useradmin.UserServiceHelper;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-// POST /users/       creates a new user
-// POST /login/form   login user
+// POST /users/                 creates a new user
+// POST /login/form             login user
+// POST /useremailconfirmation  password reset
 //
 // Intercepts authentication requests and updates the request parameters for use by Orion.
 //
@@ -59,12 +69,16 @@ import org.eclipse.orion.server.useradmin.UserServiceHelper;
 // Also, if the 'name' parameter is not specified, we default to using the value of 'email'.  This
 // differs from Orion, which sets the former to the value of 'login'.  In our case, that would
 // result in 'name' containing a seemingly random alphanumeric sequence, which isn't very useful.
+//
+// Password reset for pre-M10 accounts won't work, since the email is stored in the 'login' value of
+// the user's account, and the 'email' is blank. We fix that here.
 
 @SuppressWarnings("restriction")
 public class LoginFixUpFilter implements Filter {
 
 	public static final String USERS_SERVLET_ALIAS = "/users";
 	public static final String LOGIN_SERVLET_ALIAS = "/login";
+	public static final String EMAILCONF_SERVLET_ALIAS = "/useremailconfirmation";
 
 	static final private Logger theLogger = Logger.getLogger(LoginFixUpFilter.class.getName());
 
@@ -87,6 +101,9 @@ public class LoginFixUpFilter implements Filter {
 				if (handleLogin(httpRequest, httpResponse, chain)) {
 					return;
 				}
+			} else if (servletPath.equals(EMAILCONF_SERVLET_ALIAS) && pathInfo == null) {
+				handleEmailConfig(httpRequest, httpResponse, chain);
+				return;
 			}
 		}
 
@@ -155,6 +172,53 @@ public class LoginFixUpFilter implements Filter {
 		// continue with filter chain
 		chain.doFilter(modifiedRequest, response);
 		return true;
+	}
+
+	private void handleEmailConfig(HttpServletRequest request, HttpServletResponse response,
+			FilterChain chain) throws IOException, ServletException {
+		JSONObject data = null;
+		try {
+			data = OrionServlet.readJSONRequest(request);
+			String email = data.getString(UserConstants.KEY_EMAIL);
+			String login = data.getString(UserConstants.KEY_LOGIN);
+			
+			if (login != null && login.length() > 0) {
+				return;
+			}
+
+			IOrionCredentialsService userAdmin = getUserAdmin();
+			User user = userAdmin.getUser(UserConstants.KEY_EMAIL, email);
+			if (user != null) {
+				// a user exists with this email; let Orion handle the rest
+				return;
+			}
+
+			// Pre-M10 accounts will store the email as 'login', while 'email' will be blank. Check
+			// for that here.
+			user = userAdmin.getUser(UserConstants.KEY_LOGIN, email);
+			if (user == null) {
+				// no such user; continue on to Orion
+				return;
+			}
+
+			// let's fix up the user data now, so he/she has an 'email' value
+			user = fixOldUser(userAdmin, user);
+
+			// set email as confirmed, so user will get password reset email
+			user.confirmEmail();
+			userAdmin.updateUser(user.getUid(), user);  // errors logged by Orion
+		} catch (JSONException e) {
+			theLogger.log(Level.SEVERE, "Could not parse json request", e);
+			return;
+		} finally {
+			// POST data can only be read once, which we did above.  Create a new request, set the
+			// data and pass that on.
+			RequestWrapper modifiedRequest = new RequestWrapper(request);
+			modifiedRequest.setData(data != null ? data.toString() : "");
+
+			// continue with filter chain
+			chain.doFilter(modifiedRequest, response);
+		}
 	}
 
 	private IOrionCredentialsService getUserAdmin() {
@@ -250,6 +314,7 @@ public class LoginFixUpFilter implements Filter {
 	class RequestWrapper extends HttpServletRequestWrapper {
 
 		private HashMap<String, String[]> updatedMap = new HashMap<String, String[]>();
+		private String data = null;
 
 		public RequestWrapper(HttpServletRequest request) {
 			super(request);
@@ -293,9 +358,49 @@ public class LoginFixUpFilter implements Filter {
 			return updatedMap.get(name);
 		}
 
+		/* (non-Javadoc)
+		 * @see javax.servlet.ServletRequestWrapper#getInputStream()
+		 */
+		@Override
+		public ServletInputStream getInputStream() throws IOException {
+			if (data == null) {
+				return super.getInputStream();
+			}
+
+			String charset = getRequest().getCharacterEncoding();
+			if (charset == null) {
+				charset = Charset.defaultCharset().name();
+			}
+			byte[] bytes = data.getBytes(charset);
+			final ByteArrayInputStream in = new ByteArrayInputStream(bytes);
+
+			return new ServletInputStream() {
+				
+				@Override
+				public int read() throws IOException {
+					return in.read();
+				}
+			};
+		}
+
+		/* (non-Javadoc)
+		 * @see javax.servlet.ServletRequestWrapper#getReader()
+		 */
+		@Override
+		public BufferedReader getReader() throws IOException {
+			if (data == null) {
+				return super.getReader();
+			}
+			return new BufferedReader(new InputStreamReader(getInputStream()));
+		}
+
 		public void setParameter(String name, String value) {
 			String[] values = { value };
 			updatedMap.put(name, values);
+		}
+		
+		public void setData(String newData) {
+			data  = newData;
 		}
 
 	}

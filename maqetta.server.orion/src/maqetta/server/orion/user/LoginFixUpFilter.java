@@ -203,10 +203,6 @@ public class LoginFixUpFilter implements Filter {
 
 			// let's fix up the user data now, so he/she has an 'email' value
 			user = fixOldUser(userAdmin, user);
-
-			// set email as confirmed, so user will get password reset email
-			user.confirmEmail();
-			userAdmin.updateUser(user.getUid(), user);  // errors logged by Orion
 		} catch (JSONException e) {
 			theLogger.log(Level.SEVERE, "Could not parse json request", e);
 			return;
@@ -268,6 +264,15 @@ public class LoginFixUpFilter implements Filter {
 
 		// update
 		IStatus status = userAdmin.updateUser(uid, user);  // errors logged by Orion
+		if (!status.isOK()) {
+			return null;
+		}
+
+		// Set email as confirmed -- pre-M10 users' emails were confirmed by Maqetta, so
+		// should be fine setting it here for Orion.
+		// Need to do a seperate updateUser() call unfortunately, since we changed the email above.
+		user.confirmEmail();
+		userAdmin.updateUser(uid, user);  // errors logged by Orion
 		if (!status.isOK()) {
 			return null;
 		}

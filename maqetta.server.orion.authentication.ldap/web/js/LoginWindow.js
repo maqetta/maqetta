@@ -453,7 +453,7 @@ define([
 		document.getElementById("login-window").style.display = '';
 		document.getElementById("login").focus();
 
-		xhr.get('/server-status.json', { //$NON-NLS-0$
+		xhr.get('../server-status.json', { //$NON-NLS-0$
 			timeout: 15000,
 			handleAs: 'json'
 		}).then(function(results) {

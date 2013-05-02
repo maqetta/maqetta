@@ -334,8 +334,9 @@ public class OrionUser extends User {
 		String resultLocation = result.optString(ProtocolConstants.KEY_LOCATION);
 
 		// add user rights for the workspace
-		AuthorizationService.addUserRight(this.getUserID(), URI.create(resultLocation).getPath());
-		AuthorizationService.addUserRight(this.getUserID(), URI.create(resultLocation).getPath() + "/*"); //$NON-NLS-1$
+		String workspacePath = Activator.LOCATION_WORKSPACE_SERVLET + '/' + workspace.getId();
+		AuthorizationService.addUserRight(this.getUserID(), workspacePath);
+		AuthorizationService.addUserRight(this.getUserID(), workspacePath + "/*"); //$NON-NLS-1$
 		// add user rights for file servlet location
 		String filePath = Activator.LOCATION_FILE_SERVLET + '/' + workspace.getId();
 		AuthorizationService.addUserRight(this.getUserID(), filePath);

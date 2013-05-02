@@ -1,6 +1,7 @@
 package maqetta.core.server.user.manager;
 
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -16,7 +17,7 @@ import org.w3c.dom.Element;
 
 public class PersonManagerImpl implements IPersonManager {
 
-    protected HashMap             persons      = new HashMap();
+    protected HashMap<String, IPerson> persons = new HashMap<String, IPerson>();
 
     protected static final String USERS_TAG    = "users";
     protected static final String USER_TAG     = "user";
@@ -129,7 +130,7 @@ public class PersonManagerImpl implements IPersonManager {
      * @see org.davinci.server.user.impl.UserManager#addUser(java.lang.String,
      * java.lang.String, java.lang.String)
      */
-    public IPerson addPerson(String userName, String password, String email) throws UserException {
+    public IPerson addPerson(String userName, String password, String email) throws UserException, IOException {
         IPerson person = (IPerson) persons.get(userName);
         if (person != null) {
             throw new UserException(UserException.ALREADY_EXISTS);
@@ -185,7 +186,7 @@ public class PersonManagerImpl implements IPersonManager {
         }
     }
 
-    protected void savePersons() {
+    protected void savePersons() throws IOException {
     	IStorage baseDirectory = getBaseDirectory();
         IStorage userFile = baseDirectory.newInstance(baseDirectory, IDavinciServerConstants.USER_LIST_FILE);
         new UsersFile().save(userFile, this.persons.values());
@@ -200,7 +201,7 @@ public class PersonManagerImpl implements IPersonManager {
     
     public IPerson getPersonByEmail(String email) {
     	IPerson match = null;
-        Iterator peopleIterator = persons.values().iterator();
+        Iterator<IPerson> peopleIterator = persons.values().iterator();
         while (peopleIterator.hasNext() && match == null) {
         	IPerson person = (IPerson)peopleIterator.next();
         	if (person.getEmail().equals(email)) {

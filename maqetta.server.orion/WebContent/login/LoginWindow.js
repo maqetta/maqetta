@@ -19,24 +19,16 @@ define([
 	xhr,
 	PageUtil
 ) {
-	var ua = window.navigator.userAgent;
-	var ieIndex = ua.indexOf('MSIE');
-	var isIE = (ieIndex>=0) ? parseInt(ua.substr(ieIndex+4), 10) : false;
-	if(isIE){
-		var browser_not_supported = document.getElementById("browser_not_supported");
-		browser_not_supported.style.display = "";
-		browser_not_supported.style.color = "red";
-		browser_not_supported.style.fontSize = "16px";
-		browser_not_supported.style.padding = "20px 15px";
-		return;
-	}
+
+	/*
+	 *  Globals
+	 */
 	var userCreationEnabled;
 	var registrationURI;
 
 	var GENERIC_SERVER_MSG = 'A unexpected error prevented the operation from completing.  ' +
 			'Please try again.  If the problem persists, please contact the server administrator.';
 	var ADMIN_USERID = 'admin';
-	var ID_PREFIX = '00MaqTempId00'; // keep in sync w/ LoginFixUpFilter.java
 
 	function injectPlaceholderShims() {
 		function textFocus(e) {
@@ -263,6 +255,8 @@ define([
 		}, function(err) {			// error
 			showErrorMessage(err.response.data.error);
 		});
+
+		setResetMessage(false, "Logging in...");
 	}
 
 	function validateEmail(value) {
@@ -282,11 +276,6 @@ define([
 		}
 		hideErrorMessage();
 		return true;
-	}
-
-	function fixLogin(msg, replacement) {
-		var regex = new RegExp(ID_PREFIX + '\\w+', 'g');
-		return msg.replace(regex, replacement);
 	}
 
 	function confirmCreateUser() {
@@ -329,13 +318,15 @@ define([
 		}, function(err) {			// error
 			try {
 				var response = err.response.data;
-				showErrorMessage(fixLogin(response.Message, email));
+				showErrorMessage(response.Message);
 				return;
 			} catch (e) {
 				// not json
 			}
 			showErrorMessage(GENERIC_SERVER_MSG);
 		});
+
+		setResetMessage(false, "Registering account...");
 	}
 
 	function revealRegistration() {
@@ -407,6 +398,17 @@ define([
 	}
 
 	require(['dojo/domReady!'], function() {
+		var ua = window.navigator.userAgent;
+		var ieIndex = ua.indexOf('MSIE');
+		var isIE = (ieIndex>=0) ? parseInt(ua.substr(ieIndex+4), 10) : false;
+		if(isIE){
+			var browser_not_supported = document.getElementById("browser_not_supported");
+			browser_not_supported.style.display = "";
+			browser_not_supported.style.color = "red";
+			browser_not_supported.style.fontSize = "16px";
+			browser_not_supported.style.padding = "20px 15px";
+			return;
+		}
 		
 		// global variable
 		LoginWindowShiftKey = false;

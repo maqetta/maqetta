@@ -87,38 +87,44 @@ define(function() {
 		_reviewEditorSceneChange: function(docContext){
 			if(docContext == this.context && docContext.declaredClass == 'davinci.review.editor.Context'){
 				var win = docContext.getGlobal();
-				win["require"](["dijit/registry", "dojo/topic"], function(innerRegistry, innerTopic) {
-					var views = docContext.rootNode.querySelectorAll('.mblView');
-					for(var i=0; i<views.length; i++){
-						var view = views[i];
-						if(view.id){
-							var viewDijit = innerRegistry.byId(view.id);
-							if(viewDijit){
-								// Listen for View and ScrollableView change (probably from touch gesture)
-								viewDijit.onAfterTransitionIn = function(sm, viewId, moveTo, dir, transition, context, method){
-									dojo.publish("/davinci/scene/selectionChanged", [sm, viewId]);
-								}.bind(this, this, view.id);
-								// Listen for SwapView changes (probably from flick gesture)
-								innerTopic.subscribe('/dojox/mobile/viewChanged', function(newView){
-									// If this routine in in middle of forcing the view change, don't try to update anything
-									if(this._swapViewChangeHandle){
-										return;
-									}
-									if(newView && newView.id){
-										dojo.publish("/davinci/scene/selectionChanged", [this, newView.id]);
-									}
-								}.bind(this));
+				// NOTE: Right now, at this point (and various other places in this file)
+				// we are testing for presence of win["require"] to ensure that the
+				// current review file is a live HTML file.
+				// Might be better to test for .html file extension or something else.
+				if(win && win["require"]){
+					win["require"](["dijit/registry", "dojo/topic"], function(innerRegistry, innerTopic) {
+						var views = docContext.rootNode.querySelectorAll('.mblView');
+						for(var i=0; i<views.length; i++){
+							var view = views[i];
+							if(view.id){
+								var viewDijit = innerRegistry.byId(view.id);
+								if(viewDijit){
+									// Listen for View and ScrollableView change (probably from touch gesture)
+									viewDijit.onAfterTransitionIn = function(sm, viewId, moveTo, dir, transition, context, method){
+										dojo.publish("/davinci/scene/selectionChanged", [sm, viewId]);
+									}.bind(this, this, view.id);
+									// Listen for SwapView changes (probably from flick gesture)
+									innerTopic.subscribe('/dojox/mobile/viewChanged', function(newView){
+										// If this routine in in middle of forcing the view change, don't try to update anything
+										if(this._swapViewChangeHandle){
+											return;
+										}
+										if(newView && newView.id){
+											dojo.publish("/davinci/scene/selectionChanged", [this, newView.id]);
+										}
+									}.bind(this));
+								}
 							}
 						}
-					}
-				}.bind(this));
+					}.bind(this));
+				}
 			}
 		},
 		selectScene: function(params){
 			var sceneId = params.sceneId;
 			var win = this.context.getGlobal();
 			var n;
-			if(!win){
+			if(!win || !win["require"]){
 				return;
 			}
 			var domNode = this.context.getDocument().getElementById(sceneId);
@@ -228,8 +234,11 @@ define(function() {
 				return;
 			}
 			var currentScene, viewDijit;
-			var win = this.context.getGlobal(),
-				innerRegistry = win["require"]("dijit/registry");
+			var win = this.context.getGlobal();
+			if(!win || !win["require"]){
+				return;
+			}
+			var innerRegistry = win["require"]("dijit/registry");
 			var elems = sceneContainerNode.querySelectorAll('.mblView');
 			for(var i=0; i<elems.length; i++){
 				var elem = elems[i];
@@ -258,8 +267,11 @@ define(function() {
 				return arr;
 			}
 			var currentScene, viewDijit;
-			var win = this.context.getGlobal(),
-				innerRegistry = win["require"]("dijit/registry");
+			var win = this.context.getGlobal();
+			if(!win || !win["require"]){
+				return;
+			}
+			var innerRegistry = win["require"]("dijit/registry");
 			var elems = sceneContainerNode.querySelectorAll('.mblView');
 			for(var i=0; i<elems.length; i++){
 				var elem = elems[i];
@@ -299,7 +311,7 @@ define(function() {
 				return false;
 			}
 			var win = this.context.getGlobal();
-			if(!win){
+			if(!win || !win["require"]){
 				return false;
 			}
 			return dojo.some(node.childNodes, function(child) {
@@ -311,7 +323,7 @@ define(function() {
 				return [];
 			}
 			var win = this.context.getGlobal();
-			if(!win){
+			if(!win || !win["require"]){
 				return [];
 			}
 			return dojo.filter(node.childNodes, function(child) {
@@ -331,11 +343,13 @@ define(function() {
 //        },
 		onDocInit: function(context){
 	
-			var sm = new DojoMobileViewSceneManager(context);
-			context.registerSceneManager(sm);
-			dojo.subscribe('/davinci/ui/context/statesLoaded', function(docContext){
-				sm._reviewEditorSceneChange(docContext);
-			});
+			if(context.registerSceneManager){
+				var sm = new DojoMobileViewSceneManager(context);
+				context.registerSceneManager(sm);
+				dojo.subscribe('/davinci/ui/context/statesLoaded', function(docContext){
+					sm._reviewEditorSceneChange(docContext);
+				});
+			}
 		},
 		/**
 		 * Checks if the event attribute is required for  widget to display poperly in the visual 

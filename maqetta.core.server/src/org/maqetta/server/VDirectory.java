@@ -53,7 +53,7 @@ public class VDirectory implements IVResource {
         this.children = new Vector();
     }
 
-    public IVResource create(String path) {
+    public IVResource create(String path) throws IOException {
         // TODO Auto-generated method stub
         return null;
     }
@@ -63,7 +63,7 @@ public class VDirectory implements IVResource {
 
     }
 
-    public boolean delete() {
+    public boolean delete() throws IOException {
         // TODO Auto-generated method stub
         return false;
     }

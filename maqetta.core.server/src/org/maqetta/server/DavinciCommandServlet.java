@@ -31,24 +31,39 @@ public class DavinciCommandServlet extends HttpServlet {
     public DavinciCommandServlet() {
     }
 
-	private void log(HttpServletRequest req, String method, Throwable t) {
+	private void log(HttpServletRequest req, String method, Throwable t, IUser user) {
 		theLogger.logp(Level.SEVERE, DavinciCommandServlet.class.getName(), method, "Unhandled Exception", t);
-		theLogger.log(Level.INFO, "RequestURL: " + req.getRequestURL().toString());
+		String log = "RequestURL: " + req.getRequestURL().toString();
+
+		if (user == null) {
+			user = ServerManager.getServerManager().getUserManager().getUser(req);
+		}
+		if (user != null) {
+			log += "\nUser: uid=" + user.getUserID();
+			String email = user.getPerson().getEmail();
+			if (email != null) {
+				log += " email=" + email;
+			}
+		}
+
 		String query = req.getQueryString();
 		if (query != null) {
-			theLogger.log(Level.INFO, "Query: " + query);
+			log += "\nQuery: " + query;
 		}
+
 		Enumeration<String> names = req.getHeaderNames();
 		while (names.hasMoreElements()) {
 			String name = names.nextElement();
 			String header = req.getHeader(name);
 			if (header != null) {
-				theLogger.log(Level.INFO, name + ": " + header);
+				log += "\n" + name + ": " + header;
 			}
 		}
+		theLogger.info(log);
 	}
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		IUser user = null;
     	try {
     		resp.setCharacterEncoding("utf-8");
 	        if (!initialized) {
@@ -63,7 +78,7 @@ public class DavinciCommandServlet extends HttpServlet {
 	        if (commandDescriptor.isPut()) {
 	            throw new AssertionError(new String("commandDescriptor is Put in doGet"));
 	        }
-	        IUser user = checkLogin(req, resp, commandDescriptor);
+	        user = checkLogin(req, resp, commandDescriptor);
 	        if (user == null && !commandDescriptor.isNoLogin()) {
 	            return;
 	        }
@@ -79,16 +94,16 @@ public class DavinciCommandServlet extends HttpServlet {
 	            stream.write(command.getResponse().getBytes("utf-8"));
 	        }
     	} catch (RuntimeException re) {
-    		log(req, "doGet", re);
+    		log(req, "doGet", re, user);
     		throw re;
     	} catch (EOFException eof) {
     		// user cancelled request
     		throw eof;
     	} catch (IOException ioe) {
-    		log(req, "doGet", ioe);
+    		log(req, "doGet", ioe, user);
     		throw ioe;
     	} catch (Error e) {
-    		log(req, "doGet", e);
+    		log(req, "doGet", e, user);
     		throw e;
     	}
     }
@@ -107,6 +122,7 @@ public class DavinciCommandServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    	IUser user = null;
     	try {
 	        if (!initialized) {
 	            initialize();
@@ -121,7 +137,7 @@ public class DavinciCommandServlet extends HttpServlet {
 	            throw new AssertionError(new String("commandDescriptor is not Put in doPut"));
 	        }
 	
-	        IUser user = checkLogin(req, resp, commandDescriptor);
+	        user = checkLogin(req, resp, commandDescriptor);
 	        if (user == null && !commandDescriptor.isNoLogin()) {
 	            return;
 	        }
@@ -130,18 +146,19 @@ public class DavinciCommandServlet extends HttpServlet {
 	
 	        command.handleCommand(req, resp, user);
     	} catch (RuntimeException re) {
-    		log(req, "doPut", re);
+    		log(req, "doPut", re, user);
     		throw re;
     	} catch (IOException ioe) {
-    		log(req, "doPut", ioe);
+    		log(req, "doPut", ioe, user);
     		throw ioe;
     	} catch (Error e) {
-    		log(req, "doPut", e);
+    		log(req, "doPut", e, user);
     		throw e;
     	}
     }
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    	IUser user = null;
     	try {
 	        if (!initialized) {
 	            initialize();
@@ -157,7 +174,7 @@ public class DavinciCommandServlet extends HttpServlet {
 	        if (commandDescriptor.isPut()) {
 	            throw new AssertionError(new String("commandDescriptor is Put in doPost"));
 	        }
-	        IUser user = checkLogin(req, resp, commandDescriptor);
+	        user = checkLogin(req, resp, commandDescriptor);
 	        if (user == null) {
 	            if (!commandDescriptor.isNoLogin()) {
 	                resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -175,13 +192,13 @@ public class DavinciCommandServlet extends HttpServlet {
 	            stream.write(command.getResponse().getBytes("utf-8"));
 	        }
     	} catch(RuntimeException re) {
-    		log(req, "doPost", re);
+    		log(req, "doPost", re, user);
     		throw re;
     	} catch (IOException ioe) {
-    		log(req, "doPost", ioe);
+    		log(req, "doPost", ioe, user);
     		throw ioe;
     	} catch (Error e) {
-    		log(req, "doPost", e);
+    		log(req, "doPost", e, user);
     		throw e;
     	}
     }

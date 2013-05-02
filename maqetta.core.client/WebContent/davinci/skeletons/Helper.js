@@ -76,8 +76,7 @@ define(function() {
 		
 		/**
 		 * Invoked after new widget is created but before being adding a new widget to the page; 
-		 * when changing properties on a widget (and the widget is recreated); or for each widget
-		 *  when loading a page into the visual editor.
+		 * when changing properties on a widget (and the widget is recreated).
 		 *
 		 * XXX This is invoked from widget.createWidget().  
 		 * 

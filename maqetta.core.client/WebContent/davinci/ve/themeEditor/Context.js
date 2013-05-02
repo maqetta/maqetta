@@ -203,7 +203,34 @@ return declare("davinci.ve.ThemeEditor.Context", [Context], {
 	},
 
 	_configDojoxMobile: function() {
-	     // override base
+	     // override base for themeEditor, set the themeMap for deviceTheme so it loads no theme files
+		// theme editor loads the themes staticly based on the .theme file not the device
+		
+		try {
+			var innerRequire = this.getGlobal()['require'],
+				dm = innerRequire('dojox/mobile'),
+				deviceTheme = innerRequire('dojox/mobile/deviceTheme'),
+				djConfig = this.getGlobal().dojo.config,  // TODO: use require
+				ua = 'none',
+				themeMap,
+				themeFiles,
+				mblLoadCompatPattern;
+		
+
+
+			themeMap = [['.*','',[]]]; // no theme loading from deviceTheme
+			themeFiles = [];
+			var re = new RegExp(''); //*-compat files not used
+			mblLoadCompatPattern=re;
+			deviceTheme.themeMap = themeMap;		
+			djConfig.mblThemeFiles = themeFiles;
+			djConfig.mblLoadCompatPattern = mblLoadCompatPattern;
+			dm.loadCompatPattern = mblLoadCompatPattern;
+			deviceTheme.loadDeviceTheme(ua);
+		} catch(e) {
+			// dojox/mobile wasn't loaded
+		}
+
 
 	},
 	 

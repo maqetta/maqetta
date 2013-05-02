@@ -40,11 +40,11 @@ public class VOrionStorage implements IStorage {
 		return this.store.fetchInfo().getAttribute(EFS.ATTRIBUTE_READ_ONLY);
 	}
 
-	public boolean delete() {
+	public boolean delete() throws IOException {
 		try {
 			store.delete(EFS.NONE, null);
 		} catch (CoreException e) {
-			e.printStackTrace();
+			throw new IOException(e);
 		}
 		return true;
 	}
@@ -123,7 +123,7 @@ public class VOrionStorage implements IStorage {
 		}
 	}
 
-	public boolean mkdirs() {
+	public boolean mkdirs() throws IOException {
 		try {
 			IStorage parent = this.getParentFile();
 			if (parent != null && !parent.exists()) {
@@ -132,8 +132,7 @@ public class VOrionStorage implements IStorage {
 			// if(this.store.fetchInfo().isDirectory())
 			this.store.mkdir(EFS.NONE, null);
 		} catch (CoreException e) {
-			e.printStackTrace();
-			return false;
+			throw new IOException(e);
 		}
 		return true;
 	}
@@ -164,7 +163,7 @@ public class VOrionStorage implements IStorage {
 	}
 
 	public IStorage newInstance(IStorage parent, String name) {
-		return ((VOrionStorage) parent).create(name);
+		return parent.create(name);
 	}
 
 	public IStorage newInstance(URI uri) {

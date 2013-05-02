@@ -705,7 +705,26 @@
                                 ".mblColorDefault45": [
                                     "background-color",
                                     "background-image"
+                                ],
+                                 ".mblToolBarButtonArrow": [
+										"position",
+  										"top",
+ 										"width",
+  										"height",
+  										"border-radius",
+  										"-webkit-transform",
+  										"-moz-transform",
+  										"-o-transform",
+  										"-ms-transform",
+  										"transform",
+  										"border",
+  										"border-width",
+  										"border-style",
+  										"border-color",
+  										"border-right-color",
+  										"border-bottom-color"
                                 ]
+
                             },
                             "query": [".mblToolBarButtonArrow", ".mblToolBarButtonBody"],
                             "simulate":["mblColorDefault45", "mblColorDefaul"]
@@ -791,6 +810,7 @@
                             "margin-left",
                             "height",
                             "border",
+                            "border-color",
                             "border-top-width",
                             "border-right-width",
                             "border-bottom-width",

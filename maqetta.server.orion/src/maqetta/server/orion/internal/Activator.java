@@ -9,11 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.servlet.Filter;
-import javax.servlet.ServletException;
-
 import maqetta.server.orion.MaqettaProjectDecorator;
-import maqetta.server.orion.user.LoginFixUpDecorator;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
@@ -22,12 +18,8 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IRegistryChangeEvent;
 import org.eclipse.core.runtime.IRegistryChangeListener;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.equinox.http.servlet.ExtendedHttpService;
 import org.eclipse.orion.internal.server.core.IWebResourceDecorator;
-import org.eclipse.orion.server.core.LogHelper;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.maqetta.server.IDavinciServerConstants;
 import org.osgi.framework.Bundle;
@@ -36,8 +28,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.http.HttpService;
-import org.osgi.service.http.NamespaceException;
 import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
@@ -73,9 +63,6 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer,
 	private URI rootStoreURI;
 
 	private ServiceRegistration<IWebResourceDecorator> maqProjectDecoratorRegistration;
-	private ServiceRegistration<IWebResourceDecorator> loginFixUpDecoratorRegistration;
-
-	private Filter filter;
 
 	public static Activator getDefault() {
 		return singleton;
@@ -233,8 +220,6 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer,
 	private void registerDecorators() {
 		//adds the import/export locations to representations
 		maqProjectDecoratorRegistration = bundleContext.registerService(IWebResourceDecorator.class, new MaqettaProjectDecorator(), null);
-		//adds parent links to representations
-		loginFixUpDecoratorRegistration = bundleContext.registerService(IWebResourceDecorator.class, new LoginFixUpDecorator(), null);
 	}
 
 	public void start(BundleContext context) throws Exception {
@@ -266,35 +251,6 @@ public class Activator implements BundleActivator, ServiceTrackerCustomizer,
 		if (maqProjectDecoratorRegistration != null) {
 			maqProjectDecoratorRegistration.unregister();
 			maqProjectDecoratorRegistration = null;
-		}
-		if (loginFixUpDecoratorRegistration != null) {
-			loginFixUpDecoratorRegistration.unregister();
-			loginFixUpDecoratorRegistration = null;
-		}
-	}
-
-	// The following 2 methods are used to override Orion's email templates.  See comment at top
-	// of EmailOverrideFilter.java.
-	public void setHttpService(HttpService httpService) {
-		ExtendedHttpService eHttpService = (ExtendedHttpService) httpService;
-		filter = new EmailOverrideFilter();
-		
-		try {
-			eHttpService.registerFilter("/useremailconfirmation", filter, null, null);
-		} catch (ServletException e) {
-			LogHelper.log(new Status(IStatus.ERROR, Activator.class.getPackage().getName(), 1,
-					"An error occured when registering servlets", e));
-		} catch (NamespaceException e) {
-			LogHelper.log(new Status(IStatus.ERROR, Activator.class.getPackage().getName(), 1,
-					"A namespace error occured when registering servlets", e));
-		}
-	}
-
-	public void unsetHttpService(HttpService httpService) {
-		ExtendedHttpService eHttpService = (ExtendedHttpService) httpService;
-		if (eHttpService != null) {
-			eHttpService.unregisterFilter(filter);
-			filter = null;
 		}
 	}
 }

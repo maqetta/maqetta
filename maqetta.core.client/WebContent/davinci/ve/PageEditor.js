@@ -16,8 +16,9 @@ define([
 	"../XPathUtils",
 	"../html/HtmlFileXPathAdapter",
 	"./utils/GeomUtils",
-	"dojo/i18n!./nls/ve"
-], function(require, declare, ModelEditor, BorderContainer, ContentPane, Runtime, Moveable, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, States, XPathUtils, HtmlFileXPathAdapter, GeomUtils, veNls){
+	"dojo/i18n!./nls/ve",
+	"dojox/widget/Toaster",
+], function(require, declare, ModelEditor, BorderContainer, ContentPane, Runtime, Moveable, CommandStack, HTMLEditor, Path, VisualEditor, VisualEditorOutline, widgetUtils, States, XPathUtils, HtmlFileXPathAdapter, GeomUtils, veNls, Toaster){
 
 return declare("davinci.ve.PageEditor", ModelEditor, {
 
@@ -309,20 +310,23 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 	},
 	
 	_srcChanged: function() {
-		var wasTyping = this.htmlEditor.isTyping;
-		if(wasTyping) {
-			this.visualEditor.skipSave = true;
-		}
-		var context = this.visualEditor.context,
-			statesScenes = context && this._getStatesScenes(context);
-		this.visualEditor.setContent(this.fileName, this.htmlEditor.model);
-		this.editorContainer.updateToolbars();
-		dojo.publish('/davinci/ui/context/pagerebuilt', [context]);
-		if(statesScenes){
-			this._setStatesScenes(context, statesScenes);
-		}
-		delete this.visualEditor.skipSave;
-		this._setDirty();
+		// Because this can be called from SourceChangeCommand, make sure dojo.doc is bound to the Workbench
+		dojo.withDoc(window.document, function(){
+			var wasTyping = this.htmlEditor.isTyping;
+			if(wasTyping) {
+				this.visualEditor.skipSave = true;
+			}
+			var context = this.visualEditor.context,
+				statesScenes = context && this._getStatesScenes(context);
+			this.visualEditor.setContent(this.fileName, this.htmlEditor.model);
+			this.editorContainer.updateToolbars();
+			dojo.publish('/davinci/ui/context/pagerebuilt', [context]);
+			if(statesScenes){
+				this._setStatesScenes(context, statesScenes);
+			}
+			delete this.visualEditor.skipSave;
+			this._setDirty();
+		}, this);
 	},
 
 	/**
@@ -474,14 +478,34 @@ return declare("davinci.ve.PageEditor", ModelEditor, {
 				return;
 			}
 		}
-
-		this.savePoint=this._commandStack.getUndoCount();
-		this.visualEditor.save(isAutoSave);
-		
-		this.isDirty= this.isDirty && isAutoSave;
-		if (this.editorContainer) {
-			this.editorContainer.setDirty(isAutoSave);
+		if (typeof hasToaster == "undefined") {
+			new Toaster({
+				position: "br-left",
+				duration: 4000,
+				messageTopic: "/davinci/resource/saveError"
+			});
+			hasToaster = true;
 		}
+		
+		this.savePoint=this._commandStack.getUndoCount();
+		var promises = this.visualEditor.save(isAutoSave);
+		if (promises && promises.then){
+			promises.then(
+				function(results){
+					this.isDirty = isAutoSave;
+					if (this.editorContainer && this.editorContainer.domNode) {
+						this.editorContainer.setDirty(isAutoSave);
+					}
+				}.bind(this),
+				function(error){
+					var message = veNls.vteErrorSavingResourceMessage + error;
+					dojo.publish("/davinci/resource/saveError", [{message:message, type:"error"}]);
+		 			console.error(message);
+				}
+			);
+		}
+		
+		
 	},
 	
 	removeWorkingCopy: function(){ //wdr

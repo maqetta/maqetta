@@ -26,7 +26,7 @@ ContentPaneHelper.prototype = {
 			// RadioGroupSlide in particular needs the contentPanes to have a background for the sliding to look right
 			//
 			var parent = widget.getParent();
-			if (parent && (parent.type == "dojox.layout.RadioGroup" || parent.type == "dojox.layout.RadioGroupSlide" || parent.type == "dojox.layout.RadioGroupFade")){
+			if (parent && (parent.type == "dojox/layout/RadioGroup" || parent.type == "dojox/layout/RadioGroupSlide" || parent.type == "dojox/layout/RadioGroupFade")){
 				if (!widget.getStyle().match("background")){
 					widget.setStyleValues({background: "white"});
 				}

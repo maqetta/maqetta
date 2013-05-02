@@ -48,7 +48,7 @@ public class User implements IUser {
 		this.person = person;
 	}
 
-	public User(IPerson person, IStorage userDirectory) {
+	public User(IPerson person, IStorage userDirectory) throws IOException {
 		this(person);
 		this.userDirectory = userDirectory;
 		userDirectory.mkdirs();
@@ -214,7 +214,7 @@ public class User implements IUser {
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#addBaseSettings(java.lang.String)
 	 */
-	public void addBaseSettings(String base){
+	public void addBaseSettings(String base) throws IOException {
 		IStorage baseFile = userDirectory.newInstance(this.userDirectory, base);
 		if(!isValid(baseFile.getAbsolutePath())) return;
 		IStorage settings = userDirectory.newInstance(baseFile, IDavinciServerConstants.SETTINGS_DIRECTORY_NAME);
@@ -255,7 +255,7 @@ public class User implements IUser {
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#modifyLibrary(java.lang.String, java.lang.String, java.lang.String, boolean)
 	 */
-	public void modifyLibrary(String id, String version, String base, boolean installed, boolean required) {
+	public void modifyLibrary(String id, String version, String base, boolean installed, boolean required) throws IOException {
 		LibrarySettings libs = this.getLibSettings(base);
 
 		if (!installed) {
@@ -277,7 +277,7 @@ public class User implements IUser {
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#modifyLibrary(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
-	public void modifyLibrary(String id, String version, String virtualRoot, String base, boolean required) {
+	public void modifyLibrary(String id, String version, String virtualRoot, String base, boolean required) throws IOException {
 		LibrarySettings libs = this.getLibSettings(base);
 
 		libs.modifyLibrary(id, version, virtualRoot, base, required?"true":"false");
@@ -480,14 +480,14 @@ public class User implements IUser {
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#getWorkbenchSettings()
 	 */
-	public IStorage getWorkbenchSettings() {
+	public IStorage getWorkbenchSettings() throws IOException {
 		return getWorkbenchSettings("");
 	}
 
 	/* (non-Javadoc)
 	 * @see org.davinci.server.user.IUser#getWorkbenchSettings(java.lang.String)
 	 */
-	public IStorage getWorkbenchSettings(String base) {
+	public IStorage getWorkbenchSettings(String base) throws IOException {
 	
 		
 		IStorage baseFile = userDirectory.newInstance(this.userDirectory,base);

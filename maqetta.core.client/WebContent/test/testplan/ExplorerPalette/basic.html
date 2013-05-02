@@ -22,10 +22,10 @@
 	<ol class="steps">
 		<li>You'll want to setup a virgin user environment by creating a whole new user login or resetting the existing user login (ask engineers about how to do that).
 				Clear the browser cache. Launch the Maqetta server. Login if necessary. </li>
-		<li>Look at Files palette. You should see an initial set of files. For 0.6, there is Sample1.html, Sample2.html, SampleBanner.jpg, SampleJs.js, app.css and a themes/ folder with dijit.css, dijit_rtl.css and two folders (claro, sketch) each with many files inside.</li>
+		<li>Look at Files palette. You should see an initial set of files: app.css, app.js, and then some folders: libs, sample, themes. </li>
 		<li>Verify the tree control and that you can expand and close folders by clicking on + and - squares.</li>
 		<li>With the mouse inside of the Files palette's main area, click the right mouse button (or Ctrl-click on Mac) to bring up context menu. 
-		You should see <!-- DISABLED FOR NOW. SEE #43 "New file...",--> "New folder...", "Upload files...", "Rename...", "Delete" and "Download". (Don't activate these commands yet - see below for specific tests for each of these commands.)</li>
+		You should see "Rename...", "Delete" and "Download". (Don't activate these commands yet - see below for specific tests for each of these commands.)</li>
 		<li>Try double-clicking on the various file types to make sure that the appropriate editor is launched.
 			<ul>
 				<li>Double-click on Sample1.html. The page editor should show the sample contents, which (with 0.5 completed) should include a states demo where some controls appear and disappear at runtime depending on what the user clicks on at runtime.</li>
@@ -52,7 +52,9 @@
 		<li>With the mouse inside of the Files palette's main area, click on one of the "root-level files" (e.g., Sample.html) and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "New file...". In the dialog(s) that appear, type in an HTML file name (e.g., abc.html), click OK, and the page editor should appear with an empty canvas.</li>
 		<li>With the mouse inside of the Files palette's main area, click on one of the root-level files (e.g., Sample.html) and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "New file...". In the dialog(s) that appear, type in a JS file name (e.g., abc.js), click OK, and the source editor should appear with an empty JavaScript file.</li>
 		-->
-		<li>With the mouse inside of the Files palette's main area, click on one of the root-level files (e.g., Sample.html) and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "New folder...". In the dialog(s) that appear, enter a new folder name (e.g., "aaaa") and clock OK. The new folder should show in the Files palette.</li>
+		<li>With the mouse inside of the Files palette's main area, click on one of the root-level files (e.g., app.css) and 
+		then click on the "New folder..." icon on toolbar. 
+		In the dialog(s) that appear, enter a new folder name (e.g., "aaaa") and clock OK. The new folder should show in the Files palette.</li>
 		<!-- FIXME: Maybe restore this if we get Save/SaveAs buttons in toolbar for generic New File source editing. See #43
 		<li>With the mouse inside of the Files palette's main area, click on one of the your new folder (e.g., aaaa) and then click the right mouse button (or Ctrl-click on Mac) to bring up context menu and choose "New file...". In the dialog(s) that appear, make sure the dialog shows the proper folder name (e.g., aaaa). Type in an HTML file name (e.g., bbbb.html), click OK, and the page editor should appear with an empty canvas, and the Files palette should should bbb.html in folder aaaa.</li>
 		-->
@@ -71,15 +73,13 @@
 			Clear the browser cache. Launch the Maqetta server. Login if necessary. </li>
 		<li>With the mouse inside of the Files palette's main area, 
 			click on one of the root-level files (e.g., Sample.html) and then 
-			click the right mouse button (or Ctrl-click on Mac) to bring up context menu 
-			and choose "Upload Files". In the dialog(s) that appear, choose a file from your 
+			click on the "Upload Files" icon on the <strong>Files</strong> palette toolbar. In the dialog(s) that appear, choose a file from your 
 			disk and upload to your workspace. The new file should have been added 
 			into the root folder in the Files palette.</li>
 		<li>Create a new folder (see instructions above), perhaps named "ggg". 
 			With the mouse inside of the Files palette's main area, 
-			click on thie folder (e.g., ggg) and then click the right mouse button 
-			(or Ctrl-click on Mac) to bring up context menu and 
-			choose "Upload Files". In the dialog(s) that appear, choose a file from your disk and 
+			click on thie folder (e.g., ggg) and then click on the "Upload Files" icon on the <strong>Files</strong> palette toolbar. 
+			In the dialog(s) that appear, choose a file from your disk and 
 			upload to your workspace. The new file should have been added into the ggg 
 			folder in the Files palette.</li>
 	</ol>

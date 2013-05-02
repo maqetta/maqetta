@@ -71,6 +71,7 @@ define(["dojo/_base/declare",
 			});
 			dojo.connect(this.uploader, "onError", function(args){
 				//FIXME: post error message
+				alert("Upload error: " + args);
 				console.error("Upload error: ", args);
 				setDone();
 			});

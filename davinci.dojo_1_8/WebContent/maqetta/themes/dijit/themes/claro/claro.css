@@ -3093,7 +3093,7 @@ div.dijitTabDisabled, .dj_ie div.dijitTabDisabled {
 .claro .dijitCalendar img {
   border: none;
 }
-.claro .dijitCalendarHover, .claro .dijitCalendar:hover, .claro .dijitCalendarActive {
+.claro .dijitCalendarHover, .claro .dijitCalendarActive, .claro .dijitCalendar:hover {
   
   background-color: #abd6ff;
   border: solid 1px #759dc0;

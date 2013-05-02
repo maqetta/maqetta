@@ -226,9 +226,9 @@
 		It is locked in the first position.
 	</li>
 	<li><span class='majortopic'>Updated to Eclipse Orion 2.0</span> -
-		Previous versions of Maqetta embedded pre-release versions of Eclipse Orion.
-		With Release 10, Maqetta has upgraded all the way to Orion 2.0.  A few new features are available
+		Maqetta now builds on top of Orion 2.0 (upgraded from v0.5).  A few new features are available
 		in the source editor, such as bracket matching and a folding ruler for comments when editing JS and CSS.
+		For more information, please visit the <a href="http://www.eclipse.org/orion/">Orion website</a>.
 	</li>
 	<li><span class='majortopic'>Different behavior when Publishing a review</span> -
 		In previous releases, when you created a new review and clicked on the Publish button
@@ -249,6 +249,43 @@
 		There is now a small "x" that appears in the filter box for the widget palette
 		whenever there is at least one character typed into the filter box. THe "x" icon
 		clears the filter box.
+	</li>
+	<li><span class='majortopic'>Enhanced SmartInput</span> -
+		<ul>
+			<li><strong>Setting multiple fields from SmartInput</strong> - For example dojo TextBox supports 
+			the HTML placeHolder attribute, SmartInput for all dojo TextBox now lets the user set the TextBox
+			value and placeHolder attributes.
+			</li>
+			<li><strong>Setting Date and Time fields from SmartInput using date and time pickers</strong>
+			 - For example dojo DateTextBox SmartInput now uses a date picker for setting the value feild. 
+			</li>
+		</ul>
+	</li>
+	<li><span class='majortopic'>Theme Editor support for simulating CSS Pseudo-class behaviors</span> 
+	- For example the user can now select the HTML button, select the Hover from the states palette and 
+	set the :hover CSS Pseudo-class in the claro theme.
+	</li>
+	<li><span class='majortopic'>Save As Widget Improvements - old custom widgets not supported</span> 
+		<div>The Save As Widget feature has been "experimental", and with Release 10 continues to be experimental, 
+		but in Release 10 there have been major improvements. Several bugs have been fixed, and it appears
+		that it is possible now to put any widgets inside of an HTML &lt;div&gt;, select the &lt;div&gt;, then
+		Save As Widget, and the resulting custom widget can be used in HTML pages, where it will render and operate correctly.
+		Also, the team's testing showed that it is possible to create a ZIP from the root folder for a custom widget
+		(found in <code>lib/custom</code>),
+		send the ZIP to another user, who then can use the new "upload ZIP" feature to expand the ZIP
+		into his <code>lib/custom</code> folder, and then that custom widget is available for his use.</div>
+		<p>The improvements required some significant coding changes, and the coding changes resulted
+		in lack of backwards-compatible support for custom
+		widgets created in previous versions. For maqetta.org users, the old custom widgets will still 
+		be in your (migrated) workspace, and you can find your old custom widget files by invoking
+		Open -&gt; Orion Navigator, and looking for your old custom widgets in {project}/lib/custom/{custom widget name}.
+		</p>
+		<p>The Save As Widget feature has many of the same limitations as in previous releases.
+			For example, there is still no way to define configurable properties on a custom widget.</p>	
+	</li>
+	<li><span class='majortopic'>Removed Managed Libraries feature</span> 
+	- Because the feature had too many bugs, we have removed the "Managed Libraries" feature from Release 10.
+	You can still relocate your JavaScript libraries as part of the download entire project dialog.
 	</li>
 </ul>
 	

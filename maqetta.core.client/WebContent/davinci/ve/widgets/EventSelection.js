@@ -1,6 +1,8 @@
 define(["dojo/_base/declare",
 		"dojo/_base/connect",
+		"dojo/dom-class",
 		'system/resource',
+		'davinci/Runtime',
 		'davinci/Workbench',
 		'davinci/model/Path',
 		'../../workbench/Preferences',
@@ -8,7 +10,7 @@ define(["dojo/_base/declare",
 		"../commands/EventCommand",
 		"./HTMLStringUtil",
 		"../States"
-],function(declare, connect, Resource, Workbench, Path, Preferences, ViewLite, EventCommand, HTMLStringUtil, States){
+],function(declare, connect, domClass, Resource, Runtime, Workbench, Path, Preferences, ViewLite, EventCommand, HTMLStringUtil, States){
 
 var StateColonString = 'State:';
 var StatePatternDisplay=new RegExp('^'+StateColonString+'.*');
@@ -120,6 +122,7 @@ var EventSelection = declare("davinci.ve.widgets.EventSelection", [ViewLite], {
 
 		pageTemplate: [{display:"onclick", target:"onclick",type:"state", hideCascade:true},
 			{display:"ondblclick",target:"ondblclick",type:"state", hideCascade:true},
+			{display:"onmousedown",target:"onmousedown",type:"state", hideCascade:true},
 			{display:"onmouseup",target:"onmouseup",type:"state", hideCascade:true},
 			{display:"onmouseover",target:"onmouseover",type:"state", hideCascade:true},
 			{display:"onmousemove",target:"onmousemove",type:"state", hideCascade:true},
@@ -134,6 +137,7 @@ var EventSelection = declare("davinci.ve.widgets.EventSelection", [ViewLite], {
 		buildRendering : function(){
 			this.domNode =  dojo.doc.createElement("div");
 			this.domNode.innerHTML = HTMLStringUtil.generateTable(this.pageTemplate, {zeroSpaceForIncrDecr:true});
+			domClass.add(this.domNode, 'EventSelection');
 			this.inherited(arguments);
 		},
 		setReadOnly : function(isReadOnly){
@@ -206,9 +210,13 @@ var EventSelection = declare("davinci.ve.widgets.EventSelection", [ViewLite], {
 			if(!e || !e.node || !e.node._dvWidget){
 				return;
 			}
-			var widget = e.node._dvWidget;
+			var context = e.node._dvWidget.getContext();
+			var editor = (context && context.editor);
+			if(!editor || editor != Runtime.currentEditor){
+				return;
+			}
 			this._buildSelectionValues();
-			if (widget == this._widget) {
+			if(this._widget){
 				this._setValues();
 			}
 		},

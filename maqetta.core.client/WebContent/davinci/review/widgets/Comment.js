@@ -4,6 +4,7 @@ define([
 	"davinci/maqetta/AppStates",
 	"davinci/review/Review",
 	"davinci/Runtime",
+	"davinci/Workbench",
 	"dijit/_WidgetBase",
 	"dijit/_TemplatedMixin",
 	"dijit/Menu",
@@ -12,9 +13,11 @@ define([
 	"dojo/date/locale",
 	"dojo/date/stamp",
 	"dojo/Deferred",
+	"dojo/string",
 	"dojo/i18n!./nls/widgets",
-	"dojo/text!./templates/Comment.html"
-], function(declare, XPathUtils, AppStates, Review, Runtime, _Widget, _Templated, Menu, MenuItem, DropDownButton, locale, stamp, Deferred, widgetsNls, commentTemplate) {
+	"dojo/text!./templates/Comment.html",
+	"dojo/text!./templates/MailFailureDialogContent.html"
+], function(declare, XPathUtils, AppStates, Review, Runtime, Workbench, _Widget, _Templated, Menu, MenuItem, DropDownButton, locale, stamp, Deferred, dojostring, widgetsNls, commentTemplate, warningString) {
 
 // AppStates functions are only available on the prototype object
 var States = AppStates.prototype;
@@ -104,6 +107,17 @@ return declare("davinci.review.widgets.Comment", [_Widget, _Templated], {
 				
 				// Resolve the promise that the created time stamp is available
 				this._createdPromise.resolve(this.created);
+
+				if (result.emailResult && result.emailResult !== 'OK') {
+					// Server failed to send an email notification (server is either
+					// unreachable or not configured). Display message to user.
+					var dialogContent = dojostring.substitute(warningString, {
+							htmlContent: result.emailResult,
+							inviteNotSent: widgetsNls.commentNotSent,
+							mailFailureMsg: widgetsNls.commentMailFailureMsg
+					});
+					Workbench.showMessage(widgetsNls.warning, dialogContent);
+				}
 			}.bind(this)));
 		} else {
 			this._populate(this);

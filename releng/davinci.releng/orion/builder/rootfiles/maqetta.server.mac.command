@@ -46,7 +46,6 @@ check_java() {
 }
 
 MAQ_BASE=`dirname "$0"`
-JAVA_ARGS=""
 # XXX Issue 2941 - Need to specify "-clean" flag due to possible Eclipse bug.
 APP_ARGS="-console -noExit -clean"
 
@@ -57,16 +56,13 @@ read_conf()
 {
 	# check for configuration file
 	MAQ_CONFIG=$MAQ_BASE/maqetta.conf
-	test -r $MAQ_CONFIG || { echo "$MAQ_CONFIG not found"; exit 1; }
+	test -r "$MAQ_CONFIG" || { echo "$MAQ_CONFIG not found"; exit 1; }
 	# check for site configuration Directory
 	MAQ_CONFIG_DIR=$MAQ_BASE/siteConfig
-	test -r $MAQ_CONFIG_DIR || { echo "$MAQ_CONFIG_DIR not found"; exit 1; }
+	test -r "$MAQ_CONFIG_DIR" || { echo "$MAQ_CONFIG_DIR not found"; exit 1; }
 
 	# Some props (such as 'admin' password) **must** be in a config file; passing
 	# them on the command line won't work.
-	JAVA_ARGS="${JAVA_ARGS} -Dorion.core.configFile=${MAQ_CONFIG}"
-	# Site configuration json files
-	JAVA_ARGS="${JAVA_ARGS} -Dmaqetta.siteConfigDirectory=${MAQ_CONFIG_DIR}" 
 
 	# read config
 	while read line
@@ -78,25 +74,23 @@ read_conf()
 			"maqetta.baseDirectory")
 				base_dir=$val
 				# pass in as "-data" property (used by Orion)
-				APP_ARGS="${APP_ARGS} -data ${val}"
+				DATA_ARGS="${val}"
 				;;
 			"maqetta.extra_java_args")
 				extra_java_args=$val
 				;;
 			"org.eclipse.equinox.http.jetty.http.port")
 				port=$val
-				# Add to the Java args
-				JAVA_ARGS="${JAVA_ARGS} -D${line}"
 				;;
 
 			# all other config items are read directly from file by server code
 		esac
 
-	done < <(grep -v "^#" ${MAQ_CONFIG} | grep -v "^\s*$")
+	done < <(grep -v "^#" "${MAQ_CONFIG}" | grep -v "^\s*$")
 
 	# get jar path
 	jarFilePath=`ls "$MAQ_BASE"/plugins/org.eclipse.equinox.launcher*.jar`
-	JAR_FILE="-jar ${jarFilePath}"
+	JAR_FILE="${jarFilePath}"
 }
 
 do_start() {
@@ -114,7 +108,7 @@ do_start() {
 		B=`basename "$base_dir"`
 		base_dir="`cd \"$D\" 2>/dev/null && pwd || echo \"$D\"`/$B"
 		# set default value
-		APP_ARGS="${APP_ARGS} -data ${base_dir}"
+		DATA_ARGS="${base_dir}"
 	fi
 	mkdir -p "$base_dir"
 	echo "Using directory: ${base_dir}"
@@ -130,10 +124,10 @@ do_start() {
 	echo
 
 	if [ $DAEMON ]; then
-		nohup java $JAVA_ARGS ${extra_java_args} $JAR_FILE $APP_ARGS > nohup.out 2>&1 &
+		nohup java -Dorion.core.configFile="${MAQ_CONFIG}" -Dmaqetta.siteConfigDirectory="${MAQ_CONFIG_DIR}" -Dorg.eclipse.equinox.http.jetty.http.port=$port ${extra_java_args} -jar "$JAR_FILE" $APP_ARGS -data "$DATA_ARGS" > nohup.out 2>&1 &
 		echo $! > "$MAQ_BASE"/maqetta.pid
 	else
-		java $JAVA_ARGS ${extra_java_args} $JAR_FILE $APP_ARGS
+		java -Dorion.core.configFile="${MAQ_CONFIG}" -Dmaqetta.siteConfigDirectory="${MAQ_CONFIG_DIR}" -Dorg.eclipse.equinox.http.jetty.http.port=$port ${extra_java_args} -jar "$JAR_FILE" $APP_ARGS -data "$DATA_ARGS"
 	fi
 }
 

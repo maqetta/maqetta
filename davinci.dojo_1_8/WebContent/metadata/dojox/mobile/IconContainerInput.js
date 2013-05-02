@@ -32,10 +32,11 @@ define([
 
 return declare(SmartInput, {
 	_substitutedMainTemplate: null,
-	childType: "dojox.mobile.IconItem",
+	childType: "dojox/mobile/IconItem",
 	dialogTitle: dojoxNLS.iconContainerTitle,
 
 	show: function(widgetId) {
+
 		this._widget = Widget.byId(widgetId);
 
 		this._inline = Dialog.showDialog({

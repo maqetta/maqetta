@@ -70,6 +70,8 @@ define({ root:
 		//MailFailurDialogContent.html
 		"inviteNotSent":"Invitation was not sent",
 		"mailFailureMsg":"It seems that the mail service is down or not configured. Please copy the invitation below and send it manually.",
+		"commentNotSent":"Commenters not updated",
+		"commentMailFailureMsg":"It seems that the mail service is down or not configured. Please copy the comment text below and send it manually.",
 		
 		//ReviewToolBarText.js
 		'ReviewToolBarText':'Note: The page below is a "live" web application (e.g., may respond to mouse clicks or touches). You can add comments and on-screen annotations using the Comments palette. You can change the currently active scene in the Scenes palette.'

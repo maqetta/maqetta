@@ -118,6 +118,9 @@ public class VOrionWorkspaceStorage extends VOrionProjectStorage{
 				public IStorage newInstance(URI uri) {
 					return null;
 				}
+				public IStorage create(String path) {
+					return null;
+				}
 				public Collection<?> findFiles(IStorage parentFolder, String pathStr, boolean ignoreCase) {
 					return null;
 				}

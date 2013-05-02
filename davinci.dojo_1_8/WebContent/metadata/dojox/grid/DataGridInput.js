@@ -76,12 +76,17 @@ return declare(DataStoreBasedWidgetInput, {
 			
 			if (items.length > 0) {
 				attributes = store.getAttributes(items[0]);
-				if (attributes[0] === "unique_id") {
-					//Get rid of "unique_id"
-					attributes.splice(0, 1);
-				} 
 				value ='';
+				var pre = '';
 				for (var x = 0; x < attributes.length; x++){
+					if (attributes[x] === "unique_id") {
+						/*
+						 * unique_id is a search for the item
+						 * so it should not be included in the 
+						 * data displayed to the user  
+						 */
+						continue;
+					}
 					var attributeLabel = attributes[x].trim();
 					dojo.some(currentWidgetStructure, function(currentWidgetStructureElement) {
 						if (attributeLabel === currentWidgetStructureElement.field) {
@@ -90,8 +95,9 @@ return declare(DataStoreBasedWidgetInput, {
 						}
 					});
 					
-					var pre = (x > 0) ? ',' : '';
+					
 					value += pre + attributeLabel;
+					pre = ',';
 				}
 			}
 	
@@ -99,10 +105,20 @@ return declare(DataStoreBasedWidgetInput, {
 			value += '\n';
 			for (var i = 0; i <	items.length; i++){
 				var item = items[i];
+				var pre = '';
 				for (var s = 0; s < attributes.length; s++){
-					var pre = (s > 0) ? ',' : '';
+					if (attributes[s] === "unique_id") {
+						/*
+						 * unique_id is a search for the item
+						 * so it should not be included in the 
+						 * data displayed to the user  
+						 */
+						continue;
+					}
+					
 					var itemValue = item[attributes[s]];
 					value += pre + (itemValue ? itemValue[0] : "");
+					pre = ',';
 				}
 				value += '\n';
 			}
@@ -182,6 +198,8 @@ return declare(DataStoreBasedWidgetInput, {
 				var fieldName = structure[s].field;
 				if (cols[s] != null) {
 					item[fieldName] = cols[s];
+				} else {
+					item[fieldName] = ""; // place holder for empty col
 				}
 			}
 			items.push(item);

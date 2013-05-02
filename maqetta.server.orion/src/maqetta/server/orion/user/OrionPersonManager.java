@@ -9,6 +9,7 @@ import maqetta.core.server.user.manager.PersonManagerImpl;
 
 import org.davinci.server.user.IPerson;
 import org.davinci.server.user.UserException;
+import org.eclipse.orion.server.useradmin.IOrionCredentialsService;
 import org.eclipse.orion.server.useradmin.User;
 import org.eclipse.orion.server.useradmin.UserConstants;
 import org.eclipse.orion.server.useradmin.UserServiceHelper;
@@ -179,8 +180,12 @@ public class OrionPersonManager extends PersonManagerImpl {
 		}
 	}
 
+	private static IOrionCredentialsService getUserAdmin() {
+		return UserServiceHelper.getDefault().getUserStore();
+	}
+
 	protected static User getOrionUser(String key, String val) {
-		return UserServiceHelper.getDefault().getUserStore().getUser(key, val);
+		return getUserAdmin().getUser(key, val);
 	}
 
 	protected static User getOrionUser(String userName) {
@@ -189,6 +194,6 @@ public class OrionPersonManager extends PersonManagerImpl {
 	}
 
 	protected static User getOrionUserByEmail(String email) {
-		return getOrionUser(UserConstants.KEY_LOGIN, email);
+		return getOrionUser(UserConstants.KEY_EMAIL, email);
 	}
 }

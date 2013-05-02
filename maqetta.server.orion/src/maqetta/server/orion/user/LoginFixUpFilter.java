@@ -10,35 +10,44 @@
  *******************************************************************************/
 package maqetta.server.orion.user;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletInputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.orion.internal.server.servlets.ProtocolConstants;
-import org.eclipse.orion.internal.server.servlets.workspace.WebUser;
-import org.eclipse.orion.server.core.resources.Base64Counter;
+import org.eclipse.orion.server.servlets.OrionServlet;
 import org.eclipse.orion.server.useradmin.IOrionCredentialsService;
 import org.eclipse.orion.server.useradmin.User;
 import org.eclipse.orion.server.useradmin.UserConstants;
 import org.eclipse.orion.server.useradmin.UserServiceHelper;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-// POST /users/       creates a new user
-// POST /login/form   login user
+// POST /users/                 creates a new user
+// POST /login/form             login user
+// POST /useremailconfirmation  password reset
 //
 // Intercepts authentication requests and updates the request parameters for use by Orion.
 //
@@ -61,17 +70,15 @@ import org.eclipse.orion.server.useradmin.UserServiceHelper;
 // differs from Orion, which sets the former to the value of 'login'.  In our case, that would
 // result in 'name' containing a seemingly random alphanumeric sequence, which isn't very useful.
 //
-// NOTE: This class works in conjunction with LoginFixUpDecorator.  Keep the two in sync.
+// Password reset for pre-M10 accounts won't work, since the email is stored in the 'login' value of
+// the user's account, and the 'email' is blank. We fix that here.
 
 @SuppressWarnings("restriction")
 public class LoginFixUpFilter implements Filter {
 
-	private static final Base64Counter userCounter = new Base64Counter();
-
 	public static final String USERS_SERVLET_ALIAS = "/users";
 	public static final String LOGIN_SERVLET_ALIAS = "/login";
-
-	public static final String ID_PREFIX = "00MaqTempId00";
+	public static final String EMAILCONF_SERVLET_ALIAS = "/useremailconfirmation";
 
 	static final private Logger theLogger = Logger.getLogger(LoginFixUpFilter.class.getName());
 
@@ -94,6 +101,9 @@ public class LoginFixUpFilter implements Filter {
 				if (handleLogin(httpRequest, httpResponse, chain)) {
 					return;
 				}
+			} else if (servletPath.equals(EMAILCONF_SERVLET_ALIAS) && pathInfo == null) {
+				handleEmailConfig(httpRequest, httpResponse, chain);
+				return;
 			}
 		}
 
@@ -110,15 +120,16 @@ public class LoginFixUpFilter implements Filter {
 			return false;
 		}
 
+		String email = request.getParameter(UserConstants.KEY_EMAIL);
+		String name = request.getParameter(ProtocolConstants.KEY_NAME);
+
 		IOrionCredentialsService userAdmin = getUserAdmin();
 
 		// modify request with generated `login` parameter
 		RequestWrapper modifiedRequest = new RequestWrapper(request);
-		modifiedRequest.setParameter(UserConstants.KEY_LOGIN, nextUserId(userAdmin));
+		modifiedRequest.setParameter(UserConstants.KEY_LOGIN, generateUserId(userAdmin, email));
 
 		// check if 'name' parameter is set
-		String email = request.getParameter(UserConstants.KEY_EMAIL);
-		String name = request.getParameter(ProtocolConstants.KEY_NAME);
 		if (name == null || name.length() == 0) {
 			// If 'name' isn't set, default to 'email'. This differs from Orion, which defaults
 			// to using 'login'.
@@ -127,29 +138,6 @@ public class LoginFixUpFilter implements Filter {
 
 		// continue with filter chain
 		chain.doFilter(modifiedRequest, response);
-
-		// reset `login` to be the same as the UID
-		User user = userAdmin.getUser(UserConstants.KEY_EMAIL, email);
-		if (user != null) {
-			String value = user.getLogin();
-			if (value.startsWith(ID_PREFIX)) {
-				String uid = user.getUid();
-
-				// update credentials service
-				user.setLogin(uid);
-				userAdmin.updateUser(uid, user);  // errors logged by Orion
-
-				// update user object for workspace service
-				WebUser webUser = WebUser.fromUserId(uid);
-				webUser.setUserName(uid);
-				try {
-					webUser.save();
-				} catch (CoreException e) {
-					throw new ServletException("Could not save WebUser", e);
-				}
-			}
-		}
-
 		return true;
 	}
 
@@ -186,19 +174,78 @@ public class LoginFixUpFilter implements Filter {
 		return true;
 	}
 
+	private void handleEmailConfig(HttpServletRequest request, HttpServletResponse response,
+			FilterChain chain) throws IOException, ServletException {
+		JSONObject data = null;
+		try {
+			data = OrionServlet.readJSONRequest(request);
+			String email = data.getString(UserConstants.KEY_EMAIL);
+			String login = data.getString(UserConstants.KEY_LOGIN);
+			
+			if (login != null && login.length() > 0) {
+				return;
+			}
+
+			IOrionCredentialsService userAdmin = getUserAdmin();
+			User user = userAdmin.getUser(UserConstants.KEY_EMAIL, email);
+			if (user != null) {
+				// a user exists with this email; let Orion handle the rest
+				return;
+			}
+
+			// Pre-M10 accounts will store the email as 'login', while 'email' will be blank. Check
+			// for that here.
+			user = userAdmin.getUser(UserConstants.KEY_LOGIN, email);
+			if (user == null) {
+				// no such user; continue on to Orion
+				return;
+			}
+
+			// let's fix up the user data now, so he/she has an 'email' value
+			user = fixOldUser(userAdmin, user);
+		} catch (JSONException e) {
+			theLogger.log(Level.SEVERE, "Could not parse json request", e);
+			return;
+		} finally {
+			// POST data can only be read once, which we did above.  Create a new request, set the
+			// data and pass that on.
+			RequestWrapper modifiedRequest = new RequestWrapper(request);
+			modifiedRequest.setData(data != null ? data.toString() : "");
+
+			// continue with filter chain
+			chain.doFilter(modifiedRequest, response);
+		}
+	}
+
 	private IOrionCredentialsService getUserAdmin() {
 		return UserServiceHelper.getDefault().getUserStore();
 	}
 
-	public static String nextUserId(IOrionCredentialsService userAdmin) {
-		synchronized (userCounter) {
-			String candidate;
-			do {
-				candidate = ID_PREFIX + userCounter.toString();
-				userCounter.increment();
-			} while (userAdmin.getUser(UserConstants.KEY_LOGIN, candidate) != null);
+	public static String generateUserId(IOrionCredentialsService userAdmin, String email) {
+		// Try to use the first part of user's email address, removing common non-alphanumeric
+		// characters.
+		String login = email.split("@", 2)[0];
+		login = login.replaceAll("[.\\-_+]", "");
+		if (login.length() > USERNAME_MAX_LENGTH) {
+			login = login.substring(0, USERNAME_MAX_LENGTH);
+		}
+
+		// if it's still a valid login, then return one that doesn't collide with existing one
+		if (validateLogin(login)) {
+			int counter = 0;
+			String candidate = login;
+			while (userAdmin.getUser(UserConstants.KEY_LOGIN, candidate) != null) {
+				candidate = login + ++counter;
+			}
 			return candidate;
 		}
+
+		// login still has some validation issues; just create a "random" login name
+		int randlen = new Random().nextInt(USERNAME_MAX_LENGTH - USERNAME_MIN_LENGTH + 1) + USERNAME_MIN_LENGTH;
+		do {
+			login = UUID.randomUUID().toString().replaceAll("-","").substring(0, randlen);
+		} while (userAdmin.getUser(UserConstants.KEY_LOGIN, login) != null);
+		return login;
 	}
 
 	public User fixOldUser(IOrionCredentialsService userAdmin, User user) {
@@ -208,7 +255,7 @@ public class LoginFixUpFilter implements Filter {
 		String uid = user.getUid();
 
 		// set new values
-		user.setLogin(uid);
+		user.setLogin(generateUserId(userAdmin, email));
 		user.setEmail(email);
 		if (name.length() == 0) {
 			// default 'name' to same value as 'email'
@@ -221,7 +268,50 @@ public class LoginFixUpFilter implements Filter {
 			return null;
 		}
 
+		// Set email as confirmed -- pre-M10 users' emails were confirmed by Maqetta, so
+		// should be fine setting it here for Orion.
+		// Need to do a seperate updateUser() call unfortunately, since we changed the email above.
+		user.confirmEmail();
+		userAdmin.updateUser(uid, user);  // errors logged by Orion
+		if (!status.isOK()) {
+			return null;
+		}
+
 		return user;
+	}
+
+	//============================================================================================//
+	//  The following are copied from Orion's UserHandlerV1.java
+	//============================================================================================//
+	/**
+	 * The minimum length of a username.
+	 */
+	private static final int USERNAME_MIN_LENGTH = 3;
+	/**
+	 * The maximum length of a username.
+	 */
+	private static final int USERNAME_MAX_LENGTH = 20;
+	/**
+	 * Validates that the provided login is valid. Login must consistent of alphanumeric characters only for now.
+	 * @return <code>null</code> if the login is valid, and otherwise a string message stating the reason
+	 * why it is not valid.
+	 */
+	private static boolean /*String*/ validateLogin(String login) {
+		if (login == null || login.length() == 0)
+			return false /*"User login not specified"*/;
+		int length = login.length();
+		if (length < USERNAME_MIN_LENGTH)
+			return false /*NLS.bind("Username must contain at least {0} characters", USERNAME_MIN_LENGTH)*/;
+		if (length > USERNAME_MAX_LENGTH)
+			return false /*NLS.bind("Username must contain no more than {0} characters", USERNAME_MAX_LENGTH)*/;
+		if (login.equals("ultramegatron"))
+			return false /*"Nice try, Mark"*/;
+
+		for (int i = 0; i < length; i++) {
+			if (!Character.isLetterOrDigit(login.charAt(i)))
+				return false /*NLS.bind("Username {0} contains invalid character ''{1}''", login, login.charAt(i))*/;
+		}
+		return true /*null*/;
 	}
 
 	//============================================================================================//
@@ -229,6 +319,7 @@ public class LoginFixUpFilter implements Filter {
 	class RequestWrapper extends HttpServletRequestWrapper {
 
 		private HashMap<String, String[]> updatedMap = new HashMap<String, String[]>();
+		private String data = null;
 
 		public RequestWrapper(HttpServletRequest request) {
 			super(request);
@@ -272,9 +363,49 @@ public class LoginFixUpFilter implements Filter {
 			return updatedMap.get(name);
 		}
 
+		/* (non-Javadoc)
+		 * @see javax.servlet.ServletRequestWrapper#getInputStream()
+		 */
+		@Override
+		public ServletInputStream getInputStream() throws IOException {
+			if (data == null) {
+				return super.getInputStream();
+			}
+
+			String charset = getRequest().getCharacterEncoding();
+			if (charset == null) {
+				charset = Charset.defaultCharset().name();
+			}
+			byte[] bytes = data.getBytes(charset);
+			final ByteArrayInputStream in = new ByteArrayInputStream(bytes);
+
+			return new ServletInputStream() {
+				
+				@Override
+				public int read() throws IOException {
+					return in.read();
+				}
+			};
+		}
+
+		/* (non-Javadoc)
+		 * @see javax.servlet.ServletRequestWrapper#getReader()
+		 */
+		@Override
+		public BufferedReader getReader() throws IOException {
+			if (data == null) {
+				return super.getReader();
+			}
+			return new BufferedReader(new InputStreamReader(getInputStream()));
+		}
+
 		public void setParameter(String name, String value) {
 			String[] values = { value };
 			updatedMap.put(name, values);
+		}
+		
+		public void setData(String newData) {
+			data  = newData;
 		}
 
 	}

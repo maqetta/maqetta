@@ -80,6 +80,7 @@ public class ServerManager implements IServerManager {
 		}
 
 		BufferedReader br = null;
+		String log = "";
 		try {
 			// Open the file that is the first command line parameter
 			FileInputStream fstream = new FileInputStream(configFile);
@@ -89,9 +90,9 @@ public class ServerManager implements IServerManager {
 
 			//Read File Line By Line
 			String strLine;
-			theLogger.log(Level.CONFIG, "Reading Config File: " + configFile);
+			log = "Reading Config File: " + configFile;
 			while ((strLine = br.readLine()) != null) {
-				theLogger.log(Level.CONFIG, strLine);
+				log += "\n" + strLine;
 
 				strLine = strLine.trim(); // remove leading trailing white space
 				String delims = "[=]+";
@@ -104,6 +105,7 @@ public class ServerManager implements IServerManager {
 			if (br != null) {
 				br.close();
 			}
+			theLogger.config(log);
 		}
 	}
 

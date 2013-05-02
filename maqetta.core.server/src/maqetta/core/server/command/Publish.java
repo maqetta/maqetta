@@ -178,7 +178,10 @@ public class Publish extends Command {
 			UserEmailUtil.getUtil().sendEmail(subject, htmlContent, to);
 			return "OK";
 		} catch (Exception e) {
-			return htmlContent;	// XXX this seems odd
+			// Email server not reachable or not configured. Return email contents to client.
+			// Note: We do not return an error on the request since sending an email notification
+			// is a secondary goal; the primary goal is to add a new review session.
+			return htmlContent;
 		}
 	}
 

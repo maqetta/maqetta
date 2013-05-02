@@ -30,7 +30,7 @@ public class DeleteResource extends Command {
         user.rebuildWorkspace();
     }
 
-    private void deleteDir(IVResource file) {
+    private void deleteDir(IVResource file) throws IOException {
         IVResource[] files = file.listFiles();
         for (int i = 0; i < files.length; i++) {
             if (files[i].isDirectory()) {

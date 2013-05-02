@@ -166,15 +166,17 @@ return declare("davinci.ve.ThemeModifier", null, {
 		var promises = [],
 			visitor = { visit: function(node){
 				if(node.elementType == "CSSFile" && node.isDirty()){
-					promises.push(node.save(isAutoSave).then(function(){
+					promises.push(node.save(isAutoSave).then(function(result){
 						// only remove the working copy if the save was a success 
 						if (!isAutoSave){
 							systemResource.findResource(node.url).removeWorkingCopy();
 						}
 						node.dirtyResource = isAutoSave;
+						return node;
 					},
 					function(error){
 						console.error(dojo.string.substitute(commonNls.errorSavingFile, [node.url, error]));
+						return error;
 					}));
 				}
 				return false;

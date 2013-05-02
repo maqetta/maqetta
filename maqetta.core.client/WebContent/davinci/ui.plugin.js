@@ -408,7 +408,8 @@ return {
                     id: "username",
                     action: "davinci/actions/UserNameAction",
                     run: function() {
-                    	// do monthing - purely informational
+                        window.open("../settings/settings.html", '_blank');
+                        window.focus();
                     },
                     label: "{user}",	// Filled in programmatically by UserNameAction class
                     menubarPath: "davinci.usersettings/username"

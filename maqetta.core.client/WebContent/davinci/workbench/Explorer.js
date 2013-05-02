@@ -264,6 +264,7 @@ return declare("davinci.workbench.Explorer", ViewPart, {
 				);
 		    }.bind(this)
 		}));
+		/*FIXME: Commenting out Modify Libraries feature because feature has too many bugs.
 		menu.addChild(new MenuSeparator());
 		menu.addChild(new MenuItem({
 			id: 'userlibs',
@@ -277,6 +278,7 @@ return declare("davinci.workbench.Explorer", ViewPart, {
                     );
 		    }.bind(this)
 		}));
+		*/
 		var button = new DropDownButton({
 			"class":"ExplorerDropDownButton",
 			iconClass:"ExplorerDropDownIcon",

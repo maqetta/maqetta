@@ -14,6 +14,9 @@ define([
 	"system/resource",
 	"../../model/Path",
 	"../../Theme",
+	"dojo/promise/all",
+	"dojo/i18n!../nls/ve",
+	"dojox/widget/Toaster",
 	], function(
 			declare,
 			ModelEditor,
@@ -29,7 +32,10 @@ define([
 			ThemeColor,
 			systemResource,
 			Path,
-			Theme
+			Theme,
+			all,
+			veNls,
+			Toaster
 	){
 
 return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifier*/], {
@@ -716,13 +722,34 @@ return declare("davinci.ve.themeEditor.ThemeEditor", [ModelEditor/*, ThemeModifi
 	},
 	save : function (isWorkingCopy){
 
-		this.getContext().saveDynamicCssFiles(this.getContext()._getCssFiles(), isWorkingCopy);
-		if(!isWorkingCopy) {
-			this.isDirty=false;
+		var  promises = this.getContext().saveDynamicCssFiles(this.getContext()._getCssFiles(), isWorkingCopy);
+		if (typeof hasToaster == "undefined") {
+			new Toaster({
+				position: "br-left",
+				duration: 4000,
+				messageTopic: "/davinci/resource/saveError"
+			});
+			hasToaster = true;
 		}
-		if (this.editorContainer && !isWorkingCopy) {
-			this.editorContainer.setDirty(false);
-		}
+		 all(promises).then(function(results){
+			 	for (var i = 0; i < results.length; i++) {
+			 		if (results[i] instanceof Error) {
+			 			// error saving a resource most likely a CSS file 
+			 			// bail out and don't clear the dirty bit
+			 			var message = veNls.vteErrorSavingResourceMessage + results[i];
+						dojo.publish("/davinci/resource/saveError", [{message:message, type:"error"}]);
+			 			console.error(message);
+			 			return ;
+			 		}
+			 	}
+			 	if(!isWorkingCopy) {
+					this.isDirty=false;
+				}
+				if (this.editorContainer && !isWorkingCopy) {
+					this.editorContainer.setDirty(false);
+				}
+			  }.bind(this));
+		
 
 	},
 	removeWorkingCopy: function(){

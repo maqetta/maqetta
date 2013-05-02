@@ -1429,7 +1429,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		                        if(!this._started){ 
 		                        	return this.value;
 		                        }
-		                        return valueSuper.apply(this);
+		                        return valueSuper.apply(this) || this.value;
 							};
 						}
 					}catch(e){

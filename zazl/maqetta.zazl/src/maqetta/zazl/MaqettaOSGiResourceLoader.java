@@ -1,5 +1,6 @@
 package maqetta.zazl;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -59,6 +60,10 @@ public class MaqettaOSGiResourceLoader extends OSGiResourceLoader {
 				try {
 					user = userManager.getUser(userName);
 				} catch (UserException e) {
+					// TODO surface error up the stack
+					e.printStackTrace();
+					return null;
+				} catch (IOException e) {
 					// TODO surface error up the stack
 					e.printStackTrace();
 					return null;

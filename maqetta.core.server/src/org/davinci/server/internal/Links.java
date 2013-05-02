@@ -1,10 +1,9 @@
 package org.davinci.server.internal;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 
 import org.davinci.server.util.XMLFile;
 import org.maqetta.server.IDavinciServerConstants;
@@ -90,7 +89,7 @@ public class Links extends XMLFile {
         return null;
     }
 
-    public boolean addLink(String path, String location, int type) {
+    public boolean addLink(String path, String location, int type) throws IOException {
         String loc = findPath(path);
         if (loc != null) {
             return false;
@@ -111,7 +110,7 @@ public class Links extends XMLFile {
         return this.links;
     }
 
-    public boolean removeLink(String path) {
+    public boolean removeLink(String path) throws IOException {
         for (int i = 0; i < this.links.length; i++) {
             if (this.links[i].path.equals(path)) {
                 Link[] newLinks = new Link[links.length - 1];
@@ -128,7 +127,7 @@ public class Links extends XMLFile {
 
     }
 
-    private void save() {
+    private void save() throws IOException {
         this.save(linksFile, Arrays.asList(this.links));
     }
 

@@ -1,5 +1,7 @@
 package maqetta.server.orion;
 
+import java.io.IOException;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.maqetta.server.IStorage;
@@ -15,7 +17,7 @@ public class VOrionWorkspace extends VWorkspaceRoot{
     	this.store=storage;
 	}
 
-	public IVResource create(String path) {
+	public IVResource create(String path) throws IOException {
 		IPath ps = new Path(path);
 		IVResource parent = this;
 		

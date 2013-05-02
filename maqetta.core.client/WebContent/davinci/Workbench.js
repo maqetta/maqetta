@@ -104,7 +104,7 @@ var handleIoError = function (deferred, reason) {
      *	for the request with the topic.
 	 */
 
-	if (reason.response.status == 401 || reason.response.status == 403) {
+	if (reason.status == 401 || reason.status == 403) {
 		sessionTimedOut();
 	// Only handle error if it is as of result of a failed XHR connection, not
 	// (for example) if a callback throws an error. (For dojo.xhr, def.cancel()
@@ -131,7 +131,7 @@ var handleIoError = function (deferred, reason) {
 
 		Runtime.handleError(reason.message);
 		console.warn('Failed to load url=' + url + ' message=' + reason.message +
-				' status=' + reason.response.status);
+				' status=' + reason.status);
 	}
 };
 
@@ -682,11 +682,6 @@ var Workbench = {
 					region:'center',
 					id: "mainStackContainer",
 					controllerWidget: "dijit.layout.StackController"
-				});
-			var welcomePage = Workbench.welcomePage = 
-				new ContentPane({
-					id: "welcomePage",
-					href: "app/davinci/ve/resources/welcome_to_maqetta.html"
 				});
 
 			var mainBorderContainer = Workbench.mainBorderContainer = new BorderContainer({
@@ -1620,15 +1615,14 @@ var Workbench = {
 
 	getActionSets: function(partID){
 		var actionSetIDs = [];
-		var editorExtensions=Runtime.getExtension("davinci.actionSetPartAssociations",
-			function (extension) {
-				return extension.parts.some(function(part) {
-					if (part == partID) {
-						actionSetIDs.push(extension.targetID);
-						return true;
-					}
-				});
+		Runtime.getExtension("davinci.actionSetPartAssociations", function (extension) {
+			return extension.parts.some(function(part) {
+				if (part == partID) {
+					actionSetIDs.push(extension.targetID);
+					return true;
+				}
 			});
+		});
 		
 		var actionSets;
 		var clonedActionSets = [];
@@ -1838,7 +1832,7 @@ var Workbench = {
 			// First, we will get the metadata for the extension and get its list of 
 			// palettes to bring to the top
 			var editorExtensions=Runtime.getExtensions("davinci.editor", function (extension){
-				return (newEditor ? (extension.id === newEditor.editorID) : false);
+				return newEditor ? (extension.id === newEditor.editorID) : false;
 			});
 			if (editorExtensions && editorExtensions.length > 0) {
 				var editorExtension = editorExtensions[0];
@@ -2130,7 +2124,12 @@ var Workbench = {
 			Workbench.saveState = true;
 		}
 	},
-	
+
+	clearWorkbenchState: function() {
+		Workbench._state = {};
+		return Workbench.updateWorkbenchState();
+	},
+
 	updateWorkbenchState: function(){
 		delete Workbench.saveState;
 		return xhr.put({

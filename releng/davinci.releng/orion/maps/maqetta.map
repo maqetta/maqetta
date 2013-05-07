@@ -22,6 +22,7 @@ plugin@maqetta.server.configurator=GIT,repo=git://github.com/maqetta/maqetta.git
 feature@maqetta.server.feature=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion-latest,path=/maqetta.server.feature
 feature@maqetta.client.feature=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion-latest,path=/maqetta.client.feature
 feature@maqetta.libraries.feature=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion-latest,path=/maqetta.libraries.feature
+feature@maqetta.war=GIT,repo=git://github.com/maqetta/maqetta.git,tag=orion-latest,path=/maqetta.war
 
 #
 # zazl plugins

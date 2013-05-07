@@ -191,6 +191,7 @@ build() {
 	cmd="java -enableassertions -jar $launcherJar \
 				-application org.eclipse.ant.core.antRunner \
 				-buildfile ${relEngDir}/buildAll.xml \
+				$TARGET \
 				-Dbuilder=$builderDir \
 				-Dbase=$writableBuildRoot \
 				-DbuildType=$buildType -Dtimestamp=$timestamp -DbuildLabel=$buildLabel \
@@ -240,6 +241,8 @@ tagRepositories() {
 		popd
 	fi
 }
+
+TARGET=$1
 
 currentDirectory=`pwd`
 setProperties

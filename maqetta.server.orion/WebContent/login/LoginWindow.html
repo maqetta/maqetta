@@ -8,8 +8,7 @@
 <link rel="stylesheet" type="text/css" href="./LoginWindow.css" />
 <script>
   var dojoConfig = {
-    async: true,
-    tlmSiblingOfDojo: false
+    async: true
   };
 </script>
 <script src="../maqetta/app/dojo/dojo.js"></script>
@@ -37,6 +36,10 @@ require({
       location: 'maqetta/app/dojox',
       main: 'lib/main',
       lib: '.'
+    },
+    {
+      name: 'orion',
+      location: 'orion'
     }		    
   ]
 });

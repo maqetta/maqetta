@@ -51,20 +51,40 @@ define([
 			//with loading of the shapes.css file, which might not be available
 			//for the first shapes widget added to a document.
 			var shapes_css_check = function(counter){
+				var loaded = true;
+				
+				var checkForShapeCSS  = function(styleSheet){
+					if(styleSheet.href && styleSheet.href.indexOf('shapes.css') >= 0 && styleSheet.cssRules && styleSheet.cssRules.length > 0){
+						this.resize();
+						this._bboxStartup = this._bbox;
+						return true;
+					}
+					return false;
+				}.bind(this);
+				
 				var styleSheets = this.domNode && this.domNode.ownerDocument && this.domNode.ownerDocument.styleSheets;
 				if(!styleSheets){
 					styleSheets = [];
 				}
-				var loaded = false;
+				
+				shapeCssLoop:
 				for(var ss=0; ss<styleSheets.length; ss++){
 					var styleSheet = styleSheets[ss];
-					if(styleSheet.href.indexOf('shapes.css') >= 0 && styleSheet.cssRules && styleSheet.cssRules.length > 0){
-						loaded = true;
-						this.resize();
-						this._bboxStartup = this._bbox;
-						break;
+					if(loaded = checkForShapeCSS(styleSheet)){
+						break shapeCssLoop;
+					}
+					if(styleSheet.cssRules){
+						for(var r=0; r<styleSheet.cssRules.length; r++){
+							var rule = styleSheet.cssRules[r];
+							if(rule.type == 3 && rule.styleSheet){	// type==3 => @import
+								if(loaded = checkForShapeCSS(rule.styleSheet)){
+									break shapeCssLoop;
+								}
+							}
+						}
 					}
 				}
+				
 				// Try again once every second for up to 10 tries
 				if(!loaded && counter<10){
 					setTimeout(function(counter){

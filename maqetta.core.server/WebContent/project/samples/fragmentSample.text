@@ -1,8 +1,0 @@
-<script type="text/javascript">
-require([
-  "dijit/form/Button"
-]);
-</script>
-  <div>Fragment sample</div>  
-  <input type="button" data-dojo-type="dijit/form/Button" label="Button 1"></input>
-  <input type="button" data-dojo-type="dijit/form/Button" label="Button 2"></input>

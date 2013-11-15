@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.4"?>
-<plugin>
-	<extension point="maqetta.core.server.mainPage"><mainPage path="WebContent/pagedesigner.html" priority="2"/></extension>
-	<!--
-   	<extension point="maqetta.core.server.previewPage"><previewPage path="WebContent/preview.html" priority="1" /></extension>
-	-->
-	
-</plugin>

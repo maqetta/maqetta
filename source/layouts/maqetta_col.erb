@@ -1,0 +1,35 @@
+<% wrap_layout :maqetta_main do %>
+<style>
+<!--
+	.s-c-s #colmid { left:0px;}
+	.s-c-s #colright { margin-left:-210px;}
+	.s-c-s #col1pad { margin-left:210px;}
+	.s-c-s #col2 { left:210px;width:0px;}
+	.s-c-s #col3 { width:210px;}
+	
+	.s-c-x #colright { left:0px;}
+	.s-c-x #col1wrap { right:0px;}
+	.s-c-x #col1 { margin-left:0px;}
+	.s-c-x #col2 { right:0px;width:0px;}
+	
+	.x-c-s #colright { margin-left:-210px;}
+	.x-c-s #col1 { margin-left:210px;}
+	.x-c-s #col3 { left:210px;width:210px;}
+-->
+</style>
+<div id="main-content" class="x-c-s">
+	<div id="colmask" class="ckl-color2">
+		<div id="colmid" class="cdr-color1">
+			<div id="colright" class="ctr-color1">
+				<div id="col1wrap">
+					<div id="col1pad">
+						<div id="col1">
+							<%= yield %>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<% end %>

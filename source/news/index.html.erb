@@ -1,0 +1,42 @@
+---
+pageable: true
+per_page: 1
+layout: maqetta_col
+---
+<span class="news">
+  <% page_articles.each_with_index do |article, i| %>
+    <h1 class="title">
+      <%= link_to article.title, article %>
+      <span class="date">
+        <%= article.date.strftime('%b %e') %>
+      </span>
+    </h1>
+    <span class="body">
+      <%= article.body %>
+    </span>
+  <% end %>
+
+  <% if paginate %>
+    <p class="nav">
+      <span class="prev">
+        <% if prev_page %>
+          <%= link_to '« Prev', prev_page %>
+        <% else %>
+          « Prev
+        <% end %>
+      </span>
+
+      <span class="index">
+        <%= page_number %> of <%= num_pages %>
+      </span>
+
+      <span class="next">
+        <% if next_page %>
+          <%= link_to 'Next »', next_page %>
+        <% else %>
+          Next »
+        <% end %>
+      </span>
+    </p>
+  <% end %>
+</span>

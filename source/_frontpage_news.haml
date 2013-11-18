@@ -1,0 +1,9 @@
+-#
+-# Displays news listed in /data/news.yml.  If 'text' element in that file is
+-# empty, then set 'display:none' to hide the News section.
+-#
+.module.maq_titled_module.maq_quick_links_module(style="margin-bottom: 7px; display: #{:none if data.news.text == nil}")
+  %h3.module-title News
+  .module-body
+    %div{:style => "display:block; color:#00D; font-weight:bold; font-size:15px;margin: 10px 0 0 20px"}
+      %a{:href => "#{data.news.url}"} #{data.news.text}

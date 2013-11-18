@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="index, follow" />
+	<meta name="keywords" content="Maqetta, HTML5, tool, visual, Dojo, open, source" />
+	<meta name="description" content="Maqetta - Visual authoring of HTML5 user interfaces - in the browser" />
+
+	<title><%= data.page.title || "Maqetta" %></title>
+	<%= favicon_tag "/favicon.ico" %>
+
+	<style type="text/css">
+	    <!--
+		#wrapper { margin: 0 auto; width: 962px;padding:0;}
+	    -->
+    </style>
+
+	<%= stylesheet_link_tag "light3.css" %>
+	<%= feed_tag :atom, "/news/feed.xml", :title => "Maqetta News" %>
+</head>
+
+<body class="maq_body maq_loggedin_no <%= page_classes %>">
+	<div class="maq_top">
+		<div class="maq_dojo_attribution_row">
+			<div class="maq_dojo_attribution_cell">
+				<span class="maq_dojo_attribution_chevron"></span>
+				<span class="maq_dojo_attribution_text">
+					Maqetta is an <span class="maq_open_source_project">open source project</span> hosted by the <a class="maq_link" href="http://dojofoundation.org" title="Dojo Foundation web site">Dojo Foundation</a>
+				</span>
+			</div>
+		</div>
+		<div class="maq_logo_row">
+			<div class="maq_logo_cell">
+				<span class="maq_header_right">
+					<div class="maq_header_right_text_div" style="visibility: hidden;">
+						&nbsp;
+					</div>
+					<div class="maq_header_search_div">
+						<div id="header">
+							<div class="module">
+								<div class="module-body">
+									<form action="http://google.com/search" method="get">
+										<div class="search">
+											<input name="sitesearch" value="maqetta.org" type="hidden"/>
+											<input name="q" id="mod_search_searchword" type="text" alt="Search"
+												class="inputbox" size="35" maxlength="255" value="search Maqetta..."
+												onblur="if(this.value=='') this.value='search Maqetta...';"
+												onfocus="if(this.value=='search Maqetta...') this.value='';" />
+											<input type="submit" value="Search" class="button"/>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</span>
+				<span class="maq_logo"></span>
+			</div>
+		</div>
+	</div>
+	<div class="maq_logo_under_1"></div>
+	<div class="maq_logo_under_2"></div>
+	<div id="main">
+		<div id="wrapper" class="foreground">
+			<div id="nav">
+				<ul class="menu">
+					<li class="item1">
+						<%= link_to "Home", "/" %>
+					</li>
+					<li class="parent item3">
+						<%= link_to "Overview", "/overview/" %>
+						<ul>
+							<li class="item5">
+								<%= link_to "Project Summary", "/overview/summary.html" %>
+							</li>
+							<li class="item11">
+								<%= link_to "Project Status", "/overview/status.html" %>
+							</li>
+							<li class="item12">
+								<%= link_to "Hosted Application", "/overview/hosted.html" %>
+							</li>
+							<li class="item14">
+								<%= link_to "Community", "/community.html" %>
+							</li>
+							<li class="item26">
+								<%= link_to "Help and Support", "/overview/help-and-support.html" %>
+							</li>
+						</ul>
+					</li>
+					<li class="parent item13">
+						<%= link_to "Features", "/features/" %>
+						<ul>
+							<li class="item15">
+								<%= link_to "Visual Page Editor", "/features/visual-page-editor.html" %>
+							</li>
+							<li class="item16">
+								<%= link_to "States", "/features/states.html" %>
+							</li>
+							<li class="item17">
+								<%= link_to "Review/Commenting", "/features/review-and-commenting.html" %>
+							</li>
+							<li class="item18">
+								<%= link_to "Designer/Developer", "/features/workflow.html" %>
+							</li>
+							<li class="item19">
+								<%= link_to "Theme Editor", "/features/theme-editor.html" %>
+							</li>
+							<li class="item20">
+								<%= link_to "Wireframing", "/features/wireframing.html" %>
+							</li>
+							<li class="item21">
+								<%= link_to "Libs, Widgets, Themes", "/features/libraries.html" %>
+							</li>
+							<li class="item22">
+								<%= link_to "Mobile Authoring", "/features/mobile.html" %>
+							</li>
+							<li class="item23">
+								<%= link_to "Future Features", "/features/future.html" %>
+							</li>
+						</ul>
+					</li>
+					<li class="item7">
+						<a href="http://app.maqetta.org/maqetta/app/docs/index.html#tutorials/tutorials" onclick="window.open(this.href,'targetWindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,');return false;">
+							<span>Tutorials</span>
+						</a>
+					</li>
+					<li class="item4">
+						<a href="http://app.maqetta.org/maqetta/app/docs/index.html" onclick="window.open(this.href,'targetWindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,');return false;">
+							<span>Documentation</span>
+						</a>
+					</li>
+					<li class="item9">
+						<%= link_to "News", "/news/" %>
+					</li>
+					<li class="item6">
+						<%= link_to "Community", "/community.html" %>
+					</li>
+					<li class="item8">
+						<%= link_to "FAQ", "/faq.html" %>
+					</li>
+				</ul>
+			</div>
+
+			<%= yield %>
+		</div>
+
+		<div class="maq_footer_space_1"></div>
+		<div class="maq_logo_under_1"></div>
+		<div class="maq_logo_under_2"></div>
+		<div class="maq_footer">
+			&copy; Copyright <a class="maq_link" href="http://dojofoundation.org" title="Dojo Foundation web site">The Dojo Foundation</a>, All rights reserved <%= link_to "Terms of Use", "/terms_of_use.html", :class => "maq_link maq_terms_of_use", :target => "_blank" %>
+		</div>
+	</body>
+</html>

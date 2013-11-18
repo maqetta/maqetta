@@ -1,0 +1,4 @@
+# Displays a news item on the front page.
+# If `text` is empty or commented out, no news item is displayed
+text: Maqetta Release 10 is now available!
+url: /news

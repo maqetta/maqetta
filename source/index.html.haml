@@ -1,0 +1,98 @@
+---
+title: Maqetta
+layout: maqetta_main
+---
+
+-# inline CSS for contents
+:css
+  .s-c-s #colmid { left:0px;}
+  .s-c-s #colright { margin-left:-210px;}
+  .s-c-s #col1pad { margin-left:210px;}
+  .s-c-s #col2 { left:210px;width:0px;}
+  .s-c-s #col3 { width:210px;}
+  
+  .s-c-x #colright { left:0px;}
+  .s-c-x #col1wrap { right:0px;}
+  .s-c-x #col1 { margin-left:0px;}
+  .s-c-x #col2 { right:0px;width:0px;}
+  
+  .x-c-s #colright { margin-left:-210px;}
+  .x-c-s #col1 { margin-left:210px;}
+  .x-c-s #col3 { left:210px;width:210px;}
+-# contents
+#showcase.dp100
+  .background
+  .foreground
+    .product_summary_container
+      %h2.product_summary_heading Visual authoring of HTML5 user interfaces - in the browser!
+      .product_summary_text Maqetta is an open source project that provides WYSIWYG visual authoring of HTML5 user interfaces. The Maqetta application itself is authored in HTML, and therefore runs in the browser without requiring additional plugins or downloads.
+#main-content.x-c-s
+  #colmask.ckl-color2
+    #colmid.cdr-color1
+      #colright.ctr-color1
+        #col1wrap
+          #col1pad
+            #col1
+              #mainmods.spacer.w99
+              .component-pad
+                #page
+                  %p.buttonheading
+                  .central_content_1_cell.central_content_1_col_1
+                    %a.maq_video_link{:href => "http://www.youtube.com/user/Maqetta/", :target => "_blank"}
+                      .maq_video
+                        .youtube_button_shared.youtube_button_text
+                          Click here to go to
+                          %br/
+                          Maqetta's YouTube channel
+                        .youtube_button_shared.youtube_button_arrow ▶
+        #col3.color1
+          .module
+            .module-body
+              .central_content_1_cell.central_content_1_col_2
+                .big_button_container
+                  %div
+                    .big_button_launch
+                      - MAQ_HOSTNAME = build_target_is?(:maqtest) ? "maqetta-app-test.austin.ibm.com" : "app.maqetta.org"
+                      %a{:href => "http://#{MAQ_HOSTNAME}/maqetta/", :style => "display: inline-block; width: 100%; height: 100%;"}
+                        %span{:style => "color:#FCFCFC;font-size:1;opacity:0;"} .
+                    = partial "frontpage_news"
+                    = partial "quicklinks"
+#footer
+  .footer-pad
+    .central_content_rule
+      %span{:style => "color:#FCFCFC;font-size:1;opacity:0;"} .
+    .central_content_2
+      .central_content_2_column.central_content_2_col_1
+        %h3 Open Source
+        %p Maqetta is available under a commercial-friendly open source license. You can download the source code and install it on your own server, customize the code to fit your needs and/or contribute improvements to the open source project.
+        .central_content_2_bullets
+          %ul
+            %li
+              %a{:href => "https://github.com/maqetta"} Open Source Project
+      .central_content_2_vert_ruler
+        %span{:style => "color:#FCFCFC;font-size:1;opacity:0;"} .
+      .central_content_2_column.central_content_2_col_2
+        %h3 Support
+        %p
+          The HTML pages
+          %em created by Maqetta
+          typically work across all popular browsers, including IE (caveat: this depends on the JavaScript toolkit you use and coding details). But if you want
+          %em to run the Maqetta application,
+          you'll need to use a recent release of one of the following browsers, all of which support the HTML5 features that Maqetta requires.
+        .maq_supported_browsers
+          %span{:style => "color:#FCFCFC;font-size:1;opacity:0;"} .
+      .central_content_2_vert_ruler
+        %span{:style => "color:#FCFCFC;font-size:1;opacity:0;"} .
+      .central_content_2_column.central_content_2_col_1
+        %h3 Standards
+        %p The project's code is built using 100% open standards technologies. Some of the key standards supported by the project:
+        .central_content_2-bullets
+          %ul
+            %li
+              %a{:href => "http://en.wikipedia.org/wiki/Html5", :target => "_blank"} HTML5
+            %li
+              %a{:href => "http://en.wikipedia.org/wiki/Cascading_Style_Sheets#CSS_3", :target => "_blank"} CSS3
+            %li
+              %a{:href => "http://en.wikipedia.org/wiki/Javascript", :target => "_blank"} JavaScript
+            %li
+              %a{:href => "http://www.openajax.org/member/wiki/OpenAjax_Metadata_1.0_Specification_Widget_Overview", :target => "_blank"} OpenAjax Widgets

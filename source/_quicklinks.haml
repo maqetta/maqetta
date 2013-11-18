@@ -1,0 +1,28 @@
+.module.maq_titled_module.maq_quick_links_module
+  %h3.module-title Quick Links
+  .module-body
+    %ul
+      %li
+        = link_to "Project Summary", "/overview/summary.html"
+      %li
+        = link_to "Help and Support", "/overview/help-and-support.html"
+      %li
+        = link_to "Community", "/community.html"
+      %li
+        = link_to "Issue Tracking", "/issues.html"
+      %li
+        %a{:href => "https://github.com/maqetta"} Open Source
+      %li
+        %a{:href => "downloads/"} Downloads
+    .maq_titled_module_horiz_rule.maq_quick_links_horiz_rule
+      %span{:style => "color:#FCFCFC;font-size:1;opacity:0;"} .
+    .maq_social_div.maq_rss_div
+      = link_to("/news/feed.xml", :class => "maq_rss_text") do
+        %span.maq_social_icon.maq_rss_icon
+          %span{:style => "color:#FCFCFC;font-size:1;opacity:0;"} .
+        Subscribe to a news feed
+    .maq_social_div.maq_twitter_div
+      %a.maq_twitter_text{:href => "http://twitter.com/Maqetta"}
+        %span.maq_social_icon.maq_twitter_icon
+          %span{:style => "color:#FCFCFC;font-size:1;opacity:0;"} .
+        Follow us on Twitter

@@ -51,10 +51,6 @@ layout: maqetta_main
               .central_content_1_cell.central_content_1_col_2
                 .big_button_container
                   %div
-                    .big_button_launch
-                      - MAQ_HOSTNAME = build_target_is?(:maqtest) ? "maqetta-app-test.austin.ibm.com" : "app.maqetta.org"
-                      %a{:href => "http://#{MAQ_HOSTNAME}/maqetta/", :style => "display: inline-block; width: 100%; height: 100%;"}
-                        %span{:style => "color:#FCFCFC;font-size:1;opacity:0;"} .
                     = partial "frontpage_news"
                     = partial "quicklinks"
 #footer

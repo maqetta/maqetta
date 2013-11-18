@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Maqetta News</title>
+  <subtitle>Maqetta - Visual authoring of HTML5 user interfaces - in the browser</subtitle>
+  <id>http://maqetta.org/news/</id>
+  <link href="http://maqetta.org/news/"/>
+  <link href="http://maqetta.org/news/feed.xml" rel="self"/>
+  <updated>2013-04-29T19:15:00Z</updated>
+  <entry>
+    <title>Maqetta Release 10</title>
+    <link rel="alternate" href="http://maqetta.org/news/2013/maqetta-release-10.html"/>
+    <id>/news/2013/maqetta-release-10.html</id>
+    <published>2013-04-29T19:15:00Z</published>
+    <updated>2013-04-29T19:15:00Z</updated>
+    <summary type="html">&lt;p&gt;We have updated Maqetta.org with &lt;strong&gt;&lt;em&gt;Maqetta Release 10&lt;/em&gt;&lt;/strong&gt;. There are a large number of improvements in this release (&lt;a href='http://app.maqetta.org/maqetta/app/docs/index.html#releasenotes/release10'&gt;read the full release notes&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;We are not aware of any migration issues and believe that content create in Release 9 should work with Release 10.&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;We have updated Maqetta.org with &lt;strong&gt;&lt;em&gt;Maqetta Release 10&lt;/em&gt;&lt;/strong&gt;. There are a large number of improvements in this release (&lt;a href='http://app.maqetta.org/maqetta/app/docs/index.html#releasenotes/release10'&gt;read the full release notes&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;We are not aware of any migration issues and believe that content create in Release 9 should work with Release 10.&lt;/p&gt;
+
+&lt;h4 id='release_10_highlights'&gt;Release 10 highlights:&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Upload ZIP from local file system&lt;/strong&gt; - With Release 10, we have added an the ability to upload a ZIP file from your local file system into your cloud workspace. Maqetta will expand the contents of the ZIP and store the embedded files within a target folder in your cloud workspace.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Clone existing project and &amp;#8220;Save as project template&amp;#8221;&lt;/strong&gt; - With Release 10, we have added a series of features that make it more convenient to work with projects. The two main new features are the ability to clone an existing project, and the ability to save the current project as a &amp;#8220;project template&amp;#8221; that you or your colleagues can use in the future.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Files palette UI changes&lt;/strong&gt; - changes to toolbar and context menus - With Release 10, the File palette has a redesigned toolbar, and the context menu has been changed.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Several new clipart icons&lt;/strong&gt; - Release 10 adds the following new clipart images: Cellphone, Computer, Copy, Delete, Edit, Error, Fatal, Folder, GraphBar, GraphLine, GraphPie, Info, Laptop, Paste, ProgressBar, Record, Refresh, Save, Server, Table, Tablet, WaitingPending, Warning.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;onChange event support&lt;/strong&gt; - The onChange event has been added to the Events palette.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Source edits are now undo-able&lt;/strong&gt; - If you change HTML source code in the Maqetta source editor (either in source view or one of the split views), those changes are now undoable.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Source editing improvements for mobile applications&lt;/strong&gt; - We fixed some problems when doing source editing of multi-view mobile applications.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Can now re-order application states using drag/drop&lt;/strong&gt; - In the Scenes palette, you can now re-order application states by dragging one of the existing application states to a new position.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Updated to Eclipse Orion 2.0&lt;/strong&gt; - Maqetta now builds on top of Orion 2.0 (upgraded from v0.5). A few new features are available in the source editor, such as bracket matching and a folding ruler for comments when editing JS and CSS. For more information, please visit the Orion website.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Different behavior when Publishing a review&lt;/strong&gt; - In previous releases, when you created a new review and clicked on the Publish button in the Create Review wizard, the application would open up a review session within the author&amp;#8217;s running copy of Maqetta. With Release 10, we no longer open a review session when clicking on Publish. The user has to open review HTML files manually.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;User actual name&lt;/strong&gt; - In various parts of the UI, Maqetta now shows the user&amp;#8217;s real name (e.g., John Smith) instead of the user&amp;#8217;s email (john&amp;#8230;@example.com).&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Widget-specific date properties now include date picker&lt;/strong&gt; - Any widget-specific properties that are specified as holding a date value now will present a popup date picker in the &amp;#8220;Widget&amp;#8221; section of the properties palette.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Small &amp;#8220;x&amp;#8221; icon added to widget palette filter box&lt;/strong&gt; - There is now a small &amp;#8220;x&amp;#8221; that appears in the filter box for the widget palette whenever there is at least one character typed into the filter box. The &amp;#8220;x&amp;#8221; icon clears the filter box.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Enhanced SmartInput&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;- Setting multiple fields from SmartInput - For example dojo TextBox supports the HTML placeHolder attribute, SmartInput for all dojo TextBox now lets the user set the TextBox value and placeHolder attributes.&lt;/li&gt;
+
+&lt;li&gt;- Setting Date and Time fields from SmartInput using date and time pickers - For example dojo DateTextBox SmartInput now uses a date picker for setting the value feild.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Theme Editor support for simulating CSS Pseudo-class behaviors&lt;/strong&gt; - For example the user can now select the HTML button, select the Hover from the states palette and set the :hover CSS Pseudo-class in the claro theme.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Save As Widget Improvements - old custom widgets not supported&lt;/strong&gt; - The Save As Widget feature has been &amp;#8220;experimental&amp;#8221;, and with Release 10 continues to be experimental, but in Release 10 there have been improvements and bug fixes. The improvements required some significant coding changes, and the coding changes resulted in lack of backwards-compatible support for custom widgets created in previous versions.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;br /&gt;
+&lt;p&gt;&lt;strong&gt;Downloads&lt;/strong&gt; are available from the main &lt;a href='//maqetta.org/downloads/'&gt;downloads page&lt;/a&gt;.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>Maqetta Release 9</title>
+    <link rel="alternate" href="http://maqetta.org/news/2013/maqetta-release-9.html"/>
+    <id>/news/2013/maqetta-release-9.html</id>
+    <published>2013-02-06T00:00:00Z</published>
+    <updated>2013-02-06T00:00:00Z</updated>
+    <summary type="html">&lt;p&gt;We have now posted Release 9 of the Maqetta application at &lt;a href='http://maqetta.org'&gt;http://maqetta.org&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you run the Maqetta application at &lt;a href='http://maqetta.org'&gt;http://maqetta.org&lt;/a&gt;, you be running the new release.&lt;/p&gt;
+
+&lt;p&gt;If you have been using a downloaded version of Maqetta 8, then we recommend that you pull down the new Release 9 download from &lt;a href='http://maqetta.org/downloads/'&gt;http://maqetta.org/downloads/&lt;/a&gt; (usually &lt;a href='http://www.maqetta.org/downloads/maqetta-release-9.zip'&gt;http://www.maqetta.org/downloads/maqetta-release-9.zip&lt;/a&gt;), and then copy your users/ folder from your Release 8 installation into your Release 9 installation.&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;We have now posted Release 9 of the Maqetta application at &lt;a href='http://maqetta.org'&gt;http://maqetta.org&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you run the Maqetta application at &lt;a href='http://maqetta.org'&gt;http://maqetta.org&lt;/a&gt;, you be running the new release.&lt;/p&gt;
+
+&lt;p&gt;If you have been using a downloaded version of Maqetta 8, then we recommend that you pull down the new Release 9 download from &lt;a href='http://maqetta.org/downloads/'&gt;http://maqetta.org/downloads/&lt;/a&gt; (usually &lt;a href='http://www.maqetta.org/downloads/maqetta-release-9.zip'&gt;http://www.maqetta.org/downloads/maqetta-release-9.zip&lt;/a&gt;), and then copy your users/ folder from your Release 8 installation into your Release 9 installation.&lt;/p&gt;
+
+&lt;p&gt;We are not aware of any migration issues with user files.&lt;/p&gt;
+
+&lt;p&gt;Major changes include several new tutorials, LDAP support, WAR/Tomcat support, and three new icons on Scenes palette for more efficient development using application states. For more information about the new release, please refer to the release notes:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href='http://app.maqetta.org/maqetta/app/docs/index.html#releasenotes/release9'&gt;http://app.maqetta.org/maqetta/app/docs/index.html#releasenotes/release9&lt;/a&gt;&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>Maqetta Release 8</title>
+    <link rel="alternate" href="http://maqetta.org/news/2012/maqetta-release-8.html"/>
+    <id>/news/2012/maqetta-release-8.html</id>
+    <published>2012-12-16T00:00:00Z</published>
+    <updated>2012-12-16T00:00:00Z</updated>
+    <summary type="html">&lt;p&gt;We have now posted &lt;strong&gt;Release 8&lt;/strong&gt; of the Maqetta application at &lt;a href='http://maqetta.org'&gt;http://maqetta.org&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you run the Maqetta application at &lt;a href='http://maqetta.org'&gt;http://maqetta.org&lt;/a&gt;, you be running the new release.&lt;/p&gt;
+
+&lt;p&gt;If you are using a downloaded version of Maqetta 7, then we recommend that you pull down the new Release 8 download from &lt;a href='http://maqetta.org/downloads/'&gt;http://maqetta.org/downloads/&lt;/a&gt;, and then copy your users/ folder from your Release 7 installation into your Release 8 installation.&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;We have now posted &lt;strong&gt;Release 8&lt;/strong&gt; of the Maqetta application at &lt;a href='http://maqetta.org'&gt;http://maqetta.org&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you run the Maqetta application at &lt;a href='http://maqetta.org'&gt;http://maqetta.org&lt;/a&gt;, you be running the new release.&lt;/p&gt;
+
+&lt;p&gt;If you are using a downloaded version of Maqetta 7, then we recommend that you pull down the new Release 8 download from &lt;a href='http://maqetta.org/downloads/'&gt;http://maqetta.org/downloads/&lt;/a&gt;, and then copy your users/ folder from your Release 7 installation into your Release 8 installation.&lt;/p&gt;
+
+&lt;p&gt;We are not aware of any migration issues with user files.&lt;/p&gt;
+
+&lt;p&gt;From a user perspective, the primary new feature is the redesign of the &amp;#8220;Palette&amp;#8221; (the list of widgets at top/left of the user interface for the visual page editor). For more information about the Palette changes, and other changes in this release, please refer to the release notes:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href='http://app.maqetta.org/maqetta/app/docs/index.html#releasenotes/release8'&gt;http://app.maqetta.org/maqetta/app/docs/index.html#releasenotes/release8&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;We also changed one of the server settings at Maqetta.org, which will improve performance, but at this point, we aren&amp;#8217;t sure how significant the performance improvements will be.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>Maqetta Announces Release 7</title>
+    <link rel="alternate" href="http://maqetta.org/news/2012/maqetta-announces-release-7.html"/>
+    <id>/news/2012/maqetta-announces-release-7.html</id>
+    <published>2012-09-06T00:00:00Z</published>
+    <updated>2012-09-06T00:00:00Z</updated>
+    <summary type="html">&lt;p&gt;The Maqetta team is pleased to announce the &lt;strong&gt;Release 7&lt;/strong&gt; of the Maqetta visual authoring tool Maqetta.org. Read the full &lt;a href='http://app.maqetta.org/maqetta/app/docs/index.html#releasenotes/release7'&gt;release notes&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here is a summary of new features:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;User interface makeover:&lt;/strong&gt;&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;The Maqetta team is pleased to announce the &lt;strong&gt;Release 7&lt;/strong&gt; of the Maqetta visual authoring tool Maqetta.org. Read the full &lt;a href='http://app.maqetta.org/maqetta/app/docs/index.html#releasenotes/release7'&gt;release notes&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here is a summary of new features:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;User interface makeover:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;New visual styling for nearly all of the most common user interface components&lt;/li&gt;
+
+&lt;li&gt;Redesigned, collapsable palettes on left and right side of user interface&lt;/li&gt;
+
+&lt;li&gt;Streamlined user interface for creating HTML files&lt;/li&gt;
+
+&lt;li&gt;Redesigned and streamlined toolbar&lt;/li&gt;
+
+&lt;li&gt;New welcome page&lt;/li&gt;
+
+&lt;li&gt;New login and registration screens&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Performance improvements:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Page editor speedups - Release 7 includes several performance improvements, particularly around opening up new HTML files and increased snappiness when users add new widgets to the page.&lt;/li&gt;
+
+&lt;li&gt;Release 7 integrates &lt;a href='http://dojofoundation.org/projects/zazl'&gt;ZAZL open source technology&lt;/a&gt; into Maqetta&amp;#8217;s preview-in-browser feature. When turned on (in the Preferences dialog on the Settings menu at the top-right of the top toolbar), whenever a user clicks on the preview-in-browser button, Maqetta will run ZAZL on the server to optimize (build and minify) the user&amp;#8217;s HTML page to minimize network requests and download sizes when viewing that page directly in the web browser, typically speeding up first-time previews considerably.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Eclipse Orion integration&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Release 7 adds a new command to the Open menu, &amp;#8220;Open Orion Navigator&amp;#8221;, which opens a new browser window that launches the Eclipse Orion cloud-based source development tools, where you can perform source editing in the cloud on the various files within your Maqetta workspace. Release 7 replaces most of the old logic for user management and workspace management with Orion code that provided similar services.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;HTML table enhancements:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Table dialog at table creation time (and subsequent editing) - With Release 7, when a user adds an HTML table to the page, he is presented with a dialog that allows the user to chooose number of rows, number of columns, border thickness, &amp;#8216;border-collapse&amp;#8217;, &amp;#8216;table-layout&amp;#8217; and whether first row should be a header row&lt;/li&gt;
+
+&lt;li&gt;Column width control on the canvas&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Tree widget enhancements:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;User can specify custom icons on individual tree nodes. For container tree nodes, users can specify both a closed and open icon.&lt;/li&gt;
+
+&lt;li&gt;User can specify what actions to take on each tree node for click, double-click, open and close.&lt;/li&gt;
+
+&lt;li&gt;Ability to reorder tree nodes via simple drag/drop.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Save As Widget :&lt;/strong&gt; This command will create a re-usable widget out of the currently selected widget, and add a new widget into a &amp;#8220;User Widgets&amp;#8221; section of the widgets palette..&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Keyboard shortcuts for common operations&lt;/strong&gt; - Release 7 supports various common keyboard shortcuts in the visual editor, including shortcuts for cut, copy, paste, undo, redo and save.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Many bug fixes&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Migration of User Workspaces&lt;/strong&gt; - if you run on Maqetta.org, your projects should be migrated automatically. See release notes for details.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>Maqetta Announces Release of Preview 6</title>
+    <link rel="alternate" href="http://maqetta.org/news/2012/maqetta-announces-release-of-preview-6.html"/>
+    <id>/news/2012/maqetta-announces-release-of-preview-6.html</id>
+    <published>2012-05-31T00:00:00Z</published>
+    <updated>2012-05-31T00:00:00Z</updated>
+    <summary type="html">&lt;p&gt;The Maqetta team is pleased to announce the &lt;strong&gt;Preview 6&lt;/strong&gt; release on Maqetta.org. Read the full &lt;a href='http://app.maqetta.org/maqetta/app/docs/index.html#releasenotes/preview6'&gt;release notes&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here is a summary of new features:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Visual editor improvements:&lt;/strong&gt;&lt;/p&gt;</summary>
+    <content type="html">&lt;p&gt;The Maqetta team is pleased to announce the &lt;strong&gt;Preview 6&lt;/strong&gt; release on Maqetta.org. Read the full &lt;a href='http://app.maqetta.org/maqetta/app/docs/index.html#releasenotes/preview6'&gt;release notes&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here is a summary of new features:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Visual editor improvements:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Selection chrome has new look (and revised behavior)&lt;/li&gt;
+
+&lt;li&gt;Ability to drag a widget by mouse-down on interior&lt;/li&gt;
+
+&lt;li&gt;Elastic band select&lt;/li&gt;
+
+&lt;li&gt;Alt-key or Option-key to copy a widget with drag operation&lt;/li&gt;
+
+&lt;li&gt;Select parent, Select ancestor, Unselect all (on context menu)&lt;/li&gt;
+
+&lt;li&gt;Move to front, move to back, move forward, move backward (absolutely positioned widgets - on context menu)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Mobile UI sketching:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Mobile device silhouettes as clip art :iPhone, iPad, Android_340x480, Android_480x800, AndroidTablet, Blackberry phone&lt;/li&gt;
+
+&lt;li&gt;Countless fixes so that Dojo Mobile widgets can be used in sketch mode&lt;/li&gt;
+
+&lt;li&gt;New &lt;a href='http://app.maqetta.org/maqetta/app/docs/index.html#tutorials/Mobile_Sketching'&gt;mobile sketching tutorial&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;GridX support&lt;/strong&gt;, with creation wizard that allows for column control&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;GridX replaces DataGrid&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Properties palette improvements:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&amp;#8216;moveTo&amp;#8217; properties provide drop-downs of current mobile views&lt;/li&gt;
+
+&lt;li&gt;&amp;#8216;class&amp;#8217; attribute provides drop-down list of currently used classes&lt;/li&gt;
+
+&lt;li&gt;&amp;#8216;class&amp;#8217; and &amp;#8216;id&amp;#8217; &amp;#8216;fields on separate lines, and are stretchable&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Drawing tool improvements:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;revised collection of line/arrow widgets (Line, Arrow, Polyline, Polyline Arrow)&lt;/li&gt;
+
+&lt;li&gt;ability to drag out initial size and direction for lines and arrows&lt;/li&gt;
+
+&lt;li&gt;multiple-click create of polylines&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Mobile UI improvements:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Mobile silhouette orientation now persists&lt;/li&gt;
+
+&lt;li&gt;moveTo property now lists existing mobile view ids&lt;/li&gt;
+
+&lt;li&gt;You can now drag and drop widgets into ListItems&lt;/li&gt;
+
+&lt;li&gt;IconContainer now has a easier to use editing tool&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Limited &lt;strong&gt;PHP file support&lt;/strong&gt; - Maqetta page editor allows PHP constructs (and generally just ignores them) inside the HTML files. See release notes for details.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;CSV data file support&lt;/strong&gt; - previous versions only support JSON data&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Many bug fixes&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Migration of User Workspaces&lt;/strong&gt; - if you run on Maqetta.org, your projects should be migrated automatically. See release notes for details.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>IBM Contributes Maqetta - HTML5 Visual Authoring Tools - to Open Source Community</title>
+    <link rel="alternate" href="http://maqetta.org/news/2011/ibm-contributes-maqetta-html5-visual-authoring-tools-to-open-source-community.html"/>
+    <id>/news/2011/ibm-contributes-maqetta-html5-visual-authoring-tools-to-open-source-community.html</id>
+    <published>2011-04-08T00:00:00Z</published>
+    <updated>2011-04-08T00:00:00Z</updated>
+    <summary type="html">&lt;h3 id='free_web_hosting_and_downloads_available_at_maqettaorg'&gt;Free Web Hosting and Downloads Available at Maqetta.org&lt;/h3&gt;
+
+&lt;p&gt;ARMONK, NY - 11 Apr 2011: IBM today announced the open source contribution of Maqetta to the Dojo Foundation. Maqetta provides WYSIWYG authoring of HTML5 user interfaces using drag/drop assembly, and supports both desktop and mobile user interfaces.&lt;/p&gt;</summary>
+    <content type="html">&lt;h3 id='free_web_hosting_and_downloads_available_at_maqettaorg'&gt;Free Web Hosting and Downloads Available at Maqetta.org&lt;/h3&gt;
+
+&lt;p&gt;ARMONK, NY - 11 Apr 2011: IBM today announced the open source contribution of Maqetta to the Dojo Foundation. Maqetta provides WYSIWYG authoring of HTML5 user interfaces using drag/drop assembly, and supports both desktop and mobile user interfaces.&lt;/p&gt;
+
+&lt;p&gt;HTML5 is an umbrella term for dozens of new features that ship in modern browsers (desktop and mobile) that allow rich user interfaces, graphics, multimedia and fast performance using open standards. HTML5 ships in the latest versions of Microsoft Internet Explorer, Mozilla Firefox, Google Chrome and Apple Safari, and on modern smartphones, including iPhone, Android, RIM Blackberry and Windows 7 Mobile.&lt;/p&gt;
+
+&lt;p&gt;The Maqetta application itself is authored in HTML5/Ajax, and therefore runs in the browser without requiring additional plugins or downloads. Some Maqetta features include:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;a WYSIWYG visual page editor for drawing out user interfaces&lt;/li&gt;
+
+&lt;li&gt;drag/drop mobile UI authoring within an exact-dimension device silhouette, such as the silhouette of an iPhone&lt;/li&gt;
+
+&lt;li&gt;simultaneous editing in either design or source views&lt;/li&gt;
+
+&lt;li&gt;deep support for CSS styling (the applications includes a full CSS parser/modeler)&lt;/li&gt;
+
+&lt;li&gt;a mechanism for organizing a UI prototype into a series of &amp;#8220;application states&amp;#8221; (aka &amp;#8220;screens&amp;#8221; or &amp;#8220;panels&amp;#8221;) which allows a UI design to define interactivity without programming&lt;/li&gt;
+
+&lt;li&gt;a web-based review and commenting feature where the author can submit a live UI mockup for review by his team members&lt;/li&gt;
+
+&lt;li&gt;a &amp;#8220;wireframing&amp;#8221; feature that allows UI designers to create UI proposals that have a hand-drawn look&lt;/li&gt;
+
+&lt;li&gt;a theme editor for customizing the visual styling of a collection of widgets&lt;/li&gt;
+
+&lt;li&gt;export options that allow for smooth hand-off of the UI mockups into leading developer tools such as Eclipse&lt;/li&gt;
+
+&lt;li&gt;Maqetta&amp;#8217;s code base has a toolkit-independent architecture that allows for plugging in arbitrary widget libraries and CSS themes&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The Preview 1 release of the Maqetta application is available for the community to use for free at the open source project&amp;#8217;s Web site, http://maqetta.org. Alternatively, users can download builds that they can install on their own servers.&lt;/p&gt;
+
+&lt;p&gt;The primary target users for Maqetta are user experience designers (UXD) within Enterprise development teams, with the goal of improving overall team efficiency around HTML5 application development. To support Enterprise team development, Maqetta&amp;#8217;s extensible architecture allows plug-in widget libraries and plug-in CSS styling themes, including company-specific libraries and themes. Maqetta includes a sophisticated and extensible CSS theme editor.&lt;/p&gt;
+
+&lt;p&gt;&amp;#8220;By contributing Maqetta to Dojo Foundation as open source and free hosted software, IBM hopes to build a community of users and open source developers working together towards strong visual tools for creating HTML5-based user interfaces. Our targets are the desktop web, the mobile web and cross-platform installed mobile applications,&amp;#8221; David Boloker, CTO, Internet Emerging Technologies, IBM. &amp;#8220;We see Maqetta as particularly attractive to enterprise development teams where UI designers need to work in partnership with development teams.&amp;#8221;&lt;/p&gt;
+
+&lt;p&gt;IBM has donated the technology to the Dojo Foundation, which hosts more than a dozen open source initiatives, including the Dojo Toolkit, RequireJS, CometD, EmbedJS,Persevere, Wink Toolkit, and OpenCoweb&lt;/p&gt;
+
+&lt;p&gt;&amp;#8220;The Dojo Foundation is excited by IBM&amp;#8217;s open source contribution of Maqetta, which fills a major hole in the HTML5 ecosystem around visual tooling. Maqetta is a great complement to other initiatives at the Dojo Foundation, particularly our mobile initiatives such as dojox.mobile, Wink Toolkit, EmbedJS, and integration of these with PhoneGap&amp;#8221; said Dylan Schiemann, President at the Dojo Foundation and CEO at SitePen. &amp;#8220;The technology will make it easier for new developers to get started with various HTML5 technologies, including other Dojo Foundation initiatives such as the Dojo Toolkit and our emerging mobile widget sets.&amp;#8221;&lt;/p&gt;
+
+&lt;p&gt;The Maqetta project was launched inside of IBM to address its own needs for more efficient development of desktop and mobile applications. The initial requirements and feature set for Maqetta were defined by IBM&amp;#8217;s various product teams in partnership with IBM&amp;#8217;s Design Leadership team.&lt;/p&gt;
+
+&lt;p&gt;&amp;#8220;Strong visual tools are essential towards improving IBM&amp;#8217;s efficiency at delivering compelling and intuitive user interfaces. IBM offers hundreds of leading-edge software applications, nearly all of which provide advanced user interfaces running in the browser.&amp;#8221; said Karel Vredenburg, Director, IBM User Interface Design. &amp;#8220;Inside IBM, Maqetta will be our strategic tool for designing and reviewing user interfaces, both desktop and mobile. It will help our product teams comply with our internal user interface standards and guidelines and will help our customers extend and customize our products.&amp;#8221;&lt;/p&gt;
+
+&lt;p&gt;Maqetta mockups are actual running HTML5/Ajax applications that can be modified incrementally by developers into a production application. The Maqetta project is working in partnership with Eclipse Foundation&amp;#8217;s recently announced Orion project (developer tools in the browser), and is making use of the Orion source code editor. Optionally, Maqetta workspaces can be easily exported into Eclipse-based developer tools, such as the Eclipse Workbench or IBM Rational Application Developer.&lt;/p&gt;
+
+&lt;p&gt;The majority of the Maqetta application is authored using open standard browser technologies (JavaScript, HTML, CSS). The Maqetta application includes a simple REST-based server that is implemented using Java and OSGi, and can be integrated into JEE Enterprise servers such as IBM WebSphere Application Server.&lt;/p&gt;
+
+&lt;p&gt;&amp;#8220;Browser-based tools represent the new frontier. Last month we launched OrionHub for source development in the browser. We are excited about the integration between Maqetta&amp;#8217;s designer features and Eclipse Foundation&amp;#8217;s initiatives around developer tools, including both our highly popular Eclipse IDE and our emerging Orion project.&amp;#8221; said Mike Milinkovich, Executive Director of the Eclipse Foundation. &amp;#8220;We look forward to ongoing collaboration and technology sharing between Maqetta and our various initiatives at Eclipse.&amp;#8221;&lt;/p&gt;
+
+&lt;p&gt;Maqetta includes a web-based review-and-commenting feature where authors can invite team members to provide feedback via blog-style comments or on-screen annotations. For mobile development, Maqetta allows the author to choose among various mobile device silhouettes so that the user interface can be designed in the context of the actual size of the target device.&lt;/p&gt;
+
+&lt;p&gt;“Maqetta is both timely and important. As development becomes distributed and data moves to the cloud, it&amp;#8217;s natural for development to move there too. The browser-as-platform is what Dojo has always strived to achieve, and Maqetta fills a critical need to make that a reality. I&amp;#8217;m happy and proud that the Dojo Foundation can serve as a home for this important work” said Alex Russell, co-founder, Dojo Toolkit and Software Engineer at Google.&lt;/p&gt;
+
+&lt;p&gt;The Maqetta application is currently at preview level. By engaging with the community with Maqetta at an early stage, IBM hopes to collaborate both on product requirements and on open source development, with the goal that future releases of Maqetta will deliver strong tools for UI design and an efficient workflow between UI design and production development.&lt;/p&gt;</content>
+  </entry>
+</feed>

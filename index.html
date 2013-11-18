@@ -1,1 +1,339 @@
-Maqetta project page
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="index, follow" />
+	<meta name="keywords" content="Maqetta, HTML5, tool, visual, Dojo, open, source" />
+	<meta name="description" content="Maqetta - Visual authoring of HTML5 user interfaces - in the browser" />
+
+	<title>Maqetta</title>
+	<link href="/favicon.ico" rel="icon" type="image/ico" />
+
+	<style type="text/css">
+	    <!--
+		#wrapper { margin: 0 auto; width: 962px;padding:0;}
+	    -->
+    </style>
+
+	<link href="/stylesheets/light3.css" media="screen" rel="stylesheet" type="text/css" />
+	<link rel="alternate" type="application/atom+xml" title="Maqetta News" href="/news/feed.xml" />
+</head>
+
+<body class="maq_body maq_loggedin_no index">
+	<div class="maq_top">
+		<div class="maq_dojo_attribution_row">
+			<div class="maq_dojo_attribution_cell">
+				<span class="maq_dojo_attribution_chevron"></span>
+				<span class="maq_dojo_attribution_text">
+					Maqetta is an <span class="maq_open_source_project">open source project</span> hosted by the <a class="maq_link" href="http://dojofoundation.org" title="Dojo Foundation web site">Dojo Foundation</a>
+				</span>
+			</div>
+		</div>
+		<div class="maq_logo_row">
+			<div class="maq_logo_cell">
+				<span class="maq_header_right">
+					<div class="maq_header_right_text_div" style="visibility: hidden;">
+						&nbsp;
+					</div>
+					<div class="maq_header_search_div">
+						<div id="header">
+							<div class="module">
+								<div class="module-body">
+									<form action="http://google.com/search" method="get">
+										<div class="search">
+											<input name="sitesearch" value="maqetta.org" type="hidden"/>
+											<input name="q" id="mod_search_searchword" type="text" alt="Search"
+												class="inputbox" size="35" maxlength="255" value="search Maqetta..."
+												onblur="if(this.value=='') this.value='search Maqetta...';"
+												onfocus="if(this.value=='search Maqetta...') this.value='';" />
+											<input type="submit" value="Search" class="button"/>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</span>
+				<span class="maq_logo"></span>
+			</div>
+		</div>
+	</div>
+	<div class="maq_logo_under_1"></div>
+	<div class="maq_logo_under_2"></div>
+	<div id="main">
+		<div id="wrapper" class="foreground">
+			<div id="nav">
+				<ul class="menu">
+					<li class="item1">
+						<a href="/">Home</a>
+					</li>
+					<li class="parent item3">
+						<a href="/overview/">Overview</a>
+						<ul>
+							<li class="item5">
+								<a href="/overview/summary.html">Project Summary</a>
+							</li>
+							<li class="item11">
+								<a href="/overview/status.html">Project Status</a>
+							</li>
+							<li class="item12">
+								<a href="/overview/hosted.html">Hosted Application</a>
+							</li>
+							<li class="item14">
+								<a href="/community.html">Community</a>
+							</li>
+							<li class="item26">
+								<a href="/overview/help-and-support.html">Help and Support</a>
+							</li>
+						</ul>
+					</li>
+					<li class="parent item13">
+						<a href="/features/">Features</a>
+						<ul>
+							<li class="item15">
+								<a href="/features/visual-page-editor.html">Visual Page Editor</a>
+							</li>
+							<li class="item16">
+								<a href="/features/states.html">States</a>
+							</li>
+							<li class="item17">
+								<a href="/features/review-and-commenting.html">Review/Commenting</a>
+							</li>
+							<li class="item18">
+								<a href="/features/workflow.html">Designer/Developer</a>
+							</li>
+							<li class="item19">
+								<a href="/features/theme-editor.html">Theme Editor</a>
+							</li>
+							<li class="item20">
+								<a href="/features/wireframing.html">Wireframing</a>
+							</li>
+							<li class="item21">
+								<a href="/features/libraries.html">Libs, Widgets, Themes</a>
+							</li>
+							<li class="item22">
+								<a href="/features/mobile.html">Mobile Authoring</a>
+							</li>
+							<li class="item23">
+								<a href="/features/future.html">Future Features</a>
+							</li>
+						</ul>
+					</li>
+					<li class="item7">
+						<a href="http://app.maqetta.org/maqetta/app/docs/index.html#tutorials/tutorials" onclick="window.open(this.href,'targetWindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,');return false;">
+							<span>Tutorials</span>
+						</a>
+					</li>
+					<li class="item4">
+						<a href="http://app.maqetta.org/maqetta/app/docs/index.html" onclick="window.open(this.href,'targetWindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,');return false;">
+							<span>Documentation</span>
+						</a>
+					</li>
+					<li class="item9">
+						<a href="/news/">News</a>
+					</li>
+					<li class="item6">
+						<a href="/community.html">Community</a>
+					</li>
+					<li class="item8">
+						<a href="/faq.html">FAQ</a>
+					</li>
+				</ul>
+			</div>
+
+			<style>
+  .s-c-s #colmid { left:0px;}
+  .s-c-s #colright { margin-left:-210px;}
+  .s-c-s #col1pad { margin-left:210px;}
+  .s-c-s #col2 { left:210px;width:0px;}
+  .s-c-s #col3 { width:210px;}
+  
+  .s-c-x #colright { left:0px;}
+  .s-c-x #col1wrap { right:0px;}
+  .s-c-x #col1 { margin-left:0px;}
+  .s-c-x #col2 { right:0px;width:0px;}
+  
+  .x-c-s #colright { margin-left:-210px;}
+  .x-c-s #col1 { margin-left:210px;}
+  .x-c-s #col3 { left:210px;width:210px;}
+</style>
+<div class='dp100' id='showcase'>
+  <div class='background'></div>
+  <div class='foreground'>
+    <div class='product_summary_container'>
+      <h2 class='product_summary_heading'>Visual authoring of HTML5 user interfaces - in the browser!</h2>
+      <div class='product_summary_text'>Maqetta is an open source project that provides WYSIWYG visual authoring of HTML5 user interfaces. The Maqetta application itself is authored in HTML, and therefore runs in the browser without requiring additional plugins or downloads.</div>
+    </div>
+  </div>
+</div>
+<div class='x-c-s' id='main-content'>
+  <div class='ckl-color2' id='colmask'>
+    <div class='cdr-color1' id='colmid'>
+      <div class='ctr-color1' id='colright'>
+        <div id='col1wrap'>
+          <div id='col1pad'>
+            <div id='col1'>
+              <div class='spacer w99' id='mainmods'></div>
+              <div class='component-pad'>
+                <div id='page'>
+                  <p class='buttonheading'></p>
+                  <div class='central_content_1_cell central_content_1_col_1'>
+                    <a class='maq_video_link' href='http://www.youtube.com/user/Maqetta/' target='_blank'>
+                      <div class='maq_video'>
+                        <div class='youtube_button_shared youtube_button_text'>
+                          Click here to go to
+                          <br>
+                          Maqetta's YouTube channel
+                        </div>
+                        <div class='youtube_button_shared youtube_button_arrow'>▶</div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='color1' id='col3'>
+          <div class='module'>
+            <div class='module-body'>
+              <div class='central_content_1_cell central_content_1_col_2'>
+                <div class='big_button_container'>
+                  <div>
+                    <div class='big_button_launch'>
+                      <a href='http://app.maqetta.org/maqetta/' style='display: inline-block; width: 100%; height: 100%;'>
+                        <span style='color:#FCFCFC;font-size:1;opacity:0;'>.</span>
+                      </a>
+                    </div>
+                    <div class='module maq_titled_module maq_quick_links_module' style='margin-bottom: 7px; display: '>
+                      <h3 class='module-title'>News</h3>
+                      <div class='module-body'>
+                        <div style='display:block; color:#00D; font-weight:bold; font-size:15px;margin: 10px 0 0 20px'>
+                          <a href='/news'>Maqetta Release 10 is now available!</a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class='module maq_titled_module maq_quick_links_module'>
+                      <h3 class='module-title'>Quick Links</h3>
+                      <div class='module-body'>
+                        <ul>
+                          <li>
+                            <a href="/overview/summary.html">Project Summary</a>
+                          </li>
+                          <li>
+                            <a href="/overview/help-and-support.html">Help and Support</a>
+                          </li>
+                          <li>
+                            <a href="/community.html">Community</a>
+                          </li>
+                          <li>
+                            <a href="/issues.html">Issue Tracking</a>
+                          </li>
+                          <li>
+                            <a href='https://github.com/maqetta'>Open Source</a>
+                          </li>
+                          <li>
+                            <a href='downloads/'>Downloads</a>
+                          </li>
+                        </ul>
+                        <div class='maq_titled_module_horiz_rule maq_quick_links_horiz_rule'>
+                          <span style='color:#FCFCFC;font-size:1;opacity:0;'>.</span>
+                        </div>
+                        <div class='maq_social_div maq_rss_div'>
+                                <a class="maq_rss_text" href="/news/feed.xml"><span class='maq_social_icon maq_rss_icon'>
+                            <span style='color:#FCFCFC;font-size:1;opacity:0;'>.</span>
+                          </span>
+                          Subscribe to a news feed
+                          </a>
+                    
+                        </div>
+                        <div class='maq_social_div maq_twitter_div'>
+                          <a class='maq_twitter_text' href='http://twitter.com/Maqetta'>
+                            <span class='maq_social_icon maq_twitter_icon'>
+                              <span style='color:#FCFCFC;font-size:1;opacity:0;'>.</span>
+                            </span>
+                            Follow us on Twitter
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id='footer'>
+  <div class='footer-pad'>
+    <div class='central_content_rule'>
+      <span style='color:#FCFCFC;font-size:1;opacity:0;'>.</span>
+    </div>
+    <div class='central_content_2'>
+      <div class='central_content_2_column central_content_2_col_1'>
+        <h3>Open Source</h3>
+        <p>Maqetta is available under a commercial-friendly open source license. You can download the source code and install it on your own server, customize the code to fit your needs and/or contribute improvements to the open source project.</p>
+        <div class='central_content_2_bullets'>
+          <ul>
+            <li>
+              <a href='https://github.com/maqetta'>Open Source Project</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class='central_content_2_vert_ruler'>
+        <span style='color:#FCFCFC;font-size:1;opacity:0;'>.</span>
+      </div>
+      <div class='central_content_2_column central_content_2_col_2'>
+        <h3>Support</h3>
+        <p>
+          The HTML pages
+          <em>created by Maqetta</em>
+          typically work across all popular browsers, including IE (caveat: this depends on the JavaScript toolkit you use and coding details). But if you want
+          <em>to run the Maqetta application,</em>
+          you'll need to use a recent release of one of the following browsers, all of which support the HTML5 features that Maqetta requires.
+        </p>
+        <div class='maq_supported_browsers'>
+          <span style='color:#FCFCFC;font-size:1;opacity:0;'>.</span>
+        </div>
+      </div>
+      <div class='central_content_2_vert_ruler'>
+        <span style='color:#FCFCFC;font-size:1;opacity:0;'>.</span>
+      </div>
+      <div class='central_content_2_column central_content_2_col_1'>
+        <h3>Standards</h3>
+        <p>The project's code is built using 100% open standards technologies. Some of the key standards supported by the project:</p>
+        <div class='central_content_2-bullets'>
+          <ul>
+            <li>
+              <a href='http://en.wikipedia.org/wiki/Html5' target='_blank'>HTML5</a>
+            </li>
+            <li>
+              <a href='http://en.wikipedia.org/wiki/Cascading_Style_Sheets#CSS_3' target='_blank'>CSS3</a>
+            </li>
+            <li>
+              <a href='http://en.wikipedia.org/wiki/Javascript' target='_blank'>JavaScript</a>
+            </li>
+            <li>
+              <a href='http://www.openajax.org/member/wiki/OpenAjax_Metadata_1.0_Specification_Widget_Overview' target='_blank'>OpenAjax Widgets</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+		</div>
+
+		<div class="maq_footer_space_1"></div>
+		<div class="maq_logo_under_1"></div>
+		<div class="maq_logo_under_2"></div>
+		<div class="maq_footer">
+			&copy; Copyright <a class="maq_link" href="http://dojofoundation.org" title="Dojo Foundation web site">The Dojo Foundation</a>, All rights reserved <a class="maq_link maq_terms_of_use" target="_blank" href="/terms_of_use.html">Terms of Use</a>
+		</div>
+	</body>
+</html>

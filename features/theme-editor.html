@@ -1,0 +1,205 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="robots" content="index, follow" />
+	<meta name="keywords" content="Maqetta, HTML5, tool, visual, Dojo, open, source" />
+	<meta name="description" content="Maqetta - Visual authoring of HTML5 user interfaces - in the browser" />
+
+	<title>Theme Editor</title>
+	<link href="/favicon.ico" rel="icon" type="image/ico" />
+
+	<style type="text/css">
+	    <!--
+		#wrapper { margin: 0 auto; width: 962px;padding:0;}
+	    -->
+    </style>
+
+	<link href="/stylesheets/light3.css" media="screen" rel="stylesheet" type="text/css" />
+	<link rel="alternate" type="application/atom+xml" title="Maqetta News" href="/news/feed.xml" />
+</head>
+
+<body class="maq_body maq_loggedin_no features features_theme-editor">
+	<div class="maq_top">
+		<div class="maq_dojo_attribution_row">
+			<div class="maq_dojo_attribution_cell">
+				<span class="maq_dojo_attribution_chevron"></span>
+				<span class="maq_dojo_attribution_text">
+					Maqetta is an <span class="maq_open_source_project">open source project</span> hosted by the <a class="maq_link" href="http://dojofoundation.org" title="Dojo Foundation web site">Dojo Foundation</a>
+				</span>
+			</div>
+		</div>
+		<div class="maq_logo_row">
+			<div class="maq_logo_cell">
+				<span class="maq_header_right">
+					<div class="maq_header_right_text_div" style="visibility: hidden;">
+						&nbsp;
+					</div>
+					<div class="maq_header_search_div">
+						<div id="header">
+							<div class="module">
+								<div class="module-body">
+									<form action="http://google.com/search" method="get">
+										<div class="search">
+											<input name="sitesearch" value="maqetta.org" type="hidden"/>
+											<input name="q" id="mod_search_searchword" type="text" alt="Search"
+												class="inputbox" size="35" maxlength="255" value="search Maqetta..."
+												onblur="if(this.value=='') this.value='search Maqetta...';"
+												onfocus="if(this.value=='search Maqetta...') this.value='';" />
+											<input type="submit" value="Search" class="button"/>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</span>
+				<span class="maq_logo"></span>
+			</div>
+		</div>
+	</div>
+	<div class="maq_logo_under_1"></div>
+	<div class="maq_logo_under_2"></div>
+	<div id="main">
+		<div id="wrapper" class="foreground">
+			<div id="nav">
+				<ul class="menu">
+					<li class="item1">
+						<a href="/">Home</a>
+					</li>
+					<li class="parent item3">
+						<a href="/overview/">Overview</a>
+						<ul>
+							<li class="item5">
+								<a href="/overview/summary.html">Project Summary</a>
+							</li>
+							<li class="item11">
+								<a href="/overview/status.html">Project Status</a>
+							</li>
+							<li class="item12">
+								<a href="/overview/hosted.html">Hosted Application</a>
+							</li>
+							<li class="item14">
+								<a href="/community.html">Community</a>
+							</li>
+							<li class="item26">
+								<a href="/overview/help-and-support.html">Help and Support</a>
+							</li>
+						</ul>
+					</li>
+					<li class="parent item13">
+						<a href="/features/">Features</a>
+						<ul>
+							<li class="item15">
+								<a href="/features/visual-page-editor.html">Visual Page Editor</a>
+							</li>
+							<li class="item16">
+								<a href="/features/states.html">States</a>
+							</li>
+							<li class="item17">
+								<a href="/features/review-and-commenting.html">Review/Commenting</a>
+							</li>
+							<li class="item18">
+								<a href="/features/workflow.html">Designer/Developer</a>
+							</li>
+							<li class="item19">
+								<a href="/features/theme-editor.html">Theme Editor</a>
+							</li>
+							<li class="item20">
+								<a href="/features/wireframing.html">Wireframing</a>
+							</li>
+							<li class="item21">
+								<a href="/features/libraries.html">Libs, Widgets, Themes</a>
+							</li>
+							<li class="item22">
+								<a href="/features/mobile.html">Mobile Authoring</a>
+							</li>
+							<li class="item23">
+								<a href="/features/future.html">Future Features</a>
+							</li>
+						</ul>
+					</li>
+					<li class="item7">
+						<a href="http://app.maqetta.org/maqetta/app/docs/index.html#tutorials/tutorials" onclick="window.open(this.href,'targetWindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,');return false;">
+							<span>Tutorials</span>
+						</a>
+					</li>
+					<li class="item4">
+						<a href="http://app.maqetta.org/maqetta/app/docs/index.html" onclick="window.open(this.href,'targetWindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,');return false;">
+							<span>Documentation</span>
+						</a>
+					</li>
+					<li class="item9">
+						<a href="/news/">News</a>
+					</li>
+					<li class="item6">
+						<a href="/community.html">Community</a>
+					</li>
+					<li class="item8">
+						<a href="/faq.html">FAQ</a>
+					</li>
+				</ul>
+			</div>
+
+			<style>
+<!--
+	.s-c-s #colmid { left:0px;}
+	.s-c-s #colright { margin-left:-210px;}
+	.s-c-s #col1pad { margin-left:210px;}
+	.s-c-s #col2 { left:210px;width:0px;}
+	.s-c-s #col3 { width:210px;}
+	
+	.s-c-x #colright { left:0px;}
+	.s-c-x #col1wrap { right:0px;}
+	.s-c-x #col1 { margin-left:0px;}
+	.s-c-x #col2 { right:0px;width:0px;}
+	
+	.x-c-s #colright { margin-left:-210px;}
+	.x-c-s #col1 { margin-left:210px;}
+	.x-c-s #col3 { left:210px;width:210px;}
+-->
+</style>
+<div id="main-content" class="x-c-s">
+	<div id="colmask" class="ckl-color2">
+		<div id="colmid" class="cdr-color1">
+			<div id="colright" class="ctr-color1">
+				<div id="col1wrap">
+					<div id="col1pad">
+						<div id="col1">
+							<div id="page">
+	<h1>Theme Editor</h1>
+	<div class="maq_article_content">
+		<p>A &#8220;theme&#8221; is a related collection of CSS files that provides consistent styling for a collection of widgets (a &#8220;widget library&#8221;). Maqetta includes a theme editor that allows the user to customize the CSS styling rules within a theme that control the visual styling of widgets within a widget library.</p>
+
+<ul>
+<li><strong>Intelligent/deep widget styling leveraging theme metadata</strong> - To enable Maqetta&#8217;s various CSS-related authoring features, including the theme editor, Maqetta has defined a <strong>theme metadata format</strong> that defines the mapping between CSS rules within a theme and the widgets in the collection. (More precisely, the theme metadata maps a particular CSS rules to a particular {property P on widget W for widget sub-component C for interactive state S}.) This allows deep and intelligent customization of CSS styling on particular widgets. For example of the level of detail control you have with the Maqetta theme editor, you can control the background color and text color for the section (&#8220;sub-widget&#8221;) of the Calendar widget for the currently selected date, including different colors for different interactive states (e.g., Normal vs Hover).</li>
+
+<li><strong>Built-in desktop themes</strong> - Maqetta ships with two desktop themes, Claro and Sketch, both of which apply to widgets found in Dojo&#8217;s Dijit library of widgets. Claro is a high-quality and highly-detailed CSS styling theme for Dijit that takes advantages of CSS3 features for optimal look-and-feel on modern browsers and reasonable fallback on older browsers. Sketch provides a hand-drawn (&#8220;sketch&#8221;) look for Dijit widgets that is useful for wireframing scenarios where the author would like reviewers to focus in on the flow of the application rather than visual details (to avoid reviewers focusing on colors and fonts). The Sketch theme was built using the Maqetta theme editor via incremental editing of the Claro theme.</li>
+
+<li><strong>Built-in mobile themes</strong> - Maqetta ships with five mobile themes, android, blackberry, ipad, iphone and custom, all of which apply to widgets found in Dojo&#8217;s dojox.mobile library of mobile widgets. The first four themes (android, blackberry, ipad and iphone) provide native styling so that dojox.mobile widgets will look and act like built-in, native UI controls on the respective mobile device. The other theme, custom, is a generic, cross-platform CSS styling theme that was designed to enable users to customize to transform into their own CSS theme.</li>
+
+<li><strong>Custom theme creation</strong> - Maqetta allows a user to clone any existing theme into a custom theme using the <strong>New Theme&#8230;</strong> command available on the <strong>New</strong> dropdown menu on the main application menu. For example, the user can clone the &#8220;claro&#8221; theme into a new theme named &#8220;myclaro&#8221;. After creating a new theme, the user can open the new theme in the Theme Editor to incrementally restyle to fit his needs.</li>
+
+<li><strong>Ability to switch between themes in visual page editor</strong> - The visual page editor provides a &#8220;switch theme&#8221; icon on the editor toolbar that allows the author to view his HTML page using different styling themes. For Dojo/Dijit widgets, the author can switch between &#8220;claro&#8221; (full visual styling) and &#8220;sketch&#8221; (hand-drawn look). The author can also switch to view any custom themes he has created. This allows the author to try out various experimental styling themes and visually how his HTML pages look using each of these themes.</li>
+</ul>
+	</div>
+</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+		</div>
+
+		<div class="maq_footer_space_1"></div>
+		<div class="maq_logo_under_1"></div>
+		<div class="maq_logo_under_2"></div>
+		<div class="maq_footer">
+			&copy; Copyright <a class="maq_link" href="http://dojofoundation.org" title="Dojo Foundation web site">The Dojo Foundation</a>, All rights reserved <a class="maq_link maq_terms_of_use" target="_blank" href="/terms_of_use.html">Terms of Use</a>
+		</div>
+	</body>
+</html>

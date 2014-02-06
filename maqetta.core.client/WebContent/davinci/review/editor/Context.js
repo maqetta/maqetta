@@ -110,7 +110,7 @@ return declare("davinci.review.editor.Context", [Context], {
 
 					// add the user activity monitoring to the document and add the connects to be 
 					// disconnected latter
-					var newCons = [].concat(this._cxtConns, UserActivityMonitor.addInActivityMonitor(this.frame.contentDocument));
+					var newCons = [].concat(this._cxtConns, UserActivityMonitor.addInactivityMonitor(this.frame.contentDocument));
 					this._cxtConns = newCons;
 					this.containerEditor.silhouetteiframe.setSVGFilename(svgFilename);
 					this._statesLoaded = true;

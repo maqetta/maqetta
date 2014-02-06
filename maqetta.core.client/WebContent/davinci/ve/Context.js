@@ -1339,7 +1339,7 @@ return declare("davinci.ve.Context", [ThemeModifier], {
 		
 		// add the user activity monitoring to the document and add the connects to be 
 		// disconnected latter
-		this._connects = (this._connects || []).concat(UserActivityMonitor.addInActivityMonitor(this.getDocument()));
+		this._connects = (this._connects || []).concat(UserActivityMonitor.addInactivityMonitor(this.getDocument()));
 		// Set mobile device CSS files
 		var mobileDevice = this.getMobileDevice();
 	

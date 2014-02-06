@@ -1,46 +1,54 @@
 define([
     "require",
     "dojo/_base/xhr",
+    "dojo/request",
+    "dojo/request/notify",
 	"dojo/i18n!./nls/webContent"
 ], function(
 	require,
 	xhr,
+	request,
+	notify,
 	webContent
 ) {
 
+//FIXME: define interval in getInitializationInfo? preferences? Hard-code value, for now.
+var maxInactiveInterval = 5 * 60 * 1000,
+	connections = [],
+	countdown,
+	warnDiv;
+
+/*
+ *  Sets up Maqetta to monitor interaction with the server and the workspace
+ */
 var UserActivityMonitor = {
-	/*
-	 *  Sets up Maqetta to monitor interaction with the server and the workspace
-	 */
 	setUpInActivityMonitor: function(doc, Runtime) {
-		if (Runtime.singleUserMode()) {
-			this._MaxInactiveInterval = -1; // no timeout
-		} else {
-			this._firstPoll = true;
-			this._MaxInactiveInterval = 60 * 5; // default this will be changed when we get from server
-			this.keepAlive(); // get the timeout value
-			this.addInActivityMonitor(doc);
-			Runtime.subscribe('/dojo/io/load', this.lastServerConnection);
-			this.userActivity(); // prime the value
+		if (!Runtime.singleUserMode()) {
+			connections = UserActivityMonitor.addInactivityMonitor(doc);
+			Runtime.subscribe('/dojo/io/load', UserActivityMonitor.lastServerConnection); // topic is deprecated
+			notify("load", UserActivityMonitor.lastServerConnection);
+
+			UserActivityMonitor.lastActivity = Date.now();
+
+			UserActivityMonitor.heartbeat = window.setInterval(function(){
+				if (!countdown && Date.now() - UserActivityMonitor.lastActivity > maxInactiveInterval) {
+					UserActivityMonitor.idle();
+				}
+			}, 1000);
 		}
 	},
 	
 	/*
 	 *  Adds user activity monitoring for a document, that is most likely in an iframe (eg editors)
 	 */
-	addInActivityMonitor: function(doc) {
-		if (this._MaxInactiveInterval === -1) { // no session timeout
-			return []; // no monitoring
-		} else {
-			var connections = [
-			//dojo.connect(doc.documentElement, "mousemove", this, "userActivity"),
-			dojo.connect(doc.documentElement, "keydown",  this, "userActivity"),
-			//dojo.connect(doc.documentElement, "DOMMouseScroll", this, "userActivity"),
-			//dojo.connect(doc.documentElement, "mousewheel",  this, "userActivity"),
-			dojo.connect(doc.documentElement, "mousedown",  this, "userActivity")
-			];
-			return connections;
-		}
+	addInactivityMonitor: function(doc) {
+		return [
+			//dojo.connect(doc.documentElement, "mousemove", UserActivityMonitor, "userActivity"),
+			dojo.connect(doc.documentElement, "keydown",  UserActivityMonitor, "userActivity"),
+			//dojo.connect(doc.documentElement, "DOMMouseScroll", UserActivityMonitor, "userActivity"),
+			//dojo.connect(doc.documentElement, "mousewheel",  UserActivityMonitor, "userActivity"),
+			dojo.connect(doc.documentElement, "mousedown",  UserActivityMonitor, "userActivity")
+		];
 	},
 	
 	/*
@@ -51,59 +59,27 @@ var UserActivityMonitor = {
 	 */
 	userActivity: function(e){
 		//console.log('userActivity');
-		if (this.countdown) { 
+		if (countdown) { 
 			//user is about to time out so clear it
-			this.resetIdle();
+			UserActivityMonitor.resetIdle();
 		}
-		if (this._idleTimer){
-			window.clearTimeout(this._idleTimer);
-		}
-		if (this._MaxInactiveInterval > 0) { // set the timer only if we have a timeout
-			var t = this._MaxInactiveInterval * 1000; 
-			this._idleTimer = window.setTimeout(function(){
-				this.idle();
-			}.bind(this), t); // make sure this happens before the server times out
-		}
-	},
-	
-	/* 
-	 *  This method queries the server to find the session timeout value and also 
-	 *  let the user we are still working here so don't time us out
-	 */
-	keepAlive: function(){
-		return xhr.get({
-			url: "cmd/keepalive",
-			handleAs: "json"
-		}).then(function(result) {
-			if (result.MaxInactiveInterval) {
-				this._MaxInactiveInterval = result.MaxInactiveInterval;
-				if (this._firstPoll) {
-					delete this._firstPoll;
-					this.userActivity(null); // reset to server timeout from defaults
-				}
-			} else {
-			    console.warn("Keep Alive: no MaxInactiveInterval. result="+result);
-			}
-		}.bind(this), function(error) {
-			console.warn("keepalive error", error);
-	    });
+		UserActivityMonitor.lastActivity = Date.now();
 	},
 	
 	/*
 	 * this method is subscribed to /dojo/io/load and will be invoked whenever we have successful
 	 * io with the server. When the method is invoked we will reset the server poll timer to 80%
-	 * of the server session timeout value. if the timer pop's we will call keepAlive to let the server 
+	 * of the server session timeout value. if the timer pops we will call keepAlive to let the server 
 	 * know we are still working
 	 */
 	lastServerConnection: function(deferred, result) {
-		if (this._serverPollTimer){
-			window.clearTimeout(this._serverPollTimer);
+		if (UserActivityMonitor._serverPollTimer){
+			window.clearTimeout(UserActivityMonitor._serverPollTimer);
 		}
-		if (this._MaxInactiveInterval > 0) { // set the timer only if we have a timeout
-			var t = this._MaxInactiveInterval * 1000 * .8;  // take 80 %
-			this._serverPollTimer = window.setTimeout(function(){
-				this.keepAlive();
-			}.bind(this), t); // _MaxInactiveInterval is in seconds so poll 30 seconds early
+		if (maxInactiveInterval > 0) { // set the timer only if we have a timeout
+			UserActivityMonitor._serverPollTimer = window.setTimeout(function(){
+				request("cmd/keepalive");
+			}, maxInactiveInterval * .8); // maxInactiveInterval is in seconds so poll 30 seconds early
 		}
 	},
 	
@@ -114,33 +90,33 @@ var UserActivityMonitor = {
 	 */
 	idle: function(){
 		var counter = 30;
-		var warnDiv = this.warnDiv = dojo.create('div', {
+		warnDiv = dojo.create('div', {
 			'class': "idleWarning",
 			innerHTML: dojo.string.substitute(webContent.idleSessionMessage, {seconds: counter})
 		}, dojo.byId('davinci_app'), "first");
 
-		this.countdown = window.setInterval(function(){
+		countdown = window.setInterval(function(){
 			if(--counter === 0){
-				window.clearInterval(this.countdown);
-				delete this.countdown;
+				window.clearInterval(countdown);
+				countdown = null;
 				require("davinci/Workbench").logoff().otherwise(function(result) {
 					//TODO: tear down warnDiv and post failure message
 				});
 			} else {
 				warnDiv.innerHTML = dojo.string.substitute(webContent.idleSessionMessage, {seconds: counter});
 			}
-		}.bind(this), 1000);
+		}, 1000);
 	},
 
 	/*
 	 * This method removes the session timeout message and calls userActivity 
 	 */
 	resetIdle: function(e){
-		window.clearInterval(this.countdown);
-		delete this.countdown;
-		this.warnDiv.parentNode.removeChild(this.warnDiv);
-		delete this.warnDiv;
-		this.userActivity();
+		window.clearInterval(countdown);
+		countdown = null;
+		warnDiv.parentNode.removeChild(warnDiv);
+		warnDiv = null;
+		UserActivityMonitor.userActivity();
 	}
 };
 

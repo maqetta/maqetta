@@ -4,7 +4,7 @@ date: 2012-05-31 00:00 +00:00
 tags:
 ---
 
-The Maqetta team is pleased to announce the **Preview 6** release on Maqetta.org. Read the full [release notes](http://app.maqetta.org/maqetta/app/docs/index.html#releasenotes/preview6).
+The Maqetta team is pleased to announce the **Preview 6** release on Maqetta.org.
 
 Here is a summary of new features:
 
@@ -21,7 +21,7 @@ Here is a summary of new features:
 
 *   Mobile device silhouettes as clip art :iPhone, iPad, Android_340x480, Android_480x800, AndroidTablet, Blackberry phone
 *   Countless fixes so that Dojo Mobile widgets can be used in sketch mode
-*   New [mobile sketching tutorial](http://app.maqetta.org/maqetta/app/docs/index.html#tutorials/Mobile_Sketching).
+*   New mobile sketching tutorial.
 
 **GridX support**, with creation wizard that allows for column control
 

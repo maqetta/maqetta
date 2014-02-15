@@ -4,7 +4,7 @@ date: 2013-04-29 14:15 -05:00
 tags:
 ---
 
-We have updated Maqetta.org with ***Maqetta Release 10***. There are a large number of improvements in this release ([read the full release notes](http://app.maqetta.org/maqetta/app/docs/index.html#releasenotes/release10)).
+We have updated Maqetta.org with ***Maqetta Release 10***. There are a large number of improvements in this release.
 
 We are not aware of any migration issues and believe that content create in Release 9 should work with Release 10.
 
@@ -31,4 +31,4 @@ We are not aware of any migration issues and believe that content create in Rele
 The Save As Widget feature has been "experimental", and with Release 10 continues to be experimental, but in Release 10 there have been improvements and bug fixes. The improvements required some significant coding changes, and the coding changes resulted in lack of backwards-compatible support for custom widgets created in previous versions. 
 
 <br>
-**Downloads** are available from the main [downloads page](//maqetta.org/downloads/).
+**Downloads** are available from the main [downloads page](http://github.com/maqetta/maqetta/releases).

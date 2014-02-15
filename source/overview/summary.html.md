@@ -2,6 +2,10 @@
 title: Project Summary
 ---
 
+***In May 2013, active development of the Maqetta open source project [stopped](https://groups.google.com/forum/#!msg/maqetta-users/dLGzdERrkG8/PQ9Xv25eRD8J), and in February 2014, the free web hosting service for the Maqetta application at Maqetta.org [became unavailable](https://groups.google.com/forum/#!msg/maqetta-users/0M0da6576Cg/_2i6SbvFTqAJ).***
+
+---
+
 Maqetta is an open source technology initiative at Dojo Foundation that provides WYSIWYG tooling in the cloud for HTML5 (desktop and mobile). Maqetta allows User Experience Designers (UXD) to perform drag/drop assembly of live UI mockups.
 
 One of Maqetta's key design goals is to create developer-ready UI mockups that promote efficient hand-off from designers to developers. The user interfaces created by Maqetta are real-life web applications that can be handed off to developers, who can then transform the application incrementally from UI mockup into final shipping application. While we expect the Maqetta-created mockups often will go through major code changes, Maqetta is designed to promote preservation of visual assets, particularly the CSS style sheets, across the development life cycle. As a result, the careful pixel-level styling efforts by the UI team will carry through into the final shipping application. To help with the designer/developer hand-off, Maqetta includes a "download into ZIP" feature to create a ZIP image that can be imported into a developer tool workspace (e.g., Eclipse IDE).

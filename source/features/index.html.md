@@ -12,4 +12,3 @@ The following articles introduce some of the features in the Maqetta application
 * [Wireframing](wireframing.html)
 * [JavaScript Libraries, Widgets and Themes](libraries.html)
 * [Mobile Authoring](mobile.html)
-* [Future Features](future.html)

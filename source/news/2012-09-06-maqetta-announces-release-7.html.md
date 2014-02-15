@@ -4,7 +4,7 @@ date: 2012-09-06 00:00 +00:00
 tags:
 ---
 
-The Maqetta team is pleased to announce the **Release 7** of the Maqetta visual authoring tool Maqetta.org. Read the full [release notes](http://app.maqetta.org/maqetta/app/docs/index.html#releasenotes/release7).
+The Maqetta team is pleased to announce the **Release 7** of the Maqetta visual authoring tool Maqetta.org.
 
 Here is a summary of new features:
 

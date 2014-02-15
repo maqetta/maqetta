@@ -2,9 +2,7 @@
 title: Community
 ---
 
-Maqetta is a community effort, and we need your help!
-
-It's easy to get involved, and there are lots of ways you can make a difference:
+*In May 2013, active development of the Maqetta open source project [stopped](https://groups.google.com/forum/#!msg/maqetta-users/dLGzdERrkG8/PQ9Xv25eRD8J), and in February 2014, the free web hosting service for the Maqetta application at Maqetta.org [became unavailable](https://groups.google.com/forum/#!msg/maqetta-users/0M0da6576Cg/_2i6SbvFTqAJ).*
 
 User community
 --------------
@@ -13,7 +11,6 @@ Users can help the Maqetta project by:
 
 *   Participating in the Maqetta [user community at Google Groups](http://groups.google.com/group/maqetta-users)
 *   Reporting bugs and requesting features using the [Maqetta Issue Tracker at GitHub](https://github.com/maqetta/maqetta/issues)
-*   Helping other users on IRC (#maqetta channel at irc.freenode.net)
 
 More active participation
 -------------------------
@@ -48,13 +45,6 @@ If you think you've found a new bug in the system, we encourage you to file a bu
 5.  If you can provide a patch, please follow the guidelines below and make sure to sign a CLA and provide your full name in the comment field when attaching the patch to the ticket.
 
 The better the bug reports, the faster we can fix things, and improving existing bug reports for issues scheduled to be addressed in the next major release is a great way to get involved and speed improvement in the toolkit. And writing good test cases is just a small step away from writing patches to fix the issues.
-
-IRC
----
-
-Many project developers and users can be found in the #maqetta channel in irc.freenode.net. Discussions here range from user support to design of new toolkit features. Most topics are fair game for discussion, but we only ask that everyone in the channel keep it clean and civil.
-
-You should google for an answer to your question before asking it in IRC and civility is expected of everyone.
 
 Contributing Fixes
 ------------------

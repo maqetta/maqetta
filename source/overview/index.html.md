@@ -8,6 +8,5 @@ The following articles explore various aspects of the Maqetta open source initia
 
 * [Project Summary](summary.html)
 * [Project Status](status.html)
-* [Hosted Version of the Maqetta Application](hosted.html)
 * [Features](../features/)
 * [Community](../community.html)

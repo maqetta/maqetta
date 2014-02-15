@@ -2,6 +2,8 @@
 title: Frequently Asked Questions
 ---
 
+*In May 2013, active development of the Maqetta open source project [stopped](https://groups.google.com/forum/#!msg/maqetta-users/dLGzdERrkG8/PQ9Xv25eRD8J), and in February 2014, the free web hosting service for the Maqetta application at Maqetta.org [became unavailable](https://groups.google.com/forum/#!msg/maqetta-users/0M0da6576Cg/_2i6SbvFTqAJ).*
+
 General
 -------
 
@@ -104,10 +106,6 @@ Intended for software developers who are interested in or currently contributing
 #### How do I report bugs and how do I request features?
 
 You can log bugs and/or request features using the [Maqetta Issue Tracker at GitHub](https://github.com/maqetta/maqetta/issues).
-
-#### Chat: is there an IRC channel?
-
-There is an IRC-based community chat room (#maqetta channel at irc.freenode.net), where we hope you'll find both other users and developers working on the Maqetta open source project team.
 
 
 Browsers

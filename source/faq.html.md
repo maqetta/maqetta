@@ -77,7 +77,7 @@ The Maqetta theme editor is designed to support arbitrary CSS themes, not just D
 
 That said, not all of the extension points for the theme editor have been programmed yet. With the current release, Maqetta is hardcoded to only know about the Claro and Sketch themes. At this point, adding support for new CSS themes in the Maqetta theme editor requires downloading the open source and customizing the logic manually. In the future, the project team plans on making it easier to customize and extend the theme editor.
 
-The primary extensibility mechanism for the theme editor is the theme metadata format, which has some initial documentation at [Theme Editor Technical Documentation](http://app.maqetta.org/maqetta/app/docs/index.html#techdocs/themeEditor). The goal is that a developer just needs to create theme metadata that sits alongside his existing theme (consisting of one or more CSS files).
+The primary extensibility mechanism for the theme editor is the theme metadata format, which has some initial documentation at Theme Editor Technical Documentation. The goal is that a developer just needs to create theme metadata that sits alongside his existing theme (consisting of one or more CSS files).
 
 
 Community

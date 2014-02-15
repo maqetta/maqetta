@@ -4,7 +4,7 @@ title: Help and Support
 
 If you need help or support in using Maqetta, here are some ways to look for solutions to your problem:
 
-* [**User docs**](http://app.maqetta.org/maqetta/app/docs/index.html) - The Maqetta application ships with an initial set of user documentation.
+* **User docs** - The Maqetta application ships with an initial set of user documentation.
 * [**Maqetta YouTube channel**](http://www.youtube.com/user/Maqetta/) - The Maqetta team has posted some introductory videos on YouTube.
 * [**How-to articles**](https://www.ibm.com/search/csass/search/?sn=dw&amp;en=utf&amp;hpp=20&amp;dws=dw&amp;q=maqetta&amp;Search=Search) - The Maqetta team has posted some how-to articles, mostly on advanced topics.
 * [**maqetta-users group archives**](http://groups.google.com/group/maqetta-users) - Other users might have had the same problem.

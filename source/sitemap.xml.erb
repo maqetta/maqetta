@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <% sitemap.resources.find_all { |p| p.source_file.match(/\.html/) }.each do |p| %>
   <url>
-    <loc>http://maqetta.org/<%= p.destination_path.gsub('/index.html','/') %></loc>
+    <loc>http://maqetta.github.io/maqetta/<%= p.destination_path.gsub('/index.html','/') %></loc>
   </url>
 <% end %>
 </urlset>

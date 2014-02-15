@@ -1,5 +1,5 @@
 User-agent: *
-Sitemap: http://maqetta.org/sitemap.xml
+Sitemap: http://maqetta.github.io/maqetta/sitemap.xml
 Disallow: /administrator/
 Disallow: /cache/
 Disallow: /components/

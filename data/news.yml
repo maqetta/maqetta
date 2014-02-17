@@ -1,4 +1,4 @@
 # Displays a news item on the front page.
 # If `text` is empty or commented out, no news item is displayed
-text: MAQETTA FREE HOSTING SERVICE SUSPENDED
+text: '<span style="color:red; font-style:italic; font-weight:bold;">MAQETTA FREE HOSTING SERVICE SUSPENDED</span>'
 url: ./news

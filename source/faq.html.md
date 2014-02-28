@@ -37,12 +37,6 @@ The current release does not have all extension points completed yet that would 
 
 Maqetta's original technologies were donated by IBM to Dojo Foundation as an open source project, under Dojo's liberal and commercial-friendly open source licensing terms.
 
-#### If I use the application hosted on Maqetta.org, are my files safe and secure?
-
-The Maqetta application that you can run from the Maqetta.org site is available on an as-is basis with no guarantees about suitability, reliability, performance, security, data preservation, or anything else. While the Maqetta project will try to keep the application running on a continuous basis and preserve user data, the publicly hosted application might become unavailable at any time, temporarily or permanently, and your data might be deleted without notice. In the current release, there is no permissions system to prevent other web users from seeing your data, and there is no backup system on any of your data.
-
-If you notice a security issue with the site, please send an email that reports the security problem to: [maqetta-security@googlegroups.com](mailto:maqetta-security@googlegroups.com)
-
 #### Why the name "Maqetta" and how to pronounce it?
 
 "Maqetta" is a spelling variation of the Spanish word for mock-up ("maqueta"). The team members pronounce the name as if the "q" were a "k".

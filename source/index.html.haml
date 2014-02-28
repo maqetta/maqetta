@@ -52,7 +52,7 @@ layout: maqetta_main
                 .big_button_container
                   %div
                     .big_button_launch
-                      %a{:href => "", :style => "display: inline-block; width: 100%; height: 100%;", :onclick => "alert('To run the Maqetta application:\\n\\n 1. Download the application (using the Downloads link on this page)\\n 2. Uncompress the ZIP file\\n 3. Follow the instructions in the README.html file');return false;"}
+                      = link_to nil, "/local.html"
                     = partial "frontpage_news"
                     = partial "quicklinks"
 #footer
